@@ -85,6 +85,7 @@ func walkDir(dir string) {
 
 		if file.IsDir() {
 			walkDir(path)
+			continue
 		}
 
 		if !strings.HasSuffix(path, ".go") {
