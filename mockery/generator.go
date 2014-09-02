@@ -15,7 +15,9 @@ import (
 )
 
 type Generator struct {
-	buf   bytes.Buffer
+	buf bytes.Buffer
+
+	ip    bool
 	iface *Interface
 }
 
@@ -23,6 +25,35 @@ func NewGenerator(iface *Interface) *Generator {
 	return &Generator{
 		iface: iface,
 	}
+}
+
+func (g *Generator) GenerateIPPrologue() {
+	g.printf("package %s\n\n", g.iface.File.Name)
+
+	g.printf("import \"github.com/stretchr/testify/mock\"\n\n")
+	if g.iface.File.Imports == nil {
+		return
+	}
+
+	for _, imp := range g.iface.File.Imports {
+		if imp.Name == nil {
+			g.printf("import %s\n", imp.Path.Value)
+		} else {
+			g.printf("import %s %s\n", imp.Name.Name, imp.Path.Value)
+		}
+	}
+
+	g.printf("\n")
+
+	g.ip = true
+}
+
+func (g *Generator) mockName() string {
+	if g.ip {
+		return "Mock" + g.iface.Name
+	}
+
+	return g.iface.Name
 }
 
 func (g *Generator) GeneratePrologue() {
@@ -90,6 +121,10 @@ var builtinTypes = map[string]bool{
 func (g *Generator) typeString(typ ast.Expr) string {
 	switch specific := typ.(type) {
 	case *ast.Ident:
+		if g.ip {
+			return specific.Name
+		}
+
 		_, isBuiltin := builtinTypes[specific.Name]
 		if isBuiltin {
 			return specific.Name
@@ -170,7 +205,7 @@ func (g *Generator) Generate() error {
 		return ErrNotSetup
 	}
 
-	g.printf("type %s struct {\n\tmock.Mock\n}\n\n", g.iface.Name)
+	g.printf("type %s struct {\n\tmock.Mock\n}\n\n", g.mockName())
 
 	for _, method := range g.iface.Type.Methods.List {
 		ftype, ok := method.Type.(*ast.FuncType)
@@ -183,7 +218,7 @@ func (g *Generator) Generate() error {
 		names, _, params := g.genList(ftype.Params)
 		_, types, returs := g.genList(ftype.Results)
 
-		g.printf("func (m *%s) %s(%s) ", g.iface.Name, fname, strings.Join(params, ", "))
+		g.printf("func (m *%s) %s(%s) ", g.mockName(), fname, strings.Join(params, ", "))
 
 		switch len(returs) {
 		case 0:

@@ -17,6 +17,7 @@ var fPrint = flag.Bool("print", false, "print the generated mock to stdout")
 var fOutput = flag.String("output", "./mocks", "directory to write mocks to")
 var fDir = flag.String("dir", ".", "directory to search for interfaces")
 var fAll = flag.Bool("all", false, "generates mocks for all found interfaces")
+var fIP = flag.Bool("inpkg", false, "generate a mock that goes inside the original package")
 
 func checkDir(p *mockery.Parser, dir, name string) bool {
 	files, err := ioutil.ReadDir(dir)
@@ -149,8 +150,14 @@ func genMock(iface *mockery.Interface) {
 	if *fPrint {
 		out = os.Stdout
 	} else {
-		path := filepath.Join(*fOutput, name+".go")
-		os.MkdirAll(filepath.Dir(path), 0755)
+		var path string
+
+		if *fIP {
+			path = filepath.Join(filepath.Dir(iface.Path), "mock_"+name+".go")
+		} else {
+			path = filepath.Join(*fOutput, name+".go")
+			os.MkdirAll(filepath.Dir(path), 0755)
+		}
 
 		f, err := os.Create(path)
 		if err != nil {
@@ -167,7 +174,12 @@ func genMock(iface *mockery.Interface) {
 
 	gen := mockery.NewGenerator(iface)
 
-	gen.GeneratePrologue()
+	if *fIP {
+		gen.GenerateIPPrologue()
+	} else {
+		gen.GeneratePrologue()
+	}
+
 	err := gen.Generate()
 	if err != nil {
 		fmt.Printf("Error with %s: %s\n", name, err)
