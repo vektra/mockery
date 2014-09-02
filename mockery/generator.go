@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"go/ast"
 	"io"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"code.google.com/p/go.tools/imports"
@@ -25,8 +27,17 @@ func NewGenerator(iface *Interface) *Generator {
 
 func (g *Generator) GeneratePrologue() {
 	g.printf("package mocks\n\n")
-	g.printf("import \"github.com/stretchr/testify/mock\"\n\n")
 
+	goPath := os.Getenv("GOPATH")
+
+	local, err := filepath.Rel(filepath.Join(goPath, "src"), filepath.Dir(g.iface.Path))
+	if err != nil {
+		panic("unable to figure out path for package")
+	}
+
+	g.printf("import \"%s\"\n", local)
+
+	g.printf("import \"github.com/stretchr/testify/mock\"\n\n")
 	if g.iface.File.Imports == nil {
 		return
 	}
@@ -48,10 +59,43 @@ func (g *Generator) printf(s string, vals ...interface{}) {
 	fmt.Fprintf(&g.buf, s, vals...)
 }
 
+var builtinTypes = map[string]bool{
+	"ComplexType": true,
+	"FloatType":   true,
+	"IntegerType": true,
+	"Type":        true,
+	"Type1":       true,
+	"bool":        true,
+	"byte":        true,
+	"complex128":  true,
+	"complex64":   true,
+	"error":       true,
+	"float32":     true,
+	"float64":     true,
+	"int":         true,
+	"int16":       true,
+	"int32":       true,
+	"int64":       true,
+	"int8":        true,
+	"rune":        true,
+	"string":      true,
+	"uint":        true,
+	"uint16":      true,
+	"uint32":      true,
+	"uint64":      true,
+	"uint8":       true,
+	"uintptr":     true,
+}
+
 func (g *Generator) typeString(typ ast.Expr) string {
 	switch specific := typ.(type) {
 	case *ast.Ident:
-		return specific.Name
+		_, isBuiltin := builtinTypes[specific.Name]
+		if isBuiltin {
+			return specific.Name
+		}
+
+		return g.iface.File.Name.Name + "." + specific.Name
 	case *ast.StarExpr:
 		return "*" + g.typeString(specific.X)
 	case *ast.ArrayType:
@@ -69,7 +113,11 @@ func (g *Generator) typeString(typ ast.Expr) string {
 			return "[" + l + "]" + g.typeString(specific.Elt)
 		}
 	case *ast.SelectorExpr:
-		return g.typeString(specific.X) + "." + specific.Sel.Name
+		if ident, ok := specific.X.(*ast.Ident); ok {
+			return ident.Name + "." + specific.Sel.Name
+		} else {
+			panic(fmt.Sprintf("strange selector expr encountered: %#v", specific))
+		}
 	case *ast.InterfaceType:
 		if len(specific.Methods.List) == 0 {
 			return "interface{}"

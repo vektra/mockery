@@ -4,6 +4,7 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"path/filepath"
 )
 
 type Parser struct {
@@ -25,7 +26,12 @@ func (p *Parser) Parse(path string) error {
 		return err
 	}
 
-	p.path = path
+	abs, err := filepath.Abs(path)
+	if err != nil {
+		return err
+	}
+
+	p.path = abs
 	p.file = f
 	return nil
 }
@@ -37,7 +43,7 @@ func (p *Parser) Find(name string) (*Interface, error) {
 				if typespec, ok := spec.(*ast.TypeSpec); ok {
 					if typespec.Name.Name == name {
 						if iface, ok := typespec.Type.(*ast.InterfaceType); ok {
-							return &Interface{name, p.file, iface}, nil
+							return &Interface{name, p.path, p.file, iface}, nil
 						} else {
 							return nil, ErrNotInterface
 						}
@@ -51,6 +57,7 @@ func (p *Parser) Find(name string) (*Interface, error) {
 
 type Interface struct {
 	Name string
+	Path string
 	File *ast.File
 	Type *ast.InterfaceType
 }
@@ -63,7 +70,7 @@ func (p *Parser) Interfaces() []*Interface {
 			for _, spec := range gen.Specs {
 				if typespec, ok := spec.(*ast.TypeSpec); ok {
 					if iface, ok := typespec.Type.(*ast.InterfaceType); ok {
-						ifaces = append(ifaces, &Interface{typespec.Name.Name, p.file, iface})
+						ifaces = append(ifaces, &Interface{typespec.Name.Name, p.path, p.file, iface})
 					}
 				}
 			}
