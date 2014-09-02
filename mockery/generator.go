@@ -1,26 +1,25 @@
 package mockery
 
 import (
+	"bytes"
 	"fmt"
 	"go/ast"
 	"io"
 	"strings"
 
+	"code.google.com/p/go.tools/imports"
+
 	"github.com/vektra/errors"
 )
 
 type Generator struct {
-	out    io.Writer
-	parser *Parser
-
-	name  string
-	iface *ast.InterfaceType
+	buf   bytes.Buffer
+	iface *Interface
 }
 
-func NewGenerator(parser *Parser, out io.Writer) *Generator {
+func NewGenerator(iface *Interface) *Generator {
 	return &Generator{
-		out:    out,
-		parser: parser,
+		iface: iface,
 	}
 }
 
@@ -28,11 +27,11 @@ func (g *Generator) GeneratePrologue() {
 	g.printf("package mocks\n\n")
 	g.printf("import \"github.com/stretchr/testify/mock\"\n\n")
 
-	if len(g.parser.file.Imports) == 0 {
+	if g.iface.File.Imports == nil {
 		return
 	}
 
-	for _, imp := range g.parser.file.Imports {
+	for _, imp := range g.iface.File.Imports {
 		if imp.Name == nil {
 			g.printf("import %s\n", imp.Path.Value)
 		} else {
@@ -46,7 +45,7 @@ func (g *Generator) GeneratePrologue() {
 var ErrNotInterface = errors.New("expression not an interface")
 
 func (g *Generator) printf(s string, vals ...interface{}) {
-	fmt.Fprintf(g.out, s, vals...)
+	fmt.Fprintf(&g.buf, s, vals...)
 }
 
 func (g *Generator) typeString(typ ast.Expr) string {
@@ -71,6 +70,16 @@ func (g *Generator) typeString(typ ast.Expr) string {
 		}
 	case *ast.SelectorExpr:
 		return g.typeString(specific.X) + "." + specific.Sel.Name
+	case *ast.InterfaceType:
+		if len(specific.Methods.List) == 0 {
+			return "interface{}"
+		} else {
+			panic(fmt.Sprintf("unable to handle this interface type: %#v", specific))
+		}
+	case *ast.MapType:
+		return "map[" + g.typeString(specific.Key) + "]" + g.typeString(specific.Value)
+	case *ast.Ellipsis:
+		return "..." + g.typeString(specific.Elt)
 	default:
 		panic(fmt.Sprintf("unable to handle type: %#v", typ))
 	}
@@ -106,22 +115,6 @@ func (g *Generator) genList(list *ast.FieldList) ([]string, []string, []string) 
 	return names, types, params
 }
 
-func (g *Generator) Setup(name string) error {
-	expr, err := g.parser.Find(name)
-	if err != nil {
-		return err
-	}
-
-	iface, ok := expr.(*ast.InterfaceType)
-	if !ok {
-		return ErrNotInterface
-	}
-
-	g.name = name
-	g.iface = iface
-	return nil
-}
-
 var ErrNotSetup = errors.New("not setup")
 
 func (g *Generator) Generate() error {
@@ -129,9 +122,9 @@ func (g *Generator) Generate() error {
 		return ErrNotSetup
 	}
 
-	g.printf("type %s struct {\n\tmock.Mock\n}\n\n", g.name)
+	g.printf("type %s struct {\n\tmock.Mock\n}\n\n", g.iface.Name)
 
-	for _, method := range g.iface.Methods.List {
+	for _, method := range g.iface.Type.Methods.List {
 		ftype, ok := method.Type.(*ast.FuncType)
 		if !ok {
 			continue
@@ -142,7 +135,7 @@ func (g *Generator) Generate() error {
 		names, _, params := g.genList(ftype.Params)
 		_, types, returs := g.genList(ftype.Results)
 
-		g.printf("func (m *%s) %s(%s) ", g.name, fname, strings.Join(params, ", "))
+		g.printf("func (m *%s) %s(%s) ", g.iface.Name, fname, strings.Join(params, ", "))
 
 		switch len(returs) {
 		case 0:
@@ -159,7 +152,11 @@ func (g *Generator) Generate() error {
 			var ret []string
 
 			for idx, typ := range types {
-				g.printf("\tr%d := m.Get(%d).(%s)\n", idx, idx, typ)
+				if typ == "error" {
+					g.printf("\tr%d := ret.Error(%d)\n", idx, idx)
+				} else {
+					g.printf("\tr%d := ret.Get(%d).(%s)\n", idx, idx, typ)
+				}
 				ret = append(ret, fmt.Sprintf("r%d", idx))
 			}
 
@@ -172,5 +169,16 @@ func (g *Generator) Generate() error {
 		g.printf("}\n")
 	}
 
+	return nil
+}
+
+func (g *Generator) Write(w io.Writer) error {
+	opt := &imports.Options{}
+	res, err := imports.Process("mock.go", g.buf.Bytes(), opt)
+	if err != nil {
+		return err
+	}
+
+	w.Write(res)
 	return nil
 }

@@ -1,31 +1,21 @@
 package mockery
 
 import (
-	"bytes"
 	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func run(g *Generator, name string) error {
-	err := g.Setup(name)
-	if err != nil {
-		return err
-	}
-
-	return g.Generate()
-}
-
 func TestGenerator(t *testing.T) {
 	parser := NewParser()
 	parser.Parse(testFile)
 
-	var out bytes.Buffer
+	iface, err := parser.Find("Requester")
 
-	gen := NewGenerator(parser, &out)
+	gen := NewGenerator(iface)
 
-	err := run(gen, "Requester")
+	err = gen.Generate()
 	assert.NoError(t, err)
 
 	expected := `type Requester struct {
@@ -35,25 +25,25 @@ func TestGenerator(t *testing.T) {
 func (m *Requester) Get(path string) (string, error) {
 	ret := m.Called(path)
 
-	r0 := m.Get(0).(string)
-	r1 := m.Get(1).(error)
+	r0 := ret.Get(0).(string)
+	r1 := ret.Error(1)
 
 	return r0, r1
 }
 `
 
-	assert.Equal(t, expected, out.String())
+	assert.Equal(t, expected, gen.buf.String())
 }
 
 func TestGeneratorSingleReturn(t *testing.T) {
 	parser := NewParser()
 	parser.Parse(testFile2)
 
-	var out bytes.Buffer
+	iface, err := parser.Find("Requester2")
 
-	gen := NewGenerator(parser, &out)
+	gen := NewGenerator(iface)
 
-	err := run(gen, "Requester2")
+	err = gen.Generate()
 	assert.NoError(t, err)
 
 	expected := `type Requester2 struct {
@@ -63,24 +53,24 @@ func TestGeneratorSingleReturn(t *testing.T) {
 func (m *Requester2) Get(path string) error {
 	ret := m.Called(path)
 
-	r0 := m.Get(0).(error)
+	r0 := ret.Error(0)
 
 	return r0
 }
 `
 
-	assert.Equal(t, expected, out.String())
+	assert.Equal(t, expected, gen.buf.String())
 }
 
 func TestGeneratorNoArguments(t *testing.T) {
 	parser := NewParser()
 	parser.Parse(filepath.Join(fixturePath, "requester3.go"))
 
-	var out bytes.Buffer
+	iface, err := parser.Find("Requester3")
 
-	gen := NewGenerator(parser, &out)
+	gen := NewGenerator(iface)
 
-	err := run(gen, "Requester3")
+	err = gen.Generate()
 	assert.NoError(t, err)
 
 	expected := `type Requester3 struct {
@@ -90,24 +80,24 @@ func TestGeneratorNoArguments(t *testing.T) {
 func (m *Requester3) Get() error {
 	ret := m.Called()
 
-	r0 := m.Get(0).(error)
+	r0 := ret.Error(0)
 
 	return r0
 }
 `
 
-	assert.Equal(t, expected, out.String())
+	assert.Equal(t, expected, gen.buf.String())
 }
 
 func TestGeneratorNoNothing(t *testing.T) {
 	parser := NewParser()
 	parser.Parse(filepath.Join(fixturePath, "requester4.go"))
 
-	var out bytes.Buffer
+	iface, err := parser.Find("Requester4")
 
-	gen := NewGenerator(parser, &out)
+	gen := NewGenerator(iface)
 
-	err := run(gen, "Requester4")
+	err = gen.Generate()
 	assert.NoError(t, err)
 
 	expected := `type Requester4 struct {
@@ -119,16 +109,17 @@ func (m *Requester4) Get() {
 }
 `
 
-	assert.Equal(t, expected, out.String())
+	assert.Equal(t, expected, gen.buf.String())
 }
 
 func TestGeneratorPrologue(t *testing.T) {
 	parser := NewParser()
 	parser.Parse(testFile)
 
-	var out bytes.Buffer
+	iface, err := parser.Find("Requester")
+	assert.NoError(t, err)
 
-	gen := NewGenerator(parser, &out)
+	gen := NewGenerator(iface)
 
 	gen.GeneratePrologue()
 
@@ -138,16 +129,17 @@ import "github.com/stretchr/testify/mock"
 
 `
 
-	assert.Equal(t, expected, out.String())
+	assert.Equal(t, expected, gen.buf.String())
 }
 
 func TestGeneratorProloguewithImports(t *testing.T) {
 	parser := NewParser()
 	parser.Parse(filepath.Join(fixturePath, "requester_ns.go"))
 
-	var out bytes.Buffer
+	iface, err := parser.Find("RequesterNS")
+	assert.NoError(t, err)
 
-	gen := NewGenerator(parser, &out)
+	gen := NewGenerator(iface)
 
 	gen.GeneratePrologue()
 
@@ -159,18 +151,20 @@ import "net/http"
 
 `
 
-	assert.Equal(t, expected, out.String())
+	assert.Equal(t, expected, gen.buf.String())
 }
 
 func TestGeneratorPointers(t *testing.T) {
 	parser := NewParser()
 	parser.Parse(filepath.Join(fixturePath, "requester_ptr.go"))
 
-	var out bytes.Buffer
+	iface, err := parser.Find("RequesterPtr")
+	assert.NoError(t, err)
 
-	gen := NewGenerator(parser, &out)
+	gen := NewGenerator(iface)
+	assert.NoError(t, err)
 
-	err := run(gen, "RequesterPtr")
+	err = gen.Generate()
 	assert.NoError(t, err)
 
 	expected := `type RequesterPtr struct {
@@ -180,25 +174,27 @@ func TestGeneratorPointers(t *testing.T) {
 func (m *RequesterPtr) Get(path string) (*string, error) {
 	ret := m.Called(path)
 
-	r0 := m.Get(0).(*string)
-	r1 := m.Get(1).(error)
+	r0 := ret.Get(0).(*string)
+	r1 := ret.Error(1)
 
 	return r0, r1
 }
 `
 
-	assert.Equal(t, expected, out.String())
+	assert.Equal(t, expected, gen.buf.String())
 }
 
 func TestGeneratorSlice(t *testing.T) {
 	parser := NewParser()
 	parser.Parse(filepath.Join(fixturePath, "requester_slice.go"))
 
-	var out bytes.Buffer
+	iface, err := parser.Find("RequesterSlice")
+	assert.NoError(t, err)
 
-	gen := NewGenerator(parser, &out)
+	gen := NewGenerator(iface)
+	assert.NoError(t, err)
 
-	err := run(gen, "RequesterSlice")
+	err = gen.Generate()
 	assert.NoError(t, err)
 
 	expected := `type RequesterSlice struct {
@@ -208,25 +204,27 @@ func TestGeneratorSlice(t *testing.T) {
 func (m *RequesterSlice) Get(path string) ([]string, error) {
 	ret := m.Called(path)
 
-	r0 := m.Get(0).([]string)
-	r1 := m.Get(1).(error)
+	r0 := ret.Get(0).([]string)
+	r1 := ret.Error(1)
 
 	return r0, r1
 }
 `
 
-	assert.Equal(t, expected, out.String())
+	assert.Equal(t, expected, gen.buf.String())
 }
 
 func TestGeneratorArrayLiteralLen(t *testing.T) {
 	parser := NewParser()
 	parser.Parse(filepath.Join(fixturePath, "requester_array.go"))
 
-	var out bytes.Buffer
+	iface, err := parser.Find("RequesterArray")
+	assert.NoError(t, err)
 
-	gen := NewGenerator(parser, &out)
+	gen := NewGenerator(iface)
+	assert.NoError(t, err)
 
-	err := run(gen, "RequesterArray")
+	err = gen.Generate()
 	assert.NoError(t, err)
 
 	expected := `type RequesterArray struct {
@@ -236,25 +234,27 @@ func TestGeneratorArrayLiteralLen(t *testing.T) {
 func (m *RequesterArray) Get(path string) ([2]string, error) {
 	ret := m.Called(path)
 
-	r0 := m.Get(0).([2]string)
-	r1 := m.Get(1).(error)
+	r0 := ret.Get(0).([2]string)
+	r1 := ret.Error(1)
 
 	return r0, r1
 }
 `
 
-	assert.Equal(t, expected, out.String())
+	assert.Equal(t, expected, gen.buf.String())
 }
 
 func TestGeneratorNamespacedTypes(t *testing.T) {
 	parser := NewParser()
 	parser.Parse(filepath.Join(fixturePath, "requester_ns.go"))
 
-	var out bytes.Buffer
+	iface, err := parser.Find("RequesterNS")
+	assert.NoError(t, err)
 
-	gen := NewGenerator(parser, &out)
+	gen := NewGenerator(iface)
+	assert.NoError(t, err)
 
-	err := run(gen, "RequesterNS")
+	err = gen.Generate()
 	assert.NoError(t, err)
 
 	expected := `type RequesterNS struct {
@@ -264,12 +264,12 @@ func TestGeneratorNamespacedTypes(t *testing.T) {
 func (m *RequesterNS) Get(path string) (http.Response, error) {
 	ret := m.Called(path)
 
-	r0 := m.Get(0).(http.Response)
-	r1 := m.Get(1).(error)
+	r0 := ret.Get(0).(http.Response)
+	r1 := ret.Error(1)
 
 	return r0, r1
 }
 `
 
-	assert.Equal(t, expected, out.String())
+	assert.Equal(t, expected, gen.buf.String())
 }

@@ -5,8 +5,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"go/ast"
-
 	"github.com/stretchr/testify/assert"
 )
 
@@ -35,8 +33,15 @@ func TestFileParse(t *testing.T) {
 	node, err := parser.Find("Requester")
 	assert.NoError(t, err)
 	assert.NotNil(t, node)
+}
 
-	_, ok := node.(*ast.InterfaceType)
+func TestFileInterfaces(t *testing.T) {
+	parser := NewParser()
 
-	assert.True(t, ok)
+	err := parser.Parse(testFile)
+	assert.NoError(t, err)
+
+	nodes := parser.Interfaces()
+	assert.Equal(t, 1, len(nodes))
+	assert.Equal(t, "Requester", nodes[0].Name)
 }
