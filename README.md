@@ -4,6 +4,10 @@ mockery
 mockery provides the ability to easily generate mocks for golang interfaces. It removes
 the boilerplate coding required to use mocks.
 
+### Installation
+
+`go install github.com/vektra/mockery`, then `$GOPATH/bin/mockery`
+
 ### Example
 
 Given this is in `string.go`
