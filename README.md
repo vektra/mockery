@@ -12,7 +12,7 @@ the boilerplate coding required to use mocks.
 
 Given this is in `string.go`
 
-```
+```go
 package test
 
 type Stringer interface {
@@ -22,7 +22,7 @@ type Stringer interface {
 
 Run: `mockery -name=Stringer` and the following will be output to `mocks/Stringer.go`:
 
-```
+```go
 package mocks
 
 import "github.com/stretchr/testify/mock"
