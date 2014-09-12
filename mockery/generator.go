@@ -28,6 +28,8 @@ func NewGenerator(iface *Interface) *Generator {
 }
 
 func (g *Generator) GenerateIPPrologue() {
+	g.ip = true
+
 	g.printf("package %s\n\n", g.iface.File.Name)
 
 	g.printf("import \"github.com/stretchr/testify/mock\"\n\n")
@@ -44,8 +46,6 @@ func (g *Generator) GenerateIPPrologue() {
 	}
 
 	g.printf("\n")
-
-	g.ip = true
 }
 
 func (g *Generator) mockName() string {
@@ -168,7 +168,7 @@ func (g *Generator) typeString(typ ast.Expr) string {
 	}
 }
 
-func (g *Generator) genList(list *ast.FieldList) ([]string, []string, []string) {
+func (g *Generator) genList(list *ast.FieldList, addNames bool) ([]string, []string, []string) {
 	var (
 		params []string
 		names  []string
@@ -179,19 +179,25 @@ func (g *Generator) genList(list *ast.FieldList) ([]string, []string, []string) 
 		return params, names, types
 	}
 
-	for _, param := range list.List {
+	for idx, param := range list.List {
 		ts := g.typeString(param.Type)
 
-		if len(param.Names) == 0 {
-			names = append(names, "")
-			types = append(types, ts)
-			params = append(params, ts)
-		} else {
-			pname := param.Names[0].Name
+		var pname string
+
+		if addNames {
+			if len(param.Names) == 0 {
+				pname = fmt.Sprintf("_a%d", idx)
+			} else {
+				pname = param.Names[0].Name
+			}
 
 			names = append(names, pname)
 			types = append(types, ts)
 			params = append(params, fmt.Sprintf("%s %s", pname, ts))
+		} else {
+			names = append(names, "")
+			types = append(types, ts)
+			params = append(params, ts)
 		}
 	}
 
@@ -215,8 +221,8 @@ func (g *Generator) Generate() error {
 
 		fname := method.Names[0].Name
 
-		names, _, params := g.genList(ftype.Params)
-		_, types, returs := g.genList(ftype.Results)
+		names, _, params := g.genList(ftype.Params, true)
+		_, types, returs := g.genList(ftype.Results, false)
 
 		g.printf("func (m *%s) %s(%s) ", g.mockName(), fname, strings.Join(params, ", "))
 

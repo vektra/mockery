@@ -275,3 +275,34 @@ func (m *RequesterNS) Get(path string) (http.Response, error) {
 
 	assert.Equal(t, expected, gen.buf.String())
 }
+
+func TestGeneratorHavingNoNamesOnArguments(t *testing.T) {
+	parser := NewParser()
+
+	parser.Parse(filepath.Join(fixturePath, "custom_error.go"))
+
+	iface, err := parser.Find("KeyManager")
+	assert.NoError(t, err)
+
+	gen := NewGenerator(iface)
+	assert.NoError(t, err)
+
+	err = gen.Generate()
+	assert.NoError(t, err)
+
+	expected := `type KeyManager struct {
+	mock.Mock
+}
+
+func (m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *interfaces.Err) {
+	ret := m.Called(_a0, _a1)
+
+	r0 := ret.Get(0).([]byte)
+	r1 := ret.Get(1).(*interfaces.Err)
+
+	return r0, r1
+}
+`
+
+	assert.Equal(t, expected, gen.buf.String())
+}

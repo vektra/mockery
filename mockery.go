@@ -186,5 +186,9 @@ func genMock(iface *mockery.Interface) {
 		os.Exit(1)
 	}
 
-	gen.Write(out)
+	err = gen.Write(out)
+	if err != nil {
+		fmt.Printf("Error writing %s: %s\n", name, err)
+		os.Exit(1)
+	}
 }
