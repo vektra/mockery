@@ -187,13 +187,19 @@ func (g *Generator) genList(list *ast.FieldList, addNames bool) ([]string, []str
 		if addNames {
 			if len(param.Names) == 0 {
 				pname = fmt.Sprintf("_a%d", idx)
-			} else {
-				pname = param.Names[0].Name
+				names = append(names, pname)
+				types = append(types, ts)
+				params = append(params, fmt.Sprintf("%s %s", pname, ts))
+
+				continue
 			}
 
-			names = append(names, pname)
-			types = append(types, ts)
-			params = append(params, fmt.Sprintf("%s %s", pname, ts))
+			for _, name := range param.Names {
+				pname = name.Name
+				names = append(names, pname)
+				types = append(types, ts)
+				params = append(params, fmt.Sprintf("%s %s", pname, ts))
+			}
 		} else {
 			names = append(names, "")
 			types = append(types, ts)

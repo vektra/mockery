@@ -306,3 +306,30 @@ func (m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *interfaces.Err) {
 
 	assert.Equal(t, expected, gen.buf.String())
 }
+
+func TestGeneratorElidedType(t *testing.T) {
+	parser := NewParser()
+	parser.Parse(filepath.Join(fixturePath, "requester_elided.go"))
+
+	iface, err := parser.Find("RequesterElided")
+
+	gen := NewGenerator(iface)
+
+	err = gen.Generate()
+	assert.NoError(t, err)
+
+	expected := `type RequesterElided struct {
+	mock.Mock
+}
+
+func (m *RequesterElided) Get(path string, url string) error {
+	ret := m.Called(path, url)
+
+	r0 := ret.Error(0)
+
+	return r0
+}
+`
+
+	assert.Equal(t, expected, gen.buf.String())
+}
