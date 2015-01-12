@@ -9,7 +9,6 @@ import (
 
 type Parser struct {
 	file *ast.File
-	fset *token.FileSet
 	path string
 }
 
@@ -34,7 +33,6 @@ func (p *Parser) Parse(path string) error {
 
 	p.path = abs
 	p.file = f
-	p.fset = fset
 	return nil
 }
 
@@ -45,7 +43,7 @@ func (p *Parser) Find(name string) (*Interface, error) {
 				if typespec, ok := spec.(*ast.TypeSpec); ok {
 					if typespec.Name.Name == name {
 						if iface, ok := typespec.Type.(*ast.InterfaceType); ok {
-							return &Interface{name, p.path, p.file, iface, p.fset}, nil
+							return &Interface{name, p.path, p.file, iface}, nil
 						} else {
 							return nil, ErrNotInterface
 						}
@@ -62,7 +60,6 @@ type Interface struct {
 	Path string
 	File *ast.File
 	Type *ast.InterfaceType
-	FSet *token.FileSet
 }
 
 func (p *Parser) Interfaces() []*Interface {
@@ -73,10 +70,7 @@ func (p *Parser) Interfaces() []*Interface {
 			for _, spec := range gen.Specs {
 				if typespec, ok := spec.(*ast.TypeSpec); ok {
 					if iface, ok := typespec.Type.(*ast.InterfaceType); ok {
-						ifaces = append(
-							ifaces,
-							&Interface{typespec.Name.Name, p.path, p.file, iface, p.fset},
-						)
+						ifaces = append(ifaces, &Interface{typespec.Name.Name, p.path, p.file, iface})
 					}
 				}
 			}
