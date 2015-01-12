@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"go/ast"
+	"go/printer"
 	"io"
 	"os"
 	"path/filepath"
@@ -90,82 +91,15 @@ func (g *Generator) printf(s string, vals ...interface{}) {
 	fmt.Fprintf(&g.buf, s, vals...)
 }
 
-var builtinTypes = map[string]bool{
-	"ComplexType": true,
-	"FloatType":   true,
-	"IntegerType": true,
-	"Type":        true,
-	"Type1":       true,
-	"bool":        true,
-	"byte":        true,
-	"complex128":  true,
-	"complex64":   true,
-	"error":       true,
-	"float32":     true,
-	"float64":     true,
-	"int":         true,
-	"int16":       true,
-	"int32":       true,
-	"int64":       true,
-	"int8":        true,
-	"rune":        true,
-	"string":      true,
-	"uint":        true,
-	"uint16":      true,
-	"uint32":      true,
-	"uint64":      true,
-	"uint8":       true,
-	"uintptr":     true,
-}
-
 func (g *Generator) typeString(typ ast.Expr) string {
-	switch specific := typ.(type) {
-	case *ast.Ident:
-		if g.ip {
-			return specific.Name
-		}
+	var buf bytes.Buffer
 
-		_, isBuiltin := builtinTypes[specific.Name]
-		if isBuiltin {
-			return specific.Name
-		}
-
-		return g.iface.File.Name.Name + "." + specific.Name
-	case *ast.StarExpr:
-		return "*" + g.typeString(specific.X)
-	case *ast.ArrayType:
-		if specific.Len == nil {
-			return "[]" + g.typeString(specific.Elt)
-		} else {
-			var l string
-
-			switch ls := specific.Len.(type) {
-			case *ast.BasicLit:
-				l = ls.Value
-			default:
-				panic(fmt.Sprintf("unable to figure out array length: %#v", specific.Len))
-			}
-			return "[" + l + "]" + g.typeString(specific.Elt)
-		}
-	case *ast.SelectorExpr:
-		if ident, ok := specific.X.(*ast.Ident); ok {
-			return ident.Name + "." + specific.Sel.Name
-		} else {
-			panic(fmt.Sprintf("strange selector expr encountered: %#v", specific))
-		}
-	case *ast.InterfaceType:
-		if len(specific.Methods.List) == 0 {
-			return "interface{}"
-		} else {
-			panic(fmt.Sprintf("unable to handle this interface type: %#v", specific))
-		}
-	case *ast.MapType:
-		return "map[" + g.typeString(specific.Key) + "]" + g.typeString(specific.Value)
-	case *ast.Ellipsis:
-		return "..." + g.typeString(specific.Elt)
-	default:
-		panic(fmt.Sprintf("unable to handle type: %#v", typ))
+	err := printer.Fprint(&buf, g.iface.FSet, typ)
+	if err != nil {
+		panic(err)
 	}
+
+	return buf.String()
 }
 
 func (g *Generator) genList(list *ast.FieldList, addNames bool) ([]string, []string, []string) {

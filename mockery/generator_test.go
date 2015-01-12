@@ -294,11 +294,11 @@ func TestGeneratorHavingNoNamesOnArguments(t *testing.T) {
 	mock.Mock
 }
 
-func (m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *interfaces.Err) {
+func (m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *Err) {
 	ret := m.Called(_a0, _a1)
 
 	r0 := ret.Get(0).([]byte)
-	r1 := ret.Get(1).(*interfaces.Err)
+	r1 := ret.Get(1).(*Err)
 
 	return r0, r1
 }
@@ -324,6 +324,33 @@ func TestGeneratorElidedType(t *testing.T) {
 
 func (m *RequesterElided) Get(path string, url string) error {
 	ret := m.Called(path, url)
+
+	r0 := ret.Error(0)
+
+	return r0
+}
+`
+
+	assert.Equal(t, expected, gen.buf.String())
+}
+
+func TestGeneratorFuncType(t *testing.T) {
+	parser := NewParser()
+	parser.Parse(filepath.Join(fixturePath, "func_type.go"))
+
+	iface, err := parser.Find("Fooer")
+
+	gen := NewGenerator(iface)
+
+	err = gen.Generate()
+	assert.NoError(t, err)
+
+	expected := `type Fooer struct {
+	mock.Mock
+}
+
+func (m *Fooer) Foo(f func(x string) string) error {
+	ret := m.Called(f)
 
 	r0 := ret.Error(0)
 
