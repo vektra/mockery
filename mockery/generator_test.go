@@ -333,3 +333,30 @@ func (m *RequesterElided) Get(path string, url string) error {
 
 	assert.Equal(t, expected, gen.buf.String())
 }
+
+func TestGeneratorFuncType(t *testing.T) {
+	parser := NewParser()
+	parser.Parse(filepath.Join(fixturePath, "func_type.go"))
+
+	iface, err := parser.Find("Fooer")
+
+	gen := NewGenerator(iface)
+
+	err = gen.Generate()
+	assert.NoError(t, err)
+
+	expected := `type Fooer struct {
+	mock.Mock
+}
+
+func (m *Fooer) Foo(f func(string) string) error {
+	ret := m.Called(f)
+
+	r0 := ret.Error(0)
+
+	return r0
+}
+`
+
+	assert.Equal(t, expected, gen.buf.String())
+}

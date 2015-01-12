@@ -163,9 +163,36 @@ func (g *Generator) typeString(typ ast.Expr) string {
 		return "map[" + g.typeString(specific.Key) + "]" + g.typeString(specific.Value)
 	case *ast.Ellipsis:
 		return "..." + g.typeString(specific.Elt)
+	case *ast.FuncType:
+		return "func(" + g.typeFieldList(specific.Params, false) + ") " + g.typeFieldList(specific.Results, true)
 	default:
 		panic(fmt.Sprintf("unable to handle type: %#v", typ))
 	}
+}
+
+func (g *Generator) typeFieldList(fl *ast.FieldList, optParen bool) string {
+	var list []string
+
+	for _, field := range fl.List {
+		cnt := len(field.Names)
+		if cnt == 0 {
+			cnt = 1
+		}
+
+		for i := 0; i < cnt; i++ {
+			list = append(list, g.typeString(field.Type))
+		}
+	}
+
+	if optParen {
+		if len(list) == 1 {
+			return list[0]
+		}
+
+		return "(" + strings.Join(list, ", ") + ")"
+	}
+
+	return strings.Join(list, ", ")
 }
 
 func (g *Generator) genList(list *ast.FieldList, addNames bool) ([]string, []string, []string) {
