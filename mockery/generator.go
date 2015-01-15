@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"code.google.com/p/go.tools/imports"
+	"golang.org/x/tools/imports"
 
 	"github.com/vektra/errors"
 )
