@@ -356,6 +356,9 @@ func (m *Fooer) Foo(f func(string) string) error {
 
 	return r0
 }
+func (m *Fooer) Bar(f func([]int) ) {
+	m.Called(f)
+}
 `
 
 	assert.Equal(t, expected, gen.buf.String())

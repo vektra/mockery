@@ -173,6 +173,9 @@ func (g *Generator) typeString(typ ast.Expr) string {
 func (g *Generator) typeFieldList(fl *ast.FieldList, optParen bool) string {
 	var list []string
 
+	if fl == nil {
+		return ""
+	}
 	for _, field := range fl.List {
 		cnt := len(field.Names)
 		if cnt == 0 {
