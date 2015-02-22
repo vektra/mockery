@@ -1,4 +1,4 @@
-package interfaces
+package test
 
 type Err struct {
 	msg  string
