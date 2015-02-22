@@ -294,11 +294,11 @@ func TestGeneratorHavingNoNamesOnArguments(t *testing.T) {
 	mock.Mock
 }
 
-func (m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *interfaces.Err) {
+func (m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 	ret := m.Called(_a0, _a1)
 
 	r0 := ret.Get(0).([]byte)
-	r1 := ret.Get(1).(*interfaces.Err)
+	r1 := ret.Get(1).(*test.Err)
 
 	return r0, r1
 }
