@@ -165,6 +165,15 @@ func (g *Generator) typeString(typ ast.Expr) string {
 		return "..." + g.typeString(specific.Elt)
 	case *ast.FuncType:
 		return "func(" + g.typeFieldList(specific.Params, false) + ") " + g.typeFieldList(specific.Results, true)
+	case *ast.ChanType:
+		switch specific.Dir {
+		case ast.SEND:
+			return "chan<- " + g.typeString(specific.Value)
+		case ast.RECV:
+			return "<-chan " + g.typeString(specific.Value)
+		default:
+			return "chan " + g.typeString(specific.Value)
+		}
 	default:
 		panic(fmt.Sprintf("unable to handle type: %#v", typ))
 	}

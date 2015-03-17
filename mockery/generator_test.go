@@ -363,3 +363,44 @@ func (m *Fooer) Bar(f func([]int) ) {
 
 	assert.Equal(t, expected, gen.buf.String())
 }
+
+func TestGeneratorChanType(t *testing.T) {
+	parser := NewParser()
+	parser.Parse(filepath.Join(fixturePath, "async.go"))
+
+	iface, err := parser.Find("AsyncProducer")
+
+	gen := NewGenerator(iface)
+
+	err = gen.Generate()
+	assert.NoError(t, err)
+
+	expected := `type AsyncProducer struct {
+	mock.Mock
+}
+
+func (m *AsyncProducer) Input() chan<- bool {
+	ret := m.Called()
+
+	r0 := ret.Get(0).(chan<- bool)
+
+	return r0
+}
+func (m *AsyncProducer) Output() <-chan bool {
+	ret := m.Called()
+
+	r0 := ret.Get(0).(<-chan bool)
+
+	return r0
+}
+func (m *AsyncProducer) Whatever() chan bool {
+	ret := m.Called()
+
+	r0 := ret.Get(0).(chan bool)
+
+	return r0
+}
+`
+
+	assert.Equal(t, expected, gen.buf.String())
+}
