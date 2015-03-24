@@ -176,7 +176,10 @@ func TestGeneratorPointers(t *testing.T) {
 func (m *RequesterPtr) Get(path string) (*string, error) {
 	ret := m.Called(path)
 
-	r0 := ret.Get(0).(*string)
+	var r0 *string
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).(*string)
+	}
 	r1 := ret.Error(1)
 
 	return r0, r1
@@ -298,7 +301,10 @@ func (m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 	ret := m.Called(_a0, _a1)
 
 	r0 := ret.Get(0).([]byte)
-	r1 := ret.Get(1).(*test.Err)
+	var r1 *test.Err
+	if ret.Get(1) != nil {
+		r1 = ret.Get(1).(*test.Err)
+	}
 
 	return r0, r1
 }
