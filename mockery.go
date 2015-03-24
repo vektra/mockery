@@ -114,7 +114,7 @@ func mockAll() {
 
 func mockFor(name string) {
 	if name == "" {
-		fmt.Fprintf(os.Stderr, "Use -name to specify the name of the interface")
+		fmt.Fprintf(os.Stderr, "Use -name to specify the name of the interface\n")
 		os.Exit(1)
 	}
 

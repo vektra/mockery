@@ -288,6 +288,11 @@ func (g *Generator) Generate() error {
 			for idx, typ := range types {
 				if typ == "error" {
 					g.printf("\tr%d := ret.Error(%d)\n", idx, idx)
+				} else if _, ok := ftype.Results.List[idx].Type.(*ast.StarExpr); ok {
+					g.printf("\tvar r%d %s\n", idx, typ)
+					g.printf("\tif ret.Get(%d) != nil {\n", idx)
+					g.printf("\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
+					g.printf("\t}\n")
 				} else {
 					g.printf("\tr%d := ret.Get(%d).(%s)\n", idx, idx, typ)
 				}
