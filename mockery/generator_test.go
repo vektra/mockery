@@ -209,7 +209,10 @@ func TestGeneratorSlice(t *testing.T) {
 func (m *RequesterSlice) Get(path string) ([]string, error) {
 	ret := m.Called(path)
 
-	r0 := ret.Get(0).([]string)
+	var r0 []string
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).([]string)
+	}
 	r1 := ret.Error(1)
 
 	return r0, r1
@@ -239,7 +242,10 @@ func TestGeneratorArrayLiteralLen(t *testing.T) {
 func (m *RequesterArray) Get(path string) ([2]string, error) {
 	ret := m.Called(path)
 
-	r0 := ret.Get(0).([2]string)
+	var r0 [2]string
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).([2]string)
+	}
 	r1 := ret.Error(1)
 
 	return r0, r1
@@ -300,7 +306,10 @@ func TestGeneratorHavingNoNamesOnArguments(t *testing.T) {
 func (m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 	ret := m.Called(_a0, _a1)
 
-	r0 := ret.Get(0).([]byte)
+	var r0 []byte
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).([]byte)
+	}
 	var r1 *test.Err
 	if ret.Get(1) != nil {
 		r1 = ret.Get(1).(*test.Err)
@@ -388,21 +397,30 @@ func TestGeneratorChanType(t *testing.T) {
 func (m *AsyncProducer) Input() chan<- bool {
 	ret := m.Called()
 
-	r0 := ret.Get(0).(chan<- bool)
+	var r0 chan<- bool
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).(chan<- bool)
+	}
 
 	return r0
 }
 func (m *AsyncProducer) Output() <-chan bool {
 	ret := m.Called()
 
-	r0 := ret.Get(0).(<-chan bool)
+	var r0 <-chan bool
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).(<-chan bool)
+	}
 
 	return r0
 }
 func (m *AsyncProducer) Whatever() chan bool {
 	ret := m.Called()
 
-	r0 := ret.Get(0).(chan bool)
+	var r0 chan bool
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).(chan bool)
+	}
 
 	return r0
 }
