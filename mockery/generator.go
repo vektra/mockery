@@ -279,7 +279,6 @@ func (g *Generator) Generate() error {
 		default:
 			g.printf("(%s) {\n", strings.Join(returs, ", "))
 		}
-
 		if len(types) > 0 {
 			g.printf("\tret := m.Called(%s)\n\n", strings.Join(names, ", "))
 
@@ -288,7 +287,7 @@ func (g *Generator) Generate() error {
 			for idx, typ := range types {
 				if typ == "error" {
 					g.printf("\tr%d := ret.Error(%d)\n", idx, idx)
-				} else if _, ok := ftype.Results.List[idx].Type.(*ast.StarExpr); ok {
+				} else if g.isNillable(ftype.Results.List[idx].Type) {
 					g.printf("\tvar r%d %s\n", idx, typ)
 					g.printf("\tif ret.Get(%d) != nil {\n", idx)
 					g.printf("\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
@@ -309,6 +308,14 @@ func (g *Generator) Generate() error {
 	}
 
 	return nil
+}
+
+func (g *Generator) isNillable(typ ast.Expr) bool {
+	switch typ.(type) {
+	case *ast.StarExpr, *ast.ArrayType, *ast.MapType, *ast.InterfaceType, *ast.FuncType, *ast.ChanType:
+		return true
+	}
+	return false
 }
 
 func (g *Generator) Write(w io.Writer) error {
