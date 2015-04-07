@@ -112,6 +112,30 @@ func (m *Requester4) Get() {
 	assert.Equal(t, expected, gen.buf.String())
 }
 
+func TestGeneratorUnexported(t *testing.T) {
+	parser := NewParser()
+	parser.Parse(filepath.Join(fixturePath, "requester_unexported.go"))
+
+	iface, err := parser.Find("requester")
+
+	gen := NewGenerator(iface)
+	gen.ip = true
+
+	err = gen.Generate()
+	assert.NoError(t, err)
+
+	expected := `type mockRequester struct {
+	mock.Mock
+}
+
+func (m *mockRequester) Get() {
+	m.Called()
+}
+`
+
+	assert.Equal(t, expected, gen.buf.String())
+}
+
 func TestGeneratorPrologue(t *testing.T) {
 	parser := NewParser()
 	parser.Parse(testFile)
