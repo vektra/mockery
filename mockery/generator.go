@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"unicode"
 
 	"golang.org/x/tools/imports"
 
@@ -50,7 +51,18 @@ func (g *Generator) GenerateIPPrologue() {
 
 func (g *Generator) mockName() string {
 	if g.ip {
-		return "Mock" + g.iface.Name
+		if ast.IsExported(g.iface.Name) {
+			return "Mock" + g.iface.Name
+		} else {
+			first := true
+			return "mock" + strings.Map(func(r rune) rune {
+				if first {
+					first = false
+					return unicode.ToUpper(r)
+				}
+				return r
+			}, g.iface.Name)
+		}
 	}
 
 	return g.iface.Name
