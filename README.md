@@ -43,7 +43,7 @@ func (m *Stringer) String() string {
 ### Imports
 
 mockery pulls in all the same imports used in the file that contains the interface so
-that package types will work correctly. It then runs the output through the `imports` 
+that package types will work correctly. It then runs the output through the `imports`
 package to remove any unnecessary imports (as they'd result in compile errors).
 
 ### Types
@@ -66,3 +66,8 @@ You can control which mocks directory is used by using `-output`, which defaults
 ### Debug
 
 Use `mockery -print` to have the resulting code printed out instead of written to disk.
+
+### Mocking interfaces in `main`
+
+When your interfaces are in the main package you should supply the `-inpkg` flag.
+This will generate mocks in the same package as the target code avoiding import issues.
