@@ -167,9 +167,9 @@ func genMock(iface *mockery.Interface) {
 		var path string
 
 		if *fIP {
-			path = filepath.Join(filepath.Dir(iface.Path), "mock_"+caseName+".go")
+			path = filepath.Join(filepath.Dir(iface.Path), filename(name, *fIP))
 		} else {
-			path = filepath.Join(*fOutput, caseName+".go")
+			path = filepath.Join(*fOutput, filename(name, *fIP))
 			os.MkdirAll(filepath.Dir(path), 0755)
 			pkg = filepath.Base(filepath.Dir(path))
 		}
@@ -216,4 +216,13 @@ func underscoreCaseName(caseName string) string {
 	s1 := rxp1.ReplaceAllString(caseName, "${1}_${2}")
 	rxp2 := regexp.MustCompile("([a-z0-9])([A-Z])")
 	return strings.ToLower(rxp2.ReplaceAllString(s1, "${1}_${2}"))
+}
+
+func filename(name string, ip bool) string {
+	name = strings.ToLower(name)
+	if ip {
+		return "mock_" + name + "_test.go"
+	} else {
+		return name + ".go"
+	}
 }
