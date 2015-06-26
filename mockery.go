@@ -33,9 +33,13 @@ func checkDir(p *mockery.Parser, dir, name string) bool {
 		path := filepath.Join(dir, file.Name())
 
 		if file.IsDir() {
-			ret := checkDir(p, path, name)
-			if ret {
-				return true
+			if *fAll {
+				ret := checkDir(p, path, name)
+				if ret {
+					return true
+				}
+			} else {
+				continue
 			}
 		}
 
@@ -85,7 +89,9 @@ func walkDir(dir string) {
 		path := filepath.Join(dir, file.Name())
 
 		if file.IsDir() {
-			walkDir(path)
+			if *fAll {
+				walkDir(path)
+			}
 			continue
 		}
 
