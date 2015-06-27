@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/vektra/mockery/mockery"
@@ -18,6 +19,7 @@ var fOutput = flag.String("output", "./mocks", "directory to write mocks to")
 var fDir = flag.String("dir", ".", "directory to search for interfaces")
 var fAll = flag.Bool("all", false, "generates mocks for all found interfaces")
 var fIP = flag.Bool("inpkg", false, "generate a mock that goes inside the original package")
+var fCase = flag.String("case", "camel", "name the mocked file using casing convention")
 
 func checkDir(p *mockery.Parser, dir, name string) bool {
 	files, err := ioutil.ReadDir(dir)
@@ -152,6 +154,11 @@ func genMock(iface *mockery.Interface) {
 	var out io.Writer
 
 	name := iface.Name
+	caseName := iface.Name
+	if *fCase == "underscore" {
+		rxp := regexp.MustCompile("(.)([A-Z])")
+		caseName = strings.ToLower(rxp.ReplaceAllString(caseName, "$1_$2"))
+	}
 
 	if *fPrint {
 		out = os.Stdout
@@ -159,9 +166,9 @@ func genMock(iface *mockery.Interface) {
 		var path string
 
 		if *fIP {
-			path = filepath.Join(filepath.Dir(iface.Path), "mock_"+name+".go")
+			path = filepath.Join(filepath.Dir(iface.Path), "mock_"+caseName+".go")
 		} else {
-			path = filepath.Join(*fOutput, name+".go")
+			path = filepath.Join(*fOutput, caseName+".go")
 			os.MkdirAll(filepath.Dir(path), 0755)
 		}
 

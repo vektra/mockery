@@ -63,6 +63,12 @@ and generates mocks for any interfaces it finds.
 mockery always generates files with the package `mocks` to keep things clean and simple.
 You can control which mocks directory is used by using `-output`, which defaults to `./mocks`.
 
+## Caseing
+
+mockery generates files using the caseing of the original interface name.  This
+can be modified by specifying `-case=underscore` to format the generated file
+name using underscore casing.
+
 ### Debug
 
 Use `mockery -print` to have the resulting code printed out instead of written to disk.
