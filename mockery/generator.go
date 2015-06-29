@@ -68,8 +68,8 @@ func (g *Generator) mockName() string {
 	return g.iface.Name
 }
 
-func (g *Generator) GeneratePrologue() {
-	g.printf("package mocks\n\n")
+func (g *Generator) GeneratePrologue(pkg string) {
+	g.printf("package %v\n\n", pkg)
 
 	goPath := os.Getenv("GOPATH")
 
