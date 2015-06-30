@@ -25,8 +25,19 @@ func TestGenerator(t *testing.T) {
 func (m *Requester) Get(path string) (string, error) {
 	ret := m.Called(path)
 
-	r0 := ret.Get(0).(string)
-	r1 := ret.Error(1)
+	var r0 string
+	if rf, ok := ret.Get(0).(func(string) string); ok {
+		r0 = rf(path)
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(path)
+	} else {
+		r1 = ret.Error(1)
+	}
 
 	return r0, r1
 }
@@ -53,7 +64,12 @@ func TestGeneratorSingleReturn(t *testing.T) {
 func (m *Requester2) Get(path string) error {
 	ret := m.Called(path)
 
-	r0 := ret.Error(0)
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string) error); ok {
+		r0 = rf(path)
+	} else {
+		r0 = ret.Error(0)
+	}
 
 	return r0
 }
@@ -80,7 +96,12 @@ func TestGeneratorNoArguments(t *testing.T) {
 func (m *Requester3) Get() error {
 	ret := m.Called()
 
-	r0 := ret.Error(0)
+	var r0 error
+	if rf, ok := ret.Get(0).(func() error); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Error(0)
+	}
 
 	return r0
 }
@@ -145,7 +166,7 @@ func TestGeneratorPrologue(t *testing.T) {
 
 	gen := NewGenerator(iface)
 
-	gen.GeneratePrologue()
+	gen.GeneratePrologue("mocks")
 
 	expected := `package mocks
 
@@ -166,7 +187,7 @@ func TestGeneratorProloguewithImports(t *testing.T) {
 
 	gen := NewGenerator(iface)
 
-	gen.GeneratePrologue()
+	gen.GeneratePrologue("mocks")
 
 	expected := `package mocks
 
@@ -201,10 +222,20 @@ func (m *RequesterPtr) Get(path string) (*string, error) {
 	ret := m.Called(path)
 
 	var r0 *string
-	if ret.Get(0) != nil {
-		r0 = ret.Get(0).(*string)
+	if rf, ok := ret.Get(0).(func(string) *string); ok {
+		r0 = rf(path)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*string)
+		}
 	}
-	r1 := ret.Error(1)
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(path)
+	} else {
+		r1 = ret.Error(1)
+	}
 
 	return r0, r1
 }
@@ -234,10 +265,20 @@ func (m *RequesterSlice) Get(path string) ([]string, error) {
 	ret := m.Called(path)
 
 	var r0 []string
-	if ret.Get(0) != nil {
-		r0 = ret.Get(0).([]string)
+	if rf, ok := ret.Get(0).(func(string) []string); ok {
+		r0 = rf(path)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
+		}
 	}
-	r1 := ret.Error(1)
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(path)
+	} else {
+		r1 = ret.Error(1)
+	}
 
 	return r0, r1
 }
@@ -267,10 +308,20 @@ func (m *RequesterArray) Get(path string) ([2]string, error) {
 	ret := m.Called(path)
 
 	var r0 [2]string
-	if ret.Get(0) != nil {
-		r0 = ret.Get(0).([2]string)
+	if rf, ok := ret.Get(0).(func(string) [2]string); ok {
+		r0 = rf(path)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([2]string)
+		}
 	}
-	r1 := ret.Error(1)
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(path)
+	} else {
+		r1 = ret.Error(1)
+	}
 
 	return r0, r1
 }
@@ -299,8 +350,19 @@ func TestGeneratorNamespacedTypes(t *testing.T) {
 func (m *RequesterNS) Get(path string) (http.Response, error) {
 	ret := m.Called(path)
 
-	r0 := ret.Get(0).(http.Response)
-	r1 := ret.Error(1)
+	var r0 http.Response
+	if rf, ok := ret.Get(0).(func(string) http.Response); ok {
+		r0 = rf(path)
+	} else {
+		r0 = ret.Get(0).(http.Response)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(path)
+	} else {
+		r1 = ret.Error(1)
+	}
 
 	return r0, r1
 }
@@ -331,12 +393,21 @@ func (m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 	ret := m.Called(_a0, _a1)
 
 	var r0 []byte
-	if ret.Get(0) != nil {
-		r0 = ret.Get(0).([]byte)
+	if rf, ok := ret.Get(0).(func(string, uint16) []byte); ok {
+		r0 = rf(_a0, _a1)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]byte)
+		}
 	}
+
 	var r1 *test.Err
-	if ret.Get(1) != nil {
-		r1 = ret.Get(1).(*test.Err)
+	if rf, ok := ret.Get(1).(func(string, uint16) *test.Err); ok {
+		r1 = rf(_a0, _a1)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*test.Err)
+		}
 	}
 
 	return r0, r1
@@ -364,7 +435,12 @@ func TestGeneratorElidedType(t *testing.T) {
 func (m *RequesterElided) Get(path string, url string) error {
 	ret := m.Called(path, url)
 
-	r0 := ret.Error(0)
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, string) error); ok {
+		r0 = rf(path, url)
+	} else {
+		r0 = ret.Error(0)
+	}
 
 	return r0
 }
@@ -391,12 +467,31 @@ func TestGeneratorFuncType(t *testing.T) {
 func (m *Fooer) Foo(f func(string) string) error {
 	ret := m.Called(f)
 
-	r0 := ret.Error(0)
+	var r0 error
+	if rf, ok := ret.Get(0).(func(func(string) string) error); ok {
+		r0 = rf(f)
+	} else {
+		r0 = ret.Error(0)
+	}
 
 	return r0
 }
 func (m *Fooer) Bar(f func([]int) ) {
 	m.Called(f)
+}
+func (m *Fooer) Baz(path string) func(string) string {
+	ret := m.Called(path)
+
+	var r0 func(string) string
+	if rf, ok := ret.Get(0).(func(string) func(string) string); ok {
+		r0 = rf(path)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(func(string) string)
+		}
+	}
+
+	return r0
 }
 `
 
@@ -422,8 +517,12 @@ func (m *AsyncProducer) Input() chan<- bool {
 	ret := m.Called()
 
 	var r0 chan<- bool
-	if ret.Get(0) != nil {
-		r0 = ret.Get(0).(chan<- bool)
+	if rf, ok := ret.Get(0).(func() chan<- bool); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(chan<- bool)
+		}
 	}
 
 	return r0
@@ -432,8 +531,12 @@ func (m *AsyncProducer) Output() <-chan bool {
 	ret := m.Called()
 
 	var r0 <-chan bool
-	if ret.Get(0) != nil {
-		r0 = ret.Get(0).(<-chan bool)
+	if rf, ok := ret.Get(0).(func() <-chan bool); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(<-chan bool)
+		}
 	}
 
 	return r0
@@ -442,8 +545,12 @@ func (m *AsyncProducer) Whatever() chan bool {
 	ret := m.Called()
 
 	var r0 chan bool
-	if ret.Get(0) != nil {
-		r0 = ret.Get(0).(chan bool)
+	if rf, ok := ret.Get(0).(func() chan bool); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(chan bool)
+		}
 	}
 
 	return r0
