@@ -22,8 +22,8 @@ func TestGenerator(t *testing.T) {
 	mock.Mock
 }
 
-func (m *Requester) Get(path string) (string, error) {
-	ret := m.Called(path)
+func (_m *Requester) Get(path string) (string, error) {
+	ret := _m.Called(path)
 
 	r0 := ret.Get(0).(string)
 	r1 := ret.Error(1)
@@ -50,8 +50,8 @@ func TestGeneratorSingleReturn(t *testing.T) {
 	mock.Mock
 }
 
-func (m *Requester2) Get(path string) error {
-	ret := m.Called(path)
+func (_m *Requester2) Get(path string) error {
+	ret := _m.Called(path)
 
 	r0 := ret.Error(0)
 
@@ -77,8 +77,8 @@ func TestGeneratorNoArguments(t *testing.T) {
 	mock.Mock
 }
 
-func (m *Requester3) Get() error {
-	ret := m.Called()
+func (_m *Requester3) Get() error {
+	ret := _m.Called()
 
 	r0 := ret.Error(0)
 
@@ -104,8 +104,8 @@ func TestGeneratorNoNothing(t *testing.T) {
 	mock.Mock
 }
 
-func (m *Requester4) Get() {
-	m.Called()
+func (_m *Requester4) Get() {
+	_m.Called()
 }
 `
 
@@ -173,8 +173,8 @@ func TestGeneratorPointers(t *testing.T) {
 	mock.Mock
 }
 
-func (m *RequesterPtr) Get(path string) (*string, error) {
-	ret := m.Called(path)
+func (_m *RequesterPtr) Get(path string) (*string, error) {
+	ret := _m.Called(path)
 
 	r0 := ret.Get(0).(*string)
 	r1 := ret.Error(1)
@@ -203,8 +203,8 @@ func TestGeneratorSlice(t *testing.T) {
 	mock.Mock
 }
 
-func (m *RequesterSlice) Get(path string) ([]string, error) {
-	ret := m.Called(path)
+func (_m *RequesterSlice) Get(path string) ([]string, error) {
+	ret := _m.Called(path)
 
 	r0 := ret.Get(0).([]string)
 	r1 := ret.Error(1)
@@ -233,8 +233,8 @@ func TestGeneratorArrayLiteralLen(t *testing.T) {
 	mock.Mock
 }
 
-func (m *RequesterArray) Get(path string) ([2]string, error) {
-	ret := m.Called(path)
+func (_m *RequesterArray) Get(path string) ([2]string, error) {
+	ret := _m.Called(path)
 
 	r0 := ret.Get(0).([2]string)
 	r1 := ret.Error(1)
@@ -263,8 +263,8 @@ func TestGeneratorNamespacedTypes(t *testing.T) {
 	mock.Mock
 }
 
-func (m *RequesterNS) Get(path string) (http.Response, error) {
-	ret := m.Called(path)
+func (_m *RequesterNS) Get(path string) (http.Response, error) {
+	ret := _m.Called(path)
 
 	r0 := ret.Get(0).(http.Response)
 	r1 := ret.Error(1)
@@ -294,8 +294,8 @@ func TestGeneratorHavingNoNamesOnArguments(t *testing.T) {
 	mock.Mock
 }
 
-func (m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
-	ret := m.Called(_a0, _a1)
+func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
+	ret := _m.Called(_a0, _a1)
 
 	r0 := ret.Get(0).([]byte)
 	r1 := ret.Get(1).(*test.Err)
@@ -322,8 +322,8 @@ func TestGeneratorElidedType(t *testing.T) {
 	mock.Mock
 }
 
-func (m *RequesterElided) Get(path string, url string) error {
-	ret := m.Called(path, url)
+func (_m *RequesterElided) Get(path string, url string) error {
+	ret := _m.Called(path, url)
 
 	r0 := ret.Error(0)
 
@@ -349,15 +349,15 @@ func TestGeneratorFuncType(t *testing.T) {
 	mock.Mock
 }
 
-func (m *Fooer) Foo(f func(string) string) error {
-	ret := m.Called(f)
+func (_m *Fooer) Foo(f func(string) string) error {
+	ret := _m.Called(f)
 
 	r0 := ret.Error(0)
 
 	return r0
 }
-func (m *Fooer) Bar(f func([]int) ) {
-	m.Called(f)
+func (_m *Fooer) Bar(f func([]int) ) {
+	_m.Called(f)
 }
 `
 
@@ -379,22 +379,22 @@ func TestGeneratorChanType(t *testing.T) {
 	mock.Mock
 }
 
-func (m *AsyncProducer) Input() chan<- bool {
-	ret := m.Called()
+func (_m *AsyncProducer) Input() chan<- bool {
+	ret := _m.Called()
 
 	r0 := ret.Get(0).(chan<- bool)
 
 	return r0
 }
-func (m *AsyncProducer) Output() <-chan bool {
-	ret := m.Called()
+func (_m *AsyncProducer) Output() <-chan bool {
+	ret := _m.Called()
 
 	r0 := ret.Get(0).(<-chan bool)
 
 	return r0
 }
-func (m *AsyncProducer) Whatever() chan bool {
-	ret := m.Called()
+func (_m *AsyncProducer) Whatever() chan bool {
+	ret := _m.Called()
 
 	r0 := ret.Get(0).(chan bool)
 

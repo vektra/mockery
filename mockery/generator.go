@@ -269,7 +269,7 @@ func (g *Generator) Generate() error {
 		names, _, params := g.genList(ftype.Params, true)
 		_, types, returs := g.genList(ftype.Results, false)
 
-		g.printf("func (m *%s) %s(%s) ", g.mockName(), fname, strings.Join(params, ", "))
+		g.printf("func (_m *%s) %s(%s) ", g.mockName(), fname, strings.Join(params, ", "))
 
 		switch len(returs) {
 		case 0:
@@ -281,7 +281,7 @@ func (g *Generator) Generate() error {
 		}
 
 		if len(types) > 0 {
-			g.printf("\tret := m.Called(%s)\n\n", strings.Join(names, ", "))
+			g.printf("\tret := _m.Called(%s)\n\n", strings.Join(names, ", "))
 
 			var ret []string
 
@@ -297,7 +297,7 @@ func (g *Generator) Generate() error {
 			g.printf("\n\treturn %s\n", strings.Join(ret, ", "))
 
 		} else {
-			g.printf("\tm.Called(%s)\n", strings.Join(names, ", "))
+			g.printf("\t_m.Called(%s)\n", strings.Join(names, ", "))
 		}
 
 		g.printf("}\n")
