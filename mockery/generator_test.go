@@ -180,6 +180,26 @@ import "net/http"
 	assert.Equal(t, expected, gen.buf.String())
 }
 
+func TestGeneratorPrologueNote(t *testing.T) {
+	parser := NewParser()
+	parser.Parse(testFile)
+
+	iface, err := parser.Find("Requester")
+	assert.NoError(t, err)
+
+	gen := NewGenerator(iface)
+
+	gen.GeneratePrologueNote("A\\nB")
+
+	expected := `
+// A
+// B
+
+`
+
+	assert.Equal(t, expected, gen.buf.String())
+}
+
 func TestGeneratorPointers(t *testing.T) {
 	parser := NewParser()
 	parser.Parse(filepath.Join(fixturePath, "requester_ptr.go"))

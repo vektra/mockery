@@ -20,6 +20,7 @@ var fDir = flag.String("dir", ".", "directory to search for interfaces")
 var fAll = flag.Bool("all", false, "generates mocks for all found interfaces")
 var fIP = flag.Bool("inpkg", false, "generate a mock that goes inside the original package")
 var fCase = flag.String("case", "camel", "name the mocked file using casing convention")
+var fNote = flag.String("note", "", "comment to insert into prologue of each generated file")
 
 func checkDir(p *mockery.Parser, dir, name string) bool {
 	files, err := ioutil.ReadDir(dir)
@@ -194,6 +195,8 @@ func genMock(iface *mockery.Interface) {
 	} else {
 		gen.GeneratePrologue(pkg)
 	}
+
+	gen.GeneratePrologueNote(*fNote)
 
 	err := gen.Generate()
 	if err != nil {

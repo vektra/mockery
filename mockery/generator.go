@@ -96,6 +96,16 @@ func (g *Generator) GeneratePrologue(pkg string) {
 	g.printf("\n")
 }
 
+func (g *Generator) GeneratePrologueNote(note string) {
+	if note != "" {
+		g.printf("\n")
+		for _, n := range strings.Split(note, "\\n") {
+				g.printf("// %s\n", n)
+		}
+		g.printf("\n")
+	}
+}
+
 var ErrNotInterface = errors.New("expression not an interface")
 
 func (g *Generator) printf(s string, vals ...interface{}) {
@@ -331,7 +341,7 @@ func (g *Generator) isNillable(typ ast.Expr) bool {
 }
 
 func (g *Generator) Write(w io.Writer) error {
-	opt := &imports.Options{}
+	opt := &imports.Options{Comments: true}
 	res, err := imports.Process("mock.go", g.buf.Bytes(), opt)
 	if err != nil {
 		return err
