@@ -145,7 +145,7 @@ func TestGeneratorPrologue(t *testing.T) {
 
 	gen := NewGenerator(iface)
 
-	gen.GeneratePrologue()
+	gen.GeneratePrologue("mocks")
 
 	expected := `package mocks
 
@@ -166,7 +166,7 @@ func TestGeneratorProloguewithImports(t *testing.T) {
 
 	gen := NewGenerator(iface)
 
-	gen.GeneratePrologue()
+	gen.GeneratePrologue("mocks")
 
 	expected := `package mocks
 
