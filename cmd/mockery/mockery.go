@@ -17,69 +17,30 @@ var fName = flag.String("name", "", "name of interface to generate mock for")
 var fPrint = flag.Bool("print", false, "print the generated mock to stdout")
 var fOutput = flag.String("output", "./mocks", "directory to write mocks to")
 var fDir = flag.String("dir", ".", "directory to search for interfaces")
+var fRecursive = flag.Bool("recursive", false, "recurse into child directories")
 var fAll = flag.Bool("all", false, "generates mocks for all found interfaces")
 var fIP = flag.Bool("inpkg", false, "generate a mock that goes inside the original package")
 var fTO = flag.Bool("testonly", false, "generate a mock in a _test.go file")
 var fCase = flag.String("case", "camel", "name the mocked file using casing convention")
 var fNote = flag.String("note", "", "comment to insert into prologue of each generated file")
 
-func checkDir(p *mockery.Parser, dir, name string) bool {
-	files, err := ioutil.ReadDir(dir)
-	if err != nil {
-		return false
-	}
-
-	for _, file := range files {
-		if strings.HasPrefix(file.Name(), ".") {
-			continue
-		}
-
-		path := filepath.Join(dir, file.Name())
-
-		if file.IsDir() {
-			if *fAll {
-				ret := checkDir(p, path, name)
-				if ret {
-					return true
-				}
-			} else {
-				continue
-			}
-		}
-
-		if !strings.HasSuffix(path, ".go") {
-			continue
-		}
-
-		err = p.Parse(path)
-		if err != nil {
-			continue
-		}
-
-		node, err := p.Find(name)
-		if err != nil {
-			continue
-		}
-
-		if node != nil {
-			return true
-		}
-	}
-
-	return false
-}
-
 func main() {
 	flag.Parse()
 
-	if *fAll {
-		mockAll()
-	} else {
-		mockFor(*fName)
+	if *fName == "" && !*fAll {
+		fmt.Fprintf(os.Stderr, "Use -name to specify the name of the interface or -all for all interfaces found\n")
+		os.Exit(1)
+	}
+
+	generated := walkDir(*fDir)
+
+	if *fName != "" && !generated {
+		fmt.Printf("Unable to find %s in any go files under this path\n", *fName)
+		os.Exit(1)
 	}
 }
 
-func walkDir(dir string) {
+func walkDir(dir string) (generated bool) {
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
 		return
@@ -93,8 +54,11 @@ func walkDir(dir string) {
 		path := filepath.Join(dir, file.Name())
 
 		if file.IsDir() {
-			if *fAll {
-				walkDir(path)
+			if *fRecursive {
+				generated = walkDir(path) || generated
+				if generated && *fName != "" {
+					return
+				}
 			}
 			continue
 		}
@@ -111,38 +75,18 @@ func walkDir(dir string) {
 		}
 
 		for _, iface := range p.Interfaces() {
+			if *fName != "" && *fName != iface.Name {
+				continue
+			}
 			genMock(iface)
+			generated = true
+			if *fName != "" {
+				return
+			}
 		}
 	}
 
 	return
-}
-
-func mockAll() {
-	walkDir(*fDir)
-}
-
-func mockFor(name string) {
-	if name == "" {
-		fmt.Fprintf(os.Stderr, "Use -name to specify the name of the interface\n")
-		os.Exit(1)
-	}
-
-	parser := mockery.NewParser()
-
-	ret := checkDir(parser, *fDir, name)
-	if !ret {
-		fmt.Printf("Unable to find %s in any go files under this path\n", name)
-		os.Exit(1)
-	}
-
-	iface, err := parser.Find(name)
-	if err != nil {
-		fmt.Printf("Error finding %s: %s\n", name, err)
-		os.Exit(1)
-	}
-
-	genMock(iface)
 }
 
 func genMock(iface *mockery.Interface) {

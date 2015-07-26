@@ -85,9 +85,14 @@ situations like passthroughs or other test-only calculations.
 
 It's common for a big package to have a lot of interfaces, so mockery provides `-all`.
 This option will tell mockery to scan all files under the directory named by `-dir` ("." by default)
-and generates mocks for any interfaces it finds.
+and generates mocks for any interfaces it finds. To include subdirectories, also use `-recursive`.
 
 `-all` was designed to be able to be used automatically in the background if required.
+
+### Recursive
+
+Use the `-recursive` option to search subdirectories for the interface(s).
+Compatible with either `-name` or `-all`.
 
 ### Output
 
