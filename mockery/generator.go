@@ -288,42 +288,46 @@ func (g *Generator) Generate() error {
 
 		fname := method.Names[0].Name
 
-		names, _, params := g.genList(ftype.Params, true)
-		_, types, returs := g.genList(ftype.Results, false)
+		paramNames, paramTypes, params := g.genList(ftype.Params, true)
+		_, returnTypes, returns := g.genList(ftype.Results, false)
 
 		g.printf("func (m *%s) %s(%s) ", g.mockName(), fname, strings.Join(params, ", "))
 
-		switch len(returs) {
+		switch len(returns) {
 		case 0:
 			g.printf("{\n")
 		case 1:
-			g.printf("%s {\n", returs[0])
+			g.printf("%s {\n", returns[0])
 		default:
-			g.printf("(%s) {\n", strings.Join(returs, ", "))
+			g.printf("(%s) {\n", strings.Join(returns, ", "))
 		}
-		if len(types) > 0 {
-			g.printf("\tret := m.Called(%s)\n\n", strings.Join(names, ", "))
+		if len(returnTypes) > 0 {
+			g.printf("\tret := m.Called(%s)\n\n", strings.Join(paramNames, ", "))
 
 			var ret []string
 
-			for idx, typ := range types {
+			for idx, typ := range returnTypes {
+				g.printf("\tvar r%d %s\n", idx, typ)
+				g.printf("\tif rf, ok := ret.Get(%d).(func(%s) %s); ok {\n", idx, strings.Join(paramTypes, ", "), typ)
+				g.printf("\t\tr%d = rf(%s)\n", idx, strings.Join(paramNames, ", "))
+				g.printf("\t} else {\n")
 				if typ == "error" {
-					g.printf("\tr%d := ret.Error(%d)\n", idx, idx)
+					g.printf("\t\tr%d = ret.Error(%d)\n", idx, idx)
 				} else if g.isNillable(ftype.Results.List[idx].Type) {
-					g.printf("\tvar r%d %s\n", idx, typ)
-					g.printf("\tif ret.Get(%d) != nil {\n", idx)
-					g.printf("\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
-					g.printf("\t}\n")
+					g.printf("\t\tif ret.Get(%d) != nil {\n", idx)
+					g.printf("\t\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
+					g.printf("\t\t}\n")
 				} else {
-					g.printf("\tr%d := ret.Get(%d).(%s)\n", idx, idx, typ)
+					g.printf("\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
 				}
+				g.printf("\t}\n\n")
 				ret = append(ret, fmt.Sprintf("r%d", idx))
 			}
 
-			g.printf("\n\treturn %s\n", strings.Join(ret, ", "))
+			g.printf("\treturn %s\n", strings.Join(ret, ", "))
 
 		} else {
-			g.printf("\tm.Called(%s)\n", strings.Join(names, ", "))
+			g.printf("\tm.Called(%s)\n", strings.Join(paramNames, ", "))
 		}
 
 		g.printf("}\n")

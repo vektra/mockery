@@ -32,11 +32,16 @@ type Stringer struct {
 }
 
 func (m *Stringer) String() string {
- ret := m.Called()
+	ret := m.Called()
 
- r0 := ret.Get(0).(string)
+	var r0 string
+	if rf, ok := ret.Get(0).(func() string); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Get(0)
+	}
 
- return r0
+	return r0
 }
 ```
 
@@ -49,6 +54,32 @@ package to remove any unnecessary imports (as they'd result in compile errors).
 ### Types
 
 mockery should handle all types. If you find it does not, please report the issue.
+
+### Return Value Provider Functions
+
+If your tests need access to the arguments to calculate the return values,
+set the return value to a function that takes the method's arguments as its own
+arguments and returns the return value. For example, given this interface:
+
+```go
+package test
+
+type Proxy interface {
+  passthrough(s string) string
+}
+```
+
+The argument can be passed through as the return value:
+
+```
+Mock.On("passthrough").Return(func(s string) string) {
+    return s
+})
+```
+
+Note, this approach should be used judiciously, as return values should generally 
+not depend on arguments in mocks; however, this approach can be helpful for 
+situations like passthroughs or other test-only calculations.
 
 ### All
 
