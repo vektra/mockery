@@ -220,7 +220,6 @@ func underscoreCaseName(caseName string) string {
 }
 
 func filename(name string) string {
-	name = strings.ToLower(name)
 	if *fIP && *fTO {
 		return "mock_" + name + "_test.go"
 	} else if *fIP {
