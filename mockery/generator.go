@@ -100,7 +100,7 @@ func (g *Generator) GeneratePrologueNote(note string) {
 	if note != "" {
 		g.printf("\n")
 		for _, n := range strings.Split(note, "\\n") {
-				g.printf("// %s\n", n)
+			g.printf("// %s\n", n)
 		}
 		g.printf("\n")
 	}
