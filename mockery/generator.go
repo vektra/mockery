@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"unicode"
 
 	"golang.org/x/tools/imports"
 
@@ -50,14 +51,25 @@ func (g *Generator) GenerateIPPrologue() {
 
 func (g *Generator) mockName() string {
 	if g.ip {
-		return "Mock" + g.iface.Name
+		if ast.IsExported(g.iface.Name) {
+			return "Mock" + g.iface.Name
+		} else {
+			first := true
+			return "mock" + strings.Map(func(r rune) rune {
+				if first {
+					first = false
+					return unicode.ToUpper(r)
+				}
+				return r
+			}, g.iface.Name)
+		}
 	}
 
 	return g.iface.Name
 }
 
-func (g *Generator) GeneratePrologue() {
-	g.printf("package mocks\n\n")
+func (g *Generator) GeneratePrologue(pkg string) {
+	g.printf("package %v\n\n", pkg)
 
 	goPath := os.Getenv("GOPATH")
 
@@ -82,6 +94,16 @@ func (g *Generator) GeneratePrologue() {
 	}
 
 	g.printf("\n")
+}
+
+func (g *Generator) GeneratePrologueNote(note string) {
+	if note != "" {
+		g.printf("\n")
+		for _, n := range strings.Split(note, "\\n") {
+			g.printf("// %s\n", n)
+		}
+		g.printf("\n")
+	}
 }
 
 var ErrNotInterface = errors.New("expression not an interface")
@@ -266,38 +288,47 @@ func (g *Generator) Generate() error {
 
 		fname := method.Names[0].Name
 
-		names, _, params := g.genList(ftype.Params, true)
-		_, types, returs := g.genList(ftype.Results, false)
+		paramNames, paramTypes, params := g.genList(ftype.Params, true)
+		_, returnTypes, returns := g.genList(ftype.Results, false)
 
 		g.printf("func (_m *%s) %s(%s) ", g.mockName(), fname, strings.Join(params, ", "))
 
-		switch len(returs) {
+		switch len(returns) {
 		case 0:
 			g.printf("{\n")
 		case 1:
-			g.printf("%s {\n", returs[0])
+			g.printf("%s {\n", returns[0])
 		default:
-			g.printf("(%s) {\n", strings.Join(returs, ", "))
+			g.printf("(%s) {\n", strings.Join(returns, ", "))
 		}
 
-		if len(types) > 0 {
-			g.printf("\tret := _m.Called(%s)\n\n", strings.Join(names, ", "))
+		if len(returnTypes) > 0 {
+			g.printf("\tret := _m.Called(%s)\n\n", strings.Join(paramNames, ", "))
 
 			var ret []string
 
-			for idx, typ := range types {
+			for idx, typ := range returnTypes {
+				g.printf("\tvar r%d %s\n", idx, typ)
+				g.printf("\tif rf, ok := ret.Get(%d).(func(%s) %s); ok {\n", idx, strings.Join(paramTypes, ", "), typ)
+				g.printf("\t\tr%d = rf(%s)\n", idx, strings.Join(paramNames, ", "))
+				g.printf("\t} else {\n")
 				if typ == "error" {
-					g.printf("\tr%d := ret.Error(%d)\n", idx, idx)
+					g.printf("\t\tr%d = ret.Error(%d)\n", idx, idx)
+				} else if g.isNillable(ftype.Results.List[idx].Type) {
+					g.printf("\t\tif ret.Get(%d) != nil {\n", idx)
+					g.printf("\t\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
+					g.printf("\t\t}\n")
 				} else {
-					g.printf("\tr%d := ret.Get(%d).(%s)\n", idx, idx, typ)
+					g.printf("\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
 				}
+				g.printf("\t}\n\n")
 				ret = append(ret, fmt.Sprintf("r%d", idx))
 			}
 
-			g.printf("\n\treturn %s\n", strings.Join(ret, ", "))
+			g.printf("\treturn %s\n", strings.Join(ret, ", "))
 
 		} else {
-			g.printf("\t_m.Called(%s)\n", strings.Join(names, ", "))
+			g.printf("\t_m.Called(%s)\n", strings.Join(paramNames, ", "))
 		}
 
 		g.printf("}\n")
@@ -306,8 +337,16 @@ func (g *Generator) Generate() error {
 	return nil
 }
 
+func (g *Generator) isNillable(typ ast.Expr) bool {
+	switch typ.(type) {
+	case *ast.StarExpr, *ast.ArrayType, *ast.MapType, *ast.InterfaceType, *ast.FuncType, *ast.ChanType:
+		return true
+	}
+	return false
+}
+
 func (g *Generator) Write(w io.Writer) error {
-	opt := &imports.Options{}
+	opt := &imports.Options{Comments: true}
 	res, err := imports.Process("mock.go", g.buf.Bytes(), opt)
 	if err != nil {
 		return err

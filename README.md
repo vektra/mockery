@@ -32,23 +32,54 @@ type Stringer struct {
 }
 
 func (m *Stringer) String() string {
- ret := m.Called()
+	ret := m.Called()
 
- r0 := ret.Get(0).(string)
+	var r0 string
+	if rf, ok := ret.Get(0).(func() string); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Get(0)
+	}
 
- return r0
+	return r0
 }
 ```
 
 ### Imports
 
 mockery pulls in all the same imports used in the file that contains the interface so
-that package types will work correctly. It then runs the output through the `imports` 
+that package types will work correctly. It then runs the output through the `imports`
 package to remove any unnecessary imports (as they'd result in compile errors).
 
 ### Types
 
 mockery should handle all types. If you find it does not, please report the issue.
+
+### Return Value Provider Functions
+
+If your tests need access to the arguments to calculate the return values,
+set the return value to a function that takes the method's arguments as its own
+arguments and returns the return value. For example, given this interface:
+
+```go
+package test
+
+type Proxy interface {
+  passthrough(s string) string
+}
+```
+
+The argument can be passed through as the return value:
+
+```
+Mock.On("passthrough").Return(func(s string) string) {
+    return s
+})
+```
+
+Note, this approach should be used judiciously, as return values should generally 
+not depend on arguments in mocks; however, this approach can be helpful for 
+situations like passthroughs or other test-only calculations.
 
 ### All
 
@@ -63,6 +94,17 @@ and generates mocks for any interfaces it finds.
 mockery always generates files with the package `mocks` to keep things clean and simple.
 You can control which mocks directory is used by using `-output`, which defaults to `./mocks`.
 
+## Caseing
+
+mockery generates files using the caseing of the original interface name.  This
+can be modified by specifying `-case=underscore` to format the generated file
+name using underscore casing.
+
 ### Debug
 
 Use `mockery -print` to have the resulting code printed out instead of written to disk.
+
+### Mocking interfaces in `main`
+
+When your interfaces are in the main package you should supply the `-inpkg` flag.
+This will generate mocks in the same package as the target code avoiding import issues.
