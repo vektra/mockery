@@ -19,6 +19,7 @@ var fOutput = flag.String("output", "./mocks", "directory to write mocks to")
 var fDir = flag.String("dir", ".", "directory to search for interfaces")
 var fAll = flag.Bool("all", false, "generates mocks for all found interfaces")
 var fIP = flag.Bool("inpkg", false, "generate a mock that goes inside the original package")
+var fTO = flag.Bool("testonly", false, "generate a mock in a _test.go file")
 var fCase = flag.String("case", "camel", "name the mocked file using casing convention")
 var fNote = flag.String("note", "", "comment to insert into prologue of each generated file")
 
@@ -167,9 +168,9 @@ func genMock(iface *mockery.Interface) {
 		var path string
 
 		if *fIP {
-			path = filepath.Join(filepath.Dir(iface.Path), "mock_"+caseName+".go")
+			path = filepath.Join(filepath.Dir(iface.Path), filename(caseName))
 		} else {
-			path = filepath.Join(*fOutput, caseName+".go")
+			path = filepath.Join(*fOutput, filename(caseName))
 			os.MkdirAll(filepath.Dir(path), 0755)
 			pkg = filepath.Base(filepath.Dir(path))
 		}
@@ -216,4 +217,13 @@ func underscoreCaseName(caseName string) string {
 	s1 := rxp1.ReplaceAllString(caseName, "${1}_${2}")
 	rxp2 := regexp.MustCompile("([a-z0-9])([A-Z])")
 	return strings.ToLower(rxp2.ReplaceAllString(s1, "${1}_${2}"))
+}
+
+func filename(name string) string {
+	if *fIP && *fTO {
+		return "mock_" + name + "_test.go"
+	} else if *fIP {
+		return "mock_" + name + ".go"
+	}
+	return name + ".go"
 }
