@@ -158,8 +158,7 @@ func genMock(iface *mockery.Interface) {
 	name := iface.Name
 	caseName := iface.Name
 	if *fCase == "underscore" {
-		rxp := regexp.MustCompile("(.)([A-Z])")
-		caseName = strings.ToLower(rxp.ReplaceAllString(caseName, "$1_$2"))
+		caseName = underscoreCaseName(caseName)
 	}
 
 	if *fPrint {
@@ -209,4 +208,12 @@ func genMock(iface *mockery.Interface) {
 		fmt.Printf("Error writing %s: %s\n", name, err)
 		os.Exit(1)
 	}
+}
+
+// shamelessly taken from http://stackoverflow.com/questions/1175208/elegant-python-function-to-convert-camelcase-to-camel-caseo
+func underscoreCaseName(caseName string) string {
+	rxp1 := regexp.MustCompile("(.)([A-Z][a-z]+)")
+	s1 := rxp1.ReplaceAllString(caseName, "${1}_${2}")
+	rxp2 := regexp.MustCompile("([a-z0-9])([A-Z])")
+	return strings.ToLower(rxp2.ReplaceAllString(s1, "${1}_${2}"))
 }
