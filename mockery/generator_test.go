@@ -149,8 +149,8 @@ func TestGeneratorUnexported(t *testing.T) {
 	mock.Mock
 }
 
-func (m *mockRequester) Get() {
-	m.Called()
+func (_m *mockRequester) Get() {
+	_m.Called()
 }
 `
 
@@ -499,8 +499,8 @@ func (_m *Fooer) Foo(f func(string) string) error {
 func (_m *Fooer) Bar(f func([]int) ) {
 	_m.Called(f)
 }
-func (m *Fooer) Baz(path string) func(string) string {
-	ret := m.Called(path)
+func (_m *Fooer) Baz(path string) func(string) string {
+	ret := _m.Called(path)
 
 	var r0 func(string) string
 	if rf, ok := ret.Get(0).(func(string) func(string) string); ok {
