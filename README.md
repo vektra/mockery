@@ -81,13 +81,22 @@ Note, this approach should be used judiciously, as return values should generall
 not depend on arguments in mocks; however, this approach can be helpful for 
 situations like passthroughs or other test-only calculations.
 
+### Name
+
+The `-name` option takes either the name or matching regular expression of interface to generate mock(s) for.
+
 ### All
 
 It's common for a big package to have a lot of interfaces, so mockery provides `-all`.
 This option will tell mockery to scan all files under the directory named by `-dir` ("." by default)
-and generates mocks for any interfaces it finds.
+and generates mocks for any interfaces it finds. This option implies `-recursive=true`.
 
 `-all` was designed to be able to be used automatically in the background if required.
+
+### Recursive
+
+Use the `-recursive` option to search subdirectories for the interface(s).
+This option is only compatible with `-name`. The `-all` option implies `-recursive=true`.
 
 ### Output
 

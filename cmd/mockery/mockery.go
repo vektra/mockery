@@ -13,73 +13,58 @@ import (
 	"github.com/vektra/mockery/mockery"
 )
 
-var fName = flag.String("name", "", "name of interface to generate mock for")
+const regexMetadataChars = "\\.+*?()|[]{}^$"
+
+var fName = flag.String("name", "", "name or matching regular expression of interface to generate mock for")
 var fPrint = flag.Bool("print", false, "print the generated mock to stdout")
 var fOutput = flag.String("output", "./mocks", "directory to write mocks to")
 var fDir = flag.String("dir", ".", "directory to search for interfaces")
-var fAll = flag.Bool("all", false, "generates mocks for all found interfaces")
+var fRecursive = flag.Bool("recursive", false, "recurse search into sub-directories")
+var fAll = flag.Bool("all", false, "generates mocks for all found interfaces in all sub-directories")
 var fIP = flag.Bool("inpkg", false, "generate a mock that goes inside the original package")
 var fTO = flag.Bool("testonly", false, "generate a mock in a _test.go file")
 var fCase = flag.String("case", "camel", "name the mocked file using casing convention")
 var fNote = flag.String("note", "", "comment to insert into prologue of each generated file")
 
-func checkDir(p *mockery.Parser, dir, name string) bool {
-	files, err := ioutil.ReadDir(dir)
-	if err != nil {
-		return false
-	}
-
-	for _, file := range files {
-		if strings.HasPrefix(file.Name(), ".") {
-			continue
-		}
-
-		path := filepath.Join(dir, file.Name())
-
-		if file.IsDir() {
-			if *fAll {
-				ret := checkDir(p, path, name)
-				if ret {
-					return true
-				}
-			} else {
-				continue
-			}
-		}
-
-		if !strings.HasSuffix(path, ".go") {
-			continue
-		}
-
-		err = p.Parse(path)
-		if err != nil {
-			continue
-		}
-
-		node, err := p.Find(name)
-		if err != nil {
-			continue
-		}
-
-		if node != nil {
-			return true
-		}
-	}
-
-	return false
-}
-
 func main() {
 	flag.Parse()
 
-	if *fAll {
-		mockAll()
+	var recursive bool
+	var filter *regexp.Regexp
+	var err error
+	var limitOne bool
+
+	if *fName != "" && *fAll {
+		fmt.Fprintln(os.Stderr, "Specify -name or -all, but not both")
+		os.Exit(1)
+	} else if *fName != "" {
+		recursive = *fRecursive
+		if strings.ContainsAny(*fName, regexMetadataChars) {
+			if filter, err = regexp.Compile(*fName); err != nil {
+				fmt.Fprintln(os.Stderr, "Invalid regular expression provided to -name")
+				os.Exit(1)
+			}
+		} else {
+			filter = regexp.MustCompile(fmt.Sprintf("^%s$", *fName))
+			limitOne = true
+		}
+	} else if *fAll {
+		recursive = true
+		filter = regexp.MustCompile(".*")
 	} else {
-		mockFor(*fName)
+		fmt.Fprintln(os.Stderr, "Use -name to specify the name of the interface or -all for all interfaces found")
+		os.Exit(1)
+	}
+
+	generated := walkDir(*fDir, recursive, filter, limitOne)
+
+	if *fName != "" && !generated {
+		fmt.Printf("Unable to find %s in any go files under this path\n", *fName)
+		os.Exit(1)
 	}
 }
 
-func walkDir(dir string) {
+func walkDir(dir string, recursive bool, filter *regexp.Regexp, limitOne bool) (generated bool) {
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
 		return
@@ -93,8 +78,11 @@ func walkDir(dir string) {
 		path := filepath.Join(dir, file.Name())
 
 		if file.IsDir() {
-			if *fAll {
-				walkDir(path)
+			if recursive {
+				generated = walkDir(path, recursive, filter, limitOne) || generated
+				if generated && limitOne {
+					return
+				}
 			}
 			continue
 		}
@@ -111,38 +99,18 @@ func walkDir(dir string) {
 		}
 
 		for _, iface := range p.Interfaces() {
+			if !filter.MatchString(iface.Name) {
+				continue
+			}
 			genMock(iface)
+			generated = true
+			if limitOne {
+				return
+			}
 		}
 	}
 
 	return
-}
-
-func mockAll() {
-	walkDir(*fDir)
-}
-
-func mockFor(name string) {
-	if name == "" {
-		fmt.Fprintf(os.Stderr, "Use -name to specify the name of the interface\n")
-		os.Exit(1)
-	}
-
-	parser := mockery.NewParser()
-
-	ret := checkDir(parser, *fDir, name)
-	if !ret {
-		fmt.Printf("Unable to find %s in any go files under this path\n", name)
-		os.Exit(1)
-	}
-
-	iface, err := parser.Find(name)
-	if err != nil {
-		fmt.Printf("Error finding %s: %s\n", name, err)
-		os.Exit(1)
-	}
-
-	genMock(iface)
 }
 
 func genMock(iface *mockery.Interface) {
