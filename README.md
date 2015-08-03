@@ -6,7 +6,7 @@ the boilerplate coding required to use mocks.
 
 ### Installation
 
-`go get github.com/vektra/mockery`, then `$GOPATH/bin/mockery`
+`go get github.com/vektra/mockery/.../`, then `$GOPATH/bin/mockery`
 
 ### Example
 
