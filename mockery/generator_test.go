@@ -22,6 +22,18 @@ func TestGenerator(t *testing.T) {
 	mock.Mock
 }
 
+func (_m *Requester) Name_Get() string {
+	return "Get"
+}
+func (_m *Requester) MockOn_Get(path interface{}) *mock.Mock {
+	return _m.Mock.On("Get", path)
+}
+func (_m *Requester) MockOnTyped_Get(path string) *mock.Mock {
+	return _m.Mock.On("Get", path)
+}
+func (_m *Requester) MockOnAny_Get() *mock.Mock {
+	return _m.Mock.On("Get", mock.Anything)
+}
 func (_m *Requester) Get(path string) (string, error) {
 	ret := _m.Called(path)
 
@@ -61,6 +73,18 @@ func TestGeneratorSingleReturn(t *testing.T) {
 	mock.Mock
 }
 
+func (_m *Requester2) Name_Get() string {
+	return "Get"
+}
+func (_m *Requester2) MockOn_Get(path interface{}) *mock.Mock {
+	return _m.Mock.On("Get", path)
+}
+func (_m *Requester2) MockOnTyped_Get(path string) *mock.Mock {
+	return _m.Mock.On("Get", path)
+}
+func (_m *Requester2) MockOnAny_Get() *mock.Mock {
+	return _m.Mock.On("Get", mock.Anything)
+}
 func (_m *Requester2) Get(path string) error {
 	ret := _m.Called(path)
 
@@ -93,6 +117,18 @@ func TestGeneratorNoArguments(t *testing.T) {
 	mock.Mock
 }
 
+func (_m *Requester3) Name_Get() string {
+	return "Get"
+}
+func (_m *Requester3) MockOn_Get() *mock.Mock {
+	return _m.Mock.On("Get")
+}
+func (_m *Requester3) MockOnTyped_Get() *mock.Mock {
+	return _m.Mock.On("Get")
+}
+func (_m *Requester3) MockOnAny_Get() *mock.Mock {
+	return _m.Mock.On("Get")
+}
 func (_m *Requester3) Get() error {
 	ret := _m.Called()
 
@@ -125,6 +161,18 @@ func TestGeneratorNoNothing(t *testing.T) {
 	mock.Mock
 }
 
+func (_m *Requester4) Name_Get() string {
+	return "Get"
+}
+func (_m *Requester4) MockOn_Get() *mock.Mock {
+	return _m.Mock.On("Get")
+}
+func (_m *Requester4) MockOnTyped_Get() *mock.Mock {
+	return _m.Mock.On("Get")
+}
+func (_m *Requester4) MockOnAny_Get() *mock.Mock {
+	return _m.Mock.On("Get")
+}
 func (_m *Requester4) Get() {
 	_m.Called()
 }
@@ -149,6 +197,18 @@ func TestGeneratorUnexported(t *testing.T) {
 	mock.Mock
 }
 
+func (_m *mockRequester) Name_Get() string {
+	return "Get"
+}
+func (_m *mockRequester) MockOn_Get() *mock.Mock {
+	return _m.Mock.On("Get")
+}
+func (_m *mockRequester) MockOnTyped_Get() *mock.Mock {
+	return _m.Mock.On("Get")
+}
+func (_m *mockRequester) MockOnAny_Get() *mock.Mock {
+	return _m.Mock.On("Get")
+}
 func (_m *mockRequester) Get() {
 	_m.Called()
 }
@@ -238,6 +298,18 @@ func TestGeneratorPointers(t *testing.T) {
 	mock.Mock
 }
 
+func (_m *RequesterPtr) Name_Get() string {
+	return "Get"
+}
+func (_m *RequesterPtr) MockOn_Get(path interface{}) *mock.Mock {
+	return _m.Mock.On("Get", path)
+}
+func (_m *RequesterPtr) MockOnTyped_Get(path string) *mock.Mock {
+	return _m.Mock.On("Get", path)
+}
+func (_m *RequesterPtr) MockOnAny_Get() *mock.Mock {
+	return _m.Mock.On("Get", mock.Anything)
+}
 func (_m *RequesterPtr) Get(path string) (*string, error) {
 	ret := _m.Called(path)
 
@@ -281,6 +353,18 @@ func TestGeneratorSlice(t *testing.T) {
 	mock.Mock
 }
 
+func (_m *RequesterSlice) Name_Get() string {
+	return "Get"
+}
+func (_m *RequesterSlice) MockOn_Get(path interface{}) *mock.Mock {
+	return _m.Mock.On("Get", path)
+}
+func (_m *RequesterSlice) MockOnTyped_Get(path string) *mock.Mock {
+	return _m.Mock.On("Get", path)
+}
+func (_m *RequesterSlice) MockOnAny_Get() *mock.Mock {
+	return _m.Mock.On("Get", mock.Anything)
+}
 func (_m *RequesterSlice) Get(path string) ([]string, error) {
 	ret := _m.Called(path)
 
@@ -324,6 +408,18 @@ func TestGeneratorArrayLiteralLen(t *testing.T) {
 	mock.Mock
 }
 
+func (_m *RequesterArray) Name_Get() string {
+	return "Get"
+}
+func (_m *RequesterArray) MockOn_Get(path interface{}) *mock.Mock {
+	return _m.Mock.On("Get", path)
+}
+func (_m *RequesterArray) MockOnTyped_Get(path string) *mock.Mock {
+	return _m.Mock.On("Get", path)
+}
+func (_m *RequesterArray) MockOnAny_Get() *mock.Mock {
+	return _m.Mock.On("Get", mock.Anything)
+}
 func (_m *RequesterArray) Get(path string) ([2]string, error) {
 	ret := _m.Called(path)
 
@@ -367,6 +463,18 @@ func TestGeneratorNamespacedTypes(t *testing.T) {
 	mock.Mock
 }
 
+func (_m *RequesterNS) Name_Get() string {
+	return "Get"
+}
+func (_m *RequesterNS) MockOn_Get(path interface{}) *mock.Mock {
+	return _m.Mock.On("Get", path)
+}
+func (_m *RequesterNS) MockOnTyped_Get(path string) *mock.Mock {
+	return _m.Mock.On("Get", path)
+}
+func (_m *RequesterNS) MockOnAny_Get() *mock.Mock {
+	return _m.Mock.On("Get", mock.Anything)
+}
 func (_m *RequesterNS) Get(path string) (http.Response, error) {
 	ret := _m.Called(path)
 
@@ -409,6 +517,18 @@ func TestGeneratorHavingNoNamesOnArguments(t *testing.T) {
 	mock.Mock
 }
 
+func (_m *KeyManager) Name_GetKey() string {
+	return "GetKey"
+}
+func (_m *KeyManager) MockOn_GetKey(_a0 interface{}, _a1 interface{}) *mock.Mock {
+	return _m.Mock.On("GetKey", _a0, _a1)
+}
+func (_m *KeyManager) MockOnTyped_GetKey(_a0 string, _a1 uint16) *mock.Mock {
+	return _m.Mock.On("GetKey", _a0, _a1)
+}
+func (_m *KeyManager) MockOnAny_GetKey() *mock.Mock {
+	return _m.Mock.On("GetKey", mock.Anything, mock.Anything)
+}
 func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 	ret := _m.Called(_a0, _a1)
 
@@ -452,6 +572,18 @@ func TestGeneratorElidedType(t *testing.T) {
 	mock.Mock
 }
 
+func (_m *RequesterElided) Name_Get() string {
+	return "Get"
+}
+func (_m *RequesterElided) MockOn_Get(path interface{}, url interface{}) *mock.Mock {
+	return _m.Mock.On("Get", path, url)
+}
+func (_m *RequesterElided) MockOnTyped_Get(path string, url string) *mock.Mock {
+	return _m.Mock.On("Get", path, url)
+}
+func (_m *RequesterElided) MockOnAny_Get() *mock.Mock {
+	return _m.Mock.On("Get", mock.Anything, mock.Anything)
+}
 func (_m *RequesterElided) Get(path string, url string) error {
 	ret := _m.Called(path, url)
 
@@ -484,6 +616,18 @@ func TestGeneratorFuncType(t *testing.T) {
 	mock.Mock
 }
 
+func (_m *Fooer) Name_Foo() string {
+	return "Foo"
+}
+func (_m *Fooer) MockOn_Foo(f interface{}) *mock.Mock {
+	return _m.Mock.On("Foo", f)
+}
+func (_m *Fooer) MockOnTyped_Foo(f func(string) string) *mock.Mock {
+	return _m.Mock.On("Foo", f)
+}
+func (_m *Fooer) MockOnAny_Foo() *mock.Mock {
+	return _m.Mock.On("Foo", mock.Anything)
+}
 func (_m *Fooer) Foo(f func(string) string) error {
 	ret := _m.Called(f)
 
@@ -496,8 +640,32 @@ func (_m *Fooer) Foo(f func(string) string) error {
 
 	return r0
 }
+func (_m *Fooer) Name_Bar() string {
+	return "Bar"
+}
+func (_m *Fooer) MockOn_Bar(f interface{}) *mock.Mock {
+	return _m.Mock.On("Bar", f)
+}
+func (_m *Fooer) MockOnTyped_Bar(f func([]int) ) *mock.Mock {
+	return _m.Mock.On("Bar", f)
+}
+func (_m *Fooer) MockOnAny_Bar() *mock.Mock {
+	return _m.Mock.On("Bar", mock.Anything)
+}
 func (_m *Fooer) Bar(f func([]int) ) {
 	_m.Called(f)
+}
+func (_m *Fooer) Name_Baz() string {
+	return "Baz"
+}
+func (_m *Fooer) MockOn_Baz(path interface{}) *mock.Mock {
+	return _m.Mock.On("Baz", path)
+}
+func (_m *Fooer) MockOnTyped_Baz(path string) *mock.Mock {
+	return _m.Mock.On("Baz", path)
+}
+func (_m *Fooer) MockOnAny_Baz() *mock.Mock {
+	return _m.Mock.On("Baz", mock.Anything)
 }
 func (_m *Fooer) Baz(path string) func(string) string {
 	ret := _m.Called(path)
@@ -533,6 +701,18 @@ func TestGeneratorChanType(t *testing.T) {
 	mock.Mock
 }
 
+func (_m *AsyncProducer) Name_Input() string {
+	return "Input"
+}
+func (_m *AsyncProducer) MockOn_Input() *mock.Mock {
+	return _m.Mock.On("Input")
+}
+func (_m *AsyncProducer) MockOnTyped_Input() *mock.Mock {
+	return _m.Mock.On("Input")
+}
+func (_m *AsyncProducer) MockOnAny_Input() *mock.Mock {
+	return _m.Mock.On("Input")
+}
 func (_m *AsyncProducer) Input() chan<- bool {
 	ret := _m.Called()
 
@@ -547,6 +727,18 @@ func (_m *AsyncProducer) Input() chan<- bool {
 
 	return r0
 }
+func (_m *AsyncProducer) Name_Output() string {
+	return "Output"
+}
+func (_m *AsyncProducer) MockOn_Output() *mock.Mock {
+	return _m.Mock.On("Output")
+}
+func (_m *AsyncProducer) MockOnTyped_Output() *mock.Mock {
+	return _m.Mock.On("Output")
+}
+func (_m *AsyncProducer) MockOnAny_Output() *mock.Mock {
+	return _m.Mock.On("Output")
+}
 func (_m *AsyncProducer) Output() <-chan bool {
 	ret := _m.Called()
 
@@ -560,6 +752,18 @@ func (_m *AsyncProducer) Output() <-chan bool {
 	}
 
 	return r0
+}
+func (_m *AsyncProducer) Name_Whatever() string {
+	return "Whatever"
+}
+func (_m *AsyncProducer) MockOn_Whatever() *mock.Mock {
+	return _m.Mock.On("Whatever")
+}
+func (_m *AsyncProducer) MockOnTyped_Whatever() *mock.Mock {
+	return _m.Mock.On("Whatever")
+}
+func (_m *AsyncProducer) MockOnAny_Whatever() *mock.Mock {
+	return _m.Mock.On("Whatever")
 }
 func (_m *AsyncProducer) Whatever() chan bool {
 	ret := _m.Called()

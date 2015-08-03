@@ -49,6 +49,12 @@ func (g *Generator) GenerateIPPrologue() {
 	g.printf("\n")
 }
 
+func (g *Generator) generateMockOn(variant string, fname string, builderParams []string, onParams []string) {
+	g.printf("func (_m *%s) MockOn%s_%s(%s) *mock.Mock {\n", g.mockName(), variant, fname, strings.Join(builderParams, ", "))
+	g.printf("\treturn _m.Mock.On(%s)\n", strings.Join(append([]string{"\"" + fname + "\""}, onParams...), ", "))
+	g.printf("}\n")
+}
+
 func (g *Generator) mockName() string {
 	if g.ip {
 		if ast.IsExported(g.iface.Name) {
@@ -290,6 +296,20 @@ func (g *Generator) Generate() error {
 
 		paramNames, paramTypes, params := g.genList(ftype.Params, true)
 		_, returnTypes, returns := g.genList(ftype.Results, false)
+
+		g.printf("func (_m *%s) Name_%s() string {\n", g.mockName(), fname)
+		g.printf("\treturn %s\n", "\""+fname+"\"")
+		g.printf("}\n")
+
+		paramsInterface := []string{}
+		paramsAnything := []string{}
+		for _, p := range paramNames {
+			paramsInterface = append(paramsInterface, p+" interface{}")
+			paramsAnything = append(paramsAnything, "mock.Anything")
+		}
+		g.generateMockOn("", fname, paramsInterface, paramNames)
+		g.generateMockOn("Typed", fname, params, paramNames)
+		g.generateMockOn("Any", fname, []string{}, paramsAnything)
 
 		g.printf("func (_m *%s) %s(%s) ", g.mockName(), fname, strings.Join(params, ", "))
 
