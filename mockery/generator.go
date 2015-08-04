@@ -302,6 +302,23 @@ func (g *Generator) Generate() error {
 			g.printf("(%s) {\n", strings.Join(returns, ", "))
 		}
 
+		formatParamNames := func() string {
+			names := ""
+			for i, name := range paramNames {
+				if i > 0 {
+					names += ", "
+				}
+
+				paramType := paramTypes[i]
+				// for variable args, move the ... to the end.
+				if strings.Index(paramType, "...") == 0 {
+					name += "..."
+				}
+				names += name
+			}
+			return names
+		}
+
 		if len(returnTypes) > 0 {
 			g.printf("\tret := _m.Called(%s)\n\n", strings.Join(paramNames, ", "))
 
@@ -310,7 +327,7 @@ func (g *Generator) Generate() error {
 			for idx, typ := range returnTypes {
 				g.printf("\tvar r%d %s\n", idx, typ)
 				g.printf("\tif rf, ok := ret.Get(%d).(func(%s) %s); ok {\n", idx, strings.Join(paramTypes, ", "), typ)
-				g.printf("\t\tr%d = rf(%s)\n", idx, strings.Join(paramNames, ", "))
+				g.printf("\t\tr%d = rf(%s)\n", idx, formatParamNames())
 				g.printf("\t} else {\n")
 				if typ == "error" {
 					g.printf("\t\tr%d = ret.Error(%d)\n", idx, idx)
