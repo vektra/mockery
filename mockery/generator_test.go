@@ -469,6 +469,38 @@ func (_m *RequesterElided) Get(path string, url string) error {
 	assert.Equal(t, expected, gen.buf.String())
 }
 
+func TestGeneratorVariableArgs(t *testing.T) {
+
+	parser := NewParser()
+	parser.Parse(filepath.Join(fixturePath, "requester_variable.go"))
+
+	iface, err := parser.Find("RequesterVariable")
+
+	gen := NewGenerator(iface)
+
+	err = gen.Generate()
+	assert.NoError(t, err)
+	expected := `type RequesterVariable struct {
+	mock.Mock
+}
+
+func (_m *RequesterVariable) Get(values ...string) bool {
+	ret := _m.Called(values)
+
+	var r0 bool
+	if rf, ok := ret.Get(0).(func(...string) bool); ok {
+		r0 = rf(values...)
+	} else {
+		r0 = ret.Get(0).(bool)
+	}
+
+	return r0
+}
+`
+
+	assert.Equal(t, expected, gen.buf.String())
+}
+
 func TestGeneratorFuncType(t *testing.T) {
 	parser := NewParser()
 	parser.Parse(filepath.Join(fixturePath, "func_type.go"))
