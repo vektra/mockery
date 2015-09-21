@@ -484,7 +484,7 @@ func TestGeneratorReturnElidedType(t *testing.T) {
 	mock.Mock
 }
 
-func (_m *RequesterReturnElided) Get(path string) (a int, b int, err error) {
+func (_m *RequesterReturnElided) Get(path string) (int, int, int, error) {
 	ret := _m.Called(path)
 
 	var r0 int
@@ -501,14 +501,21 @@ func (_m *RequesterReturnElided) Get(path string) (a int, b int, err error) {
 		r1 = ret.Get(1).(int)
 	}
 
-	var r2 error
-	if rf, ok := ret.Get(2).(func(string) error); ok {
+	var r2 int
+	if rf, ok := ret.Get(2).(func(string) int); ok {
 		r2 = rf(path)
 	} else {
-		r2 = ret.Error(2)
+		r2 = ret.Get(2).(int)
 	}
 
-	return r0, r1, r2
+	var r3 error
+	if rf, ok := ret.Get(3).(func(string) error); ok {
+		r3 = rf(path)
+	} else {
+		r3 = ret.Error(3)
+	}
+
+	return r0, r1, r2, r3
 }
 `
 

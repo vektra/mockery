@@ -1,5 +1,5 @@
 package test
 
 type RequesterReturnElided interface {
-	Get(path string) (a, b int, err error)
+	Get(path string) (a, b, c int, err error)
 }
