@@ -469,6 +469,52 @@ func (_m *RequesterElided) Get(path string, url string) error {
 	assert.Equal(t, expected, gen.buf.String())
 }
 
+func TestGeneratorReturnElidedType(t *testing.T) {
+	parser := NewParser()
+	parser.Parse(filepath.Join(fixturePath, "requester_ret_elided.go"))
+
+	iface, err := parser.Find("RequesterReturnElided")
+
+	gen := NewGenerator(iface)
+
+	err = gen.Generate()
+	assert.NoError(t, err)
+
+	expected := `type RequesterReturnElided struct {
+	mock.Mock
+}
+
+func (_m *RequesterReturnElided) Get(path string) (a int, b int, err error) {
+	ret := _m.Called(path)
+
+	var r0 int
+	if rf, ok := ret.Get(0).(func(string) int); ok {
+		r0 = rf(path)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	var r1 int
+	if rf, ok := ret.Get(1).(func(string) int); ok {
+		r1 = rf(path)
+	} else {
+		r1 = ret.Get(1).(int)
+	}
+
+	var r2 error
+	if rf, ok := ret.Get(2).(func(string) error); ok {
+		r2 = rf(path)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+`
+
+	assert.Equal(t, expected, gen.buf.String())
+}
+
 func TestGeneratorVariableArgs(t *testing.T) {
 
 	parser := NewParser()

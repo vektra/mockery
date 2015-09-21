@@ -240,12 +240,22 @@ func (g *Generator) genList(list *ast.FieldList, addNames bool) ([]string, []str
 		return params, names, types
 	}
 
+	elided := false
+	if !addNames {
+		for _, param := range list.List {
+			if len(param.Names) > 1 {
+				elided = true
+				break
+			}
+		}
+	}
+
 	for idx, param := range list.List {
 		ts := g.typeString(param.Type)
 
 		var pname string
 
-		if addNames {
+		if addNames || elided {
 			if len(param.Names) == 0 {
 				pname = fmt.Sprintf("_a%d", idx)
 				names = append(names, pname)
