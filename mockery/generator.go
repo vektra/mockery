@@ -308,7 +308,7 @@ func (g *Generator) Generate() error {
 		case 1:
 			g.printf("%s {\n", returns[0])
 		default:
-			g.printf("(%s) {\n", strings.Join(returns, ", "))
+			g.printf("(%s) {\n", strings.Join(returnTypes, ", "))
 		}
 
 		formatParamNames := func() string {
@@ -331,24 +331,40 @@ func (g *Generator) Generate() error {
 		if len(returnTypes) > 0 {
 			g.printf("\tret := _m.Called(%s)\n\n", strings.Join(paramNames, ", "))
 
-			var ret []string
+			var (
+				ret []string
+				idx int
+			)
 
-			for idx, typ := range returnTypes {
-				g.printf("\tvar r%d %s\n", idx, typ)
-				g.printf("\tif rf, ok := ret.Get(%d).(func(%s) %s); ok {\n", idx, strings.Join(paramTypes, ", "), typ)
-				g.printf("\t\tr%d = rf(%s)\n", idx, formatParamNames())
-				g.printf("\t} else {\n")
-				if typ == "error" {
-					g.printf("\t\tr%d = ret.Error(%d)\n", idx, idx)
-				} else if g.isNillable(ftype.Results.List[idx].Type) {
-					g.printf("\t\tif ret.Get(%d) != nil {\n", idx)
-					g.printf("\t\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
-					g.printf("\t\t}\n")
-				} else {
-					g.printf("\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
+			for i := range ftype.Results.List {
+				field := ftype.Results.List[i]
+
+				numNames := len(field.Names)
+				if numNames == 0 {
+					numNames = 1
 				}
-				g.printf("\t}\n\n")
-				ret = append(ret, fmt.Sprintf("r%d", idx))
+
+				for j := 0; j < numNames; j++ {
+					typ := returnTypes[idx]
+
+					g.printf("\tvar r%d %s\n", idx, typ)
+					g.printf("\tif rf, ok := ret.Get(%d).(func(%s) %s); ok {\n", idx, strings.Join(paramTypes, ", "), typ)
+					g.printf("\t\tr%d = rf(%s)\n", idx, formatParamNames())
+					g.printf("\t} else {\n")
+					if typ == "error" {
+						g.printf("\t\tr%d = ret.Error(%d)\n", idx, idx)
+					} else if g.isNillable(field.Type) {
+						g.printf("\t\tif ret.Get(%d) != nil {\n", idx)
+						g.printf("\t\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
+						g.printf("\t\t}\n")
+					} else {
+						g.printf("\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
+					}
+					g.printf("\t}\n\n")
+
+					ret = append(ret, fmt.Sprintf("r%d", idx))
+					idx++
+				}
 			}
 
 			g.printf("\treturn %s\n", strings.Join(ret, ", "))
