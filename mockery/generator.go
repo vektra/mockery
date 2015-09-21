@@ -240,6 +240,15 @@ func (g *Generator) genList(list *ast.FieldList, addNames bool) ([]string, []str
 		return params, names, types
 	}
 
+	if !addNames {
+		for _, param := range list.List {
+			if len(param.Names) > 1 {
+				addNames = true
+				break
+			}
+		}
+	}
+
 	for idx, param := range list.List {
 		ts := g.typeString(param.Type)
 
