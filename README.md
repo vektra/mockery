@@ -72,7 +72,7 @@ type Proxy interface {
 The argument can be passed through as the return value:
 
 ```
-. "github.com/stretchr/testify/mock"
+import . "github.com/stretchr/testify/mock"
 
 Mock.On("passthrough", AnythingOfType("string")).Return(func(s string) string {
     return s
