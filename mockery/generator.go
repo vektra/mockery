@@ -300,6 +300,7 @@ func (g *Generator) Generate() error {
 		paramNames, paramTypes, params := g.genList(ftype.Params, true)
 		_, returnTypes, returns := g.genList(ftype.Results, false)
 
+		g.printf("// %s provides a mock function with given fields: %s\n", fname, strings.Join(paramNames, ", "))
 		g.printf("func (_m *%s) %s(%s) ", g.mockName(), fname, strings.Join(params, ", "))
 
 		switch len(returns) {
