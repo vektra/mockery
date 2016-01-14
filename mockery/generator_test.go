@@ -1,6 +1,7 @@
 package mockery
 
 import (
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -22,6 +23,7 @@ func TestGenerator(t *testing.T) {
 	mock.Mock
 }
 
+// Get provides a mock function with given fields: path
 func (_m *Requester) Get(path string) (string, error) {
 	ret := _m.Called(path)
 
@@ -61,6 +63,7 @@ func TestGeneratorSingleReturn(t *testing.T) {
 	mock.Mock
 }
 
+// Get provides a mock function with given fields: path
 func (_m *Requester2) Get(path string) error {
 	ret := _m.Called(path)
 
@@ -93,6 +96,7 @@ func TestGeneratorNoArguments(t *testing.T) {
 	mock.Mock
 }
 
+// Get provides a mock function with given fields: 
 func (_m *Requester3) Get() error {
 	ret := _m.Called()
 
@@ -125,6 +129,7 @@ func TestGeneratorNoNothing(t *testing.T) {
 	mock.Mock
 }
 
+// Get provides a mock function with given fields: 
 func (_m *Requester4) Get() {
 	_m.Called()
 }
@@ -149,6 +154,7 @@ func TestGeneratorUnexported(t *testing.T) {
 	mock.Mock
 }
 
+// Get provides a mock function with given fields: 
 func (_m *mockRequester) Get() {
 	_m.Called()
 }
@@ -168,9 +174,13 @@ func TestGeneratorPrologue(t *testing.T) {
 
 	gen.GeneratePrologue("mocks")
 
+	goPath := os.Getenv("GOPATH")
+	local, err := filepath.Rel(filepath.Join(goPath, "src"), filepath.Dir(iface.Path))
+	assert.NoError(t, err)
+
 	expected := `package mocks
 
-import "github.com/vektra/mockery/mockery/fixtures"
+import "` + local + `"
 import "github.com/stretchr/testify/mock"
 
 `
@@ -189,9 +199,13 @@ func TestGeneratorProloguewithImports(t *testing.T) {
 
 	gen.GeneratePrologue("mocks")
 
+	goPath := os.Getenv("GOPATH")
+	local, err := filepath.Rel(filepath.Join(goPath, "src"), filepath.Dir(iface.Path))
+	assert.NoError(t, err)
+
 	expected := `package mocks
 
-import "github.com/vektra/mockery/mockery/fixtures"
+import "` + local + `"
 import "github.com/stretchr/testify/mock"
 
 import "net/http"
@@ -238,6 +252,7 @@ func TestGeneratorPointers(t *testing.T) {
 	mock.Mock
 }
 
+// Get provides a mock function with given fields: path
 func (_m *RequesterPtr) Get(path string) (*string, error) {
 	ret := _m.Called(path)
 
@@ -281,6 +296,7 @@ func TestGeneratorSlice(t *testing.T) {
 	mock.Mock
 }
 
+// Get provides a mock function with given fields: path
 func (_m *RequesterSlice) Get(path string) ([]string, error) {
 	ret := _m.Called(path)
 
@@ -324,6 +340,7 @@ func TestGeneratorArrayLiteralLen(t *testing.T) {
 	mock.Mock
 }
 
+// Get provides a mock function with given fields: path
 func (_m *RequesterArray) Get(path string) ([2]string, error) {
 	ret := _m.Called(path)
 
@@ -367,6 +384,7 @@ func TestGeneratorNamespacedTypes(t *testing.T) {
 	mock.Mock
 }
 
+// Get provides a mock function with given fields: path
 func (_m *RequesterNS) Get(path string) (http.Response, error) {
 	ret := _m.Called(path)
 
@@ -409,6 +427,7 @@ func TestGeneratorHavingNoNamesOnArguments(t *testing.T) {
 	mock.Mock
 }
 
+// GetKey provides a mock function with given fields: _a0, _a1
 func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 	ret := _m.Called(_a0, _a1)
 
@@ -452,6 +471,7 @@ func TestGeneratorElidedType(t *testing.T) {
 	mock.Mock
 }
 
+// Get provides a mock function with given fields: path, url
 func (_m *RequesterElided) Get(path string, url string) error {
 	ret := _m.Called(path, url)
 
@@ -484,6 +504,7 @@ func TestGeneratorReturnElidedType(t *testing.T) {
 	mock.Mock
 }
 
+// Get provides a mock function with given fields: path
 func (_m *RequesterReturnElided) Get(path string) (int, int, int, error) {
 	ret := _m.Called(path)
 
@@ -537,6 +558,7 @@ func TestGeneratorVariableArgs(t *testing.T) {
 	mock.Mock
 }
 
+// Get provides a mock function with given fields: values
 func (_m *RequesterVariable) Get(values ...string) bool {
 	ret := _m.Called(values)
 
@@ -569,6 +591,7 @@ func TestGeneratorFuncType(t *testing.T) {
 	mock.Mock
 }
 
+// Foo provides a mock function with given fields: f
 func (_m *Fooer) Foo(f func(string) string) error {
 	ret := _m.Called(f)
 
@@ -581,9 +604,11 @@ func (_m *Fooer) Foo(f func(string) string) error {
 
 	return r0
 }
+// Bar provides a mock function with given fields: f
 func (_m *Fooer) Bar(f func([]int) ) {
 	_m.Called(f)
 }
+// Baz provides a mock function with given fields: path
 func (_m *Fooer) Baz(path string) func(string) string {
 	ret := _m.Called(path)
 
@@ -618,6 +643,7 @@ func TestGeneratorChanType(t *testing.T) {
 	mock.Mock
 }
 
+// Input provides a mock function with given fields: 
 func (_m *AsyncProducer) Input() chan<- bool {
 	ret := _m.Called()
 
@@ -632,6 +658,7 @@ func (_m *AsyncProducer) Input() chan<- bool {
 
 	return r0
 }
+// Output provides a mock function with given fields: 
 func (_m *AsyncProducer) Output() <-chan bool {
 	ret := _m.Called()
 
@@ -646,6 +673,7 @@ func (_m *AsyncProducer) Output() <-chan bool {
 
 	return r0
 }
+// Whatever provides a mock function with given fields: 
 func (_m *AsyncProducer) Whatever() chan bool {
 	ret := _m.Called()
 
