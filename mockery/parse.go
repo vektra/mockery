@@ -51,7 +51,12 @@ func (p *Parser) Parse(path string) error {
 }
 
 func (p *Parser) Find(name string) (*Interface, error) {
-	typ := p.pkg.Scope().Lookup(name).Type().(*types.Named)
+	obj := p.pkg.Scope().Lookup(name)
+	if obj == nil {
+		return nil, ErrNotInterface
+	}
+
+	typ := obj.Type().(*types.Named)
 
 	name = typ.Obj().Name()
 

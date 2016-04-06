@@ -1,11 +1,13 @@
 package mockery
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestGenerator(t *testing.T) {
@@ -687,6 +689,49 @@ func (_m *AsyncProducer) Whatever() chan bool {
 	return r0
 }
 `
+
+	assert.Equal(t, expected, gen.buf.String())
+}
+
+func TestGeneratorFromImport(t *testing.T) {
+	parser := NewParser()
+	parser.Parse(filepath.Join(fixturePath, "io_import.go"))
+
+	iface, err := parser.Find("MyReader")
+	require.NoError(t, err)
+
+	gen := NewGenerator(iface)
+
+	err = gen.Generate()
+	assert.NoError(t, err)
+
+	expected := `type MyReader struct {
+	mock.Mock
+}
+
+// Read provides a mock function with given fields: p
+func (_m *MyReader) Read(p []byte) (int, error) {
+	ret := _m.Called(p)
+
+	var r0 int
+	if rf, ok := ret.Get(0).(func([]byte) int); ok {
+		r0 = rf(p)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func([]byte) error); ok {
+		r1 = rf(p)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+`
+
+	fmt.Println(gen.buf.String())
 
 	assert.Equal(t, expected, gen.buf.String())
 }
