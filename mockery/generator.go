@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"go/ast"
+	"go/types"
 	"io"
 	"os"
 	"path/filepath"
@@ -140,6 +141,75 @@ var builtinTypes = map[string]bool{
 	"uintptr":     true,
 }
 
+type namer interface {
+	Name() string
+}
+
+func renderType(t types.Type) string {
+	switch t := t.(type) {
+	case *types.Named:
+		o := t.Obj()
+		if o.Pkg() == nil {
+			return o.Name()
+		} else {
+			return o.Pkg().Name() + "." + o.Name()
+		}
+	case *types.Basic:
+		return t.Name()
+	case *types.Pointer:
+		return "*" + renderType(t.Elem())
+	case *types.Slice:
+		return "[]" + renderType(t.Elem())
+	case *types.Array:
+		return fmt.Sprintf("[%d]%s", t.Len(), renderType(t.Elem()))
+	case *types.Signature:
+		switch t.Results().Len() {
+		case 0:
+			return fmt.Sprintf(
+				"func(%s)",
+				renderTypeTuple(t.Params()),
+			)
+		case 1:
+			return fmt.Sprintf(
+				"func(%s) %s",
+				renderTypeTuple(t.Params()),
+				renderType(t.Results().At(0).Type()),
+			)
+		default:
+			return fmt.Sprintf(
+				"func(%s)(%s)",
+				renderTypeTuple(t.Params()),
+				renderTypeTuple(t.Results()),
+			)
+		}
+	case *types.Chan:
+		switch t.Dir() {
+		case types.SendRecv:
+			return "chan " + renderType(t.Elem())
+		case types.RecvOnly:
+			return "<-chan " + renderType(t.Elem())
+		default:
+			return "chan<- " + renderType(t.Elem())
+		}
+	case namer:
+		return t.Name()
+	default:
+		panic(fmt.Sprintf("un-namable type: %#v (%T)", t, t))
+	}
+}
+
+func renderTypeTuple(tup *types.Tuple) string {
+	var parts []string
+
+	for i := 0; i < tup.Len(); i++ {
+		v := tup.At(i)
+
+		parts = append(parts, renderType(v.Type()))
+	}
+
+	return strings.Join(parts, " , ")
+}
+
 func (g *Generator) typeString(typ ast.Expr) string {
 	switch specific := typ.(type) {
 	case *ast.Ident:
@@ -229,55 +299,91 @@ func (g *Generator) typeFieldList(fl *ast.FieldList, optParen bool) string {
 	return strings.Join(list, ", ")
 }
 
-func (g *Generator) genList(list *ast.FieldList, addNames bool) ([]string, []string, []string) {
+func isNillable(typ types.Type) bool {
+	switch typ.(type) {
+	case *types.Pointer, *types.Array, *types.Map, *types.Interface, *types.Signature, *types.Chan, *types.Slice:
+		return true
+	}
+	return false
+}
+
+func (g *Generator) genList(list *types.Tuple, addNames, varadic bool) ([]string, []string, []string, []bool) {
 	var (
-		params []string
-		names  []string
-		types  []string
+		params  []string
+		names   []string
+		vtypes  []string
+		nilable []bool
 	)
 
 	if list == nil {
-		return params, names, types
+		return params, names, vtypes, nilable
 	}
 
-	if !addNames {
-		for _, param := range list.List {
-			if len(param.Names) > 1 {
-				addNames = true
-				break
+	/*
+		if !addNames {
+			for _, param := range list.List {
+				if len(param.Names) > 1 {
+					addNames = true
+					break
+				}
 			}
 		}
-	}
+	*/
 
-	for idx, param := range list.List {
-		ts := g.typeString(param.Type)
+	for i := 0; i < list.Len(); i++ {
+		v := list.At(i)
 
-		var pname string
+		ts := renderType(v.Type())
 
-		if addNames {
-			if len(param.Names) == 0 {
-				pname = fmt.Sprintf("_a%d", idx)
-				names = append(names, pname)
-				types = append(types, ts)
-				params = append(params, fmt.Sprintf("%s %s", pname, ts))
-
-				continue
+		if varadic && i == list.Len()-1 {
+			t := v.Type()
+			switch t := t.(type) {
+			case *types.Slice:
+				ts = "..." + renderType(t.Elem())
+			default:
+				panic("bad varadic type!")
 			}
-
-			for _, name := range param.Names {
-				pname = name.Name
-				names = append(names, pname)
-				types = append(types, ts)
-				params = append(params, fmt.Sprintf("%s %s", pname, ts))
-			}
-		} else {
-			names = append(names, "")
-			types = append(types, ts)
-			params = append(params, ts)
 		}
+
+		pname := v.Name()
+
+		if pname == "" {
+			pname = fmt.Sprintf("_a%d", i)
+		}
+
+		names = append(names, pname)
+		vtypes = append(vtypes, ts)
+		params = append(params, fmt.Sprintf("%s %s", pname, ts))
+		nilable = append(nilable, isNillable(v.Type()))
+
+		/*
+			var pname string
+
+			if addNames {
+				if len(param.Names) == 0 {
+					pname = fmt.Sprintf("_a%d", idx)
+					names = append(names, pname)
+					vtypes = append(types, ts)
+					params = append(params, fmt.Sprintf("%s %s", pname, ts))
+
+					continue
+				}
+
+				for _, name := range param.Names {
+					pname = name.Name
+					names = append(names, pname)
+					types = append(types, ts)
+					params = append(params, fmt.Sprintf("%s %s", pname, ts))
+				}
+			} else {
+				names = append(names, "")
+				types = append(types, ts)
+				params = append(params, ts)
+			}
+		*/
 	}
 
-	return names, types, params
+	return names, vtypes, params, nilable
 }
 
 var ErrNotSetup = errors.New("not setup")
@@ -289,25 +395,30 @@ func (g *Generator) Generate() error {
 
 	g.printf("type %s struct {\n\tmock.Mock\n}\n\n", g.mockName())
 
-	for _, method := range g.iface.Type.Methods.List {
-		ftype, ok := method.Type.(*ast.FuncType)
-		if !ok {
-			continue
-		}
+	for i := 0; i < g.iface.Type.NumMethods(); i++ {
+		fn := g.iface.Type.Method(i)
 
-		fname := method.Names[0].Name
+		ftype := fn.Type().(*types.Signature)
+		// for _, method := range g.iface.Type.Methods.List {
+		// ftype, ok := method.Type.(*ast.FuncType)
+		// if !ok {
+		// continue
+		// }
 
-		paramNames, paramTypes, params := g.genList(ftype.Params, true)
-		_, returnTypes, returns := g.genList(ftype.Results, false)
+		// fname := method.Names[0].Name
+		fname := fn.Name()
+
+		paramNames, paramTypes, params, _ := g.genList(ftype.Params(), true, ftype.Variadic())
+		_, returnTypes, _, returnNils := g.genList(ftype.Results(), false, false)
 
 		g.printf("// %s provides a mock function with given fields: %s\n", fname, strings.Join(paramNames, ", "))
 		g.printf("func (_m *%s) %s(%s) ", g.mockName(), fname, strings.Join(params, ", "))
 
-		switch len(returns) {
+		switch len(returnTypes) {
 		case 0:
 			g.printf("{\n")
 		case 1:
-			g.printf("%s {\n", returns[0])
+			g.printf("%s {\n", returnTypes[0])
 		default:
 			g.printf("(%s) {\n", strings.Join(returnTypes, ", "))
 		}
@@ -334,42 +445,66 @@ func (g *Generator) Generate() error {
 
 			var (
 				ret []string
-				idx int
 			)
 
-			for i := range ftype.Results.List {
-				field := ftype.Results.List[i]
-
-				numNames := len(field.Names)
-				if numNames == 0 {
-					numNames = 1
+			for idx, typ := range returnTypes {
+				g.printf("\tvar r%d %s\n", idx, typ)
+				g.printf("\tif rf, ok := ret.Get(%d).(func(%s) %s); ok {\n", idx, strings.Join(paramTypes, ", "), typ)
+				g.printf("\t\tr%d = rf(%s)\n", idx, formatParamNames())
+				g.printf("\t} else {\n")
+				if typ == "error" {
+					g.printf("\t\tr%d = ret.Error(%d)\n", idx, idx)
+				} else if returnNils[idx] {
+					g.printf("\t\tif ret.Get(%d) != nil {\n", idx)
+					g.printf("\t\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
+					g.printf("\t\t}\n")
+				} else {
+					g.printf("\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
 				}
+				g.printf("\t}\n\n")
 
-				for j := 0; j < numNames; j++ {
-					typ := returnTypes[idx]
-
-					g.printf("\tvar r%d %s\n", idx, typ)
-					g.printf("\tif rf, ok := ret.Get(%d).(func(%s) %s); ok {\n", idx, strings.Join(paramTypes, ", "), typ)
-					g.printf("\t\tr%d = rf(%s)\n", idx, formatParamNames())
-					g.printf("\t} else {\n")
-					if typ == "error" {
-						g.printf("\t\tr%d = ret.Error(%d)\n", idx, idx)
-					} else if g.isNillable(field.Type) {
-						g.printf("\t\tif ret.Get(%d) != nil {\n", idx)
-						g.printf("\t\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
-						g.printf("\t\t}\n")
-					} else {
-						g.printf("\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
-					}
-					g.printf("\t}\n\n")
-
-					ret = append(ret, fmt.Sprintf("r%d", idx))
-					idx++
-				}
+				ret = append(ret, fmt.Sprintf("r%d", idx))
 			}
 
 			g.printf("\treturn %s\n", strings.Join(ret, ", "))
 
+			/*
+				results := ftype.Results()
+
+				for i := 0; i < results.Len(); i++ {
+					field := results.At(i)
+
+					numNames := len(field.Names)
+					if numNames == 0 {
+						numNames = 1
+					}
+
+					for j := 0; j < numNames; j++ {
+						typ := returnTypes[idx]
+
+						g.printf("\tvar r%d %s\n", idx, typ)
+						g.printf("\tif rf, ok := ret.Get(%d).(func(%s) %s); ok {\n", idx, strings.Join(paramTypes, ", "), typ)
+						g.printf("\t\tr%d = rf(%s)\n", idx, formatParamNames())
+						g.printf("\t} else {\n")
+						if typ == "error" {
+							g.printf("\t\tr%d = ret.Error(%d)\n", idx, idx)
+						} else if g.isNillable(field.Type) {
+							g.printf("\t\tif ret.Get(%d) != nil {\n", idx)
+							g.printf("\t\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
+							g.printf("\t\t}\n")
+						} else {
+							g.printf("\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
+						}
+						g.printf("\t}\n\n")
+
+						ret = append(ret, fmt.Sprintf("r%d", idx))
+						idx++
+					}
+				}
+
+				g.printf("\treturn %s\n", strings.Join(ret, ", "))
+
+			*/
 		} else {
 			g.printf("\t_m.Called(%s)\n", strings.Join(paramNames, ", "))
 		}
@@ -378,14 +513,6 @@ func (g *Generator) Generate() error {
 	}
 
 	return nil
-}
-
-func (g *Generator) isNillable(typ ast.Expr) bool {
-	switch typ.(type) {
-	case *ast.StarExpr, *ast.ArrayType, *ast.MapType, *ast.InterfaceType, *ast.FuncType, *ast.ChanType:
-		return true
-	}
-	return false
 }
 
 func (g *Generator) Write(w io.Writer) error {

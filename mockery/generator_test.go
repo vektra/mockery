@@ -275,7 +275,6 @@ func (_m *RequesterPtr) Get(path string) (*string, error) {
 	return r0, r1
 }
 `
-
 	assert.Equal(t, expected, gen.buf.String())
 }
 
@@ -319,7 +318,6 @@ func (_m *RequesterSlice) Get(path string) ([]string, error) {
 	return r0, r1
 }
 `
-
 	assert.Equal(t, expected, gen.buf.String())
 }
 
@@ -591,21 +589,8 @@ func TestGeneratorFuncType(t *testing.T) {
 	mock.Mock
 }
 
-// Foo provides a mock function with given fields: f
-func (_m *Fooer) Foo(f func(string) string) error {
-	ret := _m.Called(f)
-
-	var r0 error
-	if rf, ok := ret.Get(0).(func(func(string) string) error); ok {
-		r0 = rf(f)
-	} else {
-		r0 = ret.Error(0)
-	}
-
-	return r0
-}
 // Bar provides a mock function with given fields: f
-func (_m *Fooer) Bar(f func([]int) ) {
+func (_m *Fooer) Bar(f func([]int)) {
 	_m.Called(f)
 }
 // Baz provides a mock function with given fields: path
@@ -619,6 +604,19 @@ func (_m *Fooer) Baz(path string) func(string) string {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(func(string) string)
 		}
+	}
+
+	return r0
+}
+// Foo provides a mock function with given fields: f
+func (_m *Fooer) Foo(f func(string) string) error {
+	ret := _m.Called(f)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(func(string) string) error); ok {
+		r0 = rf(f)
+	} else {
+		r0 = ret.Error(0)
 	}
 
 	return r0
