@@ -80,7 +80,7 @@ func main() {
 }
 
 func walkDir(config Config, dir string, recursive bool, filter *regexp.Regexp, limitOne bool) (generated bool) {
-	files, err := ioutil.ReadDir(config.fDir)
+	files, err := ioutil.ReadDir(dir)
 	if err != nil {
 		return
 	}
