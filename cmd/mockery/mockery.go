@@ -15,18 +15,33 @@ import (
 
 const regexMetadataChars = "\\.+*?()|[]{}^$"
 
-var fName = flag.String("name", "", "name or matching regular expression of interface to generate mock for")
-var fPrint = flag.Bool("print", false, "print the generated mock to stdout")
-var fOutput = flag.String("output", "./mocks", "directory to write mocks to")
-var fDir = flag.String("dir", ".", "directory to search for interfaces")
-var fRecursive = flag.Bool("recursive", false, "recurse search into sub-directories")
-var fAll = flag.Bool("all", false, "generates mocks for all found interfaces in all sub-directories")
-var fIP = flag.Bool("inpkg", false, "generate a mock that goes inside the original package")
-var fTO = flag.Bool("testonly", false, "generate a mock in a _test.go file")
-var fCase = flag.String("case", "camel", "name the mocked file using casing convention")
-var fNote = flag.String("note", "", "comment to insert into prologue of each generated file")
+type Config struct {
+	fName      string
+	fPrint     bool
+	fOutput    string
+	fDir       string
+	fRecursive bool
+	fAll       bool
+	fIP        bool
+	fTO        bool
+	fCase      string
+	fNote      string
+}
 
 func main() {
+	config := Config{}
+
+	flag.StringVar(&config.fName, "name", "", "name or matching regular expression of interface to generate mock for")
+	flag.BoolVar(&config.fPrint, "print", false, "print the generated mock to stdout")
+	flag.StringVar(&config.fOutput, "output", "./mocks", "directory to write mocks to")
+	flag.StringVar(&config.fDir, "dir", ".", "directory to search for interfaces")
+	flag.BoolVar(&config.fRecursive, "recursive", false, "recurse search into sub-directories")
+	flag.BoolVar(&config.fAll, "all", false, "generates mocks for all found interfaces in all sub-directories")
+	flag.BoolVar(&config.fIP, "inpkg", false, "generate a mock that goes inside the original package")
+	flag.BoolVar(&config.fTO, "testonly", false, "generate a mock in a _test.go file")
+	flag.StringVar(&config.fCase, "case", "camel", "name the mocked file using casing convention")
+	flag.StringVar(&config.fNote, "note", "", "comment to insert into prologue of each generated file")
+
 	flag.Parse()
 
 	var recursive bool
@@ -34,21 +49,21 @@ func main() {
 	var err error
 	var limitOne bool
 
-	if *fName != "" && *fAll {
+	if config.fName != "" && config.fAll {
 		fmt.Fprintln(os.Stderr, "Specify -name or -all, but not both")
 		os.Exit(1)
-	} else if *fName != "" {
-		recursive = *fRecursive
-		if strings.ContainsAny(*fName, regexMetadataChars) {
-			if filter, err = regexp.Compile(*fName); err != nil {
+	} else if config.fName != "" {
+		recursive = config.fRecursive
+		if strings.ContainsAny(config.fName, regexMetadataChars) {
+			if filter, err = regexp.Compile(config.fName); err != nil {
 				fmt.Fprintln(os.Stderr, "Invalid regular expression provided to -name")
 				os.Exit(1)
 			}
 		} else {
-			filter = regexp.MustCompile(fmt.Sprintf("^%s$", *fName))
+			filter = regexp.MustCompile(fmt.Sprintf("^%s$", config.fName))
 			limitOne = true
 		}
-	} else if *fAll {
+	} else if config.fAll {
 		recursive = true
 		filter = regexp.MustCompile(".*")
 	} else {
@@ -56,16 +71,16 @@ func main() {
 		os.Exit(1)
 	}
 
-	generated := walkDir(*fDir, recursive, filter, limitOne)
+	generated := walkDir(config, config.fDir, recursive, filter, limitOne)
 
-	if *fName != "" && !generated {
-		fmt.Printf("Unable to find %s in any go files under this path\n", *fName)
+	if config.fName != "" && !generated {
+		fmt.Printf("Unable to find %s in any go files under this path\n", config.fName)
 		os.Exit(1)
 	}
 }
 
-func walkDir(dir string, recursive bool, filter *regexp.Regexp, limitOne bool) (generated bool) {
-	files, err := ioutil.ReadDir(dir)
+func walkDir(config Config, dir string, recursive bool, filter *regexp.Regexp, limitOne bool) (generated bool) {
+	files, err := ioutil.ReadDir(config.fDir)
 	if err != nil {
 		return
 	}
@@ -75,11 +90,11 @@ func walkDir(dir string, recursive bool, filter *regexp.Regexp, limitOne bool) (
 			continue
 		}
 
-		path := filepath.Join(dir, file.Name())
+		path := filepath.Join(config.fDir, file.Name())
 
 		if file.IsDir() {
 			if recursive {
-				generated = walkDir(path, recursive, filter, limitOne) || generated
+				generated = walkDir(config, path, recursive, filter, limitOne) || generated
 				if generated && limitOne {
 					return
 				}
@@ -102,7 +117,7 @@ func walkDir(dir string, recursive bool, filter *regexp.Regexp, limitOne bool) (
 			if !filter.MatchString(iface.Name) {
 				continue
 			}
-			genMock(iface)
+			genMock(iface, config)
 			generated = true
 			if limitOne {
 				return
@@ -113,7 +128,7 @@ func walkDir(dir string, recursive bool, filter *regexp.Regexp, limitOne bool) (
 	return
 }
 
-func genMock(iface *mockery.Interface) {
+func genMock(iface *mockery.Interface, config Config) {
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Printf("Unable to generated mock for '%s': %s\n", iface.Name, r)
@@ -126,19 +141,19 @@ func genMock(iface *mockery.Interface) {
 	pkg := "mocks"
 	name := iface.Name
 	caseName := iface.Name
-	if *fCase == "underscore" {
+	if config.fCase == "underscore" {
 		caseName = underscoreCaseName(caseName)
 	}
 
-	if *fPrint {
+	if config.fPrint {
 		out = os.Stdout
 	} else {
 		var path string
 
-		if *fIP {
-			path = filepath.Join(filepath.Dir(iface.Path), filename(caseName))
+		if config.fIP {
+			path = filepath.Join(filepath.Dir(iface.Path), filename(caseName, config))
 		} else {
-			path = filepath.Join(*fOutput, filename(caseName))
+			path = filepath.Join(config.fOutput, filename(caseName, config))
 			os.MkdirAll(filepath.Dir(path), 0755)
 			pkg = filepath.Base(filepath.Dir(path))
 		}
@@ -158,13 +173,13 @@ func genMock(iface *mockery.Interface) {
 
 	gen := mockery.NewGenerator(iface)
 
-	if *fIP {
+	if config.fIP {
 		gen.GenerateIPPrologue()
 	} else {
 		gen.GeneratePrologue(pkg)
 	}
 
-	gen.GeneratePrologueNote(*fNote)
+	gen.GeneratePrologueNote(config.fNote)
 
 	err := gen.Generate()
 	if err != nil {
@@ -187,11 +202,13 @@ func underscoreCaseName(caseName string) string {
 	return strings.ToLower(rxp2.ReplaceAllString(s1, "${1}_${2}"))
 }
 
-func filename(name string) string {
-	if *fIP && *fTO {
+func filename(name string, config Config) string {
+	if config.fIP && config.fTO {
 		return "mock_" + name + "_test.go"
-	} else if *fIP {
+	} else if config.fIP {
 		return "mock_" + name + ".go"
+	} else if config.fTO {
+		return name + "_test.go"
 	}
 	return name + ".go"
 }
