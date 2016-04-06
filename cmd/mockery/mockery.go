@@ -29,20 +29,7 @@ type Config struct {
 }
 
 func main() {
-	config := Config{}
-
-	flag.StringVar(&config.fName, "name", "", "name or matching regular expression of interface to generate mock for")
-	flag.BoolVar(&config.fPrint, "print", false, "print the generated mock to stdout")
-	flag.StringVar(&config.fOutput, "output", "./mocks", "directory to write mocks to")
-	flag.StringVar(&config.fDir, "dir", ".", "directory to search for interfaces")
-	flag.BoolVar(&config.fRecursive, "recursive", false, "recurse search into sub-directories")
-	flag.BoolVar(&config.fAll, "all", false, "generates mocks for all found interfaces in all sub-directories")
-	flag.BoolVar(&config.fIP, "inpkg", false, "generate a mock that goes inside the original package")
-	flag.BoolVar(&config.fTO, "testonly", false, "generate a mock in a _test.go file")
-	flag.StringVar(&config.fCase, "case", "camel", "name the mocked file using casing convention")
-	flag.StringVar(&config.fNote, "note", "", "comment to insert into prologue of each generated file")
-
-	flag.Parse()
+	config := parseConfigFromArgs(os.Args)
 
 	var recursive bool
 	var filter *regexp.Regexp
@@ -79,6 +66,27 @@ func main() {
 	}
 }
 
+func parseConfigFromArgs(args []string) Config {
+	config := Config{}
+
+	flagSet := flag.NewFlagSet(args[0], flag.ExitOnError)
+
+	flagSet.StringVar(&config.fName, "name", "", "name or matching regular expression of interface to generate mock for")
+	flagSet.BoolVar(&config.fPrint, "print", false, "print the generated mock to stdout")
+	flagSet.StringVar(&config.fOutput, "output", "./mocks", "directory to write mocks to")
+	flagSet.StringVar(&config.fDir, "dir", ".", "directory to search for interfaces")
+	flagSet.BoolVar(&config.fRecursive, "recursive", false, "recurse search into sub-directories")
+	flagSet.BoolVar(&config.fAll, "all", false, "generates mocks for all found interfaces in all sub-directories")
+	flagSet.BoolVar(&config.fIP, "inpkg", false, "generate a mock that goes inside the original package")
+	flagSet.BoolVar(&config.fTO, "testonly", false, "generate a mock in a _test.go file")
+	flagSet.StringVar(&config.fCase, "case", "camel", "name the mocked file using casing convention")
+	flagSet.StringVar(&config.fNote, "note", "", "comment to insert into prologue of each generated file")
+
+	flagSet.Parse(args[1:])
+
+	return config
+}
+
 func walkDir(config Config, dir string, recursive bool, filter *regexp.Regexp, limitOne bool) (generated bool) {
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
@@ -90,7 +98,7 @@ func walkDir(config Config, dir string, recursive bool, filter *regexp.Regexp, l
 			continue
 		}
 
-		path := filepath.Join(config.fDir, file.Name())
+		path := filepath.Join(dir, file.Name())
 
 		if file.IsDir() {
 			if recursive {
@@ -112,7 +120,6 @@ func walkDir(config Config, dir string, recursive bool, filter *regexp.Regexp, l
 		if err != nil {
 			continue
 		}
-
 		for _, iface := range p.Interfaces() {
 			if !filter.MatchString(iface.Name) {
 				continue
