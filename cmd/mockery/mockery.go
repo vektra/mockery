@@ -90,7 +90,7 @@ func walkDir(config Config, dir string, recursive bool, filter *regexp.Regexp, l
 			continue
 		}
 
-		path := filepath.Join(dir, file.Name())
+		path := filepath.Join(config.fDir, file.Name())
 
 		if file.IsDir() {
 			if recursive {
