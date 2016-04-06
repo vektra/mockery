@@ -28,5 +28,5 @@ func TestFilenameMockTest(t *testing.T) {
 }
 
 func TestFilenameTest(t *testing.T) {
-	assert.Equal(t, "name.go", filename("name", Config{fIP: false, fTO: true}))
+	assert.Equal(t, "name_test.go", filename("name", Config{fIP: false, fTO: true}))
 }

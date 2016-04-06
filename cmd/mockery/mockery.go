@@ -207,6 +207,8 @@ func filename(name string, config Config) string {
 		return "mock_" + name + "_test.go"
 	} else if config.fIP {
 		return "mock_" + name + ".go"
+	} else if config.fTO {
+		return name + "_test.go"
 	}
 	return name + ".go"
 }
