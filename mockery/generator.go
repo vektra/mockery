@@ -210,95 +210,6 @@ func renderTypeTuple(tup *types.Tuple) string {
 	return strings.Join(parts, " , ")
 }
 
-func (g *Generator) typeString(typ ast.Expr) string {
-	switch specific := typ.(type) {
-	case *ast.Ident:
-		if g.ip {
-			return specific.Name
-		}
-
-		_, isBuiltin := builtinTypes[specific.Name]
-		if isBuiltin {
-			return specific.Name
-		}
-
-		return g.iface.File.Name.Name + "." + specific.Name
-	case *ast.StarExpr:
-		return "*" + g.typeString(specific.X)
-	case *ast.ArrayType:
-		if specific.Len == nil {
-			return "[]" + g.typeString(specific.Elt)
-		} else {
-			var l string
-
-			switch ls := specific.Len.(type) {
-			case *ast.BasicLit:
-				l = ls.Value
-			default:
-				panic(fmt.Sprintf("unable to figure out array length: %#v", specific.Len))
-			}
-			return "[" + l + "]" + g.typeString(specific.Elt)
-		}
-	case *ast.SelectorExpr:
-		if ident, ok := specific.X.(*ast.Ident); ok {
-			return ident.Name + "." + specific.Sel.Name
-		} else {
-			panic(fmt.Sprintf("strange selector expr encountered: %#v", specific))
-		}
-	case *ast.InterfaceType:
-		if len(specific.Methods.List) == 0 {
-			return "interface{}"
-		} else {
-			panic(fmt.Sprintf("unable to handle this interface type: %#v", specific))
-		}
-	case *ast.MapType:
-		return "map[" + g.typeString(specific.Key) + "]" + g.typeString(specific.Value)
-	case *ast.Ellipsis:
-		return "..." + g.typeString(specific.Elt)
-	case *ast.FuncType:
-		return "func(" + g.typeFieldList(specific.Params, false) + ") " + g.typeFieldList(specific.Results, true)
-	case *ast.ChanType:
-		switch specific.Dir {
-		case ast.SEND:
-			return "chan<- " + g.typeString(specific.Value)
-		case ast.RECV:
-			return "<-chan " + g.typeString(specific.Value)
-		default:
-			return "chan " + g.typeString(specific.Value)
-		}
-	default:
-		panic(fmt.Sprintf("unable to handle type: %#v", typ))
-	}
-}
-
-func (g *Generator) typeFieldList(fl *ast.FieldList, optParen bool) string {
-	var list []string
-
-	if fl == nil {
-		return ""
-	}
-	for _, field := range fl.List {
-		cnt := len(field.Names)
-		if cnt == 0 {
-			cnt = 1
-		}
-
-		for i := 0; i < cnt; i++ {
-			list = append(list, g.typeString(field.Type))
-		}
-	}
-
-	if optParen {
-		if len(list) == 1 {
-			return list[0]
-		}
-
-		return "(" + strings.Join(list, ", ") + ")"
-	}
-
-	return strings.Join(list, ", ")
-}
-
 func isNillable(typ types.Type) bool {
 	switch typ.(type) {
 	case *types.Pointer, *types.Array, *types.Map, *types.Interface, *types.Signature, *types.Chan, *types.Slice:
@@ -307,28 +218,19 @@ func isNillable(typ types.Type) bool {
 	return false
 }
 
-func (g *Generator) genList(list *types.Tuple, addNames, varadic bool) ([]string, []string, []string, []bool) {
-	var (
-		params  []string
-		names   []string
-		vtypes  []string
-		nilable []bool
-	)
+type paramList struct {
+	Names   []string
+	Types   []string
+	Params  []string
+	Nilable []bool
+}
+
+func genList(list *types.Tuple, varadic bool) *paramList {
+	var params paramList
 
 	if list == nil {
-		return params, names, vtypes, nilable
+		return &params
 	}
-
-	/*
-		if !addNames {
-			for _, param := range list.List {
-				if len(param.Names) > 1 {
-					addNames = true
-					break
-				}
-			}
-		}
-	*/
 
 	for i := 0; i < list.Len(); i++ {
 		v := list.At(i)
@@ -351,39 +253,13 @@ func (g *Generator) genList(list *types.Tuple, addNames, varadic bool) ([]string
 			pname = fmt.Sprintf("_a%d", i)
 		}
 
-		names = append(names, pname)
-		vtypes = append(vtypes, ts)
-		params = append(params, fmt.Sprintf("%s %s", pname, ts))
-		nilable = append(nilable, isNillable(v.Type()))
-
-		/*
-			var pname string
-
-			if addNames {
-				if len(param.Names) == 0 {
-					pname = fmt.Sprintf("_a%d", idx)
-					names = append(names, pname)
-					vtypes = append(types, ts)
-					params = append(params, fmt.Sprintf("%s %s", pname, ts))
-
-					continue
-				}
-
-				for _, name := range param.Names {
-					pname = name.Name
-					names = append(names, pname)
-					types = append(types, ts)
-					params = append(params, fmt.Sprintf("%s %s", pname, ts))
-				}
-			} else {
-				names = append(names, "")
-				types = append(types, ts)
-				params = append(params, ts)
-			}
-		*/
+		params.Names = append(params.Names, pname)
+		params.Types = append(params.Types, ts)
+		params.Params = append(params.Params, fmt.Sprintf("%s %s", pname, ts))
+		params.Nilable = append(params.Nilable, isNillable(v.Type()))
 	}
 
-	return names, vtypes, params, nilable
+	return &params
 }
 
 var ErrNotSetup = errors.New("not setup")
@@ -399,38 +275,31 @@ func (g *Generator) Generate() error {
 		fn := g.iface.Type.Method(i)
 
 		ftype := fn.Type().(*types.Signature)
-		// for _, method := range g.iface.Type.Methods.List {
-		// ftype, ok := method.Type.(*ast.FuncType)
-		// if !ok {
-		// continue
-		// }
-
-		// fname := method.Names[0].Name
 		fname := fn.Name()
 
-		paramNames, paramTypes, params, _ := g.genList(ftype.Params(), true, ftype.Variadic())
-		_, returnTypes, _, returnNils := g.genList(ftype.Results(), false, false)
+		params := genList(ftype.Params(), ftype.Variadic())
+		returns := genList(ftype.Results(), false)
 
-		g.printf("// %s provides a mock function with given fields: %s\n", fname, strings.Join(paramNames, ", "))
-		g.printf("func (_m *%s) %s(%s) ", g.mockName(), fname, strings.Join(params, ", "))
+		g.printf("// %s provides a mock function with given fields: %s\n", fname, strings.Join(params.Names, ", "))
+		g.printf("func (_m *%s) %s(%s) ", g.mockName(), fname, strings.Join(params.Params, ", "))
 
-		switch len(returnTypes) {
+		switch len(returns.Types) {
 		case 0:
 			g.printf("{\n")
 		case 1:
-			g.printf("%s {\n", returnTypes[0])
+			g.printf("%s {\n", returns.Types[0])
 		default:
-			g.printf("(%s) {\n", strings.Join(returnTypes, ", "))
+			g.printf("(%s) {\n", strings.Join(returns.Types, ", "))
 		}
 
 		formatParamNames := func() string {
 			names := ""
-			for i, name := range paramNames {
+			for i, name := range params.Names {
 				if i > 0 {
 					names += ", "
 				}
 
-				paramType := paramTypes[i]
+				paramType := params.Types[i]
 				// for variable args, move the ... to the end.
 				if strings.Index(paramType, "...") == 0 {
 					name += "..."
@@ -440,21 +309,22 @@ func (g *Generator) Generate() error {
 			return names
 		}
 
-		if len(returnTypes) > 0 {
-			g.printf("\tret := _m.Called(%s)\n\n", strings.Join(paramNames, ", "))
+		if len(returns.Types) > 0 {
+			g.printf("\tret := _m.Called(%s)\n\n", strings.Join(params.Names, ", "))
 
 			var (
 				ret []string
 			)
 
-			for idx, typ := range returnTypes {
+			for idx, typ := range returns.Types {
 				g.printf("\tvar r%d %s\n", idx, typ)
-				g.printf("\tif rf, ok := ret.Get(%d).(func(%s) %s); ok {\n", idx, strings.Join(paramTypes, ", "), typ)
+				g.printf("\tif rf, ok := ret.Get(%d).(func(%s) %s); ok {\n",
+					idx, strings.Join(params.Types, ", "), typ)
 				g.printf("\t\tr%d = rf(%s)\n", idx, formatParamNames())
 				g.printf("\t} else {\n")
 				if typ == "error" {
 					g.printf("\t\tr%d = ret.Error(%d)\n", idx, idx)
-				} else if returnNils[idx] {
+				} else if returns.Nilable[idx] {
 					g.printf("\t\tif ret.Get(%d) != nil {\n", idx)
 					g.printf("\t\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
 					g.printf("\t\t}\n")
@@ -467,46 +337,8 @@ func (g *Generator) Generate() error {
 			}
 
 			g.printf("\treturn %s\n", strings.Join(ret, ", "))
-
-			/*
-				results := ftype.Results()
-
-				for i := 0; i < results.Len(); i++ {
-					field := results.At(i)
-
-					numNames := len(field.Names)
-					if numNames == 0 {
-						numNames = 1
-					}
-
-					for j := 0; j < numNames; j++ {
-						typ := returnTypes[idx]
-
-						g.printf("\tvar r%d %s\n", idx, typ)
-						g.printf("\tif rf, ok := ret.Get(%d).(func(%s) %s); ok {\n", idx, strings.Join(paramTypes, ", "), typ)
-						g.printf("\t\tr%d = rf(%s)\n", idx, formatParamNames())
-						g.printf("\t} else {\n")
-						if typ == "error" {
-							g.printf("\t\tr%d = ret.Error(%d)\n", idx, idx)
-						} else if g.isNillable(field.Type) {
-							g.printf("\t\tif ret.Get(%d) != nil {\n", idx)
-							g.printf("\t\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
-							g.printf("\t\t}\n")
-						} else {
-							g.printf("\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
-						}
-						g.printf("\t}\n\n")
-
-						ret = append(ret, fmt.Sprintf("r%d", idx))
-						idx++
-					}
-				}
-
-				g.printf("\treturn %s\n", strings.Join(ret, ", "))
-
-			*/
 		} else {
-			g.printf("\t_m.Called(%s)\n", strings.Join(paramNames, ", "))
+			g.printf("\t_m.Called(%s)\n", strings.Join(params.Names, ", "))
 		}
 
 		g.printf("}\n")
