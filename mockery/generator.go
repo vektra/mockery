@@ -205,6 +205,12 @@ func renderType(t types.Type) string {
 		}
 
 		return fmt.Sprintf("struct{%s}", strings.Join(fields, ";"))
+	case *types.Interface:
+		if t.NumMethods() != 0 {
+			panic("Unable to mock inline interfaces with methods")
+		}
+
+		return "interface{}"
 	case namer:
 		return t.Name()
 	default:
