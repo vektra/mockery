@@ -182,6 +182,11 @@ func renderType(t types.Type) string {
 				renderTypeTuple(t.Results()),
 			)
 		}
+	case *types.Map:
+		kt := renderType(t.Key())
+		vt := renderType(t.Elem())
+
+		return fmt.Sprintf("map[%s]%s", kt, vt)
 	case *types.Chan:
 		switch t.Dir() {
 		case types.SendRecv:
