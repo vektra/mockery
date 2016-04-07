@@ -1,6 +1,9 @@
 SHELL=bash
 
-all: fmt test install integration
+all: clean fmt test install integration
+
+clean:
+	rm -rf mocks
 
 fmt:
 	go fmt ./...
