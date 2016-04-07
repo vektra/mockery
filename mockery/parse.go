@@ -94,22 +94,30 @@ type Interface struct {
 }
 
 func (p *Parser) Interfaces() []*Interface {
-	return nil
-	/*
-		var ifaces []*Interface
+	var ifaces []*Interface
 
-		for _, decl := range p.file.Decls {
-			if gen, ok := decl.(*ast.GenDecl); ok {
-				for _, spec := range gen.Specs {
-					if typespec, ok := spec.(*ast.TypeSpec); ok {
-						if iface, ok := typespec.Type.(*ast.InterfaceType); ok {
-							ifaces = append(ifaces, &Interface{typespec.Name.Name, p.path, p.file, nil})
-						}
-					}
-				}
-			}
+	scope := p.pkg.Scope()
+
+	for _, name := range scope.Names() {
+		obj := p.pkg.Scope().Lookup(name)
+		if obj == nil {
+			continue
 		}
 
-		return ifaces
-	*/
+		typ, ok := obj.Type().(*types.Named)
+		if !ok {
+			continue
+		}
+
+		name = typ.Obj().Name()
+
+		iface, ok := typ.Underlying().(*types.Interface)
+		if !ok {
+			continue
+		}
+
+		ifaces = append(ifaces, &Interface{name, p.path, p.file, iface.Complete()})
+	}
+
+	return ifaces
 }
