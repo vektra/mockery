@@ -3,10 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io"
-	"io/ioutil"
 	"os"
-	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -70,7 +67,19 @@ func main() {
 		}
 	}
 
-	generated := walkDir(config, config.fDir, recursive, filter, limitOne, osp)
+	visitor := &mockery.GeneratorVisitor{
+		InPackage: config.fIP,
+		Note:      config.fNote,
+		Osp:       osp,
+	}
+
+	walker := mockery.Walker{
+		BaseDir:   config.fDir,
+		Recursive: recursive,
+		Filter:    filter,
+		LimitOne:  limitOne,
+	}
+	generated := walker.Walk(visitor)
 
 	if config.fName != "" && !generated {
 		fmt.Printf("Unable to find %s in any go files under this path\n", config.fName)
@@ -97,94 +106,4 @@ func parseConfigFromArgs(args []string) Config {
 	flagSet.Parse(args[1:])
 
 	return config
-}
-
-func walkDir(config Config, dir string, recursive bool, filter *regexp.Regexp, limitOne bool, osp mockery.OutputStreamProvider) (generated bool) {
-	files, err := ioutil.ReadDir(dir)
-	if err != nil {
-		return
-	}
-
-	for _, file := range files {
-		if strings.HasPrefix(file.Name(), ".") {
-			continue
-		}
-
-		path := filepath.Join(dir, file.Name())
-
-		if file.IsDir() {
-			if recursive {
-				generated = walkDir(config, path, recursive, filter, limitOne, osp) || generated
-				if generated && limitOne {
-					return
-				}
-			}
-			continue
-		}
-
-		if !strings.HasSuffix(path, ".go") {
-			continue
-		}
-
-		p := mockery.NewParser()
-
-		err = p.Parse(path)
-		if err != nil {
-			continue
-		}
-		for _, iface := range p.Interfaces() {
-			if !filter.MatchString(iface.Name) {
-				continue
-			}
-			genMock(iface, config, osp)
-			generated = true
-			if limitOne {
-				return
-			}
-		}
-	}
-
-	return
-}
-
-func genMock(iface *mockery.Interface, config Config, osp mockery.OutputStreamProvider) {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Printf("Unable to generated mock for '%s': %s\n", iface.Name, r)
-			return
-		}
-	}()
-
-	var out io.Writer
-
-	pkg := "mocks"
-
-	out, err, closer := osp.GetWriter(iface, pkg)
-	if err != nil {
-		fmt.Printf("Unable to get writer for %s: %s", iface.Name, err)
-		os.Exit(1)
-	}
-	defer closer()
-
-	gen := mockery.NewGenerator(iface)
-
-	if config.fIP {
-		gen.GenerateIPPrologue()
-	} else {
-		gen.GeneratePrologue(pkg)
-	}
-
-	gen.GeneratePrologueNote(config.fNote)
-
-	err = gen.Generate()
-	if err != nil {
-		fmt.Printf("Error with %s: %s\n", iface.Name, err)
-		os.Exit(1)
-	}
-
-	err = gen.Write(out)
-	if err != nil {
-		fmt.Printf("Error writing %s: %s\n", iface.Name, err)
-		os.Exit(1)
-	}
 }
