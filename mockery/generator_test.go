@@ -1,7 +1,6 @@
 package mockery
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -234,6 +233,42 @@ func TestGeneratorPrologueNote(t *testing.T) {
 
 `
 
+	assert.Equal(t, expected, gen.buf.String())
+}
+
+func TestGeneratorChecksInterfacesForNilable(t *testing.T) {
+	parser := NewParser()
+	parser.Parse(filepath.Join(fixturePath, "requester_iface.go"))
+
+	iface, err := parser.Find("RequesterIface")
+	assert.NoError(t, err)
+
+	gen := NewGenerator(iface)
+	assert.NoError(t, err)
+
+	err = gen.Generate()
+	assert.NoError(t, err)
+
+	expected := `type RequesterIface struct {
+	mock.Mock
+}
+
+// Get provides a mock function with given fields: 
+func (_m *RequesterIface) Get() io.Reader {
+	ret := _m.Called()
+
+	var r0 io.Reader
+	if rf, ok := ret.Get(0).(func() io.Reader); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(io.Reader)
+		}
+	}
+
+	return r0
+}
+`
 	assert.Equal(t, expected, gen.buf.String())
 }
 
@@ -730,8 +765,6 @@ func (_m *MyReader) Read(p []byte) (int, error) {
 	return r0, r1
 }
 `
-
-	fmt.Println(gen.buf.String())
 
 	assert.Equal(t, expected, gen.buf.String())
 }

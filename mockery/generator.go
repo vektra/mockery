@@ -211,9 +211,11 @@ func renderTypeTuple(tup *types.Tuple) string {
 }
 
 func isNillable(typ types.Type) bool {
-	switch typ.(type) {
+	switch t := typ.(type) {
 	case *types.Pointer, *types.Array, *types.Map, *types.Interface, *types.Signature, *types.Chan, *types.Slice:
 		return true
+	case *types.Named:
+		return isNillable(t.Underlying())
 	}
 	return false
 }
