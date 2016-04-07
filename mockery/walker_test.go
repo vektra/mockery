@@ -1,7 +1,6 @@
 package mockery
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"path"
@@ -38,10 +37,6 @@ func TestWalkerHere(t *testing.T) {
 
 	w.Walk(gv)
 
-	for _, i := range gv.Interfaces {
-		fmt.Println(i)
-	}
-
 	assert.Equal(t, 18, len(gv.Interfaces))
 	first := gv.Interfaces[0]
 	assert.Equal(t, "AsyncProducer", first.Name)
@@ -61,10 +56,6 @@ func TestWalkerRegexp(t *testing.T) {
 	gv := NewGatheringVisitor()
 
 	w.Walk(gv)
-
-	for _, i := range gv.Interfaces {
-		fmt.Println(i)
-	}
 
 	assert.Equal(t, 1, len(gv.Interfaces))
 	first := gv.Interfaces[0]
