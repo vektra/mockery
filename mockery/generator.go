@@ -191,6 +191,20 @@ func renderType(t types.Type) string {
 		default:
 			return "chan<- " + renderType(t.Elem())
 		}
+	case *types.Struct:
+		var fields []string
+
+		for i := 0; i < t.NumFields(); i++ {
+			f := t.Field(i)
+
+			if f.Anonymous() {
+				fields = append(fields, renderType(f.Type()))
+			} else {
+				fields = append(fields, fmt.Sprintf("%s %s", f.Name(), renderType(f.Type())))
+			}
+		}
+
+		return fmt.Sprintf("struct{%s}", strings.Join(fields, ";"))
 	case namer:
 		return t.Name()
 	default:
