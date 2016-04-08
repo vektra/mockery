@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -26,12 +27,15 @@ func (this *Walker) Walk(visitor WalkerVisitor) (generated bool) {
 }
 
 func (this *Walker) doWalk(dir string, visitor WalkerVisitor) (generated bool) {
+	log.Printf("Walker::doWalk(%s)", dir)
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
+		log.Printf("Walker::doWalk: error reading directory %s: %s", dir, err)
 		return
 	}
 
 	for _, file := range files {
+		log.Printf("Walker::doWalk(%s): Checking file: %s", dir, file.Name())
 		if strings.HasPrefix(file.Name(), ".") {
 			continue
 		}
@@ -39,9 +43,11 @@ func (this *Walker) doWalk(dir string, visitor WalkerVisitor) (generated bool) {
 		path := filepath.Join(dir, file.Name())
 
 		if file.IsDir() {
+			log.Printf("Walker::doWalk(%s): %s is a directory", dir, file.Name())
 			if this.Recursive {
 				generated = this.doWalk(path, visitor) || generated
 				if generated && this.LimitOne {
+					log.Printf("Walker::doWalk(%s): is directory && generated && LimitOne", dir)
 					return
 				}
 			}
@@ -56,10 +62,13 @@ func (this *Walker) doWalk(dir string, visitor WalkerVisitor) (generated bool) {
 
 		err = p.Parse(path)
 		if err != nil {
+			log.Printf("Walker::doWalk(%s): parse(%s) error: %s", dir, path, err)
 			continue
 		}
 		for _, iface := range p.Interfaces() {
+			log.Printf("Walker::doWalk(%s): checking interface: %s", dir, iface)
 			if !this.Filter.MatchString(iface.Name) {
+				log.Printf("Walker::doWalk(%s): %s does not match filter %s, skipping", dir, iface.Name, this.Filter)
 				continue
 			}
 			err := visitor.VisitWalk(iface)
@@ -69,6 +78,7 @@ func (this *Walker) doWalk(dir string, visitor WalkerVisitor) (generated bool) {
 			}
 			generated = true
 			if this.LimitOne {
+				log.Printf("Walker::doWalk(%s): generated && LimtOne", dir)
 				return
 			}
 		}
