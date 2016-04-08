@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 	"regexp"
 	"strings"
@@ -23,10 +25,17 @@ type Config struct {
 	fTO        bool
 	fCase      string
 	fNote      string
+	Verbose    bool
 }
 
 func main() {
 	config := parseConfigFromArgs(os.Args)
+
+	if !config.Verbose {
+		log.SetOutput(ioutil.Discard)
+	}
+
+	log.Printf("Parsed Config: %s", config)
 
 	var recursive bool
 	var filter *regexp.Regexp
@@ -66,12 +75,14 @@ func main() {
 			Case:      config.fCase,
 		}
 	}
+	log.Printf("Set OutputProvider to %s", osp)
 
 	visitor := &mockery.GeneratorVisitor{
 		InPackage: config.fIP,
 		Note:      config.fNote,
 		Osp:       osp,
 	}
+	log.Printf("Using Visitor: %s", visitor)
 
 	walker := mockery.Walker{
 		BaseDir:   config.fDir,
@@ -79,12 +90,15 @@ func main() {
 		Filter:    filter,
 		LimitOne:  limitOne,
 	}
+	log.Printf("Using Walker: %s", walker)
+
 	generated := walker.Walk(visitor)
 
 	if config.fName != "" && !generated {
 		fmt.Printf("Unable to find %s in any go files under this path\n", config.fName)
 		os.Exit(1)
 	}
+	log.Print("Success")
 }
 
 func parseConfigFromArgs(args []string) Config {
@@ -102,6 +116,7 @@ func parseConfigFromArgs(args []string) Config {
 	flagSet.BoolVar(&config.fTO, "testonly", false, "generate a mock in a _test.go file")
 	flagSet.StringVar(&config.fCase, "case", "camel", "name the mocked file using casing convention")
 	flagSet.StringVar(&config.fNote, "note", "", "comment to insert into prologue of each generated file")
+	flagSet.BoolVar(&config.Verbose, "verbose", false, "Enables verbose logging")
 
 	flagSet.Parse(args[1:])
 
