@@ -58,7 +58,7 @@ func TestWalkerRegexp(t *testing.T) {
 
 	w.Walk(gv)
 
-	assert.Equal(t, 1, len(gv.Interfaces))
+	assert.True(t, len(gv.Interfaces) >= 1)
 	first := gv.Interfaces[0]
 	assert.Equal(t, "AsyncProducer", first.Name)
 	assert.Equal(t, path.Join(wd, "fixtures/async.go"), first.Path)

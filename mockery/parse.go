@@ -6,6 +6,7 @@ import (
 	"go/parser"
 	"go/token"
 	"go/types"
+	"io/ioutil"
 	"path/filepath"
 )
 
@@ -21,13 +22,35 @@ func NewParser() *Parser {
 }
 
 func (p *Parser) Parse(path string) error {
-	fset := token.NewFileSet()
+	dir := filepath.Dir(path)
 
-	// Parse the file containing this very example
-	// but stop after processing the imports.
-	f, err := parser.ParseFile(fset, path, nil, 0)
+	files, err := ioutil.ReadDir(dir)
 	if err != nil {
 		return err
+	}
+
+	var astFiles []*ast.File
+
+	fset := token.NewFileSet()
+
+	for _, fi := range files {
+		if filepath.Ext(fi.Name()) != ".go" {
+			continue
+		}
+
+		fpath := filepath.Join(dir, fi.Name())
+		// Parse the file containing this very example
+		// but stop after processing the imports.
+		f, err := parser.ParseFile(fset, fpath, nil, 0)
+		if err != nil {
+			return err
+		}
+
+		if fi.Name() == filepath.Base(path) {
+			p.file = f
+		}
+
+		astFiles = append(astFiles, f)
 	}
 
 	abs, err := filepath.Abs(path)
@@ -39,13 +62,14 @@ func (p *Parser) Parse(path string) error {
 	// Type information for the imported packages
 	// comes from $GOROOT/pkg/$GOOS_$GOOARCH/fmt.a.
 	conf := types.Config{Importer: importer.Default()}
-	pkg, err := conf.Check(abs, fset, []*ast.File{f}, nil)
+	conf.DisableUnusedImportCheck = true
+	conf.IgnoreFuncBodies = true
+	pkg, err := conf.Check(abs, fset, astFiles, nil)
 	if err != nil {
 		return err
 	}
 
 	p.path = abs
-	p.file = f
 	p.pkg = pkg
 	return nil
 }
