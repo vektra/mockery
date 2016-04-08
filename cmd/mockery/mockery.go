@@ -82,7 +82,7 @@ func main() {
 		Note:      config.fNote,
 		Osp:       osp,
 	}
-	log.Printf("Using Wisitor: %s", visitor)
+	log.Printf("Using Visitor: %s", visitor)
 
 	walker := mockery.Walker{
 		BaseDir:   config.fDir,
