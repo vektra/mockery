@@ -56,6 +56,7 @@ func (this *Walker) doWalk(dir string, visitor WalkerVisitor) (generated bool) {
 
 		err = p.Parse(path)
 		if err != nil {
+			fmt.Fprintln(os.Stderr, "Error parsing file: ", err)
 			continue
 		}
 		for _, iface := range p.Interfaces() {
@@ -64,7 +65,7 @@ func (this *Walker) doWalk(dir string, visitor WalkerVisitor) (generated bool) {
 			}
 			err := visitor.VisitWalk(iface)
 			if err != nil {
-				fmt.Printf("Error walking %s: %s\n", iface.Name, err)
+				fmt.Fprintf(os.Stderr, "Error walking %s: %s\n", iface.Name, err)
 				os.Exit(1)
 			}
 			generated = true

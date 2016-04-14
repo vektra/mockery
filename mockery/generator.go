@@ -149,7 +149,7 @@ func renderType(t types.Type) string {
 	switch t := t.(type) {
 	case *types.Named:
 		o := t.Obj()
-		if o.Pkg() == nil {
+		if o.Pkg() == nil || o.Pkg().Name() == "main" {
 			return o.Name()
 		} else {
 			return o.Pkg().Name() + "." + o.Name()
