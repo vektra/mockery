@@ -308,7 +308,11 @@ func (g *Generator) Generate() error {
 		params := genList(ftype.Params(), ftype.Variadic())
 		returns := genList(ftype.Results(), false)
 
-		g.printf("// %s provides a mock function with given fields: %s\n", fname, strings.Join(params.Names, ", "))
+		namesPrefix := " "
+		if len(params.Names) == 0 {
+			namesPrefix = ""
+		}
+		g.printf("// %s provides a mock function with given fields:%s%s\n", fname, namesPrefix, strings.Join(params.Names, ", "))
 		g.printf("func (_m *%s) %s(%s) ", g.mockName(), fname, strings.Join(params.Params, ", "))
 
 		switch len(returns.Types) {
@@ -345,21 +349,24 @@ func (g *Generator) Generate() error {
 			)
 
 			for idx, typ := range returns.Types {
-				g.printf("\tvar r%d %s\n", idx, typ)
-				g.printf("\tif rf, ok := ret.Get(%d).(func(%s) %s); ok {\n",
-					idx, strings.Join(params.Types, ", "), typ)
-				g.printf("\t\tr%d = rf(%s)\n", idx, formatParamNames())
-				g.printf("\t} else {\n")
-				if typ == "error" {
-					g.printf("\t\tr%d = ret.Error(%d)\n", idx, idx)
-				} else if returns.Nilable[idx] {
-					g.printf("\t\tif ret.Get(%d) != nil {\n", idx)
-					g.printf("\t\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
-					g.printf("\t\t}\n")
-				} else {
-					g.printf("\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
+				if idx == 0 {
+					g.printf("\tif rf, ok := ret.Get(%d).(func(%s) (%s)); ok {\n",
+						idx, strings.Join(params.Types, ", "), strings.Join(returns.Types, ", "))
+					g.printf("\t\treturn rf(%s)\n", formatParamNames())
+					g.printf("\t}\n\n")
 				}
-				g.printf("\t}\n\n")
+
+				g.printf("\tvar r%d %s\n", idx, typ)
+				if typ == "error" {
+					g.printf("\tr%d = ret.Error(%d)\n", idx, idx)
+				} else if returns.Nilable[idx] {
+					g.printf("\tif ret.Get(%d) != nil {\n", idx)
+					g.printf("\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
+					g.printf("\t}\n")
+				} else {
+					g.printf("\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
+				}
+				g.printf("\n")
 
 				ret = append(ret, fmt.Sprintf("r%d", idx))
 			}

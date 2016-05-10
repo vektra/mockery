@@ -29,19 +29,15 @@ type Requester struct {
 func (_m *Requester) Get(path string) (string, error) {
 	ret := _m.Called(path)
 
-	var r0 string
-	if rf, ok := ret.Get(0).(func(string) string); ok {
-		r0 = rf(path)
-	} else {
-		r0 = ret.Get(0).(string)
+	if rf, ok := ret.Get(0).(func(string) (string, error)); ok {
+		return rf(path)
 	}
 
+	var r0 string
+	r0 = ret.Get(0).(string)
+
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string) error); ok {
-		r1 = rf(path)
-	} else {
-		r1 = ret.Error(1)
-	}
+	r1 = ret.Error(1)
 
 	return r0, r1
 }
@@ -70,12 +66,12 @@ type Requester2 struct {
 func (_m *Requester2) Get(path string) error {
 	ret := _m.Called(path)
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(string) error); ok {
-		r0 = rf(path)
-	} else {
-		r0 = ret.Error(0)
+	if rf, ok := ret.Get(0).(func(string) (error)); ok {
+		return rf(path)
 	}
+
+	var r0 error
+	r0 = ret.Error(0)
 
 	return r0
 }
@@ -100,16 +96,16 @@ type Requester3 struct {
 	mock.Mock
 }
 
-// Get provides a mock function with given fields: 
+// Get provides a mock function with given fields:
 func (_m *Requester3) Get() error {
 	ret := _m.Called()
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func() error); ok {
-		r0 = rf()
-	} else {
-		r0 = ret.Error(0)
+	if rf, ok := ret.Get(0).(func() (error)); ok {
+		return rf()
 	}
+
+	var r0 error
+	r0 = ret.Error(0)
 
 	return r0
 }
@@ -134,7 +130,7 @@ type Requester4 struct {
 	mock.Mock
 }
 
-// Get provides a mock function with given fields: 
+// Get provides a mock function with given fields:
 func (_m *Requester4) Get() {
 	_m.Called()
 }
@@ -160,7 +156,7 @@ type mockRequester struct {
 	mock.Mock
 }
 
-// Get provides a mock function with given fields: 
+// Get provides a mock function with given fields:
 func (_m *mockRequester) Get() {
 	_m.Called()
 }
@@ -259,17 +255,17 @@ type RequesterIface struct {
 	mock.Mock
 }
 
-// Get provides a mock function with given fields: 
+// Get provides a mock function with given fields:
 func (_m *RequesterIface) Get() io.Reader {
 	ret := _m.Called()
 
+	if rf, ok := ret.Get(0).(func() (io.Reader)); ok {
+		return rf()
+	}
+
 	var r0 io.Reader
-	if rf, ok := ret.Get(0).(func() io.Reader); ok {
-		r0 = rf()
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(io.Reader)
-		}
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).(io.Reader)
 	}
 
 	return r0
@@ -300,21 +296,17 @@ type RequesterPtr struct {
 func (_m *RequesterPtr) Get(path string) (*string, error) {
 	ret := _m.Called(path)
 
+	if rf, ok := ret.Get(0).(func(string) (*string, error)); ok {
+		return rf(path)
+	}
+
 	var r0 *string
-	if rf, ok := ret.Get(0).(func(string) *string); ok {
-		r0 = rf(path)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*string)
-		}
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).(*string)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string) error); ok {
-		r1 = rf(path)
-	} else {
-		r1 = ret.Error(1)
-	}
+	r1 = ret.Error(1)
 
 	return r0, r1
 }
@@ -344,21 +336,17 @@ type RequesterSlice struct {
 func (_m *RequesterSlice) Get(path string) ([]string, error) {
 	ret := _m.Called(path)
 
+	if rf, ok := ret.Get(0).(func(string) ([]string, error)); ok {
+		return rf(path)
+	}
+
 	var r0 []string
-	if rf, ok := ret.Get(0).(func(string) []string); ok {
-		r0 = rf(path)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]string)
-		}
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).([]string)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string) error); ok {
-		r1 = rf(path)
-	} else {
-		r1 = ret.Error(1)
-	}
+	r1 = ret.Error(1)
 
 	return r0, r1
 }
@@ -388,21 +376,17 @@ type RequesterArray struct {
 func (_m *RequesterArray) Get(path string) ([2]string, error) {
 	ret := _m.Called(path)
 
+	if rf, ok := ret.Get(0).(func(string) ([2]string, error)); ok {
+		return rf(path)
+	}
+
 	var r0 [2]string
-	if rf, ok := ret.Get(0).(func(string) [2]string); ok {
-		r0 = rf(path)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([2]string)
-		}
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).([2]string)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string) error); ok {
-		r1 = rf(path)
-	} else {
-		r1 = ret.Error(1)
-	}
+	r1 = ret.Error(1)
 
 	return r0, r1
 }
@@ -433,19 +417,15 @@ type RequesterNS struct {
 func (_m *RequesterNS) Get(path string) (http.Response, error) {
 	ret := _m.Called(path)
 
-	var r0 http.Response
-	if rf, ok := ret.Get(0).(func(string) http.Response); ok {
-		r0 = rf(path)
-	} else {
-		r0 = ret.Get(0).(http.Response)
+	if rf, ok := ret.Get(0).(func(string) (http.Response, error)); ok {
+		return rf(path)
 	}
 
+	var r0 http.Response
+	r0 = ret.Get(0).(http.Response)
+
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string) error); ok {
-		r1 = rf(path)
-	} else {
-		r1 = ret.Error(1)
-	}
+	r1 = ret.Error(1)
 
 	return r0, r1
 }
@@ -477,22 +457,18 @@ type KeyManager struct {
 func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 	ret := _m.Called(_a0, _a1)
 
+	if rf, ok := ret.Get(0).(func(string, uint16) ([]byte, *test.Err)); ok {
+		return rf(_a0, _a1)
+	}
+
 	var r0 []byte
-	if rf, ok := ret.Get(0).(func(string, uint16) []byte); ok {
-		r0 = rf(_a0, _a1)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]byte)
-		}
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).([]byte)
 	}
 
 	var r1 *test.Err
-	if rf, ok := ret.Get(1).(func(string, uint16) *test.Err); ok {
-		r1 = rf(_a0, _a1)
-	} else {
-		if ret.Get(1) != nil {
-			r1 = ret.Get(1).(*test.Err)
-		}
+	if ret.Get(1) != nil {
+		r1 = ret.Get(1).(*test.Err)
 	}
 
 	return r0, r1
@@ -522,12 +498,12 @@ type RequesterElided struct {
 func (_m *RequesterElided) Get(path string, url string) error {
 	ret := _m.Called(path, url)
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(string, string) error); ok {
-		r0 = rf(path, url)
-	} else {
-		r0 = ret.Error(0)
+	if rf, ok := ret.Get(0).(func(string, string) (error)); ok {
+		return rf(path, url)
 	}
+
+	var r0 error
+	r0 = ret.Error(0)
 
 	return r0
 }
@@ -556,33 +532,21 @@ type RequesterReturnElided struct {
 func (_m *RequesterReturnElided) Get(path string) (int, int, int, error) {
 	ret := _m.Called(path)
 
-	var r0 int
-	if rf, ok := ret.Get(0).(func(string) int); ok {
-		r0 = rf(path)
-	} else {
-		r0 = ret.Get(0).(int)
+	if rf, ok := ret.Get(0).(func(string) (int, int, int, error)); ok {
+		return rf(path)
 	}
+
+	var r0 int
+	r0 = ret.Get(0).(int)
 
 	var r1 int
-	if rf, ok := ret.Get(1).(func(string) int); ok {
-		r1 = rf(path)
-	} else {
-		r1 = ret.Get(1).(int)
-	}
+	r1 = ret.Get(1).(int)
 
 	var r2 int
-	if rf, ok := ret.Get(2).(func(string) int); ok {
-		r2 = rf(path)
-	} else {
-		r2 = ret.Get(2).(int)
-	}
+	r2 = ret.Get(2).(int)
 
 	var r3 error
-	if rf, ok := ret.Get(3).(func(string) error); ok {
-		r3 = rf(path)
-	} else {
-		r3 = ret.Error(3)
-	}
+	r3 = ret.Error(3)
 
 	return r0, r1, r2, r3
 }
@@ -612,12 +576,12 @@ type RequesterVariable struct {
 func (_m *RequesterVariable) Get(values ...string) bool {
 	ret := _m.Called(values)
 
-	var r0 bool
-	if rf, ok := ret.Get(0).(func(...string) bool); ok {
-		r0 = rf(values...)
-	} else {
-		r0 = ret.Get(0).(bool)
+	if rf, ok := ret.Get(0).(func(...string) (bool)); ok {
+		return rf(values...)
 	}
+
+	var r0 bool
+	r0 = ret.Get(0).(bool)
 
 	return r0
 }
@@ -650,13 +614,13 @@ func (_m *Fooer) Bar(f func([]int)) {
 func (_m *Fooer) Baz(path string) func(string) string {
 	ret := _m.Called(path)
 
+	if rf, ok := ret.Get(0).(func(string) (func(string) string)); ok {
+		return rf(path)
+	}
+
 	var r0 func(string) string
-	if rf, ok := ret.Get(0).(func(string) func(string) string); ok {
-		r0 = rf(path)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(func(string) string)
-		}
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).(func(string) string)
 	}
 
 	return r0
@@ -665,12 +629,12 @@ func (_m *Fooer) Baz(path string) func(string) string {
 func (_m *Fooer) Foo(f func(string) string) error {
 	ret := _m.Called(f)
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(func(string) string) error); ok {
-		r0 = rf(f)
-	} else {
-		r0 = ret.Error(0)
+	if rf, ok := ret.Get(0).(func(func(string) string) (error)); ok {
+		return rf(f)
 	}
+
+	var r0 error
+	r0 = ret.Error(0)
 
 	return r0
 }
@@ -695,47 +659,47 @@ type AsyncProducer struct {
 	mock.Mock
 }
 
-// Input provides a mock function with given fields: 
+// Input provides a mock function with given fields:
 func (_m *AsyncProducer) Input() chan<- bool {
 	ret := _m.Called()
 
+	if rf, ok := ret.Get(0).(func() (chan<- bool)); ok {
+		return rf()
+	}
+
 	var r0 chan<- bool
-	if rf, ok := ret.Get(0).(func() chan<- bool); ok {
-		r0 = rf()
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(chan<- bool)
-		}
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).(chan<- bool)
 	}
 
 	return r0
 }
-// Output provides a mock function with given fields: 
+// Output provides a mock function with given fields:
 func (_m *AsyncProducer) Output() <-chan bool {
 	ret := _m.Called()
 
+	if rf, ok := ret.Get(0).(func() (<-chan bool)); ok {
+		return rf()
+	}
+
 	var r0 <-chan bool
-	if rf, ok := ret.Get(0).(func() <-chan bool); ok {
-		r0 = rf()
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(<-chan bool)
-		}
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).(<-chan bool)
 	}
 
 	return r0
 }
-// Whatever provides a mock function with given fields: 
+// Whatever provides a mock function with given fields:
 func (_m *AsyncProducer) Whatever() chan bool {
 	ret := _m.Called()
 
+	if rf, ok := ret.Get(0).(func() (chan bool)); ok {
+		return rf()
+	}
+
 	var r0 chan bool
-	if rf, ok := ret.Get(0).(func() chan bool); ok {
-		r0 = rf()
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(chan bool)
-		}
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).(chan bool)
 	}
 
 	return r0
@@ -766,19 +730,15 @@ type MyReader struct {
 func (_m *MyReader) Read(p []byte) (int, error) {
 	ret := _m.Called(p)
 
-	var r0 int
-	if rf, ok := ret.Get(0).(func([]byte) int); ok {
-		r0 = rf(p)
-	} else {
-		r0 = ret.Get(0).(int)
+	if rf, ok := ret.Get(0).(func([]byte) (int, error)); ok {
+		return rf(p)
 	}
 
+	var r0 int
+	r0 = ret.Get(0).(int)
+
 	var r1 error
-	if rf, ok := ret.Get(1).(func([]byte) error); ok {
-		r1 = rf(p)
-	} else {
-		r1 = ret.Error(1)
-	}
+	r1 = ret.Error(1)
 
 	return r0, r1
 }
@@ -808,34 +768,30 @@ type ConsulLock struct {
 func (_m *ConsulLock) Lock(_a0 <-chan struct{}) (<-chan struct{}, error) {
 	ret := _m.Called(_a0)
 
+	if rf, ok := ret.Get(0).(func(<-chan struct{}) (<-chan struct{}, error)); ok {
+		return rf(_a0)
+	}
+
 	var r0 <-chan struct{}
-	if rf, ok := ret.Get(0).(func(<-chan struct{}) <-chan struct{}); ok {
-		r0 = rf(_a0)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(<-chan struct{})
-		}
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).(<-chan struct{})
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(<-chan struct{}) error); ok {
-		r1 = rf(_a0)
-	} else {
-		r1 = ret.Error(1)
-	}
+	r1 = ret.Error(1)
 
 	return r0, r1
 }
-// Unlock provides a mock function with given fields: 
+// Unlock provides a mock function with given fields:
 func (_m *ConsulLock) Unlock() error {
 	ret := _m.Called()
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func() error); ok {
-		r0 = rf()
-	} else {
-		r0 = ret.Error(0)
+	if rf, ok := ret.Get(0).(func() (error)); ok {
+		return rf()
 	}
+
+	var r0 error
+	r0 = ret.Error(0)
 
 	return r0
 }
@@ -864,12 +820,12 @@ type Blank struct {
 func (_m *Blank) Create(x interface{}) error {
 	ret := _m.Called(x)
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(interface{}) error); ok {
-		r0 = rf(x)
-	} else {
-		r0 = ret.Error(0)
+	if rf, ok := ret.Get(0).(func(interface{}) (error)); ok {
+		return rf(x)
 	}
+
+	var r0 error
+	r0 = ret.Error(0)
 
 	return r0
 }
@@ -898,12 +854,12 @@ type MapFunc struct {
 func (_m *MapFunc) Get(m map[string]func(string) string) error {
 	ret := _m.Called(m)
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(map[string]func(string) string) error); ok {
-		r0 = rf(m)
-	} else {
-		r0 = ret.Error(0)
+	if rf, ok := ret.Get(0).(func(map[string]func(string) string) (error)); ok {
+		return rf(m)
 	}
+
+	var r0 error
+	r0 = ret.Error(0)
 
 	return r0
 }
