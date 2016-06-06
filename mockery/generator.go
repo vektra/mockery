@@ -21,11 +21,13 @@ type Generator struct {
 
 	ip    bool
 	iface *Interface
+	pkg   string
 }
 
-func NewGenerator(iface *Interface) *Generator {
+func NewGenerator(iface *Interface, pkg string) *Generator {
 	return &Generator{
 		iface: iface,
+		pkg:   pkg,
 	}
 }
 
@@ -145,11 +147,11 @@ type namer interface {
 	Name() string
 }
 
-func renderType(t types.Type) string {
+func (g *Generator) renderType(t types.Type) string {
 	switch t := t.(type) {
 	case *types.Named:
 		o := t.Obj()
-		if o.Pkg() == nil || o.Pkg().Name() == "main" {
+		if o.Pkg() == nil || o.Pkg().Name() == "main" || o.Pkg().Name() == g.pkg {
 			return o.Name()
 		} else {
 			return o.Pkg().Name() + "." + o.Name()
@@ -157,44 +159,44 @@ func renderType(t types.Type) string {
 	case *types.Basic:
 		return t.Name()
 	case *types.Pointer:
-		return "*" + renderType(t.Elem())
+		return "*" + g.renderType(t.Elem())
 	case *types.Slice:
-		return "[]" + renderType(t.Elem())
+		return "[]" + g.renderType(t.Elem())
 	case *types.Array:
-		return fmt.Sprintf("[%d]%s", t.Len(), renderType(t.Elem()))
+		return fmt.Sprintf("[%d]%s", t.Len(), g.renderType(t.Elem()))
 	case *types.Signature:
 		switch t.Results().Len() {
 		case 0:
 			return fmt.Sprintf(
 				"func(%s)",
-				renderTypeTuple(t.Params()),
+				g.renderTypeTuple(t.Params()),
 			)
 		case 1:
 			return fmt.Sprintf(
 				"func(%s) %s",
-				renderTypeTuple(t.Params()),
-				renderType(t.Results().At(0).Type()),
+				g.renderTypeTuple(t.Params()),
+				g.renderType(t.Results().At(0).Type()),
 			)
 		default:
 			return fmt.Sprintf(
 				"func(%s)(%s)",
-				renderTypeTuple(t.Params()),
-				renderTypeTuple(t.Results()),
+				g.renderTypeTuple(t.Params()),
+				g.renderTypeTuple(t.Results()),
 			)
 		}
 	case *types.Map:
-		kt := renderType(t.Key())
-		vt := renderType(t.Elem())
+		kt := g.renderType(t.Key())
+		vt := g.renderType(t.Elem())
 
 		return fmt.Sprintf("map[%s]%s", kt, vt)
 	case *types.Chan:
 		switch t.Dir() {
 		case types.SendRecv:
-			return "chan " + renderType(t.Elem())
+			return "chan " + g.renderType(t.Elem())
 		case types.RecvOnly:
-			return "<-chan " + renderType(t.Elem())
+			return "<-chan " + g.renderType(t.Elem())
 		default:
-			return "chan<- " + renderType(t.Elem())
+			return "chan<- " + g.renderType(t.Elem())
 		}
 	case *types.Struct:
 		var fields []string
@@ -203,9 +205,9 @@ func renderType(t types.Type) string {
 			f := t.Field(i)
 
 			if f.Anonymous() {
-				fields = append(fields, renderType(f.Type()))
+				fields = append(fields, g.renderType(f.Type()))
 			} else {
-				fields = append(fields, fmt.Sprintf("%s %s", f.Name(), renderType(f.Type())))
+				fields = append(fields, fmt.Sprintf("%s %s", f.Name(), g.renderType(f.Type())))
 			}
 		}
 
@@ -223,13 +225,13 @@ func renderType(t types.Type) string {
 	}
 }
 
-func renderTypeTuple(tup *types.Tuple) string {
+func (g *Generator) renderTypeTuple(tup *types.Tuple) string {
 	var parts []string
 
 	for i := 0; i < tup.Len(); i++ {
 		v := tup.At(i)
 
-		parts = append(parts, renderType(v.Type()))
+		parts = append(parts, g.renderType(v.Type()))
 	}
 
 	return strings.Join(parts, " , ")
@@ -252,7 +254,7 @@ type paramList struct {
 	Nilable []bool
 }
 
-func genList(list *types.Tuple, varadic bool) *paramList {
+func (g *Generator) genList(list *types.Tuple, varadic bool) *paramList {
 	var params paramList
 
 	if list == nil {
@@ -262,13 +264,13 @@ func genList(list *types.Tuple, varadic bool) *paramList {
 	for i := 0; i < list.Len(); i++ {
 		v := list.At(i)
 
-		ts := renderType(v.Type())
+		ts := g.renderType(v.Type())
 
 		if varadic && i == list.Len()-1 {
 			t := v.Type()
 			switch t := t.(type) {
 			case *types.Slice:
-				ts = "..." + renderType(t.Elem())
+				ts = "..." + g.renderType(t.Elem())
 			default:
 				panic("bad varadic type!")
 			}
@@ -305,8 +307,8 @@ func (g *Generator) Generate() error {
 		ftype := fn.Type().(*types.Signature)
 		fname := fn.Name()
 
-		params := genList(ftype.Params(), ftype.Variadic())
-		returns := genList(ftype.Results(), false)
+		params := g.genList(ftype.Params(), ftype.Variadic())
+		returns := g.genList(ftype.Results(), false)
 
 		g.printf("// %s provides a mock function with given fields: %s\n", fname, strings.Join(params.Names, ", "))
 		g.printf("func (_m *%s) %s(%s) ", g.mockName(), fname, strings.Join(params.Params, ", "))

@@ -93,8 +93,13 @@ func (this *GeneratorVisitor) VisitWalk(iface *Interface) error {
 	}()
 
 	var out io.Writer
+	var pkg string
 
-	pkg := "mocks"
+	if this.InPackage {
+		pkg = iface.File.Name.String()
+	} else {
+		pkg = "mocks"
+	}
 
 	out, err, closer := this.Osp.GetWriter(iface, pkg)
 	if err != nil {
@@ -103,7 +108,7 @@ func (this *GeneratorVisitor) VisitWalk(iface *Interface) error {
 	}
 	defer closer()
 
-	gen := NewGenerator(iface)
+	gen := NewGenerator(iface, pkg)
 
 	if this.InPackage {
 		gen.GenerateIPPrologue()

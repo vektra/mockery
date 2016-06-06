@@ -3,11 +3,11 @@ package mockery
 import (
 	"go/ast"
 	"go/importer"
-	"go/parser"
-	"go/token"
 	"go/types"
+	"golang.org/x/tools/go/loader"
 	"io/ioutil"
 	"path/filepath"
+	"strings"
 )
 
 type Parser struct {
@@ -30,8 +30,11 @@ func (p *Parser) Parse(path string) error {
 	}
 
 	var astFiles []*ast.File
+	var conf loader.Config
 
-	fset := token.NewFileSet()
+	conf.TypeCheckFuncBodies = func(_ string) bool { return false }
+	conf.TypeChecker.DisableUnusedImportCheck = true
+	conf.TypeChecker.Importer = importer.Default()
 
 	for _, fi := range files {
 		if filepath.Ext(fi.Name()) != ".go" {
@@ -39,9 +42,7 @@ func (p *Parser) Parse(path string) error {
 		}
 
 		fpath := filepath.Join(dir, fi.Name())
-		// Parse the file containing this very example
-		// but stop after processing the imports.
-		f, err := parser.ParseFile(fset, fpath, nil, 0)
+		f, err := conf.ParseFile(fpath, nil)
 		if err != nil {
 			return err
 		}
@@ -61,16 +62,18 @@ func (p *Parser) Parse(path string) error {
 	// Type-check a package consisting of this file.
 	// Type information for the imported packages
 	// comes from $GOROOT/pkg/$GOOS_$GOOARCH/fmt.a.
-	conf := types.Config{Importer: importer.Default()}
-	conf.DisableUnusedImportCheck = true
-	conf.IgnoreFuncBodies = true
-	pkg, err := conf.Check(abs, fset, astFiles, nil)
+	conf.CreateFromFiles(abs, astFiles...)
+
+	prog, err := conf.Load()
 	if err != nil {
 		return err
+	} else if len(prog.Created) != 1 {
+		panic("expected only one Created package")
 	}
 
 	p.path = abs
-	p.pkg = pkg
+	p.pkg = prog.Created[0].Pkg
+
 	return nil
 }
 
