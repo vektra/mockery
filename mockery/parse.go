@@ -4,10 +4,10 @@ import (
 	"go/ast"
 	"go/importer"
 	"go/types"
-	"golang.org/x/tools/go/loader"
 	"io/ioutil"
 	"path/filepath"
-	"strings"
+
+	"golang.org/x/tools/go/loader"
 )
 
 type Parser struct {
