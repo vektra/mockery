@@ -13,7 +13,8 @@ const pkg = "test"
 
 func TestGenerator(t *testing.T) {
 	parser := NewParser()
-	parser.Parse(testFile)
+	err := parser.Parse(testFile)
+	require.NoError(t, err)
 
 	iface, err := parser.Find("Requester")
 
@@ -476,7 +477,7 @@ type KeyManager struct {
 }
 
 // GetKey provides a mock function with given fields: _a0, _a1
-func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
+func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *Err) {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 []byte
@@ -488,12 +489,12 @@ func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 		}
 	}
 
-	var r1 *test.Err
-	if rf, ok := ret.Get(1).(func(string, uint16) *test.Err); ok {
+	var r1 *Err
+	if rf, ok := ret.Get(1).(func(string, uint16) *Err); ok {
 		r1 = rf(_a0, _a1)
 	} else {
 		if ret.Get(1) != nil {
-			r1 = ret.Get(1).(*test.Err)
+			r1 = ret.Get(1).(*Err)
 		}
 	}
 
