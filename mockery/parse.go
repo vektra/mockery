@@ -89,7 +89,7 @@ func (p *Parser) Find(name string) (*Interface, error) {
 
 	iface := typ.Underlying().(*types.Interface).Complete()
 
-	return &Interface{name, p.path, p.file, iface}, nil
+	return &Interface{name, p.path, p.file, p.pkg, iface}, nil
 }
 
 /*
@@ -117,6 +117,7 @@ type Interface struct {
 	Name string
 	Path string
 	File *ast.File
+	Pkg  *types.Package
 	Type *types.Interface
 }
 
@@ -143,7 +144,7 @@ func (p *Parser) Interfaces() []*Interface {
 			continue
 		}
 
-		ifaces = append(ifaces, &Interface{name, p.path, p.file, iface.Complete()})
+		ifaces = append(ifaces, &Interface{name, p.path, p.file, p.pkg, iface.Complete()})
 	}
 
 	return ifaces

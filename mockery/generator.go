@@ -278,6 +278,19 @@ func (g *Generator) genList(list *types.Tuple, varadic bool) *paramList {
 
 		pname := v.Name()
 
+		if pname == g.pkg {
+			// Argument is same as our package name
+			pname = ""
+		} else if g.iface.Pkg != nil {
+			for _, imp := range g.iface.Pkg.Imports() {
+				if imp.Name() == pname {
+					// Argument is same as that of an imported package
+					pname = ""
+					break
+				}
+			}
+		}
+
 		if pname == "" {
 			pname = fmt.Sprintf("_a%d", i)
 		}
