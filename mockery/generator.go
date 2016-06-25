@@ -12,6 +12,8 @@ import (
 	"strings"
 	"unicode"
 
+	"code.uber.internal/go-common.git/x/log"
+
 	"golang.org/x/tools/imports"
 )
 
@@ -20,34 +22,88 @@ import (
 type Generator struct {
 	buf bytes.Buffer
 
-	ip            bool
-	iface         *Interface
-	pkg           string
-	packageToName map[string]string
-	imports       []*ast.ImportSpec
+	ip               bool
+	iface            *Interface
+	pkg              string
+	packageToName    map[string]string
+	imports          []*ast.ImportSpec
+	localPackageName *string
 }
 
 // NewGenerator builds a Generator.
 func NewGenerator(iface *Interface, pkg string, inPackage bool) *Generator {
 	return &Generator{
-		iface:         iface,
-		pkg:           pkg,
-		packageToName: make(map[string]string),
-		imports:       iface.File.Imports,
-		ip:            inPackage,
+		iface: iface,
+		pkg:   pkg,
+		ip:    inPackage,
 	}
 }
 
-func (g *Generator) getPackageToName() map[string]string {
-	if true {
-		g.packageToName = make(map[string]string)
-		for _, imp := range g.imports {
-			if imp.Name != nil {
-				g.packageToName[strings.Replace(imp.Path.Value, "\"", "", -1)] = imp.Name.Name
-			}
+func (g *Generator) getLocalPackageName() string {
+	if g.localPackageName == nil {
+		localName := g.getLocalPackageNameFromPackageMap(g.getPackageToName())
+		g.localPackageName = &localName
+	}
+	return *g.localPackageName
+}
+
+func (g *Generator) getLocalPackageNameFromPackageMap(packageToName map[string]string) string {
+	localPackageName := g.iface.Pkg.Name()
+	for path, name := range packageToName {
+		if localPackageName == name && path != g.getInterfacePackagePath() {
+			return "_interfacePackage"
 		}
 	}
+	return localPackageName
+}
+
+func (g *Generator) getInterfacePackagePath() string {
+	return g.getLocalizedPath(g.iface.Pkg.Path())
+}
+
+func (g *Generator) getLocalizedPath(path string) string {
+	local, err := filepath.Rel(
+		filepath.Join(os.Getenv("GOPATH"), "src"),
+		filepath.Dir(path),
+	)
+	if err != nil {
+		panic("unable to figure out path for package")
+	}
+	return local
+}
+
+func (g *Generator) getPackageToName() map[string]string {
+	if g.packageToName == nil {
+		g.packageToName = make(map[string]string)
+		for _, imp := range g.iface.File.Imports {
+			importName, err := g.getNameForImport(imp)
+			if err == nil {
+				g.packageToName[g.unescapedImportPath(imp)] = importName
+			} else {
+				log.Warn(err)
+			}
+		}
+		g.packageToName[g.getInterfacePackagePath()] =
+			g.getLocalPackageNameFromPackageMap(g.packageToName)
+	}
 	return g.packageToName
+}
+
+func (g *Generator) unescapedImportPath(imp *ast.ImportSpec) string {
+	return strings.Replace(imp.Path.Value, "\"", "", -1)
+}
+
+func (g *Generator) getNameForImport(imp *ast.ImportSpec) (string, error) {
+	if imp.Name != nil {
+		return imp.Name.Name, nil
+	}
+	unescapedPath := g.unescapedImportPath(imp)
+	for _, p := range g.iface.Pkg.Imports() {
+		if p.Path() == unescapedPath {
+			return p.Name(), nil
+		}
+	}
+	return "", fmt.Errorf("Unable to find package name for import")
 }
 
 func (g *Generator) mockName() string {
@@ -68,34 +124,31 @@ func (g *Generator) mockName() string {
 	return g.iface.Name
 }
 
+func (g *Generator) getImportStringFromSpec(imp *ast.ImportSpec) string {
+	if name, ok := g.getPackageToName()[g.unescapedImportPath(imp)]; ok {
+		return fmt.Sprintf("import %s %s\n", name, imp.Path.Value)
+	}
+	return fmt.Sprintf("import %s\n", imp.Path.Value)
+}
+
 func (g *Generator) generateImports() {
 	if g.iface.File.Imports == nil {
 		return
 	}
 	for _, imp := range g.iface.File.Imports {
-		if imp.Name == nil {
-			g.printf("import %s\n", imp.Path.Value)
-		} else {
-			g.printf("import %s %s\n", imp.Name.Name, imp.Path.Value)
-		}
+		g.printf(g.getImportStringFromSpec(imp))
 	}
 }
 
 // GeneratePrologue generates the prologue of the mock.
 func (g *Generator) GeneratePrologue(pkg string) {
 	if g.ip {
-		g.printf("package %s\n\n", g.iface.File.Name)
+		g.printf("package %s\n\n", g.iface.Pkg.Name())
 	} else {
 		g.printf("package %v\n\n", pkg)
-		local, err := filepath.Rel(
-			filepath.Join(os.Getenv("GOPATH"), "src"),
-			filepath.Dir(g.iface.Path),
+		g.printf(
+			"import %s \"%s\"\n", g.getLocalPackageName(), g.getInterfacePackagePath(),
 		)
-		if err != nil {
-			panic("unable to figure out path for package")
-		}
-
-		g.printf("import \"%s\"\n", local)
 	}
 	g.printf("import \"github.com/stretchr/testify/mock\"\n\n")
 	g.generateImports()
@@ -155,7 +208,14 @@ type namer interface {
 }
 
 func (g *Generator) getInFilePackageNameFromPackage(p *types.Package) string {
-	if name, ok := g.getPackageToName()[p.Path()]; ok {
+	path := p.Path()
+	if strings.HasPrefix(path, "/") {
+		path = g.getLocalizedPath(path)
+	}
+	// if path == g.getInterfacePackagePath() {
+	// 	return g.getLocalPackageName()
+	// }
+	if name, ok := g.getPackageToName()[path]; ok {
 		return name
 	}
 	return p.Name()
@@ -165,7 +225,7 @@ func (g *Generator) renderType(t types.Type) string {
 	switch t := t.(type) {
 	case *types.Named:
 		o := t.Obj()
-		if o.Pkg() == nil || o.Pkg().Name() == "main" || o.Pkg().Name() == g.pkg {
+		if o.Pkg() == nil || o.Pkg().Name() == "main" || (g.ip && o.Pkg().Name() == g.pkg) {
 			return o.Name()
 		}
 		return g.getInFilePackageNameFromPackage(o.Pkg()) + "." + o.Name()
