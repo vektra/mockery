@@ -291,7 +291,7 @@ func (g *Generator) genList(list *types.Tuple, varadic bool) *paramList {
 
 		pname := v.Name()
 
-		if g.nameCollides(pname) {
+		if g.nameCollides(pname) || pname == "" {
 			pname = fmt.Sprintf("_a%d", i)
 		}
 
