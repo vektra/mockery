@@ -18,7 +18,7 @@ func TestGenerator(t *testing.T) {
 
 	iface, err := parser.Find("Requester")
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 
 	err = gen.Generate()
 	assert.NoError(t, err)
@@ -59,7 +59,7 @@ func TestGeneratorSingleReturn(t *testing.T) {
 
 	iface, err := parser.Find("Requester2")
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 
 	err = gen.Generate()
 	assert.NoError(t, err)
@@ -93,7 +93,7 @@ func TestGeneratorNoArguments(t *testing.T) {
 
 	iface, err := parser.Find("Requester3")
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 
 	err = gen.Generate()
 	assert.NoError(t, err)
@@ -127,7 +127,7 @@ func TestGeneratorNoNothing(t *testing.T) {
 
 	iface, err := parser.Find("Requester4")
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 
 	err = gen.Generate()
 	assert.NoError(t, err)
@@ -152,8 +152,7 @@ func TestGeneratorUnexported(t *testing.T) {
 
 	iface, err := parser.Find("requester")
 
-	gen := NewGenerator(iface, pkg)
-	gen.ip = true
+	gen := NewGenerator(iface, pkg, true)
 
 	err = gen.Generate()
 	assert.NoError(t, err)
@@ -179,7 +178,7 @@ func TestGeneratorPrologue(t *testing.T) {
 	iface, err := parser.Find("Requester")
 	assert.NoError(t, err)
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 
 	gen.GeneratePrologue("mocks")
 
@@ -191,6 +190,7 @@ func TestGeneratorPrologue(t *testing.T) {
 
 import "` + local + `"
 import "github.com/stretchr/testify/mock"
+
 
 `
 
@@ -204,7 +204,7 @@ func TestGeneratorProloguewithImports(t *testing.T) {
 	iface, err := parser.Find("RequesterNS")
 	assert.NoError(t, err)
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 
 	gen.GeneratePrologue("mocks")
 
@@ -224,6 +224,34 @@ import "net/http"
 	assert.Equal(t, expected, gen.buf.String())
 }
 
+func TestGeneratorPrologueWithMultipleImportsSameName(t *testing.T) {
+	parser := NewParser()
+	parser.Parse(filepath.Join(fixturePath, "same_name_imports.go"))
+
+	iface, err := parser.Find("Example")
+	assert.NoError(t, err)
+
+	gen := NewGenerator(iface, pkg, false)
+
+	gen.GeneratePrologue("mocks")
+
+	goPath := os.Getenv("GOPATH")
+	local, err := filepath.Rel(filepath.Join(goPath, "src"), filepath.Dir(iface.Path))
+	assert.NoError(t, err)
+
+	expected := `package mocks
+
+import "` + local + `"
+import "github.com/stretchr/testify/mock"
+
+import "net/http"
+import my_http "github.com/vektra/mockery/mockery/fixtures/http"
+
+`
+
+	assert.Equal(t, expected, gen.buf.String())
+}
+
 func TestGeneratorPrologueNote(t *testing.T) {
 	parser := NewParser()
 	parser.Parse(testFile)
@@ -231,7 +259,7 @@ func TestGeneratorPrologueNote(t *testing.T) {
 	iface, err := parser.Find("Requester")
 	assert.NoError(t, err)
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 
 	gen.GeneratePrologueNote("A\\nB")
 
@@ -251,7 +279,7 @@ func TestGeneratorChecksInterfacesForNilable(t *testing.T) {
 	iface, err := parser.Find("RequesterIface")
 	assert.NoError(t, err)
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 	assert.NoError(t, err)
 
 	err = gen.Generate()
@@ -288,7 +316,7 @@ func TestGeneratorPointers(t *testing.T) {
 	iface, err := parser.Find("RequesterPtr")
 	assert.NoError(t, err)
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 	assert.NoError(t, err)
 
 	err = gen.Generate()
@@ -332,7 +360,7 @@ func TestGeneratorSlice(t *testing.T) {
 	iface, err := parser.Find("RequesterSlice")
 	assert.NoError(t, err)
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 	assert.NoError(t, err)
 
 	err = gen.Generate()
@@ -376,7 +404,7 @@ func TestGeneratorArrayLiteralLen(t *testing.T) {
 	iface, err := parser.Find("RequesterArray")
 	assert.NoError(t, err)
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 	assert.NoError(t, err)
 
 	err = gen.Generate()
@@ -421,7 +449,7 @@ func TestGeneratorNamespacedTypes(t *testing.T) {
 	iface, err := parser.Find("RequesterNS")
 	assert.NoError(t, err)
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 	assert.NoError(t, err)
 
 	err = gen.Generate()
@@ -464,7 +492,7 @@ func TestGeneratorWhereArgumentNameConflictsWithImport(t *testing.T) {
 	iface, err := parser.Find("RequesterArgSameAsImport")
 	assert.NoError(t, err)
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 	assert.NoError(t, err)
 
 	err = gen.Generate()
@@ -502,7 +530,7 @@ func TestGeneratorWhereArgumentNameConflictsWithNamedImport(t *testing.T) {
 	iface, err := parser.Find("RequesterArgSameAsNamedImport")
 	assert.NoError(t, err)
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 	assert.NoError(t, err)
 
 	err = gen.Generate()
@@ -540,7 +568,7 @@ func TestGeneratorWhereArgumentNameConflictsWithPackage(t *testing.T) {
 	iface, err := parser.Find("RequesterArgSameAsPkg")
 	assert.NoError(t, err)
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 	assert.NoError(t, err)
 
 	err = gen.Generate()
@@ -568,7 +596,7 @@ func TestGeneratorHavingNoNamesOnArguments(t *testing.T) {
 	iface, err := parser.Find("KeyManager")
 	assert.NoError(t, err)
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 	assert.NoError(t, err)
 
 	err = gen.Generate()
@@ -614,7 +642,7 @@ func TestGeneratorElidedType(t *testing.T) {
 
 	iface, err := parser.Find("RequesterElided")
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 
 	err = gen.Generate()
 	assert.NoError(t, err)
@@ -648,7 +676,7 @@ func TestGeneratorReturnElidedType(t *testing.T) {
 
 	iface, err := parser.Find("RequesterReturnElided")
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 
 	err = gen.Generate()
 	assert.NoError(t, err)
@@ -704,7 +732,7 @@ func TestGeneratorVariableArgs(t *testing.T) {
 
 	iface, err := parser.Find("RequesterVariable")
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 
 	err = gen.Generate()
 	assert.NoError(t, err)
@@ -738,7 +766,7 @@ func TestGeneratorFuncType(t *testing.T) {
 
 	iface, err := parser.Find("Fooer")
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 
 	err = gen.Generate()
 	assert.NoError(t, err)
@@ -791,7 +819,7 @@ func TestGeneratorChanType(t *testing.T) {
 
 	iface, err := parser.Find("AsyncProducer")
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 
 	err = gen.Generate()
 	assert.NoError(t, err)
@@ -858,7 +886,7 @@ func TestGeneratorFromImport(t *testing.T) {
 	iface, err := parser.Find("MyReader")
 	require.NoError(t, err)
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 
 	err = gen.Generate()
 	assert.NoError(t, err)
@@ -900,7 +928,7 @@ func TestGeneratorComplexChanFromConsul(t *testing.T) {
 	iface, err := parser.Find("ConsulLock")
 	require.NoError(t, err)
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 
 	err = gen.Generate()
 	assert.NoError(t, err)
@@ -956,7 +984,7 @@ func TestGeneratorForEmptyInterface(t *testing.T) {
 
 	iface, err := parser.Find("Blank")
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 
 	err = gen.Generate()
 	assert.NoError(t, err)
@@ -990,7 +1018,7 @@ func TestGeneratorForMapFunc(t *testing.T) {
 
 	iface, err := parser.Find("MapFunc")
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 
 	err = gen.Generate()
 	assert.NoError(t, err)
@@ -1024,7 +1052,7 @@ func TestGeneratorForMethodUsingInterface(t *testing.T) {
 
 	iface, err := parser.Find("UsesOtherPkgIface")
 
-	gen := NewGenerator(iface, pkg)
+	gen := NewGenerator(iface, pkg, false)
 
 	err = gen.Generate()
 	assert.NoError(t, err)
@@ -1040,5 +1068,68 @@ func (_m *UsesOtherPkgIface) DoSomethingElse(obj Sibling) {
 }
 `
 
+	assert.Equal(t, expected, gen.buf.String())
+}
+
+func TestGeneratorWithAliasing(t *testing.T) {
+	parser := NewParser()
+	parser.Parse(filepath.Join(fixturePath, "same_name_imports.go"))
+
+	iface, err := parser.Find("Example")
+
+	gen := NewGenerator(iface, pkg, false)
+
+	err = gen.Generate()
+	assert.NoError(t, err)
+
+	expected := `// Example is an autogenerated mock type for the Example type
+type Example struct {
+	mock.Mock
+}
+
+// A provides a mock function with given fields: 
+func (_m *Example) A() http.Flusher {
+	ret := _m.Called()
+
+	var r0 http.Flusher
+	if rf, ok := ret.Get(0).(func() http.Flusher); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(http.Flusher)
+		}
+	}
+
+	return r0
+}
+// B provides a mock function with given fields: _a0
+func (_m *Example) B(_a0 string) my_http.MyStruct {
+	ret := _m.Called(_a0)
+
+	var r0 my_http.MyStruct
+	if rf, ok := ret.Get(0).(func(string) my_http.MyStruct); ok {
+		r0 = rf(_a0)
+	} else {
+		r0 = ret.Get(0).(my_http.MyStruct)
+	}
+
+	return r0
+}
+`
+	assert.Equal(t, expected, gen.buf.String())
+}
+
+func TestGeneratorImportsSameAsPackage(t *testing.T) {
+	parser := NewParser()
+	parser.Parse(filepath.Join(fixturePath, "imports_same_as_package.go"))
+
+	iface, err := parser.Find("ImportsSameAsPackage")
+
+	gen := NewGenerator(iface, pkg, false)
+
+	err = gen.Generate()
+	assert.NoError(t, err)
+
+	expected := ``
 	assert.Equal(t, expected, gen.buf.String())
 }

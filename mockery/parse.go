@@ -11,8 +11,9 @@ import (
 )
 
 type Parser struct {
-	file *ast.File
-	path string
+	file     *ast.File
+	path     string
+	astFiles []*ast.File
 
 	pkg *types.Package
 }
@@ -29,7 +30,6 @@ func (p *Parser) Parse(path string) error {
 		return err
 	}
 
-	var astFiles []*ast.File
 	var conf loader.Config
 
 	conf.TypeCheckFuncBodies = func(_ string) bool { return false }
@@ -51,7 +51,7 @@ func (p *Parser) Parse(path string) error {
 			p.file = f
 		}
 
-		astFiles = append(astFiles, f)
+		p.astFiles = append(p.astFiles, f)
 	}
 
 	abs, err := filepath.Abs(path)
@@ -62,7 +62,7 @@ func (p *Parser) Parse(path string) error {
 	// Type-check a package consisting of this file.
 	// Type information for the imported packages
 	// comes from $GOROOT/pkg/$GOOS_$GOOARCH/fmt.a.
-	conf.CreateFromFiles(abs, astFiles...)
+	conf.CreateFromFiles(abs, p.astFiles...)
 
 	prog, err := conf.Load()
 	if err != nil {
@@ -121,13 +121,22 @@ type Interface struct {
 	Type *types.Interface
 }
 
+func (p *Parser) getFileForInterfaceName(name string) *ast.File {
+	for _, file := range p.astFiles {
+		if file.Scope.Lookup(name) != nil {
+			return file
+		}
+	}
+	return p.file
+}
+
 func (p *Parser) Interfaces() []*Interface {
 	var ifaces []*Interface
 
 	scope := p.pkg.Scope()
 
 	for _, name := range scope.Names() {
-		obj := p.pkg.Scope().Lookup(name)
+		obj := scope.Lookup(name)
 		if obj == nil {
 			continue
 		}
@@ -144,7 +153,13 @@ func (p *Parser) Interfaces() []*Interface {
 			continue
 		}
 
-		ifaces = append(ifaces, &Interface{name, p.path, p.file, p.pkg, iface.Complete()})
+		ifaces = append(
+			ifaces,
+			&Interface{
+				name, p.path, p.getFileForInterfaceName(name), p.pkg,
+				iface.Complete(),
+			},
+		)
 	}
 
 	return ifaces
