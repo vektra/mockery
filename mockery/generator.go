@@ -22,20 +22,22 @@ import (
 type Generator struct {
 	buf bytes.Buffer
 
-	ip               bool
-	iface            *Interface
-	pkg              string
-	packageToName    map[string]string
-	imports          []*ast.ImportSpec
-	localPackageName *string
+	ip                bool
+	iface             *Interface
+	pkg               string
+	packageToName     map[string]string
+	imports           []*ast.ImportSpec
+	localPackageName  *string
+	localizationCache map[string]string
 }
 
 // NewGenerator builds a Generator.
 func NewGenerator(iface *Interface, pkg string, inPackage bool) *Generator {
 	return &Generator{
-		iface: iface,
-		pkg:   pkg,
-		ip:    inPackage,
+		iface:             iface,
+		pkg:               pkg,
+		ip:                inPackage,
+		localizationCache: make(map[string]string),
 	}
 }
 
@@ -58,18 +60,50 @@ func (g *Generator) getLocalPackageNameFromPackageMap(packageToName map[string]s
 }
 
 func (g *Generator) getInterfacePackagePath() string {
-	return g.getLocalizedPath(g.iface.Pkg.Path())
+	return g.getLocalizedPathFromPackage(g.iface.Pkg)
 }
 
+func (g *Generator) getLocalizedPathFromPackage(pkg *types.Package) string {
+	return g.getLocalizedPath(pkg.Path())
+}
+
+// TODO(@IvanMalison): Is there not a better way to get the actual
+// import path of a package?
 func (g *Generator) getLocalizedPath(path string) string {
-	local, err := filepath.Rel(
-		filepath.Join(os.Getenv("GOPATH"), "src"),
-		filepath.Dir(path),
-	)
-	if err != nil {
-		panic("unable to figure out path for package")
+	if strings.HasSuffix(path, ".go") {
+		path, _ = filepath.Split(path)
 	}
-	return local
+	if localized, ok := g.localizationCache[path]; ok {
+		return localized
+	}
+	directories := strings.Split(path, string(filepath.Separator))
+	numDirectories := len(directories)
+	vendorIndex := -1
+	for i := 1; i <= numDirectories; i++ {
+		dir := directories[numDirectories-i]
+		if dir == "vendor" {
+			vendorIndex = numDirectories - i
+			break
+		}
+	}
+
+	toReturn := path
+	if vendorIndex >= 0 {
+		toReturn = filepath.Join(directories[vendorIndex+1:]...)
+	} else if filepath.IsAbs(path) {
+		packageRoot := filepath.Join(os.Getenv("GOPATH"), "src")
+		if strings.HasPrefix(path, packageRoot) {
+			packagePath, err := filepath.Rel(packageRoot, path)
+			if err == nil {
+				toReturn = packagePath
+			} else {
+				log.Warn("Unable to localize path %v, %v", path, err)
+			}
+		}
+	}
+
+	g.localizationCache[path] = toReturn
+	return toReturn
 }
 
 func (g *Generator) getPackageToName() map[string]string {
@@ -99,11 +133,11 @@ func (g *Generator) getNameForImport(imp *ast.ImportSpec) (string, error) {
 	}
 	unescapedPath := g.unescapedImportPath(imp)
 	for _, p := range g.iface.Pkg.Imports() {
-		if p.Path() == unescapedPath {
+		if g.getLocalizedPathFromPackage(p) == unescapedPath {
 			return p.Name(), nil
 		}
 	}
-	return "", fmt.Errorf("Unable to find package name for import")
+	return "", fmt.Errorf("unable to find package name for import: %v", unescapedPath)
 }
 
 func (g *Generator) mockName() string {
@@ -209,12 +243,7 @@ type namer interface {
 
 func (g *Generator) getInFilePackageNameFromPackage(p *types.Package) string {
 	path := p.Path()
-	if strings.HasPrefix(path, "/") {
-		path = g.getLocalizedPath(path)
-	}
-	// if path == g.getInterfacePackagePath() {
-	// 	return g.getLocalPackageName()
-	// }
+	path = g.getLocalizedPathFromPackage(p)
 	if name, ok := g.getPackageToName()[path]; ok {
 		return name
 	}
