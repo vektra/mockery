@@ -2,6 +2,7 @@ package mockery
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"go/ast"
 	"go/types"
@@ -11,94 +12,151 @@ import (
 	"strings"
 	"unicode"
 
-	"golang.org/x/tools/imports"
+	"code.uber.internal/go-common.git/x/log"
 
-	"github.com/vektra/errors"
+	"golang.org/x/tools/imports"
 )
 
+// Generator is responsible for generating the string containing
+// imports and the mock struct that will later be written out as file.
 type Generator struct {
 	buf bytes.Buffer
 
-	ip    bool
-	iface *Interface
-	pkg   string
+	ip               bool
+	iface            *Interface
+	pkg              string
+	packageToName    map[string]string
+	imports          []*ast.ImportSpec
+	localPackageName *string
 }
 
-func NewGenerator(iface *Interface, pkg string) *Generator {
+// NewGenerator builds a Generator.
+func NewGenerator(iface *Interface, pkg string, inPackage bool) *Generator {
 	return &Generator{
 		iface: iface,
 		pkg:   pkg,
+		ip:    inPackage,
 	}
 }
 
-func (g *Generator) GenerateIPPrologue() {
-	g.ip = true
-
-	g.printf("package %s\n\n", g.iface.File.Name)
-
-	g.printf("import \"github.com/stretchr/testify/mock\"\n\n")
-	if g.iface.File.Imports == nil {
-		return
+func (g *Generator) getLocalPackageName() string {
+	if g.localPackageName == nil {
+		localName := g.getLocalPackageNameFromPackageMap(g.getPackageToName())
+		g.localPackageName = &localName
 	}
+	return *g.localPackageName
+}
 
-	for _, imp := range g.iface.File.Imports {
-		if imp.Name == nil {
-			g.printf("import %s\n", imp.Path.Value)
-		} else {
-			g.printf("import %s %s\n", imp.Name.Name, imp.Path.Value)
+func (g *Generator) getLocalPackageNameFromPackageMap(packageToName map[string]string) string {
+	localPackageName := g.iface.Pkg.Name()
+	for path, name := range packageToName {
+		if localPackageName == name && path != g.getInterfacePackagePath() {
+			return "_interfacePackage"
 		}
 	}
+	return localPackageName
+}
 
-	g.printf("\n")
+func (g *Generator) getInterfacePackagePath() string {
+	return g.getLocalizedPath(g.iface.Pkg.Path())
+}
+
+func (g *Generator) getLocalizedPath(path string) string {
+	local, err := filepath.Rel(
+		filepath.Join(os.Getenv("GOPATH"), "src"),
+		filepath.Dir(path),
+	)
+	if err != nil {
+		panic("unable to figure out path for package")
+	}
+	return local
+}
+
+func (g *Generator) getPackageToName() map[string]string {
+	if g.packageToName == nil {
+		g.packageToName = make(map[string]string)
+		for _, imp := range g.iface.File.Imports {
+			importName, err := g.getNameForImport(imp)
+			if err == nil {
+				g.packageToName[g.unescapedImportPath(imp)] = importName
+			} else {
+				log.Warn(err)
+			}
+		}
+		g.packageToName[g.getInterfacePackagePath()] =
+			g.getLocalPackageNameFromPackageMap(g.packageToName)
+	}
+	return g.packageToName
+}
+
+func (g *Generator) unescapedImportPath(imp *ast.ImportSpec) string {
+	return strings.Replace(imp.Path.Value, "\"", "", -1)
+}
+
+func (g *Generator) getNameForImport(imp *ast.ImportSpec) (string, error) {
+	if imp.Name != nil {
+		return imp.Name.Name, nil
+	}
+	unescapedPath := g.unescapedImportPath(imp)
+	for _, p := range g.iface.Pkg.Imports() {
+		if p.Path() == unescapedPath {
+			return p.Name(), nil
+		}
+	}
+	return "", fmt.Errorf("Unable to find package name for import")
 }
 
 func (g *Generator) mockName() string {
 	if g.ip {
 		if ast.IsExported(g.iface.Name) {
 			return "Mock" + g.iface.Name
-		} else {
-			first := true
-			return "mock" + strings.Map(func(r rune) rune {
-				if first {
-					first = false
-					return unicode.ToUpper(r)
-				}
-				return r
-			}, g.iface.Name)
 		}
+		first := true
+		return "mock" + strings.Map(func(r rune) rune {
+			if first {
+				first = false
+				return unicode.ToUpper(r)
+			}
+			return r
+		}, g.iface.Name)
 	}
 
 	return g.iface.Name
 }
 
-func (g *Generator) GeneratePrologue(pkg string) {
-	g.printf("package %v\n\n", pkg)
-
-	goPath := os.Getenv("GOPATH")
-
-	local, err := filepath.Rel(filepath.Join(goPath, "src"), filepath.Dir(g.iface.Path))
-	if err != nil {
-		panic("unable to figure out path for package")
+func (g *Generator) getImportStringFromSpec(imp *ast.ImportSpec) string {
+	if name, ok := g.getPackageToName()[g.unescapedImportPath(imp)]; ok {
+		return fmt.Sprintf("import %s %s\n", name, imp.Path.Value)
 	}
+	return fmt.Sprintf("import %s\n", imp.Path.Value)
+}
 
-	g.printf("import \"%s\"\n", local)
-
-	g.printf("import \"github.com/stretchr/testify/mock\"\n\n")
+func (g *Generator) generateImports() {
 	if g.iface.File.Imports == nil {
 		return
 	}
-
 	for _, imp := range g.iface.File.Imports {
-		if imp.Name == nil {
-			g.printf("import %s\n", imp.Path.Value)
-		} else {
-			g.printf("import %s %s\n", imp.Name.Name, imp.Path.Value)
-		}
+		g.printf(g.getImportStringFromSpec(imp))
 	}
+}
 
+// GeneratePrologue generates the prologue of the mock.
+func (g *Generator) GeneratePrologue(pkg string) {
+	if g.ip {
+		g.printf("package %s\n\n", g.iface.Pkg.Name())
+	} else {
+		g.printf("package %v\n\n", pkg)
+		g.printf(
+			"import %s \"%s\"\n", g.getLocalPackageName(), g.getInterfacePackagePath(),
+		)
+	}
+	g.printf("import \"github.com/stretchr/testify/mock\"\n\n")
+	g.generateImports()
 	g.printf("\n")
 }
 
+// GeneratePrologueNote adds a note after the prologue to the output
+// string.
 func (g *Generator) GeneratePrologueNote(note string) {
 	if note != "" {
 		g.printf("\n")
@@ -109,6 +167,8 @@ func (g *Generator) GeneratePrologueNote(note string) {
 	}
 }
 
+// ErrNotInterface is returned when the given type is not an interface
+// type.
 var ErrNotInterface = errors.New("expression not an interface")
 
 func (g *Generator) printf(s string, vals ...interface{}) {
@@ -147,15 +207,28 @@ type namer interface {
 	Name() string
 }
 
+func (g *Generator) getInFilePackageNameFromPackage(p *types.Package) string {
+	path := p.Path()
+	if strings.HasPrefix(path, "/") {
+		path = g.getLocalizedPath(path)
+	}
+	// if path == g.getInterfacePackagePath() {
+	// 	return g.getLocalPackageName()
+	// }
+	if name, ok := g.getPackageToName()[path]; ok {
+		return name
+	}
+	return p.Name()
+}
+
 func (g *Generator) renderType(t types.Type) string {
 	switch t := t.(type) {
 	case *types.Named:
 		o := t.Obj()
-		if o.Pkg() == nil || o.Pkg().Name() == "main" || o.Pkg().Name() == g.pkg {
+		if o.Pkg() == nil || o.Pkg().Name() == "main" || (g.ip && o.Pkg().Name() == g.pkg) {
 			return o.Name()
-		} else {
-			return o.Pkg().Name() + "." + o.Name()
 		}
+		return g.getInFilePackageNameFromPackage(o.Pkg()) + "." + o.Name()
 	case *types.Basic:
 		return t.Name()
 	case *types.Pointer:
@@ -278,20 +351,7 @@ func (g *Generator) genList(list *types.Tuple, varadic bool) *paramList {
 
 		pname := v.Name()
 
-		if pname == g.pkg {
-			// Argument is same as our package name
-			pname = ""
-		} else if g.iface.Pkg != nil {
-			for _, imp := range g.iface.Pkg.Imports() {
-				if imp.Name() == pname {
-					// Argument is same as that of an imported package
-					pname = ""
-					break
-				}
-			}
-		}
-
-		if pname == "" {
+		if g.nameCollides(pname) || pname == "" {
 			pname = fmt.Sprintf("_a%d", i)
 		}
 
@@ -304,15 +364,37 @@ func (g *Generator) genList(list *types.Tuple, varadic bool) *paramList {
 	return &params
 }
 
+func (g *Generator) nameCollides(pname string) bool {
+	if pname == g.pkg {
+		return true
+	} else if g.iface.Pkg != nil {
+		for _, imp := range g.iface.Pkg.Imports() {
+			if g.getInFilePackageNameFromPackage(imp) == pname {
+				// Argument is same as that of an imported package
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// ErrNotSetup is returned when the generator is not configured.
 var ErrNotSetup = errors.New("not setup")
 
+// Generate builds a string that constitutes a valid go source file
+// containing the mock of the relevant interface.
 func (g *Generator) Generate() error {
 	if g.iface == nil {
 		return ErrNotSetup
 	}
 
-	g.printf("// %s is an autogenerated mock type for the %s type\n", g.mockName(), g.iface.Name)
-	g.printf("type %s struct {\n\tmock.Mock\n}\n\n", g.mockName())
+	g.printf(
+		"// %s is an autogenerated mock type for the %s type\n", g.mockName(),
+		g.iface.Name,
+	)
+	g.printf(
+		"type %s struct {\n\tmock.Mock\n}\n\n", g.mockName(),
+	)
 
 	for i := 0; i < g.iface.Type.NumMethods(); i++ {
 		fn := g.iface.Type.Method(i)
@@ -323,8 +405,14 @@ func (g *Generator) Generate() error {
 		params := g.genList(ftype.Params(), ftype.Variadic())
 		returns := g.genList(ftype.Results(), false)
 
-		g.printf("// %s provides a mock function with given fields: %s\n", fname, strings.Join(params.Names, ", "))
-		g.printf("func (_m *%s) %s(%s) ", g.mockName(), fname, strings.Join(params.Params, ", "))
+		g.printf(
+			"// %s provides a mock function with given fields: %s\n", fname,
+			strings.Join(params.Names, ", "),
+		)
+		g.printf(
+			"func (_m *%s) %s(%s) ", g.mockName(), fname,
+			strings.Join(params.Params, ", "),
+		)
 
 		switch len(returns.Types) {
 		case 0:
@@ -392,7 +480,9 @@ func (g *Generator) Generate() error {
 
 func (g *Generator) Write(w io.Writer) error {
 	opt := &imports.Options{Comments: true}
-	res, err := imports.Process("mock.go", g.buf.Bytes(), opt)
+	theBytes := g.buf.Bytes()
+
+	res, err := imports.Process("mock.go", theBytes, opt)
 	if err != nil {
 		return err
 	}
