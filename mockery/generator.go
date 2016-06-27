@@ -169,6 +169,7 @@ func (g *Generator) generateImports() {
 	if g.iface.File.Imports == nil {
 		return
 	}
+
 	for _, imp := range g.iface.File.Imports {
 		g.printf(g.getImportStringFromSpec(imp))
 	}
@@ -247,6 +248,7 @@ func (g *Generator) getInFilePackageNameFromPackage(p *types.Package) string {
 	if name, ok := g.getPackageToName()[path]; ok {
 		return name
 	}
+	log.Warnf("Could not find package name for %v", path)
 	return p.Name()
 }
 
