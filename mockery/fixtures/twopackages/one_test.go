@@ -1,4 +1,4 @@
-package twopackagestest
+package twopackages_test
 
 import "net/http"
 
