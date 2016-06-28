@@ -9,5 +9,5 @@ import (
 // Example is an example
 type Example interface {
 	A() http.Flusher
-	B(my_http string) my_http.MyStruct
+	B(fixtureshttp string) my_http.MyStruct
 }

@@ -188,9 +188,7 @@ func (s *GeneratorSuite) TestGeneratorPrologue() {
 	generator := s.getGenerator(testFile, "Requester", false)
 	expected := `package mocks
 
-import test "` + s.getInterfaceRelPath(generator.iface) + `"
-import "github.com/stretchr/testify/mock"
-
+import mock "github.com/stretchr/testify/mock"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -200,10 +198,8 @@ func (s *GeneratorSuite) TestGeneratorPrologueWithImports() {
 	generator := s.getGenerator("requester_ns.go", "RequesterNS", false)
 	expected := `package mocks
 
-import test "` + s.getInterfaceRelPath(generator.iface) + `"
-import "github.com/stretchr/testify/mock"
-
 import http "net/http"
+import mock "github.com/stretchr/testify/mock"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -214,11 +210,9 @@ func (s *GeneratorSuite) TestGeneratorPrologueWithMultipleImportsSameName() {
 
 	expected := `package mocks
 
-import test "` + s.getInterfaceRelPath(generator.iface) + `"
-import "github.com/stretchr/testify/mock"
-
+import fixtureshttp "github.com/vektra/mockery/mockery/fixtures/http"
 import http "net/http"
-import my_http "github.com/vektra/mockery/mockery/fixtures/http"
+import mock "github.com/stretchr/testify/mock"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -901,14 +895,14 @@ func (_m *Example) A() http.Flusher {
 	return r0
 }
 // B provides a mock function with given fields: _a0
-func (_m *Example) B(_a0 string) my_http.MyStruct {
+func (_m *Example) B(_a0 string) fixtureshttp.MyStruct {
 	ret := _m.Called(_a0)
 
-	var r0 my_http.MyStruct
-	if rf, ok := ret.Get(0).(func(string) my_http.MyStruct); ok {
+	var r0 fixtureshttp.MyStruct
+	if rf, ok := ret.Get(0).(func(string) fixtureshttp.MyStruct); ok {
 		r0 = rf(_a0)
 	} else {
-		r0 = ret.Get(0).(my_http.MyStruct)
+		r0 = ret.Get(0).(fixtureshttp.MyStruct)
 	}
 
 	return r0
@@ -940,22 +934,22 @@ func (_m *ImportsSameAsPackage) A() test.B {
 	return r0
 }
 // B provides a mock function with given fields: 
-func (_m *ImportsSameAsPackage) B() _interfacePackage.KeyManager {
+func (_m *ImportsSameAsPackage) B() fixtures.KeyManager {
 	ret := _m.Called()
 
-	var r0 _interfacePackage.KeyManager
-	if rf, ok := ret.Get(0).(func() _interfacePackage.KeyManager); ok {
+	var r0 fixtures.KeyManager
+	if rf, ok := ret.Get(0).(func() fixtures.KeyManager); ok {
 		r0 = rf()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(_interfacePackage.KeyManager)
+			r0 = ret.Get(0).(fixtures.KeyManager)
 		}
 	}
 
 	return r0
 }
 // C provides a mock function with given fields: _a0
-func (_m *ImportsSameAsPackage) C(_a0 _interfacePackage.C) {
+func (_m *ImportsSameAsPackage) C(_a0 fixtures.C) {
 	_m.Called(_a0)
 }
 `
@@ -972,10 +966,24 @@ func (s *GeneratorSuite) TestPrologueWithImportSameAsLocalPackage() {
 	s.getInterfaceRelPath(generator.iface)
 	expected := `package mocks
 
-import _interfacePackage "` + s.getInterfaceRelPath(generator.iface) + `"
-import "github.com/stretchr/testify/mock"
-
+import fixtures "` + s.getInterfaceRelPath(generator.iface) + `"
+import mock "github.com/stretchr/testify/mock"
 import test "github.com/vektra/mockery/mockery/fixtures/test"
+
+`
+
+	s.checkPrologueGeneration(generator, expected)
+}
+
+func (s *GeneratorSuite) TestPrologueWithImportFromNestedInterface() {
+	generator := s.getGenerator(
+		"imports_from_nested_interface.go", "HasConflictingNestedImports", false,
+	)
+	expected := `package mocks
+
+import fixtureshttp "github.com/vektra/mockery/mockery/fixtures/http"
+import http "net/http"
+import mock "github.com/stretchr/testify/mock"
 
 `
 
