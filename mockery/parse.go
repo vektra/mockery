@@ -6,6 +6,7 @@ import (
 	"go/types"
 	"io/ioutil"
 	"path/filepath"
+	"strings"
 
 	"golang.org/x/tools/go/loader"
 )
@@ -42,16 +43,23 @@ func (p *Parser) Parse(path string) error {
 		}
 
 		fpath := filepath.Join(dir, fi.Name())
+
 		f, err := conf.ParseFile(fpath, nil)
 		if err != nil {
 			return err
 		}
 
-		if fi.Name() == filepath.Base(path) {
-			p.file = f
+		// Respect the `go test` convention that test sources for package foo
+		// can be declared in package foo_test to enforce strict whitebox testing.
+		if strings.HasSuffix(f.Name.Name, "_test") &&
+			filepath.Base(dir) != f.Name.Name {
+			continue
 		}
 
-		astFiles = append(astFiles, f)
+		if fi.Name() == filepath.Base(path) {
+			p.file = f
+			astFiles = append(astFiles, f)
+		}
 	}
 
 	abs, err := filepath.Abs(path)

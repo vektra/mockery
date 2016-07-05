@@ -11,6 +11,7 @@ import (
 var fixturePath string
 var testFile string
 var testFile2 string
+var ignoredFile string
 
 func init() {
 	dir, err := os.Getwd()
@@ -22,6 +23,7 @@ func init() {
 
 	testFile = filepath.Join(dir, "fixtures", "requester.go")
 	testFile2 = filepath.Join(dir, "fixtures", "requester2.go")
+	ignoredFile = filepath.Join(dir, "fixtures", "custom_error_test.go")
 }
 
 func TestFileParse(t *testing.T) {
@@ -33,6 +35,14 @@ func TestFileParse(t *testing.T) {
 	node, err := parser.Find("Requester")
 	assert.NoError(t, err)
 	assert.NotNil(t, node)
+}
+
+func TestIgnoreTestPackage(t *testing.T) {
+	parser := NewParser()
+
+	err := parser.Parse(ignoredFile)
+	assert.NoError(t, err)
+	assert.Nil(t, parser.file)
 }
 
 func noTestFileInterfaces(t *testing.T) {
