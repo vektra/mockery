@@ -101,7 +101,7 @@ func (p *Parser) FindInPackage(name string, pkg *types.Package) *Interface {
 
 	iface := typ.Underlying().(*types.Interface).Complete()
 
-	return &Interface{name, p.path, p.file, pkg, iface}
+	return &Interface{name, p.path, p.file, pkg, iface, typ}
 }
 
 /*
@@ -126,11 +126,12 @@ func (p *Parser) FindOld(name string) (*Interface, error) {
 */
 
 type Interface struct {
-	Name string
-	Path string
-	File *ast.File
-	Pkg  *types.Package
-	Type *types.Interface
+	Name      string
+	Path      string
+	File      *ast.File
+	Pkg       *types.Package
+	Type      *types.Interface
+	NamedType *types.Named
 }
 
 func (p *Parser) getFileForInterfaceName(name string) *ast.File {
@@ -177,7 +178,7 @@ func (p *Parser) packageInterfaces(pkg *types.Package, ifaces []*Interface) []*I
 			ifaces,
 			&Interface{
 				name, p.path, p.getFileForInterfaceName(name), pkg,
-				iface.Complete(),
+				iface.Complete(), typ,
 			},
 		)
 	}

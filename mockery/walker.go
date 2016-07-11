@@ -117,6 +117,8 @@ func (this *GeneratorVisitor) VisitWalk(iface *Interface) error {
 		return err
 	}
 
+	gen.GenerateInterfaceAssertion()
+
 	err = gen.Write(out)
 	if err != nil {
 		return err
