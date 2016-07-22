@@ -82,6 +82,8 @@ type GeneratorVisitor struct {
 	InPackage bool
 	Note      string
 	Osp       OutputStreamProvider
+	// The name of the output package, if InPackage is false (defaults to "mocks")
+	PackageName string
 }
 
 func (this *GeneratorVisitor) VisitWalk(iface *Interface) error {
@@ -98,7 +100,7 @@ func (this *GeneratorVisitor) VisitWalk(iface *Interface) error {
 	if this.InPackage {
 		pkg = iface.File.Name.String()
 	} else {
-		pkg = "mocks"
+		pkg = this.PackageName
 	}
 
 	out, err, closer := this.Osp.GetWriter(iface, pkg)
