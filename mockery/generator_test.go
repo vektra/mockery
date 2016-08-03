@@ -3,6 +3,7 @@ package mockery
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -183,7 +184,7 @@ func TestGeneratorPrologue(t *testing.T) {
 
 	gen.GeneratePrologue("mocks")
 
-	goPath := os.Getenv("GOPATH")
+	goPath := strings.SplitN(os.Getenv("GOPATH"), string(os.PathListSeparator), 2)[0]
 	local, err := filepath.Rel(filepath.Join(goPath, "src"), filepath.Dir(iface.Path))
 	assert.NoError(t, err)
 
@@ -208,7 +209,7 @@ func TestGeneratorProloguewithImports(t *testing.T) {
 
 	gen.GeneratePrologue("mocks")
 
-	goPath := os.Getenv("GOPATH")
+	goPath := strings.SplitN(os.Getenv("GOPATH"), string(os.PathListSeparator), 2)[0]
 	local, err := filepath.Rel(filepath.Join(goPath, "src"), filepath.Dir(iface.Path))
 	assert.NoError(t, err)
 

@@ -74,7 +74,7 @@ func (g *Generator) mockName() string {
 func (g *Generator) GeneratePrologue(pkg string) {
 	g.printf("package %v\n\n", pkg)
 
-	goPath := os.Getenv("GOPATH")
+	goPath := strings.SplitN(os.Getenv("GOPATH"), string(os.PathListSeparator), 2)[0]
 
 	local, err := filepath.Rel(filepath.Join(goPath, "src"), filepath.Dir(g.iface.Path))
 	if err != nil {
