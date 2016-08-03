@@ -16,6 +16,7 @@ type Config struct {
 	fName      string
 	fPrint     bool
 	fOutput    string
+	fOutpkg    string
 	fDir       string
 	fRecursive bool
 	fAll       bool
@@ -68,9 +69,10 @@ func main() {
 	}
 
 	visitor := &mockery.GeneratorVisitor{
-		InPackage: config.fIP,
-		Note:      config.fNote,
-		Osp:       osp,
+		InPackage:   config.fIP,
+		Note:        config.fNote,
+		Osp:         osp,
+		PackageName: config.fOutpkg,
 	}
 
 	walker := mockery.Walker{
@@ -95,6 +97,7 @@ func parseConfigFromArgs(args []string) Config {
 	flagSet.StringVar(&config.fName, "name", "", "name or matching regular expression of interface to generate mock for")
 	flagSet.BoolVar(&config.fPrint, "print", false, "print the generated mock to stdout")
 	flagSet.StringVar(&config.fOutput, "output", "./mocks", "directory to write mocks to")
+	flagSet.StringVar(&config.fOutpkg, "outpkg", "mocks", "name of generated package")
 	flagSet.StringVar(&config.fDir, "dir", ".", "directory to search for interfaces")
 	flagSet.BoolVar(&config.fRecursive, "recursive", false, "recurse search into sub-directories")
 	flagSet.BoolVar(&config.fAll, "all", false, "generates mocks for all found interfaces in all sub-directories")
