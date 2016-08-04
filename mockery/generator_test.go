@@ -1,7 +1,6 @@
 package mockery
 
 import (
-	"os"
 	"path/filepath"
 	"testing"
 
@@ -65,9 +64,7 @@ func (s *GeneratorSuite) checkPrologueGeneration(
 }
 
 func (s *GeneratorSuite) getInterfaceRelPath(iface *Interface) string {
-	local, err := filepath.Rel(
-		filepath.Join(os.Getenv("GOPATH"), "src"), filepath.Dir(iface.Path),
-	)
+	local, err := filepath.Rel(getGoPathSrc(), filepath.Dir(iface.Path))
 	s.NoError(err, "No errors with relative path generation.")
 	return local
 }
@@ -189,6 +186,7 @@ func (s *GeneratorSuite) TestGeneratorPrologue() {
 	expected := `package mocks
 
 import mock "github.com/stretchr/testify/mock"
+import test "github.com/vektra/mockery/mockery/fixtures"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -200,6 +198,7 @@ func (s *GeneratorSuite) TestGeneratorPrologueWithImports() {
 
 import http "net/http"
 import mock "github.com/stretchr/testify/mock"
+import test "github.com/vektra/mockery/mockery/fixtures"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -213,6 +212,7 @@ func (s *GeneratorSuite) TestGeneratorPrologueWithMultipleImportsSameName() {
 import fixtureshttp "github.com/vektra/mockery/mockery/fixtures/http"
 import http "net/http"
 import mock "github.com/stretchr/testify/mock"
+import test "github.com/vektra/mockery/mockery/fixtures"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -984,6 +984,7 @@ func (s *GeneratorSuite) TestPrologueWithImportFromNestedInterface() {
 import fixtureshttp "github.com/vektra/mockery/mockery/fixtures/http"
 import http "net/http"
 import mock "github.com/stretchr/testify/mock"
+import test "github.com/vektra/mockery/mockery/fixtures"
 
 `
 

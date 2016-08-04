@@ -20,6 +20,10 @@ import (
 
 var invalidIdentifierChar = regexp.MustCompile("[^[:digit:][:alpha:]_]")
 
+func getGoPathSrc() string {
+	return filepath.Join(filepath.SplitList(os.Getenv("GOPATH"))[0], "src")
+}
+
 func stripChars(str, chr string) string {
 	return strings.Map(func(r rune) rune {
 		if strings.IndexRune(chr, r) < 0 {
@@ -160,7 +164,7 @@ func (g *Generator) getLocalizedPath(path string) string {
 	if vendorIndex >= 0 {
 		toReturn = filepath.Join(directories[vendorIndex+1:]...)
 	} else if filepath.IsAbs(path) {
-		packageRoot := filepath.Join(os.Getenv("GOPATH"), "src")
+		packageRoot := getGoPathSrc()
 		if strings.HasPrefix(path, packageRoot) {
 			packagePath, err := filepath.Rel(packageRoot, path)
 			if err == nil {
