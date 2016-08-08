@@ -13,6 +13,10 @@ func (e *Err) Code() uint64 {
 	return e.code
 }
 
+func NewErr(msg string, code uint64) Err {
+	return Err{msg, code}
+}
+
 type KeyManager interface {
 	GetKey(string, uint16) ([]byte, *Err)
 }
