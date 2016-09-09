@@ -48,7 +48,7 @@ func (this *Walker) doWalk(dir string, visitor WalkerVisitor) (generated bool) {
 			continue
 		}
 
-		if !strings.HasSuffix(path, ".go") {
+		if !strings.HasSuffix(path, ".go") || strings.HasSuffix(path, "_test.go") {
 			continue
 		}
 
