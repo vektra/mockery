@@ -11,14 +11,17 @@ import (
 )
 
 type Parser struct {
-	file *ast.File
-	path string
-
-	pkg *types.Package
+	file           *ast.File
+	path           string
+	nameToASTFiles map[string][]*ast.File
+	parserPackages []*types.Package
 }
 
 func NewParser() *Parser {
-	return &Parser{}
+	return &Parser{
+		parserPackages: make([]*types.Package, 0),
+		nameToASTFiles: make(map[string][]*ast.File),
+	}
 }
 
 func (p *Parser) Parse(path string) error {
@@ -29,7 +32,6 @@ func (p *Parser) Parse(path string) error {
 		return err
 	}
 
-	var astFiles []*ast.File
 	var conf loader.Config
 
 	conf.TypeCheckFuncBodies = func(_ string) bool { return false }
@@ -50,37 +52,47 @@ func (p *Parser) Parse(path string) error {
 		if fi.Name() == filepath.Base(path) {
 			p.file = f
 		}
-
-		astFiles = append(astFiles, f)
+		p.nameToASTFiles[f.Name.String()] = append(p.nameToASTFiles[f.Name.String()], f)
 	}
 
 	abs, err := filepath.Abs(path)
 	if err != nil {
 		return err
 	}
+	p.path = abs
 
 	// Type-check a package consisting of this file.
 	// Type information for the imported packages
 	// comes from $GOROOT/pkg/$GOOS_$GOOARCH/fmt.a.
-	conf.CreateFromFiles(abs, astFiles...)
+	for _, files := range p.nameToASTFiles {
+		conf.CreateFromFiles(abs, files...)
+	}
 
 	prog, err := conf.Load()
 	if err != nil {
 		return err
-	} else if len(prog.Created) != 1 {
-		panic("expected only one Created package")
 	}
 
-	p.path = abs
-	p.pkg = prog.Created[0].Pkg
+	for _, pkgInfo := range prog.Created {
+		p.parserPackages = append(p.parserPackages, pkgInfo.Pkg)
+	}
 
 	return nil
 }
 
 func (p *Parser) Find(name string) (*Interface, error) {
-	obj := p.pkg.Scope().Lookup(name)
+	for _, pkg := range p.parserPackages {
+		if iface := p.FindInPackage(name, pkg); iface != nil {
+			return iface, nil
+		}
+	}
+	return nil, ErrNotInterface
+}
+
+func (p *Parser) FindInPackage(name string, pkg *types.Package) *Interface {
+	obj := pkg.Scope().Lookup(name)
 	if obj == nil {
-		return nil, ErrNotInterface
+		return nil
 	}
 
 	typ := obj.Type().(*types.Named)
@@ -89,7 +101,7 @@ func (p *Parser) Find(name string) (*Interface, error) {
 
 	iface := typ.Underlying().(*types.Interface).Complete()
 
-	return &Interface{name, p.path, p.file, p.pkg, iface}, nil
+	return &Interface{name, p.path, p.file, pkg, iface, typ}
 }
 
 /*
@@ -114,20 +126,38 @@ func (p *Parser) FindOld(name string) (*Interface, error) {
 */
 
 type Interface struct {
-	Name string
-	Path string
-	File *ast.File
-	Pkg  *types.Package
-	Type *types.Interface
+	Name      string
+	Path      string
+	File      *ast.File
+	Pkg       *types.Package
+	Type      *types.Interface
+	NamedType *types.Named
 }
 
-func (p *Parser) Interfaces() []*Interface {
-	var ifaces []*Interface
+func (p *Parser) getFileForInterfaceName(name string) *ast.File {
+	for _, astFiles := range p.nameToASTFiles {
+		for _, file := range astFiles {
+			if file.Scope.Lookup(name) != nil {
+				return file
+			}
+		}
+	}
+	return p.file
+}
 
-	scope := p.pkg.Scope()
+func (p *Parser) Interfaces() (ifaces []*Interface) {
+	for _, pkg := range p.parserPackages {
+		ifaces = p.packageInterfaces(pkg, ifaces)
+	}
+	return
+}
+
+func (p *Parser) packageInterfaces(pkg *types.Package, ifaces []*Interface) []*Interface {
+
+	scope := pkg.Scope()
 
 	for _, name := range scope.Names() {
-		obj := p.pkg.Scope().Lookup(name)
+		obj := scope.Lookup(name)
 		if obj == nil {
 			continue
 		}
@@ -144,7 +174,13 @@ func (p *Parser) Interfaces() []*Interface {
 			continue
 		}
 
-		ifaces = append(ifaces, &Interface{name, p.path, p.file, p.pkg, iface.Complete()})
+		ifaces = append(
+			ifaces,
+			&Interface{
+				name, p.path, p.getFileForInterfaceName(name), pkg,
+				iface.Complete(), typ,
+			},
+		)
 	}
 
 	return ifaces

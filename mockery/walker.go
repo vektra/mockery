@@ -110,20 +110,16 @@ func (this *GeneratorVisitor) VisitWalk(iface *Interface) error {
 	}
 	defer closer()
 
-	gen := NewGenerator(iface, pkg)
-
-	if this.InPackage {
-		gen.GenerateIPPrologue()
-	} else {
-		gen.GeneratePrologue(pkg)
-	}
-
+	gen := NewGenerator(iface, pkg, this.InPackage)
+	gen.GeneratePrologue(pkg)
 	gen.GeneratePrologueNote(this.Note)
 
 	err = gen.Generate()
 	if err != nil {
 		return err
 	}
+
+	gen.GenerateInterfaceAssertion()
 
 	err = gen.Write(out)
 	if err != nil {
