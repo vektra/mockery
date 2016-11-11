@@ -249,10 +249,6 @@ func (g *Generator) GeneratePrologueNote(note string) {
 	}
 }
 
-func (g *Generator) GenerateInterfaceAssertion() {
-	g.printf("\nvar _ %s = (*%s)(nil)", g.renderType(g.iface.NamedType), g.mockName())
-}
-
 // ErrNotInterface is returned when the given type is not an interface
 // type.
 var ErrNotInterface = errors.New("expression not an interface")
