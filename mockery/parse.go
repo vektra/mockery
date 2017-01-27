@@ -25,11 +25,6 @@ func NewParser() *Parser {
 }
 
 func (p *Parser) Parse(path string) error {
-	abs, err := filepath.Abs(path)
-	if err != nil {
-		return err
-	}
-
 	// To support relative paths to mock targets w/ vendor deps, we need to provide eventual
 	// calls to build.Context.Import with an absolute path. It needs to be absolute because
 	// Import will only find the vendor directory if our target path for parsing is under
@@ -37,7 +32,10 @@ func (p *Parser) Parse(path string) error {
 	//
 	// For example, if our parse target is "./ifaces", Import will check if any "roots" are a
 	// prefix of "ifaces" and decide to skip the vendor search.
-	path = abs
+	path, err := filepath.Abs(path)
+	if err != nil {
+		return err
+	}
 
 	dir := filepath.Dir(path)
 
@@ -69,13 +67,13 @@ func (p *Parser) Parse(path string) error {
 		p.nameToASTFiles[f.Name.String()] = append(p.nameToASTFiles[f.Name.String()], f)
 	}
 
-	p.path = abs
+	p.path = path
 
 	// Type-check a package consisting of this file.
 	// Type information for the imported packages
 	// comes from $GOROOT/pkg/$GOOS_$GOOARCH/fmt.a.
 	for _, files := range p.nameToASTFiles {
-		conf.CreateFromFiles(abs, files...)
+		conf.CreateFromFiles(path, files...)
 	}
 
 	prog, err := conf.Load()
