@@ -6,6 +6,7 @@ import (
 	"go/types"
 	"io/ioutil"
 	"path/filepath"
+	"strings"
 
 	"golang.org/x/tools/go/loader"
 )
@@ -39,7 +40,7 @@ func (p *Parser) Parse(path string) error {
 	conf.TypeChecker.Importer = importer.Default()
 
 	for _, fi := range files {
-		if filepath.Ext(fi.Name()) != ".go" {
+		if filepath.Ext(fi.Name()) != ".go" || strings.HasSuffix(fi.Name(), "_test.go") {
 			continue
 		}
 
