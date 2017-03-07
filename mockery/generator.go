@@ -485,10 +485,14 @@ func (g *Generator) Generate() error {
 		params := g.genList(ftype.Params(), ftype.Variadic())
 		returns := g.genList(ftype.Results(), false)
 
-		g.printf(
-			"// %s provides a mock function with given fields: %s\n", fname,
-			strings.Join(params.Names, ", "),
-		)
+		if len(params.Names) == 0 {
+			g.printf("// %s provides a mock function with given fields:\n", fname)
+		} else {
+			g.printf(
+				"// %s provides a mock function with given fields: %s\n", fname,
+				strings.Join(params.Names, ", "),
+			)
+		}
 		g.printf(
 			"func (_m *%s) %s(%s) ", g.mockName(), fname,
 			strings.Join(params.Params, ", "),
