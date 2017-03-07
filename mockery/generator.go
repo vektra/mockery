@@ -47,10 +47,19 @@ type Generator struct {
 	localizationCache    map[string]string
 	packagePathToName    map[string]string
 	nameToPackagePath    map[string]string
+
+	packageRoots []string
 }
 
 // NewGenerator builds a Generator.
 func NewGenerator(iface *Interface, pkg string, inPackage bool) *Generator {
+
+	var roots []string
+
+	for _, root := range filepath.SplitList(os.Getenv("GOPATH")) {
+		roots = append(roots, filepath.Join(root, "src"))
+	}
+
 	g := &Generator{
 		iface:             iface,
 		pkg:               pkg,
@@ -58,7 +67,9 @@ func NewGenerator(iface *Interface, pkg string, inPackage bool) *Generator {
 		localizationCache: make(map[string]string),
 		packagePathToName: make(map[string]string),
 		nameToPackagePath: make(map[string]string),
+		packageRoots:      roots,
 	}
+
 	g.addPackageImportWithName("github.com/stretchr/testify/mock", "mock")
 	return g
 }
@@ -140,6 +151,20 @@ func (g *Generator) getLocalizedPathFromPackage(pkg *types.Package) string {
 	return g.getLocalizedPath(pkg.Path())
 }
 
+func calculateImport(set []string, path string) string {
+	for _, root := range set {
+		if strings.HasPrefix(path, root) {
+			packagePath, err := filepath.Rel(root, path)
+			if err == nil {
+				return packagePath
+			} else {
+				log.Printf("Unable to localize path %v, %v", path, err)
+			}
+		}
+	}
+	return path
+}
+
 // TODO(@IvanMalison): Is there not a better way to get the actual
 // import path of a package?
 func (g *Generator) getLocalizedPath(path string) string {
@@ -164,15 +189,7 @@ func (g *Generator) getLocalizedPath(path string) string {
 	if vendorIndex >= 0 {
 		toReturn = filepath.Join(directories[vendorIndex+1:]...)
 	} else if filepath.IsAbs(path) {
-		packageRoot := getGoPathSrc()
-		if strings.HasPrefix(path, packageRoot) {
-			packagePath, err := filepath.Rel(packageRoot, path)
-			if err == nil {
-				toReturn = packagePath
-			} else {
-				log.Printf("Unable to localize path %v, %v", path, err)
-			}
-		}
+		toReturn = calculateImport(g.packageRoots, path)
 	}
 
 	g.localizationCache[path] = toReturn
