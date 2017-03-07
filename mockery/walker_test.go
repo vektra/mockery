@@ -25,6 +25,10 @@ func NewGatheringVisitor() *GatheringVisitor {
 }
 
 func TestWalkerHere(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping recursive walker test")
+	}
+
 	wd, err := os.Getwd()
 	assert.NoError(t, err)
 	w := Walker{
@@ -45,6 +49,10 @@ func TestWalkerHere(t *testing.T) {
 }
 
 func TestWalkerRegexp(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping recursive walker test")
+	}
+
 	wd, err := os.Getwd()
 	assert.NoError(t, err)
 	w := Walker{
