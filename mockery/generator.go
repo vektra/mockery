@@ -406,13 +406,14 @@ func isNillable(typ types.Type) bool {
 }
 
 type paramList struct {
-	Names   []string
-	Types   []string
-	Params  []string
-	Nilable []bool
+	Names    []string
+	Types    []string
+	Params   []string
+	Nilable  []bool
+	Variadic bool
 }
 
-func (g *Generator) genList(list *types.Tuple, varadic bool) *paramList {
+func (g *Generator) genList(list *types.Tuple, variadic bool) *paramList {
 	var params paramList
 
 	if list == nil {
@@ -424,13 +425,14 @@ func (g *Generator) genList(list *types.Tuple, varadic bool) *paramList {
 
 		ts := g.renderType(v.Type())
 
-		if varadic && i == list.Len()-1 {
+		if variadic && i == list.Len()-1 {
 			t := v.Type()
 			switch t := t.(type) {
 			case *types.Slice:
+				params.Variadic = true
 				ts = "..." + g.renderType(t.Elem())
 			default:
-				panic("bad varadic type!")
+				panic("bad variadic type!")
 			}
 		}
 
@@ -507,25 +509,24 @@ func (g *Generator) Generate() error {
 			g.printf("(%s) {\n", strings.Join(returns.Types, ", "))
 		}
 
-		formatParamNames := func() string {
-			names := ""
-			for i, name := range params.Names {
-				if i > 0 {
-					names += ", "
-				}
-
-				paramType := params.Types[i]
-				// for variable args, move the ... to the end.
-				if strings.Index(paramType, "...") == 0 {
-					name += "..."
-				}
-				names += name
+		var formattedParamNames string
+		for i, name := range params.Names {
+			if i > 0 {
+				formattedParamNames += ", "
 			}
-			return names
+
+			paramType := params.Types[i]
+			// for variable args, move the ... to the end.
+			if strings.Index(paramType, "...") == 0 {
+				name += "..."
+			}
+			formattedParamNames += name
 		}
 
+		called := g.generateCalled(params, formattedParamNames) // _m.Called invocation string
+
 		if len(returns.Types) > 0 {
-			g.printf("\tret := _m.Called(%s)\n\n", strings.Join(params.Names, ", "))
+			g.printf("\tret := %s\n\n", called)
 
 			var (
 				ret []string
@@ -535,7 +536,7 @@ func (g *Generator) Generate() error {
 				g.printf("\tvar r%d %s\n", idx, typ)
 				g.printf("\tif rf, ok := ret.Get(%d).(func(%s) %s); ok {\n",
 					idx, strings.Join(params.Types, ", "), typ)
-				g.printf("\t\tr%d = rf(%s)\n", idx, formatParamNames())
+				g.printf("\t\tr%d = rf(%s)\n", idx, formattedParamNames)
 				g.printf("\t} else {\n")
 				if typ == "error" {
 					g.printf("\t\tr%d = ret.Error(%d)\n", idx, idx)
@@ -553,13 +554,69 @@ func (g *Generator) Generate() error {
 
 			g.printf("\treturn %s\n", strings.Join(ret, ", "))
 		} else {
-			g.printf("\t_m.Called(%s)\n", strings.Join(params.Names, ", "))
+			g.printf("\t%s\n", called)
 		}
 
 		g.printf("}\n")
 	}
 
 	return nil
+}
+
+// generateCalled returns the Mock.Called invocation string and, if necessary, prints the
+// steps to prepare its argument list.
+//
+// It is separate from Generate to avoid cyclomatic complexity through early return statements.
+func (g *Generator) generateCalled(list *paramList, formattedParamNames string) string {
+	namesLen := len(list.Names)
+	if namesLen == 0 {
+		return "_m.Called()"
+	}
+
+	if !list.Variadic {
+		return "_m.Called(" + formattedParamNames + ")"
+	}
+
+	var variadicArgsName string
+	variadicName := list.Names[namesLen-1]
+	variadicIface := strings.Contains(list.Types[namesLen-1], "interface{}")
+
+	if variadicIface {
+		// Variadic is already of the interface{} type, so we don't need special handling.
+		variadicArgsName = variadicName
+	} else {
+		// Define _va to avoid "cannot use t (type T) as type []interface {} in append" error
+		// whenever the variadic type is non-interface{}.
+		g.printf("\t_va := make([]interface{}, len(%s))\n", variadicName)
+		g.printf("\tfor _i := range %s {\n\t\t_va[_i] = %s[_i]\n\t}\n", variadicName, variadicName)
+		variadicArgsName = "_va"
+	}
+
+	// _ca will hold all arguments we'll mirror into Called, one argument per distinct value
+	// passed to the method.
+	//
+	// For example, if the second argument is variadic and consists of three values,
+	// a total of 4 arguments will be passed to Called. The alternative is to
+	// pass a total of 2 arguments where the second is a slice with those 3 values from
+	// the variadic argument. But the alternative is less accessible because it requires
+	// building a []interface{} before calling Mock methods like On and AssertCalled for
+	// the variadic argument, and creates incompatibility issues with the diff algorithm
+	// in github.com/stretchr/testify/mock.
+	//
+	// This mirroring will allow argument lists for methods like On and AssertCalled to
+	// always resemble the expected calls they describe and retain compatibility.
+	//
+	// It's okay for us to use the interface{} type, regardless of the actual types, because
+	// Called receives only interface{} anyway.
+	g.printf("\tvar _ca []interface{}\n")
+
+	if namesLen > 1 {
+		nonVariadicParamNames := formattedParamNames[0:strings.LastIndex(formattedParamNames, ",")]
+		g.printf("\t_ca = append(_ca, %s)\n", nonVariadicParamNames)
+	}
+	g.printf("\t_ca = append(_ca, %s...)\n", variadicArgsName)
+
+	return "_m.Called(_ca...)"
 }
 
 func (g *Generator) Write(w io.Writer) error {
