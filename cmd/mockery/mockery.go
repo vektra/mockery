@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/vektra/mockery/mockery"
+	"runtime/pprof"
 )
 
 const regexMetadataChars = "\\.+*?()|[]{}^$"
@@ -24,6 +25,7 @@ type Config struct {
 	fTO        bool
 	fCase      string
 	fNote      string
+	fProfile   string
 }
 
 func main() {
@@ -56,6 +58,17 @@ func main() {
 		os.Exit(1)
 	}
 
+	if config.fProfile != "" {
+		f, err := os.Create(config.fProfile)
+		if err != nil {
+			os.Exit(1)
+			return
+		}
+
+		pprof.StartCPUProfile(f)
+		defer pprof.StopCPUProfile()
+	}
+
 	var osp mockery.OutputStreamProvider
 	if config.fPrint {
 		osp = &mockery.StdoutStreamProvider{}
@@ -81,6 +94,7 @@ func main() {
 		Filter:    filter,
 		LimitOne:  limitOne,
 	}
+
 	generated := walker.Walk(visitor)
 
 	if config.fName != "" && !generated {
@@ -105,6 +119,7 @@ func parseConfigFromArgs(args []string) Config {
 	flagSet.BoolVar(&config.fTO, "testonly", false, "generate a mock in a _test.go file")
 	flagSet.StringVar(&config.fCase, "case", "camel", "name the mocked file using casing convention")
 	flagSet.StringVar(&config.fNote, "note", "", "comment to insert into prologue of each generated file")
+	flagSet.StringVar(&config.fProfile, "cpuprofile", "", "write cpu profile to file")
 
 	flagSet.Parse(args[1:])
 
