@@ -22,10 +22,34 @@ type WalkerVisitor interface {
 }
 
 func (this *Walker) Walk(visitor WalkerVisitor) (generated bool) {
-	return this.doWalk(this.BaseDir, visitor)
+	parser := NewParser()
+	this.doWalk(parser, this.BaseDir, visitor)
+
+	err := parser.Load()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error walking: %v\n", err)
+		os.Exit(1)
+	}
+
+	for _, iface := range parser.Interfaces() {
+		if !this.Filter.MatchString(iface.Name) {
+			continue
+		}
+		err := visitor.VisitWalk(iface)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error walking %s: %s\n", iface.Name, err)
+			os.Exit(1)
+		}
+		generated = true
+		if this.LimitOne {
+			return
+		}
+	}
+
+	return
 }
 
-func (this *Walker) doWalk(dir string, visitor WalkerVisitor) (generated bool) {
+func (this *Walker) doWalk(p *Parser, dir string, visitor WalkerVisitor) (generated bool) {
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
 		return
@@ -40,7 +64,7 @@ func (this *Walker) doWalk(dir string, visitor WalkerVisitor) (generated bool) {
 
 		if file.IsDir() {
 			if this.Recursive {
-				generated = this.doWalk(path, visitor) || generated
+				generated = this.doWalk(p, path, visitor) || generated
 				if generated && this.LimitOne {
 					return
 				}
@@ -52,26 +76,10 @@ func (this *Walker) doWalk(dir string, visitor WalkerVisitor) (generated bool) {
 			continue
 		}
 
-		p := NewParser()
-
 		err = p.Parse(path)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "Error parsing file: ", err)
-			continue
-		}
-		for _, iface := range p.Interfaces() {
-			if !this.Filter.MatchString(iface.Name) {
-				continue
-			}
-			err := visitor.VisitWalk(iface)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error walking %s: %s\n", iface.Name, err)
-				os.Exit(1)
-			}
-			generated = true
-			if this.LimitOne {
-				return
-			}
+			return
 		}
 	}
 
@@ -98,7 +106,7 @@ func (this *GeneratorVisitor) VisitWalk(iface *Interface) error {
 	var pkg string
 
 	if this.InPackage {
-		pkg = iface.File.Name.String()
+		pkg = iface.Path
 	} else {
 		pkg = this.PackageName
 	}
