@@ -116,7 +116,10 @@ func (g *Generator) getNonConflictingName(path, name string) string {
 	if !g.importNameExists(name) {
 		return name
 	}
-	directories := strings.Split(path, string(filepath.Separator))
+
+	// The path will always contain '/' because it is enforced in getLocalizedPath
+	// regardless of OS.
+	directories := strings.Split(path, "/")
 
 	cleanedDirectories := make([]string, 0, len(directories))
 	for _, directory := range directories {
@@ -191,6 +194,9 @@ func (g *Generator) getLocalizedPath(path string) string {
 	} else if filepath.IsAbs(path) {
 		toReturn = calculateImport(g.packageRoots, path)
 	}
+
+	// Enforce '/' slashes for import paths in every OS.
+	toReturn = filepath.ToSlash(toReturn)
 
 	g.localizationCache[path] = toReturn
 	return toReturn

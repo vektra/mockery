@@ -66,7 +66,9 @@ func (s *GeneratorSuite) checkPrologueGeneration(
 func (s *GeneratorSuite) getInterfaceRelPath(iface *Interface) string {
 	local, err := filepath.Rel(getGoPathSrc(), filepath.Dir(iface.Path))
 	s.NoError(err, "No errors with relative path generation.")
-	return local
+
+	// Align w/ Generator.getLocalizedPath and enforce '/' slashes for import paths in every OS.
+	return filepath.ToSlash(local)
 }
 
 func (s *GeneratorSuite) TestCalculateImport() {
