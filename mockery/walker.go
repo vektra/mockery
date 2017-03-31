@@ -32,7 +32,7 @@ func (this *Walker) doWalk(dir string, visitor WalkerVisitor) (generated bool) {
 	}
 
 	for _, file := range files {
-		if strings.HasPrefix(file.Name(), ".") {
+		if strings.HasPrefix(file.Name(), ".") || strings.HasPrefix(file.Name(), "_") {
 			continue
 		}
 
