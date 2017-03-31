@@ -1,5 +1,5 @@
 package test
 
-type requester interface {
+type requester_unexported interface {
 	Get()
 }

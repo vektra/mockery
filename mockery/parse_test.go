@@ -30,6 +30,9 @@ func TestFileParse(t *testing.T) {
 	err := parser.Parse(testFile)
 	assert.NoError(t, err)
 
+	err = parser.Load()
+	assert.NoError(t, err)
+
 	node, err := parser.Find("Requester")
 	assert.NoError(t, err)
 	assert.NotNil(t, node)
@@ -39,6 +42,9 @@ func noTestFileInterfaces(t *testing.T) {
 	parser := NewParser()
 
 	err := parser.Parse(testFile)
+	assert.NoError(t, err)
+
+	err = parser.Load()
 	assert.NoError(t, err)
 
 	nodes := parser.Interfaces()
