@@ -79,7 +79,17 @@ Mock.On("passthrough", AnythingOfType("string")).Return(func(s string) string {
 })
 ```
 
-Note, this approach should be used judiciously, as return values should generally 
+#### Requirements
+
+`Return` must be passed the same argument count and types as expected by the interface. If the return argument signature of `passthrough` in the above example was instead `(string, error)` in the interface, `Return` would also need a second argument to define the error value.
+
+If any return argument is missing, `github.com/stretchr/testify/mock.Arguments.Get` will emit a panic.
+
+For example, `panic: assert: arguments: Cannot call Get(0) because there are 0 argument(s). [recovered]` indicates that `Return` was not provided any arguments but (at least one) was expected based on the interface. `Get(1)` would indicate that the `Return` call is missing a second argument, and so on.
+
+#### Notes
+
+This approach should be used judiciously, as return values should generally 
 not depend on arguments in mocks; however, this approach can be helpful for 
 situations like passthroughs or other test-only calculations.
 
