@@ -26,6 +26,7 @@ type Config struct {
 	fCase      string
 	fNote      string
 	fProfile   string
+	fVersion   bool
 }
 
 func main() {
@@ -36,7 +37,10 @@ func main() {
 	var err error
 	var limitOne bool
 
-	if config.fName != "" && config.fAll {
+	if config.fVersion {
+		fmt.Println(mockery.SemVer)
+		return 
+	} else if config.fName != "" && config.fAll {
 		fmt.Fprintln(os.Stderr, "Specify -name or -all, but not both")
 		os.Exit(1)
 	} else if config.fName != "" {
@@ -120,6 +124,7 @@ func parseConfigFromArgs(args []string) Config {
 	flagSet.StringVar(&config.fCase, "case", "camel", "name the mocked file using casing convention")
 	flagSet.StringVar(&config.fNote, "note", "", "comment to insert into prologue of each generated file")
 	flagSet.StringVar(&config.fProfile, "cpuprofile", "", "write cpu profile to file")
+	flagSet.BoolVar(&config.fVersion, "version", false, "prints the installed version of mockery")
 
 	flagSet.Parse(args[1:])
 
