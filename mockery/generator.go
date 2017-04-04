@@ -240,9 +240,13 @@ func (g *Generator) sortedImportNames() (importNames []string) {
 }
 
 func (g *Generator) generateImports() {
+	pkgPath := g.nameToPackagePath[g.iface.Pkg.Name()]
 	// Sort by import name so that we get a deterministic order
 	for _, name := range g.sortedImportNames() {
 		path := g.nameToPackagePath[name]
+		if g.ip && path == pkgPath {
+			continue
+		}
 		g.printf("import %s \"%s\"\n", name, path)
 	}
 }
@@ -312,11 +316,11 @@ type namer interface {
 	Name() string
 }
 
-func (g *Generator) renderType(t types.Type) string {
-	switch t := t.(type) {
+func (g *Generator) renderType(typ types.Type) string {
+	switch t := typ.(type) {
 	case *types.Named:
 		o := t.Obj()
-		if o.Pkg() == nil || o.Pkg().Name() == "main" || (g.ip && o.Pkg().Name() == g.pkg) {
+		if o.Pkg() == nil || o.Pkg().Name() == "main" || (g.ip && o.Pkg() == g.iface.Pkg) {
 			return o.Name()
 		}
 		return g.addPackageImport(o.Pkg()) + "." + o.Name()
@@ -450,6 +454,7 @@ func (g *Generator) genList(list *types.Tuple, variadic bool) *paramList {
 
 		params.Names = append(params.Names, pname)
 		params.Types = append(params.Types, ts)
+
 		params.Params = append(params.Params, fmt.Sprintf("%s %s", pname, ts))
 		params.Nilable = append(params.Nilable, isNillable(v.Type()))
 	}
