@@ -53,11 +53,11 @@ func (s *GeneratorSuite) checkGeneration(
 	generator := s.getGenerator(filepath, interfaceName, inPackage)
 	s.NoError(generator.Generate(), "The generator ran without errors.")
 
-	// Mirror the formatting done by normally done by golang.org/x/tools/imports in Generator.Write
+	// Mirror the formatting done by normally done by golang.org/x/tools/imports in Generator.Write.
 	//
 	// While we could possibly reuse Generator.Write here in addition to Generator.Generate,
 	// it would require changing Write's signature to accept custom options, specifically to
-	// allow the fragmeents already used in test cases. It's assumed that this approximation,
+	// allow the fragments in preexisting cases. It's assumed that this approximation,
 	// just formatting the source, is sufficient for the needs of the current test styles.
 	var actual []byte
 	actual, fmtErr := format.Source(generator.buf.Bytes())
