@@ -51,8 +51,13 @@ func (s *GeneratorSuite) checkGeneration(
 ) *Generator {
 	generator := s.getGenerator(filepath, interfaceName, inPackage)
 	s.NoError(generator.Generate(), "The generator ran without errors.")
+
+	// Compare lines for easier debugging via testify's slice diff output
+	expectedLines := strings.Split(expected, "\n")
+	actualLines := strings.Split(generator.buf.String(), "\n")
+
 	s.Equal(
-		expected, generator.buf.String(),
+		expectedLines, actualLines,
 		"The generator produced the expected output.",
 	)
 	return generator
