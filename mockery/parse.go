@@ -2,15 +2,17 @@ package mockery
 
 import (
 	"go/ast"
+	"go/build"
 	"go/importer"
 	"go/types"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
 
-	"golang.org/x/tools/go/loader"
 	"sort"
 	"sync"
+
+	"golang.org/x/tools/go/loader"
 )
 
 type Parser struct {
@@ -27,6 +29,12 @@ func NewParser() *Parser {
 	conf.TypeCheckFuncBodies = func(_ string) bool { return false }
 	conf.TypeChecker.DisableUnusedImportCheck = true
 	conf.TypeChecker.Importer = importer.Default()
+
+	// Initialize the build context (e.g. GOARCH/GOOS fields) so we can use it for respecting
+	// build tags during Parse.
+	defaultBuildCtx := build.Default
+	conf.Build = &defaultBuildCtx
+
 	return &Parser{
 		parserPackages:   make([]*types.Package, 0),
 		configMapping:    make(map[string][]*ast.File),
@@ -37,6 +45,7 @@ func NewParser() *Parser {
 }
 
 func (p *Parser) Parse(path string) error {
+
 	// To support relative paths to mock targets w/ vendor deps, we need to provide eventual
 	// calls to build.Context.Import with an absolute path. It needs to be absolute because
 	// Import will only find the vendor directory if our target path for parsing is under
@@ -61,10 +70,25 @@ func (p *Parser) Parse(path string) error {
 			continue
 		}
 
-		fpath := filepath.Join(dir, fi.Name())
-		f, err := p.conf.ParseFile(fpath, nil)
-		if err != nil {
-			return err
+		fname := fi.Name()
+		fpath := filepath.Join(dir, fname)
+
+		// If go/build would ignore this file, e.g. based on build tags, also ignore it here.
+		//
+		// (Further coupling with go internals and x/tools may of course bear a cost eventually
+		// e.g. https://github.com/vektra/mockery/pull/117#issue-199337071, but should add
+		// worthwhile consistency in this tool's behavior in the meantime.)
+		match, matchErr := p.conf.Build.MatchFile(dir, fname)
+		if matchErr != nil {
+			return matchErr
+		}
+		if !match {
+			continue
+		}
+
+		f, parseErr := p.conf.ParseFile(fpath, nil)
+		if parseErr != nil {
+			return parseErr
 		}
 
 		p.configMapping[path] = append(p.configMapping[path], f)
