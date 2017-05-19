@@ -3,9 +3,8 @@ package mockery
 import (
 	"io/ioutil"
 	"path/filepath"
-	"testing"
-
 	"strings"
+	"testing"
 
 	"github.com/stretchr/testify/suite"
 )
@@ -917,6 +916,14 @@ func (_m *Example) B(_a0 string) fixtureshttp.MyStruct {
 		filepath.Join(fixturePath, "same_name_imports.go"), "Example", false,
 		expected,
 	)
+}
+
+func (s *GeneratorSuite) TestGeneratorWithImportSameAsLocalPackageInpkgNoCycle() {
+	iface := s.getInterfaceFromFile("imports_same_as_package.go", "ImportsSameAsPackage")
+	pkg := iface.Path
+	gen := NewGenerator(iface, pkg, true)
+	gen.GeneratePrologue(pkg)
+	s.NotContains(gen.buf.String(), `import test "github.com/vektra/mockery/mockery/fixtures/test"`)
 }
 
 func (s *GeneratorSuite) TestGeneratorWithImportSameAsLocalPackage() {
