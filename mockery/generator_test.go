@@ -1,6 +1,7 @@
 package mockery
 
 import (
+	"go/format"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
@@ -52,8 +53,23 @@ func (s *GeneratorSuite) checkGeneration(
 ) *Generator {
 	generator := s.getGenerator(filepath, interfaceName, inPackage)
 	s.NoError(generator.Generate(), "The generator ran without errors.")
+
+	// Mirror the formatting done by normally done by golang.org/x/tools/imports in Generator.Write.
+	//
+	// While we could possibly reuse Generator.Write here in addition to Generator.Generate,
+	// it would require changing Write's signature to accept custom options, specifically to
+	// allow the fragments in preexisting cases. It's assumed that this approximation,
+	// just formatting the source, is sufficient for the needs of the current test styles.
+	var actual []byte
+	actual, fmtErr := format.Source(generator.buf.Bytes())
+	s.NoError(fmtErr, "The formatter ran without errors.")
+
+	// Compare lines for easier debugging via testify's slice diff output
+	expectedLines := strings.Split(expected, "\n")
+	actualLines := strings.Split(string(actual), "\n")
+
 	s.Equal(
-		expected, generator.buf.String(),
+		expectedLines, actualLines,
 		"The generator produced the expected output.",
 	)
 	return generator
@@ -614,8 +630,7 @@ func (s *GeneratorSuite) TestGeneratorVariadicArgs() {
 	// Read the expected output from a "golden" file that we can also import in CompatSuite
 	// to asserts its actual behavior.
 	//
-	// NOTE: After regenerating the mock, the blank lines between the method blocks currently
-	// need to be removed due to possible defect in the checker.
+	// To regenerate the golden file: make fixture
 	expectedBytes, err := ioutil.ReadFile(filepath.Join(fixturePath, "mocks", "requester_variadic.go"))
 	s.NoError(err)
 	expected := string(expectedBytes)
@@ -636,6 +651,7 @@ type Fooer struct {
 func (_m *Fooer) Bar(f func([]int)) {
 	_m.Called(f)
 }
+
 // Baz provides a mock function with given fields: path
 func (_m *Fooer) Baz(path string) func(string) string {
 	ret := _m.Called(path)
@@ -651,6 +667,7 @@ func (_m *Fooer) Baz(path string) func(string) string {
 
 	return r0
 }
+
 // Foo provides a mock function with given fields: f
 func (_m *Fooer) Foo(f func(string) string) error {
 	ret := _m.Called(f)
@@ -691,6 +708,7 @@ func (_m *AsyncProducer) Input() chan<- bool {
 
 	return r0
 }
+
 // Output provides a mock function with given fields:
 func (_m *AsyncProducer) Output() <-chan bool {
 	ret := _m.Called()
@@ -706,6 +724,7 @@ func (_m *AsyncProducer) Output() <-chan bool {
 
 	return r0
 }
+
 // Whatever provides a mock function with given fields:
 func (_m *AsyncProducer) Whatever() chan bool {
 	ret := _m.Called()
@@ -789,6 +808,7 @@ func (_m *ConsulLock) Lock(_a0 <-chan struct{}) (<-chan struct{}, error) {
 
 	return r0, r1
 }
+
 // Unlock provides a mock function with given fields:
 func (_m *ConsulLock) Unlock() error {
 	ret := _m.Called()
@@ -914,6 +934,7 @@ func (_m *Example) A() http.Flusher {
 
 	return r0
 }
+
 // B provides a mock function with given fields: _a0
 func (_m *Example) B(_a0 string) fixtureshttp.MyStruct {
 	ret := _m.Called(_a0)
@@ -961,6 +982,7 @@ func (_m *ImportsSameAsPackage) A() test.B {
 
 	return r0
 }
+
 // B provides a mock function with given fields:
 func (_m *ImportsSameAsPackage) B() fixtures.KeyManager {
 	ret := _m.Called()
@@ -976,6 +998,7 @@ func (_m *ImportsSameAsPackage) B() fixtures.KeyManager {
 
 	return r0
 }
+
 // C provides a mock function with given fields: _a0
 func (_m *ImportsSameAsPackage) C(_a0 fixtures.C) {
 	_m.Called(_a0)
