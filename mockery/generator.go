@@ -637,6 +637,8 @@ func (g *Generator) Write(w io.Writer) error {
 
 	res, err := imports.Process("mock.go", theBytes, opt)
 	if err != nil {
+		line := "--------------------------------------------------------------------------------------------"
+		fmt.Fprintf(os.Stderr, "Between the lines is the file (mock.go) mockery generated in-memory but detected as invalid:\n%s\n%s\n%s\n", line, g.buf.String(), line)
 		return err
 	}
 
