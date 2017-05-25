@@ -23,10 +23,11 @@ func TestParseConfigDefaults(t *testing.T) {
 	assert.Equal(t, false, config.fTO)
 	assert.Equal(t, "camel", config.fCase)
 	assert.Equal(t, "", config.fNote)
+	assert.Equal(t, false, config.quiet)
 }
 
 func TestParseConfigFlippingValues(t *testing.T) {
-	config := configFromCommandLine("mockery -name hi -print -output output -dir dir -recursive -all -inpkg -testonly -case case -note note")
+	config := configFromCommandLine("mockery -quiet -name hi -print -output output -dir dir -recursive -all -inpkg -testonly -case case -note note")
 	assert.Equal(t, "hi", config.fName)
 	assert.Equal(t, true, config.fPrint)
 	assert.Equal(t, "output", config.fOutput)
@@ -37,4 +38,5 @@ func TestParseConfigFlippingValues(t *testing.T) {
 	assert.Equal(t, true, config.fTO)
 	assert.Equal(t, "case", config.fCase)
 	assert.Equal(t, "note", config.fNote)
+	assert.Equal(t, true, config.quiet)
 }

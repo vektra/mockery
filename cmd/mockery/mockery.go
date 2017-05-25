@@ -9,7 +9,6 @@ import (
 
 	"github.com/vektra/mockery/mockery"
 	"runtime/pprof"
-	"syscall"
 )
 
 const regexMetadataChars = "\\.+*?()|[]{}^$"
@@ -40,8 +39,8 @@ func main() {
 	var limitOne bool
 
 	if config.quiet {
-		// if "quiet" flag is set, set os.Stdout to /dev/null to suppress all output to Stdout
-		os.Stdout = os.NewFile(uintptr(syscall.Stdout), os.DevNull)
+		// if "quiet" flag is set, set os.Stdout to nil to suppress all output to Stdout
+		os.Stdout = nil
 	}
 
 	if config.fVersion {
