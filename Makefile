@@ -1,6 +1,6 @@
 SHELL=bash
 
-all: clean fmt test fixture install integration
+all: clean fmt test install fixture integration
 
 novendor=$(shell glide novendor)
 
