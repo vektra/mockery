@@ -4,13 +4,22 @@ language: go
 go_import_path: github.com/vektra/mockery
 
 go:
-  - 1.5.x
   - 1.6.x
   - 1.7.x
   - 1.8.x
   - tip
 
+matrix:
+  include:
+    - go: "1.5.x"
+      env: GO15VENDOREXPERIMENT=1
+
 before_script:
-  - go get ./...
-  # This package is used in tests only, so "go get" misses it
+  #install glide
+  - wget "https://github.com/Masterminds/glide/releases/download/0.10.2/glide-0.10.2-linux-amd64.tar.gz"
+  - mkdir -p $HOME/bin
+  - tar -vxz -C $HOME/bin --strip=1 -f glide-0.10.2-linux-amd64.tar.gz
+  - export PATH="$HOME/bin:$PATH"
+  
+  # This package is not vendored in to allow clients to choose their own version
   - go get github.com/stretchr/testify/assert

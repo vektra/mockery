@@ -1,21 +1,23 @@
 SHELL=bash
 
-all: clean fmt test fixture install integration
+all: clean fmt test install fixture integration
+
+novendor=$(shell glide novendor)
 
 clean:
 	rm -rf mocks
 
 fmt:
-	go fmt ./...
+	go fmt ${novendor}
 
 test:
-	go test ./...
+	go test ${novendor}
 
 fixture:
 	mockery -print -dir mockery/fixtures -name RequesterVariadic > mockery/fixtures/mocks/requester_variadic.go
 
 install:
-	go install ./...
+	go install ${novendor}
 
 integration:
 	rm -rf mocks
@@ -28,3 +30,8 @@ integration:
 		echo "AsyncProducer.go not created"; \
 		echo 1; \
 	fi
+
+glide_up:
+	glide up --skip-test
+	#Can be found here https://github.com/sgotti/glide-vc
+	glide-vc --use-lock-file
