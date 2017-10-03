@@ -32,8 +32,8 @@ func NewParser() *Parser {
 
 	// Initialize the build context (e.g. GOARCH/GOOS fields) so we can use it for respecting
 	// build tags during Parse.
-	defaultBuildCtx := build.Default
-	conf.Build = &defaultBuildCtx
+	buildCtx := build.Default
+	conf.Build = &buildCtx
 
 	return &Parser{
 		parserPackages:   make([]*types.Package, 0),
@@ -42,6 +42,10 @@ func NewParser() *Parser {
 		pathToASTFile:    make(map[string]*ast.File),
 		conf:             conf,
 	}
+}
+
+func (p *Parser) AddBuildTags(buildTags ...string) {
+	p.conf.Build.BuildTags = append(p.conf.Build.BuildTags, buildTags...)
 }
 
 func (p *Parser) Parse(path string) error {
