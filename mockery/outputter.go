@@ -23,10 +23,12 @@ func (this *StdoutStreamProvider) GetWriter(iface *Interface, pkg string) (io.Wr
 }
 
 type FileOutputStreamProvider struct {
-	BaseDir   string
-	InPackage bool
-	TestOnly  bool
-	Case      string
+	BaseDir                   string
+	InPackage                 bool
+	TestOnly                  bool
+	Case                      string
+	KeepTree                  bool
+	KeepTreeOriginalDirectory string
 }
 
 func (this *FileOutputStreamProvider) GetWriter(iface *Interface, pkg string) (io.Writer, error, Cleanup) {
@@ -37,7 +39,17 @@ func (this *FileOutputStreamProvider) GetWriter(iface *Interface, pkg string) (i
 		caseName = this.underscoreCaseName(caseName)
 	}
 
-	if this.InPackage {
+	if this.KeepTree {
+		absOriginalDir, err := filepath.Abs(this.KeepTreeOriginalDirectory)
+		if err != nil {
+			return nil, err, func() error { return nil }
+		}
+		relativePath := strings.TrimPrefix(
+			filepath.Join(filepath.Dir(iface.Path), this.filename(caseName)),
+			absOriginalDir)
+		path = filepath.Join(this.BaseDir, relativePath)
+		os.MkdirAll(filepath.Dir(path), 0755)
+	} else if this.InPackage {
 		path = filepath.Join(filepath.Dir(iface.Path), this.filename(caseName))
 	} else {
 		path = filepath.Join(this.BaseDir, this.filename(caseName))
@@ -50,7 +62,7 @@ func (this *FileOutputStreamProvider) GetWriter(iface *Interface, pkg string) (i
 		return nil, err, func() error { return nil }
 	}
 
-	fmt.Printf("Generating mock for: %s\n", iface.Name)
+	fmt.Printf("Generating mock for: %s in file: %s\n", iface.Name, path)
 	return f, nil, func() error {
 		return f.Close()
 	}
