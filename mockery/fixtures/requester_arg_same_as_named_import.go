@@ -1,6 +1,6 @@
 package test
 
-import json "encoding/json"
+import "encoding/json"
 
 type RequesterArgSameAsNamedImport interface {
 	Get(json string) *json.RawMessage
