@@ -58,11 +58,6 @@ func (p *Parser) Parse(path string) error {
 		return err
 	}
 
-	path, err = filepath.EvalSymlinks(path)
-	if err != nil {
-		return err
-	}
-
 	dir := filepath.Dir(path)
 
 	files, err := ioutil.ReadDir(dir)
