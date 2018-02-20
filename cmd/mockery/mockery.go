@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"runtime/pprof"
 	"strings"
+	"syscall"
 
 	"github.com/vektra/mockery/mockery"
-	"runtime/pprof"
-	"syscall"
 )
 
 const regexMetadataChars = "\\.+*?()|[]{}^$"

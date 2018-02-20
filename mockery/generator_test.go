@@ -1,15 +1,15 @@
 package mockery
 
 import (
+	"bufio"
 	"go/format"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/suite"
 	"github.com/stretchr/testify/require"
-	"bufio"
+	"github.com/stretchr/testify/suite"
 )
 
 const pkg = "test"

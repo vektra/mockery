@@ -7,9 +7,8 @@ import (
 	"go/types"
 	"io/ioutil"
 	"path/filepath"
-	"strings"
-
 	"sort"
+	"strings"
 	"sync"
 
 	"golang.org/x/tools/go/loader"
