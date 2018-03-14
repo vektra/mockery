@@ -170,9 +170,9 @@ This option is only compatible with `-name`. The `-all` option implies `-recursi
 mockery always generates files with the package `mocks` to keep things clean and simple.
 You can control which mocks directory is used by using `-output`, which defaults to `./mocks`.
 
-## Caseing
+## Casing
 
-mockery generates files using the caseing of the original interface name.  This
+mockery generates files using the casing of the original interface name.  This
 can be modified by specifying `-case=underscore` to format the generated file
 name using underscore casing.
 
