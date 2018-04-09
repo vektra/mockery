@@ -540,6 +540,17 @@ func (g *Generator) Generate() error {
 		if len(returns.Types) > 0 {
 			g.printf("\tret := %s\n\n", called)
 
+			if len(returns.Types) > 1 {
+				// There can be one function that returns all arguments.
+				g.printf("\tif len(ret) == 1 {\n")
+				g.printf("\t\trf, ok := ret.Get(0).(func(%s) (%s))\n", strings.Join(params.Types, ", "), strings.Join(returns.Types, ", "))
+				g.printf("\t\tif ok {\n")
+				g.printf("\t\t\treturn rf(%s)\n", formattedParamNames)
+				g.printf("\t\t}\n")
+				g.printf("\t}\n")
+				g.printf("\n")
+			}
+
 			var (
 				ret []string
 			)
