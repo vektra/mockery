@@ -85,3 +85,22 @@ func TestBuildTagInComment(t *testing.T) {
 	assert.Equal(t, 1, len(nodes))
 	assert.Equal(t, "IfaceWithBuildTagInComment", nodes[0].Name)
 }
+
+func TestCustomBuildTag(t *testing.T) {
+	parser := NewParser()
+	parser.AddBuildTags("custom")
+
+	// Include two files that define the same interface, but with different
+	// build tags. Only one should be loaded.
+	err := parser.Parse(getFixturePath("buildtag", "comment", "custom_iface.go"))
+	assert.NoError(t, err)
+	err = parser.Parse(getFixturePath("buildtag", "comment", "custom2_iface.go"))
+	assert.NoError(t, err)
+
+	err = parser.Load()
+	assert.NoError(t, err) // Expect "redeclared in this block" if tags aren't respected
+
+	nodes := parser.Interfaces()
+	assert.Equal(t, 1, len(nodes))
+	assert.Equal(t, "IfaceWithCustomBuildTagInComment", nodes[0].Name)
+}

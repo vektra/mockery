@@ -29,6 +29,7 @@ type Config struct {
 	fProfile   string
 	fVersion   bool
 	quiet      bool
+	buildTags  string
 }
 
 func main() {
@@ -104,6 +105,7 @@ func main() {
 		Recursive: recursive,
 		Filter:    filter,
 		LimitOne:  limitOne,
+		BuildTags: strings.Split(config.buildTags, " "),
 	}
 
 	generated := walker.Walk(visitor)
@@ -133,6 +135,7 @@ func parseConfigFromArgs(args []string) Config {
 	flagSet.StringVar(&config.fProfile, "cpuprofile", "", "write cpu profile to file")
 	flagSet.BoolVar(&config.fVersion, "version", false, "prints the installed version of mockery")
 	flagSet.BoolVar(&config.quiet, "quiet", false, "suppress output to stdout")
+	flagSet.StringVar(&config.buildTags, "tags", "", "space-separated list of additional build tags to use")
 
 	flagSet.Parse(args[1:])
 
