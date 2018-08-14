@@ -29,6 +29,7 @@ type Config struct {
 	fProfile   string
 	fVersion   bool
 	quiet      bool
+	fkeepTree  bool
 	buildTags  string
 }
 
@@ -70,6 +71,10 @@ func main() {
 		os.Exit(1)
 	}
 
+	if config.fkeepTree {
+		config.fIP = false
+	}
+
 	if config.fProfile != "" {
 		f, err := os.Create(config.fProfile)
 		if err != nil {
@@ -86,10 +91,12 @@ func main() {
 		osp = &mockery.StdoutStreamProvider{}
 	} else {
 		osp = &mockery.FileOutputStreamProvider{
-			BaseDir:   config.fOutput,
-			InPackage: config.fIP,
-			TestOnly:  config.fTO,
-			Case:      config.fCase,
+			BaseDir:                   config.fOutput,
+			InPackage:                 config.fIP,
+			TestOnly:                  config.fTO,
+			Case:                      config.fCase,
+			KeepTree:                  config.fkeepTree,
+			KeepTreeOriginalDirectory: config.fDir,
 		}
 	}
 
@@ -135,6 +142,7 @@ func parseConfigFromArgs(args []string) Config {
 	flagSet.StringVar(&config.fProfile, "cpuprofile", "", "write cpu profile to file")
 	flagSet.BoolVar(&config.fVersion, "version", false, "prints the installed version of mockery")
 	flagSet.BoolVar(&config.quiet, "quiet", false, "suppress output to stdout")
+	flagSet.BoolVar(&config.fkeepTree, "keeptree", false, "keep the tree structure of the original interface files into a different repository. Must be used with XX")
 	flagSet.StringVar(&config.buildTags, "tags", "", "space-separated list of additional build tags to use")
 
 	flagSet.Parse(args[1:])
