@@ -273,8 +273,8 @@ func (g *Generator) GeneratePrologueNote(note string) {
 		for _, n := range strings.Split(note, "\\n") {
 			g.printf("// %s\n", n)
 		}
-		g.printf("\n")
 	}
+	g.printf("\n")
 }
 
 // ErrNotInterface is returned when the given type is not an interface
