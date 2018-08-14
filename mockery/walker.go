@@ -15,6 +15,7 @@ type Walker struct {
 	Recursive bool
 	Filter    *regexp.Regexp
 	LimitOne  bool
+	BuildTags []string
 }
 
 type WalkerVisitor interface {
@@ -23,6 +24,7 @@ type WalkerVisitor interface {
 
 func (this *Walker) Walk(visitor WalkerVisitor) (generated bool) {
 	parser := NewParser()
+	parser.AddBuildTags(this.BuildTags...)
 	this.doWalk(parser, this.BaseDir, visitor)
 
 	err := parser.Load()

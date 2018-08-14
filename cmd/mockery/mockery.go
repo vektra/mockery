@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"runtime/pprof"
 	"strings"
+	"syscall"
 
 	"github.com/vektra/mockery/mockery"
-	"runtime/pprof"
-	"syscall"
 )
 
 const regexMetadataChars = "\\.+*?()|[]{}^$"
@@ -30,6 +30,7 @@ type Config struct {
 	fVersion   bool
 	quiet      bool
 	fkeepTree  bool
+	buildTags  string
 }
 
 func main() {
@@ -111,6 +112,7 @@ func main() {
 		Recursive: recursive,
 		Filter:    filter,
 		LimitOne:  limitOne,
+		BuildTags: strings.Split(config.buildTags, " "),
 	}
 
 	generated := walker.Walk(visitor)
@@ -141,6 +143,7 @@ func parseConfigFromArgs(args []string) Config {
 	flagSet.BoolVar(&config.fVersion, "version", false, "prints the installed version of mockery")
 	flagSet.BoolVar(&config.quiet, "quiet", false, "suppress output to stdout")
 	flagSet.BoolVar(&config.fkeepTree, "keeptree", false, "keep the tree structure of the original interface files into a different repository. Must be used with XX")
+	flagSet.StringVar(&config.buildTags, "tags", "", "space-separated list of additional build tags to use")
 
 	flagSet.Parse(args[1:])
 
