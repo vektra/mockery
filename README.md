@@ -4,7 +4,7 @@ mockery
 mockery provides the ability to easily generate mocks for golang interfaces. It removes
 the boilerplate coding required to use mocks.
 
-[![Linux Build Status](https://travis-ci.org/vektra/mockery.png)](https://travis-ci.org/vektra/mockery) [![Windows Build Status](https://ci.appveyor.com/api/projects/status/github/vektra/mockery)](https://ci.appveyor.com/project/vektra/mockery) [![GoDoc](https://godoc.org/github.com/vektra/mockery/mockery?status.svg)](https://godoc.org/github.com/vektra/mockery/mockery) [![Go Report Card](https://goreportcard.com/badge/github.com/vektra/mockery)](https://goreportcard.com/report/github.com/vektra/mockery) 
+[![Linux Build Status](https://travis-ci.org/vektra/mockery.png)](https://travis-ci.org/vektra/mockery) [![Windows Build Status](https://ci.appveyor.com/api/projects/status/github/vektra/mockery)](https://ci.appveyor.com/project/vektra/mockery) [![GoDoc](https://godoc.org/github.com/vektra/mockery/mockery?status.svg)](https://godoc.org/github.com/vektra/mockery/mockery) [![Go Report Card](https://goreportcard.com/badge/github.com/vektra/mockery)](https://goreportcard.com/report/github.com/vektra/mockery)
 
 ### Installation
 
@@ -144,8 +144,8 @@ For example, `panic: assert: arguments: Cannot call Get(0) because there are 0 a
 
 #### Notes
 
-This approach should be used judiciously, as return values should generally 
-not depend on arguments in mocks; however, this approach can be helpful for 
+This approach should be used judiciously, as return values should generally
+not depend on arguments in mocks; however, this approach can be helpful for
 situations like passthroughs or other test-only calculations.
 
 ### Name
@@ -169,6 +169,12 @@ This option is only compatible with `-name`. The `-all` option implies `-recursi
 
 mockery always generates files with the package `mocks` to keep things clean and simple.
 You can control which mocks directory is used by using `-output`, which defaults to `./mocks`.
+
+### In Package (-inpkg) and KeepTree (-keeptree)
+
+For some complex repositories, there could be multiple interfaces with the same name but in different packages. In that case, `-inpkg` allows generate the mocked interfaces directly in the package that it mocks.
+
+In the case you don't want to generate the mocks into the package but want to keep a similar structure, use the option `-keeptree`.
 
 ## Casing
 
