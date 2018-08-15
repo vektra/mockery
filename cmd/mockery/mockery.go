@@ -137,7 +137,7 @@ func parseConfigFromArgs(args []string) Config {
 	flagSet.BoolVar(&config.fAll, "all", false, "generates mocks for all found interfaces in all sub-directories")
 	flagSet.BoolVar(&config.fIP, "inpkg", false, "generate a mock that goes inside the original package")
 	flagSet.BoolVar(&config.fTO, "testonly", false, "generate a mock in a _test.go file")
-	flagSet.StringVar(&config.fCase, "case", "camel", "name the mocked file using casing convention")
+	flagSet.StringVar(&config.fCase, "case", "camel", "name the mocked file using casing convention [camel, snake, underscore]")
 	flagSet.StringVar(&config.fNote, "note", "", "comment to insert into prologue of each generated file")
 	flagSet.StringVar(&config.fProfile, "cpuprofile", "", "write cpu profile to file")
 	flagSet.BoolVar(&config.fVersion, "version", false, "prints the installed version of mockery")

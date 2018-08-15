@@ -35,7 +35,7 @@ func (this *FileOutputStreamProvider) GetWriter(iface *Interface, pkg string) (i
 	var path string
 
 	caseName := iface.Name
-	if this.Case == "underscore" {
+	if this.Case == "underscore" || this.Case == "snake" {
 		caseName = this.underscoreCaseName(caseName)
 	}
 
