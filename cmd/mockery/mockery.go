@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"runtime/pprof"
 	"strings"
+	"syscall"
 
 	"github.com/vektra/mockery/mockery"
 	"runtime/pprof"
@@ -28,6 +30,8 @@ type Config struct {
 	fProfile   string
 	fVersion   bool
 	quiet      bool
+	fkeepTree  bool
+	buildTags  string
 }
 
 func main() {
@@ -68,6 +72,10 @@ func main() {
 		os.Exit(1)
 	}
 
+	if config.fkeepTree {
+		config.fIP = false
+	}
+
 	if config.fProfile != "" {
 		f, err := os.Create(config.fProfile)
 		if err != nil {
@@ -84,10 +92,12 @@ func main() {
 		osp = &mockery.StdoutStreamProvider{}
 	} else {
 		osp = &mockery.FileOutputStreamProvider{
-			BaseDir:   config.fOutput,
-			InPackage: config.fIP,
-			TestOnly:  config.fTO,
-			Case:      config.fCase,
+			BaseDir:                   config.fOutput,
+			InPackage:                 config.fIP,
+			TestOnly:                  config.fTO,
+			Case:                      config.fCase,
+			KeepTree:                  config.fkeepTree,
+			KeepTreeOriginalDirectory: config.fDir,
 		}
 	}
 
@@ -103,6 +113,7 @@ func main() {
 		Recursive: recursive,
 		Filter:    filter,
 		LimitOne:  limitOne,
+		BuildTags: strings.Split(config.buildTags, " "),
 	}
 
 	generated := walker.Walk(visitor)
@@ -127,11 +138,13 @@ func parseConfigFromArgs(args []string) Config {
 	flagSet.BoolVar(&config.fAll, "all", false, "generates mocks for all found interfaces in all sub-directories")
 	flagSet.BoolVar(&config.fIP, "inpkg", false, "generate a mock that goes inside the original package")
 	flagSet.BoolVar(&config.fTO, "testonly", false, "generate a mock in a _test.go file")
-	flagSet.StringVar(&config.fCase, "case", "camel", "name the mocked file using casing convention")
+	flagSet.StringVar(&config.fCase, "case", "camel", "name the mocked file using casing convention [camel, snake, underscore]")
 	flagSet.StringVar(&config.fNote, "note", "", "comment to insert into prologue of each generated file")
 	flagSet.StringVar(&config.fProfile, "cpuprofile", "", "write cpu profile to file")
 	flagSet.BoolVar(&config.fVersion, "version", false, "prints the installed version of mockery")
 	flagSet.BoolVar(&config.quiet, "quiet", false, "suppress output to stdout")
+	flagSet.BoolVar(&config.fkeepTree, "keeptree", false, "keep the tree structure of the original interface files into a different repository. Must be used with XX")
+	flagSet.StringVar(&config.buildTags, "tags", "", "space-separated list of additional build tags to use")
 
 	flagSet.Parse(args[1:])
 

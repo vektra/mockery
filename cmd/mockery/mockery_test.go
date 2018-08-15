@@ -1,10 +1,10 @@
 package main
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"strings"
 )
 
 func configFromCommandLine(str string) Config {
