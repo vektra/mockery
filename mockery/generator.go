@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"go/ast"
+	"go/build"
 	"go/types"
 	"io"
 	"log"
@@ -21,7 +22,7 @@ import (
 var invalidIdentifierChar = regexp.MustCompile("[^[:digit:][:alpha:]_]")
 
 func getGoPathSrc() string {
-	return filepath.Join(filepath.SplitList(os.Getenv("GOPATH"))[0], "src")
+	return filepath.Join(filepath.SplitList(build.Default.GOPATH)[0], "src")
 }
 
 func stripChars(str, chr string) string {
@@ -56,7 +57,7 @@ func NewGenerator(iface *Interface, pkg string, inPackage bool) *Generator {
 
 	var roots []string
 
-	for _, root := range filepath.SplitList(os.Getenv("GOPATH")) {
+	for _, root := range filepath.SplitList(build.Default.GOPATH) {
 		roots = append(roots, filepath.Join(root, "src"))
 	}
 
