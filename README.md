@@ -176,9 +176,9 @@ For some complex repositories, there could be multiple interfaces with the same 
 
 In the case you don't want to generate the mocks into the package but want to keep a similar structure, use the option `-keeptree`.
 
-## Caseing
+## Casing
 
-mockery generates files using the caseing of the original interface name.  This
+mockery generates files using the casing of the original interface name.  This
 can be modified by specifying `-case=underscore` to format the generated file
 name using underscore casing.
 
