@@ -203,6 +203,8 @@ type mockRequester_unexported struct {
 	mock.Mock
 }
 
+var _ requester_unexported = (*mockRequester_unexported)(nil)
+
 // Get provides a mock function with given fields:
 func (_m *mockRequester_unexported) Get() {
 	_m.Called()
@@ -901,6 +903,8 @@ func (s *GeneratorSuite) TestGeneratorForMethodUsingInterfaceInPackage() {
 type MockUsesOtherPkgIface struct {
 	mock.Mock
 }
+
+var _ UsesOtherPkgIface = (*MockUsesOtherPkgIface)(nil)
 
 // DoSomethingElse provides a mock function with given fields: obj
 func (_m *MockUsesOtherPkgIface) DoSomethingElse(obj Sibling) {

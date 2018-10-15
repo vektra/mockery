@@ -490,6 +490,9 @@ func (g *Generator) Generate() error {
 	g.printf(
 		"type %s struct {\n\tmock.Mock\n}\n\n", g.mockName(),
 	)
+	if g.ip {
+		g.printf("var _ %s = (*%s)(nil)\n\n", g.iface.Name, g.mockName())
+	}
 
 	for i := 0; i < g.iface.Type.NumMethods(); i++ {
 		fn := g.iface.Type.Method(i)
