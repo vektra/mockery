@@ -40,6 +40,7 @@ type Generator struct {
 	buf bytes.Buffer
 
 	ip               bool
+	ta               bool
 	iface            *Interface
 	pkg              string
 	localPackageName *string
@@ -53,7 +54,7 @@ type Generator struct {
 }
 
 // NewGenerator builds a Generator.
-func NewGenerator(iface *Interface, pkg string, inPackage bool) *Generator {
+func NewGenerator(iface *Interface, pkg string, inPackage bool, typeAssertion bool) *Generator {
 
 	var roots []string
 
@@ -65,6 +66,7 @@ func NewGenerator(iface *Interface, pkg string, inPackage bool) *Generator {
 		iface:             iface,
 		pkg:               pkg,
 		ip:                inPackage,
+		ta:                typeAssertion,
 		localizationCache: make(map[string]string),
 		packagePathToName: make(map[string]string),
 		nameToPackagePath: make(map[string]string),
@@ -490,8 +492,9 @@ func (g *Generator) Generate() error {
 	g.printf(
 		"type %s struct {\n\tmock.Mock\n}\n\n", g.mockName(),
 	)
-	if g.ip {
-		g.printf("var _ %s = (*%s)(nil)\n\n", g.iface.Name, g.mockName())
+
+	if g.ta {
+		g.printf("var _ %s = (*%s)(nil)\n\n", g.renderType(g.iface.NamedType), g.mockName())
 	}
 
 	for i := 0; i < g.iface.Type.NumMethods(); i++ {

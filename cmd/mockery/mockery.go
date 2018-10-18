@@ -23,6 +23,7 @@ type Config struct {
 	fRecursive bool
 	fAll       bool
 	fIP        bool
+	fType      bool
 	fTO        bool
 	fCase      string
 	fNote      string
@@ -101,10 +102,11 @@ func main() {
 	}
 
 	visitor := &mockery.GeneratorVisitor{
-		InPackage:   config.fIP,
-		Note:        config.fNote,
-		Osp:         osp,
-		PackageName: config.fOutpkg,
+		InPackage:     config.fIP,
+		TypeAssertion: config.fType,
+		Note:          config.fNote,
+		Osp:           osp,
+		PackageName:   config.fOutpkg,
 	}
 
 	walker := mockery.Walker{
@@ -136,6 +138,7 @@ func parseConfigFromArgs(args []string) Config {
 	flagSet.BoolVar(&config.fRecursive, "recursive", false, "recurse search into sub-directories")
 	flagSet.BoolVar(&config.fAll, "all", false, "generates mocks for all found interfaces in all sub-directories")
 	flagSet.BoolVar(&config.fIP, "inpkg", false, "generate a mock that goes inside the original package")
+	flagSet.BoolVar(&config.fType, "typeassert", false, "include a static type assertion in generated mocks")
 	flagSet.BoolVar(&config.fTO, "testonly", false, "generate a mock in a _test.go file")
 	flagSet.StringVar(&config.fCase, "case", "camel", "name the mocked file using casing convention [camel, snake, underscore]")
 	flagSet.StringVar(&config.fNote, "note", "", "comment to insert into prologue of each generated file")

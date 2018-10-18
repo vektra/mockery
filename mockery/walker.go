@@ -89,9 +89,10 @@ func (this *Walker) doWalk(p *Parser, dir string, visitor WalkerVisitor) (genera
 }
 
 type GeneratorVisitor struct {
-	InPackage bool
-	Note      string
-	Osp       OutputStreamProvider
+	InPackage     bool
+	TypeAssertion bool
+	Note          string
+	Osp           OutputStreamProvider
 	// The name of the output package, if InPackage is false (defaults to "mocks")
 	PackageName string
 }
@@ -120,7 +121,7 @@ func (this *GeneratorVisitor) VisitWalk(iface *Interface) error {
 	}
 	defer closer()
 
-	gen := NewGenerator(iface, pkg, this.InPackage)
+	gen := NewGenerator(iface, pkg, this.InPackage, this.TypeAssertion)
 	gen.GeneratePrologueNote(this.Note)
 	gen.GeneratePrologue(pkg)
 
