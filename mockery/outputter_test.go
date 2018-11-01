@@ -26,6 +26,11 @@ func TestFilenameTest(t *testing.T) {
 	assert.Equal(t, "name_test.go", out.filename("name"))
 }
 
+func TestFilenameOverride(t *testing.T) {
+	out := FileOutputStreamProvider{InPackage: false, TestOnly: true, FileName: "override.go"}
+	assert.Equal(t, "override.go", out.filename("anynamehere"))
+}
+
 func TestUnderscoreCaseName(t *testing.T) {
 	assert.Equal(t, "notify_event", (&FileOutputStreamProvider{}).underscoreCaseName("NotifyEvent"))
 	assert.Equal(t, "repository", (&FileOutputStreamProvider{}).underscoreCaseName("Repository"))

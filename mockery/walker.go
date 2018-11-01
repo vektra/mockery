@@ -94,6 +94,7 @@ type GeneratorVisitor struct {
 	Osp       OutputStreamProvider
 	// The name of the output package, if InPackage is false (defaults to "mocks")
 	PackageName string
+	StructName  string
 }
 
 func (this *GeneratorVisitor) VisitWalk(iface *Interface) error {
@@ -120,7 +121,7 @@ func (this *GeneratorVisitor) VisitWalk(iface *Interface) error {
 	}
 	defer closer()
 
-	gen := NewGenerator(iface, pkg, this.InPackage)
+	gen := NewGenerator(iface, pkg, this.InPackage, this.StructName)
 	gen.GeneratePrologueNote(this.Note)
 	gen.GeneratePrologue(pkg)
 

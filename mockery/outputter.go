@@ -29,6 +29,7 @@ type FileOutputStreamProvider struct {
 	Case                      string
 	KeepTree                  bool
 	KeepTreeOriginalDirectory string
+	FileName                  string
 }
 
 func (this *FileOutputStreamProvider) GetWriter(iface *Interface, pkg string) (io.Writer, error, Cleanup) {
@@ -69,7 +70,9 @@ func (this *FileOutputStreamProvider) GetWriter(iface *Interface, pkg string) (i
 }
 
 func (this *FileOutputStreamProvider) filename(name string) string {
-	if this.InPackage && this.TestOnly {
+	if this.FileName != "" {
+		return this.FileName
+	} else if this.InPackage && this.TestOnly {
 		return "mock_" + name + "_test.go"
 	} else if this.InPackage {
 		return "mock_" + name + ".go"

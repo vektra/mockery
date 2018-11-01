@@ -50,10 +50,14 @@ type Generator struct {
 	nameToPackagePath    map[string]string
 
 	packageRoots []string
+
+	// structName overrides the name given to the mock struct and should only be nonempty
+	// when generating for an exact match (non regex expression in -name).
+	structName string
 }
 
 // NewGenerator builds a Generator.
-func NewGenerator(iface *Interface, pkg string, inPackage bool) *Generator {
+func NewGenerator(iface *Interface, pkg string, inPackage bool, structName string) *Generator {
 
 	var roots []string
 
@@ -69,6 +73,7 @@ func NewGenerator(iface *Interface, pkg string, inPackage bool) *Generator {
 		packagePathToName: make(map[string]string),
 		nameToPackagePath: make(map[string]string),
 		packageRoots:      roots,
+		structName:        structName,
 	}
 
 	g.addPackageImportWithName("github.com/stretchr/testify/mock", "mock")
@@ -204,6 +209,10 @@ func (g *Generator) getLocalizedPath(path string) string {
 }
 
 func (g *Generator) mockName() string {
+	if g.structName != "" {
+		return g.structName
+	}
+
 	if g.ip {
 		if ast.IsExported(g.iface.Name) {
 			return "Mock" + g.iface.Name
