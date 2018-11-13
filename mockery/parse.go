@@ -72,19 +72,6 @@ func (p *Parser) Parse(path string) error {
 			continue
 		}
 
-		// If go/build would ignore this file, e.g. based on build tags, also ignore it here.
-		//
-		// (Further coupling with go internals and x/tools may of course bear a cost eventually
-		// e.g. https://github.com/vektra/mockery/pull/117#issue-199337071, but should add
-		// worthwhile consistency in this tool's behavior in the meantime.)
-		// match, matchErr := p.conf.Build.MatchFile(dir, fname)
-		// if matchErr != nil {
-		// 	return matchErr
-		// }
-		// if !match {
-		// 	continue
-		// }
-
 		pkgs, err := packages.Load(&p.conf, "file="+fpath)
 		if err != nil {
 			return err
