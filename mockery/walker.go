@@ -107,12 +107,12 @@ func (this *GeneratorVisitor) VisitWalk(iface *Interface) error {
 	var pkg string
 
 	if this.InPackage {
-		pkg = iface.Path
+		pkg = filepath.Dir(iface.FileName)
 	} else {
 		pkg = this.PackageName
 	}
 
-	out, err, closer := this.Osp.GetWriter(iface, pkg)
+	out, err, closer := this.Osp.GetWriter(iface)
 	if err != nil {
 		fmt.Printf("Unable to get writer for %s: %s", iface.Name, err)
 		os.Exit(1)

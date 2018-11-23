@@ -167,13 +167,13 @@ func (p *Parser) Find(name string) (*Interface, error) {
 }
 
 type Interface struct {
-	Name      string
-	Path      string
-	FileName  string
-	File      *ast.File
-	Pkg       *types.Package
-	Type      *types.Interface
-	NamedType *types.Named
+	Name          string
+	QualifiedName string
+	FileName      string
+	File          *ast.File
+	Pkg           *types.Package
+	Type          *types.Interface
+	NamedType     *types.Named
 }
 
 type sortableIFaceList []*Interface
@@ -231,13 +231,13 @@ func (p *Parser) packageInterfaces(
 		}
 
 		elem := &Interface{
-			Name:      name,
-			Pkg:       pkg,
-			Path:      pkg.Path(),
-			FileName:  fileName,
-			Type:      iface.Complete(),
-			NamedType: typ,
-			File:      file,
+			Name:          name,
+			Pkg:           pkg,
+			QualifiedName: pkg.Path(),
+			FileName:      fileName,
+			Type:          iface.Complete(),
+			NamedType:     typ,
+			File:          file,
 		}
 
 		ifaces = append(ifaces, elem)

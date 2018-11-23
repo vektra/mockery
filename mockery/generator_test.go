@@ -948,7 +948,7 @@ func (_m *Example) B(_a0 string) fixtureshttp.MyStruct {
 
 func (s *GeneratorSuite) TestGeneratorWithImportSameAsLocalPackageInpkgNoCycle() {
 	iface := s.getInterfaceFromFile("imports_same_as_package.go", "ImportsSameAsPackage")
-	pkg := iface.Path
+	pkg := iface.QualifiedName
 	gen := NewGenerator(iface, pkg, true)
 	gen.GeneratePrologue(pkg)
 	s.NotContains(gen.buf.String(), `import test "github.com/vektra/mockery/mockery/fixtures/test"`)
@@ -1007,7 +1007,7 @@ func (s *GeneratorSuite) TestPrologueWithImportSameAsLocalPackage() {
 	)
 	expected := `package mocks
 
-import fixtures "` + generator.iface.Path + `"
+import fixtures "` + generator.iface.QualifiedName + `"
 import mock "github.com/stretchr/testify/mock"
 import test "github.com/vektra/mockery/mockery/fixtures/test"
 
