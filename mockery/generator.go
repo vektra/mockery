@@ -39,7 +39,7 @@ func stripChars(str, chr string) string {
 type Generator struct {
 	buf bytes.Buffer
 
-	ip               bool
+	inPackage        bool
 	iface            *Interface
 	pkg              string
 	localPackageName *string
@@ -64,7 +64,7 @@ func NewGenerator(iface *Interface, pkg string, inPackage bool) *Generator {
 	g := &Generator{
 		iface:             iface,
 		pkg:               pkg,
-		ip:                inPackage,
+		inPackage:         inPackage,
 		localizationCache: make(map[string]string),
 		packagePathToName: make(map[string]string),
 		nameToPackagePath: make(map[string]string),
@@ -204,7 +204,7 @@ func (g *Generator) getLocalizedPath(path string) string {
 }
 
 func (g *Generator) mockName() string {
-	if g.ip {
+	if g.inPackage {
 		if ast.IsExported(g.iface.Name) {
 			return "Mock" + g.iface.Name
 		}
@@ -216,6 +216,12 @@ func (g *Generator) mockName() string {
 			}
 			return r
 		}, g.iface.Name)
+	}
+
+	if !ast.IsExported(g.iface.Name) {
+		runes := []rune(g.iface.Name)
+		runes[0] = unicode.ToUpper(runes[0])
+		return string(runes)
 	}
 
 	return g.iface.Name
@@ -245,7 +251,7 @@ func (g *Generator) generateImports() {
 	// Sort by import name so that we get a deterministic order
 	for _, name := range g.sortedImportNames() {
 		path := g.nameToPackagePath[name]
-		if g.ip && path == pkgPath {
+		if g.inPackage && path == pkgPath {
 			continue
 		}
 		g.printf("import %s \"%s\"\n", name, path)
@@ -255,7 +261,7 @@ func (g *Generator) generateImports() {
 // GeneratePrologue generates the prologue of the mock.
 func (g *Generator) GeneratePrologue(pkg string) {
 	g.populateImports()
-	if g.ip {
+	if g.inPackage {
 		g.printf("package %s\n\n", g.iface.Pkg.Name())
 	} else {
 		g.printf("package %v\n\n", pkg)
@@ -322,7 +328,7 @@ func (g *Generator) renderType(typ types.Type) string {
 	switch t := typ.(type) {
 	case *types.Named:
 		o := t.Obj()
-		if o.Pkg() == nil || o.Pkg().Name() == "main" || (g.ip && o.Pkg() == g.iface.Pkg) {
+		if o.Pkg() == nil || o.Pkg().Name() == "main" || (g.inPackage && o.Pkg() == g.iface.Pkg) {
 			return o.Name()
 		}
 		return g.addPackageImport(o.Pkg()) + "." + o.Name()
