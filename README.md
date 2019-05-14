@@ -190,3 +190,16 @@ Use `mockery -print` to have the resulting code printed out instead of written t
 
 When your interfaces are in the main package you should supply the `-inpkg` flag.
 This will generate mocks in the same package as the target code avoiding import issues.
+
+### Extracting Function Names ###
+
+When using mocks, it's recommended to extract the function names using the below utility function in order to make your unit-tests more robust
+for code changes.
+
+```go
+import "github.com/stretchr/testify/utils"
+
+Mock.On(utils.GetFunctionName(mock.Function), mock.Anything).Return(func(s string) string {
+    return s
+})
+```
