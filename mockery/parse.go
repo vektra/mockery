@@ -5,6 +5,7 @@ import (
 	"go/ast"
 	"go/types"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -54,11 +55,22 @@ func (p *Parser) Parse(path string) error {
 		return err
 	}
 
-	dir := filepath.Dir(path)
-
-	files, err := ioutil.ReadDir(dir)
+	fileInfo, err := os.Stat(path)
 	if err != nil {
 		return err
+	}
+
+	var files []os.FileInfo
+	var dir string
+	if fileInfo.IsDir() {
+		dir = path
+		files, err = ioutil.ReadDir(path)
+		if err != nil {
+			return err
+		}
+	} else {
+		dir = filepath.Dir(path)
+		files = []os.FileInfo{fileInfo}
 	}
 
 	for _, fi := range files {
