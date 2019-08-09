@@ -53,7 +53,7 @@ type Generator struct {
 }
 
 // NewGenerator builds a Generator.
-func NewGenerator(iface *Interface, pkg string, inPackage bool) *Generator {
+func NewGenerator(iface *Interface, pkg string, inPackage bool, mockLibPath string) *Generator {
 
 	var roots []string
 
@@ -70,8 +70,7 @@ func NewGenerator(iface *Interface, pkg string, inPackage bool) *Generator {
 		nameToPackagePath: make(map[string]string),
 		packageRoots:      roots,
 	}
-
-	g.addPackageImportWithName("github.com/stretchr/testify/mock", "mock")
+	g.addPackageImportWithName(mockLibPath, "mock")
 	return g
 }
 

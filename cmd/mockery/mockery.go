@@ -31,6 +31,7 @@ type Config struct {
 	quiet      bool
 	fkeepTree  bool
 	buildTags  string
+	fMLP       string
 }
 
 func main() {
@@ -105,6 +106,7 @@ func main() {
 		Note:        config.fNote,
 		Osp:         osp,
 		PackageName: config.fOutpkg,
+		MockLibPath: config.fMLP,
 	}
 
 	walker := mockery.Walker{
@@ -144,6 +146,7 @@ func parseConfigFromArgs(args []string) Config {
 	flagSet.BoolVar(&config.quiet, "quiet", false, "suppress output to stdout")
 	flagSet.BoolVar(&config.fkeepTree, "keeptree", false, "keep the tree structure of the original interface files into a different repository. Must be used with XX")
 	flagSet.StringVar(&config.buildTags, "tags", "", "space-separated list of additional build tags to use")
+	flagSet.StringVar(&config.fMLP, "mocklib", "github.com/stretchr/testify/mock", "use a compatable mocking library other than testify (such as github.com/maraino/go-mock)")
 
 	flagSet.Parse(args[1:])
 
