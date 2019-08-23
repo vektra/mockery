@@ -1,3 +1,9 @@
+
+**[Deprecated]**
+
+ This project will stop having new updated since golang now has a library that does the same job.
+https://github.com/golang/mock
+
 mockery
 =======
 
