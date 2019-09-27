@@ -120,7 +120,7 @@ arguments and returns the return value. For example, given this interface:
 package test
 
 type Proxy interface {
-  passthrough(s string) string
+  passthrough(ctx context.Context, s string) string
 }
 ```
 
@@ -129,7 +129,7 @@ The argument can be passed through as the return value:
 ```go
 import . "github.com/stretchr/testify/mock"
 
-Mock.On("passthrough", AnythingOfType("string")).Return(func(s string) string {
+Mock.On("passthrough", mock.AnythingOfType("context.Context"), mock.AnythingOfType("string")).Return(func(ctx context.Context, s string) string {
     return s
 })
 ```
