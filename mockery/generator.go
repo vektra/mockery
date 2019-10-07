@@ -500,6 +500,43 @@ func (g *Generator) Generate() error {
 		params := g.genList(ftype.Params(), ftype.Variadic())
 		returns := g.genList(ftype.Results(), false)
 
+		// Generate OnFunc(params) (CallType) {}
+		if len(returns.Types) > 0 {
+			callType := fmt.Sprintf("%s_%s", g.mockName(), fname)
+			g.printf("type %s struct {\n\t*mock.Call\n}\n\n", callType)
+
+			g.printf("func (_m %s) Return(%s) *%s {\n",
+				callType,
+				strings.Join(returns.Params, ", "),
+				callType)
+			{
+				g.printf("\treturn &%s{Call: _m.Call.Return(%s)}\n", callType, strings.Join(returns.Names, ", "))
+			}
+			g.printf("}\n\n")
+
+			g.printf(
+				"func (_m *%s) On%s(%s) *%s {\n", g.mockName(), fname,
+				strings.Join(params.Params, ", "),
+				callType,
+			)
+			{
+				g.printf("\tc := _m.On(\"%s\")\n", fname)
+				g.printf("\treturn &%s{Call: c}\n", callType)
+			}
+			g.printf("}\n")
+
+			g.printf(
+				"func (_m *%s) On%sMatch(matchers ...interface{}) *%s {\n", g.mockName(), fname,
+				callType,
+			)
+			{
+				g.printf("\tc := _m.On(\"%s\", matchers...)\n", fname)
+				g.printf("\treturn &%s{Call: c}\n", callType)
+			}
+			g.printf("}\n")
+		}
+
+		// Generate Func(params) (return types) {...}
 		if len(params.Names) == 0 {
 			g.printf("// %s provides a mock function with given fields:\n", fname)
 		} else {
@@ -508,6 +545,7 @@ func (g *Generator) Generate() error {
 				strings.Join(params.Names, ", "),
 			)
 		}
+
 		g.printf(
 			"func (_m *%s) %s(%s) ", g.mockName(), fname,
 			strings.Join(params.Params, ", "),
