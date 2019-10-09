@@ -524,7 +524,7 @@ func (g *Generator) Generate() error {
 					[]string{fmt.Sprintf("\"%s\"", fname)}, params.Names...), ","))
 				g.printf("\treturn &%s{Call: c}\n", callType)
 			}
-			g.printf("}\n")
+			g.printf("}\n\n")
 
 			g.printf(
 				"func (_m *%s) On%sMatch(matchers ...interface{}) *%s {\n", g.mockName(), fname,
