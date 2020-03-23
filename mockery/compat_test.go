@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
-	"github.com/vektra/mockery/mockery/fixtures/mocks"
+	"github.com/Willyham/mockery/mockery/fixtures/mocks"
 )
 
 // CompatSuite covers compatbility with github.com/stretchr/testify/mock.

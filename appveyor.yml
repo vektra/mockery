@@ -1,6 +1,6 @@
 version: "{build}"
 
-clone_folder: c:\gopath\src\github.com\vektra\mockery
+clone_folder: c:\gopath\src\github.com\Willyham\mockery
 
 environment:
   GOPATH: c:\gopath
@@ -26,4 +26,4 @@ deploy: false
 
 test_script:
   - go get -v -t ./...
-  - go test -v github.com/vektra/mockery/mockery
+  - go test -v github.com/Willyham/mockery/mockery
