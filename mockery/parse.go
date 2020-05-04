@@ -1,9 +1,8 @@
 package mockery
 
 import (
+	"fmt"
 	"go/ast"
-	"go/build"
-	"go/importer"
 	"go/types"
 	"io/ioutil"
 	"path/filepath"
@@ -11,44 +10,38 @@ import (
 	"strings"
 	"sync"
 
-	"golang.org/x/tools/go/loader"
+	"golang.org/x/tools/go/packages"
 )
 
-type Parser struct {
-	configMapping    map[string][]*ast.File
-	pathToInterfaces map[string][]string
-	pathToASTFile    map[string]*ast.File
-	parserPackages   []*types.Package
-	conf             loader.Config
+type parserEntry struct {
+	fileName   string
+	pkg        *packages.Package
+	syntax     *ast.File
+	interfaces []string
 }
 
-func NewParser() *Parser {
-	var conf loader.Config
+type Parser struct {
+	entries           []*parserEntry
+	entriesByFileName map[string]*parserEntry
+	packages          []*packages.Package
+	parserPackages    []*types.Package
+	conf              packages.Config
+}
 
-	conf.TypeCheckFuncBodies = func(_ string) bool { return false }
-	conf.TypeChecker.DisableUnusedImportCheck = true
-	conf.TypeChecker.Importer = importer.Default()
-
-	// Initialize the build context (e.g. GOARCH/GOOS fields) so we can use it for respecting
-	// build tags during Parse.
-	buildCtx := build.Default
-	conf.Build = &buildCtx
-
+func NewParser(buildTags []string) *Parser {
+	var conf packages.Config
+	conf.Mode = packages.LoadSyntax
+	if len(buildTags) > 0 {
+		conf.BuildFlags = []string{"-tags", strings.Join(buildTags, ",")}
+	}
 	return &Parser{
-		parserPackages:   make([]*types.Package, 0),
-		configMapping:    make(map[string][]*ast.File),
-		pathToInterfaces: make(map[string][]string),
-		pathToASTFile:    make(map[string]*ast.File),
-		conf:             conf,
+		parserPackages:    make([]*types.Package, 0),
+		entriesByFileName: map[string]*parserEntry{},
+		conf:              conf,
 	}
 }
 
-func (p *Parser) AddBuildTags(buildTags ...string) {
-	p.conf.Build.BuildTags = append(p.conf.Build.BuildTags, buildTags...)
-}
-
 func (p *Parser) Parse(path string) error {
-
 	// To support relative paths to mock targets w/ vendor deps, we need to provide eventual
 	// calls to build.Context.Import with an absolute path. It needs to be absolute because
 	// Import will only find the vendor directory if our target path for parsing is under
@@ -75,27 +68,46 @@ func (p *Parser) Parse(path string) error {
 
 		fname := fi.Name()
 		fpath := filepath.Join(dir, fname)
-
-		// If go/build would ignore this file, e.g. based on build tags, also ignore it here.
-		//
-		// (Further coupling with go internals and x/tools may of course bear a cost eventually
-		// e.g. https://github.com/vektra/mockery/pull/117#issue-199337071, but should add
-		// worthwhile consistency in this tool's behavior in the meantime.)
-		match, matchErr := p.conf.Build.MatchFile(dir, fname)
-		if matchErr != nil {
-			return matchErr
-		}
-		if !match {
+		if _, ok := p.entriesByFileName[fpath]; ok {
 			continue
 		}
 
-		f, parseErr := p.conf.ParseFile(fpath, nil)
-		if parseErr != nil {
-			return parseErr
+		pkgs, err := packages.Load(&p.conf, "file="+fpath)
+		if err != nil {
+			return err
+		}
+		if len(pkgs) == 0 {
+			continue
+		}
+		if len(pkgs) > 1 {
+			names := make([]string, len(pkgs))
+			for i, p := range pkgs {
+				names[i] = p.Name
+			}
+			panic(fmt.Sprintf("file %s resolves to multiple packages: %s", fpath, strings.Join(names, ", ")))
 		}
 
-		p.configMapping[path] = append(p.configMapping[path], f)
-		p.pathToASTFile[fpath] = f
+		pkg := pkgs[0]
+		if len(pkg.Errors) > 0 {
+			return pkg.Errors[0]
+		}
+		if len(pkg.GoFiles) == 0 {
+			continue
+		}
+
+		for idx, f := range pkg.GoFiles {
+			if _, ok := p.entriesByFileName[f]; ok {
+				continue
+			}
+			entry := parserEntry{
+				fileName: f,
+				pkg:      pkg,
+				syntax:   pkg.Syntax[idx],
+			}
+			p.entries = append(p.entries, &entry)
+			p.entriesByFileName[f] = &entry
+		}
+		p.packages = append(p.packages, pkg)
 	}
 
 	return nil
@@ -129,65 +141,39 @@ func (p *Parser) Load() error {
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
-		for path, fi := range p.pathToASTFile {
+		for _, entry := range p.entries {
 			nv := NewNodeVisitor()
-			ast.Walk(nv, fi)
-			p.pathToInterfaces[path] = nv.DeclaredInterfaces()
+			ast.Walk(nv, entry.syntax)
+			entry.interfaces = nv.DeclaredInterfaces()
 		}
 		wg.Done()
 	}()
-
-	// Type-check a package consisting of this file.
-	// Type information for the imported packages
-	// comes from $GOROOT/pkg/$GOOS_$GOOARCH/fmt.a.
-	for path, files := range p.configMapping {
-		p.conf.CreateFromFiles(path, files...)
-	}
-
-	prog, err := p.conf.Load()
-	if err != nil {
-		return err
-	}
-
-	for _, pkgInfo := range prog.Created {
-		p.parserPackages = append(p.parserPackages, pkgInfo.Pkg)
-	}
-
 	wg.Wait()
 	return nil
 }
 
 func (p *Parser) Find(name string) (*Interface, error) {
-	for _, pkg := range p.parserPackages {
-		if iface := p.FindInPackage(name, pkg); iface != nil {
-			return iface, nil
+	for _, entry := range p.entries {
+		for _, iface := range entry.interfaces {
+			if iface == name {
+				list := p.packageInterfaces(entry.pkg.Types, entry.syntax, entry.fileName, []string{name}, nil)
+				if len(list) > 0 {
+					return list[0], nil
+				}
+			}
 		}
 	}
 	return nil, ErrNotInterface
 }
 
-func (p *Parser) FindInPackage(name string, pkg *types.Package) *Interface {
-	iFaces := p.pathToInterfaces[pkg.Path()]
-	for i := 0; i < len(iFaces); i++ {
-		iface := iFaces[i]
-		if iface == name {
-			list := make([]*Interface, 0)
-			file := p.pathToASTFile[pkg.Path()]
-			list = p.packageInterfaces(pkg, file, []string{name}, list)
-			return list[0]
-		}
-	}
-
-	return nil
-}
-
 type Interface struct {
-	Name      string
-	Path      string
-	File      *ast.File
-	Pkg       *types.Package
-	Type      *types.Interface
-	NamedType *types.Named
+	Name          string
+	QualifiedName string
+	FileName      string
+	File          *ast.File
+	Pkg           *types.Package
+	Type          *types.Interface
+	NamedType     *types.Named
 }
 
 type sortableIFaceList []*Interface
@@ -206,18 +192,22 @@ func (s sortableIFaceList) Less(i, j int) bool {
 
 func (p *Parser) Interfaces() []*Interface {
 	ifaces := make(sortableIFaceList, 0)
-	for _, pkg := range p.parserPackages {
-		path := pkg.Path()
-		declaredIfaces := p.pathToInterfaces[path]
-		astFile := p.pathToASTFile[path]
-		ifaces = p.packageInterfaces(pkg, astFile, declaredIfaces, ifaces)
+	for _, entry := range p.entries {
+		declaredIfaces := entry.interfaces
+		astFile := entry.syntax
+		ifaces = p.packageInterfaces(entry.pkg.Types, astFile, entry.fileName, declaredIfaces, ifaces)
 	}
 
 	sort.Sort(ifaces)
 	return ifaces
 }
 
-func (p *Parser) packageInterfaces(pkg *types.Package, file *ast.File, declaredInterfaces []string, ifaces []*Interface) []*Interface {
+func (p *Parser) packageInterfaces(
+	pkg *types.Package,
+	file *ast.File,
+	fileName string,
+	declaredInterfaces []string,
+	ifaces []*Interface) []*Interface {
 	scope := pkg.Scope()
 	for _, name := range declaredInterfaces {
 		obj := scope.Lookup(name)
@@ -241,12 +231,13 @@ func (p *Parser) packageInterfaces(pkg *types.Package, file *ast.File, declaredI
 		}
 
 		elem := &Interface{
-			Name:      name,
-			Pkg:       pkg,
-			Path:      pkg.Path(),
-			Type:      iface.Complete(),
-			NamedType: typ,
-			File:      file,
+			Name:          name,
+			Pkg:           pkg,
+			QualifiedName: pkg.Path(),
+			FileName:      fileName,
+			Type:          iface.Complete(),
+			NamedType:     typ,
+			File:          file,
 		}
 
 		ifaces = append(ifaces, elem)

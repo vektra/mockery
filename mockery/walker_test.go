@@ -44,7 +44,8 @@ func TestWalkerHere(t *testing.T) {
 	assert.True(t, len(gv.Interfaces) > 10)
 	first := gv.Interfaces[0]
 	assert.Equal(t, "A", first.Name)
-	assert.Equal(t, getFixturePath("struct_value.go"), first.Path)
+	assert.Equal(t, getFixturePath("struct_value.go"), first.FileName)
+	assert.Equal(t, "github.com/vektra/mockery/mockery/fixtures", first.QualifiedName)
 }
 
 func TestWalkerRegexp(t *testing.T) {
@@ -68,5 +69,6 @@ func TestWalkerRegexp(t *testing.T) {
 	assert.True(t, len(gv.Interfaces) >= 1)
 	first := gv.Interfaces[0]
 	assert.Equal(t, "AsyncProducer", first.Name)
-	assert.Equal(t, getFixturePath("async.go"), first.Path)
+	assert.Equal(t, getFixturePath("async.go"), first.FileName)
+	assert.Equal(t, "github.com/vektra/mockery/mockery/fixtures", first.QualifiedName)
 }

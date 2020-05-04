@@ -20,7 +20,7 @@ type GeneratorSuite struct {
 }
 
 func (s *GeneratorSuite) SetupTest() {
-	s.parser = NewParser()
+	s.parser = NewParser(nil)
 }
 
 func (s *GeneratorSuite) getInterfaceFromFile(interfacePath, interfaceName string) *Interface {
@@ -36,7 +36,8 @@ func (s *GeneratorSuite) getInterfaceFromFile(interfacePath, interfaceName strin
 	)
 
 	iface, err := s.parser.Find(interfaceName)
-	s.NoError(err, "The requested interface was found.")
+	s.Require().NoError(err)
+	s.Require().NotNil(iface)
 	return iface
 }
 
@@ -83,14 +84,6 @@ func (s *GeneratorSuite) checkPrologueGeneration(
 		expected, generator.buf.String(),
 		"The generator produced the expected prologue.",
 	)
-}
-
-func (s *GeneratorSuite) getInterfaceRelPath(iface *Interface) string {
-	local, err := filepath.Rel(getGoPathSrc(), filepath.Dir(iface.Path))
-	s.NoError(err, "No errors with relative path generation.")
-
-	// Align w/ Generator.getLocalizedPath and enforce '/' slashes for import paths in every OS.
-	return filepath.ToSlash(local)
 }
 
 func (s *GeneratorSuite) TestCalculateImport() {
@@ -957,7 +950,7 @@ func (_m *Example) B(_a0 string) fixtureshttp.MyStruct {
 
 func (s *GeneratorSuite) TestGeneratorWithImportSameAsLocalPackageInpkgNoCycle() {
 	iface := s.getInterfaceFromFile("imports_same_as_package.go", "ImportsSameAsPackage")
-	pkg := iface.Path
+	pkg := iface.QualifiedName
 	gen := NewGenerator(iface, pkg, true, "")
 	gen.GeneratePrologue(pkg)
 	s.NotContains(gen.buf.String(), `import test "github.com/vektra/mockery/mockery/fixtures/test"`)
@@ -1014,15 +1007,13 @@ func (s *GeneratorSuite) TestPrologueWithImportSameAsLocalPackage() {
 	generator := s.getGenerator(
 		"imports_same_as_package.go", "ImportsSameAsPackage", false, "",
 	)
-	s.getInterfaceRelPath(generator.iface)
 	expected := `package mocks
 
-import fixtures "` + s.getInterfaceRelPath(generator.iface) + `"
+import fixtures "` + generator.iface.QualifiedName + `"
 import mock "github.com/stretchr/testify/mock"
 import test "github.com/vektra/mockery/mockery/fixtures/test"
 
 `
-
 	s.checkPrologueGeneration(generator, expected)
 }
 
