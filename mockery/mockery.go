@@ -1,5 +1,4 @@
 package mockery
 
-const (
-	SemVer = "1.0.0"
-)
+// SemVer is the version of mockery at build time.
+var SemVer = "0.0.0-dev"
