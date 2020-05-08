@@ -1,15 +1,29 @@
 language: go
 
-# Allow use in forks
-go_import_path: github.com/vektra/mockery
+os: 
+  - linux
+  - osx
+  - windows
+
+env:
+  - GO111MODULE=on
+  - CGO_ENABLED=0
 
 go:
-  - 1.11.x
-  - 1.12.x
   - 1.13.x
+  - 1.14.x
   - tip
 
-before_script:
-  - go get ./...
-  # This package is used in tests only, so "go get" misses it
-  - go get github.com/stretchr/testify/assert
+git:
+    depth: 1
+
+script: 
+  - go test -v -cover ./...
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: curl -sL https://git.io/goreleaser | bash
+    on:
+        tags: true
+        condition: $TRAVIS_OS_NAME = linux
