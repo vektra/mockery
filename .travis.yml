@@ -3,7 +3,6 @@ language: go
 os: 
   - linux
   - osx
-  - windows
 
 env:
   - GO111MODULE=on CGO_ENABLED=0
