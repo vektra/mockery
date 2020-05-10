@@ -27,3 +27,4 @@ deploy:
     on:
         tags: true
         condition: $TRAVIS_OS_NAME = linux
+        go: 1.14.x
