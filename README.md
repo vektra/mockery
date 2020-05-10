@@ -10,7 +10,11 @@ the boilerplate coding required to use mocks.
 
 Download one of the [releases](https://github.com/vektra/mockery/releases) for your platform. Binaries are built inside `.tar.gz` files and can be run directly after extraction.
 
-Alternatively, you can use the deprecated method of `go get github.com/vektra/mockery/.../` to get a development version of the software.
+Alternatively, you can use the DEPRECATED method of `go get github.com/vektra/mockery/.../` to get a development version of the software.
+
+#### Note about versions
+
+The SemVer variable by default is `1.0.0` and is overwritten during build steps to the git tagged version. For backwards-compatibility reasons, SemVer in source will remain at `1.0.0`. This will eventually be changed over to `0.0.0-dev`. Keep in mind that if using the `go get` version of downloading instead of downloading the pre-built binaries, mockery will not correctly specify its version.
 
 ### Examples
 
