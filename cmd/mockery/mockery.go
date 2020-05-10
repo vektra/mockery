@@ -15,22 +15,24 @@ import (
 const regexMetadataChars = "\\.+*?()|[]{}^$"
 
 type Config struct {
-	fName      string
-	fPrint     bool
-	fOutput    string
-	fOutpkg    string
-	fDir       string
-	fRecursive bool
-	fAll       bool
-	fIP        bool
-	fTO        bool
-	fCase      string
-	fNote      string
-	fProfile   string
-	fVersion   bool
-	quiet      bool
-	fkeepTree  bool
-	buildTags  string
+	fName       string
+	fPrint      bool
+	fOutput     string
+	fOutpkg     string
+	fDir        string
+	fRecursive  bool
+	fAll        bool
+	fIP         bool
+	fTO         bool
+	fCase       string
+	fNote       string
+	fProfile    string
+	fVersion    bool
+	quiet       bool
+	fkeepTree   bool
+	buildTags   string
+	fFileName   string
+	fStructName string
 }
 
 func main() {
@@ -52,11 +54,17 @@ func main() {
 	} else if config.fName != "" && config.fAll {
 		fmt.Fprintln(os.Stderr, "Specify -name or -all, but not both")
 		os.Exit(1)
+	} else if (config.fFileName != "" || config.fStructName != "") && config.fAll {
+		fmt.Fprintln(os.Stderr, "Cannot specify -filename or -structname with -all")
+		os.Exit(1)
 	} else if config.fName != "" {
 		recursive = config.fRecursive
 		if strings.ContainsAny(config.fName, regexMetadataChars) {
 			if filter, err = regexp.Compile(config.fName); err != nil {
 				fmt.Fprintln(os.Stderr, "Invalid regular expression provided to -name")
+				os.Exit(1)
+			} else if config.fFileName != "" || config.fStructName != "" {
+				fmt.Fprintln(os.Stderr, "Cannot specify -filename or -structname with regex in -name")
 				os.Exit(1)
 			}
 		} else {
@@ -97,6 +105,7 @@ func main() {
 			Case:                      config.fCase,
 			KeepTree:                  config.fkeepTree,
 			KeepTreeOriginalDirectory: config.fDir,
+			FileName:                  config.fFileName,
 		}
 	}
 
@@ -105,6 +114,7 @@ func main() {
 		Note:        config.fNote,
 		Osp:         osp,
 		PackageName: config.fOutpkg,
+		StructName:  config.fStructName,
 	}
 
 	walker := mockery.Walker{
@@ -144,6 +154,8 @@ func parseConfigFromArgs(args []string) Config {
 	flagSet.BoolVar(&config.quiet, "quiet", false, "suppress output to stdout")
 	flagSet.BoolVar(&config.fkeepTree, "keeptree", false, "keep the tree structure of the original interface files into a different repository. Must be used with XX")
 	flagSet.StringVar(&config.buildTags, "tags", "", "space-separated list of additional build tags to use")
+	flagSet.StringVar(&config.fFileName, "filename", "", "name of generated file (only works with -name and no regex)")
+	flagSet.StringVar(&config.fStructName, "structname", "", "name of generated struct (only works with -name and no regex)")
 
 	flagSet.Parse(args[1:])
 

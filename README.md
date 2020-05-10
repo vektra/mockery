@@ -178,6 +178,11 @@ For some complex repositories, there could be multiple interfaces with the same 
 
 In the case you don't want to generate the mocks into the package but want to keep a similar structure, use the option `-keeptree`.
 
+### Specifying File (-filename) and Struct Name (-structname)
+
+Use the `-filename` and `-structname` to override the default generated file and struct name.
+These options are only compatible with non-regular expressions in -name, where only one mock is generated.
+
 ## Casing
 
 mockery generates files using the casing of the original interface name.  This
