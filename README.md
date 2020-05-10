@@ -8,7 +8,9 @@ the boilerplate coding required to use mocks.
 
 ### Installation
 
-`go get github.com/vektra/mockery/.../`, then `$GOPATH/bin/mockery`
+Download one of the [releases](https://github.com/vektra/mockery/releases) for your platform. Binaries are built inside `.tar.gz` files and can be run directly after extraction.
+
+Alternatively, you can use the deprecated method of `go get github.com/vektra/mockery/.../` to get a development version of the software.
 
 ### Examples
 
