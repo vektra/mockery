@@ -1,0 +1,33 @@
+---
+project_name: mockery
+before:
+    hooks:
+      - go mod download
+builds:
+  - main: ./cmd/mockery/mockery.go
+    ldflags:
+      - -s -w -X github.com/vektra/mockery/mockery.SemVer={{.Version}}
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+archives:
+  - replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+    files:
+      - README.md
+      - LICENSE
+checksum:
+    name_template: "checksum.txt"
+snapshot:
+    name_template: "{{ .Tag }}-next"
+changelog:
+    sort: asc
