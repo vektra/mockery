@@ -20,6 +20,12 @@ git:
 script: 
   - go test -v -cover ./...
 
+services:
+  - docker
+
+after_success:
+  - test -n "$TRAVIS_TAG" && docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+
 deploy:
   - provider: script
     skip_cleanup: true
