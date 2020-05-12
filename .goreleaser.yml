@@ -48,3 +48,12 @@ dockers:
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--label=org.opencontainers.image.source={{.GitURL}}"
+brews:
+  - homepage: https://github.com/vektra/mockery
+    description: "A mock code autogenerator for Go"
+    github:
+        owner: vektra
+        name: homebrew-tap
+    folder: Formula
+    test: |
+        system "#{bin}mockery --version"
