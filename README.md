@@ -6,17 +6,44 @@ the boilerplate coding required to use mocks.
 
 [![Linux Build Status](https://travis-ci.org/vektra/mockery.svg?branch=master)](https://travis-ci.org/vektra/mockery) [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/vektra/mockery/mockery?tab=doc) [![Go Report Card](https://goreportcard.com/badge/github.com/vektra/mockery)](https://goreportcard.com/report/github.com/vektra/mockery)
 
-### Installation
+Installation
+------------
 
-Download one of the [releases](https://github.com/vektra/mockery/releases) for your platform. Binaries are built inside `.tar.gz` files and can be run directly after extraction.
+### Github Release
 
-Alternatively, you can use the DEPRECATED method of `go get github.com/vektra/mockery/.../` to get a development version of the software.
+Visit the [releases page](https://github.com/vektra/mockery/releases) to download one of the pre-built binaries for your platform. 
 
-#### Note about versions
+### Docker
 
-The SemVer variable by default is `1.0.0` and is overwritten during build steps to the git tagged version. For backwards-compatibility reasons, SemVer in source will remain at `1.0.0`. This will eventually be changed over to `0.0.0-dev`. Keep in mind that if using the `go get` version of downloading instead of downloading the pre-built binaries, mockery will not correctly specify its version.
+Use the Docker image
 
-### Examples
+```
+docker pull vektra/mockery
+```
+
+### Homebrew
+
+Install through homebrew
+
+```
+brew install vektra/tap/mockery
+brew upgrade mockery
+```
+
+### go get
+
+Alternatively, you can use the DEPRECATED method of:
+
+```
+go get github.com/vektra/mockery/.../
+``` 
+
+to get a development version of the software.
+
+The SemVer variable by default is `1.0.0` and is overwritten during build steps to the git tagged version. For backwards-compatibility reasons, SemVer in source will remain at `1.0.0`. This will eventually be changed over to `0.0.0-dev`. Keep in mind that if using the `go get` version of downloading, mockery will not correctly specify its version.
+
+Examples
+--------
 
 #### Simplest case
 
@@ -106,17 +133,20 @@ func main() {
 }
 ```
 
-### Imports
+Imports
+-------
 
 mockery pulls in all the same imports used in the file that contains the interface so
 that package types will work correctly. It then runs the output through the `imports`
 package to remove any unnecessary imports (as they'd result in compile errors).
 
-### Types
+Types
+-----
 
 mockery should handle all types. If you find it does not, please report the issue.
 
-### Return Value Provider Functions
+Return Value Provider Functions
+--------------------------------
 
 If your tests need access to the arguments to calculate the return values,
 set the return value to a function that takes the method's arguments as its own
@@ -154,11 +184,13 @@ This approach should be used judiciously, as return values should generally
 not depend on arguments in mocks; however, this approach can be helpful for
 situations like passthroughs or other test-only calculations.
 
-### Name
+Name
+---------
 
 The `-name` option takes either the name or matching regular expression of interface to generate mock(s) for.
 
-### All
+All
+---------
 
 It's common for a big package to have a lot of interfaces, so mockery provides `-all`.
 This option will tell mockery to scan all files under the directory named by `-dir` ("." by default)
@@ -166,38 +198,45 @@ and generates mocks for any interfaces it finds. This option implies `-recursive
 
 `-all` was designed to be able to be used automatically in the background if required.
 
-### Recursive
+Recursive
+---------
 
 Use the `-recursive` option to search subdirectories for the interface(s).
 This option is only compatible with `-name`. The `-all` option implies `-recursive=true`.
 
-### Output
+Output
+---------
 
 mockery always generates files with the package `mocks` to keep things clean and simple.
 You can control which mocks directory is used by using `-output`, which defaults to `./mocks`.
 
-### In Package (-inpkg) and KeepTree (-keeptree)
+In Package (-inpkg) and KeepTree (-keeptree)
+--------------------------------------------
 
 For some complex repositories, there could be multiple interfaces with the same name but in different packages. In that case, `-inpkg` allows generate the mocked interfaces directly in the package that it mocks.
 
 In the case you don't want to generate the mocks into the package but want to keep a similar structure, use the option `-keeptree`.
 
-### Specifying File (-filename) and Struct Name (-structname)
+Specifying File (-filename) and Struct Name (-structname)
+---------------------------------------------------------
 
 Use the `-filename` and `-structname` to override the default generated file and struct name.
 These options are only compatible with non-regular expressions in -name, where only one mock is generated.
 
-## Casing
+Casing
+-------
 
 mockery generates files using the casing of the original interface name.  This
 can be modified by specifying `-case=underscore` to format the generated file
 name using underscore casing.
 
-### Debug
+Debug
+------
 
 Use `mockery -print` to have the resulting code printed out instead of written to disk.
 
-### Mocking interfaces in `main`
+Mocking interfaces in `main`
+----------------------------
 
 When your interfaces are in the main package you should supply the `-inpkg` flag.
 This will generate mocks in the same package as the target code avoiding import issues.
