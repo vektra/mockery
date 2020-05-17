@@ -1,6 +1,7 @@
 package mockery
 
 import (
+	"context"
 	"os"
 	"regexp"
 	"testing"
@@ -12,7 +13,7 @@ type GatheringVisitor struct {
 	Interfaces []*Interface
 }
 
-func (this *GatheringVisitor) VisitWalk(iface *Interface) error {
+func (this *GatheringVisitor) VisitWalk(ctx context.Context, iface *Interface) error {
 	this.Interfaces = append(this.Interfaces, iface)
 	return nil
 }
@@ -39,7 +40,7 @@ func TestWalkerHere(t *testing.T) {
 
 	gv := NewGatheringVisitor()
 
-	w.Walk(gv)
+	w.Walk(context.Background(), gv)
 
 	assert.True(t, len(gv.Interfaces) > 10)
 	first := gv.Interfaces[0]
@@ -64,7 +65,7 @@ func TestWalkerRegexp(t *testing.T) {
 
 	gv := NewGatheringVisitor()
 
-	w.Walk(gv)
+	w.Walk(context.Background(), gv)
 
 	assert.True(t, len(gv.Interfaces) >= 1)
 	first := gv.Interfaces[0]

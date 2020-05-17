@@ -1,6 +1,7 @@
 package mockery
 
 import (
+	"context"
 	"fmt"
 	"go/ast"
 	"go/types"
@@ -10,6 +11,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/rs/zerolog"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -41,7 +43,7 @@ func NewParser(buildTags []string) *Parser {
 	}
 }
 
-func (p *Parser) Parse(path string) error {
+func (p *Parser) Parse(ctx context.Context, path string) error {
 	// To support relative paths to mock targets w/ vendor deps, we need to provide eventual
 	// calls to build.Context.Import with an absolute path. It needs to be absolute because
 	// Import will only find the vendor directory if our target path for parsing is under
@@ -62,9 +64,17 @@ func (p *Parser) Parse(path string) error {
 	}
 
 	for _, fi := range files {
+		log := zerolog.Ctx(ctx).With().
+			Str(LogKeyDir, dir).
+			Str(LogKeyFile, fi.Name()).
+			Logger()
+		ctx = log.WithContext(ctx)
+
 		if filepath.Ext(fi.Name()) != ".go" || strings.HasSuffix(fi.Name(), "_test.go") {
 			continue
 		}
+
+		log.Debug().Msgf("visiting")
 
 		fname := fi.Name()
 		fpath := filepath.Join(dir, fname)
