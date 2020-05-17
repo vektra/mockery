@@ -3,7 +3,7 @@ mockery
 [![Linux Build Status](https://travis-ci.org/vektra/mockery.svg?branch=master)](https://travis-ci.org/vektra/mockery) [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/vektra/mockery/mockery?tab=doc) [![Go Report Card](https://goreportcard.com/badge/github.com/vektra/mockery)](https://goreportcard.com/report/github.com/vektra/mockery)
 
 
-mockery provides the ability to easily generate mocks for golang interfaces. It removes
+mockery provides the ability to easily generate mocks for golang interfaces using the [stretchr/testify/mock](https://pkg.go.dev/github.com/stretchr/testify/mock?tab=doc) package. It removes
 the boilerplate coding required to use mocks.
 
 Installation
