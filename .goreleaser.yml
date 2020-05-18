@@ -57,3 +57,9 @@ brews:
     folder: Formula
     test: |
         system "#{bin}mockery --version"
+snapcraft:
+  summary: mockery
+  publish: true
+  description: |
+    A mock code autogenerator for golang
+    

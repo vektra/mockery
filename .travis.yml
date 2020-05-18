@@ -1,35 +1,41 @@
 language: go
-
-os: 
-  - linux
-  - osx
-
+os:
+- linux
+- osx
 env:
-  - GO111MODULE=on CGO_ENABLED=0
-
+  matrix:
+  - GO111MODULE=on CGO_ENABLED=0 PATH=/snap/bin:$PATH
+  global:
+    secure: f3MAC8ilVbLZhnPv3gSFknsdEh+gVuDRS0Xi9C5yfYyNpB65M3FDUpQ8n8s9lf/228xb3F1pbM4GRexq2lm7jVdO53wohzDrzRfUcVU+F/jp3dUWEDHcBIXiVUbzLQVeafOoc9ZTtLBVYYLfbKkDxXO0Tp10QhR22T6WD4Mx17dFvR5MacydNtDTdmCXlmgtxezuQwgs0l6Q0z6rzxkeMJhZQ21c9TOV67V5G8Jdkv8Wu9pRI/+QoXO9qOOzQTb8KFiQokRfoJrcn7u/bE//vDcOtn2jgihuOou265pILQdJplEIfDObALbFlsCVG6Jgq4UHosQsu4RAYOsyOSQAFGZHZThelT252FnaSxZarAYQMGJ7P3dI/injrDCqQwOlaG2F+xeY8hUCaA+5c/BvDYcGuwgsF41M4NRzzsfjDRgU+Ks29GWp9cI0zg5h98j/6fbkgmc64onBRKpbzT6yUJl6RJbgTbyyQFAgMuCTiXjolit5YdmcMqZiMd0oYfM/kxDKcB3FJQSYRCmUtkJi18utNxaquFUndTUsQlm9GuTzSnH/J4cjulcWpHK1chXFfLYCtqYcEvf7paKRWaEll0alrbuUY7E6z69YaL+bn3h7wOrK2Hrfg66JPLBLiiKEbMsdJRgYQ0zuQLnnPiOtGNocaMwLA2C5ArFWi7xAhR4=
 go:
-  - 1.11.x
-  - 1.12.x
-  - 1.13.x
-  - 1.14.x
-  - tip
-
+- 1.11.x
+- 1.12.x
+- 1.13.x
+- 1.14.x
+- tip
+addons:
+  apt:
+    packages:
+    - snapd
+    - openssl
+install:
+- sudo snap install snapcraft --classic
 git:
-    depth: 1
-
-script: 
-  - go test -v -cover ./...
-
+  depth: 1
+script:
+- go test -v -cover ./...
 services:
-  - docker
-
+- docker
 after_success:
-  - test -n "$TRAVIS_TAG" && docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-
+- test -n "$TRAVIS_TAG" && docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  && snapcraft login --with snap.login
 deploy:
-  - provider: script
-    script: curl -sL https://git.io/goreleaser | bash
-    on:
-        tags: true
-        condition: $TRAVIS_OS_NAME = linux
-        go: 1.14.x
+- provider: script
+  script: curl -sL https://git.io/goreleaser | bash
+  on:
+    tags: true
+    condition: "$TRAVIS_OS_NAME = linux"
+    go: 1.14.x
+before_install:
+- openssl aes-256-cbc -K $encrypted_03752a622397_key -iv $encrypted_03752a622397_iv
+  -in snap.login.enc -out snap.login -d
