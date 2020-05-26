@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 	"regexp"
 	"runtime/pprof"
 	"strings"
@@ -15,6 +16,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/vektra/mockery/mockery"
 	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/tools/go/packages"
 )
 
 const regexMetadataChars = "\\.+*?()|[]{}^$"
@@ -33,6 +35,7 @@ type Config struct {
 	fNote       string
 	fProfile    string
 	fVersion    bool
+	fSrcPkg     string
 	quiet       bool
 	fkeepTree   bool
 	buildTags   string
@@ -70,6 +73,8 @@ func main() {
 		log.Fatal().Msgf("Specify -name or -all, but not both")
 	} else if (config.fFileName != "" || config.fStructName != "") && config.fAll {
 		log.Fatal().Msgf("Cannot specify -filename or -structname with -all")
+	} else if config.fDir != "" && config.fDir != "." && config.fSrcPkg != "" {
+		log.Fatal().Msgf("Specify -dir or -srcpkg, but not both")
 	} else if config.fName != "" {
 		recursive = config.fRecursive
 		if strings.ContainsAny(config.fName, regexMetadataChars) {
@@ -118,6 +123,30 @@ func main() {
 		}
 	}
 
+	baseDir := config.fDir
+
+	if config.fSrcPkg != "" {
+		pkgs, err := packages.Load(&packages.Config{
+			Mode: packages.NeedFiles,
+		}, config.fSrcPkg)
+		if err != nil || len(pkgs) == 0 {
+			log.Fatal().Err(err).Msgf("Failed to load package %s", config.fSrcPkg)
+		}
+
+		// NOTE: we only pass one package name (config.fSrcPkg) to packages.Load
+		// it should return one package at most
+		pkg := pkgs[0]
+
+		if pkg.Errors != nil {
+			log.Fatal().Err(pkg.Errors[0]).Msgf("Failed to load package %s", config.fSrcPkg)
+		}
+
+		if len(pkg.GoFiles) == 0 {
+			log.Fatal().Msgf("No go files in package %s", config.fSrcPkg)
+		}
+		baseDir = filepath.Dir(pkg.GoFiles[0])
+	}
+
 	visitor := &mockery.GeneratorVisitor{
 		InPackage:   config.fIP,
 		Note:        config.fNote,
@@ -127,7 +156,7 @@ func main() {
 	}
 
 	walker := mockery.Walker{
-		BaseDir:   config.fDir,
+		BaseDir:   baseDir,
 		Recursive: recursive,
 		Filter:    filter,
 		LimitOne:  limitOne,
@@ -165,6 +194,7 @@ func parseConfigFromArgs(args []string) Config {
 	flagSet.StringVar(&config.fFileName, "filename", "", "name of generated file (only works with -name and no regex)")
 	flagSet.StringVar(&config.fStructName, "structname", "", "name of generated struct (only works with -name and no regex)")
 	flagSet.StringVar(&config.fLogLevel, "log-level", "info", "Level of logging")
+	flagSet.StringVar(&config.fSrcPkg, "srcpkg", "", "source pkg to search for interfaces")
 
 	flagSet.Parse(args[1:])
 
