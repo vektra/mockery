@@ -15,7 +15,7 @@ Visit the [releases page](https://github.com/vektra/mockery/releases) to downloa
 
 ### Docker
 
-Use the Docker image
+Use the [Docker image](https://hub.docker.com/r/vektra/mockery)
 
 ```
 docker pull vektra/mockery
