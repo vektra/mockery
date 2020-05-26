@@ -608,7 +608,7 @@ func (g *Generator) generateCalled(list *paramList, formattedParamNames string) 
 
 	var variadicArgsName string
 	variadicName := list.Names[namesLen-1]
-	variadicIface := strings.Contains(list.Types[namesLen-1], "interface{}")
+	variadicIface := strings.Contains(list.Types[namesLen-1], "interface{}") && !strings.Contains(list.Types[namesLen-1], "map")
 
 	if variadicIface {
 		// Variadic is already of the interface{} type, so we don't need special handling.
