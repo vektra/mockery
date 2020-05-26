@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"os"
@@ -8,8 +9,12 @@ import (
 	"runtime/pprof"
 	"strings"
 	"syscall"
+	"time"
 
+	"github.com/pkg/errors"
+	"github.com/rs/zerolog"
 	"github.com/vektra/mockery/mockery"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 const regexMetadataChars = "\\.+*?()|[]{}^$"
@@ -33,6 +38,7 @@ type Config struct {
 	buildTags   string
 	fFileName   string
 	fStructName string
+	fLogLevel   string
 }
 
 func main() {
@@ -46,26 +52,31 @@ func main() {
 	if config.quiet {
 		// if "quiet" flag is set, set os.Stdout to /dev/null to suppress all output to Stdout
 		os.Stdout = os.NewFile(uintptr(syscall.Stdout), os.DevNull)
+		config.fLogLevel = ""
 	}
+
+	log, err := getLogger(config.fLogLevel)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to initialize logger: %v\n", err)
+		os.Exit(1)
+	}
+	log.Info().Msgf("Starting mockery")
+	ctx := log.WithContext(context.Background())
 
 	if config.fVersion {
 		fmt.Println(mockery.SemVer)
 		return
 	} else if config.fName != "" && config.fAll {
-		fmt.Fprintln(os.Stderr, "Specify -name or -all, but not both")
-		os.Exit(1)
+		log.Fatal().Msgf("Specify -name or -all, but not both")
 	} else if (config.fFileName != "" || config.fStructName != "") && config.fAll {
-		fmt.Fprintln(os.Stderr, "Cannot specify -filename or -structname with -all")
-		os.Exit(1)
+		log.Fatal().Msgf("Cannot specify -filename or -structname with -all")
 	} else if config.fName != "" {
 		recursive = config.fRecursive
 		if strings.ContainsAny(config.fName, regexMetadataChars) {
 			if filter, err = regexp.Compile(config.fName); err != nil {
-				fmt.Fprintln(os.Stderr, "Invalid regular expression provided to -name")
-				os.Exit(1)
+				log.Fatal().Err(err).Msgf("Invalid regular expression provided to -name")
 			} else if config.fFileName != "" || config.fStructName != "" {
-				fmt.Fprintln(os.Stderr, "Cannot specify -filename or -structname with regex in -name")
-				os.Exit(1)
+				log.Fatal().Msgf("Cannot specify -filename or -structname with regex in -name")
 			}
 		} else {
 			filter = regexp.MustCompile(fmt.Sprintf("^%s$", config.fName))
@@ -75,8 +86,7 @@ func main() {
 		recursive = true
 		filter = regexp.MustCompile(".*")
 	} else {
-		fmt.Fprintln(os.Stderr, "Use -name to specify the name of the interface or -all for all interfaces found")
-		os.Exit(1)
+		log.Fatal().Msgf("Use -name to specify the name of the interface or -all for all interfaces found")
 	}
 
 	if config.fkeepTree {
@@ -86,8 +96,7 @@ func main() {
 	if config.fProfile != "" {
 		f, err := os.Create(config.fProfile)
 		if err != nil {
-			os.Exit(1)
-			return
+			log.Fatal().Err(err).Msgf("Failed to create profile file")
 		}
 
 		pprof.StartCPUProfile(f)
@@ -125,11 +134,10 @@ func main() {
 		BuildTags: strings.Split(config.buildTags, " "),
 	}
 
-	generated := walker.Walk(visitor)
+	generated := walker.Walk(ctx, visitor)
 
 	if config.fName != "" && !generated {
-		fmt.Printf("Unable to find %s in any go files under this path\n", config.fName)
-		os.Exit(1)
+		log.Fatal().Msgf("Unable to find '%s' in any go files under this path", config.fName)
 	}
 }
 
@@ -156,8 +164,38 @@ func parseConfigFromArgs(args []string) Config {
 	flagSet.StringVar(&config.buildTags, "tags", "", "space-separated list of additional build tags to use")
 	flagSet.StringVar(&config.fFileName, "filename", "", "name of generated file (only works with -name and no regex)")
 	flagSet.StringVar(&config.fStructName, "structname", "", "name of generated struct (only works with -name and no regex)")
+	flagSet.StringVar(&config.fLogLevel, "log-level", "info", "Level of logging")
 
 	flagSet.Parse(args[1:])
 
 	return config
+}
+
+type timeHook struct{}
+
+func (t timeHook) Run(e *zerolog.Event, level zerolog.Level, msg string) {
+	e.Time("time", time.Now())
+}
+
+func getLogger(levelStr string) (zerolog.Logger, error) {
+	level, err := zerolog.ParseLevel(levelStr)
+	if err != nil {
+		return zerolog.Logger{}, errors.Wrapf(err, "Couldn't parse log level")
+	}
+	out := os.Stderr
+	writer := zerolog.ConsoleWriter{
+		Out:        out,
+		TimeFormat: time.RFC822,
+	}
+	if !terminal.IsTerminal(int(out.Fd())) {
+		writer.NoColor = true
+	}
+	log := zerolog.New(writer).
+		Hook(timeHook{}).
+		Level(level).
+		With().
+		Str("version", mockery.SemVer).
+		Logger()
+
+	return log, nil
 }
