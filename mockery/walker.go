@@ -1,6 +1,7 @@
 package mockery
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -8,6 +9,8 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/rs/zerolog"
 )
 
 type Walker struct {
@@ -19,12 +22,17 @@ type Walker struct {
 }
 
 type WalkerVisitor interface {
-	VisitWalk(*Interface) error
+	VisitWalk(context.Context, *Interface) error
 }
 
-func (this *Walker) Walk(visitor WalkerVisitor) (generated bool) {
+func (this *Walker) Walk(ctx context.Context, visitor WalkerVisitor) (generated bool) {
+	log := zerolog.Ctx(ctx)
+	ctx = log.WithContext(ctx)
+
+	log.Info().Msgf("Walking")
+
 	parser := NewParser(this.BuildTags)
-	this.doWalk(parser, this.BaseDir, visitor)
+	this.doWalk(ctx, parser, this.BaseDir, visitor)
 
 	err := parser.Load()
 	if err != nil {
@@ -36,7 +44,7 @@ func (this *Walker) Walk(visitor WalkerVisitor) (generated bool) {
 		if !this.Filter.MatchString(iface.Name) {
 			continue
 		}
-		err := visitor.VisitWalk(iface)
+		err := visitor.VisitWalk(ctx, iface)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error walking %s: %s\n", iface.Name, err)
 			os.Exit(1)
@@ -50,7 +58,10 @@ func (this *Walker) Walk(visitor WalkerVisitor) (generated bool) {
 	return
 }
 
-func (this *Walker) doWalk(p *Parser, dir string, visitor WalkerVisitor) (generated bool) {
+func (this *Walker) doWalk(ctx context.Context, p *Parser, dir string, visitor WalkerVisitor) (generated bool) {
+	log := zerolog.Ctx(ctx)
+	ctx = log.WithContext(ctx)
+
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
 		return
@@ -65,7 +76,7 @@ func (this *Walker) doWalk(p *Parser, dir string, visitor WalkerVisitor) (genera
 
 		if file.IsDir() {
 			if this.Recursive {
-				generated = this.doWalk(p, path, visitor) || generated
+				generated = this.doWalk(ctx, p, path, visitor) || generated
 				if generated && this.LimitOne {
 					return
 				}
@@ -77,9 +88,9 @@ func (this *Walker) doWalk(p *Parser, dir string, visitor WalkerVisitor) (genera
 			continue
 		}
 
-		err = p.Parse(path)
+		err = p.Parse(ctx, path)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "Error parsing file: ", err)
+			log.Err(err).Msgf("Error parsing file")
 			continue
 		}
 	}
@@ -96,10 +107,13 @@ type GeneratorVisitor struct {
 	StructName  string
 }
 
-func (this *GeneratorVisitor) VisitWalk(iface *Interface) error {
+func (this *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) error {
+	log := zerolog.Ctx(ctx).With().Str(LogKeyInterface, iface.Name).Logger()
+	ctx = log.WithContext(ctx)
+
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Printf("Unable to generated mock for '%s': %s\n", iface.Name, r)
+			log.Error().Msgf("Unable to generate mock: %s", r)
 			return
 		}
 	}()
@@ -113,18 +127,18 @@ func (this *GeneratorVisitor) VisitWalk(iface *Interface) error {
 		pkg = this.PackageName
 	}
 
-	out, err, closer := this.Osp.GetWriter(iface)
+	out, err, closer := this.Osp.GetWriter(ctx, iface)
 	if err != nil {
-		fmt.Printf("Unable to get writer for %s: %s", iface.Name, err)
+		log.Err(err).Msgf("Unable to get writer")
 		os.Exit(1)
 	}
 	defer closer()
 
-	gen := NewGenerator(iface, pkg, this.InPackage, this.StructName)
+	gen := NewGenerator(ctx, iface, pkg, this.InPackage, this.StructName)
 	gen.GeneratePrologueNote(this.Note)
-	gen.GeneratePrologue(pkg)
+	gen.GeneratePrologue(ctx, pkg)
 
-	err = gen.Generate()
+	err = gen.Generate(ctx)
 	if err != nil {
 		return err
 	}

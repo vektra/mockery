@@ -2,6 +2,7 @@ package mockery
 
 import (
 	"bufio"
+	"context"
 	"go/format"
 	"io/ioutil"
 	"path/filepath"
@@ -17,10 +18,12 @@ const pkg = "test"
 type GeneratorSuite struct {
 	suite.Suite
 	parser *Parser
+	ctx    context.Context
 }
 
 func (s *GeneratorSuite) SetupTest() {
 	s.parser = NewParser(nil)
+	s.ctx = context.Background()
 }
 
 func (s *GeneratorSuite) getInterfaceFromFile(interfacePath, interfaceName string) *Interface {
@@ -28,7 +31,7 @@ func (s *GeneratorSuite) getInterfaceFromFile(interfacePath, interfaceName strin
 		interfacePath = filepath.Join(fixturePath, interfacePath)
 	}
 	s.NoError(
-		s.parser.Parse(interfacePath), "The parser is able to parse the given file.",
+		s.parser.Parse(s.ctx, interfacePath), "The parser is able to parse the given file.",
 	)
 
 	s.NoError(
@@ -45,7 +48,7 @@ func (s *GeneratorSuite) getGenerator(
 	filepath, interfaceName string, inPackage bool, structName string,
 ) *Generator {
 	return NewGenerator(
-		s.getInterfaceFromFile(filepath, interfaceName), pkg, inPackage, structName,
+		s.ctx, s.getInterfaceFromFile(filepath, interfaceName), pkg, inPackage, structName,
 	)
 }
 
@@ -53,7 +56,7 @@ func (s *GeneratorSuite) checkGeneration(
 	filepath, interfaceName string, inPackage bool, structName string, expected string,
 ) *Generator {
 	generator := s.getGenerator(filepath, interfaceName, inPackage, structName)
-	s.NoError(generator.Generate(), "The generator ran without errors.")
+	s.NoError(generator.Generate(s.ctx), "The generator ran without errors.")
 
 	// Mirror the formatting done by normally done by golang.org/x/tools/imports in Generator.Write.
 	//
@@ -79,7 +82,7 @@ func (s *GeneratorSuite) checkGeneration(
 func (s *GeneratorSuite) checkPrologueGeneration(
 	generator *Generator, expected string,
 ) {
-	generator.GeneratePrologue("mocks")
+	generator.GeneratePrologue(ctx, "mocks")
 	s.Equal(
 		expected, generator.buf.String(),
 		"The generator produced the expected prologue.",
@@ -89,9 +92,9 @@ func (s *GeneratorSuite) checkPrologueGeneration(
 func (s *GeneratorSuite) TestCalculateImport() {
 	gp := []string{"a/src", "b/src"}
 
-	s.Equal("c", calculateImport(gp, "a/src/c"))
-	s.Equal("c", calculateImport(gp, "b/src/c"))
-	s.Equal("d/src/c", calculateImport(gp, "d/src/c"))
+	s.Equal("c", calculateImport(ctx, gp, "a/src/c"))
+	s.Equal("c", calculateImport(ctx, gp, "b/src/c"))
+	s.Equal("d/src/c", calculateImport(ctx, gp, "d/src/c"))
 }
 
 func (s *GeneratorSuite) TestGenerator() {
@@ -262,8 +265,8 @@ func (s *GeneratorSuite) TestVersionOnCorrectLine() {
 
 	//Run everything that is ran by the GeneratorVisitor
 	gen.GeneratePrologueNote("A\\nB")
-	gen.GeneratePrologue(pkg)
-	err := gen.Generate()
+	gen.GeneratePrologue(s.ctx, pkg)
+	err := gen.Generate(s.ctx)
 
 	require.NoError(s.T(), err)
 	scan := bufio.NewScanner(&gen.buf)
@@ -951,8 +954,8 @@ func (_m *Example) B(_a0 string) fixtureshttp.MyStruct {
 func (s *GeneratorSuite) TestGeneratorWithImportSameAsLocalPackageInpkgNoCycle() {
 	iface := s.getInterfaceFromFile("imports_same_as_package.go", "ImportsSameAsPackage")
 	pkg := iface.QualifiedName
-	gen := NewGenerator(iface, pkg, true, "")
-	gen.GeneratePrologue(pkg)
+	gen := NewGenerator(s.ctx, iface, pkg, true, "")
+	gen.GeneratePrologue(s.ctx, pkg)
 	s.NotContains(gen.buf.String(), `import test "github.com/vektra/mockery/mockery/fixtures/test"`)
 }
 

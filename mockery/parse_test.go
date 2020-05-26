@@ -1,6 +1,7 @@
 package mockery
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -14,10 +15,12 @@ func init() {
 	testFile2 = getFixturePath("requester2.go")
 }
 
+var ctx = context.Background()
+
 func TestFileParse(t *testing.T) {
 	parser := NewParser(nil)
 
-	err := parser.Parse(testFile)
+	err := parser.Parse(ctx, testFile)
 	assert.NoError(t, err)
 
 	err = parser.Load()
@@ -31,7 +34,7 @@ func TestFileParse(t *testing.T) {
 func noTestFileInterfaces(t *testing.T) {
 	parser := NewParser(nil)
 
-	err := parser.Parse(testFile)
+	err := parser.Parse(ctx, testFile)
 	assert.NoError(t, err)
 
 	err = parser.Load()
@@ -47,13 +50,13 @@ func TestBuildTagInFilename(t *testing.T) {
 
 	// Include the major OS values found on https://golang.org/dl/ so we're likely to match
 	// anywhere the test is executed.
-	err := parser.Parse(getFixturePath("buildtag", "filename", "iface_windows.go"))
+	err := parser.Parse(ctx, getFixturePath("buildtag", "filename", "iface_windows.go"))
 	assert.NoError(t, err)
-	err = parser.Parse(getFixturePath("buildtag", "filename", "iface_linux.go"))
+	err = parser.Parse(ctx, getFixturePath("buildtag", "filename", "iface_linux.go"))
 	assert.NoError(t, err)
-	err = parser.Parse(getFixturePath("buildtag", "filename", "iface_darwin.go"))
+	err = parser.Parse(ctx, getFixturePath("buildtag", "filename", "iface_darwin.go"))
 	assert.NoError(t, err)
-	err = parser.Parse(getFixturePath("buildtag", "filename", "iface_freebsd.go"))
+	err = parser.Parse(ctx, getFixturePath("buildtag", "filename", "iface_freebsd.go"))
 	assert.NoError(t, err)
 
 	err = parser.Load()
@@ -69,13 +72,13 @@ func TestBuildTagInComment(t *testing.T) {
 
 	// Include the major OS values found on https://golang.org/dl/ so we're likely to match
 	// anywhere the test is executed.
-	err := parser.Parse(getFixturePath("buildtag", "comment", "windows_iface.go"))
+	err := parser.Parse(ctx, getFixturePath("buildtag", "comment", "windows_iface.go"))
 	assert.NoError(t, err)
-	err = parser.Parse(getFixturePath("buildtag", "comment", "linux_iface.go"))
+	err = parser.Parse(ctx, getFixturePath("buildtag", "comment", "linux_iface.go"))
 	assert.NoError(t, err)
-	err = parser.Parse(getFixturePath("buildtag", "comment", "darwin_iface.go"))
+	err = parser.Parse(ctx, getFixturePath("buildtag", "comment", "darwin_iface.go"))
 	assert.NoError(t, err)
-	err = parser.Parse(getFixturePath("buildtag", "comment", "freebsd_iface.go"))
+	err = parser.Parse(ctx, getFixturePath("buildtag", "comment", "freebsd_iface.go"))
 	assert.NoError(t, err)
 
 	err = parser.Load()
@@ -91,9 +94,9 @@ func TestCustomBuildTag(t *testing.T) {
 
 	// Include two files that define the same interface, but with different
 	// build tags. Only one should be loaded.
-	err := parser.Parse(getFixturePath("buildtag", "comment", "custom_iface.go"))
+	err := parser.Parse(ctx, getFixturePath("buildtag", "comment", "custom_iface.go"))
 	assert.NoError(t, err)
-	err = parser.Parse(getFixturePath("buildtag", "comment", "custom2_iface.go"))
+	err = parser.Parse(ctx, getFixturePath("buildtag", "comment", "custom2_iface.go"))
 	assert.NoError(t, err)
 
 	err = parser.Load()

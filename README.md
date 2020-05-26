@@ -3,7 +3,7 @@ mockery
 [![Linux Build Status](https://travis-ci.org/vektra/mockery.svg?branch=master)](https://travis-ci.org/vektra/mockery) [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/vektra/mockery/mockery?tab=doc) [![Go Report Card](https://goreportcard.com/badge/github.com/vektra/mockery)](https://goreportcard.com/report/github.com/vektra/mockery)
 
 
-mockery provides the ability to easily generate mocks for golang interfaces. It removes
+mockery provides the ability to easily generate mocks for golang interfaces using the [stretchr/testify/mock](https://pkg.go.dev/github.com/stretchr/testify/mock?tab=doc) package. It removes
 the boilerplate coding required to use mocks.
 
 Installation
@@ -15,7 +15,7 @@ Visit the [releases page](https://github.com/vektra/mockery/releases) to downloa
 
 ### Docker
 
-Use the Docker image
+Use the [Docker image](https://hub.docker.com/r/vektra/mockery)
 
 ```
 docker pull vektra/mockery
@@ -240,3 +240,17 @@ Mocking interfaces in `main`
 
 When your interfaces are in the main package you should supply the `-inpkg` flag.
 This will generate mocks in the same package as the target code avoiding import issues.
+
+Semantic Versioning
+-------------------
+
+The versioning in this project applies only to the behavior of the mockery binary itself. This project explicitly does not promise a stable internal API, but rather a stable executable. The versioning applies to the following:
+
+1. CLI arguments.
+2. Parsing of Golang code. New features in the Golang language will be supported in a backwards-compatible manner, except during major version bumps.
+3. Behavior of mock objects. Mock objects can be considered to be part of the public API.
+4. Behavior of mockery given a set of argments.
+
+What the version does _not_ track:
+1. The interfaces, objects, methods etc. in the vektra/mockery package.
+2. Compatibility of `go get`-ing mockery with new or old versions of Golang.
