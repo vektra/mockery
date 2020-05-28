@@ -25,10 +25,11 @@ func TestParseConfigDefaults(t *testing.T) {
 	assert.Equal(t, "", config.fNote)
 	assert.Equal(t, "", config.fFileName)
 	assert.Equal(t, "", config.fStructName)
+	assert.Equal(t, "", config.fSrcPkg)
 }
 
 func TestParseConfigFlippingValues(t *testing.T) {
-	config := configFromCommandLine("mockery -name hi -print -output output -dir dir -recursive -all -inpkg -testonly -case case -note note -structname structname -filename filename")
+	config := configFromCommandLine("mockery -name hi -print -output output -dir dir -recursive -all -inpkg -testonly -case case -note note -structname structname -filename filename -srcpkg github.com/vektra/mockery")
 	assert.Equal(t, "hi", config.fName)
 	assert.Equal(t, true, config.fPrint)
 	assert.Equal(t, "output", config.fOutput)
@@ -41,4 +42,5 @@ func TestParseConfigFlippingValues(t *testing.T) {
 	assert.Equal(t, "note", config.fNote)
 	assert.Equal(t, "filename", config.fFileName)
 	assert.Equal(t, "structname", config.fStructName)
+	assert.Equal(t, "github.com/vektra/mockery", config.fSrcPkg)
 }
