@@ -9,7 +9,6 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
-	"sync"
 
 	"github.com/rs/zerolog"
 	"golang.org/x/tools/go/packages"
@@ -25,7 +24,6 @@ type parserEntry struct {
 type Parser struct {
 	entries           []*parserEntry
 	entriesByFileName map[string]*parserEntry
-	packages          []*packages.Package
 	parserPackages    []*types.Package
 	conf              packages.Config
 }
@@ -117,7 +115,6 @@ func (p *Parser) Parse(ctx context.Context, path string) error {
 			p.entries = append(p.entries, &entry)
 			p.entriesByFileName[f] = &entry
 		}
-		p.packages = append(p.packages, pkg)
 	}
 
 	return nil
@@ -148,17 +145,11 @@ func (nv *NodeVisitor) Visit(node ast.Node) ast.Visitor {
 }
 
 func (p *Parser) Load() error {
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		for _, entry := range p.entries {
-			nv := NewNodeVisitor()
-			ast.Walk(nv, entry.syntax)
-			entry.interfaces = nv.DeclaredInterfaces()
-		}
-		wg.Done()
-	}()
-	wg.Wait()
+	for _, entry := range p.entries {
+		nv := NewNodeVisitor()
+		ast.Walk(nv, entry.syntax)
+		entry.interfaces = nv.DeclaredInterfaces()
+	}
 	return nil
 }
 
@@ -166,7 +157,7 @@ func (p *Parser) Find(name string) (*Interface, error) {
 	for _, entry := range p.entries {
 		for _, iface := range entry.interfaces {
 			if iface == name {
-				list := p.packageInterfaces(entry.pkg.Types, entry.syntax, entry.fileName, []string{name}, nil)
+				list := p.packageInterfaces(entry.pkg.Types, entry.fileName, []string{name}, nil)
 				if len(list) > 0 {
 					return list[0], nil
 				}
@@ -204,8 +195,7 @@ func (p *Parser) Interfaces() []*Interface {
 	ifaces := make(sortableIFaceList, 0)
 	for _, entry := range p.entries {
 		declaredIfaces := entry.interfaces
-		astFile := entry.syntax
-		ifaces = p.packageInterfaces(entry.pkg.Types, astFile, entry.fileName, declaredIfaces, ifaces)
+		ifaces = p.packageInterfaces(entry.pkg.Types, entry.fileName, declaredIfaces, ifaces)
 	}
 
 	sort.Sort(ifaces)
@@ -214,7 +204,6 @@ func (p *Parser) Interfaces() []*Interface {
 
 func (p *Parser) packageInterfaces(
 	pkg *types.Package,
-	file *ast.File,
 	fileName string,
 	declaredInterfaces []string,
 	ifaces []*Interface) []*Interface {
@@ -247,7 +236,6 @@ func (p *Parser) packageInterfaces(
 			FileName:      fileName,
 			Type:          iface.Complete(),
 			NamedType:     typ,
-			File:          file,
 		}
 
 		ifaces = append(ifaces, elem)
