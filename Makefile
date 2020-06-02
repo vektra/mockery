@@ -17,5 +17,8 @@ fixture:
 install:
 	go install ./...
 
+docker:
+	docker build -f Dockerfile $(GOPATH)/bin
+
 integration:
 	./hack/run-e2e.sh
