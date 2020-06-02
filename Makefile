@@ -17,7 +17,7 @@ fixture:
 install:
 	go install ./...
 
-docker:
+docker: install
 	docker build -f Dockerfile $(GOPATH)/bin
 
 integration:
