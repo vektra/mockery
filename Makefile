@@ -17,5 +17,8 @@ fixture:
 install:
 	go install ./...
 
-integration:
+docker: install
+	docker build -t vektra/mockery -f Dockerfile ${GOPATH}/bin
+
+integration: docker install
 	./hack/run-e2e.sh
