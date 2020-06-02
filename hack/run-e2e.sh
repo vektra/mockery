@@ -29,3 +29,16 @@ verify
 reset
 ${GOPATH}/bin/mockery -all -recursive -cpuprofile="mockery.prof" -srcpkg github.com/vektra/mockery/mockery/fixtures
 verify
+
+
+reset
+# TODO command needad that places binary at repository root before build
+docker build .
+docker run -v $(pwd):/src -w /src --user=$(id -u):$(id -g) vektra/mockery -all -recursive -cpuprofile="mockery.prof" -dir="mockery/fixtures"
+verify
+
+reset
+# TODO command needad that places binary at repository root before build
+docker build .
+docker run -v $(pwd):/src -w /src --user=$(id -u):$(id -g) vektra/mockery -all -recursive -cpuprofile="mockery.prof" -srcpkg github.com/vektra/mockery/mockery/fixtures
+verify
