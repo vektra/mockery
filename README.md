@@ -1,3 +1,4 @@
+
 mockery
 =======
 [![Linux Build Status](https://travis-ci.org/vektra/mockery.svg?branch=master)](https://travis-ci.org/vektra/mockery) [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/vektra/mockery/mockery?tab=doc) [![Go Report Card](https://goreportcard.com/badge/github.com/vektra/mockery)](https://goreportcard.com/report/github.com/vektra/mockery)
@@ -5,6 +6,37 @@ mockery
 
 mockery provides the ability to easily generate mocks for golang interfaces using the [stretchr/testify/mock](https://pkg.go.dev/github.com/stretchr/testify/mock?tab=doc) package. It removes
 the boilerplate coding required to use mocks.
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Installation](#installation)
+  - [Github Release](#github-release)
+  - [Docker](#docker)
+  - [Homebrew](#homebrew)
+  - [go get](#go-get)
+- [Examples](#examples)
+    - [Simplest case](#simplest-case)
+    - [Next level case](#next-level-case)
+- [Imports](#imports)
+- [Types](#types)
+- [Return Value Provider Functions](#return-value-provider-functions)
+    - [Requirements](#requirements)
+    - [Notes](#notes)
+- [Name](#name)
+- [All](#all)
+- [Recursive](#recursive)
+- [Output](#output)
+- [In Package (-inpkg) and KeepTree (-keeptree)](#in-package--inpkg-and-keeptree--keeptree)
+- [Specifying File (-filename) and Struct Name (-structname)](#specifying-file--filename-and-struct-name--structname)
+- [Casing](#casing)
+- [Debug](#debug)
+- [Mocking interfaces in `main`](#mocking-interfaces-in-main)
+- [Semantic Versioning](#semantic-versioning)
+- [Stargazers](#stargazers)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 Installation
 ------------
