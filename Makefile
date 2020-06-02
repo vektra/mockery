@@ -18,7 +18,7 @@ install:
 	go install ./...
 
 docker: install
-	docker build -f Dockerfile $(GOPATH)/bin
+	docker build -t vektra/mockery -f Dockerfile ${GOPATH}/bin
 
-integration:
+integration: docker install
 	./hack/run-e2e.sh

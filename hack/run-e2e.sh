@@ -32,11 +32,9 @@ verify
 
 
 reset
-docker build -f Dockerfile ${GOPATH}/bin
 docker run -v $(pwd):/src -w /src --user=$(id -u):$(id -g) vektra/mockery -all -recursive -cpuprofile="mockery.prof" -dir="mockery/fixtures"
 verify
 
 reset
-docker build -f Dockerfile ${GOPATH}/bin
 docker run -v $(pwd):/src -w /src --user=$(id -u):$(id -g) vektra/mockery -all -recursive -cpuprofile="mockery.prof" -srcpkg github.com/vektra/mockery/mockery/fixtures
 verify
