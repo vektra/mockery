@@ -29,3 +29,12 @@ verify
 reset
 ${GOPATH}/bin/mockery -all -recursive -cpuprofile="mockery.prof" -srcpkg github.com/vektra/mockery/mockery/fixtures
 verify
+
+
+reset
+docker run -v $(pwd):/src -w /src --user=$(id -u):$(id -g) vektra/mockery -all -recursive -cpuprofile="mockery.prof" -dir="mockery/fixtures"
+verify
+
+reset
+docker run -v $(pwd):/src -w /src --user=$(id -u):$(id -g) vektra/mockery -all -recursive -cpuprofile="mockery.prof" -srcpkg github.com/vektra/mockery/mockery/fixtures
+verify

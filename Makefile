@@ -1,6 +1,6 @@
 SHELL=bash
 
-all: clean fmt test fixture install integration
+all: clean fmt test fixture install docker integration
 
 clean:
 	rm -rf mocks
@@ -17,5 +17,8 @@ fixture:
 install:
 	go install ./...
 
-integration:
+docker:
+	docker build -t vektra/mockery .
+
+integration: docker install
 	./hack/run-e2e.sh
