@@ -22,26 +22,27 @@ import (
 const regexMetadataChars = "\\.+*?()|[]{}^$"
 
 type Config struct {
-	fName       string
-	fPrint      bool
-	fOutput     string
-	fOutpkg     string
-	fDir        string
-	fRecursive  bool
-	fAll        bool
-	fIP         bool
-	fTO         bool
-	fCase       string
-	fNote       string
-	fProfile    string
-	fVersion    bool
-	fSrcPkg     string
-	quiet       bool
-	fkeepTree   bool
-	buildTags   string
-	fFileName   string
-	fStructName string
-	fLogLevel   string
+	fName          string
+	fPrint         bool
+	fOutput        string
+	fOutpkg        string
+	fPackagePrefix string
+	fDir           string
+	fRecursive     bool
+	fAll           bool
+	fIP            bool
+	fTO            bool
+	fCase          string
+	fNote          string
+	fProfile       string
+	fVersion       bool
+	fSrcPkg        string
+	quiet          bool
+	fkeepTree      bool
+	buildTags      string
+	fFileName      string
+	fStructName    string
+	fLogLevel      string
 }
 
 func main() {
@@ -148,11 +149,12 @@ func main() {
 	}
 
 	visitor := &mockery.GeneratorVisitor{
-		InPackage:   config.fIP,
-		Note:        config.fNote,
-		Osp:         osp,
-		PackageName: config.fOutpkg,
-		StructName:  config.fStructName,
+		InPackage:         config.fIP,
+		Note:              config.fNote,
+		Osp:               osp,
+		PackageName:       config.fOutpkg,
+		PackageNamePrefix: config.fPackagePrefix,
+		StructName:        config.fStructName,
 	}
 
 	walker := mockery.Walker{
@@ -179,6 +181,7 @@ func parseConfigFromArgs(args []string) Config {
 	flagSet.BoolVar(&config.fPrint, "print", false, "print the generated mock to stdout")
 	flagSet.StringVar(&config.fOutput, "output", "./mocks", "directory to write mocks to")
 	flagSet.StringVar(&config.fOutpkg, "outpkg", "mocks", "name of generated package")
+	flagSet.StringVar(&config.fPackagePrefix, "packageprefix", "", "prefix for the generated package name, it takes precedence over outpkg")
 	flagSet.StringVar(&config.fDir, "dir", ".", "directory to search for interfaces")
 	flagSet.BoolVar(&config.fRecursive, "recursive", false, "recurse search into sub-directories")
 	flagSet.BoolVar(&config.fAll, "all", false, "generates mocks for all found interfaces in all sub-directories")
