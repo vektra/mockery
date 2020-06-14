@@ -71,6 +71,7 @@ func init() {
 	pFlags.Bool("print", false, "print the generated mock to stdout")
 	pFlags.String("output", "./mocks", "directory to write mocks to")
 	pFlags.String("outpkg", "mocks", "name of generated package")
+	pFlags.String("packageprefix", "", "prefix for the generated package name, it is ignored if outpkg is also specified.")
 	pFlags.String("dir", ".", "directory to search for interfaces")
 	pFlags.BoolP("recursive", "r", false, "recurse search into sub-directories")
 	pFlags.Bool("all", false, "generates mocks for all found interfaces in all sub-directories")

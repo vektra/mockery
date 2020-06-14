@@ -109,6 +109,8 @@ type GeneratorVisitor struct {
 	Osp       OutputStreamProvider
 	// The name of the output package, if InPackage is false (defaults to "mocks")
 	PackageName string
+	// The name of the output package's prefix
+	PackageNamePrefix string
 	StructName  string
 }
 
@@ -131,7 +133,9 @@ func (this *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) e
 
 	if this.InPackage {
 		pkg = filepath.Dir(iface.FileName)
-	} else {
+	} else if this.PackageNamePrefix != "" {
+		pkg = fmt.Sprintf("%s%s", this.PackageNamePrefix, iface.Pkg.Name())
+	} else if this.PackageName != "" {
 		pkg = this.PackageName
 	}
 
