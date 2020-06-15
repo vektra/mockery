@@ -12,7 +12,7 @@ test:
 	go test ./...
 
 fixture:
-	mockery --print --dir pkg/mockery/fixtures --name RequesterVariadic > pkg/mockery/fixtures/mocks/requester_variadic.go
+	mockery --print --dir pkg/fixtures --name RequesterVariadic > pkg/fixtures/mocks/requester_variadic.go
 
 install:
 	go install ./...

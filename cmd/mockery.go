@@ -17,7 +17,9 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/vektra/mockery/pkg/mockery"
+	"github.com/vektra/mockery/pkg"
+	"github.com/vektra/mockery/pkg/config"
+	"github.com/vektra/mockery/pkg/logging"
 	"golang.org/x/crypto/ssh/terminal"
 	"golang.org/x/tools/go/packages"
 )
@@ -60,32 +62,6 @@ func Execute() {
 	}
 }
 
-type Config struct {
-	All        bool
-	BuildTags  string
-	Case       string
-	Config     string
-	Cpuprofile string
-	Dir        string
-	FileName   string
-	InPackage  bool
-	KeepTree   bool
-	LogLevel   string `mapstructure:"log-level"`
-	Name       string
-	Note       string
-	Outpkg     string
-	Output     string
-	Print      bool
-	Profile    string
-	Quiet      bool
-	Recursive  bool
-	SrcPkg     string
-	StructName string
-	Tags       string
-	TestOnly   bool
-	Version    bool
-}
-
 func init() {
 	cobra.OnInitialize(initConfig)
 
@@ -111,6 +87,7 @@ func init() {
 	pFlags.String("structname", "", "name of generated struct (only works with -name and no regex)")
 	pFlags.String("log-level", "info", "Level of logging")
 	pFlags.String("srcpkg", "", "source pkg to search for interfaces")
+	pFlags.BoolP("dry-run", "d", false, "Do a dry run, don't modify any files")
 
 	viper.BindPFlags(pFlags)
 }
@@ -144,7 +121,7 @@ func initConfig() {
 const regexMetadataChars = "\\.+*?()|[]{}^$"
 
 type RootApp struct {
-	Config
+	config.Config
 }
 
 func GetRootAppFromViper(v *viper.Viper) (*RootApp, error) {
@@ -172,11 +149,12 @@ func (r *RootApp) Run() error {
 		fmt.Fprintf(os.Stderr, "Failed to initialize logger: %v\n", err)
 		return err
 	}
+	log = log.With().Bool(logging.LogKeyDryRun, r.Config.DryRun).Logger()
 	log.Info().Msgf("Starting mockery")
 	ctx := log.WithContext(context.Background())
 
 	if r.Config.Version {
-		fmt.Println(mockery.SemVer)
+		fmt.Println(config.SemVer)
 		return nil
 	} else if r.Config.Name != "" && r.Config.All {
 		log.Fatal().Msgf("Specify --name or --all, but not both")
@@ -216,11 +194,11 @@ func (r *RootApp) Run() error {
 		defer pprof.StopCPUProfile()
 	}
 
-	var osp mockery.OutputStreamProvider
+	var osp pkg.OutputStreamProvider
 	if r.Config.Print {
-		osp = &mockery.StdoutStreamProvider{}
+		osp = &pkg.StdoutStreamProvider{}
 	} else {
-		osp = &mockery.FileOutputStreamProvider{
+		osp = &pkg.FileOutputStreamProvider{
 			BaseDir:                   r.Config.Output,
 			InPackage:                 r.Config.InPackage,
 			TestOnly:                  r.Config.TestOnly,
@@ -255,7 +233,7 @@ func (r *RootApp) Run() error {
 		baseDir = filepath.Dir(pkg.GoFiles[0])
 	}
 
-	visitor := &mockery.GeneratorVisitor{
+	visitor := &pkg.GeneratorVisitor{
 		InPackage:   r.Config.InPackage,
 		Note:        r.Config.Note,
 		Osp:         osp,
@@ -263,7 +241,7 @@ func (r *RootApp) Run() error {
 		StructName:  r.Config.StructName,
 	}
 
-	walker := mockery.Walker{
+	walker := pkg.Walker{
 		BaseDir:   baseDir,
 		Recursive: recursive,
 		Filter:    filter,
@@ -302,7 +280,7 @@ func getLogger(levelStr string) (zerolog.Logger, error) {
 		Hook(timeHook{}).
 		Level(level).
 		With().
-		Str("version", mockery.SemVer).
+		Str("version", config.SemVer).
 		Logger()
 
 	return log, nil

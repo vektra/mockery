@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/vektra/mockery/pkg/config"
 	"gopkg.in/yaml.v2"
 )
 
@@ -17,7 +18,7 @@ var showconfigCmd = &cobra.Command{
 This initializes viper and prints out the merged configuration between
 config files, environment variables, and CLI flags.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		config := &Config{}
+		config := &config.Config{}
 		if err := viper.UnmarshalExact(config); err != nil {
 			return errors.Wrapf(err, "failed to unmarshal config")
 		}
