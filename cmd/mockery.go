@@ -199,6 +199,7 @@ func (r *RootApp) Run() error {
 		osp = &pkg.StdoutStreamProvider{}
 	} else {
 		osp = &pkg.FileOutputStreamProvider{
+			Config:                    r.Config,
 			BaseDir:                   r.Config.Output,
 			InPackage:                 r.Config.InPackage,
 			TestOnly:                  r.Config.TestOnly,
@@ -234,6 +235,7 @@ func (r *RootApp) Run() error {
 	}
 
 	visitor := &pkg.GeneratorVisitor{
+		Config:      r.Config,
 		InPackage:   r.Config.InPackage,
 		Note:        r.Config.Note,
 		Osp:         osp,
@@ -242,6 +244,7 @@ func (r *RootApp) Run() error {
 	}
 
 	walker := pkg.Walker{
+		Config:    r.Config,
 		BaseDir:   baseDir,
 		Recursive: recursive,
 		Filter:    filter,

@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog"
+	"github.com/vektra/mockery/pkg/config"
 	"github.com/vektra/mockery/pkg/logging"
 )
 
@@ -26,6 +27,7 @@ func (this *StdoutStreamProvider) GetWriter(ctx context.Context, iface *Interfac
 }
 
 type FileOutputStreamProvider struct {
+	Config                    config.Config
 	BaseDir                   string
 	InPackage                 bool
 	TestOnly                  bool
@@ -70,6 +72,7 @@ func (this *FileOutputStreamProvider) GetWriter(ctx context.Context, iface *Inte
 	log = log.With().Str(logging.LogKeyPath, path).Logger()
 	ctx = log.WithContext(ctx)
 
+	log.Debug().Msgf("creating writer to file")
 	f, err := os.Create(path)
 	if err != nil {
 		return nil, err, func() error { return nil }
