@@ -152,9 +152,12 @@ func (this *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) e
 	}
 
 	log.Info().Msgf("Generating mock")
-	err = gen.Write(out)
-	if err != nil {
-		return err
+	if !this.Config.DryRun {
+		err = gen.Write(out)
+		if err != nil {
+			return err
+		}
 	}
+
 	return nil
 }
