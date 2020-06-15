@@ -1,7 +1,7 @@
 FROM golang:1.14-alpine as builder
 
 COPY ./ /mockery
-RUN cd /mockery && ls && go install ./...
+RUN cd /mockery && ls mockery && go install ./...
 
 FROM golang:1.14-alpine
 
