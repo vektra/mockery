@@ -4,7 +4,7 @@ before:
     hooks:
       - go mod download
 builds:
-  - main: ./cmd/mockery/mockery.go
+  - main: ./main.go
     ldflags:
       - -s -w -X github.com/vektra/mockery/mockery.SemVer={{.Version}}
     env:
