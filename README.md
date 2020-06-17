@@ -73,8 +73,6 @@ go get github.com/vektra/mockery/.../
 
 to get a development version of the software.
 
-The SemVer variable by default is `1.0.0` and is overwritten during build steps to the git tagged version. For backwards-compatibility reasons, SemVer in source will remain at `1.0.0`. This will eventually be changed over to `0.0.0-dev`. Keep in mind that if using the `go get` version of downloading, mockery will not correctly specify its version.
-
 Examples
 --------
 
