@@ -90,6 +90,7 @@ func (g *Generator) populateImports(ctx context.Context) {
 	for i := 0; i < g.iface.Type.NumMethods(); i++ {
 		fn := g.iface.Type.Method(i)
 		ftype := fn.Type().(*types.Signature)
+		log.Debug().Msgf(fn.FullName())
 		g.addImportsFromTuple(ctx, ftype.Params())
 		g.addImportsFromTuple(ctx, ftype.Results())
 		g.renderType(ctx, g.iface.NamedType)
@@ -261,6 +262,7 @@ func (g *Generator) sortedImportNames() (importNames []string) {
 func (g *Generator) generateImports(ctx context.Context) {
 	log := zerolog.Ctx(ctx)
 
+	log.Debug().Msgf("generating IMPORTS HAHA")
 	log.Debug().Msgf("%v", g.nameToPackagePath)
 	pkgPath := g.nameToPackagePath[g.iface.Pkg.Name()]
 	// Sort by import name so that we get a deterministic order
@@ -281,12 +283,16 @@ func (g *Generator) generateImports(ctx context.Context) {
 
 // GeneratePrologue generates the prologue of the mock.
 func (g *Generator) GeneratePrologue(ctx context.Context, pkg string) {
+	log := zerolog.Ctx(ctx)
+
 	g.populateImports(ctx)
 	if g.Config.InPackage {
 		g.printf("package %s\n\n", g.iface.Pkg.Name())
 	} else {
 		g.printf("package %v\n\n", pkg)
 	}
+
+	log.Debug().Msgf("imports populated")
 
 	g.generateImports(ctx)
 	g.printf("\n")
@@ -504,8 +510,6 @@ var ErrNotSetup = errors.New("not setup")
 // Generate builds a string that constitutes a valid go source file
 // containing the mock of the relevant interface.
 func (g *Generator) Generate(ctx context.Context) error {
-	g.populateImports(ctx)
-
 	if g.iface == nil {
 		return ErrNotSetup
 	}
