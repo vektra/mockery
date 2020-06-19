@@ -56,8 +56,12 @@ func (_m *RequesterVariadic) MultiWriteToFile(filename string, w ...io.Writer) s
 
 // OneInterface provides a mock function with given fields: a
 func (_m *RequesterVariadic) OneInterface(a ...interface{}) bool {
+	_va := make([]interface{}, len(a))
+	for _i := range a {
+		_va[_i] = a[_i]
+	}
 	var _ca []interface{}
-	_ca = append(_ca, a...)
+	_ca = append(_ca, _va...)
 	ret := _m.Called(_ca...)
 
 	var r0 bool
@@ -72,9 +76,13 @@ func (_m *RequesterVariadic) OneInterface(a ...interface{}) bool {
 
 // Sprintf provides a mock function with given fields: format, a
 func (_m *RequesterVariadic) Sprintf(format string, a ...interface{}) string {
+	_va := make([]interface{}, len(a))
+	for _i := range a {
+		_va[_i] = a[_i]
+	}
 	var _ca []interface{}
 	_ca = append(_ca, format)
-	_ca = append(_ca, a...)
+	_ca = append(_ca, _va...)
 	ret := _m.Called(_ca...)
 
 	var r0 string

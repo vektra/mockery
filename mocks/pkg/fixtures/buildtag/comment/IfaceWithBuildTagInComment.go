@@ -11,9 +11,13 @@ type IfaceWithBuildTagInComment struct {
 
 // Sprintf provides a mock function with given fields: format, a
 func (_m *IfaceWithBuildTagInComment) Sprintf(format string, a ...interface{}) string {
+	_va := make([]interface{}, len(a))
+	for _i := range a {
+		_va[_i] = a[_i]
+	}
 	var _ca []interface{}
 	_ca = append(_ca, format)
-	_ca = append(_ca, a...)
+	_ca = append(_ca, _va...)
 	ret := _m.Called(_ca...)
 
 	var r0 string
