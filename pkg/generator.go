@@ -459,6 +459,8 @@ type paramList struct {
 }
 
 func (g *Generator) genList(ctx context.Context, list *types.Tuple, variadic bool) *paramList {
+	log := zerolog.Ctx(ctx)
+
 	var params paramList
 
 	if list == nil {
@@ -481,27 +483,28 @@ func (g *Generator) genList(ctx context.Context, list *types.Tuple, variadic boo
 			}
 		}
 
-		pname := v.Name()
+		variableName := v.Name()
 
-		if g.nameCollides(pname) || pname == "" {
-			pname = fmt.Sprintf("_a%d", i)
+		if g.nameCollides(variableName) || variableName == "" {
+			log.Debug().Msgf("package %s name conflicts with argument name %s", g.pkg, variableName)
+			variableName = fmt.Sprintf("_a%d", i)
 		}
 
-		params.Names = append(params.Names, pname)
+		params.Names = append(params.Names, variableName)
 		params.Types = append(params.Types, ts)
 
-		params.Params = append(params.Params, fmt.Sprintf("%s %s", pname, ts))
+		params.Params = append(params.Params, fmt.Sprintf("%s %s", variableName, ts))
 		params.Nilable = append(params.Nilable, isNillable(v.Type()))
 	}
 
 	return &params
 }
 
-func (g *Generator) nameCollides(pname string) bool {
-	if pname == g.pkg {
+func (g *Generator) nameCollides(variableName string) bool {
+	if variableName == g.pkg {
 		return true
 	}
-	return g.importNameExists(pname)
+	return g.importNameExists(variableName)
 }
 
 // ErrNotSetup is returned when the generator is not configured.
@@ -613,6 +616,7 @@ func (g *Generator) Generate(ctx context.Context) error {
 //
 // It is separate from Generate to avoid cyclomatic complexity through early return statements.
 func (g *Generator) generateCalled(ctx context.Context, list *paramList, formattedParamNames string) string {
+	log := zerolog.Ctx(ctx)
 
 	namesLen := len(list.Names)
 	if namesLen == 0 {
@@ -625,7 +629,12 @@ func (g *Generator) generateCalled(ctx context.Context, list *paramList, formatt
 
 	var variadicArgsName string
 	variadicName := list.Names[namesLen-1]
-	variadicIface := list.Types[namesLen-1] == "interface{}"
+
+	// list.Types[] will contain a leading '...'. Strip this from the string to
+	// do easier comparison.
+	strippedIfaceType := strings.Trim(list.Types[namesLen-1], "...")
+	variadicIface := strippedIfaceType == "interface{}"
+	log.Debug().Msgf("variadic type: %s", list.Types[namesLen-1])
 
 	if variadicIface {
 		// Variadic is already of the interface{} type, so we don't need special handling.
