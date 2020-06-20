@@ -610,7 +610,11 @@ func (g *Generator) generateCalled(list *paramList, formattedParamNames string) 
 
 	var variadicArgsName string
 	variadicName := list.Names[namesLen-1]
-	variadicIface := strings.Contains(list.Types[namesLen-1], "interface{}")
+
+	// list.Types[] will contain a leading '...'. Strip this from the string to
+	// do easier comparison.
+	strippedIfaceType := strings.Trim(list.Types[namesLen-1], "...")
+	variadicIface := strippedIfaceType == "interface{}"
 
 	if variadicIface {
 		// Variadic is already of the interface{} type, so we don't need special handling.
