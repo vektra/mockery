@@ -11,6 +11,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
+	"github.com/vektra/mockery/pkg/config"
 )
 
 const pkg = "test"
@@ -48,7 +49,10 @@ func (s *GeneratorSuite) getGenerator(
 	filepath, interfaceName string, inPackage bool, structName string,
 ) *Generator {
 	return NewGenerator(
-		s.ctx, s.getInterfaceFromFile(filepath, interfaceName), pkg, inPackage, structName,
+		s.ctx, config.Config{
+			StructName: structName,
+			InPackage:  inPackage,
+		}, s.getInterfaceFromFile(filepath, interfaceName), pkg,
 	)
 }
 
@@ -74,7 +78,7 @@ func (s *GeneratorSuite) checkGeneration(
 
 	s.Equal(
 		expectedLines, actualLines,
-		"The generator produced the expected output.",
+		"The generator produced unexpected output.",
 	)
 	return generator
 }
@@ -85,7 +89,7 @@ func (s *GeneratorSuite) checkPrologueGeneration(
 	generator.GeneratePrologue(ctx, "mocks")
 	s.Equal(
 		expected, generator.buf.String(),
-		"The generator produced the expected prologue.",
+		"The generator produced an unexpected prologue.",
 	)
 }
 
@@ -954,7 +958,9 @@ func (_m *Example) B(_a0 string) fixtureshttp.MyStruct {
 func (s *GeneratorSuite) TestGeneratorWithImportSameAsLocalPackageInpkgNoCycle() {
 	iface := s.getInterfaceFromFile("imports_same_as_package.go", "ImportsSameAsPackage")
 	pkg := iface.QualifiedName
-	gen := NewGenerator(s.ctx, iface, pkg, true, "")
+	gen := NewGenerator(s.ctx, config.Config{
+		InPackage: true,
+	}, iface, pkg)
 	gen.GeneratePrologue(s.ctx, pkg)
 	s.NotContains(gen.buf.String(), `import test "github.com/vektra/mockery/pkg/fixtures/test"`)
 }

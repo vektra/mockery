@@ -6,6 +6,7 @@ const (
 	LogKeyDryRun        = "dry-run"
 	LogKeyFile          = "file"
 	LogKeyInterface     = "interface"
+	LogKeyImport        = "import"
 	LogKeyPath          = "path"
 	LogKeyQualifiedName = "qualified-name"
 )
