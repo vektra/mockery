@@ -142,7 +142,7 @@ func (this *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) e
 	}
 	defer closer()
 
-	gen := NewGenerator(ctx, iface, pkg, this.InPackage, this.StructName)
+	gen := NewGenerator(ctx, this.Config, iface, pkg)
 	gen.GeneratePrologueNote(this.Note)
 	gen.GeneratePrologue(ctx, pkg)
 

@@ -40,27 +40,22 @@ func stripChars(str, chr string) string {
 // Generator is responsible for generating the string containing
 // imports and the mock struct that will later be written out as file.
 type Generator struct {
+	config.Config
 	buf bytes.Buffer
 
-	ip               bool
 	iface            *Interface
 	pkg              string
 	localPackageName *string
 
-	importsWerePopulated bool
-	localizationCache    map[string]string
-	packagePathToName    map[string]string
-	nameToPackagePath    map[string]string
+	localizationCache map[string]string
+	packagePathToName map[string]string
+	nameToPackagePath map[string]string
 
 	packageRoots []string
-
-	// structName overrides the name given to the mock struct and should only be nonempty
-	// when generating for an exact match (non regex expression in -name).
-	structName string
 }
 
 // NewGenerator builds a Generator.
-func NewGenerator(ctx context.Context, iface *Interface, pkg string, inPackage bool, structName string) *Generator {
+func NewGenerator(ctx context.Context, c config.Config, iface *Interface, pkg string) *Generator {
 
 	var roots []string
 
@@ -69,14 +64,13 @@ func NewGenerator(ctx context.Context, iface *Interface, pkg string, inPackage b
 	}
 
 	g := &Generator{
+		Config:            c,
 		iface:             iface,
 		pkg:               pkg,
-		ip:                inPackage,
 		localizationCache: make(map[string]string),
 		packagePathToName: make(map[string]string),
 		nameToPackagePath: make(map[string]string),
 		packageRoots:      roots,
-		structName:        structName,
 	}
 
 	g.addPackageImportWithName(ctx, "github.com/stretchr/testify/mock", "mock")
@@ -84,9 +78,10 @@ func NewGenerator(ctx context.Context, iface *Interface, pkg string, inPackage b
 }
 
 func (g *Generator) populateImports(ctx context.Context) {
-	if g.importsWerePopulated {
-		return
-	}
+	log := zerolog.Ctx(ctx)
+
+	log.Debug().Msgf("populating imports")
+
 	for i := 0; i < g.iface.Type.NumMethods(); i++ {
 		fn := g.iface.Type.Method(i)
 		ftype := fn.Type().(*types.Signature)
@@ -218,11 +213,11 @@ func (g *Generator) getLocalizedPath(ctx context.Context, path string) string {
 }
 
 func (g *Generator) mockName() string {
-	if g.structName != "" {
-		return g.structName
+	if g.StructName != "" {
+		return g.StructName
 	}
 
-	if g.ip {
+	if g.InPackage {
 		if ast.IsExported(g.iface.Name) {
 			return "Mock" + g.iface.Name
 		}
@@ -258,12 +253,21 @@ func (g *Generator) sortedImportNames() (importNames []string) {
 	return
 }
 
-func (g *Generator) generateImports() {
+func (g *Generator) generateImports(ctx context.Context) {
+	log := zerolog.Ctx(ctx)
+
+	log.Debug().Msgf("generating imports")
+	log.Debug().Msgf("%v", g.nameToPackagePath)
+
 	pkgPath := g.nameToPackagePath[g.iface.Pkg.Name()]
 	// Sort by import name so that we get a deterministic order
 	for _, name := range g.sortedImportNames() {
+		logImport := log.With().Str(logging.LogKeyImport, g.nameToPackagePath[name]).Logger()
+		logImport.Debug().Msgf("found import")
+
 		path := g.nameToPackagePath[name]
-		if g.ip && path == pkgPath {
+		if g.InPackage && path == pkgPath {
+			logImport.Debug().Msgf("import (%s) equals interface's package path (%s), skipping", path, pkgPath)
 			continue
 		}
 		g.printf("import %s \"%s\"\n", name, path)
@@ -273,13 +277,13 @@ func (g *Generator) generateImports() {
 // GeneratePrologue generates the prologue of the mock.
 func (g *Generator) GeneratePrologue(ctx context.Context, pkg string) {
 	g.populateImports(ctx)
-	if g.ip {
+	if g.InPackage {
 		g.printf("package %s\n\n", g.iface.Pkg.Name())
 	} else {
 		g.printf("package %v\n\n", pkg)
 	}
 
-	g.generateImports()
+	g.generateImports(ctx)
 	g.printf("\n")
 }
 
@@ -340,7 +344,7 @@ func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 	switch t := typ.(type) {
 	case *types.Named:
 		o := t.Obj()
-		if o.Pkg() == nil || o.Pkg().Name() == "main" || (g.ip && o.Pkg() == g.iface.Pkg) {
+		if o.Pkg() == nil || o.Pkg().Name() == "main" || (g.InPackage && o.Pkg() == g.iface.Pkg) {
 			return o.Name()
 		}
 		return g.addPackageImport(ctx, o.Pkg()) + "." + o.Name()

@@ -24,6 +24,8 @@ type Config struct {
 	Quiet      bool
 	Recursive  bool
 	SrcPkg     string
+	// StructName overrides the name given to the mock struct and should only be nonempty
+	// when generating for an exact match (non regex expression in -name).
 	StructName string
 	Tags       string
 	TestOnly   bool
