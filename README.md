@@ -7,37 +7,26 @@ mockery
 mockery provides the ability to easily generate mocks for golang interfaces using the [stretchr/testify/mock](https://pkg.go.dev/github.com/stretchr/testify/mock?tab=doc) package. It removes
 the boilerplate coding required to use mocks.
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 Table of Contents
 -----------------
 
 - [Installation](#installation)
-  - [Github Release](#github-release)
-  - [Docker](#docker)
-  - [Homebrew](#homebrew)
-  - [go get](#go-get)
+  * [Github Release](#github-release)
+  * [Docker](#docker)
+  * [Homebrew](#homebrew)
+  * [go get](#go-get)
 - [Examples](#examples)
-    - [Simplest case](#simplest-case)
-    - [Next level case](#next-level-case)
-- [Imports](#imports)
-- [Types](#types)
+    + [Simplest case](#simplest-case)
+    + [Next level case](#next-level-case)
 - [Return Value Provider Functions](#return-value-provider-functions)
-    - [Requirements](#requirements)
-    - [Notes](#notes)
-- [Name](#name)
-- [All](#all)
-- [Recursive](#recursive)
-- [Output](#output)
-- [In Package (-inpkg) and KeepTree (-keeptree)](#in-package--inpkg-and-keeptree--keeptree)
-- [Specifying File (-filename) and Struct Name (-structname)](#specifying-file--filename-and-struct-name--structname)
-- [Casing](#casing)
-- [Debug](#debug)
+    + [Requirements](#requirements)
+    + [Notes](#notes)
+- [Extended Flag Descriptions](#extended-flag-descriptions)
 - [Mocking interfaces in `main`](#mocking-interfaces-in-main)
 - [Semantic Versioning](#semantic-versioning)
 - [Stargazers](#stargazers)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 
 Installation
 ------------
