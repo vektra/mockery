@@ -50,26 +50,20 @@ Visit the [releases page](https://github.com/vektra/mockery/releases) to downloa
 
 Use the [Docker image](https://hub.docker.com/r/vektra/mockery)
 
-```
-docker pull vektra/mockery
-```
+    docker pull vektra/mockery
 
 ### Homebrew
 
 Install through homebrew
 
-```
-brew install vektra/tap/mockery
-brew upgrade mockery
-```
+    brew install vektra/tap/mockery
+    brew upgrade mockery
 
 ### go get
 
 Alternatively, you can use the DEPRECATED method of:
 
-```
-go get github.com/vektra/mockery/.../
-``` 
+    go get github.com/vektra/mockery/.../
 
 to get a development version of the software.
 
@@ -88,7 +82,7 @@ type Stringer interface {
 }
 ```
 
-Run: `mockery -name=Stringer` and the following will be output to `mocks/Stringer.go`:
+Run: `mockery --name=Stringer` and the following will be output to `mocks/Stringer.go`:
 
 ```go
 package mocks
@@ -164,17 +158,6 @@ func main() {
 }
 ```
 
-Imports
--------
-
-mockery pulls in all the same imports used in the file that contains the interface so
-that package types will work correctly. It then runs the output through the `imports`
-package to remove any unnecessary imports (as they'd result in compile errors).
-
-Types
------
-
-mockery should handle all types. If you find it does not, please report the issue.
 
 Return Value Provider Functions
 --------------------------------
@@ -215,61 +198,27 @@ This approach should be used judiciously, as return values should generally
 not depend on arguments in mocks; however, this approach can be helpful for
 situations like passthroughs or other test-only calculations.
 
-Name
----------
 
-The `-name` option takes either the name or matching regular expression of interface to generate mock(s) for.
+Extended Flag Descriptions
+--------------------------
 
-All
----------
+The following descriptions provide additional elaboration on a few common parameters.
 
-It's common for a big package to have a lot of interfaces, so mockery provides `-all`.
-This option will tell mockery to scan all files under the directory named by `-dir` ("." by default)
-and generates mocks for any interfaces it finds. This option implies `-recursive=true`.
-
-`-all` was designed to be able to be used automatically in the background if required.
-
-Recursive
----------
-
-Use the `-recursive` option to search subdirectories for the interface(s).
-This option is only compatible with `-name`. The `-all` option implies `-recursive=true`.
-
-Output
----------
-
-mockery always generates files with the package `mocks` to keep things clean and simple.
-You can control which mocks directory is used by using `-output`, which defaults to `./mocks`.
-
-In Package (-inpkg) and KeepTree (-keeptree)
---------------------------------------------
-
-For some complex repositories, there could be multiple interfaces with the same name but in different packages. In that case, `-inpkg` allows generate the mocked interfaces directly in the package that it mocks.
-
-In the case you don't want to generate the mocks into the package but want to keep a similar structure, use the option `-keeptree`.
-
-Specifying File (-filename) and Struct Name (-structname)
----------------------------------------------------------
-
-Use the `-filename` and `-structname` to override the default generated file and struct name.
-These options are only compatible with non-regular expressions in -name, where only one mock is generated.
-
-Casing
--------
-
-mockery generates files using the casing of the original interface name.  This
-can be modified by specifying `-case=underscore` to format the generated file
-name using underscore casing.
-
-Debug
-------
-
-Use `mockery -print` to have the resulting code printed out instead of written to disk.
+| flag name  | description  |
+|---|---|
+| `--name`  | The `--name` option takes either the name or matching regular expression of interface to generate mock(s) for. |
+| `--all`  |  It's common for a big package to have a lot of interfaces, so mockery provides `--all`. This option will tell mockery to scan all files under the directory named by `--dir` ("." by default) and generates mocks for any interfaces it finds. This option implies `--recursive=true`. |
+| `--recursive`  |  Use the `--recursive` option to search subdirectories for the interface(s). This option is only compatible with `--name`. The `--all` option implies `--recursive=true`. |
+| `--output` | mockery always generates files with the package `mocks` to keep things clean and simple. You can control which mocks directory is used by using `--output`, which defaults to `./mocks`. |
+| `--inpackage` and `--keeptree` | For some complex repositories, there could be multiple interfaces with the same name but in different packages. In that case, `--inpackage` allows generating the mocked interfaces directly in the package that it mocks. In the case you don't want to generate the mocks into the package but want to keep a similar structure, use the option `--keeptree`. |
+| `--filename` | Use the `--filename` and `--structname` to override the default generated file and struct name. These options are only compatible with non-regular expressions in `--name`, where only one mock is generated. |
+| `--case` | mockery generates files using the casing of the original interface name.  This can be modified by specifying `--case underscore` to format the generated file name using underscore casing. |
+| `--print` | Use `mockery --print` to have the resulting code printed out instead of written to disk. |
 
 Mocking interfaces in `main`
 ----------------------------
 
-When your interfaces are in the main package you should supply the `-inpkg` flag.
+When your interfaces are in the main package you should supply the `--inpackge` flag.
 This will generate mocks in the same package as the target code avoiding import issues.
 
 Semantic Versioning
