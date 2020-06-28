@@ -210,6 +210,35 @@ Mocking interfaces in `main`
 When your interfaces are in the main package you should supply the `--inpackge` flag.
 This will generate mocks in the same package as the target code avoiding import issues.
 
+Configuration
+--------------
+
+mockery uses [spf13/viper](https://github.com/spf13/viper) under the hood for its configuration parsing. It is bound to three different configuration sources, in order of decreasing precedence:
+
+1. Command line
+2. Environment variables
+3. Configuration file
+
+### Example
+
+	$ export MOCKERY_STRUCTNAME=config_from_env
+	$ echo $MOCKERY_STRUCTNAME
+	config_from_env
+	$ cat .mockery.yaml | grep structname
+	structname: config_from_file
+	$ ./mockery showconfig --structname config_from_cli | grep structname
+	Using config file: /home/ltclipp/git/vektra/mockery/.mockery.yaml
+	structname: config_from_cli
+	$ ./mockery showconfig  | grep structname
+	Using config file: /home/ltclipp/git/vektra/mockery/.mockery.yaml
+	structname: config_from_env
+	$ unset MOCKERY_STRUCTNAME
+	$ ./mockery showconfig  | grep structname
+	Using config file: /home/ltclipp/git/vektra/mockery/.mockery.yaml
+	structname: config_from_file
+
+By default it searches the current working directory for a file named `.mockery.[extension]` where [extension] is any of the [recognized extensions](https://pkg.go.dev/github.com/spf13/viper@v1.7.0?tab=doc#pkg-variables)
+
 Semantic Versioning
 -------------------
 
