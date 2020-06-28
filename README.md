@@ -226,7 +226,7 @@ mockery uses [spf13/viper](https://github.com/spf13/viper) under the hood for it
 	$ export MOCKERY_STRUCTNAME=config_from_env
 	$ echo $MOCKERY_STRUCTNAME
 	config_from_env
-	$ cat .mockery.yaml | grep structname
+	$ grep structname .mockery.yaml
 	structname: config_from_file
 	$ ./mockery showconfig --structname config_from_cli | grep structname
 	Using config file: /home/ltclipp/git/vektra/mockery/.mockery.yaml
