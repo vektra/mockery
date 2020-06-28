@@ -23,6 +23,8 @@ Table of Contents
     + [Notes](#notes)
 - [Extended Flag Descriptions](#extended-flag-descriptions)
 - [Mocking interfaces in `main`](#mocking-interfaces-in-main)
+- [Configuration](#configuration)
+  * [Example](#example)
 - [Semantic Versioning](#semantic-versioning)
 - [Stargazers](#stargazers)
 
@@ -237,7 +239,7 @@ mockery uses [spf13/viper](https://github.com/spf13/viper) under the hood for it
 	Using config file: /home/ltclipp/git/vektra/mockery/.mockery.yaml
 	structname: config_from_file
 
-By default it searches the current working directory for a file named `.mockery.[extension]` where [extension] is any of the [recognized extensions](https://pkg.go.dev/github.com/spf13/viper@v1.7.0?tab=doc#pkg-variables)
+By default it searches the current working directory for a file named `.mockery.[extension]` where [extension] is any of the [recognized extensions](https://pkg.go.dev/github.com/spf13/viper@v1.7.0?tab=doc#pkg-variables).
 
 Semantic Versioning
 -------------------
