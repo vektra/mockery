@@ -5,7 +5,7 @@ package mocks
 import (
 	http "net/http"
 
-	fixtureshttp "github.com/vektra/mockery/pkg/fixtures/http"
+	fixtureshttp "github.com/vektra/mockery/v2/pkg/fixtures/http"
 
 	mock "github.com/stretchr/testify/mock"
 )

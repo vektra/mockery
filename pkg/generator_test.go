@@ -11,7 +11,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-	"github.com/vektra/mockery/pkg/config"
+	"github.com/vektra/mockery/v2/pkg/config"
 )
 
 const pkg = "test"
@@ -218,7 +218,7 @@ func (s *GeneratorSuite) TestGeneratorPrologue() {
 	expected := `package mocks
 
 import mock "github.com/stretchr/testify/mock"
-import test "github.com/vektra/mockery/pkg/fixtures"
+import test "github.com/vektra/mockery/v2/pkg/fixtures"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -230,7 +230,7 @@ func (s *GeneratorSuite) TestGeneratorPrologueWithImports() {
 
 import http "net/http"
 import mock "github.com/stretchr/testify/mock"
-import test "github.com/vektra/mockery/pkg/fixtures"
+import test "github.com/vektra/mockery/v2/pkg/fixtures"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -241,10 +241,10 @@ func (s *GeneratorSuite) TestGeneratorPrologueWithMultipleImportsSameName() {
 
 	expected := `package mocks
 
-import fixtureshttp "github.com/vektra/mockery/pkg/fixtures/http"
+import fixtureshttp "github.com/vektra/mockery/v2/pkg/fixtures/http"
 import http "net/http"
 import mock "github.com/stretchr/testify/mock"
-import test "github.com/vektra/mockery/pkg/fixtures"
+import test "github.com/vektra/mockery/v2/pkg/fixtures"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -962,7 +962,7 @@ func (s *GeneratorSuite) TestGeneratorWithImportSameAsLocalPackageInpkgNoCycle()
 		InPackage: true,
 	}, iface, pkg)
 	gen.GeneratePrologue(s.ctx, pkg)
-	s.NotContains(gen.buf.String(), `import test "github.com/vektra/mockery/pkg/fixtures/test"`)
+	s.NotContains(gen.buf.String(), `import test "github.com/vektra/mockery/v2/pkg/fixtures/test"`)
 }
 
 func (s *GeneratorSuite) TestMapToInterface() {
@@ -1044,7 +1044,7 @@ func (s *GeneratorSuite) TestPrologueWithImportSameAsLocalPackage() {
 
 import fixtures "` + generator.iface.QualifiedName + `"
 import mock "github.com/stretchr/testify/mock"
-import test "github.com/vektra/mockery/pkg/fixtures/test"
+import test "github.com/vektra/mockery/v2/pkg/fixtures/test"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -1056,10 +1056,10 @@ func (s *GeneratorSuite) TestPrologueWithImportFromNestedInterface() {
 	)
 	expected := `package mocks
 
-import fixtureshttp "github.com/vektra/mockery/pkg/fixtures/http"
+import fixtureshttp "github.com/vektra/mockery/v2/pkg/fixtures/http"
 import http "net/http"
 import mock "github.com/stretchr/testify/mock"
-import test "github.com/vektra/mockery/pkg/fixtures"
+import test "github.com/vektra/mockery/v2/pkg/fixtures"
 
 `
 

@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog"
-	"github.com/vektra/mockery/pkg/config"
-	"github.com/vektra/mockery/pkg/logging"
+	"github.com/vektra/mockery/v2/pkg/config"
+	"github.com/vektra/mockery/v2/pkg/logging"
 )
 
 type Cleanup func() error
