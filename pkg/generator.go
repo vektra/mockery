@@ -259,12 +259,17 @@ func (g *Generator) generateImports(ctx context.Context) {
 	log.Debug().Msgf("generating imports")
 	log.Debug().Msgf("%v", g.nameToPackagePath)
 
+	pkgPath := g.nameToPackagePath[g.iface.Pkg.Name()]
 	// Sort by import name so that we get a deterministic order
 	for _, name := range g.sortedImportNames() {
 		logImport := log.With().Str(logging.LogKeyImport, g.nameToPackagePath[name]).Logger()
 		logImport.Debug().Msgf("found import")
 
 		path := g.nameToPackagePath[name]
+		if g.InPackage && path == pkgPath {
+			logImport.Debug().Msgf("import (%s) equals interface's package path (%s), skipping", path, pkgPath)
+			continue
+		}
 		g.printf("import %s \"%s\"\n", name, path)
 	}
 }
@@ -654,7 +659,7 @@ func (g *Generator) generateCalled(list *paramList, formattedParamNames string) 
 }
 
 func (g *Generator) Write(w io.Writer) error {
-	opt := &imports.Options{Comments: true, FormatOnly: true}
+	opt := &imports.Options{Comments: true}
 	theBytes := g.buf.Bytes()
 
 	res, err := imports.Process("mock.go", theBytes, opt)
