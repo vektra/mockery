@@ -29,7 +29,6 @@ Table of Contents
 - [Stargazers](#stargazers)
 
 
-
 Installation
 ------------
 
@@ -60,6 +59,8 @@ to get a development version of the software.
 
 Examples
 --------
+
+![](https://raw.githubusercontent.com/vektra/mockery/master/docs/Peek%202020-06-28%2000-08.gif)
 
 #### Simplest case
 
