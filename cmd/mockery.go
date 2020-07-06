@@ -33,7 +33,7 @@ var (
 			r, err := GetRootAppFromViper(viper.GetViper())
 			if err != nil {
 				printStackTrace(err)
-				return nil
+				return err
 			}
 			return r.Run()
 		},
