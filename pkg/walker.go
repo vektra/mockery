@@ -133,10 +133,10 @@ func (this *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) e
 
 	if this.InPackage {
 		pkg = filepath.Dir(iface.FileName)
-	} else if this.PackageNamePrefix != "" {
-		pkg = fmt.Sprintf("%s%s", this.PackageNamePrefix, iface.Pkg.Name())
 	} else if this.PackageName != "" {
 		pkg = this.PackageName
+	} else if this.PackageName == "" && this.PackageNamePrefix != "" {
+		pkg = fmt.Sprintf("%s%s", this.PackageNamePrefix, iface.Pkg.Name())
 	}
 
 	out, err, closer := this.Osp.GetWriter(ctx, iface)
