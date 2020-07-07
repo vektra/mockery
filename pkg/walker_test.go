@@ -118,5 +118,5 @@ func TestPackagePrefix(t *testing.T) {
 	}
 
 	w.Walk(context.Background(), gv)
-	assert.Regexp(t, regexp.MustCompile("^package prefix_test_test$"), bufferedProvider.String())
+	assert.Regexp(t, regexp.MustCompile("package prefix_test_test"), bufferedProvider.String())
 }
