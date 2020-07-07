@@ -236,12 +236,13 @@ func (r *RootApp) Run() error {
 	}
 
 	visitor := &pkg.GeneratorVisitor{
-		Config:      r.Config,
-		InPackage:   r.Config.InPackage,
-		Note:        r.Config.Note,
-		Osp:         osp,
-		PackageName: r.Config.Outpkg,
-		StructName:  r.Config.StructName,
+		Config:            r.Config,
+		InPackage:         r.Config.InPackage,
+		Note:              r.Config.Note,
+		Osp:               osp,
+		PackageName:       r.Config.Outpkg,
+		PackageNamePrefix: r.Config.Packageprefix,
+		StructName:        r.Config.StructName,
 	}
 
 	walker := pkg.Walker{

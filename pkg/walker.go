@@ -111,7 +111,7 @@ type GeneratorVisitor struct {
 	PackageName string
 	// The name of the output package's prefix
 	PackageNamePrefix string
-	StructName  string
+	StructName        string
 }
 
 func (this *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) error {
@@ -133,10 +133,11 @@ func (this *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) e
 
 	if this.InPackage {
 		pkg = filepath.Dir(iface.FileName)
-	} else if this.PackageName != "" {
-		pkg = this.PackageName
-	} else if this.PackageName == "" && this.PackageNamePrefix != "" {
+	} else if (this.PackageName == "" || this.PackageName == "mocks") && this.PackageNamePrefix != "" {
+		// go with package name prefix only when package name is empty or default and package name prefix is specified
 		pkg = fmt.Sprintf("%s%s", this.PackageNamePrefix, iface.Pkg.Name())
+	} else {
+		pkg = this.PackageName
 	}
 
 	out, err, closer := this.Osp.GetWriter(ctx, iface)
