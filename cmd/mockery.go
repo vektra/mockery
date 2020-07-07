@@ -8,7 +8,6 @@ import (
 	"regexp"
 	"runtime/pprof"
 	"strings"
-	"syscall"
 	"time"
 
 	homedir "github.com/mitchellh/go-homedir"
@@ -80,7 +79,7 @@ func init() {
 	pFlags.String("note", "", "comment to insert into prologue of each generated file")
 	pFlags.String("cpuprofile", "", "write cpu profile to file")
 	pFlags.Bool("version", false, "prints the installed version of mockery")
-	pFlags.Bool("quiet", false, "suppress output to stdout")
+	pFlags.Bool("quiet", false, `suppresses logger output (equivalent to --log-level="")`)
 	pFlags.Bool("keeptree", false, "keep the tree structure of the original interface files into a different repository. Must be used with XX")
 	pFlags.String("tags", "", "space-separated list of additional build tags to use")
 	pFlags.String("filename", "", "name of generated file (only works with -name and no regex)")
@@ -139,8 +138,7 @@ func (r *RootApp) Run() error {
 	var limitOne bool
 
 	if r.Quiet {
-		// if "quiet" flag is set, set os.Stdout to /dev/null to suppress all output to Stdout
-		os.Stdout = os.NewFile(uintptr(syscall.Stdout), os.DevNull)
+		// if "quiet" flag is set, disable logging
 		r.Config.LogLevel = ""
 	}
 
