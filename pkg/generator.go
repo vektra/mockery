@@ -24,19 +24,6 @@ import (
 
 var invalidIdentifierChar = regexp.MustCompile("[^[:digit:][:alpha:]_]")
 
-func getGoPathSrc() string {
-	return filepath.Join(filepath.SplitList(build.Default.GOPATH)[0], "src")
-}
-
-func stripChars(str, chr string) string {
-	return strings.Map(func(r rune) rune {
-		if strings.IndexRune(chr, r) < 0 {
-			return r
-		}
-		return -1
-	}, str)
-}
-
 // Generator is responsible for generating the string containing
 // imports and the mock struct that will later be written out as file.
 type Generator struct {
