@@ -294,34 +294,6 @@ func (g *Generator) printf(s string, vals ...interface{}) {
 	fmt.Fprintf(&g.buf, s, vals...)
 }
 
-var builtinTypes = map[string]bool{
-	"ComplexType": true,
-	"FloatType":   true,
-	"IntegerType": true,
-	"Type":        true,
-	"Type1":       true,
-	"bool":        true,
-	"byte":        true,
-	"complex128":  true,
-	"complex64":   true,
-	"error":       true,
-	"float32":     true,
-	"float64":     true,
-	"int":         true,
-	"int16":       true,
-	"int32":       true,
-	"int64":       true,
-	"int8":        true,
-	"rune":        true,
-	"string":      true,
-	"uint":        true,
-	"uint16":      true,
-	"uint32":      true,
-	"uint64":      true,
-	"uint8":       true,
-	"uintptr":     true,
-}
-
 type namer interface {
 	Name() string
 }
