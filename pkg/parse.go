@@ -138,7 +138,8 @@ func (n *NodeVisitor) DeclaredInterfaces() []string {
 func (nv *NodeVisitor) Visit(node ast.Node) ast.Visitor {
 	switch n := node.(type) {
 	case *ast.TypeSpec:
-		if _, ok := n.Type.(*ast.InterfaceType); ok {
+		switch n.Type.(type) {
+		case *ast.InterfaceType, *ast.FuncType:
 			nv.declaredInterfaces = append(nv.declaredInterfaces, n.Name.Name)
 		}
 	}
@@ -168,14 +169,37 @@ func (p *Parser) Find(name string) (*Interface, error) {
 	return nil, ErrNotInterface
 }
 
+type Method struct {
+	Name      string
+	Signature *types.Signature
+}
+
+// Interface type represents the target type that we will generate a mock for.
+// It could be an interface, or a function type.
+// Function type emulates: an interface it has 1 method with the function signature
+// and a general name, e.g. "Execute".
 type Interface struct {
-	Name          string
-	QualifiedName string
-	FileName      string
-	File          *ast.File
-	Pkg           *types.Package
-	Type          *types.Interface
-	NamedType     *types.Named
+	Name            string // Name of the type to be mocked.
+	QualifiedName   string // Path to the package of the target type.
+	FileName        string
+	File            *ast.File
+	Pkg             *types.Package
+	NamedType       *types.Named
+	IsFunction      bool             // If true, this instance represents a function, otherwise it's an interface.
+	ActualInterface *types.Interface // Holds the actual interface type, in case it's an interface.
+	SingleFunction  *Method          // Holds the function type information, in case it's a function type.
+}
+
+func (iface *Interface) Methods() []*Method {
+	if iface.IsFunction {
+		return []*Method{iface.SingleFunction}
+	}
+	methods := make([]*Method, iface.ActualInterface.NumMethods())
+	for i := 0; i < iface.ActualInterface.NumMethods(); i++ {
+		fn := iface.ActualInterface.Method(i)
+		methods[i] = &Method{Name: fn.Name(), Signature: fn.Type().(*types.Signature)}
+	}
+	return methods
 }
 
 type sortableIFaceList []*Interface
@@ -221,10 +245,6 @@ func (p *Parser) packageInterfaces(
 		}
 
 		name = typ.Obj().Name()
-		iface, ok := typ.Underlying().(*types.Interface)
-		if !ok {
-			continue
-		}
 
 		if typ.Obj().Pkg() == nil {
 			continue
@@ -235,8 +255,20 @@ func (p *Parser) packageInterfaces(
 			Pkg:           pkg,
 			QualifiedName: pkg.Path(),
 			FileName:      fileName,
-			Type:          iface.Complete(),
 			NamedType:     typ,
+		}
+
+		iface, ok := typ.Underlying().(*types.Interface)
+		if ok {
+			elem.IsFunction = false
+			elem.ActualInterface = iface
+		} else {
+			sig, ok := typ.Underlying().(*types.Signature)
+			if !ok {
+				continue
+			}
+			elem.IsFunction = true
+			elem.SingleFunction = &Method{Name: "Execute", Signature: sig}
 		}
 
 		ifaces = append(ifaces, elem)

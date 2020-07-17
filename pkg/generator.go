@@ -69,9 +69,8 @@ func (g *Generator) populateImports(ctx context.Context) {
 
 	log.Debug().Msgf("populating imports")
 
-	for i := 0; i < g.iface.Type.NumMethods(); i++ {
-		fn := g.iface.Type.Method(i)
-		ftype := fn.Type().(*types.Signature)
+	for _, method := range g.iface.Methods() {
+		ftype := method.Signature
 		g.addImportsFromTuple(ctx, ftype.Params())
 		g.addImportsFromTuple(ctx, ftype.Results())
 		g.renderType(ctx, g.iface.NamedType)
@@ -500,11 +499,10 @@ func (g *Generator) Generate(ctx context.Context) error {
 		"type %s struct {\n\tmock.Mock\n}\n\n", g.mockName(),
 	)
 
-	for i := 0; i < g.iface.Type.NumMethods(); i++ {
-		fn := g.iface.Type.Method(i)
+	for _, method := range g.iface.Methods() {
 
-		ftype := fn.Type().(*types.Signature)
-		fname := fn.Name()
+		ftype := method.Signature
+		fname := method.Name
 
 		params := g.genList(ctx, ftype.Params(), ftype.Variadic())
 		returns := g.genList(ctx, ftype.Results(), false)
