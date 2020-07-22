@@ -99,6 +99,48 @@ func (m *Stringer) String() string {
 }
 ```
 
+#### Function type case
+
+Given this is in `send.go`
+
+```go
+package test
+
+type SendFunc func(data string) (int, error)
+```
+
+Run: `mockery --name=SendFunc` and the following will be output to `mocks/SendFunc.go`:
+
+```go
+package mocks
+
+import "github.com/stretchr/testify/mock"
+
+type SendFunc struct {
+	mock.Mock
+}
+
+func (_m *SendFunc) Execute(data string) (int, error) {
+	ret := _m.Called(data)
+
+	var r0 int
+	if rf, ok := ret.Get(0).(func(string) int); ok {
+		r0 = rf(data)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(data)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+```
+
 #### Next level case
 
 See [github.com/jaytaylor/mockery-example](https://github.com/jaytaylor/mockery-example)
