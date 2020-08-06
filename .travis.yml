@@ -15,7 +15,7 @@ git:
     depth: 1
 
 script: 
-  - go test -v -cover ./...
+  - go test -v -coverprofile=coverage.txt ./... 
 
 services:
   - docker
