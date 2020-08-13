@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"path/filepath"
 	"regexp"
 	"runtime/pprof"
 	"strings"
@@ -19,6 +20,7 @@ import (
 	"github.com/vektra/mockery/v2/pkg/config"
 	"github.com/vektra/mockery/v2/pkg/logging"
 	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/tools/go/packages"
 )
 
 var (
@@ -48,6 +50,7 @@ func printStackTrace(e error) {
 			fmt.Printf("%+s:%d\n", f, f)
 		}
 	}
+
 }
 
 // Execute executes the cobra CLI workflow
@@ -83,7 +86,7 @@ func init() {
 	pFlags.String("filename", "", "name of generated file (only works with -name and no regex)")
 	pFlags.String("structname", "", "name of generated struct (only works with -name and no regex)")
 	pFlags.String("log-level", "info", "Level of logging")
-	pFlags.String("srcpkg", "", "source package(s) to search for interfaces, may be a single package name or a package pattern (example: 'github.com/mockery/vektra/...'")
+	pFlags.String("srcpkg", "", "source pkg to search for interfaces")
 	pFlags.BoolP("dry-run", "d", false, "Do a dry run, don't modify any files")
 
 	viper.BindPFlags(pFlags)
@@ -133,6 +136,7 @@ func (r *RootApp) Run() error {
 	var recursive bool
 	var filter *regexp.Regexp
 	var err error
+	var limitOne bool
 
 	if r.Quiet {
 		// if "quiet" flag is set, disable logging
@@ -167,6 +171,7 @@ func (r *RootApp) Run() error {
 			}
 		} else {
 			filter = regexp.MustCompile(fmt.Sprintf("^%s$", r.Config.Name))
+			limitOne = true
 		}
 	} else if r.Config.All {
 		recursive = true
@@ -207,7 +212,25 @@ func (r *RootApp) Run() error {
 	baseDir := r.Config.Dir
 
 	if r.Config.SrcPkg != "" {
-		baseDir = r.Config.SrcPkg
+		pkgs, err := packages.Load(&packages.Config{
+			Mode: packages.NeedFiles,
+		}, r.Config.SrcPkg)
+		if err != nil || len(pkgs) == 0 {
+			log.Fatal().Err(err).Msgf("Failed to load package %s", r.Config.SrcPkg)
+		}
+
+		// NOTE: we only pass one package name (config.SrcPkg) to packages.Load
+		// it should return one package at most
+		pkg := pkgs[0]
+
+		if pkg.Errors != nil {
+			log.Fatal().Err(pkg.Errors[0]).Msgf("Failed to load package %s", r.Config.SrcPkg)
+		}
+
+		if len(pkg.GoFiles) == 0 {
+			log.Fatal().Msgf("No go files in package %s", r.Config.SrcPkg)
+		}
+		baseDir = filepath.Dir(pkg.GoFiles[0])
 	}
 
 	visitor := &pkg.GeneratorVisitor{
@@ -225,6 +248,7 @@ func (r *RootApp) Run() error {
 		BaseDir:   baseDir,
 		Recursive: recursive,
 		Filter:    filter,
+		LimitOne:  limitOne,
 		BuildTags: strings.Split(r.Config.BuildTags, " "),
 	}
 

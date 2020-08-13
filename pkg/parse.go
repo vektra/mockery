@@ -2,16 +2,16 @@ package pkg
 
 import (
 	"context"
+	"fmt"
 	"go/ast"
 	"go/types"
 	"io/ioutil"
-	"os"
 	"path/filepath"
 	"sort"
 	"strings"
 
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
+	"github.com/vektra/mockery/v2/pkg/logging"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -26,14 +26,12 @@ type Parser struct {
 	entries           []*parserEntry
 	entriesByFileName map[string]*parserEntry
 	parserPackages    []*types.Package
-	conf              *packages.Config
+	conf              packages.Config
 }
 
 func NewParser(buildTags []string) *Parser {
-	conf := &packages.Config{
-		Mode:  packages.NeedFiles | packages.NeedImports | packages.NeedName | packages.NeedSyntax | packages.NeedTypes,
-		Tests: false,
-	}
+	var conf packages.Config
+	conf.Mode = packages.LoadSyntax
 	if len(buildTags) > 0 {
 		conf.BuildFlags = []string{"-tags", strings.Join(buildTags, ",")}
 	}
@@ -44,74 +42,66 @@ func NewParser(buildTags []string) *Parser {
 	}
 }
 
-func (p *Parser) Parse(ctx context.Context, pattern string) error {
-	log := zerolog.Ctx(ctx)
-
-	info, err := os.Stat(pattern)
-	if err != nil && !os.IsNotExist(err) {
-		return err
-	}
-
-	var query string
-	switch {
-	case os.IsNotExist(err):
-		// The pattern represents one or more packages and should be passed directly to the package loader.
-		log.Debug().Msgf("Loading packages corresponding to pattern %q.", pattern)
-		query = pattern
-
-	case !info.IsDir():
-		// A file should be passed directly to the package loader as a 'file' query.
-		if filepath.Ext(pattern) != ".go" {
-			return errors.Errorf("specified file %q cannot be parsed as it is not a source file", pattern)
-		} else if strings.HasPrefix(info.Name(), ".") || strings.HasPrefix(info.Name(), "_") {
-			log.Debug().Msgf("Skipping file %q as it is prefixed with either '.' or '_'.", pattern)
-			return nil
-		}
-		pattern, err = filepath.Abs(pattern)
-		if err != nil {
-			return err
-		}
-
-		log.Debug().Msgf("Loading file %q.", pattern)
-		query = "file=" + pattern
-
-	case info.IsDir():
-		// A directory must have its files parsed individually as the package loader does not accept directory queries.
-		var dir []os.FileInfo
-		dir, err = ioutil.ReadDir(pattern)
-		if err != nil {
-			return err
-		}
-		log.Debug().Msgf("Loading files in directory %q.", pattern)
-		for _, fi := range dir {
-			if fi.IsDir() || filepath.Ext(fi.Name()) != ".go" {
-				continue
-			}
-			if err = p.Parse(ctx, filepath.Join(pattern, fi.Name())); err != nil {
-				return err
-			}
-		}
-
-	default:
-		// This is theoretically impossible to reach due to the disjunction of cases operated above.
-		return errors.Errorf("encountered unexpected situation when retrieving information about %q", pattern)
-	}
-
-	log.Debug().Msgf("parsing")
-
-	pkgs, err := packages.Load(p.conf, query)
+func (p *Parser) Parse(ctx context.Context, path string) error {
+	// To support relative paths to mock targets w/ vendor deps, we need to provide eventual
+	// calls to build.Context.Import with an absolute path. It needs to be absolute because
+	// Import will only find the vendor directory if our target path for parsing is under
+	// a "root" (GOROOT or a GOPATH). Only absolute paths will pass the prefix-based validation.
+	//
+	// For example, if our parse target is "./ifaces", Import will check if any "roots" are a
+	// prefix of "ifaces" and decide to skip the vendor search.
+	path, err := filepath.Abs(path)
 	if err != nil {
 		return err
-	} else if filepath.Ext(pattern) == ".go" && len(pkgs) > 1 {
-		err := errors.Errorf("file %q maps to multiple packages (%d) instead of a single one", pattern, len(pkgs))
-		log.Err(err).Msgf("invalid file content")
+	}
+
+	dir := filepath.Dir(path)
+
+	files, err := ioutil.ReadDir(dir)
+	if err != nil {
 		return err
 	}
 
-	for _, pkg := range pkgs {
-		log.Debug().Msgf("Parsed sources from %q.", query)
+	for _, fi := range files {
+		log := zerolog.Ctx(ctx).With().
+			Str(logging.LogKeyDir, dir).
+			Str(logging.LogKeyFile, fi.Name()).
+			Logger()
+		ctx = log.WithContext(ctx)
+
+		if filepath.Ext(fi.Name()) != ".go" || strings.HasSuffix(fi.Name(), "_test.go") {
+			continue
+		}
+
+		log.Debug().Msgf("parsing")
+
+		fname := fi.Name()
+		fpath := filepath.Join(dir, fname)
+		if _, ok := p.entriesByFileName[fpath]; ok {
+			continue
+		}
+
+		pkgs, err := packages.Load(&p.conf, "file="+fpath)
+		if err != nil {
+			return err
+		}
+		if len(pkgs) == 0 {
+			continue
+		}
+		if len(pkgs) > 1 {
+			names := make([]string, len(pkgs))
+			for i, p := range pkgs {
+				names[i] = p.Name
+			}
+			panic(fmt.Sprintf("file %s resolves to multiple packages: %s", fpath, strings.Join(names, ", ")))
+		}
+
+		pkg := pkgs[0]
 		if len(pkg.Errors) > 0 {
 			return pkg.Errors[0]
+		}
+		if len(pkg.GoFiles) == 0 {
+			continue
 		}
 
 		for idx, f := range pkg.GoFiles {

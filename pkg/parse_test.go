@@ -31,6 +31,20 @@ func TestFileParse(t *testing.T) {
 	assert.NotNil(t, node)
 }
 
+func noTestFileInterfaces(t *testing.T) {
+	parser := NewParser(nil)
+
+	err := parser.Parse(ctx, testFile)
+	assert.NoError(t, err)
+
+	err = parser.Load()
+	assert.NoError(t, err)
+
+	nodes := parser.Interfaces()
+	assert.Equal(t, 1, len(nodes))
+	assert.Equal(t, "Requester", nodes[0].Name)
+}
+
 func TestBuildTagInFilename(t *testing.T) {
 	parser := NewParser(nil)
 
