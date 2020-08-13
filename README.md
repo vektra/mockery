@@ -55,7 +55,7 @@ Install through homebrew
 
 Alternatively, you can use the DEPRECATED method of:
 
-    go get github.com/vektra/mockery/.../
+    go get github.com/vektra/mockery/v2/.../
 
 to get a development version of the software.
 
