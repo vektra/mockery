@@ -5,10 +5,12 @@ import (
 	"context"
 	"go/format"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 
+	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"github.com/vektra/mockery/v2/pkg/config"
@@ -23,8 +25,9 @@ type GeneratorSuite struct {
 }
 
 func (s *GeneratorSuite) SetupTest() {
+	log := zerolog.New(os.Stdout).Level(zerolog.DebugLevel)
+	s.ctx = log.WithContext(context.Background())
 	s.parser = NewParser(nil)
-	s.ctx = context.Background()
 }
 
 func (s *GeneratorSuite) getInterfaceFromFile(interfacePath, interfaceName string) *Interface {
@@ -716,7 +719,7 @@ func (_m *Fooer) Foo(f func(string) string) error {
 }
 `
 	s.checkGeneration(
-		filepath.Join(fixturePath, "func_type.go"), "Fooer", false, "", expected,
+		filepath.Join(fixturePath, "argument_is_func_type.go"), "Fooer", false, "", expected,
 	)
 }
 
@@ -908,7 +911,7 @@ func (_m *MapFunc) Get(m map[string]func(string) string) error {
 }
 `
 	s.checkGeneration(
-		filepath.Join(fixturePath, "map_func.go"), "MapFunc", false, "", expected,
+		filepath.Join(fixturePath, "argument_is_map_func.go"), "MapFunc", false, "", expected,
 	)
 }
 
