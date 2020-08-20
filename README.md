@@ -300,6 +300,30 @@ What the version does _not_ track:
 1. The interfaces, objects, methods etc. in the vektra/mockery package.
 2. Compatibility of `go get`-ing mockery with new or old versions of Golang.
 
+Development Efforts
+-------------------
+
+> v2 is in a soft change freeze due to the complexity of the software and the fact that functionality addition generally requires messing with logic that has been thoroughly tested, but is sensitive to change.
+
+### v1
+
+v1 is the original version of the software, and is no longer supported.
+
+### v2
+
+`mockery` is currently in v2, which iterates on v1 and includes mostly cosmetic and configuration improvements. 
+
+### v3
+
+[v3](https://github.com/vektra/mockery/projects/3) will include a ground-up overhaul of the entire codebase and will completely change how mockery works internally and externally. The highlights of the project are:
+- Moving towards a package-based model instead of a file-based model. `mockery` currently iterates over every file in a project and calls `package.Load` on each one, which is time consuming. Moving towards a model where the entire package is loaded at once will dramtically reduce runtime, and will simplify logic. Additionally, supporting only a single mode of operation (package mode) will greatly increase the intuitiveness of the software.
+- Configuration-driven generation. `v3` will be entirely driven by configuration, meaning:
+  * You specify the packages you want mocked, instead of relying on it auto-discovering your package. Auto-discovery in theory sounds great, but in practice it leads to a great amount of complexity for very little benefit.
+  * Package- or interface-specific overrides can be given that change mock generation settings on a granular level. This will allow your mocks to be generated in a heterogenous manner, and will be made explicit by yaml configuration.
+ - Proper error reporting. Errors across the board will be done in accordance with modern Golang practices
+ - Variables in generated mocks will be given meaningful names. 
+ 
+
 
 Stargazers
 ----------
