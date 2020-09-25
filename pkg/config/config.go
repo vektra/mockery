@@ -5,7 +5,7 @@ var SemVer = "0.0.0-dev"
 
 type Config struct {
 	All           bool
-	BuildTags     string
+	BuildTags     string `mapstructure:"tags"`
 	Case          string
 	Config        string
 	Cpuprofile    string
