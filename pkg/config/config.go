@@ -10,7 +10,7 @@ type Config struct {
 	Config               string
 	Cpuprofile           string
 	Dir                  string
-	DisableVersionString bool `mapstructure:"disable-version-string`
+	DisableVersionString bool `mapstructure:"disable-version-string"`
 	DryRun               bool `mapstructure:"dry-run"`
 	FileName             string
 	InPackage            bool
