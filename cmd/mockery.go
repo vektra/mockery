@@ -88,6 +88,7 @@ func init() {
 	pFlags.String("log-level", "info", "Level of logging")
 	pFlags.String("srcpkg", "", "source pkg to search for interfaces")
 	pFlags.BoolP("dry-run", "d", false, "Do a dry run, don't modify any files")
+	pFlags.Bool("disable-version-string", false, "Do not insert the version string into the generated mock file.")
 
 	viper.BindPFlags(pFlags)
 }
