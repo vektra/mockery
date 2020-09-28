@@ -5,6 +5,7 @@ import (
 	"context"
 	"io"
 	"os"
+	"path/filepath"
 	"regexp"
 	"testing"
 
@@ -92,6 +93,27 @@ func TestWalkerRegexp(t *testing.T) {
 	assert.Equal(t, "AsyncProducer", first.Name)
 	assert.Equal(t, getFixturePath("async.go"), first.FileName)
 	assert.Equal(t, "github.com/vektra/mockery/v2/pkg/fixtures", first.QualifiedName)
+}
+
+func TestWalkerIgnoredPath(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping recursive walker test")
+	}
+
+	wd, err := os.Getwd()
+	assert.NoError(t, err)
+	w := Walker{
+		BaseDir:   filepath.Join(wd, "fixtures", ".ignored"),
+		Recursive: true,
+		LimitOne:  false,
+		Filter:    regexp.MustCompile(".*"),
+	}
+
+	gv := NewGatheringVisitor()
+
+	w.Walk(context.Background(), gv)
+
+	assert.Empty(t, gv.Interfaces)
 }
 
 func TestPackagePrefix(t *testing.T) {
