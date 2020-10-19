@@ -153,9 +153,8 @@ func calculateImport(ctx context.Context, set []string, path string) string {
 			packagePath, err := filepath.Rel(root, path)
 			if err == nil {
 				return packagePath
-			} else {
-				log.Err(err).Msgf("Unable to localize path")
 			}
+			log.Err(err).Msgf("Unable to localize path")
 		}
 	}
 	return path

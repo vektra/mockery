@@ -15,8 +15,8 @@ type GatheringVisitor struct {
 	Interfaces []*Interface
 }
 
-func (this *GatheringVisitor) VisitWalk(ctx context.Context, iface *Interface) error {
-	this.Interfaces = append(this.Interfaces, iface)
+func (v *GatheringVisitor) VisitWalk(ctx context.Context, iface *Interface) error {
+	v.Interfaces = append(v.Interfaces, iface)
 	return nil
 }
 
