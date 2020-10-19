@@ -88,7 +88,7 @@ func (this *FileOutputStreamProvider) filename(name string) string {
 		return this.FileName
 	} else if this.InPackage && this.TestOnly {
 		return "mock_" + name + "_test.go"
-	} else if this.InPackage {
+	} else if this.InPackage && !this.KeepTree {
 		return "mock_" + name + ".go"
 	} else if this.TestOnly {
 		return name + "_test.go"

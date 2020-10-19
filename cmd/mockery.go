@@ -180,9 +180,6 @@ func (r *RootApp) Run() error {
 	} else {
 		log.Fatal().Msgf("Use --name to specify the name of the interface or --all for all interfaces found")
 	}
-	if r.Config.KeepTree && r.Config.InPackage {
-		log.Fatal().Msgf("--keeptree and --inpackage are mutually exclusive")
-	}
 
 	if r.Config.Profile != "" {
 		f, err := os.Create(r.Config.Profile)
