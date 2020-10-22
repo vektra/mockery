@@ -131,8 +131,8 @@ func NewNodeVisitor() *NodeVisitor {
 	}
 }
 
-func (n *NodeVisitor) DeclaredInterfaces() []string {
-	return n.declaredInterfaces
+func (nv *NodeVisitor) DeclaredInterfaces() []string {
+	return nv.declaredInterfaces
 }
 
 func (nv *NodeVisitor) Visit(node ast.Node) ast.Visitor {
