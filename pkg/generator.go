@@ -32,7 +32,6 @@ type Generator struct {
 
 	iface            *Interface
 	pkg              string
-	localPackageName *string
 
 	localizationCache map[string]string
 	packagePathToName map[string]string
@@ -140,10 +139,6 @@ func (g *Generator) importNameExists(name string) bool {
 	return nameExists
 }
 
-func (g *Generator) getLocalizedPathFromPackage(ctx context.Context, pkg *types.Package) string {
-	return g.getLocalizedPath(ctx, pkg.Path())
-}
-
 func calculateImport(ctx context.Context, set []string, path string) string {
 	log := zerolog.Ctx(ctx).With().Str(logging.LogKeyPath, path).Logger()
 	ctx = log.WithContext(ctx)
@@ -217,17 +212,6 @@ func (g *Generator) mockName() string {
 	}
 
 	return g.iface.Name
-}
-
-func (g *Generator) unescapedImportPath(imp *ast.ImportSpec) string {
-	return strings.Replace(imp.Path.Value, "\"", "", -1)
-}
-
-func (g *Generator) getImportStringFromSpec(imp *ast.ImportSpec) string {
-	if name, ok := g.packagePathToName[g.unescapedImportPath(imp)]; ok {
-		return fmt.Sprintf("import %s %s\n", name, imp.Path.Value)
-	}
-	return fmt.Sprintf("import %s\n", imp.Path.Value)
 }
 
 func (g *Generator) sortedImportNames() (importNames []string) {
