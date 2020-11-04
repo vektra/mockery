@@ -1170,6 +1170,40 @@ func (_m *Requester2OverrideName) Get(path string) error {
 	s.checkGeneration(testFile2, "Requester2", false, "Requester2OverrideName", expected)
 }
 
+func (s *GeneratorSuite) TestKeepTreeInPackageCombined() {
+	type testData struct {
+		path     string
+		name     string
+		expected string
+	}
+
+	tests := []testData{
+		{path: "example_project/root.go", name: "Root", expected: `package example_project
+
+import example_project "github.com/vektra/mockery/v2/pkg/fixtures/example_project"
+import foo "github.com/vektra/mockery/v2/pkg/fixtures/example_project/foo"
+import mock "github.com/stretchr/testify/mock"
+
+`},
+		{path: "example_project/foo/foo.go", name: "Foo", expected: `package foo
+
+import foo "github.com/vektra/mockery/v2/pkg/fixtures/example_project/foo"
+import mock "github.com/stretchr/testify/mock"
+
+`},
+	}
+
+	for _, test := range tests {
+		generator := NewGenerator(
+			s.ctx,
+			config.Config{InPackage: true, KeepTree: true},
+			s.getInterfaceFromFile(test.path, test.name),
+			pkg,
+		)
+		s.checkPrologueGeneration(generator, test.expected)
+	}
+}
+
 func TestGeneratorSuite(t *testing.T) {
 	generatorSuite := new(GeneratorSuite)
 	suite.Run(t, generatorSuite)
