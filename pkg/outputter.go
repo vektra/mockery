@@ -88,7 +88,7 @@ func (p *FileOutputStreamProvider) filename(name string) string {
 		return p.FileName
 	} else if p.InPackage && p.TestOnly {
 		return "mock_" + name + "_test.go"
-	} else if p.InPackage {
+	} else if p.InPackage && !p.KeepTree {
 		return "mock_" + name + ".go"
 	} else if p.TestOnly {
 		return name + "_test.go"

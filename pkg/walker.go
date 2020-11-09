@@ -130,7 +130,9 @@ func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) erro
 	var out io.Writer
 	var pkg string
 
-	if v.InPackage {
+	if v.KeepTree && v.InPackage {
+		pkg = filepath.Dir(iface.FileName)
+	} else if v.InPackage {
 		pkg = filepath.Dir(iface.FileName)
 	} else if (v.PackageName == "" || v.PackageName == "mocks") && v.PackageNamePrefix != "" {
 		// go with package name prefix only when package name is empty or default and package name prefix is specified

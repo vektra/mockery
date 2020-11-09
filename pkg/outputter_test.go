@@ -21,6 +21,11 @@ func TestFilenameMockTest(t *testing.T) {
 	assert.Equal(t, "mock_name_test.go", out.filename("name"))
 }
 
+func TestFilenameKeepTreeInPackage(t *testing.T) {
+	out := FileOutputStreamProvider{KeepTree: true, InPackage: true}
+	assert.Equal(t, "name.go", out.filename("name"))
+}
+
 func TestFilenameTest(t *testing.T) {
 	out := FileOutputStreamProvider{InPackage: false, TestOnly: true}
 	assert.Equal(t, "name_test.go", out.filename("name"))

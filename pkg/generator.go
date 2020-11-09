@@ -197,7 +197,7 @@ func (g *Generator) mockName() string {
 		return g.StructName
 	}
 
-	if g.InPackage {
+	if !g.KeepTree && g.InPackage {
 		if ast.IsExported(g.iface.Name) {
 			return "Mock" + g.iface.Name
 		}
@@ -235,7 +235,7 @@ func (g *Generator) generateImports(ctx context.Context) {
 		logImport.Debug().Msgf("found import")
 
 		path := g.nameToPackagePath[name]
-		if g.InPackage && path == pkgPath {
+		if !g.KeepTree && g.InPackage && path == pkgPath {
 			logImport.Debug().Msgf("import (%s) equals interface's package path (%s), skipping", path, pkgPath)
 			continue
 		}
@@ -291,7 +291,7 @@ func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 	switch t := typ.(type) {
 	case *types.Named:
 		o := t.Obj()
-		if o.Pkg() == nil || o.Pkg().Name() == "main" || (g.InPackage && o.Pkg() == g.iface.Pkg) {
+		if o.Pkg() == nil || o.Pkg().Name() == "main" || (!g.KeepTree && g.InPackage && o.Pkg() == g.iface.Pkg) {
 			return o.Name()
 		}
 		return g.addPackageImport(ctx, o.Pkg()) + "." + o.Name()
