@@ -151,7 +151,7 @@ func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) erro
 	gen := NewGenerator(ctx, v.Config, iface, pkg)
 	gen.GeneratePrologueNote(v.Note)
 	gen.GeneratePrologue(ctx, pkg)
-
+	gen.GenerateMethodConstants()
 	err = gen.Generate(ctx)
 	if err != nil {
 		return err
