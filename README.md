@@ -53,11 +53,11 @@ Install through homebrew
 
 ### go get
 
-Alternatively, you can use the DEPRECATED method of:
+Alternatively, you can use the go get method:
 
     go get github.com/vektra/mockery/v2/.../
 
-to get a development version of the software.
+Note that version strings will not be displayed properly using this method.
 
 Examples
 --------
