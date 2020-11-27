@@ -30,8 +30,8 @@ type Generator struct {
 	config.Config
 	buf bytes.Buffer
 
-	iface            *Interface
-	pkg              string
+	iface *Interface
+	pkg   string
 
 	localizationCache map[string]string
 	packagePathToName map[string]string
@@ -264,6 +264,13 @@ func (g *Generator) GeneratePrologueNote(note string) {
 		prologue += fmt.Sprintf(" v%s", config.SemVer)
 	}
 	prologue += ". DO NOT EDIT.\n"
+
+	// The note contains a boilerplate block comment that needs to come first.
+	if strings.HasPrefix(note, "/*") {
+		g.printf("%s\n", note)
+		g.printf("\n")
+		note = ""
+	}
 
 	g.printf(prologue)
 	if note != "" {
