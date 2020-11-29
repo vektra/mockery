@@ -222,7 +222,31 @@ Mock.On("passthrough", mock.AnythingOfType("context.Context"), mock.AnythingOfTy
 
 #### Requirements
 
-`Return` must be passed the same argument count and types as expected by the interface. If the return argument signature of `passthrough` in the above example was instead `(string, error)` in the interface, `Return` would also need a second argument to define the error value.
+`Return` must be passed the same argument count and types as expected by the interface. Then, for each of the return values of the mocked function, `Return` needs a function which takes the same arguments as the mocked function, and returns one of the return values. For example, if the return argument signature of `passthrough` in the above example was instead `(string, error)` in the interface, `Return` would also need a second function argument to define the error value:
+
+```go
+type Proxy interface {
+  passthrough(ctx context.Context, s string) (string, error)
+}
+```
+
+```go
+Mock.On("passthrough", mock.AnythingOfType("context.Context"), mock.AnythingOfType("string")).Return(
+	func(ctx context.Context, s string) string {
+		return s
+	},
+	func(ctx context.Context, s string) error {
+		return nil
+	})
+```
+
+Note that the following is incorrect (you can't return all the return values with one function):
+```go
+Mock.On("passthrough", mock.AnythingOfType("context.Context"), mock.AnythingOfType("string")).Return(
+	func(ctx context.Context, s string) (string, error) {
+		return s, nil
+	})
+```
 
 If any return argument is missing, `github.com/stretchr/testify/mock.Arguments.Get` will emit a panic.
 
