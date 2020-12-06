@@ -30,8 +30,8 @@ type Generator struct {
 	config.Config
 	buf bytes.Buffer
 
-	iface            *Interface
-	pkg              string
+	iface *Interface
+	pkg   string
 
 	localizationCache map[string]string
 	packagePathToName map[string]string
@@ -490,7 +490,8 @@ func (g *Generator) Generate(ctx context.Context) error {
 			g.printf("(%s) {\n", strings.Join(returns.Types, ", "))
 		}
 
-		var formattedParamNames string
+		formattedParamNames := ""
+		setOfParamNames := make(map[string]struct{}, len(params.Names))
 		for i, name := range params.Names {
 			if i > 0 {
 				formattedParamNames += ", "
@@ -502,35 +503,36 @@ func (g *Generator) Generate(ctx context.Context) error {
 				name += "..."
 			}
 			formattedParamNames += name
+
+			setOfParamNames[name] = struct{}{}
 		}
 
 		called := g.generateCalled(params, formattedParamNames) // _m.Called invocation string
 
 		if len(returns.Types) > 0 {
-			g.printf("\tret := %s\n\n", called)
+			retVariable := resolveCollision(setOfParamNames, "ret")
+			g.printf("\t%s := %s\n\n", retVariable, called)
 
-			var (
-				ret []string
-			)
+			ret := make([]string, len(returns.Types))
 
 			for idx, typ := range returns.Types {
 				g.printf("\tvar r%d %s\n", idx, typ)
-				g.printf("\tif rf, ok := ret.Get(%d).(func(%s) %s); ok {\n",
-					idx, strings.Join(params.Types, ", "), typ)
+				g.printf("\tif rf, ok := %s.Get(%d).(func(%s) %s); ok {\n",
+					retVariable, idx, strings.Join(params.Types, ", "), typ)
 				g.printf("\t\tr%d = rf(%s)\n", idx, formattedParamNames)
 				g.printf("\t} else {\n")
 				if typ == "error" {
-					g.printf("\t\tr%d = ret.Error(%d)\n", idx, idx)
+					g.printf("\t\tr%d = %s.Error(%d)\n", idx, retVariable, idx)
 				} else if returns.Nilable[idx] {
-					g.printf("\t\tif ret.Get(%d) != nil {\n", idx)
-					g.printf("\t\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
+					g.printf("\t\tif %s.Get(%d) != nil {\n", retVariable, idx)
+					g.printf("\t\t\tr%d = %s.Get(%d).(%s)\n", idx, retVariable, idx, typ)
 					g.printf("\t\t}\n")
 				} else {
-					g.printf("\t\tr%d = ret.Get(%d).(%s)\n", idx, idx, typ)
+					g.printf("\t\tr%d = %s.Get(%d).(%s)\n", idx, retVariable, idx, typ)
 				}
 				g.printf("\t}\n\n")
 
-				ret = append(ret, fmt.Sprintf("r%d", idx))
+				ret[idx] = fmt.Sprintf("r%d", idx)
 			}
 
 			g.printf("\treturn %s\n", strings.Join(ret, ", "))
@@ -617,4 +619,19 @@ func (g *Generator) Write(w io.Writer) error {
 
 	w.Write(res)
 	return nil
+}
+
+func resolveCollision(names map[string]struct{}, variable string) string {
+	ret := variable
+
+	for i := len(names); true; i++ {
+		_, ok := names[ret]
+		if !ok {
+			break
+		}
+
+		ret = fmt.Sprintf("%s_%d", variable, i)
+	}
+
+	return ret
 }
