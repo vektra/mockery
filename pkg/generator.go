@@ -265,13 +265,6 @@ func (g *Generator) GeneratePrologueNote(note string) {
 	}
 	prologue += ". DO NOT EDIT.\n"
 
-	// The note contains a boilerplate block comment that needs to come first.
-	if strings.HasPrefix(note, "/*") {
-		g.printf("%s\n", note)
-		g.printf("\n")
-		note = ""
-	}
-
 	g.printf(prologue)
 	if note != "" {
 		g.printf("\n")
@@ -280,6 +273,14 @@ func (g *Generator) GeneratePrologueNote(note string) {
 		}
 	}
 	g.printf("\n")
+}
+
+// GenerateBoilerplate adds a boilerplate text. It should be called
+// before any other generator methods to ensure the text is on top.
+func (g *Generator) GenerateBoilerplate(boilerplate string) {
+	if boilerplate != "" {
+		g.printf("%s\n", boilerplate)
+	}
 }
 
 // ErrNotInterface is returned when the given type is not an interface

@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -89,6 +90,7 @@ func init() {
 	pFlags.String("srcpkg", "", "source pkg to search for interfaces")
 	pFlags.BoolP("dry-run", "d", false, "Do a dry run, don't modify any files")
 	pFlags.Bool("disable-version-string", false, "Do not insert the version string into the generated mock file.")
+	pFlags.String("boilerplate-file", "", "File to read a boilerplate text from. Text should be a go block comment, i.e. /* ... */")
 
 	viper.BindPFlags(pFlags)
 }
@@ -231,10 +233,20 @@ func (r *RootApp) Run() error {
 		baseDir = filepath.Dir(pkg.GoFiles[0])
 	}
 
+	var boilerplate string
+	if r.Config.BoilerplateFile != "" {
+		data, err := ioutil.ReadFile(r.Config.BoilerplateFile)
+		if err != nil {
+			log.Fatal().Msgf("Failed to read boilerplate file %s: %v", r.Config.BoilerplateFile, err)
+		}
+		boilerplate = string(data)
+	}
+
 	visitor := &pkg.GeneratorVisitor{
 		Config:            r.Config,
 		InPackage:         r.Config.InPackage,
 		Note:              r.Config.Note,
+		Boilerplate:       boilerplate,
 		Osp:               osp,
 		PackageName:       r.Config.Outpkg,
 		PackageNamePrefix: r.Config.Packageprefix,
