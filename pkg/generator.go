@@ -30,8 +30,8 @@ type Generator struct {
 	config.Config
 	buf bytes.Buffer
 
-	iface            *Interface
-	pkg              string
+	iface *Interface
+	pkg   string
 
 	localizationCache map[string]string
 	packagePathToName map[string]string
@@ -273,6 +273,14 @@ func (g *Generator) GeneratePrologueNote(note string) {
 		}
 	}
 	g.printf("\n")
+}
+
+// GenerateBoilerplate adds a boilerplate text. It should be called
+// before any other generator methods to ensure the text is on top.
+func (g *Generator) GenerateBoilerplate(boilerplate string) {
+	if boilerplate != "" {
+		g.printf("%s\n", boilerplate)
+	}
 }
 
 // ErrNotInterface is returned when the given type is not an interface

@@ -104,9 +104,10 @@ func (w *Walker) doWalk(ctx context.Context, p *Parser, dir string, visitor Walk
 
 type GeneratorVisitor struct {
 	config.Config
-	InPackage bool
-	Note      string
-	Osp       OutputStreamProvider
+	InPackage   bool
+	Note        string
+	Boilerplate string
+	Osp         OutputStreamProvider
 	// The name of the output package, if InPackage is false (defaults to "mocks")
 	PackageName       string
 	PackageNamePrefix string
@@ -149,6 +150,7 @@ func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) erro
 	defer closer()
 
 	gen := NewGenerator(ctx, v.Config, iface, pkg)
+	gen.GenerateBoilerplate(v.Boilerplate)
 	gen.GeneratePrologueNote(v.Note)
 	gen.GeneratePrologue(ctx, pkg)
 

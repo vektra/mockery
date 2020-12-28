@@ -297,6 +297,19 @@ func (s *GeneratorSuite) TestGeneratorPrologueNote() {
 	s.Equal(expected, generator.buf.String())
 }
 
+func (s *GeneratorSuite) TestGeneratorBoilerplate() {
+	generator := s.getGenerator(testFile, "Requester", false, "")
+	generator.GenerateBoilerplate("/*\n    BOILERPLATE\n*/\n")
+
+	expected := `/*
+    BOILERPLATE
+*/
+
+`
+
+	s.Equal(expected, generator.buf.String())
+}
+
 func (s *GeneratorSuite) TestGeneratorPrologueNoteNoVersionString() {
 	generator := s.getGenerator(testFile, "Requester", false, "")
 	generator.Config.DisableVersionString = true
