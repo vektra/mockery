@@ -46,9 +46,9 @@ Use the [Docker image](https://hub.docker.com/r/vektra/mockery)
 
 ### Homebrew
 
-Install through homebrew
+Install through [brew](https://brew.sh/)
 
-    brew install vektra/tap/mockery
+    brew install mockery
     brew upgrade mockery
 
 ### go get
