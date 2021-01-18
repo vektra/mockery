@@ -568,6 +568,10 @@ func (g *Generator) generateCalled(list *paramList, formattedParamNames string) 
 		return "_m.Called(" + formattedParamNames + ")"
 	}
 
+	if !g.UnrollVariadic {
+		return "_m.Called(" + strings.Join(list.Names, ", ") + ")"
+	}
+
 	var variadicArgsName string
 	variadicName := list.Names[namesLen-1]
 
