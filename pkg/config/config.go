@@ -12,6 +12,7 @@ type Config struct {
 	Dir                  string
 	DisableVersionString bool `mapstructure:"disable-version-string"`
 	DryRun               bool `mapstructure:"dry-run"`
+	Exported             bool `mapstructure:"exported"`
 	FileName             string
 	InPackage            bool
 	KeepTree             bool
