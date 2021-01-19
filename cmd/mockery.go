@@ -92,6 +92,7 @@ func init() {
 	pFlags.Bool("disable-version-string", false, "Do not insert the version string into the generated mock file.")
 	pFlags.String("boilerplate-file", "", "File to read a boilerplate text from. Text should be a go block comment, i.e. /* ... */")
 	pFlags.Bool("unroll-variadic", true, "For functions with variadic arguments, do not unroll the arguments into the underlying testify call. Instead, pass variadic slice as-is.")
+	pFlags.Bool("exported", false, "Generates public mocks for private interfaces.")
 
 	viper.BindPFlags(pFlags)
 }

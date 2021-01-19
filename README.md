@@ -274,6 +274,7 @@ The following descriptions provide additional elaboration on a few common parame
 | `--filename` | Use the `--filename` and `--structname` to override the default generated file and struct name. These options are only compatible with non-regular expressions in `--name`, where only one mock is generated. |
 | `--case` | mockery generates files using the casing of the original interface name.  This can be modified by specifying `--case underscore` to format the generated file name using underscore casing. |
 | `--print` | Use `mockery --print` to have the resulting code printed out instead of written to disk. |
+| `--exported` | Use `mockery --exported` to generate public mocks for private interfaces. |
 
 Mocking interfaces in `main`
 ----------------------------
