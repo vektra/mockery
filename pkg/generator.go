@@ -198,9 +198,10 @@ func (g *Generator) mockName() string {
 	}
 
 	if !g.KeepTree && g.InPackage {
-		if ast.IsExported(g.iface.Name) {
+		if g.Exported || ast.IsExported(g.iface.Name) {
 			return "Mock" + g.iface.Name
 		}
+
 		first := true
 		return "mock" + strings.Map(func(r rune) rune {
 			if first {
