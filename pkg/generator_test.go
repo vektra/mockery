@@ -4,13 +4,18 @@ import (
 	"bufio"
 	"context"
 	"go/format"
+	"io"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
+
+	mocks "github.com/vektra/mockery/v2/mocks/pkg/fixtures"
 	"github.com/vektra/mockery/v2/pkg/config"
 )
 
@@ -50,8 +55,9 @@ func (s *GeneratorSuite) getGenerator(
 ) *Generator {
 	return NewGenerator(
 		s.ctx, config.Config{
-			StructName: structName,
-			InPackage:  inPackage,
+			StructName:     structName,
+			InPackage:      inPackage,
+			UnrollVariadic: true,
 		}, s.getInterfaceFromFile(filepath, interfaceName), pkg,
 	)
 }
@@ -733,6 +739,127 @@ func (s *GeneratorSuite) TestGeneratorVariadicArgs() {
 		filepath.Join(fixturePath, "requester_variadic.go"),
 		"RequesterVariadic", false, "", expected,
 	)
+}
+
+func (s *GeneratorSuite) TestGeneratorVariadicArgsAsOneArg() {
+	// Read the expected output from a "golden" file that we can also import in CompatSuite
+	// to asserts its actual behavior.
+	//
+	// To regenerate the golden file: make fixture
+	expectedBytes, err := ioutil.ReadFile(filepath.Join(fixturePath, "mocks", "requester_variadic_one_arg.go"))
+	s.NoError(err)
+	expected := string(expectedBytes)
+	expected = expected[strings.Index(expected, "// RequesterVariadicOneArgument is"):]
+	generator := NewGenerator(
+		s.ctx, config.Config{
+			StructName:     "RequesterVariadicOneArgument",
+			InPackage:      true,
+			UnrollVariadic: false,
+		}, s.getInterfaceFromFile("requester_variadic.go", "RequesterVariadic"), pkg,
+	)
+	s.NoError(generator.Generate(s.ctx), "The generator ran without errors.")
+
+	var actual []byte
+	actual, fmtErr := format.Source(generator.buf.Bytes())
+	s.NoError(fmtErr, "The formatter ran without errors.")
+
+	expectedLines := strings.Split(expected, "\n")
+	actualLines := strings.Split(string(actual), "\n")
+
+	s.Equal(
+		expectedLines, actualLines,
+		"The generator produced unexpected output.",
+	)
+}
+
+func TestRequesterVariadicOneArgument(t *testing.T) {
+	t.Run("Get \"1\", \"2\", \"3\"", func(t *testing.T) {
+		m := mocks.RequesterVariadicOneArgument{}
+		args := []string{"1", "2", "3"}
+		m.On("Get", args).Return(true).Once()
+		res := m.Get(args...)
+		assert.True(t, res)
+		m.AssertExpectations(t)
+	})
+
+	t.Run("Get mock.Anything", func(t *testing.T) {
+		m := mocks.RequesterVariadicOneArgument{}
+		args := []string{"1", "2", "3"}
+		m.On("Get", mock.Anything).Return(true).Once()
+		res := m.Get(args...)
+		assert.True(t, res)
+		m.AssertExpectations(t)
+	})
+
+	t.Run("Get no arguments", func(t *testing.T) {
+		m := mocks.RequesterVariadicOneArgument{}
+		m.On("Get", []string(nil)).Return(true).Once()
+		res := m.Get()
+		assert.True(t, res)
+		m.AssertExpectations(t)
+	})
+
+	t.Run("MultiWriteToFile strings builders", func(t *testing.T) {
+		m := mocks.RequesterVariadicOneArgument{}
+		args := []io.Writer{&strings.Builder{}, &strings.Builder{}}
+		expected := "res"
+		filename := "testFilename"
+		m.On("MultiWriteToFile", filename, args).Return(expected).Once()
+		res := m.MultiWriteToFile(filename, args...)
+		assert.Equal(t, expected, res)
+		m.AssertExpectations(t)
+	})
+
+	t.Run("MultiWriteToFile mock.Anything", func(t *testing.T) {
+		m := mocks.RequesterVariadicOneArgument{}
+		args := []io.Writer{&strings.Builder{}, &strings.Builder{}}
+		expected := "res"
+		filename := "testFilename"
+		m.On("MultiWriteToFile", filename, mock.Anything).Return(expected).Once()
+		res := m.MultiWriteToFile(filename, args...)
+		assert.Equal(t, expected, res)
+		m.AssertExpectations(t)
+	})
+
+	t.Run("OneInterface \"1\", \"2\", \"3\"", func(t *testing.T) {
+		m := mocks.RequesterVariadicOneArgument{}
+		args := []interface{}{"1", "2", "3"}
+		m.On("OneInterface", args).Return(true).Once()
+		res := m.OneInterface(args...)
+		assert.True(t, res)
+		m.AssertExpectations(t)
+	})
+
+	t.Run("OneInterface mock.Anything", func(t *testing.T) {
+		m := mocks.RequesterVariadicOneArgument{}
+		args := []interface{}{"1", "2", "3"}
+		m.On("OneInterface", mock.Anything).Return(true).Once()
+		res := m.OneInterface(args...)
+		assert.True(t, res)
+		m.AssertExpectations(t)
+	})
+
+	t.Run("Sprintf strings builders", func(t *testing.T) {
+		m := mocks.RequesterVariadicOneArgument{}
+		args := []interface{}{&strings.Builder{}, &strings.Builder{}}
+		expected := "res"
+		filename := "testFilename"
+		m.On("Sprintf", filename, args).Return(expected).Once()
+		res := m.Sprintf(filename, args...)
+		assert.Equal(t, expected, res)
+		m.AssertExpectations(t)
+	})
+
+	t.Run("Sprintf mock.Anything", func(t *testing.T) {
+		m := mocks.RequesterVariadicOneArgument{}
+		args := []interface{}{&strings.Builder{}, &strings.Builder{}}
+		expected := "res"
+		filename := "testFilename"
+		m.On("Sprintf", filename, mock.Anything).Return(expected).Once()
+		res := m.Sprintf(filename, args...)
+		assert.Equal(t, expected, res)
+		m.AssertExpectations(t)
+	})
 }
 
 func (s *GeneratorSuite) TestGeneratorArgumentIsFuncType() {
