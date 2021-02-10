@@ -57,8 +57,6 @@ Alternatively, you can use the go get method:
 
     go get github.com/vektra/mockery/v2/.../
 
-Note that version strings will not be displayed properly using this method.
-
 Examples
 --------
 
