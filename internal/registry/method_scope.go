@@ -23,51 +23,18 @@ type MethodScope struct {
 // without conflict with other variables and imported packages. It also
 // adds the relevant imports to the registry for each added variable.
 func (m *MethodScope) AddVar(vr *types.Var, suffix string) *Var {
-	name := vr.Name()
-	if name == "" || name == "_" {
-		name = generateVarName(vr.Type())
-	}
-
-	name += suffix
-
-	switch name {
-	case "mock", "callInfo", "break", "default", "func", "interface", "select", "case", "defer", "go", "map", "struct",
-		"chan", "else", "goto", "package", "switch", "const", "fallthrough", "if", "range", "type", "continue", "for",
-		"import", "return", "var":
-		name += "MoqParam"
-	}
-
-	if _, ok := m.searchVar(name); ok || m.conflicted[name] {
-		return m.addDisambiguatedVar(vr, name)
-	}
-
-	return m.addVar(vr, name)
-}
-
-func (m *MethodScope) addDisambiguatedVar(vr *types.Var, suggested string) *Var {
-	n := 1
-	for {
-		// Keep incrementing the suffix until we find a name which is unused.
-		if _, ok := m.searchVar(suggested + strconv.Itoa(n)); !ok {
-			break
-		}
-		n++
-	}
-
-	name := suggested + strconv.Itoa(n)
-	if n == 1 {
-		conflict, _ := m.searchVar(suggested)
-		conflict.Name += "1"
-		name = suggested + "2"
-		m.conflicted[suggested] = true
-	}
-
-	return m.addVar(vr, name)
-}
-
-func (m *MethodScope) addVar(vr *types.Var, name string) *Var {
 	imports := make(map[string]*Package)
 	m.populateImports(vr.Type(), imports)
+	m.resolveImportVarConflicts(imports)
+
+	name := varName(vr, suffix)
+	// Ensure that the var name does not conflict with a package import.
+	if _, ok := m.registry.searchImport(name); ok {
+		name += "MoqParam"
+	}
+	if _, ok := m.searchVar(name); ok || m.conflicted[name] {
+		name = m.resolveVarNameConflict(name)
+	}
 
 	v := Var{
 		vr:         vr,
@@ -76,8 +43,24 @@ func (m *MethodScope) addVar(vr *types.Var, name string) *Var {
 		Name:       name,
 	}
 	m.vars = append(m.vars, &v)
-	m.resolveImportVarConflicts(&v)
 	return &v
+}
+
+func (m *MethodScope) resolveVarNameConflict(suggested string) string {
+	for n := 1; ; n++ {
+		_, ok := m.searchVar(suggested + strconv.Itoa(n))
+		if ok {
+			continue
+		}
+
+		if n == 1 {
+			conflict, _ := m.searchVar(suggested)
+			conflict.Name += "1"
+			m.conflicted[suggested] = true
+			n++
+		}
+		return suggested + strconv.Itoa(n)
+	}
 }
 
 func (m MethodScope) searchVar(name string) (*Var, bool) {
@@ -139,15 +122,12 @@ func (m MethodScope) populateImports(t types.Type, imports map[string]*Package) 
 	}
 }
 
-func (m MethodScope) resolveImportVarConflicts(v *Var) {
-	// Ensure that the newly added var does not conflict with a package import
-	// which was added earlier.
-	if _, ok := m.registry.searchImport(v.Name); ok {
-		v.Name += "MoqParam"
-	}
+// resolveImportVarConflicts ensures that all the newly added imports do not
+// conflict with any of the existing vars.
+func (m MethodScope) resolveImportVarConflicts(imports map[string]*Package) {
 	// Ensure that all the newly added imports do not conflict with any of the
 	// existing vars.
-	for _, imprt := range v.imports {
+	for _, imprt := range imports {
 		if v, ok := m.searchVar(imprt.Qualifier()); ok {
 			v.Name += "MoqParam"
 		}

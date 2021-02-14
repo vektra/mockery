@@ -38,7 +38,25 @@ func (v Var) packageQualifier(pkg *types.Package) string {
 	return v.imports[path].Qualifier()
 }
 
-// generateVarName generates a name for the variable using the type
+func varName(vr *types.Var, suffix string) string {
+	name := vr.Name()
+	if name != "" && name != "_" {
+		return name + suffix
+	}
+
+	name = varNameForType(vr.Type()) + suffix
+
+	switch name {
+	case "mock", "callInfo", "break", "default", "func", "interface", "select", "case", "defer", "go", "map", "struct",
+		"chan", "else", "goto", "package", "switch", "const", "fallthrough", "if", "range", "type", "continue", "for",
+		"import", "return", "var":
+		name += "MoqParam"
+	}
+
+	return name
+}
+
+// varNameForType generates a name for the variable using the type
 // information.
 //
 // Examples:
@@ -49,12 +67,12 @@ func (v Var) packageQualifier(pkg *types.Package) string {
 // - map[string]int -> stringToInt
 // - error -> err
 // - a.MyType -> myType
-func generateVarName(t types.Type) string {
+func varNameForType(t types.Type) string {
 	nestedType := func(t types.Type) string {
 		if t, ok := t.(*types.Basic); ok {
 			return deCapitalise(t.String())
 		}
-		return generateVarName(t)
+		return varNameForType(t)
 	}
 
 	switch t := t.(type) {
@@ -83,7 +101,7 @@ func generateVarName(t types.Type) string {
 		return "val"
 
 	case *types.Pointer:
-		return generateVarName(t.Elem())
+		return varNameForType(t.Elem())
 
 	case *types.Signature:
 		return "fn"
