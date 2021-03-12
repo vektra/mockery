@@ -11,7 +11,7 @@ env:
   - GO111MODULE=on CGO_ENABLED=0
 
 go:
-  - 1.14.x
+  - 1.16.x
   - tip
 
 git:
@@ -33,4 +33,4 @@ deploy:
     on:
         tags: true
         condition: $TRAVIS_OS_NAME = linux
-        go: 1.14.x
+        go: 1.16.x
