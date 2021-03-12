@@ -85,7 +85,7 @@ func (p *Parser) Parse(ctx context.Context, path string) error {
 			Logger()
 		ctx = log.WithContext(ctx)
 
-		if filepath.Ext(fi.Name()) != ".go" || strings.HasSuffix(fi.Name(), "_test.go") {
+		if filepath.Ext(fi.Name()) != ".go" || strings.HasSuffix(fi.Name(), "_test.go") || strings.HasPrefix(fi.Name(), "mock_") {
 			continue
 		}
 
