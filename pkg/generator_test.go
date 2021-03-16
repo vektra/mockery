@@ -1402,6 +1402,22 @@ import mock "github.com/stretchr/testify/mock"
 	}
 }
 
+func (s *GeneratorSuite) TestInPackagePackageCollision() {
+	expected := `package foo
+
+import barfoo "github.com/vektra/mockery/v2/pkg/fixtures/example_project/bar/foo"
+import mock "github.com/stretchr/testify/mock"
+
+`
+	generator := NewGenerator(
+		s.ctx,
+		config.Config{InPackage: true, LogLevel: "debug"},
+		s.getInterfaceFromFile("example_project/foo/collision.go", "Collision"),
+		pkg,
+	)
+	s.checkPrologueGeneration(generator, expected)
+}
+
 func TestGeneratorSuite(t *testing.T) {
 	generatorSuite := new(GeneratorSuite)
 	suite.Run(t, generatorSuite)
