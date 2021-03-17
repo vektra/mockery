@@ -158,7 +158,7 @@ func (r *RootApp) Run() error {
 	ctx := log.WithContext(context.Background())
 
 	if r.Config.Version {
-		fmt.Println(config.SemVer)
+		fmt.Println(config.GetSemverInfo())
 		return nil
 	} else if r.Config.Name != "" && r.Config.All {
 		log.Fatal().Msgf("Specify --name or --all, but not both")
@@ -295,7 +295,7 @@ func getLogger(levelStr string) (zerolog.Logger, error) {
 		Hook(timeHook{}).
 		Level(level).
 		With().
-		Str("version", config.SemVer).
+		Str("version", config.GetSemverInfo()).
 		Logger()
 
 	return log, nil
