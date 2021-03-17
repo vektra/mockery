@@ -51,7 +51,7 @@ dockers:
 brews:
   - homepage: https://github.com/vektra/mockery
     description: "A mock code autogenerator for Go"
-    github:
+    tap:
         owner: vektra
         name: homebrew-tap
     folder: Formula
