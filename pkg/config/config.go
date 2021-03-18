@@ -3,16 +3,16 @@ package config
 import "runtime/debug"
 
 // SemVer is the version of mockery at build time.
-var SemVer = "0.0.0-dev"
+var SemVer = "v0.0.0-dev"
 
 // GetSemverInfo attempts to read and return the go build info of Mockery
 // If a version is not found, the fallback versioning is returned
 func GetSemverInfo() string {
 	info, ok := debug.ReadBuildInfo()
 	if !ok {
-		return SemVer
-	}
-	return info.Main.Version
+        return SemVer
+    }
+    return info.Main.Version
 }
 
 type Config struct {
