@@ -9,6 +9,10 @@ type MapFunc struct {
 	mock.Mock
 }
 
+func (_m *MapFunc) On_Get(m map[string]func(string) string, r_a0 error) *mock.Call {
+	return _m.Mock.On("Get", m).Return(r_a0)
+}
+
 // Get provides a mock function with given fields: m
 func (_m *MapFunc) Get(m map[string]func(string) string) error {
 	ret := _m.Called(m)

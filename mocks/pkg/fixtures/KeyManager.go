@@ -12,6 +12,10 @@ type KeyManager struct {
 	mock.Mock
 }
 
+func (_m *KeyManager) On_GetKey(_a0 string, _a1 uint16, r_a0 []byte, r_a1 *test.Err) *mock.Call {
+	return _m.Mock.On("GetKey", _a0, _a1).Return(r_a0, r_a1)
+}
+
 // GetKey provides a mock function with given fields: _a0, _a1
 func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 	ret := _m.Called(_a0, _a1)

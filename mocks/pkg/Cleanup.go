@@ -9,6 +9,10 @@ type Cleanup struct {
 	mock.Mock
 }
 
+func (_m *Cleanup) On_Execute(r_a0 error) *mock.Call {
+	return _m.Mock.On("Execute").Return(r_a0)
+}
+
 // Execute provides a mock function with given fields:
 func (_m *Cleanup) Execute() error {
 	ret := _m.Called()

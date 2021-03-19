@@ -13,6 +13,10 @@ type RequesterIface struct {
 	mock.Mock
 }
 
+func (_m *RequesterIface) On_Get(r_a0 io.Reader) *mock.Call {
+	return _m.Mock.On("Get").Return(r_a0)
+}
+
 // Get provides a mock function with given fields:
 func (_m *RequesterIface) Get() io.Reader {
 	ret := _m.Called()

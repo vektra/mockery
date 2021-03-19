@@ -9,6 +9,10 @@ type Blank struct {
 	mock.Mock
 }
 
+func (_m *Blank) On_Create(x interface{}, r_a0 error) *mock.Call {
+	return _m.Mock.On("Create", x).Return(r_a0)
+}
+
 // Create provides a mock function with given fields: x
 func (_m *Blank) Create(x interface{}) error {
 	ret := _m.Called(x)

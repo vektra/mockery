@@ -9,6 +9,10 @@ type requester_unexported struct {
 	mock.Mock
 }
 
+func (_m *requester_unexported) On_Get() *mock.Call {
+	return _m.Mock.On("Get").Return()
+}
+
 // Get provides a mock function with given fields:
 func (_m *requester_unexported) Get() {
 	_m.Called()

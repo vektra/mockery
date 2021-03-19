@@ -9,6 +9,10 @@ type RequesterArgSameAsPkg struct {
 	mock.Mock
 }
 
+func (_m *RequesterArgSameAsPkg) On_Get(_a0 string) *mock.Call {
+	return _m.Mock.On("Get", _a0).Return()
+}
+
 // Get provides a mock function with given fields: _a0
 func (_m *RequesterArgSameAsPkg) Get(_a0 string) {
 	_m.Called(_a0)

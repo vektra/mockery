@@ -9,6 +9,10 @@ type namer struct {
 	mock.Mock
 }
 
+func (_m *namer) On_Name(r_a0 string) *mock.Call {
+	return _m.Mock.On("Name").Return(r_a0)
+}
+
 // Name provides a mock function with given fields:
 func (_m *namer) Name() string {
 	ret := _m.Called()

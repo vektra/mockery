@@ -9,6 +9,10 @@ type RequesterElided struct {
 	mock.Mock
 }
 
+func (_m *RequesterElided) On_Get(path string, url string, r_a0 error) *mock.Call {
+	return _m.Mock.On("Get", path, url).Return(r_a0)
+}
+
 // Get provides a mock function with given fields: path, url
 func (_m *RequesterElided) Get(path string, url string) error {
 	ret := _m.Called(path, url)

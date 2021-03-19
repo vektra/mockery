@@ -477,6 +477,10 @@ func (g *Generator) Generate(ctx context.Context) error {
 		params := g.genList(ctx, ftype.Params(), ftype.Variadic())
 		returns := g.genList(ctx, ftype.Results(), false)
 
+		if g.Config.GenerateOnFunctions {
+			g.generateOnFunction(fname, params, returns)
+		}
+
 		if len(params.Names) == 0 {
 			g.printf("// %s provides a mock function with given fields:\n", fname)
 		} else {
@@ -553,6 +557,59 @@ func (g *Generator) Generate(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// generateOnFunction generates a type checked On_ function to make updating mocks in tests faster
+func (g *Generator) generateOnFunction(fname string, params *paramList, returns *paramList) {
+	if params.Variadic {
+		// TODO get this working with variadic functions
+		return
+	}
+
+	var allParams paramList
+	allParams.Params = make([]string, len(params.Params))
+	allParams.Names = make([]string, len(params.Names))
+	allParams.Nilable = make([]bool, len(params.Nilable))
+	allParams.Types = make([]string, len(params.Types))
+	copy(allParams.Params, params.Params)
+	copy(allParams.Names, params.Names)
+	copy(allParams.Nilable, params.Nilable)
+	copy(allParams.Types, params.Types)
+
+	for index := range returns.Params {
+		allParams.Params = append(allParams.Params, "r"+returns.Params[index])
+		allParams.Names = append(allParams.Names, "r"+returns.Names[index])
+		allParams.Nilable = append(allParams.Nilable, returns.Nilable[index])
+		allParams.Types = append(allParams.Types, returns.Types[index])
+	}
+
+	g.printf("\n")
+
+	g.printf(
+		"func (_m *%s) On_%s(%s) *mock.Call ",
+		g.mockName(),
+		fname,
+		strings.Join(allParams.Params, ", "),
+	)
+
+	g.printf("{\n")
+
+	if len(params.Names) == 0 {
+		g.printf(
+			"\treturn _m.Mock.On(\"%s\").Return(%s)\n",
+			fname,
+			strings.Join(allParams.Names, ", "),
+		)
+	} else {
+		g.printf(
+			"\treturn _m.Mock.On(\"%s\", %s).Return(%s)\n",
+			fname,
+			strings.Join(allParams.Names[:len(params.Names)], ", "),
+			strings.Join(allParams.Names[len(params.Names):], ", "),
+		)
+	}
+
+	g.printf("}\n\n")
 }
 
 // generateCalled returns the Mock.Called invocation string and, if necessary, prints the

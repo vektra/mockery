@@ -12,6 +12,10 @@ type UsesOtherPkgIface struct {
 	mock.Mock
 }
 
+func (_m *UsesOtherPkgIface) On_DoSomethingElse(obj test.Sibling) *mock.Call {
+	return _m.Mock.On("DoSomethingElse", obj).Return()
+}
+
 // DoSomethingElse provides a mock function with given fields: obj
 func (_m *UsesOtherPkgIface) DoSomethingElse(obj test.Sibling) {
 	_m.Called(obj)

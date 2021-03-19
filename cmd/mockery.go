@@ -93,6 +93,7 @@ func init() {
 	pFlags.String("boilerplate-file", "", "File to read a boilerplate text from. Text should be a go block comment, i.e. /* ... */")
 	pFlags.Bool("unroll-variadic", true, "For functions with variadic arguments, do not unroll the arguments into the underlying testify call. Instead, pass variadic slice as-is.")
 	pFlags.Bool("exported", false, "Generates public mocks for private interfaces.")
+	pFlags.Bool("generate-on-functions", false, "Generate typed On_X functions to make refactoring easier.")
 
 	viper.BindPFlags(pFlags)
 }

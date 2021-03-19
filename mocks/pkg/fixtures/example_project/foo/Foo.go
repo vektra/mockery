@@ -12,6 +12,10 @@ type Foo struct {
 	mock.Mock
 }
 
+func (_m *Foo) On_DoFoo(r_a0 string) *mock.Call {
+	return _m.Mock.On("DoFoo").Return(r_a0)
+}
+
 // DoFoo provides a mock function with given fields:
 func (_m *Foo) DoFoo() string {
 	ret := _m.Called()
@@ -24,6 +28,10 @@ func (_m *Foo) DoFoo() string {
 	}
 
 	return r0
+}
+
+func (_m *Foo) On_GetBaz(r_a0 *foo.Baz, r_a1 error) *mock.Call {
+	return _m.Mock.On("GetBaz").Return(r_a0, r_a1)
 }
 
 // GetBaz provides a mock function with given fields:

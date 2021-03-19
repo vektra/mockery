@@ -14,6 +14,10 @@ type ImportsSameAsPackage struct {
 	mock.Mock
 }
 
+func (_m *ImportsSameAsPackage) On_A(r_a0 test.B) *mock.Call {
+	return _m.Mock.On("A").Return(r_a0)
+}
+
 // A provides a mock function with given fields:
 func (_m *ImportsSameAsPackage) A() test.B {
 	ret := _m.Called()
@@ -26,6 +30,10 @@ func (_m *ImportsSameAsPackage) A() test.B {
 	}
 
 	return r0
+}
+
+func (_m *ImportsSameAsPackage) On_B(r_a0 fixtures.KeyManager) *mock.Call {
+	return _m.Mock.On("B").Return(r_a0)
 }
 
 // B provides a mock function with given fields:
@@ -42,6 +50,10 @@ func (_m *ImportsSameAsPackage) B() fixtures.KeyManager {
 	}
 
 	return r0
+}
+
+func (_m *ImportsSameAsPackage) On_C(_a0 fixtures.C) *mock.Call {
+	return _m.Mock.On("C", _a0).Return()
 }
 
 // C provides a mock function with given fields: _a0

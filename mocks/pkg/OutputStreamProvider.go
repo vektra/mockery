@@ -16,6 +16,10 @@ type OutputStreamProvider struct {
 	mock.Mock
 }
 
+func (_m *OutputStreamProvider) On_GetWriter(_a0 context.Context, _a1 *pkg.Interface, r_a0 io.Writer, r_a1 error, r_a2 pkg.Cleanup) *mock.Call {
+	return _m.Mock.On("GetWriter", _a0, _a1).Return(r_a0, r_a1, r_a2)
+}
+
 // GetWriter provides a mock function with given fields: _a0, _a1
 func (_m *OutputStreamProvider) GetWriter(_a0 context.Context, _a1 *pkg.Interface) (io.Writer, error, pkg.Cleanup) {
 	ret := _m.Called(_a0, _a1)

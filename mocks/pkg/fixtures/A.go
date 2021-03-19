@@ -12,6 +12,10 @@ type A struct {
 	mock.Mock
 }
 
+func (_m *A) On_Call(r_a0 test.B, r_a1 error) *mock.Call {
+	return _m.Mock.On("Call").Return(r_a0, r_a1)
+}
+
 // Call provides a mock function with given fields:
 func (_m *A) Call() (test.B, error) {
 	ret := _m.Called()

@@ -13,6 +13,10 @@ type RequesterArgSameAsImport struct {
 	mock.Mock
 }
 
+func (_m *RequesterArgSameAsImport) On_Get(_a0 string, r_a0 *json.RawMessage) *mock.Call {
+	return _m.Mock.On("Get", _a0).Return(r_a0)
+}
+
 // Get provides a mock function with given fields: _a0
 func (_m *RequesterArgSameAsImport) Get(_a0 string) *json.RawMessage {
 	ret := _m.Called(_a0)

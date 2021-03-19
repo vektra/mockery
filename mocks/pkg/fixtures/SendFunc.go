@@ -13,6 +13,10 @@ type SendFunc struct {
 	mock.Mock
 }
 
+func (_m *SendFunc) On_Execute(ctx context.Context, data string, r_a0 int, r_a1 error) *mock.Call {
+	return _m.Mock.On("Execute", ctx, data).Return(r_a0, r_a1)
+}
+
 // Execute provides a mock function with given fields: ctx, data
 func (_m *SendFunc) Execute(ctx context.Context, data string) (int, error) {
 	ret := _m.Called(ctx, data)
