@@ -133,6 +133,12 @@ func (_m *Requester) Get(path string) (string, error) {
 
 	return r0, r1
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *Requester) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
 `
 	s.checkGeneration(testFile, "Requester", false, "", expected)
 }
@@ -163,6 +169,12 @@ func (_m *SendFunc) Execute(ctx context.Context, data string) (int, error) {
 
 	return r0, r1
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *SendFunc) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
 `
 	s.checkGeneration(
 		filepath.Join(fixturePath, "function.go"), "SendFunc", false, "",
@@ -189,6 +201,12 @@ func (_m *Requester2) Get(path string) error {
 
 	return r0
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *Requester2) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
 `
 	s.checkGeneration(testFile2, "Requester2", false, "", expected)
 }
@@ -212,6 +230,12 @@ func (_m *Requester3) Get() error {
 
 	return r0
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *Requester3) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
 `
 	s.checkGeneration(
 		filepath.Join(fixturePath, "requester3.go"), "Requester3", false, "",
@@ -228,6 +252,12 @@ type Requester4 struct {
 // Get provides a mock function with given fields:
 func (_m *Requester4) Get() {
 	_m.Called()
+}
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *Requester4) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
 }
 `
 	s.checkGeneration(
@@ -246,6 +276,12 @@ type mockRequester_unexported struct {
 func (_m *mockRequester_unexported) Get() {
 	_m.Called()
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *mockRequester_unexported) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
 `
 	s.checkGeneration(
 		"requester_unexported.go", "requester_unexported", true, "", expected,
@@ -261,6 +297,12 @@ type Mockrequester_unexported struct {
 // Get provides a mock function with given fields:
 func (_m *Mockrequester_unexported) Get() {
 	_m.Called()
+}
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *Mockrequester_unexported) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
 }
 `
 	generator := NewGenerator(
@@ -398,6 +440,12 @@ func (_m *RequesterIface) Get() io.Reader {
 
 	return r0
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *RequesterIface) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
 `
 	s.checkGeneration(
 		filepath.Join(fixturePath, "requester_iface.go"), "RequesterIface",
@@ -432,6 +480,12 @@ func (_m *RequesterPtr) Get(path string) (*string, error) {
 	}
 
 	return r0, r1
+}
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *RequesterPtr) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
 }
 `
 	s.checkGeneration(
@@ -468,6 +522,12 @@ func (_m *RequesterSlice) Get(path string) ([]string, error) {
 
 	return r0, r1
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *RequesterSlice) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
 `
 	s.checkGeneration(
 		filepath.Join(fixturePath, "requester_slice.go"), "RequesterSlice",
@@ -503,6 +563,12 @@ func (_m *RequesterArray) Get(path string) ([2]string, error) {
 
 	return r0, r1
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *RequesterArray) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
 `
 	s.checkGeneration(
 		filepath.Join(fixturePath, "requester_array.go"), "RequesterArray",
@@ -536,6 +602,12 @@ func (_m *RequesterNS) Get(path string) (http.Response, error) {
 
 	return r0, r1
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *RequesterNS) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
 `
 	s.checkGeneration(
 		filepath.Join(fixturePath, "requester_ns.go"), "RequesterNS", false, "",
@@ -563,6 +635,12 @@ func (_m *RequesterArgSameAsImport) Get(_a0 string) *json.RawMessage {
 	}
 
 	return r0
+}
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *RequesterArgSameAsImport) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
 }
 `
 	s.checkGeneration(
@@ -592,6 +670,12 @@ func (_m *RequesterArgSameAsNamedImport) Get(_a0 string) *json.RawMessage {
 
 	return r0
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *RequesterArgSameAsNamedImport) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
 `
 	s.checkGeneration(
 		filepath.Join(fixturePath, "requester_arg_same_as_named_import.go"),
@@ -608,6 +692,12 @@ type RequesterArgSameAsPkg struct {
 // Get provides a mock function with given fields: _a0
 func (_m *RequesterArgSameAsPkg) Get(_a0 string) {
 	_m.Called(_a0)
+}
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *RequesterArgSameAsPkg) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
 }
 `
 	s.checkGeneration(
@@ -646,6 +736,12 @@ func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 
 	return r0, r1
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *KeyManager) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
 `
 	s.checkGeneration(
 		filepath.Join(fixturePath, "custom_error.go"), "KeyManager", false, "",
@@ -671,6 +767,12 @@ func (_m *RequesterElided) Get(path string, url string) error {
 	}
 
 	return r0
+}
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *RequesterElided) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
 }
 `
 	s.checkGeneration(
@@ -718,6 +820,12 @@ func (_m *RequesterReturnElided) Get(path string) (int, int, int, error) {
 	}
 
 	return r0, r1, r2, r3
+}
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *RequesterReturnElided) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
 }
 `
 	s.checkGeneration(
@@ -902,6 +1010,12 @@ func (_m *Fooer) Foo(f func(string) string) error {
 
 	return r0
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *Fooer) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
 `
 	s.checkGeneration(
 		filepath.Join(fixturePath, "func_type.go"), "Fooer", false, "", expected,
@@ -961,6 +1075,12 @@ func (_m *AsyncProducer) Whatever() chan bool {
 
 	return r0
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *AsyncProducer) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
 `
 	s.checkGeneration(
 		filepath.Join(fixturePath, "async.go"), "AsyncProducer", false, "",
@@ -993,6 +1113,12 @@ func (_m *MyReader) Read(p []byte) (int, error) {
 	}
 
 	return r0, r1
+}
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *MyReader) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
 }
 `
 	s.checkGeneration(
@@ -1043,6 +1169,12 @@ func (_m *ConsulLock) Unlock() error {
 
 	return r0
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *ConsulLock) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
 `
 	s.checkGeneration(
 		filepath.Join(fixturePath, "consul.go"), "ConsulLock", false, "", expected,
@@ -1067,6 +1199,12 @@ func (_m *Blank) Create(x interface{}) error {
 	}
 
 	return r0
+}
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *Blank) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
 }
 `
 	s.checkGeneration(
@@ -1094,6 +1232,12 @@ func (_m *MapFunc) Get(m map[string]func(string) string) error {
 
 	return r0
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *MapFunc) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
 `
 	s.checkGeneration(
 		filepath.Join(fixturePath, "map_func.go"), "MapFunc", false, "", expected,
@@ -1109,6 +1253,12 @@ type UsesOtherPkgIface struct {
 // DoSomethingElse provides a mock function with given fields: obj
 func (_m *UsesOtherPkgIface) DoSomethingElse(obj test.Sibling) {
 	_m.Called(obj)
+}
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *UsesOtherPkgIface) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
 }
 `
 	s.checkGeneration(
@@ -1126,6 +1276,12 @@ type MockUsesOtherPkgIface struct {
 // DoSomethingElse provides a mock function with given fields: obj
 func (_m *MockUsesOtherPkgIface) DoSomethingElse(obj Sibling) {
 	_m.Called(obj)
+}
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *MockUsesOtherPkgIface) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
 }
 `
 	s.checkGeneration(
@@ -1169,6 +1325,12 @@ func (_m *Example) B(_a0 string) fixtureshttp.MyStruct {
 
 	return r0
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *Example) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
 `
 	s.checkGeneration(
 		filepath.Join(fixturePath, "same_name_imports.go"), "Example", false, "",
@@ -1202,6 +1364,12 @@ func (_m *MapToInterface) Foo(arg1 ...map[string]interface{}) {
 	_ca = append(_ca, _va...)
 	_m.Called(_ca...)
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *MapToInterface) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
 `
 	s.checkGeneration(
 		"MapToInterface.go", "MapToInterface", false, "",
@@ -1228,6 +1396,12 @@ func (_m *FuncArgsCollision) Foo(ret interface{}) error {
 	}
 
 	return r0
+}
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *FuncArgsCollision) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
 }
 `
 	s.checkGeneration(
@@ -1274,6 +1448,12 @@ func (_m *ImportsSameAsPackage) B() fixtures.KeyManager {
 // C provides a mock function with given fields: _a0
 func (_m *ImportsSameAsPackage) C(_a0 fixtures.C) {
 	_m.Called(_a0)
+}
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *ImportsSameAsPackage) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
 }
 `
 	s.checkGeneration(
@@ -1338,6 +1518,12 @@ func (_m *A) Call() (test.B, error) {
 
 	return r0, r1
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *A) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
 `
 	s.checkGeneration(
 		filepath.Join(fixturePath, "struct_value.go"), "A", false, "",
@@ -1363,6 +1549,12 @@ func (_m *Requester2OverrideName) Get(path string) error {
 	}
 
 	return r0
+}
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *Requester2OverrideName) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
 }
 `
 	s.checkGeneration(testFile2, "Requester2", false, "Requester2OverrideName", expected)

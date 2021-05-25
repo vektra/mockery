@@ -552,6 +552,8 @@ func (g *Generator) Generate(ctx context.Context) error {
 		g.printf("}\n")
 	}
 
+	g.printf("\n// ResetMocks resets the Calls and ExpectedCalls\nfunc (_m *%s) ResetMocks() {\n\t_m.Calls = []mock.Call{}\n\t_m.ExpectedCalls = []*mock.Call{}\n}\n", g.mockName())
+
 	return nil
 }
 
