@@ -17,9 +17,10 @@ import (
 	"unicode"
 
 	"github.com/rs/zerolog"
+	"golang.org/x/tools/imports"
+
 	"github.com/vektra/mockery/v2/pkg/config"
 	"github.com/vektra/mockery/v2/pkg/logging"
-	"golang.org/x/tools/imports"
 )
 
 var invalidIdentifierChar = regexp.MustCompile("[^[:digit:][:alpha:]_]")
@@ -192,6 +193,17 @@ func (g *Generator) getLocalizedPath(ctx context.Context, path string) string {
 	return toReturn
 }
 
+func upperFirstOnly(s string) string {
+	first := true
+	return strings.Map(func(r rune) rune {
+		if first {
+			first = false
+			return unicode.ToUpper(r)
+		}
+		return r
+	},s)
+}
+
 func (g *Generator) mockName() string {
 	if g.StructName != "" {
 		return g.StructName
@@ -202,14 +214,10 @@ func (g *Generator) mockName() string {
 			return "Mock" + g.iface.Name
 		}
 
-		first := true
-		return "mock" + strings.Map(func(r rune) rune {
-			if first {
-				first = false
-				return unicode.ToUpper(r)
-			}
-			return r
-		}, g.iface.Name)
+		return "mock" + upperFirstOnly(g.iface.Name)
+	}
+	if g.Exported || ast.IsExported(g.iface.Name) {
+		return upperFirstOnly(g.iface.Name)
 	}
 
 	return g.iface.Name
