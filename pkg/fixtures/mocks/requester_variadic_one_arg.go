@@ -68,3 +68,9 @@ func (_m *RequesterVariadicOneArgument) Sprintf(format string, a ...interface{})
 
 	return r0
 }
+
+// ResetMocks resets the Calls and ExpectedCalls
+func (_m *RequesterVariadicOneArgument) ResetMocks() {
+	_m.Calls = []mock.Call{}
+	_m.ExpectedCalls = []*mock.Call{}
+}
