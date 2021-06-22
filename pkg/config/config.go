@@ -4,7 +4,7 @@ package config
 var SemVer = "v0.0.0-dev"
 
 func GetSemverInfo() string {
-    return SemVer
+	return SemVer
 }
 
 type Config struct {
@@ -34,9 +34,10 @@ type Config struct {
 	BoilerplateFile      string `mapstructure:"boilerplate-file"`
 	// StructName overrides the name given to the mock struct and should only be nonempty
 	// when generating for an exact match (non regex expression in -name).
-	StructName     string
-	Tags           string
-	TestOnly       bool
-	UnrollVariadic bool `mapstructure:"unroll-variadic"`
-	Version        bool
+	StructName          string
+	Tags                string
+	TestOnly            bool
+	UnrollVariadic      bool `mapstructure:"unroll-variadic"`
+	Version             bool
+	GenerateOnFunctions bool `mapstructure:"generate-on-functions"`
 }

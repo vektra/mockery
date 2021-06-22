@@ -9,6 +9,10 @@ type ConsulLock struct {
 	mock.Mock
 }
 
+func (_m *ConsulLock) On_Lock(_a0 <-chan struct{}, r_a0 <-chan struct{}, r_a1 error) *mock.Call {
+	return _m.Mock.On("Lock", _a0).Return(r_a0, r_a1)
+}
+
 // Lock provides a mock function with given fields: _a0
 func (_m *ConsulLock) Lock(_a0 <-chan struct{}) (<-chan struct{}, error) {
 	ret := _m.Called(_a0)
@@ -30,6 +34,10 @@ func (_m *ConsulLock) Lock(_a0 <-chan struct{}) (<-chan struct{}, error) {
 	}
 
 	return r0, r1
+}
+
+func (_m *ConsulLock) On_Unlock(r_a0 error) *mock.Call {
+	return _m.Mock.On("Unlock").Return(r_a0)
 }
 
 // Unlock provides a mock function with given fields:

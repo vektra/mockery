@@ -12,6 +12,10 @@ type Root struct {
 	mock.Mock
 }
 
+func (_m *Root) On_ReturnsFoo(r_a0 foo.Foo, r_a1 error) *mock.Call {
+	return _m.Mock.On("ReturnsFoo").Return(r_a0, r_a1)
+}
+
 // ReturnsFoo provides a mock function with given fields:
 func (_m *Root) ReturnsFoo() (foo.Foo, error) {
 	ret := _m.Called()
@@ -33,6 +37,10 @@ func (_m *Root) ReturnsFoo() (foo.Foo, error) {
 	}
 
 	return r0, r1
+}
+
+func (_m *Root) On_TakesBaz(_a0 *foo.Baz) *mock.Call {
+	return _m.Mock.On("TakesBaz", _a0).Return()
 }
 
 // TakesBaz provides a mock function with given fields: _a0

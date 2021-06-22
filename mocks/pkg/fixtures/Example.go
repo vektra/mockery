@@ -15,6 +15,10 @@ type Example struct {
 	mock.Mock
 }
 
+func (_m *Example) On_A(r_a0 http.Flusher) *mock.Call {
+	return _m.Mock.On("A").Return(r_a0)
+}
+
 // A provides a mock function with given fields:
 func (_m *Example) A() http.Flusher {
 	ret := _m.Called()
@@ -29,6 +33,10 @@ func (_m *Example) A() http.Flusher {
 	}
 
 	return r0
+}
+
+func (_m *Example) On_B(_a0 string, r_a0 fixtureshttp.MyStruct) *mock.Call {
+	return _m.Mock.On("B", _a0).Return(r_a0)
 }
 
 // B provides a mock function with given fields: _a0

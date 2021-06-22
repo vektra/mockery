@@ -9,6 +9,10 @@ type MyReader struct {
 	mock.Mock
 }
 
+func (_m *MyReader) On_Read(p []byte, rn int, rerr error) *mock.Call {
+	return _m.Mock.On("Read", p).Return(rn, rerr)
+}
+
 // Read provides a mock function with given fields: p
 func (_m *MyReader) Read(p []byte) (int, error) {
 	ret := _m.Called(p)

@@ -9,6 +9,10 @@ type AsyncProducer struct {
 	mock.Mock
 }
 
+func (_m *AsyncProducer) On_Input(r_a0 chan<- bool) *mock.Call {
+	return _m.Mock.On("Input").Return(r_a0)
+}
+
 // Input provides a mock function with given fields:
 func (_m *AsyncProducer) Input() chan<- bool {
 	ret := _m.Called()
@@ -25,6 +29,10 @@ func (_m *AsyncProducer) Input() chan<- bool {
 	return r0
 }
 
+func (_m *AsyncProducer) On_Output(r_a0 <-chan bool) *mock.Call {
+	return _m.Mock.On("Output").Return(r_a0)
+}
+
 // Output provides a mock function with given fields:
 func (_m *AsyncProducer) Output() <-chan bool {
 	ret := _m.Called()
@@ -39,6 +47,10 @@ func (_m *AsyncProducer) Output() <-chan bool {
 	}
 
 	return r0
+}
+
+func (_m *AsyncProducer) On_Whatever(r_a0 chan bool) *mock.Call {
+	return _m.Mock.On("Whatever").Return(r_a0)
 }
 
 // Whatever provides a mock function with given fields:

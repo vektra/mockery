@@ -15,6 +15,10 @@ type HasConflictingNestedImports struct {
 	mock.Mock
 }
 
+func (_m *HasConflictingNestedImports) On_Get(path string, r_a0 http.Response, r_a1 error) *mock.Call {
+	return _m.Mock.On("Get", path).Return(r_a0, r_a1)
+}
+
 // Get provides a mock function with given fields: path
 func (_m *HasConflictingNestedImports) Get(path string) (http.Response, error) {
 	ret := _m.Called(path)
@@ -34,6 +38,10 @@ func (_m *HasConflictingNestedImports) Get(path string) (http.Response, error) {
 	}
 
 	return r0, r1
+}
+
+func (_m *HasConflictingNestedImports) On_Z(r_a0 fixtureshttp.MyStruct) *mock.Call {
+	return _m.Mock.On("Z").Return(r_a0)
 }
 
 // Z provides a mock function with given fields:

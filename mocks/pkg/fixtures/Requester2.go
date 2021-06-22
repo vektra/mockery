@@ -9,6 +9,10 @@ type Requester2 struct {
 	mock.Mock
 }
 
+func (_m *Requester2) On_Get(path string, r_a0 error) *mock.Call {
+	return _m.Mock.On("Get", path).Return(r_a0)
+}
+
 // Get provides a mock function with given fields: path
 func (_m *Requester2) Get(path string) error {
 	ret := _m.Called(path)

@@ -14,6 +14,10 @@ type WalkerVisitor struct {
 	mock.Mock
 }
 
+func (_m *WalkerVisitor) On_VisitWalk(_a0 context.Context, _a1 *pkg.Interface, r_a0 error) *mock.Call {
+	return _m.Mock.On("VisitWalk", _a0, _a1).Return(r_a0)
+}
+
 // VisitWalk provides a mock function with given fields: _a0, _a1
 func (_m *WalkerVisitor) VisitWalk(_a0 context.Context, _a1 *pkg.Interface) error {
 	ret := _m.Called(_a0, _a1)

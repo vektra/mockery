@@ -13,6 +13,10 @@ type RequesterNS struct {
 	mock.Mock
 }
 
+func (_m *RequesterNS) On_Get(path string, r_a0 http.Response, r_a1 error) *mock.Call {
+	return _m.Mock.On("Get", path).Return(r_a0, r_a1)
+}
+
 // Get provides a mock function with given fields: path
 func (_m *RequesterNS) Get(path string) (http.Response, error) {
 	ret := _m.Called(path)

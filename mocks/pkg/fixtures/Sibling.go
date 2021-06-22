@@ -9,6 +9,10 @@ type Sibling struct {
 	mock.Mock
 }
 
+func (_m *Sibling) On_DoSomething() *mock.Call {
+	return _m.Mock.On("DoSomething").Return()
+}
+
 // DoSomething provides a mock function with given fields:
 func (_m *Sibling) DoSomething() {
 	_m.Called()

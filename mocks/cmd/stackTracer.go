@@ -12,6 +12,10 @@ type stackTracer struct {
 	mock.Mock
 }
 
+func (_m *stackTracer) On_StackTrace(r_a0 errors.StackTrace) *mock.Call {
+	return _m.Mock.On("StackTrace").Return(r_a0)
+}
+
 // StackTrace provides a mock function with given fields:
 func (_m *stackTracer) StackTrace() errors.StackTrace {
 	ret := _m.Called()

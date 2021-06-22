@@ -9,9 +9,17 @@ type Fooer struct {
 	mock.Mock
 }
 
+func (_m *Fooer) On_Bar(f func([]int)) *mock.Call {
+	return _m.Mock.On("Bar", f).Return()
+}
+
 // Bar provides a mock function with given fields: f
 func (_m *Fooer) Bar(f func([]int)) {
 	_m.Called(f)
+}
+
+func (_m *Fooer) On_Baz(path string, r_a0 func(string) string) *mock.Call {
+	return _m.Mock.On("Baz", path).Return(r_a0)
 }
 
 // Baz provides a mock function with given fields: path
@@ -28,6 +36,10 @@ func (_m *Fooer) Baz(path string) func(string) string {
 	}
 
 	return r0
+}
+
+func (_m *Fooer) On_Foo(f func(string) string, r_a0 error) *mock.Call {
+	return _m.Mock.On("Foo", f).Return(r_a0)
 }
 
 // Foo provides a mock function with given fields: f

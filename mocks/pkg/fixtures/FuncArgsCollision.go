@@ -9,6 +9,10 @@ type FuncArgsCollision struct {
 	mock.Mock
 }
 
+func (_m *FuncArgsCollision) On_Foo(ret interface{}, r_a0 error) *mock.Call {
+	return _m.Mock.On("Foo", ret).Return(r_a0)
+}
+
 // Foo provides a mock function with given fields: ret
 func (_m *FuncArgsCollision) Foo(ret interface{}) error {
 	ret_1 := _m.Called(ret)

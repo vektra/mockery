@@ -9,6 +9,10 @@ type RequesterArray struct {
 	mock.Mock
 }
 
+func (_m *RequesterArray) On_Get(path string, r_a0 [2]string, r_a1 error) *mock.Call {
+	return _m.Mock.On("Get", path).Return(r_a0, r_a1)
+}
+
 // Get provides a mock function with given fields: path
 func (_m *RequesterArray) Get(path string) ([2]string, error) {
 	ret := _m.Called(path)
