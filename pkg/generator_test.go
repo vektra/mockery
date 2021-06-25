@@ -1435,6 +1435,16 @@ import mock "github.com/stretchr/testify/mock"
 	}
 }
 
+func (s *GeneratorSuite) TestGenerateMethodConstants() {
+	generator := s.getGenerator(testFile, "Requester", false, "")
+	generator.GenerateMethodConstants()
+
+	expected := `const Requester_Get = "Get"
+`
+
+	s.Equal(expected, generator.buf.String())
+}
+
 func TestGeneratorSuite(t *testing.T) {
 	generatorSuite := new(GeneratorSuite)
 	suite.Run(t, generatorSuite)

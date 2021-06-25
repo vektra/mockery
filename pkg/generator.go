@@ -265,6 +265,17 @@ func (g *Generator) GeneratePrologue(ctx context.Context, pkg string) {
 	g.printf("\n")
 }
 
+// AddMethodNames adds a constant for each method name.
+func (g *Generator) GenerateMethodConstants() {
+	for _, method := range g.iface.Methods() {
+		methodName := strings.TrimSpace(method.Name)
+		constName := g.mockName() + "_" + methodName
+		if unicode.IsUpper(rune(methodName[0])) {
+			g.printf(fmt.Sprintf("const %s = \"%s\"\n", constName, methodName))
+		}
+	}
+}
+
 // GeneratePrologueNote adds a note after the prologue to the output
 // string.
 func (g *Generator) GeneratePrologueNote(note string) {
