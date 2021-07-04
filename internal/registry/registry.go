@@ -169,7 +169,7 @@ func parseImportsAliases(pkg *packages.Package) map[string]string {
 	aliases := make(map[string]string)
 	for _, syntax := range pkg.Syntax {
 		for _, imprt := range syntax.Imports {
-			if imprt.Name != nil && imprt.Name.Name != "." {
+			if imprt.Name != nil && imprt.Name.Name != "." && imprt.Name.Name != "_" {
 				aliases[strings.Trim(imprt.Path.Value, `"`)] = imprt.Name.Name
 			}
 		}
