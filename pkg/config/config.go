@@ -4,7 +4,7 @@ package config
 var SemVer = "v0.0.0-dev"
 
 func GetSemverInfo() string {
-    return SemVer
+	return SemVer
 }
 
 type Config struct {
