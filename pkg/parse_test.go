@@ -7,14 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var testFile string
-var testFile2 string
-
-func init() {
-	testFile = getFixturePath("requester.go")
-	testFile2 = getFixturePath("requester2.go")
-}
-
 var ctx = context.Background()
 
 func TestFileParse(t *testing.T) {
