@@ -5,23 +5,15 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-    types: [opened]
-  issue_comment:
-    types: [created]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ macos-latest, ubuntu-latest]
+        go_vers: [1.16, 1.17]
     steps:
-      - name: Pull Request Comment Trigger
-        uses: Khan/pull-request-comment-trigger@1.0.0
-        with:
-          trigger: 'retest this please'
-          reaction: rocket
-        env:
-          GITHUB_TOKEN: ${{ secrets.GORELEASER_GITHUB_TOKEN }} 
-        if: ${{ github.event_name == 'issue_comment' }}
-
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
@@ -29,7 +21,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.16
+          go-version: ${{ matrix.go_vers }}
 
       - name: Download dependencies
         run: go mod download -x
