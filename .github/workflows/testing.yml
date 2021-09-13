@@ -17,8 +17,7 @@ jobs:
         uses: Khan/pull-request-comment-trigger@1.0.0
         with:
           trigger: 'retest this please'
-          reaction: rocker
-          prefix_only: true
+          reaction: rocket
         env:
           GITHUB_TOKEN: ${{ secrets.GORELEASER_GITHUB_TOKEN }} 
       - uses: actions/checkout@v2
