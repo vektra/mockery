@@ -55,6 +55,7 @@ brews:
     tap:
         owner: vektra
         name: homebrew-tap
+        token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
     folder: Formula
     test: |
         system "#{bin}mockery --version"
