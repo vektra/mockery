@@ -1,7 +1,7 @@
 
 mockery
 =======
-[![Linux Build Status](https://travis-ci.org/vektra/mockery.svg?branch=master)](https://travis-ci.org/vektra/mockery) [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/vektra/mockery/v2?tab=overview) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/vektra/mockery) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/vektra/mockery) [![Go Report Card](https://goreportcard.com/badge/github.com/vektra/mockery)](https://goreportcard.com/report/github.com/vektra/mockery) [![codecov](https://codecov.io/gh/vektra/mockery/branch/master/graph/badge.svg)](https://codecov.io/gh/vektra/mockery)
+[![Release](https://github.com/vektra/mockery/actions/workflows/release.yml/badge.svg)](https://github.com/vektra/mockery/actions/workflows/release.yml) [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/vektra/mockery/v2?tab=overview) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/vektra/mockery) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/vektra/mockery) [![Go Report Card](https://goreportcard.com/badge/github.com/vektra/mockery)](https://goreportcard.com/report/github.com/vektra/mockery) [![codecov](https://codecov.io/gh/vektra/mockery/branch/master/graph/badge.svg)](https://codecov.io/gh/vektra/mockery)
 
 
 
