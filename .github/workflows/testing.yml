@@ -23,6 +23,8 @@ jobs:
         if: ${{ github.event_name == 'issue_comment' }}
 
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Set up Go
         uses: actions/setup-go@v2
