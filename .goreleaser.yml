@@ -5,6 +5,7 @@ before:
       - go mod download
 builds:
   - main: ./main.go
+    binary: mockery
     ldflags:
       - -s -w -X github.com/vektra/mockery/v2/pkg/config.SemVer=v{{.Version}}
     env:
@@ -35,8 +36,6 @@ changelog:
 dockers:
   - goos: linux
     goarch: amd64
-    binaries:
-      - mockery
     image_templates:
       - 'vektra/mockery:{{ .Tag }}'
       - 'vektra/mockery:v{{ .Major }}'
