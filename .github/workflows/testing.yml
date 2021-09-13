@@ -5,13 +5,23 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+    types: [opened]
+  issue_comment:
+    types: [created]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Pull Request Comment Trigger
+        uses: Khan/pull-request-comment-trigger@1.0.0
+        with:
+          trigger: 'retest this please'
+          reaction: rocker
+          prefix_only: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GORELEASER_GITHUB_TOKEN }} 
       - uses: actions/checkout@v2
-
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
