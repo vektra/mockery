@@ -20,7 +20,10 @@ jobs:
           reaction: rocket
         env:
           GITHUB_TOKEN: ${{ secrets.GORELEASER_GITHUB_TOKEN }} 
+        if: ${{ github.event_name == 'issue_comment' }}
+
       - uses: actions/checkout@v2
+
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
