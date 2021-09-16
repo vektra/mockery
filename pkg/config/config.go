@@ -1,10 +1,23 @@
 package config
 
+import "runtime/debug"
+
+const (
+	_defaultSemVer = "v0.0.0-dev"
+)
+
 // SemVer is the version of mockery at build time.
-var SemVer = "v0.0.0-dev"
+var SemVer = ""
 
 func GetSemverInfo() string {
-    return SemVer
+	if SemVer != "" {
+		return SemVer
+	}
+	version, ok := debug.ReadBuildInfo()
+	if ok && version.Main.Version != "(devel)" {
+		return version.Main.Version
+	}
+	return _defaultSemVer
 }
 
 type Config struct {
