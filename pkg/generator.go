@@ -201,7 +201,7 @@ func upperFirstOnly(s string) string {
 			return unicode.ToUpper(r)
 		}
 		return r
-	},s)
+	}, s)
 }
 
 func (g *Generator) mockName() string {

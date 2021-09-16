@@ -33,8 +33,8 @@ func (s *GeneratorSuite) SetupTest() {
 }
 
 func (s *GeneratorSuite) getInterfaceFromFile(interfacePath, interfaceName string) *Interface {
-	if !strings.Contains(interfacePath, fixturePath) {
-		interfacePath = filepath.Join(fixturePath, interfacePath)
+	if !filepath.IsAbs(interfacePath) {
+		interfacePath = getFixturePath(interfacePath)
 	}
 	s.NoError(
 		s.parser.Parse(s.ctx, interfacePath), "The parser is able to parse the given file.",
@@ -164,10 +164,7 @@ func (_m *SendFunc) Execute(ctx context.Context, data string) (int, error) {
 	return r0, r1
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "function.go"), "SendFunc", false, "",
-		expected,
-	)
+	s.checkGeneration("function.go", "SendFunc", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorSingleReturn() {
@@ -213,10 +210,7 @@ func (_m *Requester3) Get() error {
 	return r0
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "requester3.go"), "Requester3", false, "",
-		expected,
-	)
+	s.checkGeneration("requester3.go", "Requester3", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorNoNothing() {
@@ -230,10 +224,7 @@ func (_m *Requester4) Get() {
 	_m.Called()
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "requester4.go"), "Requester4", false, "",
-		expected,
-	)
+	s.checkGeneration("requester4.go", "Requester4", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorUnexported() {
@@ -247,9 +238,7 @@ func (_m *mockRequester_unexported) Get() {
 	_m.Called()
 }
 `
-	s.checkGeneration(
-		"requester_unexported.go", "requester_unexported", true, "", expected,
-	)
+	s.checkGeneration("requester_unexported.go", "requester_unexported", true, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorExportedOnFlag() {
@@ -432,10 +421,7 @@ func (_m *RequesterIface) Get() io.Reader {
 	return r0
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "requester_iface.go"), "RequesterIface",
-		false, "", expected,
-	)
+	s.checkGeneration("requester_iface.go", "RequesterIface", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorPointers() {
@@ -467,10 +453,7 @@ func (_m *RequesterPtr) Get(path string) (*string, error) {
 	return r0, r1
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "requester_ptr.go"), "RequesterPtr", false, "",
-		expected,
-	)
+	s.checkGeneration("requester_ptr.go", "RequesterPtr", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorSlice() {
@@ -502,10 +485,7 @@ func (_m *RequesterSlice) Get(path string) ([]string, error) {
 	return r0, r1
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "requester_slice.go"), "RequesterSlice",
-		false, "", expected,
-	)
+	s.checkGeneration("requester_slice.go", "RequesterSlice", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorArrayLiteralLen() {
@@ -537,10 +517,7 @@ func (_m *RequesterArray) Get(path string) ([2]string, error) {
 	return r0, r1
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "requester_array.go"), "RequesterArray",
-		false, "", expected,
-	)
+	s.checkGeneration("requester_array.go", "RequesterArray", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorNamespacedTypes() {
@@ -570,10 +547,7 @@ func (_m *RequesterNS) Get(path string) (http.Response, error) {
 	return r0, r1
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "requester_ns.go"), "RequesterNS", false, "",
-		expected,
-	)
+	s.checkGeneration("requester_ns.go", "RequesterNS", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorWhereArgumentNameConflictsWithImport() {
@@ -598,10 +572,7 @@ func (_m *RequesterArgSameAsImport) Get(_a0 string) *json.RawMessage {
 	return r0
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "requester_arg_same_as_import.go"),
-		"RequesterArgSameAsImport", false, "", expected,
-	)
+	s.checkGeneration("requester_arg_same_as_import.go", "RequesterArgSameAsImport", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorWhereArgumentNameConflictsWithNamedImport() {
@@ -626,10 +597,7 @@ func (_m *RequesterArgSameAsNamedImport) Get(_a0 string) *json.RawMessage {
 	return r0
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "requester_arg_same_as_named_import.go"),
-		"RequesterArgSameAsNamedImport", false, "", expected,
-	)
+	s.checkGeneration("requester_arg_same_as_named_import.go", "RequesterArgSameAsNamedImport", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorWhereArgumentNameConflictsWithPackage() {
@@ -643,10 +611,7 @@ func (_m *RequesterArgSameAsPkg) Get(_a0 string) {
 	_m.Called(_a0)
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "requester_arg_same_as_pkg.go"),
-		"RequesterArgSameAsPkg", false, "", expected,
-	)
+	s.checkGeneration("requester_arg_same_as_pkg.go", "RequesterArgSameAsPkg", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorHavingNoNamesOnArguments() {
@@ -680,10 +645,7 @@ func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 	return r0, r1
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "custom_error.go"), "KeyManager", false, "",
-		expected,
-	)
+	s.checkGeneration("custom_error.go", "KeyManager", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorElidedType() {
@@ -706,10 +668,7 @@ func (_m *RequesterElided) Get(path string, url string) error {
 	return r0
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "requester_elided.go"), "RequesterElided",
-		false, "", expected,
-	)
+	s.checkGeneration("requester_elided.go", "RequesterElided", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorReturnElidedType() {
@@ -753,33 +712,19 @@ func (_m *RequesterReturnElided) Get(path string) (int, int, int, error) {
 	return r0, r1, r2, r3
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "requester_ret_elided.go"),
-		"RequesterReturnElided", false, "", expected,
-	)
+	s.checkGeneration("requester_ret_elided.go", "RequesterReturnElided", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorVariadicArgs() {
-	// Read the expected output from a "golden" file that we can also import in CompatSuite
-	// to asserts its actual behavior.
-	//
-	// To regenerate the golden file: make fixture
-	expectedBytes, err := ioutil.ReadFile(filepath.Join(fixturePath, "mocks", "requester_variadic.go"))
+	expectedBytes, err := ioutil.ReadFile(getMocksPath("RequesterVariadic.go"))
 	s.NoError(err)
 	expected := string(expectedBytes)
 	expected = expected[strings.Index(expected, "// RequesterVariadic is"):]
-	s.checkGeneration(
-		filepath.Join(fixturePath, "requester_variadic.go"),
-		"RequesterVariadic", false, "", expected,
-	)
+	s.checkGeneration("requester_variadic.go", "RequesterVariadic", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorVariadicArgsAsOneArg() {
-	// Read the expected output from a "golden" file that we can also import in CompatSuite
-	// to asserts its actual behavior.
-	//
-	// To regenerate the golden file: make fixture
-	expectedBytes, err := ioutil.ReadFile(filepath.Join(fixturePath, "mocks", "requester_variadic_one_arg.go"))
+	expectedBytes, err := ioutil.ReadFile(getMocksPath("RequesterVariadicOneArgument.go"))
 	s.NoError(err)
 	expected := string(expectedBytes)
 	expected = expected[strings.Index(expected, "// RequesterVariadicOneArgument is"):]
@@ -936,9 +881,7 @@ func (_m *Fooer) Foo(f func(string) string) error {
 	return r0
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "func_type.go"), "Fooer", false, "", expected,
-	)
+	s.checkGeneration("func_type.go", "Fooer", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorChanType() {
@@ -995,10 +938,7 @@ func (_m *AsyncProducer) Whatever() chan bool {
 	return r0
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "async.go"), "AsyncProducer", false, "",
-		expected,
-	)
+	s.checkGeneration("async.go", "AsyncProducer", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorFromImport() {
@@ -1028,10 +968,7 @@ func (_m *MyReader) Read(p []byte) (int, error) {
 	return r0, r1
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "io_import.go"), "MyReader", false, "",
-		expected,
-	)
+	s.checkGeneration("io_import.go", "MyReader", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorComplexChanFromConsul() {
@@ -1077,9 +1014,7 @@ func (_m *ConsulLock) Unlock() error {
 	return r0
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "consul.go"), "ConsulLock", false, "", expected,
-	)
+	s.checkGeneration("consul.go", "ConsulLock", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorForEmptyInterface() {
@@ -1102,10 +1037,7 @@ func (_m *Blank) Create(x interface{}) error {
 	return r0
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "empty_interface.go"), "Blank", false, "",
-		expected,
-	)
+	s.checkGeneration("empty_interface.go", "Blank", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorArgumentIsMapFunc() {
@@ -1128,9 +1060,7 @@ func (_m *MapFunc) Get(m map[string]func(string) string) error {
 	return r0
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "map_func.go"), "MapFunc", false, "", expected,
-	)
+	s.checkGeneration("map_func.go", "MapFunc", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorForMethodUsingInterface() {
@@ -1144,10 +1074,7 @@ func (_m *UsesOtherPkgIface) DoSomethingElse(obj test.Sibling) {
 	_m.Called(obj)
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "mock_method_uses_pkg_iface.go"),
-		"UsesOtherPkgIface", false, "", expected,
-	)
+	s.checkGeneration("mock_method_uses_pkg_iface.go", "UsesOtherPkgIface", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorForMethodUsingInterfaceInPackage() {
@@ -1161,10 +1088,7 @@ func (_m *MockUsesOtherPkgIface) DoSomethingElse(obj Sibling) {
 	_m.Called(obj)
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "mock_method_uses_pkg_iface.go"),
-		"UsesOtherPkgIface", true, "", expected,
-	)
+	s.checkGeneration("mock_method_uses_pkg_iface.go", "UsesOtherPkgIface", true, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorWithAliasing() {
@@ -1203,10 +1127,7 @@ func (_m *Example) B(_a0 string) fixtureshttp.MyStruct {
 	return r0
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "same_name_imports.go"), "Example", false, "",
-		expected,
-	)
+	s.checkGeneration("same_name_imports.go", "Example", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorWithImportSameAsLocalPackageInpkgNoCycle() {
@@ -1236,10 +1157,7 @@ func (_m *MapToInterface) Foo(arg1 ...map[string]interface{}) {
 	_m.Called(_ca...)
 }
 `
-	s.checkGeneration(
-		"MapToInterface.go", "MapToInterface", false, "",
-		expected,
-	)
+	s.checkGeneration("MapToInterface.go", "MapToInterface", false, "", expected)
 
 }
 
@@ -1263,9 +1181,7 @@ func (_m *FuncArgsCollision) Foo(ret interface{}) error {
 	return r0
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "func_args_collision.go"), "FuncArgsCollision", false, "", expected,
-	)
+	s.checkGeneration("func_args_collision.go", "FuncArgsCollision", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorWithImportSameAsLocalPackage() {
@@ -1309,10 +1225,7 @@ func (_m *ImportsSameAsPackage) C(_a0 fixtures.C) {
 	_m.Called(_a0)
 }
 `
-	s.checkGeneration(
-		"imports_same_as_package.go", "ImportsSameAsPackage", false, "",
-		expected,
-	)
+	s.checkGeneration("imports_same_as_package.go", "ImportsSameAsPackage", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestPrologueWithImportSameAsLocalPackage() {
@@ -1372,10 +1285,7 @@ func (_m *A) Call() (test.B, error) {
 	return r0, r1
 }
 `
-	s.checkGeneration(
-		filepath.Join(fixturePath, "struct_value.go"), "A", false, "",
-		expected,
-	)
+	s.checkGeneration("struct_value.go", "A", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestStructNameOverride() {
@@ -1409,14 +1319,14 @@ func (s *GeneratorSuite) TestKeepTreeInPackageCombined() {
 	}
 
 	tests := []testData{
-		{path: "example_project/root.go", name: "Root", expected: `package example_project
+		{path: filepath.Join("example_project", "root.go"), name: "Root", expected: `package example_project
 
 import example_project "github.com/vektra/mockery/v2/pkg/fixtures/example_project"
 import foo "github.com/vektra/mockery/v2/pkg/fixtures/example_project/foo"
 import mock "github.com/stretchr/testify/mock"
 
 `},
-		{path: "example_project/foo/foo.go", name: "Foo", expected: `package foo
+		{path: filepath.Join("example_project", "foo", "foo.go"), name: "Foo", expected: `package foo
 
 import foo "github.com/vektra/mockery/v2/pkg/fixtures/example_project/foo"
 import mock "github.com/stretchr/testify/mock"
