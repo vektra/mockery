@@ -26,7 +26,14 @@ import (
 
 var (
 	cfgFile = ""
-	rootCmd = &cobra.Command{
+)
+
+func init() {
+	cobra.OnInitialize(initConfig)
+}
+
+func NewRootCmd() *cobra.Command {
+	cmd := &cobra.Command{
 		Use:   "mockery",
 		Short: "Generate mock objects for your Golang interfaces",
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -38,34 +45,8 @@ var (
 			return r.Run()
 		},
 	}
-)
 
-type stackTracer interface {
-	StackTrace() errors.StackTrace
-}
-
-func printStackTrace(e error) {
-	fmt.Printf("%v\n", e)
-	if err, ok := e.(stackTracer); ok {
-		for _, f := range err.StackTrace() {
-			fmt.Printf("%+s:%d\n", f, f)
-		}
-	}
-
-}
-
-// Execute executes the cobra CLI workflow
-func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		//printStackTrace(err)
-		os.Exit(1)
-	}
-}
-
-func init() {
-	cobra.OnInitialize(initConfig)
-
-	pFlags := rootCmd.PersistentFlags()
+	pFlags := cmd.PersistentFlags()
 	pFlags.StringVar(&cfgFile, "config", "", "config file to use")
 	pFlags.String("name", "", "name or matching regular expression of interface to generate mock for")
 	pFlags.Bool("print", false, "print the generated mock to stdout")
@@ -95,12 +76,42 @@ func init() {
 	pFlags.Bool("exported", false, "Generates public mocks for private interfaces.")
 
 	viper.BindPFlags(pFlags)
+
+	cmd.AddCommand(NewShowConfigCmd())
+	return cmd
+}
+
+type stackTracer interface {
+	StackTrace() errors.StackTrace
+}
+
+func printStackTrace(e error) {
+	fmt.Printf("%v\n", e)
+	if err, ok := e.(stackTracer); ok {
+		for _, f := range err.StackTrace() {
+			fmt.Printf("%+s:%d\n", f, f)
+		}
+	}
+
+}
+
+// Execute executes the cobra CLI workflow
+func Execute() {
+	if err := NewRootCmd().Execute(); err != nil {
+		//printStackTrace(err)
+		os.Exit(1)
+	}
 }
 
 func initConfig() {
+	viper.SetEnvPrefix("mockery")
+	viper.AutomaticEnv()
+
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
+	} else if viper.IsSet("config") {
+		viper.SetConfigFile(viper.GetString("config"))
 	} else {
 		// Find home directory.
 		home, err := homedir.Dir()
@@ -113,9 +124,6 @@ func initConfig() {
 		viper.AddConfigPath(home)
 		viper.SetConfigName(".mockery")
 	}
-
-	viper.SetEnvPrefix("mockery")
-	viper.AutomaticEnv()
 
 	// Note we purposely ignore the error. Don't care if we can't find a config file.
 	if err := viper.ReadInConfig(); err == nil {
