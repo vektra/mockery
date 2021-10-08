@@ -29,6 +29,9 @@ var invalidIdentifierChar = regexp.MustCompile("[^[:digit:][:alpha:]_]")
 // imports and the mock struct that will later be written out as file.
 type Generator struct {
 	config.Config
+
+	StructName string
+
 	buf bytes.Buffer
 
 	iface *Interface

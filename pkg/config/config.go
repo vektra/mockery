@@ -20,36 +20,64 @@ func GetSemverInfo() string {
 	return _defaultSemVer
 }
 
+// Config contains the app configuration.
 type Config struct {
-	All                  bool
+	All           bool   //KILLME
+	Dir           string //KILLME
+	FileName      string //KILLME
+	InPackage     bool   //KILLME
+	Name          string //KILLME
+	Outpkg        string //KILLME
+	Packageprefix string //KILLME
+	Output        string //KILLME
+	Recursive     bool   //KILLME
+	SrcPkg        string //KILLME
+	TestOnly      bool   //KILLME
+	KeepTree      bool
+
+	Mocks []MockDef
+
 	BuildTags            string `mapstructure:"tags"`
 	Case                 string
 	Config               string
 	Cpuprofile           string
-	Dir                  string
-	DisableVersionString bool `mapstructure:"disable-version-string"`
-	DryRun               bool `mapstructure:"dry-run"`
-	Exported             bool `mapstructure:"exported"`
-	FileName             string
-	InPackage            bool
-	KeepTree             bool
+	DisableVersionString bool   `mapstructure:"disable-version-string"`
+	DryRun               bool   `mapstructure:"dry-run"`
+	Exported             bool   `mapstructure:"exported"`
 	LogLevel             string `mapstructure:"log-level"`
-	Name                 string
 	Note                 string
-	Outpkg               string
-	Packageprefix        string
-	Output               string
 	Print                bool
 	Profile              string
 	Quiet                bool
-	Recursive            bool
-	SrcPkg               string
 	BoilerplateFile      string `mapstructure:"boilerplate-file"`
-	// StructName overrides the name given to the mock struct and should only be nonempty
-	// when generating for an exact match (non regex expression in -name).
-	StructName     string
-	Tags           string
-	TestOnly       bool
-	UnrollVariadic bool `mapstructure:"unroll-variadic"`
-	Version        bool
+	Tags                 string
+	UnrollVariadic       bool `mapstructure:"unroll-variadic"`
+	Version              bool
+}
+
+// MockDef contains a single mock definition.
+type MockDef struct {
+	// Package is the relative path of the package to generate mocks for.
+	Package string
+	// Interface is the interface name.
+	Interface string
+	// FileName is the name of generated file.
+	FileName string
+	// InPackage is true when the mock is to go goes inside the original package.
+	InPackage bool
+	// Outpkg contains the name of the generated package.
+	Outpkg string
+	// Output contains the directory to write mocks to
+	Output string
+	// StructName overrides the name given to the mock struct.
+	StructName string
+	// TestOnly, if true, makes mockery generate a mock in a _test.go file.
+	TestOnly bool
+}
+
+func (m *MockDef) GeneratedPackageName() string {
+	if m.Outpkg == "" {
+		return "mocks"
+	}
+	return m.Outpkg
 }

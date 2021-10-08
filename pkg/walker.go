@@ -132,9 +132,9 @@ func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) erro
 	var pkg string
 
 	if v.KeepTree && v.InPackage {
-		pkg = filepath.Dir(iface.FileName)
+		pkg = iface.Pkg.Name()
 	} else if v.InPackage {
-		pkg = filepath.Dir(iface.FileName)
+		pkg = iface.Pkg.Name()
 	} else if (v.PackageName == "" || v.PackageName == "mocks") && v.PackageNamePrefix != "" {
 		// go with package name prefix only when package name is empty or default and package name prefix is specified
 		pkg = fmt.Sprintf("%s%s", v.PackageNamePrefix, iface.Pkg.Name())
@@ -150,6 +150,8 @@ func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) erro
 	defer closer()
 
 	gen := NewGenerator(ctx, v.Config, iface, pkg)
+	gen.InPackage = v.InPackage   // FIXME
+	gen.StructName = v.StructName // FIXME
 	gen.GenerateBoilerplate(v.Boilerplate)
 	gen.GeneratePrologueNote(v.Note)
 	gen.GeneratePrologue(ctx, pkg)
