@@ -48,25 +48,16 @@ func (p *FileOutputStreamProvider) GetWriter(ctx context.Context, iface *Interfa
 		caseName = p.underscoreCaseName(caseName)
 	}
 
-	if p.KeepTree {
-		absOriginalDir, err := filepath.Abs(p.KeepTreeOriginalDirectory)
-		if err != nil {
-			return nil, err, func() error { return nil }
-		}
+	absOriginalDir, err := filepath.Abs(p.KeepTreeOriginalDirectory)
+	if err != nil {
+		return nil, err, func() error { return nil }
+	}
 
-		relativePath := strings.TrimPrefix(filepath.Dir(iface.FileName), absOriginalDir)
-		path = filepath.Join(relativePath, p.BaseDir, p.filename(caseName))
-		path = strings.TrimPrefix(path,string(filepath.Separator))
-		if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
-			return nil, err, func() error { return nil }
-		}
-	} else if p.InPackage {
-		path = filepath.Join(filepath.Dir(iface.FileName), p.filename(caseName))
-	} else {
-		path = filepath.Join(p.BaseDir, p.filename(caseName))
-		if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
-			return nil, err, func() error { return nil }
-		}
+	relativePath := strings.TrimPrefix(filepath.Dir(iface.FileName), absOriginalDir)
+	path = filepath.Join(relativePath, p.BaseDir, p.filename(caseName))
+	path = strings.TrimPrefix(path,string(filepath.Separator))
+	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+		return nil, err, func() error { return nil }
 	}
 
 	log = log.With().Str(logging.LogKeyPath, path).Logger()
