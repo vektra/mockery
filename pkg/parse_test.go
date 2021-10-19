@@ -23,6 +23,20 @@ func TestFileParse(t *testing.T) {
 	assert.NotNil(t, node)
 }
 
+func TestFileParseMoreFun(t *testing.T) {
+	parser := NewParser(nil)
+
+	err := parser.Parse(ctx, testFile)
+	assert.NoError(t, err)
+
+	err = parser.Load()
+	assert.NoError(t, err)
+
+	node, err := parser.Find("MapToInterface")
+	assert.NoError(t, err)
+	assert.NotNil(t, node)
+}
+
 func TestBuildTagInFilename(t *testing.T) {
 	parser := NewParser(nil)
 

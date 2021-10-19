@@ -308,7 +308,7 @@ func (s *GeneratorSuite) TestGeneratorPrologue() {
 	expected := `package mocks
 
 import mock "github.com/stretchr/testify/mock"
-import test "github.com/pendo-io/b2h-mockgen/pkg/fixtures"
+import test "github.com/vektra/mockery/v2/pkg/fixtures"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -320,7 +320,7 @@ func (s *GeneratorSuite) TestGeneratorPrologueWithImports() {
 
 import http "net/http"
 import mock "github.com/stretchr/testify/mock"
-import test "github.com/pendo-io/b2h-mockgen/pkg/fixtures"
+import test "github.com/vektra/mockery/v2/pkg/fixtures"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -331,10 +331,10 @@ func (s *GeneratorSuite) TestGeneratorPrologueWithMultipleImportsSameName() {
 
 	expected := `package mocks
 
-import fixtureshttp "github.com/pendo-io/b2h-mockgen/pkg/fixtures/http"
+import fixtureshttp "github.com/vektra/mockery/v2/pkg/fixtures/http"
 import http "net/http"
 import mock "github.com/stretchr/testify/mock"
-import test "github.com/pendo-io/b2h-mockgen/pkg/fixtures"
+import test "github.com/vektra/mockery/v2/pkg/fixtures"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -1043,7 +1043,7 @@ func (s *GeneratorSuite) TestGeneratorWithImportSameAsLocalPackageInpkgNoCycle()
 		InPackage: true,
 	}, iface, pkg)
 	gen.GeneratePrologue(s.ctx, pkg)
-	s.NotContains(gen.buf.String(), `import test "github.com/pendo-io/b2h-mockgen/pkg/fixtures/test"`)
+	s.NotContains(gen.buf.String(), `import test "github.com/vektra/mockery/v2/pkg/fixtures/test"`)
 }
 
 func (s *GeneratorSuite) TestMapToInterface() {
@@ -1142,7 +1142,7 @@ func (s *GeneratorSuite) TestPrologueWithImportSameAsLocalPackage() {
 
 import fixtures "` + generator.iface.QualifiedName + `"
 import mock "github.com/stretchr/testify/mock"
-import test "github.com/pendo-io/b2h-mockgen/pkg/fixtures/test"
+import test "github.com/vektra/mockery/v2/pkg/fixtures/test"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -1154,10 +1154,10 @@ func (s *GeneratorSuite) TestPrologueWithImportFromNestedInterface() {
 	)
 	expected := `package mocks
 
-import fixtureshttp "github.com/pendo-io/b2h-mockgen/pkg/fixtures/http"
+import fixtureshttp "github.com/vektra/mockery/v2/pkg/fixtures/http"
 import http "net/http"
 import mock "github.com/stretchr/testify/mock"
-import test "github.com/pendo-io/b2h-mockgen/pkg/fixtures"
+import test "github.com/vektra/mockery/v2/pkg/fixtures"
 
 `
 
@@ -1227,14 +1227,14 @@ func (s *GeneratorSuite) TestKeepTreeInPackageCombined() {
 	tests := []testData{
 		{path: filepath.Join("example_project", "root.go"), name: "Root", expected: `package example_project
 
-import example_project "github.com/pendo-io/b2h-mockgen/pkg/fixtures/example_project"
-import foo "github.com/pendo-io/b2h-mockgen/pkg/fixtures/example_project/foo"
+import example_project "github.com/vektra/mockery/v2/pkg/fixtures/example_project"
+import foo "github.com/vektra/mockery/v2/pkg/fixtures/example_project/foo"
 import mock "github.com/stretchr/testify/mock"
 
 `},
 		{path: filepath.Join("example_project", "foo", "foo.go"), name: "Foo", expected: `package foo
 
-import foo "github.com/pendo-io/b2h-mockgen/pkg/fixtures/example_project/foo"
+import foo "github.com/vektra/mockery/v2/pkg/fixtures/example_project/foo"
 import mock "github.com/stretchr/testify/mock"
 
 `},

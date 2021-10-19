@@ -1,5 +1,7 @@
 package test
 
+// SKIP MOCK
 type MapToInterface interface {
-	Foo(arg1 ...map[string]interface{})
+	// SKIP
+	Foo(arg1 ...map[string]interface{}) // TAMBIEN
 }

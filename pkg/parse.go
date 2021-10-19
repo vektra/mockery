@@ -10,9 +10,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/rs/zerolog"
-	"github.com/pendo-io/b2h-mockgen/pkg/logging"
 	"golang.org/x/tools/go/packages"
+
+	"github.com/pendo-io/b2h-mockgen/pkg/logging"
+	"github.com/rs/zerolog"
 )
 
 type parserEntry struct {
