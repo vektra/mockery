@@ -43,7 +43,7 @@ func (p *FileOutputStreamProvider) GetWriter(ctx context.Context, iface *Interfa
 
 	var path string
 
-	caseName := iface.Name
+	caseName := filepath.Base(iface.FileName)
 	if p.Case == "underscore" || p.Case == "snake" {
 		caseName = p.underscoreCaseName(caseName)
 	}
@@ -87,13 +87,13 @@ func (p *FileOutputStreamProvider) filename(name string) string {
 	if p.FileName != "" {
 		return p.FileName
 	} else if p.InPackage && p.TestOnly {
-		return "mock_" + name + "_test.go"
+		return "mock_" + name + "_test"
 	} else if p.InPackage && !p.KeepTree {
-		return "mock_" + name + ".go"
+		return "mock_" + name
 	} else if p.TestOnly {
-		return name + "_test.go"
+		return name + "_test"
 	}
-	return name + ".go"
+	return name
 }
 
 // shamelessly taken from http://stackoverflow.com/questions/1175208/elegant-python-function-to-convert-camelcase-to-camel-caseo
