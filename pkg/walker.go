@@ -10,8 +10,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/vektra/mockery/v2/pkg/config"
-	"github.com/vektra/mockery/v2/pkg/logging"
+	"github.com/pendo-io/b2h-mockgen/pkg/config"
+	"github.com/pendo-io/b2h-mockgen/pkg/logging"
 
 	"github.com/rs/zerolog"
 )

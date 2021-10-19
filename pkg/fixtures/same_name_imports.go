@@ -3,7 +3,7 @@ package test
 import (
 	"net/http"
 
-	my_http "github.com/vektra/mockery/v2/pkg/fixtures/http"
+	my_http "github.com/pendo-io/b2h-mockgen/pkg/fixtures/http"
 )
 
 // Example is an example

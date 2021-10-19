@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
-	mocks "github.com/vektra/mockery/v2/mocks/pkg/fixtures"
+	mocks "github.com/pendo-io/b2h-mockgen/mocks/pkg/fixtures"
 )
 
 // CompatSuite covers compatbility with github.com/stretchr/testify/mock.

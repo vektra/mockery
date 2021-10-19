@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/vektra/mockery/v2/cmd"
+	"github.com/pendo-io/b2h-mockgen/cmd"
 )
 
 func main() {

@@ -12,14 +12,14 @@ import (
 	"time"
 
 	homedir "github.com/mitchellh/go-homedir"
+	"github.com/pendo-io/b2h-mockgen/pkg"
+	"github.com/pendo-io/b2h-mockgen/pkg/config"
+	"github.com/pendo-io/b2h-mockgen/pkg/logging"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/vektra/mockery/v2/pkg"
-	"github.com/vektra/mockery/v2/pkg/config"
-	"github.com/vektra/mockery/v2/pkg/logging"
 	"golang.org/x/crypto/ssh/terminal"
 	"golang.org/x/tools/go/packages"
 )
@@ -50,8 +50,8 @@ func NewRootCmd() *cobra.Command {
 	pFlags.StringVar(&cfgFile, "config", "", "config file to use")
 	pFlags.String("name", "", "name or matching regular expression of interface to generate mock for")
 	pFlags.Bool("print", false, "print the generated mock to stdout")
-	pFlags.String("output", "./b2hmock", "directory to write mocks to")
-	pFlags.String("outpkg", "b2hmock", "name of generated package")
+	pFlags.String("output", "./mocks", "directory to write mocks to")
+	pFlags.String("outpkg", "mocks", "name of generated package")
 	pFlags.String("packageprefix", "", "prefix for the generated package name, it is ignored if outpkg is also specified.")
 	pFlags.String("dir", ".", "directory to search for interfaces")
 	pFlags.BoolP("recursive", "r", false, "recurse search into sub-directories")
