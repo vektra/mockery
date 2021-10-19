@@ -4,9 +4,9 @@ package b2hmock
 
 import (
 	mock "github.com/stretchr/testify/mock"
-	fixtures "github.com/vektra/mockery/v2/pkg/fixtures"
 
-	test "github.com/vektra/mockery/v2/pkg/fixtures/test"
+	fixtures "github.com/pendo-io/b2h-mockgen/pkg/fixtures"
+	test "github.com/pendo-io/b2h-mockgen/pkg/fixtures/test"
 )
 
 type ImportsSameAsPackageMock struct {

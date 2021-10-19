@@ -6,6 +6,7 @@ import (
 	"go/ast"
 	"go/types"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -133,6 +134,87 @@ func (p *Parser) Parse(ctx context.Context, path string) error {
 			p.entries = append(p.entries, &entry)
 			p.entriesByFileName[f] = &entry
 		}
+	}
+
+	return nil
+}
+
+func (p *Parser) ParseMoreFun(ctx context.Context, paths []string) error {
+	// To support relative paths to mock targets w/ vendor deps, we need to provide eventual
+	// calls to build.Context.Import with an absolute path. It needs to be absolute because
+	// Import will only find the vendor directory if our target path for parsing is under
+	// a "root" (GOROOT or a GOPATH). Only absolute paths will pass the prefix-based validation.
+	//
+	// For example, if our parse target is "./ifaces", Import will check if any "roots" are a
+	// prefix of "ifaces" and decide to skip the vendor search.
+
+	for _, path := range paths {
+		path, err := filepath.Abs(path)
+		if err != nil {
+			return err
+		}
+
+		fi, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+
+		log := zerolog.Ctx(ctx).With().
+			Str(logging.LogKeyFile, fi.Name()).
+			Logger()
+		ctx = log.WithContext(ctx)
+
+		if filepath.Ext(fi.Name()) != ".go" || strings.HasSuffix(fi.Name(), "_test.go") || strings.HasPrefix(fi.Name(), "mock_") {
+			continue
+		}
+
+		log.Debug().Msgf("parsing")
+
+		if _, ok := p.entriesByFileName[path]; ok {
+			continue
+		}
+
+		pkgs, err := p.loadPackages(path)
+		if err != nil {
+			return err
+		}
+		if len(pkgs) == 0 {
+			continue
+		}
+		if len(pkgs) > 1 {
+			names := make([]string, len(pkgs))
+			for i, p := range pkgs {
+				names[i] = p.Name
+			}
+			panic(fmt.Sprintf("file %s resolves to multiple packages: %s", path, strings.Join(names, ", ")))
+		}
+
+		pkg := pkgs[0]
+		if len(pkg.Errors) > 0 {
+			return pkg.Errors[0]
+		}
+		if len(pkg.GoFiles) == 0 {
+			continue
+		}
+
+		if _, ok := p.entriesByFileName[path]; ok {
+			continue
+		}
+
+		var idx int
+		for i := range pkg.Syntax {
+			if path == pkg.GoFiles[i] {
+				idx = i
+			}
+		}
+
+		entry := parserEntry{
+			fileName: path,
+			pkg:      pkg,
+			syntax:   pkg.Syntax[idx],
+		}
+		p.entries = append(p.entries, &entry)
+		p.entriesByFileName[path] = &entry
 	}
 
 	return nil
@@ -267,12 +349,15 @@ func (p *Parser) packageInterfaces(
 			continue
 		}
 
+		file := p.entriesByFileName[fileName].syntax
+
 		elem := &Interface{
 			Name:          name,
 			Pkg:           pkg,
 			QualifiedName: pkg.Path(),
 			FileName:      fileName,
 			NamedType:     typ,
+			File: file,
 		}
 
 		iface, ok := typ.Underlying().(*types.Interface)

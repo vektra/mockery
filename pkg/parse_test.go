@@ -26,13 +26,13 @@ func TestFileParse(t *testing.T) {
 func TestFileParseMoreFun(t *testing.T) {
 	parser := NewParser(nil)
 
-	err := parser.Parse(ctx, testFile)
+	err := parser.ParseMoreFun(ctx, []string{"fixtures/MapToInterface.go"})
 	assert.NoError(t, err)
 
 	err = parser.Load()
 	assert.NoError(t, err)
 
-	node, err := parser.Find("MapToInterface")
+	node, err := parser.Find("MapToInt")
 	assert.NoError(t, err)
 	assert.NotNil(t, node)
 }
