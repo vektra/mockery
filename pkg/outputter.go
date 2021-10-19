@@ -53,10 +53,10 @@ func (p *FileOutputStreamProvider) GetWriter(ctx context.Context, iface *Interfa
 		if err != nil {
 			return nil, err, func() error { return nil }
 		}
-		relativePath := strings.TrimPrefix(
-			filepath.Join(filepath.Dir(iface.FileName), p.filename(caseName)),
-			absOriginalDir)
-		path = filepath.Join(p.BaseDir, relativePath)
+
+		relativePath := strings.TrimPrefix(filepath.Dir(iface.FileName), absOriginalDir)
+		path = filepath.Join(relativePath, p.BaseDir, p.filename(caseName))
+		path = strings.TrimPrefix(path,string(filepath.Separator))
 		if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
 			return nil, err, func() error { return nil }
 		}
