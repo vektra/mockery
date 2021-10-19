@@ -3,9 +3,9 @@ package pkg
 import (
 	"testing"
 
+	mocks "github.com/pendo-io/b2h-mockgen/pkg/fixtures/mocks"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
-	mocks "github.com/pendo-io/b2h-mockgen/mocks/pkg/fixtures"
 )
 
 // CompatSuite covers compatbility with github.com/stretchr/testify/mock.
@@ -17,7 +17,7 @@ type CompatSuite struct {
 // that mirror those of the subject call.
 func (s *CompatSuite) TestOnVariadicArgs() {
 	t := s.T()
-	m := new(mocks.RequesterVariadic)
+	m := new(mocks.RequesterVariadicMock)
 	m.On("Sprintf", "int: %d string: %s", 22, "twenty two").Return("int: 22 string: twenty-two")
 	m.Sprintf("int: %d string: %s", 22, "twenty two")
 	m.AssertExpectations(t)
@@ -28,7 +28,7 @@ func (s *CompatSuite) TestOnVariadicArgs() {
 // variadic arguments of methods like Mock.On.
 func (s *CompatSuite) TestOnAnythingOfTypeVariadicArgs() {
 	t := s.T()
-	m := new(mocks.RequesterVariadic)
+	m := new(mocks.RequesterVariadicMock)
 	m.On("Sprintf", "int: %d string: %s", mock.AnythingOfType("int"), mock.AnythingOfType("string")).Return("int: 22 string: twenty-two")
 	m.Sprintf("int: %d string: %s", 22, "twenty two")
 	m.AssertExpectations(s.T())
