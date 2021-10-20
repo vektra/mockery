@@ -2,7 +2,6 @@ package pkg
 
 import (
 	"context"
-	"fmt"
 	"path/filepath"
 	"testing"
 
@@ -38,15 +37,6 @@ func TestFileParseList(t *testing.T) {
 	node, err := parser.Find("MapToInt")
 	assert.NoError(t, err)
 	assert.NotNil(t, node)
-
-	// this is basic naive logic to match comment lines to interfacess
-	syntax := parser.entriesByFileName[fileName].syntax
-	pkg := parser.entriesByFileName[fileName].pkg
-	commentPosition := pkg.Fset.Position(syntax.Comments[0].Pos()).Line
-	ifacePos := pkg.Fset.Position(syntax.Decls[0].Pos()).Line
-
-	fmt.Println(commentPosition)
-	fmt.Println(ifacePos)
 }
 
 func TestBuildTagInFilename(t *testing.T) {

@@ -18,7 +18,7 @@ import (
 	"github.com/rs/zerolog"
 )
 
-const skipTerm = "// SKIP MOCK"
+const skipTerm = "SKIP MOCK"
 
 type parserEntry struct {
 	fileName   string
@@ -334,7 +334,8 @@ func (p *Parser) getValidIfaces(entry *parserEntry) []string{
 	declaredIfaces := make([]string, 0)
 	skippedIndices := make([]int, 0)
 	for _,cmt := range syntax.Comments {
-		if cmt.Text() == skipTerm {
+		a := strings.TrimSpace(cmt.Text())
+		if a == skipTerm {
 			minLine := math.MaxInt8
 			minIndex := -1
 			cmtLine := pkg.Fset.Position(cmt.Pos()).Line
