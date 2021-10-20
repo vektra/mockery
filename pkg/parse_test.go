@@ -2,6 +2,8 @@ package pkg
 
 import (
 	"context"
+	"fmt"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -25,8 +27,9 @@ func TestFileParse(t *testing.T) {
 
 func TestFileParseMoreFun(t *testing.T) {
 	parser := NewParser(nil)
+	fileName, _ := filepath.Abs("fixtures/MapToInterface.go")
 
-	err := parser.ParseMoreFun(ctx, []string{"fixtures/MapToInterface.go"})
+	err := parser.ParseMoreFun(ctx, []string{fileName})
 	assert.NoError(t, err)
 
 	err = parser.Load()
@@ -35,6 +38,15 @@ func TestFileParseMoreFun(t *testing.T) {
 	node, err := parser.Find("MapToInt")
 	assert.NoError(t, err)
 	assert.NotNil(t, node)
+
+	// this is basic naive logic to match comment lines to interfacess
+	syntax := parser.entriesByFileName[fileName].syntax
+	pkg := parser.entriesByFileName[fileName].pkg
+	commentPosition := pkg.Fset.Position(syntax.Comments[0].Pos()).Line
+	ifacePos := pkg.Fset.Position(syntax.Decls[0].Pos()).Line
+
+	fmt.Println(commentPosition)
+	fmt.Println(ifacePos)
 }
 
 func TestBuildTagInFilename(t *testing.T) {
