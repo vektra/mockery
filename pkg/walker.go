@@ -3,6 +3,7 @@ package pkg
 import (
 	"context"
 	"fmt"
+	"github.com/rs/zerolog/log"
 	"io"
 	"io/ioutil"
 	"os"
@@ -100,6 +101,60 @@ func (w *Walker) doWalk(ctx context.Context, p *Parser, dir string, visitor Walk
 	}
 
 	return
+}
+
+func (w *Walker) WalkList(ctx context.Context, visitor WalkerVisitor, paths []string) (generated bool) {
+	log := zerolog.Ctx(ctx)
+	ctx = log.WithContext(ctx)
+
+	log.Info().Msgf("Walking")
+
+	parser := NewParser(w.BuildTags)
+	w.doWalkList(ctx, parser, paths)
+
+	err := parser.Load()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error walking: %v\n", err)
+		os.Exit(1)
+	}
+
+	for _, iface := range parser.Interfaces() {
+		if !w.Filter.MatchString(iface.Name) {
+			continue
+		}
+		err := visitor.VisitWalk(ctx, iface)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error walking %s: %s\n", iface.Name, err)
+			os.Exit(1)
+		}
+		generated = true
+		if w.LimitOne {
+			return
+		}
+	}
+
+	return
+}
+
+func (w *Walker) doWalkList(ctx context.Context, p *Parser, paths []string) (generated bool) {
+	for _,path := range paths {
+		if strings.HasPrefix(filepath.Base(path), ".") || strings.HasPrefix(filepath.Base(path), "_") {
+			log.Error().Msgf("Invalid File")
+			return true
+		}
+
+		if !strings.HasSuffix(path, ".go") || strings.HasSuffix(path, "_test.go") {
+			log.Error().Msgf("Invalid File")
+			return true
+		}
+	}
+	err := p.ParseList(ctx, paths)
+	if err != nil {
+		log.Err(err).Msgf("Error parsing file")
+		return true
+	}
+
+	return false
 }
 
 type GeneratorVisitor struct {
