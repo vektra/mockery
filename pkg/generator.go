@@ -222,11 +222,31 @@ func (g *Generator) mockName() string {
 	return g.iface.Name + "Mock"
 }
 
-func (g *Generator) sortedImportNames() (importNames []string) {
+func (g *Generator) sortedImportNames() (importNames [3][]string, useBlockImport bool) {
+	// Break up into 3 different sections - stdlib, 3rd party libs, pendo libs
+	thirdPartyRegex, _ := regexp.Compile("^[^.]+\\.[^.]+")
+	pendoRegex, _ := regexp.Compile("^github.com/pendo-io/pendo-appengine/")
+	// stdlib is anything else not matched by those 2
+
+	numImports := 0
 	for name := range g.nameToPackagePath {
-		importNames = append(importNames, name)
+		packageName := g.nameToPackagePath[name]
+		if pendoRegex.MatchString(packageName) {
+			fmt.Println(packageName, " matches pendo regex")
+			importNames[2] = append(importNames[2], name)
+		} else if thirdPartyRegex.MatchString(packageName) {
+			fmt.Println(packageName, " matches 3rd party regex")
+			importNames[1] = append(importNames[1], name)
+		} else {
+			fmt.Println(packageName, " is stdlib")
+			importNames[0] = append(importNames[0], name)
+		}
+		numImports++
 	}
-	sort.Strings(importNames)
+	sort.Strings(importNames[0])
+	sort.Strings(importNames[1])
+	sort.Strings(importNames[2])
+	useBlockImport = numImports > 1
 	return
 }
 
@@ -238,16 +258,34 @@ func (g *Generator) generateImports(ctx context.Context) {
 
 	pkgPath := g.nameToPackagePath[g.iface.Pkg.Name()]
 	// Sort by import name so that we get a deterministic order
-	for _, name := range g.sortedImportNames() {
-		logImport := log.With().Str(logging.LogKeyImport, g.nameToPackagePath[name]).Logger()
-		logImport.Debug().Msgf("found import")
+	nameGroups, useBlockImport := g.sortedImportNames()
+	if useBlockImport {
+		g.printf("import (\n")
+	}
+	for _, nameGroup := range nameGroups {
+		for _, name := range nameGroup {
+			logImport := log.With().Str(logging.LogKeyImport, g.nameToPackagePath[name]).Logger()
+			logImport.Debug().Msgf("found import")
 
-		path := g.nameToPackagePath[name]
-		if !g.KeepTree && g.InPackage && path == pkgPath {
-			logImport.Debug().Msgf("import (%s) equals interface's package path (%s), skipping", path, pkgPath)
-			continue
+			path := g.nameToPackagePath[name]
+			if !g.KeepTree && g.InPackage && path == pkgPath {
+				logImport.Debug().Msgf("import (%s) equals interface's package path (%s), skipping", path, pkgPath)
+				continue
+			}
+			name = strings.TrimSpace(name)
+			path = strings.TrimSpace(path)
+			prefix := "import "
+			if useBlockImport{
+				prefix ="\t"
+			}
+			g.printf("%s%s \"%s\"\n",prefix, name, path)
 		}
-		g.printf("import %s \"%s\"\n", name, path)
+		if len(nameGroup) > 0 {
+			g.printf("\n")
+		}
+	}
+	if useBlockImport {
+		g.printf(")\n\n")
 	}
 }
 
