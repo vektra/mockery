@@ -6,6 +6,7 @@ import (
 	"go/ast"
 	"go/types"
 	"io/ioutil"
+	"math"
 	"os"
 	"path/filepath"
 	"sort"
@@ -16,6 +17,8 @@ import (
 	"github.com/pendo-io/b2h-mockgen/pkg/logging"
 	"github.com/rs/zerolog"
 )
+
+const skipTerm = "// SKIP MOCK"
 
 type parserEntry struct {
 	fileName   string
@@ -139,7 +142,7 @@ func (p *Parser) Parse(ctx context.Context, path string) error {
 	return nil
 }
 
-func (p *Parser) ParseMoreFun(ctx context.Context, paths []string) error {
+func (p *Parser) ParseList(ctx context.Context, paths []string) error {
 	// To support relative paths to mock targets w/ vendor deps, we need to provide eventual
 	// calls to build.Context.Import with an absolute path. It needs to be absolute because
 	// Import will only find the vendor directory if our target path for parsing is under
@@ -318,12 +321,61 @@ func (s sortableIFaceList) Less(i, j int) bool {
 func (p *Parser) Interfaces() []*Interface {
 	ifaces := make(sortableIFaceList, 0)
 	for _, entry := range p.entries {
-		declaredIfaces := entry.interfaces
+		declaredIfaces := p.getValidIfaces(entry)
 		ifaces = p.packageInterfaces(entry.pkg.Types, entry.fileName, declaredIfaces, ifaces)
 	}
-
 	sort.Sort(ifaces)
 	return ifaces
+}
+
+func (p *Parser) getValidIfaces(entry *parserEntry) []string{
+	syntax := entry.syntax
+	pkg := entry.pkg
+	declaredIfaces := make([]string, 0)
+	skippedIndices := make([]int, 0)
+	for _,cmt := range syntax.Comments {
+		if cmt.Text() == skipTerm {
+			minLine := math.MaxInt8
+			minIndex := -1
+			cmtLine := pkg.Fset.Position(cmt.Pos()).Line
+			for i,dcl := range syntax.Decls {
+				dclLine := pkg.Fset.Position(dcl.Pos()).Line
+				if cmtLine < dclLine && minLine > dclLine {
+					minLine = dclLine
+					minIndex = i
+				}
+			}
+			if minIndex != -1 {
+				skippedIndices = append(skippedIndices, minIndex)
+			}
+		}
+	}
+
+	for i, dcl := range syntax.Decls {
+		skipped := false
+		for _,skippedIdx := range skippedIndices {
+			if i == skippedIdx {
+				skipped = true
+			}
+		}
+		if !skipped {
+			d, ok := dcl.(*ast.GenDecl)
+			if ok {
+				s, ok := d.Specs[0].(*ast.TypeSpec)
+				if ok {
+					name := s.Name.Name
+					for _,n := range entry.interfaces {
+						if name == n {
+							declaredIfaces = append(declaredIfaces, name)
+							break
+						}
+					}
+
+				}
+			}
+		}
+	}
+	return declaredIfaces
 }
 
 func (p *Parser) packageInterfaces(
@@ -349,15 +401,12 @@ func (p *Parser) packageInterfaces(
 			continue
 		}
 
-		file := p.entriesByFileName[fileName].syntax
-
 		elem := &Interface{
 			Name:          name,
 			Pkg:           pkg,
 			QualifiedName: pkg.Path(),
 			FileName:      fileName,
 			NamedType:     typ,
-			File: file,
 		}
 
 		iface, ok := typ.Underlying().(*types.Interface)

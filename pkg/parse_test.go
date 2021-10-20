@@ -25,11 +25,11 @@ func TestFileParse(t *testing.T) {
 	assert.NotNil(t, node)
 }
 
-func TestFileParseMoreFun(t *testing.T) {
+func TestFileParseList(t *testing.T) {
 	parser := NewParser(nil)
 	fileName, _ := filepath.Abs("fixtures/MapToInterface.go")
 
-	err := parser.ParseMoreFun(ctx, []string{fileName})
+	err := parser.ParseList(ctx, []string{fileName})
 	assert.NoError(t, err)
 
 	err = parser.Load()
