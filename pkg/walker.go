@@ -20,7 +20,7 @@ type Walker struct {
 	config.Config
 	BaseDir   string
 	Recursive bool
-	Filter    *regexp.Regexp
+	Filters   []*regexp.Regexp
 	LimitOne  bool
 	BuildTags []string
 }
@@ -44,19 +44,24 @@ func (w *Walker) Walk(ctx context.Context, visitor WalkerVisitor) (generated boo
 		os.Exit(1)
 	}
 
+interfaces:
 	for _, iface := range parser.Interfaces() {
-		if !w.Filter.MatchString(iface.Name) {
-			continue
+		for _, filter := range w.Filters {
+			if !filter.MatchString(iface.Name) {
+				continue
+			}
+			err := visitor.VisitWalk(ctx, iface)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Error walking %s: %s\n", iface.Name, err)
+				os.Exit(1)
+			}
+			generated = true
+			if w.LimitOne {
+				return
+			}
+			continue interfaces
 		}
-		err := visitor.VisitWalk(ctx, iface)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error walking %s: %s\n", iface.Name, err)
-			os.Exit(1)
-		}
-		generated = true
-		if w.LimitOne {
-			return
-		}
+
 	}
 
 	return

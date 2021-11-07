@@ -55,7 +55,7 @@ func TestWalkerHere(t *testing.T) {
 		BaseDir:   wd,
 		Recursive: true,
 		LimitOne:  false,
-		Filter:    regexp.MustCompile(".*"),
+		Filters:   []*regexp.Regexp{regexp.MustCompile(".*")},
 	}
 
 	gv := NewGatheringVisitor()
@@ -80,7 +80,7 @@ func TestWalkerRegexp(t *testing.T) {
 		BaseDir:   wd,
 		Recursive: true,
 		LimitOne:  false,
-		Filter:    regexp.MustCompile(".*AsyncProducer*."),
+		Filters:   []*regexp.Regexp{regexp.MustCompile(".*AsyncProducer*.")},
 	}
 
 	gv := NewGatheringVisitor()
@@ -106,7 +106,7 @@ func TestPackagePrefix(t *testing.T) {
 		BaseDir:   wd,
 		Recursive: true,
 		LimitOne:  false,
-		Filter:    regexp.MustCompile(".*AsyncProducer*."),
+		Filters:   []*regexp.Regexp{regexp.MustCompile(".*AsyncProducer*.")},
 	}
 
 	bufferedProvider := NewBufferedProvider()

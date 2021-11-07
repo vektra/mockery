@@ -131,8 +131,6 @@ func initConfig() {
 	}
 }
 
-const regexMetadataChars = "\\.+*?()|[]{}^$"
-
 type RootApp struct {
 	config.Config
 }
@@ -145,9 +143,33 @@ func GetRootAppFromViper(v *viper.Viper) (*RootApp, error) {
 	return r, nil
 }
 
+func getFilters(names []string, log zerolog.Logger) ([]*regexp.Regexp, bool) {
+
+	const regexMetadataChars = "\\.+*?()|[]{}^$"
+
+	var hasRegex bool
+	var filters []*regexp.Regexp
+
+	for _, name := range names {
+		if strings.ContainsAny(name, regexMetadataChars) {
+			hasRegex = true
+			filter, err := regexp.Compile(name)
+			if err != nil {
+				log.Fatal().Err(err).Msgf("Invalid regular expression provided to -name")
+			}
+			filters = append(filters, filter)
+		} else {
+			filters = append(filters, regexp.MustCompile(fmt.Sprintf("^%s$", name)))
+		}
+	}
+
+	return filters, hasRegex
+}
+
 func (r *RootApp) Run() error {
 	var recursive bool
-	var filter *regexp.Regexp
+	var hasRegex bool
+	var filters []*regexp.Regexp
 	var err error
 	var limitOne bool
 
@@ -176,19 +198,18 @@ func (r *RootApp) Run() error {
 		log.Fatal().Msgf("Specify -dir or -srcpkg, but not both")
 	} else if r.Config.Name != "" {
 		recursive = r.Config.Recursive
-		if strings.ContainsAny(r.Config.Name, regexMetadataChars) {
-			if filter, err = regexp.Compile(r.Config.Name); err != nil {
-				log.Fatal().Err(err).Msgf("Invalid regular expression provided to -name")
-			} else if r.Config.FileName != "" || r.Config.StructName != "" {
-				log.Fatal().Msgf("Cannot specify --filename or --structname with regex in --name")
-			}
-		} else {
-			filter = regexp.MustCompile(fmt.Sprintf("^%s$", r.Config.Name))
+		names := strings.Split(r.Config.Name, ",")
+		filters, hasRegex = getFilters(names, log)
+		if len(filters) == 1 && !hasRegex {
 			limitOne = true
+		}
+
+		if hasRegex && (r.Config.FileName != "" || r.Config.StructName != "") {
+			log.Fatal().Msgf("Cannot specify --filename or --structname with regex in --name")
 		}
 	} else if r.Config.All {
 		recursive = true
-		filter = regexp.MustCompile(".*")
+		filters = append(filters, regexp.MustCompile(".*"))
 	} else {
 		log.Fatal().Msgf("Use --name to specify the name of the interface or --all for all interfaces found")
 	}
@@ -267,7 +288,7 @@ func (r *RootApp) Run() error {
 		Config:    r.Config,
 		BaseDir:   baseDir,
 		Recursive: recursive,
-		Filter:    filter,
+		Filters:   filters,
 		LimitOne:  limitOne,
 		BuildTags: strings.Split(r.Config.BuildTags, " "),
 	}
