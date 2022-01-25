@@ -262,7 +262,7 @@ Expecter Interfaces
 
 New in [v2.10.0](https://github.com/vektra/mockery/pull/396).
 
-Mockery now supports an "expecter" interface which allows your tests to use type-safe methods. When enabled through the `with-expecter: True` mockery configuration, you can enter into the expecter interface by simply calling `.EXPECT()` on your mock object.
+Mockery now supports an "expecter" interface which allows your tests to use type-safe methods to generate call expectations. When enabled through the `with-expecter: True` mockery configuration, you can enter into the expecter interface by simply calling `.EXPECT()` on your mock object.
 
 For example, given an interface such as
 ```go
