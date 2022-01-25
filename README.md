@@ -23,6 +23,7 @@ Table of Contents
 - [Return Value Provider Functions](#return-value-provider-functions)
     + [Requirements](#requirements)
     + [Notes](#notes)
+- [Expecter Interfaces](#Expecter Interfaces)
 - [Extended Flag Descriptions](#extended-flag-descriptions)
 - [Mocking interfaces in `main`](#mocking-interfaces-in-main)
 - [Configuration](#configuration)
@@ -256,6 +257,30 @@ This approach should be used judiciously, as return values should generally
 not depend on arguments in mocks; however, this approach can be helpful for
 situations like passthroughs or other test-only calculations.
 
+Expecter Interfaces
+--------------------
+
+New in [v2.10.0](https://github.com/vektra/mockery/pull/396)
+
+Mockery now supports an "expecter" interface which allows your tests to use type-safe methods. You can enter into the expecter interface by simply calling `.EXPECT()` on your mock object.
+
+For example, given an interface such as
+```go
+type Requester interface {
+	Get(path string) (string, error)
+}
+```
+
+You can use the type-safe expecter interface as such:
+```go
+requesterMock := Requester{}
+requesterMock.EXPECT().Get("some path").Return("result", nil)
+requesterMock.EXPECT().
+	Get(mock.Anything).
+	Run(func(path string) { fmt.Println(path, "was called") }).
+	// Can still use return functions by getting the embedded mock.Call
+	Call.Return(func(path string) string { return "result for " + path }, nil)
+```
 
 Extended Flag Descriptions
 --------------------------
