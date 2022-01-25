@@ -23,7 +23,7 @@ Table of Contents
 - [Return Value Provider Functions](#return-value-provider-functions)
     + [Requirements](#requirements)
     + [Notes](#notes)
-- [Expecter Interfaces](#Expecter Interfaces)
+- [Expecter Interfaces](#expecter-interfaces)
 - [Extended Flag Descriptions](#extended-flag-descriptions)
 - [Mocking interfaces in `main`](#mocking-interfaces-in-main)
 - [Configuration](#configuration)
