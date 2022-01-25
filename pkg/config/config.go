@@ -52,4 +52,5 @@ type Config struct {
 	TestOnly       bool
 	UnrollVariadic bool `mapstructure:"unroll-variadic"`
 	Version        bool
+	WithExpecter   bool `mapstructure:"with-expecter"`
 }
