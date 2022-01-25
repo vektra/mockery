@@ -260,9 +260,9 @@ situations like passthroughs or other test-only calculations.
 Expecter Interfaces
 --------------------
 
-New in [v2.10.0](https://github.com/vektra/mockery/pull/396)
+New in [v2.10.0](https://github.com/vektra/mockery/pull/396).
 
-Mockery now supports an "expecter" interface which allows your tests to use type-safe methods. You can enter into the expecter interface by simply calling `.EXPECT()` on your mock object.
+Mockery now supports an "expecter" interface which allows your tests to use type-safe methods. When enabled through the `with-expecter: True` mockery configuration, you can enter into the expecter interface by simply calling `.EXPECT()` on your mock object.
 
 For example, given an interface such as
 ```go
