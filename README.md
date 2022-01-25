@@ -16,7 +16,7 @@ Table of Contents
   * [Github Release](#github-release)
   * [Docker](#docker)
   * [Homebrew](#homebrew)
-  * [go get](#go-get)
+  * [go install](#go-install)
 - [Examples](#examples)
     + [Simplest case](#simplest-case)
     + [Next level case](#next-level-case)
@@ -51,11 +51,11 @@ Install through [brew](https://brew.sh/)
     brew install mockery
     brew upgrade mockery
 
-### go get
+### go install
 
-Alternatively, you can use the go get method:
+Alternatively, you can use the go install method:
 
-    go get github.com/vektra/mockery/v2/.../
+    go install github.com/vektra/mockery/v2@latest
 
 Examples
 --------
