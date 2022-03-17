@@ -37,7 +37,7 @@ type Parser struct {
 
 func NewParser(buildTags []string) *Parser {
 	var conf packages.Config
-	conf.Mode = packages.LoadSyntax
+	conf.Mode = packages.LoadSyntax | packages.NeedDeps
 	if len(buildTags) > 0 {
 		conf.BuildFlags = []string{"-tags", strings.Join(buildTags, ",")}
 	}
