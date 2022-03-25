@@ -14,7 +14,7 @@ func GetSemverInfo() string {
 		return SemVer
 	}
 	version, ok := debug.ReadBuildInfo()
-	if ok && version.Main.Version != "(devel)" {
+	if ok && version.Main.Version != "(devel)" && version.Main.Version != "" {
 		return version.Main.Version
 	}
 	return _defaultSemVer
