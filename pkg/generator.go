@@ -573,6 +573,11 @@ func (g *Generator) Generate(ctx context.Context) error {
 				g.printf("\tif rf, ok := %s.Get(%d).(func(%s) %s); ok {\n",
 					retVariable, idx, strings.Join(params.Types, ", "), typ)
 				g.printf("\t\tr%d = rf(%s)\n", idx, formattedParamNames)
+				if formattedParamNames != "" && g.Config.ReturnFuncNoArg {
+					g.printf("\t} else if rf, ok := %s.Get(%d).(func() %s); ok {\n",
+						retVariable, idx, typ)
+					g.printf("\t\tr%d = rf()\n", idx)
+				}
 				g.printf("\t} else {\n")
 				if typ == "error" {
 					g.printf("\t\tr%d = %s.Error(%d)\n", idx, retVariable, idx)

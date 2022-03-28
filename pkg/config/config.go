@@ -47,10 +47,11 @@ type Config struct {
 	BoilerplateFile      string `mapstructure:"boilerplate-file"`
 	// StructName overrides the name given to the mock struct and should only be nonempty
 	// when generating for an exact match (non regex expression in -name).
-	StructName     string
-	Tags           string
-	TestOnly       bool
-	UnrollVariadic bool `mapstructure:"unroll-variadic"`
-	Version        bool
-	WithExpecter   bool `mapstructure:"with-expecter"`
+	StructName      string
+	Tags            string
+	TestOnly        bool
+	UnrollVariadic  bool `mapstructure:"unroll-variadic"`
+	Version         bool
+	WithExpecter    bool `mapstructure:"with-expecter"`
+	ReturnFuncNoArg bool `mapstructure:"return-func-no-arg"`
 }
