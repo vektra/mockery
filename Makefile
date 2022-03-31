@@ -1,11 +1,7 @@
 SHELL=bash
 
 .PHONY: all
-all: clean fmt mocks test install docker integration
-
-.PHONY: clean
-clean:
-	rm -rf mocks
+all: fmt mocks test install docker integration
 
 .PHONY: fmt
 fmt:
@@ -31,3 +27,7 @@ docker:
 .PHONY: integration
 integration: docker install
 	./hack/run-e2e.sh
+
+.PHONY: clean
+clean:
+	rm -rf mocks
