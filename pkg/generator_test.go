@@ -220,6 +220,15 @@ func (_c *Requester_Get_Call) Return(_a0 string, _a1 error) *Requester_Get_Call 
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
+
+// NewRequester creates a new instance of Requester. It also registers a cleanup function to assert the mocks expectations.
+func NewRequester(t testing.TB) *Requester {
+	mock := &Requester{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 
 	cfg := config.Config{
