@@ -80,10 +80,11 @@ func (s *GeneratorSuite) checkGenerationWithConfig(
 	expectedLines := strings.Split(expected, "\n")
 	actualLines := strings.Split(string(actual), "\n")
 
-	// Error out at first unmatched line
-	for i := range actualLines {
-		s.Equal(expectedLines[i], actualLines[i])
-	}
+	s.Equal(
+		expectedLines, actualLines,
+		"The generator produced unexpected output.",
+	)
+
 	return generator
 }
 
