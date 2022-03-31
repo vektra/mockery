@@ -106,6 +106,7 @@ func Execute() {
 
 func initConfig() {
 	viper.SetEnvPrefix("mockery")
+	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 	viper.AutomaticEnv()
 
 	if cfgFile != "" {
