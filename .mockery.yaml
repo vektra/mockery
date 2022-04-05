@@ -1,3 +1,4 @@
 quiet: False
 all: True
 keeptree: True
+disable-version-string: True
