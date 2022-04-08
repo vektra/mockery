@@ -9,6 +9,11 @@ mockery
 mockery provides the ability to easily generate mocks for golang interfaces using the [stretchr/testify/mock](https://pkg.go.dev/github.com/stretchr/testify/mock?tab=doc) package. It removes
 the boilerplate coding required to use mocks.
 
+NOTE ON Golang 1.18
+--------------------
+
+Mockery currently does not support various 1.18 Golang features, namely generics. PRs are welcome!
+
 Table of Contents
 -----------------
 
