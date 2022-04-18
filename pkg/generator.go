@@ -61,6 +61,8 @@ func NewGenerator(ctx context.Context, c config.Config, iface *Interface, pkg st
 	}
 
 	g.addPackageImportWithName(ctx, "github.com/stretchr/testify/mock", "mock")
+	g.addPackageImportWithName(ctx, "testing", "testing")
+
 	return g
 }
 
@@ -601,6 +603,8 @@ func (g *Generator) Generate(ctx context.Context) error {
 		}
 	}
 
+	g.generateConstructor()
+
 	return nil
 }
 
@@ -697,6 +701,32 @@ func (_c *{{.CallStruct}}) Return({{range .Returns.Params}}{{.}},{{end}}) *{{.Ca
 	return _c
 }
 `)
+}
+
+func (g *Generator) generateConstructor() {
+	const constructor = `
+// %[1]s creates a new instance of %[2]s. It also registers a cleanup function to assert the mocks expectations.
+func %[1]s(t testing.TB) *%[2]s {
+	mock := &%[2]s{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
+`
+
+	funcFirstLetter := "N"
+	mockName := g.mockName()
+
+	for _, firstLetter := range mockName {
+		if unicode.IsLower(firstLetter) {
+			funcFirstLetter = "n"
+		}
+
+		break
+	}
+
+	g.printf(constructor, funcFirstLetter+"ew"+upperFirstOnly(mockName), mockName)
 }
 
 // generateCalled returns the Mock.Called invocation string and, if necessary, prints the

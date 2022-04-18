@@ -80,10 +80,11 @@ func (s *GeneratorSuite) checkGenerationWithConfig(
 	expectedLines := strings.Split(expected, "\n")
 	actualLines := strings.Split(string(actual), "\n")
 
-	// Error out at first unmatched line
-	for i := range actualLines {
-		s.Equal(expectedLines[i], actualLines[i])
-	}
+	s.Equal(
+		expectedLines, actualLines,
+		"The generator produced unexpected output.",
+	)
+
 	return generator
 }
 
@@ -150,6 +151,15 @@ func (_m *Requester) Get(path string) (string, error) {
 
 	return r0, r1
 }
+
+// NewRequester creates a new instance of Requester. It also registers a cleanup function to assert the mocks expectations.
+func NewRequester(t testing.TB) *Requester {
+	mock := &Requester{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration(testFile, "Requester", false, "", expected)
 }
@@ -211,6 +221,15 @@ func (_c *Requester_Get_Call) Return(_a0 string, _a1 error) *Requester_Get_Call 
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
+
+// NewRequester creates a new instance of Requester. It also registers a cleanup function to assert the mocks expectations.
+func NewRequester(t testing.TB) *Requester {
+	mock := &Requester{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 
 	cfg := config.Config{
@@ -270,6 +289,15 @@ func (_m *SendFunc) Execute(ctx context.Context, data string) (int, error) {
 
 	return r0, r1
 }
+
+// NewSendFunc creates a new instance of SendFunc. It also registers a cleanup function to assert the mocks expectations.
+func NewSendFunc(t testing.TB) *SendFunc {
+	mock := &SendFunc{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration("function.go", "SendFunc", false, "", expected)
 }
@@ -292,6 +320,15 @@ func (_m *Requester2) Get(path string) error {
 	}
 
 	return r0
+}
+
+// NewRequester2 creates a new instance of Requester2. It also registers a cleanup function to assert the mocks expectations.
+func NewRequester2(t testing.TB) *Requester2 {
+	mock := &Requester2{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
 }
 `
 	s.checkGeneration(testFile2, "Requester2", false, "", expected)
@@ -316,6 +353,15 @@ func (_m *Requester3) Get() error {
 
 	return r0
 }
+
+// NewRequester3 creates a new instance of Requester3. It also registers a cleanup function to assert the mocks expectations.
+func NewRequester3(t testing.TB) *Requester3 {
+	mock := &Requester3{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration("requester3.go", "Requester3", false, "", expected)
 }
@@ -329,6 +375,15 @@ type Requester4 struct {
 // Get provides a mock function with given fields:
 func (_m *Requester4) Get() {
 	_m.Called()
+}
+
+// NewRequester4 creates a new instance of Requester4. It also registers a cleanup function to assert the mocks expectations.
+func NewRequester4(t testing.TB) *Requester4 {
+	mock := &Requester4{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
 }
 `
 	s.checkGeneration("requester4.go", "Requester4", false, "", expected)
@@ -344,6 +399,15 @@ type mockRequester_unexported struct {
 func (_m *mockRequester_unexported) Get() {
 	_m.Called()
 }
+
+// newMockRequester_unexported creates a new instance of mockRequester_unexported. It also registers a cleanup function to assert the mocks expectations.
+func newMockRequester_unexported(t testing.TB) *mockRequester_unexported {
+	mock := &mockRequester_unexported{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration("requester_unexported.go", "requester_unexported", true, "", expected)
 }
@@ -357,6 +421,15 @@ type Mockrequester_unexported struct {
 // Get provides a mock function with given fields:
 func (_m *Mockrequester_unexported) Get() {
 	_m.Called()
+}
+
+// NewMockrequester_unexported creates a new instance of Mockrequester_unexported. It also registers a cleanup function to assert the mocks expectations.
+func NewMockrequester_unexported(t testing.TB) *Mockrequester_unexported {
+	mock := &Mockrequester_unexported{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
 }
 `
 	generator := NewGenerator(
@@ -391,6 +464,15 @@ type Requester_unexported struct {
 func (_m *Requester_unexported) Get() {
 	_m.Called()
 }
+
+// NewRequester_unexported creates a new instance of Requester_unexported. It also registers a cleanup function to assert the mocks expectations.
+func NewRequester_unexported(t testing.TB) *Requester_unexported {
+	mock := &Requester_unexported{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	generator := NewGenerator(
 		s.ctx, config.Config{
@@ -420,6 +502,7 @@ func (s *GeneratorSuite) TestGeneratorPrologue() {
 
 import mock "github.com/stretchr/testify/mock"
 import test "github.com/vektra/mockery/v2/pkg/fixtures"
+import testing "testing"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -432,6 +515,7 @@ func (s *GeneratorSuite) TestGeneratorPrologueWithImports() {
 import http "net/http"
 import mock "github.com/stretchr/testify/mock"
 import test "github.com/vektra/mockery/v2/pkg/fixtures"
+import testing "testing"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -446,6 +530,7 @@ import fixtureshttp "github.com/vektra/mockery/v2/pkg/fixtures/http"
 import http "net/http"
 import mock "github.com/stretchr/testify/mock"
 import test "github.com/vektra/mockery/v2/pkg/fixtures"
+import testing "testing"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -527,6 +612,15 @@ func (_m *RequesterIface) Get() io.Reader {
 
 	return r0
 }
+
+// NewRequesterIface creates a new instance of RequesterIface. It also registers a cleanup function to assert the mocks expectations.
+func NewRequesterIface(t testing.TB) *RequesterIface {
+	mock := &RequesterIface{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration("requester_iface.go", "RequesterIface", false, "", expected)
 }
@@ -558,6 +652,15 @@ func (_m *RequesterPtr) Get(path string) (*string, error) {
 	}
 
 	return r0, r1
+}
+
+// NewRequesterPtr creates a new instance of RequesterPtr. It also registers a cleanup function to assert the mocks expectations.
+func NewRequesterPtr(t testing.TB) *RequesterPtr {
+	mock := &RequesterPtr{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
 }
 `
 	s.checkGeneration("requester_ptr.go", "RequesterPtr", false, "", expected)
@@ -591,6 +694,15 @@ func (_m *RequesterSlice) Get(path string) ([]string, error) {
 
 	return r0, r1
 }
+
+// NewRequesterSlice creates a new instance of RequesterSlice. It also registers a cleanup function to assert the mocks expectations.
+func NewRequesterSlice(t testing.TB) *RequesterSlice {
+	mock := &RequesterSlice{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration("requester_slice.go", "RequesterSlice", false, "", expected)
 }
@@ -623,6 +735,15 @@ func (_m *RequesterArray) Get(path string) ([2]string, error) {
 
 	return r0, r1
 }
+
+// NewRequesterArray creates a new instance of RequesterArray. It also registers a cleanup function to assert the mocks expectations.
+func NewRequesterArray(t testing.TB) *RequesterArray {
+	mock := &RequesterArray{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration("requester_array.go", "RequesterArray", false, "", expected)
 }
@@ -653,6 +774,15 @@ func (_m *RequesterNS) Get(path string) (http.Response, error) {
 
 	return r0, r1
 }
+
+// NewRequesterNS creates a new instance of RequesterNS. It also registers a cleanup function to assert the mocks expectations.
+func NewRequesterNS(t testing.TB) *RequesterNS {
+	mock := &RequesterNS{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration("requester_ns.go", "RequesterNS", false, "", expected)
 }
@@ -677,6 +807,15 @@ func (_m *RequesterArgSameAsImport) Get(_a0 string) *json.RawMessage {
 	}
 
 	return r0
+}
+
+// NewRequesterArgSameAsImport creates a new instance of RequesterArgSameAsImport. It also registers a cleanup function to assert the mocks expectations.
+func NewRequesterArgSameAsImport(t testing.TB) *RequesterArgSameAsImport {
+	mock := &RequesterArgSameAsImport{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
 }
 `
 	s.checkGeneration("requester_arg_same_as_import.go", "RequesterArgSameAsImport", false, "", expected)
@@ -703,6 +842,15 @@ func (_m *RequesterArgSameAsNamedImport) Get(_a0 string) *json.RawMessage {
 
 	return r0
 }
+
+// NewRequesterArgSameAsNamedImport creates a new instance of RequesterArgSameAsNamedImport. It also registers a cleanup function to assert the mocks expectations.
+func NewRequesterArgSameAsNamedImport(t testing.TB) *RequesterArgSameAsNamedImport {
+	mock := &RequesterArgSameAsNamedImport{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration("requester_arg_same_as_named_import.go", "RequesterArgSameAsNamedImport", false, "", expected)
 }
@@ -716,6 +864,15 @@ type RequesterArgSameAsPkg struct {
 // Get provides a mock function with given fields: _a0
 func (_m *RequesterArgSameAsPkg) Get(_a0 string) {
 	_m.Called(_a0)
+}
+
+// NewRequesterArgSameAsPkg creates a new instance of RequesterArgSameAsPkg. It also registers a cleanup function to assert the mocks expectations.
+func NewRequesterArgSameAsPkg(t testing.TB) *RequesterArgSameAsPkg {
+	mock := &RequesterArgSameAsPkg{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
 }
 `
 	s.checkGeneration("requester_arg_same_as_pkg.go", "RequesterArgSameAsPkg", false, "", expected)
@@ -751,6 +908,15 @@ func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 
 	return r0, r1
 }
+
+// NewKeyManager creates a new instance of KeyManager. It also registers a cleanup function to assert the mocks expectations.
+func NewKeyManager(t testing.TB) *KeyManager {
+	mock := &KeyManager{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration("custom_error.go", "KeyManager", false, "", expected)
 }
@@ -773,6 +939,15 @@ func (_m *RequesterElided) Get(path string, url string) error {
 	}
 
 	return r0
+}
+
+// NewRequesterElided creates a new instance of RequesterElided. It also registers a cleanup function to assert the mocks expectations.
+func NewRequesterElided(t testing.TB) *RequesterElided {
+	mock := &RequesterElided{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
 }
 `
 	s.checkGeneration("requester_elided.go", "RequesterElided", false, "", expected)
@@ -817,6 +992,15 @@ func (_m *RequesterReturnElided) Get(path string) (int, int, int, error) {
 	}
 
 	return r0, r1, r2, r3
+}
+
+// NewRequesterReturnElided creates a new instance of RequesterReturnElided. It also registers a cleanup function to assert the mocks expectations.
+func NewRequesterReturnElided(t testing.TB) *RequesterReturnElided {
+	mock := &RequesterReturnElided{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
 }
 `
 	s.checkGeneration("requester_ret_elided.go", "RequesterReturnElided", false, "", expected)
@@ -987,6 +1171,15 @@ func (_m *Fooer) Foo(f func(string) string) error {
 
 	return r0
 }
+
+// NewFooer creates a new instance of Fooer. It also registers a cleanup function to assert the mocks expectations.
+func NewFooer(t testing.TB) *Fooer {
+	mock := &Fooer{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration("func_type.go", "Fooer", false, "", expected)
 }
@@ -1044,6 +1237,15 @@ func (_m *AsyncProducer) Whatever() chan bool {
 
 	return r0
 }
+
+// NewAsyncProducer creates a new instance of AsyncProducer. It also registers a cleanup function to assert the mocks expectations.
+func NewAsyncProducer(t testing.TB) *AsyncProducer {
+	mock := &AsyncProducer{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration("async.go", "AsyncProducer", false, "", expected)
 }
@@ -1073,6 +1275,15 @@ func (_m *MyReader) Read(p []byte) (int, error) {
 	}
 
 	return r0, r1
+}
+
+// NewMyReader creates a new instance of MyReader. It also registers a cleanup function to assert the mocks expectations.
+func NewMyReader(t testing.TB) *MyReader {
+	mock := &MyReader{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
 }
 `
 	s.checkGeneration("io_import.go", "MyReader", false, "", expected)
@@ -1120,6 +1331,15 @@ func (_m *ConsulLock) Unlock() error {
 
 	return r0
 }
+
+// NewConsulLock creates a new instance of ConsulLock. It also registers a cleanup function to assert the mocks expectations.
+func NewConsulLock(t testing.TB) *ConsulLock {
+	mock := &ConsulLock{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration("consul.go", "ConsulLock", false, "", expected)
 }
@@ -1142,6 +1362,15 @@ func (_m *Blank) Create(x interface{}) error {
 	}
 
 	return r0
+}
+
+// NewBlank creates a new instance of Blank. It also registers a cleanup function to assert the mocks expectations.
+func NewBlank(t testing.TB) *Blank {
+	mock := &Blank{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
 }
 `
 	s.checkGeneration("empty_interface.go", "Blank", false, "", expected)
@@ -1166,6 +1395,15 @@ func (_m *MapFunc) Get(m map[string]func(string) string) error {
 
 	return r0
 }
+
+// NewMapFunc creates a new instance of MapFunc. It also registers a cleanup function to assert the mocks expectations.
+func NewMapFunc(t testing.TB) *MapFunc {
+	mock := &MapFunc{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration("map_func.go", "MapFunc", false, "", expected)
 }
@@ -1180,6 +1418,15 @@ type UsesOtherPkgIface struct {
 func (_m *UsesOtherPkgIface) DoSomethingElse(obj test.Sibling) {
 	_m.Called(obj)
 }
+
+// NewUsesOtherPkgIface creates a new instance of UsesOtherPkgIface. It also registers a cleanup function to assert the mocks expectations.
+func NewUsesOtherPkgIface(t testing.TB) *UsesOtherPkgIface {
+	mock := &UsesOtherPkgIface{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration("mock_method_uses_pkg_iface.go", "UsesOtherPkgIface", false, "", expected)
 }
@@ -1193,6 +1440,15 @@ type MockUsesOtherPkgIface struct {
 // DoSomethingElse provides a mock function with given fields: obj
 func (_m *MockUsesOtherPkgIface) DoSomethingElse(obj Sibling) {
 	_m.Called(obj)
+}
+
+// NewMockUsesOtherPkgIface creates a new instance of MockUsesOtherPkgIface. It also registers a cleanup function to assert the mocks expectations.
+func NewMockUsesOtherPkgIface(t testing.TB) *MockUsesOtherPkgIface {
+	mock := &MockUsesOtherPkgIface{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
 }
 `
 	s.checkGeneration("mock_method_uses_pkg_iface.go", "UsesOtherPkgIface", true, "", expected)
@@ -1233,6 +1489,15 @@ func (_m *Example) B(_a0 string) fixtureshttp.MyStruct {
 
 	return r0
 }
+
+// NewExample creates a new instance of Example. It also registers a cleanup function to assert the mocks expectations.
+func NewExample(t testing.TB) *Example {
+	mock := &Example{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration("same_name_imports.go", "Example", false, "", expected)
 }
@@ -1263,6 +1528,15 @@ func (_m *MapToInterface) Foo(arg1 ...map[string]interface{}) {
 	_ca = append(_ca, _va...)
 	_m.Called(_ca...)
 }
+
+// NewMapToInterface creates a new instance of MapToInterface. It also registers a cleanup function to assert the mocks expectations.
+func NewMapToInterface(t testing.TB) *MapToInterface {
+	mock := &MapToInterface{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration("MapToInterface.go", "MapToInterface", false, "", expected)
 
@@ -1286,6 +1560,15 @@ func (_m *FuncArgsCollision) Foo(ret interface{}) error {
 	}
 
 	return r0
+}
+
+// NewFuncArgsCollision creates a new instance of FuncArgsCollision. It also registers a cleanup function to assert the mocks expectations.
+func NewFuncArgsCollision(t testing.TB) *FuncArgsCollision {
+	mock := &FuncArgsCollision{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
 }
 `
 	s.checkGeneration("func_args_collision.go", "FuncArgsCollision", false, "", expected)
@@ -1331,6 +1614,15 @@ func (_m *ImportsSameAsPackage) B() fixtures.KeyManager {
 func (_m *ImportsSameAsPackage) C(_a0 fixtures.C) {
 	_m.Called(_a0)
 }
+
+// NewImportsSameAsPackage creates a new instance of ImportsSameAsPackage. It also registers a cleanup function to assert the mocks expectations.
+func NewImportsSameAsPackage(t testing.TB) *ImportsSameAsPackage {
+	mock := &ImportsSameAsPackage{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration("imports_same_as_package.go", "ImportsSameAsPackage", false, "", expected)
 }
@@ -1344,6 +1636,7 @@ func (s *GeneratorSuite) TestPrologueWithImportSameAsLocalPackage() {
 import fixtures "` + generator.iface.QualifiedName + `"
 import mock "github.com/stretchr/testify/mock"
 import test "github.com/vektra/mockery/v2/pkg/fixtures/test"
+import testing "testing"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -1359,6 +1652,7 @@ import fixtureshttp "github.com/vektra/mockery/v2/pkg/fixtures/http"
 import http "net/http"
 import mock "github.com/stretchr/testify/mock"
 import test "github.com/vektra/mockery/v2/pkg/fixtures"
+import testing "testing"
 
 `
 
@@ -1391,6 +1685,15 @@ func (_m *A) Call() (test.B, error) {
 
 	return r0, r1
 }
+
+// NewA creates a new instance of A. It also registers a cleanup function to assert the mocks expectations.
+func NewA(t testing.TB) *A {
+	mock := &A{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration("struct_value.go", "A", false, "", expected)
 }
@@ -1414,6 +1717,15 @@ func (_m *Requester2OverrideName) Get(path string) error {
 
 	return r0
 }
+
+// NewRequester2OverrideName creates a new instance of Requester2OverrideName. It also registers a cleanup function to assert the mocks expectations.
+func NewRequester2OverrideName(t testing.TB) *Requester2OverrideName {
+	mock := &Requester2OverrideName{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
 `
 	s.checkGeneration(testFile2, "Requester2", false, "Requester2OverrideName", expected)
 }
@@ -1431,12 +1743,14 @@ func (s *GeneratorSuite) TestKeepTreeInPackageCombined() {
 import example_project "github.com/vektra/mockery/v2/pkg/fixtures/example_project"
 import foo "github.com/vektra/mockery/v2/pkg/fixtures/example_project/foo"
 import mock "github.com/stretchr/testify/mock"
+import testing "testing"
 
 `},
 		{path: filepath.Join("example_project", "foo", "foo.go"), name: "Foo", expected: `package foo
 
 import foo "github.com/vektra/mockery/v2/pkg/fixtures/example_project/foo"
 import mock "github.com/stretchr/testify/mock"
+import testing "testing"
 
 `},
 	}
