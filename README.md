@@ -29,6 +29,7 @@ Table of Contents
     + [Requirements](#requirements)
     + [Notes](#notes)
 - [Expecter Interfaces](#expecter-interfaces)
+- [Mock constructors](#mock-constructors)
 - [Extended Flag Descriptions](#extended-flag-descriptions)
 - [Mocking interfaces in `main`](#mocking-interfaces-in-main)
 - [Configuration](#configuration)
@@ -85,7 +86,11 @@ Run: `mockery --name=Stringer` and the following will be output to `mocks/String
 ```go
 package mocks
 
-import "github.com/stretchr/testify/mock"
+import (
+	"github.com/stretchr/testify/mock"
+
+	testing "testing"
+)
 
 type Stringer struct {
 	mock.Mock
@@ -103,6 +108,16 @@ func (m *Stringer) String() string {
 
 	return r0
 }
+
+// NewStringer creates a new instance of Stringer. It also registers a cleanup function to assert the mocks expectations.
+func NewStringer(t testing.TB) *Stringer {
+	mock := &Stringer{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
+}
+
 ```
 
 #### Function type case
@@ -120,7 +135,11 @@ Run: `mockery --name=SendFunc` and the following will be output to `mocks/SendFu
 ```go
 package mocks
 
-import "github.com/stretchr/testify/mock"
+import (
+	"github.com/stretchr/testify/mock"
+
+	testing "testing"
+)
 
 type SendFunc struct {
 	mock.Mock
@@ -144,6 +163,15 @@ func (_m *SendFunc) Execute(data string) (int, error) {
 	}
 
 	return r0, r1
+}
+
+// NewSendFunc creates a new instance of SendFunc. It also registers a cleanup function to assert the mocks expectations.
+func NewSendFunc(t testing.TB) *SendFunc {
+	mock := &SendFunc{}
+
+	t.Cleanup(func() { mock.AssertExpectations(t) })
+
+	return mock
 }
 ```
 
@@ -219,9 +247,11 @@ The argument can be passed through as the return value:
 ```go
 import . "github.com/stretchr/testify/mock"
 
-Mock.On("passthrough", mock.AnythingOfType("context.Context"), mock.AnythingOfType("string")).Return(func(ctx context.Context, s string) string {
-    return s
-})
+proxyMock := mocks.NewProxy(t)
+proxyMock.On("passthrough", mock.AnythingOfType("context.Context"), mock.AnythingOfType("string")).
+	Return(func(ctx context.Context, s string) string {
+		return s
+	})
 ```
 
 #### Requirements
@@ -235,19 +265,23 @@ type Proxy interface {
 ```
 
 ```go
-Mock.On("passthrough", mock.AnythingOfType("context.Context"), mock.AnythingOfType("string")).Return(
-	func(ctx context.Context, s string) string {
-		return s
-	},
-	func(ctx context.Context, s string) error {
-		return nil
-	})
+proxyMock := mocks.NewProxy(t)
+proxyMock.On("passthrough", mock.AnythingOfType("context.Context"), mock.AnythingOfType("string")).
+	Return(
+		func(ctx context.Context, s string) string {
+			return s
+		},
+		func(ctx context.Context, s string) error {
+			return nil
+		},
+	)
 ```
 
 Note that the following is incorrect (you can't return all the return values with one function):
 ```go
-Mock.On("passthrough", mock.AnythingOfType("context.Context"), mock.AnythingOfType("string")).Return(
-	func(ctx context.Context, s string) (string, error) {
+proxyMock := mocks.NewProxy(t)
+proxyMock.On("passthrough", mock.AnythingOfType("context.Context"), mock.AnythingOfType("string")).
+	Return(func(ctx context.Context, s string) (string, error) {
 		return s, nil
 	})
 ```
@@ -278,7 +312,7 @@ type Requester interface {
 
 You can use the type-safe expecter interface as such:
 ```go
-requesterMock := Requester{}
+requesterMock := mocks.NewRequester(t)
 requesterMock.EXPECT().Get("some path").Return("result", nil)
 requesterMock.EXPECT().
 	Get(mock.Anything).
@@ -286,6 +320,27 @@ requesterMock.EXPECT().
 	// Can still use return functions by getting the embedded mock.Call
 	Call.Return(func(path string) string { return "result for " + path }, nil)
 ```
+
+Mock constructors
+-----------------
+
+New in [v2.11.0](https://github.com/vektra/mockery/pull/406).
+
+Mockery v2.11 introduces constructors for all mocks. This makes instantiation and mock registration a bit easier and
+less error-prone (you won't have to worry about forgetting the `AssertExpectations` method call anymore).
+
+Before v2.11:
+```go
+factory := &mocks.Factory{}
+defer factory.AssertExpectations(t)
+```
+
+After v2.11:
+```go
+factory := mocks.NewFactory(t)
+```
+
+The `AssertExpectations` method is registered automatically inside the constructor via `t.Cleanup()` method.
 
 Extended Flag Descriptions
 --------------------------
@@ -303,6 +358,7 @@ The following descriptions provide additional elaboration on a few common parame
 | `--case` | mockery generates files using the casing of the original interface name.  This can be modified by specifying `--case underscore` to format the generated file name using underscore casing. |
 | `--print` | Use `mockery --print` to have the resulting code printed out instead of written to disk. |
 | `--exported` | Use `mockery --exported` to generate public mocks for private interfaces. |
+| `--with-expecter` | Use `mockery --with-expecter` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
 
 Mocking interfaces in `main`
 ----------------------------
