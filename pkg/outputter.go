@@ -30,6 +30,7 @@ type FileOutputStreamProvider struct {
 	Config                    config.Config
 	BaseDir                   string
 	InPackage                 bool
+	InPackageSuffix           bool
 	TestOnly                  bool
 	Case                      string
 	KeepTree                  bool
@@ -86,13 +87,24 @@ func (p *FileOutputStreamProvider) GetWriter(ctx context.Context, iface *Interfa
 func (p *FileOutputStreamProvider) filename(name string) string {
 	if p.FileName != "" {
 		return p.FileName
-	} else if p.InPackage && p.TestOnly {
+	}
+
+	if p.InPackage && p.TestOnly {
+		if p.InPackageSuffix {
+			return name + "_mock_test.go"
+		}
+
 		return "mock_" + name + "_test.go"
 	} else if p.InPackage && !p.KeepTree {
+		if p.InPackageSuffix {
+			return name + "_mock.go"
+		}
+
 		return "mock_" + name + ".go"
 	} else if p.TestOnly {
 		return name + "_test.go"
 	}
+
 	return name + ".go"
 }
 
