@@ -1810,7 +1810,7 @@ import mock "github.com/stretchr/testify/mock"
 	generator := NewGenerator(
 		s.ctx,
 		config.Config{InPackage: true, LogLevel: "debug"},
-		s.getInterfaceFromFile("example_project/foo/collision.go", "Collision"),
+		s.getInterfaceFromFile("example_project/foo/pkg_name_same_as_import.go", "PackageNameSameAsImport"),
 		pkg,
 	)
 	s.checkPrologueGeneration(generator, expected)
