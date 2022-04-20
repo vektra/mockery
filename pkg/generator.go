@@ -71,6 +71,20 @@ func (g *Generator) populateImports(ctx context.Context) {
 
 	log.Debug().Msgf("populating imports")
 
+	// imports from generic type constraints
+	if tParams := g.iface.NamedType.TypeParams(); tParams != nil && tParams.Len() > 0 {
+		for i := 0; i < tParams.Len(); i++ {
+			g.renderType(ctx, tParams.At(i).Constraint())
+		}
+	}
+
+	// imports from type arguments
+	if tArgs := g.iface.NamedType.TypeArgs(); tArgs != nil && tArgs.Len() > 0 {
+		for i := 0; i < tArgs.Len(); i++ {
+			g.renderType(ctx, tArgs.At(i))
+		}
+	}
+
 	for _, method := range g.iface.Methods() {
 		ftype := method.Signature
 		g.addImportsFromTuple(ctx, ftype.Params())
@@ -86,6 +100,13 @@ func (g *Generator) addImportsFromTuple(ctx context.Context, list *types.Tuple) 
 		// will appear in the interface file are known
 		g.renderType(ctx, list.At(i).Type())
 	}
+}
+
+func (g *Generator) addPackageScopedType(ctx context.Context, o *types.TypeName) string {
+	if o.Pkg() == nil || o.Pkg().Name() == "main" || (!g.KeepTree && g.InPackage && o.Pkg() == g.iface.Pkg) {
+		return o.Name()
+	}
+	return g.addPackageImport(ctx, o.Pkg()) + "." + o.Name()
 }
 
 func (g *Generator) addPackageImport(ctx context.Context, pkg *types.Package) string {
@@ -231,6 +252,36 @@ func (g *Generator) mockName() string {
 	return g.maybeMakeNameExported(g.iface.Name, g.Exported)
 }
 
+func (g *Generator) typeConstraints(ctx context.Context) string {
+	tp := g.iface.NamedType.TypeParams()
+	if tp == nil || tp.Len() == 0 {
+		return ""
+	}
+	qualifiedParams := make([]string, 0, tp.Len())
+	for i := 0; i < tp.Len(); i++ {
+		param := tp.At(i)
+		switch constraint := param.Constraint().(type) {
+		case *types.Named:
+			qualifiedParams = append(qualifiedParams, fmt.Sprintf("%s %s", param.String(), g.addPackageScopedType(ctx, constraint.Obj())))
+		case *types.Interface:
+			qualifiedParams = append(qualifiedParams, fmt.Sprintf("%s %s", param.String(), constraint.String()))
+		}
+	}
+	return fmt.Sprintf("[%s]", strings.Join(qualifiedParams, ", "))
+}
+
+func (g *Generator) typeParams() string {
+	tp := g.iface.NamedType.TypeParams()
+	if tp == nil || tp.Len() == 0 {
+		return ""
+	}
+	params := make([]string, 0, tp.Len())
+	for i := 0; i < tp.Len(); i++ {
+		params = append(params, tp.At(i).String())
+	}
+	return fmt.Sprintf("[%s]", strings.Join(params, ", "))
+}
+
 func (g *Generator) expecterName() string {
 	return g.mockName() + "_Expecter"
 }
@@ -335,11 +386,12 @@ type namer interface {
 func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 	switch t := typ.(type) {
 	case *types.Named:
-		o := t.Obj()
-		if o.Pkg() == nil || o.Pkg().Name() == "main" || (!g.KeepTree && g.InPackage && o.Pkg() == g.iface.Pkg) {
-			return o.Name()
+		return g.addPackageScopedType(ctx, t.Obj())
+	case *types.TypeParam:
+		if t.Constraint() != nil {
+			return t.Obj().Name()
 		}
-		return g.addPackageImport(ctx, o.Pkg()) + "." + o.Name()
+		return g.addPackageScopedType(ctx, t.Obj())
 	case *types.Basic:
 		if t.Kind() == types.UnsafePointer {
 			return "unsafe.Pointer"
@@ -512,7 +564,7 @@ func (g *Generator) Generate(ctx context.Context) error {
 	)
 
 	g.printf(
-		"type %s struct {\n\tmock.Mock\n}\n\n", g.mockName(),
+		"type %s%s struct {\n\tmock.Mock\n}\n\n", g.mockName(), g.typeConstraints(ctx),
 	)
 
 	if g.WithExpecter {
@@ -541,7 +593,7 @@ func (g *Generator) Generate(ctx context.Context) error {
 			)
 		}
 		g.printf(
-			"func (_m *%s) %s(%s) ", g.mockName(), fname,
+			"func (_m *%s%s) %s(%s) ", g.mockName(), g.typeParams(), fname,
 			strings.Join(params.Params, ", "),
 		)
 
@@ -612,7 +664,7 @@ func (g *Generator) Generate(ctx context.Context) error {
 		}
 	}
 
-	g.generateConstructor()
+	g.generateConstructor(ctx)
 
 	return nil
 }
@@ -712,7 +764,7 @@ func (_c *{{.CallStruct}}) Return({{range .Returns.Params}}{{.}},{{end}}) *{{.Ca
 `)
 }
 
-func (g *Generator) generateConstructor() {
+func (g *Generator) generateConstructor(ctx context.Context) {
 	const constructorTemplate = `
 type {{ .ConstructorTestingInterfaceName }} interface {
 	mock.TestingT
@@ -720,8 +772,9 @@ type {{ .ConstructorTestingInterfaceName }} interface {
 }
 
 // {{ .ConstructorName }} creates a new instance of {{ .MockName }}. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func {{ .ConstructorName }}(t {{ .ConstructorTestingInterfaceName }}) *{{ .MockName }} {
+func {{ .ConstructorName }}{{ .TypeConstraint }}(t {{ .ConstructorTestingInterfaceName }}) *{{ .MockName }}{{ .TypeParams }} {
 	mock := &{{ .MockName }}{}
+
 	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
@@ -736,10 +789,14 @@ func {{ .ConstructorName }}(t {{ .ConstructorTestingInterfaceName }}) *{{ .MockN
 		ConstructorName                 string
 		ConstructorTestingInterfaceName string
 		MockName                        string
+		TypeConstraint                  string
+		TypeParams                      string
 	}{
 		ConstructorName:                 constructorName,
 		ConstructorTestingInterfaceName: constructorName + "T",
 		MockName:                        mockName,
+		TypeConstraint:                  g.typeConstraints(ctx),
+		TypeParams:                      g.typeParams(),
 	}
 	g.printTemplate(data, constructorTemplate)
 }
