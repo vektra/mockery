@@ -51,6 +51,7 @@ func (_m *Fooer) Foo(f func(string) string) error {
 // NewFooer creates a new instance of Fooer. It also registers a cleanup function to assert the mocks expectations.
 func NewFooer(t testing.TB) *Fooer {
 	mock := &Fooer{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

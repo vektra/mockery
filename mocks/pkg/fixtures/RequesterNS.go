@@ -39,6 +39,7 @@ func (_m *RequesterNS) Get(path string) (http.Response, error) {
 // NewRequesterNS creates a new instance of RequesterNS. It also registers a cleanup function to assert the mocks expectations.
 func NewRequesterNS(t testing.TB) *RequesterNS {
 	mock := &RequesterNS{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

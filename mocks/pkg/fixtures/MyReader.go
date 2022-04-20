@@ -37,6 +37,7 @@ func (_m *MyReader) Read(p []byte) (int, error) {
 // NewMyReader creates a new instance of MyReader. It also registers a cleanup function to assert the mocks expectations.
 func NewMyReader(t testing.TB) *MyReader {
 	mock := &MyReader{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

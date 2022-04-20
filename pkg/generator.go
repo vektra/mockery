@@ -708,6 +708,7 @@ func (g *Generator) generateConstructor() {
 // %[1]s creates a new instance of %[2]s. It also registers a cleanup function to assert the mocks expectations.
 func %[1]s(t testing.TB) *%[2]s {
 	mock := &%[2]s{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

@@ -30,6 +30,7 @@ func (_m *Requester2) Get(path string) error {
 // NewRequester2 creates a new instance of Requester2. It also registers a cleanup function to assert the mocks expectations.
 func NewRequester2(t testing.TB) *Requester2 {
 	mock := &Requester2{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

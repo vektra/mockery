@@ -30,6 +30,7 @@ func (_m *MapFunc) Get(m map[string]func(string) string) error {
 // NewMapFunc creates a new instance of MapFunc. It also registers a cleanup function to assert the mocks expectations.
 func NewMapFunc(t testing.TB) *MapFunc {
 	mock := &MapFunc{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

@@ -27,6 +27,7 @@ func (_m *MapToInterface) Foo(arg1 ...map[string]interface{}) {
 // NewMapToInterface creates a new instance of MapToInterface. It also registers a cleanup function to assert the mocks expectations.
 func NewMapToInterface(t testing.TB) *MapToInterface {
 	mock := &MapToInterface{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

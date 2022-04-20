@@ -30,6 +30,7 @@ func (_m *FuncArgsCollision) Foo(ret interface{}) error {
 // NewFuncArgsCollision creates a new instance of FuncArgsCollision. It also registers a cleanup function to assert the mocks expectations.
 func NewFuncArgsCollision(t testing.TB) *FuncArgsCollision {
 	mock := &FuncArgsCollision{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

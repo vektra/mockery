@@ -39,6 +39,7 @@ func (_m *SendFunc) Execute(ctx context.Context, data string) (int, error) {
 // NewSendFunc creates a new instance of SendFunc. It also registers a cleanup function to assert the mocks expectations.
 func NewSendFunc(t testing.TB) *SendFunc {
 	mock := &SendFunc{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

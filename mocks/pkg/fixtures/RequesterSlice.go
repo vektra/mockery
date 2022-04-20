@@ -39,6 +39,7 @@ func (_m *RequesterSlice) Get(path string) ([]string, error) {
 // NewRequesterSlice creates a new instance of RequesterSlice. It also registers a cleanup function to assert the mocks expectations.
 func NewRequesterSlice(t testing.TB) *RequesterSlice {
 	mock := &RequesterSlice{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

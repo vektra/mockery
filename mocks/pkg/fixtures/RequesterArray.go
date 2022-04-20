@@ -39,6 +39,7 @@ func (_m *RequesterArray) Get(path string) ([2]string, error) {
 // NewRequesterArray creates a new instance of RequesterArray. It also registers a cleanup function to assert the mocks expectations.
 func NewRequesterArray(t testing.TB) *RequesterArray {
 	mock := &RequesterArray{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

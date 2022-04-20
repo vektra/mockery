@@ -55,6 +55,7 @@ func (_m *HasConflictingNestedImports) Z() fixtureshttp.MyStruct {
 // NewHasConflictingNestedImports creates a new instance of HasConflictingNestedImports. It also registers a cleanup function to assert the mocks expectations.
 func NewHasConflictingNestedImports(t testing.TB) *HasConflictingNestedImports {
 	mock := &HasConflictingNestedImports{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

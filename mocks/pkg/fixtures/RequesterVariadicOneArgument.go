@@ -74,6 +74,7 @@ func (_m *RequesterVariadicOneArgument) Sprintf(format string, a ...interface{})
 // NewRequesterVariadicOneArgument creates a new instance of RequesterVariadicOneArgument. It also registers a cleanup function to assert the mocks expectations.
 func NewRequesterVariadicOneArgument(t testing.TB) *RequesterVariadicOneArgument {
 	mock := &RequesterVariadicOneArgument{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

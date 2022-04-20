@@ -34,6 +34,7 @@ func (_m *RequesterIface) Get() io.Reader {
 // NewRequesterIface creates a new instance of RequesterIface. It also registers a cleanup function to assert the mocks expectations.
 func NewRequesterIface(t testing.TB) *RequesterIface {
 	mock := &RequesterIface{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

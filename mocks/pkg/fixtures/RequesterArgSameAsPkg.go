@@ -21,6 +21,7 @@ func (_m *RequesterArgSameAsPkg) Get(_a0 string) {
 // NewRequesterArgSameAsPkg creates a new instance of RequesterArgSameAsPkg. It also registers a cleanup function to assert the mocks expectations.
 func NewRequesterArgSameAsPkg(t testing.TB) *RequesterArgSameAsPkg {
 	mock := &RequesterArgSameAsPkg{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

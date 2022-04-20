@@ -33,6 +33,7 @@ func (_m *IfaceWithBuildTagInFilename) Sprintf(format string, a ...interface{}) 
 // NewIfaceWithBuildTagInFilename creates a new instance of IfaceWithBuildTagInFilename. It also registers a cleanup function to assert the mocks expectations.
 func NewIfaceWithBuildTagInFilename(t testing.TB) *IfaceWithBuildTagInFilename {
 	mock := &IfaceWithBuildTagInFilename{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

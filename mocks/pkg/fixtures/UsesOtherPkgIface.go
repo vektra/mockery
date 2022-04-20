@@ -22,6 +22,7 @@ func (_m *UsesOtherPkgIface) DoSomethingElse(obj test.Sibling) {
 // NewUsesOtherPkgIface creates a new instance of UsesOtherPkgIface. It also registers a cleanup function to assert the mocks expectations.
 func NewUsesOtherPkgIface(t testing.TB) *UsesOtherPkgIface {
 	mock := &UsesOtherPkgIface{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

@@ -95,6 +95,7 @@ func (_m *ExpecterTest) VariadicMany(i int, a string, intfs ...interface{}) erro
 // NewExpecterTest creates a new instance of ExpecterTest. It also registers a cleanup function to assert the mocks expectations.
 func NewExpecterTest(t testing.TB) *ExpecterTest {
 	mock := &ExpecterTest{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

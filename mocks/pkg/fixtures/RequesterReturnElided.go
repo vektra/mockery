@@ -51,6 +51,7 @@ func (_m *RequesterReturnElided) Get(path string) (int, int, int, error) {
 // NewRequesterReturnElided creates a new instance of RequesterReturnElided. It also registers a cleanup function to assert the mocks expectations.
 func NewRequesterReturnElided(t testing.TB) *RequesterReturnElided {
 	mock := &RequesterReturnElided{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 
