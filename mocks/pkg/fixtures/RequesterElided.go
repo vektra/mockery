@@ -27,7 +27,7 @@ func (_m *RequesterElided) Get(path string, url string) error {
 	return r0
 }
 
-// NewRequesterElided creates a new instance of RequesterElided. It also registers a cleanup function to assert the mocks expectations.
+// NewRequesterElided creates a new instance of RequesterElided. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterElided(t testing.TB) *RequesterElided {
 	mock := &RequesterElided{}
 	mock.Mock.Test(t)

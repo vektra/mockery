@@ -109,9 +109,10 @@ func (m *Stringer) String() string {
 	return r0
 }
 
-// NewStringer creates a new instance of Stringer. It also registers a cleanup function to assert the mocks expectations.
+// NewStringer creates a new instance of Stringer. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewStringer(t testing.TB) *Stringer {
 	mock := &Stringer{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 
@@ -165,9 +166,10 @@ func (_m *SendFunc) Execute(data string) (int, error) {
 	return r0, r1
 }
 
-// NewSendFunc creates a new instance of SendFunc. It also registers a cleanup function to assert the mocks expectations.
+// NewSendFunc creates a new instance of SendFunc. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewSendFunc(t testing.TB) *SendFunc {
 	mock := &SendFunc{}
+    mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 
@@ -332,6 +334,7 @@ less error-prone (you won't have to worry about forgetting the `AssertExpectatio
 Before v2.11:
 ```go
 factory := &mocks.Factory{}
+factory.Test(t) // so that mock does not panic when a method is unexpected
 defer factory.AssertExpectations(t)
 ```
 
@@ -340,7 +343,9 @@ After v2.11:
 factory := mocks.NewFactory(t)
 ```
 
-The `AssertExpectations` method is registered automatically inside the constructor via `t.Cleanup()` method.
+The constructor sets up common functionalities automatically
+- The `AssertExpectations` method is registered to be called at the end of the tests via `t.Cleanup()` method.
+- The testing.TB interface is registered on the `mock.Mock` so that tests don't panic when a call on the mock is unexpected.
 
 Extended Flag Descriptions
 --------------------------

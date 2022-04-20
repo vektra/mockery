@@ -89,7 +89,7 @@ func (_m *RequesterVariadic) Sprintf(format string, a ...interface{}) string {
 	return r0
 }
 
-// NewRequesterVariadic creates a new instance of RequesterVariadic. It also registers a cleanup function to assert the mocks expectations.
+// NewRequesterVariadic creates a new instance of RequesterVariadic. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterVariadic(t testing.TB) *RequesterVariadic {
 	mock := &RequesterVariadic{}
 	mock.Mock.Test(t)

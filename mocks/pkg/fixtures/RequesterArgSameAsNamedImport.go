@@ -31,7 +31,7 @@ func (_m *RequesterArgSameAsNamedImport) Get(_a0 string) *json.RawMessage {
 	return r0
 }
 
-// NewRequesterArgSameAsNamedImport creates a new instance of RequesterArgSameAsNamedImport. It also registers a cleanup function to assert the mocks expectations.
+// NewRequesterArgSameAsNamedImport creates a new instance of RequesterArgSameAsNamedImport. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterArgSameAsNamedImport(t testing.TB) *RequesterArgSameAsNamedImport {
 	mock := &RequesterArgSameAsNamedImport{}
 	mock.Mock.Test(t)

@@ -27,7 +27,7 @@ func (_m *Cleanup) Execute() error {
 	return r0
 }
 
-// NewCleanup creates a new instance of Cleanup. It also registers a cleanup function to assert the mocks expectations.
+// NewCleanup creates a new instance of Cleanup. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewCleanup(t testing.TB) *Cleanup {
 	mock := &Cleanup{}
 

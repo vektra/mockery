@@ -30,7 +30,7 @@ func (_m *WalkerVisitor) VisitWalk(_a0 context.Context, _a1 *pkg.Interface) erro
 	return r0
 }
 
-// NewWalkerVisitor creates a new instance of WalkerVisitor. It also registers a cleanup function to assert the mocks expectations.
+// NewWalkerVisitor creates a new instance of WalkerVisitor. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewWalkerVisitor(t testing.TB) *WalkerVisitor {
 	mock := &WalkerVisitor{}
 

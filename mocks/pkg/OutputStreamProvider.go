@@ -50,7 +50,7 @@ func (_m *OutputStreamProvider) GetWriter(_a0 context.Context, _a1 *pkg.Interfac
 	return r0, r1, r2
 }
 
-// NewOutputStreamProvider creates a new instance of OutputStreamProvider. It also registers a cleanup function to assert the mocks expectations.
+// NewOutputStreamProvider creates a new instance of OutputStreamProvider. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewOutputStreamProvider(t testing.TB) *OutputStreamProvider {
 	mock := &OutputStreamProvider{}
 

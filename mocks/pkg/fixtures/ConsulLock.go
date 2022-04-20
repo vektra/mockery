@@ -50,7 +50,7 @@ func (_m *ConsulLock) Unlock() error {
 	return r0
 }
 
-// NewConsulLock creates a new instance of ConsulLock. It also registers a cleanup function to assert the mocks expectations.
+// NewConsulLock creates a new instance of ConsulLock. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewConsulLock(t testing.TB) *ConsulLock {
 	mock := &ConsulLock{}
 	mock.Mock.Test(t)

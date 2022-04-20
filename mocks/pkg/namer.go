@@ -27,7 +27,7 @@ func (_m *namer) Name() string {
 	return r0
 }
 
-// newNamer creates a new instance of namer. It also registers a cleanup function to assert the mocks expectations.
+// newNamer creates a new instance of namer. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func newNamer(t testing.TB) *namer {
 	mock := &namer{}
 

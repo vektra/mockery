@@ -51,7 +51,7 @@ func (_m *ImportsSameAsPackage) C(_a0 fixtures.C) {
 	_m.Called(_a0)
 }
 
-// NewImportsSameAsPackage creates a new instance of ImportsSameAsPackage. It also registers a cleanup function to assert the mocks expectations.
+// NewImportsSameAsPackage creates a new instance of ImportsSameAsPackage. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewImportsSameAsPackage(t testing.TB) *ImportsSameAsPackage {
 	mock := &ImportsSameAsPackage{}
 	mock.Mock.Test(t)

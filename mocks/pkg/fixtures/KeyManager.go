@@ -39,7 +39,7 @@ func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 	return r0, r1
 }
 
-// NewKeyManager creates a new instance of KeyManager. It also registers a cleanup function to assert the mocks expectations.
+// NewKeyManager creates a new instance of KeyManager. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewKeyManager(t testing.TB) *KeyManager {
 	mock := &KeyManager{}
 	mock.Mock.Test(t)

@@ -61,7 +61,7 @@ func (_m *AsyncProducer) Whatever() chan bool {
 	return r0
 }
 
-// NewAsyncProducer creates a new instance of AsyncProducer. It also registers a cleanup function to assert the mocks expectations.
+// NewAsyncProducer creates a new instance of AsyncProducer. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewAsyncProducer(t testing.TB) *AsyncProducer {
 	mock := &AsyncProducer{}
 	mock.Mock.Test(t)

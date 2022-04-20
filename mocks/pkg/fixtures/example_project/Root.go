@@ -42,7 +42,7 @@ func (_m *Root) TakesBaz(_a0 *foo.Baz) {
 	_m.Called(_a0)
 }
 
-// NewRoot creates a new instance of Root. It also registers a cleanup function to assert the mocks expectations.
+// NewRoot creates a new instance of Root. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRoot(t testing.TB) *Root {
 	mock := &Root{}
 	mock.Mock.Test(t)

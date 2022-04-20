@@ -27,7 +27,7 @@ func (_m *Requester2) Get(path string) error {
 	return r0
 }
 
-// NewRequester2 creates a new instance of Requester2. It also registers a cleanup function to assert the mocks expectations.
+// NewRequester2 creates a new instance of Requester2. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequester2(t testing.TB) *Requester2 {
 	mock := &Requester2{}
 	mock.Mock.Test(t)

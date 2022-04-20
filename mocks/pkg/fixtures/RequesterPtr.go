@@ -36,7 +36,7 @@ func (_m *RequesterPtr) Get(path string) (*string, error) {
 	return r0, r1
 }
 
-// NewRequesterPtr creates a new instance of RequesterPtr. It also registers a cleanup function to assert the mocks expectations.
+// NewRequesterPtr creates a new instance of RequesterPtr. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterPtr(t testing.TB) *RequesterPtr {
 	mock := &RequesterPtr{}
 	mock.Mock.Test(t)
