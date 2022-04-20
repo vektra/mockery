@@ -16,6 +16,7 @@ import (
 	"strings"
 	"text/template"
 	"unicode"
+	"unicode/utf8"
 
 	"github.com/rs/zerolog"
 	"github.com/vektra/mockery/v2/pkg/config"
@@ -195,15 +196,22 @@ func (g *Generator) getLocalizedPath(ctx context.Context, path string) string {
 	return toReturn
 }
 
-func upperFirstOnly(s string) string {
-	first := true
-	return strings.Map(func(r rune) rune {
-		if first {
-			first = false
-			return unicode.ToUpper(r)
-		}
-		return r
-	}, s)
+func (g *Generator) maybeMakeNameExported(name string, export bool) string {
+	if export && !ast.IsExported(name) {
+		return g.makeNameExported(name)
+	}
+
+	return name
+}
+
+func (g *Generator) makeNameExported(name string) string {
+	r, n := utf8.DecodeRuneInString(name)
+
+	if unicode.IsUpper(r) {
+		return name
+	}
+
+	return string(unicode.ToUpper(r)) + name[n:]
 }
 
 func (g *Generator) mockName() string {
@@ -216,13 +224,10 @@ func (g *Generator) mockName() string {
 			return "Mock" + g.iface.Name
 		}
 
-		return "mock" + upperFirstOnly(g.iface.Name)
-	}
-	if g.Exported || ast.IsExported(g.iface.Name) {
-		return upperFirstOnly(g.iface.Name)
+		return "mock" + g.makeNameExported(g.iface.Name)
 	}
 
-	return g.iface.Name
+	return g.maybeMakeNameExported(g.iface.Name, g.Exported)
 }
 
 func (g *Generator) expecterName() string {
@@ -715,18 +720,10 @@ func %[1]s(t testing.TB) *%[2]s {
 }
 `
 
-	funcFirstLetter := "N"
 	mockName := g.mockName()
+	constructorName := g.maybeMakeNameExported("new"+g.makeNameExported(mockName), ast.IsExported(mockName))
 
-	for _, firstLetter := range mockName {
-		if unicode.IsLower(firstLetter) {
-			funcFirstLetter = "n"
-		}
-
-		break
-	}
-
-	g.printf(constructor, funcFirstLetter+"ew"+upperFirstOnly(mockName), mockName)
+	g.printf(constructor, constructorName, mockName)
 }
 
 // generateCalled returns the Mock.Called invocation string and, if necessary, prints the
