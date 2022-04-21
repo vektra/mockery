@@ -30,7 +30,7 @@ func (_m *stackTracer) StackTrace() errors.StackTrace {
 	return r0
 }
 
-// newStackTracer creates a new instance of stackTracer. It also registers a cleanup function to assert the mocks expectations.
+// newStackTracer creates a new instance of stackTracer. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func newStackTracer(t testing.TB) *stackTracer {
 	mock := &stackTracer{}
 

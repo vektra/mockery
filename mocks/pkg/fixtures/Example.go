@@ -47,9 +47,10 @@ func (_m *Example) B(_a0 string) fixtureshttp.MyStruct {
 	return r0
 }
 
-// NewExample creates a new instance of Example. It also registers a cleanup function to assert the mocks expectations.
+// NewExample creates a new instance of Example. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewExample(t testing.TB) *Example {
 	mock := &Example{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

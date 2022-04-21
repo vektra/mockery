@@ -27,9 +27,10 @@ func (_m *Blank) Create(x interface{}) error {
 	return r0
 }
 
-// NewBlank creates a new instance of Blank. It also registers a cleanup function to assert the mocks expectations.
+// NewBlank creates a new instance of Blank. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewBlank(t testing.TB) *Blank {
 	mock := &Blank{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

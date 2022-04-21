@@ -231,9 +231,10 @@ func (_c *ExpecterTest_VariadicMany_Call) Return(_a0 error) *ExpecterTest_Variad
 	return _c
 }
 
-// NewExpecterTest creates a new instance of ExpecterTest. It also registers a cleanup function to assert the mocks expectations.
+// NewExpecterTest creates a new instance of ExpecterTest. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewExpecterTest(t testing.TB) *ExpecterTest {
 	mock := &ExpecterTest{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

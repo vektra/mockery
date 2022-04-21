@@ -51,9 +51,10 @@ func (_m *Foo) GetBaz() (*foo.Baz, error) {
 	return r0, r1
 }
 
-// NewFoo creates a new instance of Foo. It also registers a cleanup function to assert the mocks expectations.
+// NewFoo creates a new instance of Foo. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewFoo(t testing.TB) *Foo {
 	mock := &Foo{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

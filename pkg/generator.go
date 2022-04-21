@@ -705,9 +705,10 @@ func (_c *{{.CallStruct}}) Return({{range .Returns.Params}}{{.}},{{end}}) *{{.Ca
 
 func (g *Generator) generateConstructor() {
 	const constructor = `
-// %[1]s creates a new instance of %[2]s. It also registers a cleanup function to assert the mocks expectations.
+// %[1]s creates a new instance of %[2]s. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func %[1]s(t testing.TB) *%[2]s {
 	mock := &%[2]s{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

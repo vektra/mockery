@@ -27,9 +27,10 @@ func (_m *Requester3) Get() error {
 	return r0
 }
 
-// NewRequester3 creates a new instance of Requester3. It also registers a cleanup function to assert the mocks expectations.
+// NewRequester3 creates a new instance of Requester3. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequester3(t testing.TB) *Requester3 {
 	mock := &Requester3{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

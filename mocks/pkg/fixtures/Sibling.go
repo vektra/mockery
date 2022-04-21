@@ -18,9 +18,10 @@ func (_m *Sibling) DoSomething() {
 	_m.Called()
 }
 
-// NewSibling creates a new instance of Sibling. It also registers a cleanup function to assert the mocks expectations.
+// NewSibling creates a new instance of Sibling. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
 func NewSibling(t testing.TB) *Sibling {
 	mock := &Sibling{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 
