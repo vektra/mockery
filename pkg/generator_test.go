@@ -1805,6 +1805,7 @@ func (s *GeneratorSuite) TestInPackagePackageCollision() {
 
 import barfoo "github.com/vektra/mockery/v2/pkg/fixtures/example_project/bar/foo"
 import mock "github.com/stretchr/testify/mock"
+import testing "testing"
 
 `
 	generator := NewGenerator(
