@@ -1817,6 +1817,23 @@ import testing "testing"
 	s.checkPrologueGeneration(generator, expected)
 }
 
+func (s *GeneratorSuite) TestImportCollideWithStdLib() {
+	expected := `package context
+
+import context2 "context"
+import mock "github.com/stretchr/testify/mock"
+import testing "testing"
+
+`
+	generator := NewGenerator(
+		s.ctx,
+		config.Config{InPackage: true, LogLevel: "debug"},
+		s.getInterfaceFromFile("example_project/context/context.go", "CollideWithStdLib"),
+		pkg,
+	)
+	s.checkPrologueGeneration(generator, expected)
+}
+
 func TestGeneratorSuite(t *testing.T) {
 	generatorSuite := new(GeneratorSuite)
 	suite.Run(t, generatorSuite)
