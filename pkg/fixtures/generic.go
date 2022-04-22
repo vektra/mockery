@@ -1,21 +1,38 @@
 package test
 
-type Constraint interface {
-	int
+import (
+	"io"
+
+	"github.com/vektra/mockery/v2/pkg/fixtures/constraints"
+)
+
+type RequesterGenerics[
+	TAny any,
+	TComparable comparable,
+	TSigned constraints.Signed, // external constraint
+	TIntf GetInt, // internal interface
+	TExternalIntf io.Writer, // external interface
+	TGenIntf GetGeneric[TSigned], // generic interface
+	TInlineType interface{ ~int | ~uint }, // inlined interface constraints
+	TInlineTypeGeneric interface {
+		~int | GenericType[int, GetInt]
+		comparable
+	}, // inlined type constraints
+] interface {
+	GenericArguments(TAny, TComparable) (TSigned, TIntf)
+	GenericStructs(GenericType[TAny, TIntf]) GenericType[TSigned, TIntf]
+	GenericAnonymousStructs(struct{ Type1 TExternalIntf }) struct {
+		Type2 GenericType[string, EmbeddedGet[int]]
+	}
 }
 
-type Generic[T Constraint] interface {
-	Get() T
+type GenericType[T any, S GetInt] struct {
+	Any  T
+	Some []S
 }
 
-type GenericAny[T any] interface {
-	Get() T
-}
+type GetInt interface{ Get() int }
 
-type GenericComparable[T comparable] interface {
-	Get() T
-}
+type GetGeneric[T constraints.Integer] interface{ Get() T }
 
-type Embedded interface {
-	Generic[int]
-}
+type EmbeddedGet[T constraints.Signed] interface{ GetGeneric[T] }

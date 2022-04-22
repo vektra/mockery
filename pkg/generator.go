@@ -260,12 +260,7 @@ func (g *Generator) typeConstraints(ctx context.Context) string {
 	qualifiedParams := make([]string, 0, tp.Len())
 	for i := 0; i < tp.Len(); i++ {
 		param := tp.At(i)
-		switch constraint := param.Constraint().(type) {
-		case *types.Named:
-			qualifiedParams = append(qualifiedParams, fmt.Sprintf("%s %s", param.String(), g.addPackageScopedType(ctx, constraint.Obj())))
-		case *types.Interface:
-			qualifiedParams = append(qualifiedParams, fmt.Sprintf("%s %s", param.String(), constraint.String()))
-		}
+		qualifiedParams = append(qualifiedParams, fmt.Sprintf("%s %s", param.String(), g.renderType(ctx, param.Constraint())))
 	}
 	return fmt.Sprintf("[%s]", strings.Join(qualifiedParams, ", "))
 }
@@ -386,7 +381,16 @@ type namer interface {
 func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 	switch t := typ.(type) {
 	case *types.Named:
-		return g.addPackageScopedType(ctx, t.Obj())
+		name := g.addPackageScopedType(ctx, t.Obj())
+		if t.TypeArgs() == nil || t.TypeArgs().Len() == 0 {
+			return name
+		}
+		args := make([]string, 0, t.TypeArgs().Len())
+		for i := 0; i < t.TypeArgs().Len(); i++ {
+			arg := t.TypeArgs().At(i)
+			args = append(args, g.renderType(ctx, arg))
+		}
+		return fmt.Sprintf("%s[%s]", name, strings.Join(args, ","))
 	case *types.TypeParam:
 		if t.Constraint() != nil {
 			return t.Obj().Name()
@@ -456,7 +460,27 @@ func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 			panic("Unable to mock inline interfaces with methods")
 		}
 
-		return "interface{}"
+		rv := []string{"interface{"}
+		for i := 0; i < t.NumEmbeddeds(); i++ {
+			rv = append(rv, g.renderType(ctx, t.EmbeddedType(i)))
+		}
+		rv = append(rv, "}")
+		sep := ""
+		if t.NumEmbeddeds() > 1 {
+			sep = "\n"
+		}
+		return strings.Join(rv, sep)
+	case *types.Union:
+		rv := make([]string, 0, t.Len())
+		for i := 0; i < t.Len(); i++ {
+			term := t.Term(i)
+			if term.Tilde() {
+				rv = append(rv, "~"+g.renderType(ctx, term.Type()))
+			} else {
+				rv = append(rv, g.renderType(ctx, term.Type()))
+			}
+		}
+		return strings.Join(rv, "|")
 	case namer:
 		return t.Name()
 	default:
@@ -593,7 +617,7 @@ func (g *Generator) Generate(ctx context.Context) error {
 			)
 		}
 		g.printf(
-			"func (_m *%s%s) %s(%s) ", g.mockName(), g.typeParams(), fname,
+			"func (_m *%s%s) %s(%s) ", g.mockName(), g.typeParams(ctx), fname,
 			strings.Join(params.Params, ", "),
 		)
 
