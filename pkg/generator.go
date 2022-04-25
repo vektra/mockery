@@ -102,7 +102,12 @@ func (g *Generator) addImportsFromTuple(ctx context.Context, list *types.Tuple) 
 	}
 }
 
-func (g *Generator) addPackageScopedType(ctx context.Context, o *types.TypeName) string {
+// getPackageScopedType returns the appropriate string representation for the
+// object TypeName. The string may either be the unqualified name (in the case
+// the mock will live in the same package as the interface being mocked, e.g.
+// `Foo`) or the package pathname (in the case the type lives in a package
+// external to the mock, e.g. `packagename.Foo`).
+func (g *Generator) getPackageScopedType(ctx context.Context, o *types.TypeName) string {
 	if o.Pkg() == nil || o.Pkg().Name() == "main" || (!g.KeepTree && g.InPackage && o.Pkg() == g.iface.Pkg) {
 		return o.Name()
 	}
@@ -252,7 +257,17 @@ func (g *Generator) mockName() string {
 	return g.maybeMakeNameExported(g.iface.Name, g.Exported)
 }
 
-func (g *Generator) typeConstraints(ctx context.Context) string {
+// getTypeConstraintString returns type constraint string for a given interface.
+//  For instance, a method using this constraint:
+//
+//    func Foo[T Stringer](s []T) (ret []string) {
+//
+//    }
+//
+// The constraint returned will be "[T Stringer]"
+//
+// https://go.googlesource.com/proposal/+/refs/heads/master/design/43651-type-parameters.md#type-parameters
+func (g *Generator) getTypeConstraintString(ctx context.Context) string {
 	tp := g.iface.NamedType.TypeParams()
 	if tp == nil || tp.Len() == 0 {
 		return ""
@@ -265,7 +280,10 @@ func (g *Generator) typeConstraints(ctx context.Context) string {
 	return fmt.Sprintf("[%s]", strings.Join(qualifiedParams, ", "))
 }
 
-func (g *Generator) typeParams() string {
+// getInstantiatedTypeString returns the "instantiated" type names for a given
+// constraint list. For instance, if your interface has the constraints
+// `[S Stringer, I int, C Comparable]`, this method would return: `[S, I, C]`
+func (g *Generator) getInstantiatedTypeString() string {
 	tp := g.iface.NamedType.TypeParams()
 	if tp == nil || tp.Len() == 0 {
 		return ""
@@ -381,7 +399,7 @@ type namer interface {
 func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 	switch t := typ.(type) {
 	case *types.Named:
-		name := g.addPackageScopedType(ctx, t.Obj())
+		name := g.getPackageScopedType(ctx, t.Obj())
 		if t.TypeArgs() == nil || t.TypeArgs().Len() == 0 {
 			return name
 		}
@@ -395,7 +413,7 @@ func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 		if t.Constraint() != nil {
 			return t.Obj().Name()
 		}
-		return g.addPackageScopedType(ctx, t.Obj())
+		return g.getPackageScopedType(ctx, t.Obj())
 	case *types.Basic:
 		if t.Kind() == types.UnsafePointer {
 			return "unsafe.Pointer"
@@ -588,7 +606,7 @@ func (g *Generator) Generate(ctx context.Context) error {
 	)
 
 	g.printf(
-		"type %s%s struct {\n\tmock.Mock\n}\n\n", g.mockName(), g.typeConstraints(ctx),
+		"type %s%s struct {\n\tmock.Mock\n}\n\n", g.mockName(), g.getTypeConstraintString(ctx),
 	)
 
 	if g.WithExpecter {
@@ -617,7 +635,7 @@ func (g *Generator) Generate(ctx context.Context) error {
 			)
 		}
 		g.printf(
-			"func (_m *%s%s) %s(%s) ", g.mockName(), g.typeParams(ctx), fname,
+			"func (_m *%s%s) %s(%s) ", g.mockName(), g.getInstantiatedTypeString(), fname,
 			strings.Join(params.Params, ", "),
 		)
 
@@ -797,7 +815,7 @@ type {{ .ConstructorTestingInterfaceName }} interface {
 
 // {{ .ConstructorName }} creates a new instance of {{ .MockName }}. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func {{ .ConstructorName }}{{ .TypeConstraint }}(t {{ .ConstructorTestingInterfaceName }}) *{{ .MockName }}{{ .TypeParams }} {
-	mock := &{{ .MockName }}{}
+	mock := &{{ .MockName }}{{ .InstantiatedTypeString }}{}
 
 	mock.Mock.Test(t)
 
@@ -812,15 +830,16 @@ func {{ .ConstructorName }}{{ .TypeConstraint }}(t {{ .ConstructorTestingInterfa
 	data := struct {
 		ConstructorName                 string
 		ConstructorTestingInterfaceName string
+		InstantiatedTypeString          string
 		MockName                        string
 		TypeConstraint                  string
 		TypeParams                      string
 	}{
 		ConstructorName:                 constructorName,
 		ConstructorTestingInterfaceName: constructorName + "T",
+		InstantiatedTypeString:          g.getInstantiatedTypeString(),
 		MockName:                        mockName,
-		TypeConstraint:                  g.typeConstraints(ctx),
-		TypeParams:                      g.typeParams(),
+		TypeConstraint:                  g.getTypeConstraintString(ctx),
 	}
 	g.printTemplate(data, constructorTemplate)
 }
