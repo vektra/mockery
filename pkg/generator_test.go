@@ -1774,7 +1774,7 @@ func (s *GeneratorSuite) TestKeepTreeInPackageCombined() {
 	tests := []testData{
 		{path: filepath.Join("example_project", "root.go"), name: "Root", expected: `package example_project
 
-import example_project "github.com/vektra/mockery/v2/pkg/fixtures/example_project"
+import fixturesexample_project "github.com/vektra/mockery/v2/pkg/fixtures/example_project"
 import foo "github.com/vektra/mockery/v2/pkg/fixtures/example_project/foo"
 import mock "github.com/stretchr/testify/mock"
 import testing "testing"
@@ -1782,7 +1782,7 @@ import testing "testing"
 `},
 		{path: filepath.Join("example_project", "foo", "foo.go"), name: "Foo", expected: `package foo
 
-import foo "github.com/vektra/mockery/v2/pkg/fixtures/example_project/foo"
+import example_projectfoo "github.com/vektra/mockery/v2/pkg/fixtures/example_project/foo"
 import mock "github.com/stretchr/testify/mock"
 import testing "testing"
 
@@ -1798,6 +1798,40 @@ import testing "testing"
 		)
 		s.checkPrologueGeneration(generator, test.expected)
 	}
+}
+
+func (s *GeneratorSuite) TestInPackagePackageCollision() {
+	expected := `package foo
+
+import barfoo "github.com/vektra/mockery/v2/pkg/fixtures/example_project/bar/foo"
+import mock "github.com/stretchr/testify/mock"
+import testing "testing"
+
+`
+	generator := NewGenerator(
+		s.ctx,
+		config.Config{InPackage: true, LogLevel: "debug"},
+		s.getInterfaceFromFile("example_project/foo/pkg_name_same_as_import.go", "PackageNameSameAsImport"),
+		pkg,
+	)
+	s.checkPrologueGeneration(generator, expected)
+}
+
+func (s *GeneratorSuite) TestImportCollideWithStdLib() {
+	expected := `package context
+
+import context2 "context"
+import mock "github.com/stretchr/testify/mock"
+import testing "testing"
+
+`
+	generator := NewGenerator(
+		s.ctx,
+		config.Config{InPackage: true, LogLevel: "debug"},
+		s.getInterfaceFromFile("example_project/context/context.go", "CollideWithStdLib"),
+		pkg,
+	)
+	s.checkPrologueGeneration(generator, expected)
 }
 
 func TestGeneratorSuite(t *testing.T) {

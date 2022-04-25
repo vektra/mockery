@@ -106,7 +106,8 @@ func (g *Generator) addPackageImportWithName(ctx context.Context, path, name str
 }
 
 func (g *Generator) getNonConflictingName(path, name string) string {
-	if !g.importNameExists(name) {
+	if !g.importNameExists(name) && (!g.InPackage || g.iface.Pkg.Name() != name) {
+		// do not allow imports with the same name as the package when inPackage
 		return name
 	}
 
@@ -123,7 +124,8 @@ func (g *Generator) getNonConflictingName(path, name string) string {
 	var prospectiveName string
 	for i := 1; i <= numDirectories; i++ {
 		prospectiveName = strings.Join(cleanedDirectories[numDirectories-i:], "")
-		if !g.importNameExists(prospectiveName) {
+		if !g.importNameExists(prospectiveName) && (!g.InPackage || g.iface.Pkg.Name() != prospectiveName) {
+			// do not allow imports with the same name as the package when inPackage
 			return prospectiveName
 		}
 	}
