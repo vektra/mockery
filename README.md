@@ -62,7 +62,7 @@ Install through [brew](https://brew.sh/)
 
 [DEPRECATED](https://github.com/vektra/mockery/pull/456#issuecomment-1105365611)
 
-Alternatively, you can use the go install method:
+Alternatively, you can use the go install method (not recommended, do not use this for production deployments! See linked deprecation note above):
 
     go install github.com/vektra/mockery/v2@latest
 
