@@ -68,9 +68,11 @@ func (w *Walker) doWalk(ctx context.Context, p *Parser, dir string, visitor Walk
 
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
+		log.Err(err).Msgf("Error reading directory")
 		return
 	}
 
+OUTER:
 	for _, file := range files {
 		if strings.HasPrefix(file.Name(), ".") || strings.HasPrefix(file.Name(), "_") {
 			continue
@@ -80,6 +82,17 @@ func (w *Walker) doWalk(ctx context.Context, p *Parser, dir string, visitor Walk
 
 		if file.IsDir() {
 			if w.Recursive {
+				nextFiles, err := ioutil.ReadDir(path)
+				if err != nil {
+					log.Err(err).Msgf("Error reading directory")
+					return
+				}
+				for _, nextFile := range nextFiles {
+					if nextFile.Name() == ".mockery_skip" {
+						continue OUTER
+					}
+				}
+
 				generated = w.doWalk(ctx, p, path, visitor) || generated
 				if generated && w.LimitOne {
 					return

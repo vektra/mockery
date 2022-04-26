@@ -31,6 +31,7 @@ Table of Contents
 - [Expecter Interfaces](#expecter-interfaces)
 - [Mock constructors](#mock-constructors)
 - [Extended Flag Descriptions](#extended-flag-descriptions)
+- [Excluding Directories](#excluding-directories)
 - [Mocking interfaces in `main`](#mocking-interfaces-in-main)
 - [Configuration](#configuration)
   * [Example](#example)
@@ -366,6 +367,11 @@ The following descriptions provide additional elaboration on a few common parame
 | `--print` | Use `mockery --print` to have the resulting code printed out instead of written to disk. |
 | `--exported` | Use `mockery --exported` to generate public mocks for private interfaces. |
 | `--with-expecter` | Use `mockery --with-expecter` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
+
+Excluding Directories
+---------------------
+
+Directories can be excluded from mock generation by placing a file `.mockery_skip` inside them. Mocks will not be generated for any types present in a directory containing such a file nor for any in its sub-directories.
 
 Mocking interfaces in `main`
 ----------------------------

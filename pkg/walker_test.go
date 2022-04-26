@@ -120,3 +120,30 @@ func TestPackagePrefix(t *testing.T) {
 	w.Walk(context.Background(), gv)
 	assert.Regexp(t, regexp.MustCompile("package prefix_test_test"), bufferedProvider.String())
 }
+
+func TestWalkerDirectorySkip(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping recursive walker test")
+	}
+
+	wd, err := os.Getwd()
+	assert.NoError(t, err)
+	w := Walker{
+		BaseDir:   wd,
+		Recursive: true,
+		LimitOne:  false,
+		Filter:    regexp.MustCompile(".*"),
+	}
+
+	gv := NewGatheringVisitor()
+
+	// Generating mocks, ignoring the fixtures directory
+	skipMarker, err := os.Create(getFixturePath(".mockery_skip"))
+	assert.NoError(t, err)
+	defer func() { os.Remove(skipMarker.Name()) }()
+
+	w.Walk(context.Background(), gv)
+
+	// There are 4 mocks generated from the files within pkg/* but outside pkg/fixtures/*
+	assert.Len(t, gv.Interfaces, 4)
+}
