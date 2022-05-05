@@ -165,6 +165,8 @@ func (r *RootApp) Run() error {
 	}
 	log = log.With().Bool(logging.LogKeyDryRun, r.Config.DryRun).Logger()
 	log.Info().Msgf("Starting mockery")
+	log.Warn().Msgf("DEPRECATION NOTICE!")
+	log.Warn().Msgf("Using go install to download mockery will break after June 1, 2022. Please view PR #456 for details.")
 	ctx := log.WithContext(context.Background())
 
 	if r.Config.Version {
