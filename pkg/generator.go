@@ -342,6 +342,9 @@ func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 		}
 		return g.addPackageImport(ctx, o.Pkg()) + "." + o.Name()
 	case *types.Basic:
+		if t.Kind() == types.UnsafePointer {
+			return "unsafe.Pointer"
+		}
 		return t.Name()
 	case *types.Pointer:
 		return "*" + g.renderType(ctx, t.Elem())
