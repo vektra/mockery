@@ -153,7 +153,7 @@ func (_m *Requester) Get(path string) (string, error) {
 }
 
 type NewRequesterT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -229,7 +229,7 @@ func (_c *Requester_Get_Call) Return(_a0 string, _a1 error) *Requester_Get_Call 
 }
 
 type NewRequesterT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -252,8 +252,8 @@ func NewRequester(t NewRequesterT) *Requester {
 }
 
 func (s *GeneratorSuite) TestGeneratorExpecterComplete() {
-	expectedBytes, err := ioutil.ReadFile(getFixturePath("mocks", "expecter.go"))
-	s.NoError(err)
+	expectedBytes, err := ioutil.ReadFile(getMocksPath("ExpecterTest.go"))
+	require.NoError(s.T(), err)
 	expected := string(expectedBytes)
 	expected = expected[strings.Index(expected, "// ExpecterTest is"):]
 
@@ -303,7 +303,7 @@ func (_m *SendFunc) Execute(ctx context.Context, data string) (int, error) {
 }
 
 type NewSendFuncT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -341,7 +341,7 @@ func (_m *Requester2) Get(path string) error {
 }
 
 type NewRequester2T interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -379,7 +379,7 @@ func (_m *Requester3) Get() error {
 }
 
 type NewRequester3T interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -408,7 +408,7 @@ func (_m *Requester4) Get() {
 }
 
 type NewRequester4T interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -437,7 +437,7 @@ func (_m *mockRequester_unexported) Get() {
 }
 
 type newMockRequester_unexportedT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -466,7 +466,7 @@ func (_m *Mockrequester_unexported) Get() {
 }
 
 type NewMockrequester_unexportedT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -514,7 +514,7 @@ func (_m *Requester_unexported) Get() {
 }
 
 type NewRequester_unexportedT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -556,7 +556,6 @@ func (s *GeneratorSuite) TestGeneratorPrologue() {
 
 import mock "github.com/stretchr/testify/mock"
 import test "github.com/vektra/mockery/v2/pkg/fixtures"
-import testing "testing"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -569,7 +568,6 @@ func (s *GeneratorSuite) TestGeneratorPrologueWithImports() {
 import http "net/http"
 import mock "github.com/stretchr/testify/mock"
 import test "github.com/vektra/mockery/v2/pkg/fixtures"
-import testing "testing"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -584,7 +582,6 @@ import fixtureshttp "github.com/vektra/mockery/v2/pkg/fixtures/http"
 import http "net/http"
 import mock "github.com/stretchr/testify/mock"
 import test "github.com/vektra/mockery/v2/pkg/fixtures"
-import testing "testing"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -668,7 +665,7 @@ func (_m *RequesterIface) Get() io.Reader {
 }
 
 type NewRequesterIfaceT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -715,7 +712,7 @@ func (_m *RequesterPtr) Get(path string) (*string, error) {
 }
 
 type NewRequesterPtrT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -762,7 +759,7 @@ func (_m *RequesterSlice) Get(path string) ([]string, error) {
 }
 
 type NewRequesterSliceT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -809,7 +806,7 @@ func (_m *RequesterArray) Get(path string) ([2]string, error) {
 }
 
 type NewRequesterArrayT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -854,7 +851,7 @@ func (_m *RequesterNS) Get(path string) (http.Response, error) {
 }
 
 type NewRequesterNST interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -894,7 +891,7 @@ func (_m *RequesterArgSameAsImport) Get(_a0 string) *json.RawMessage {
 }
 
 type NewRequesterArgSameAsImportT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -934,7 +931,7 @@ func (_m *RequesterArgSameAsNamedImport) Get(_a0 string) *json.RawMessage {
 }
 
 type NewRequesterArgSameAsNamedImportT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -963,7 +960,7 @@ func (_m *RequesterArgSameAsPkg) Get(_a0 string) {
 }
 
 type NewRequesterArgSameAsPkgT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1012,7 +1009,7 @@ func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 }
 
 type NewKeyManagerT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1050,7 +1047,7 @@ func (_m *RequesterElided) Get(path string, url string) error {
 }
 
 type NewRequesterElidedT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1109,7 +1106,7 @@ func (_m *RequesterReturnElided) Get(path string) (int, int, int, error) {
 }
 
 type NewRequesterReturnElidedT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1293,7 +1290,7 @@ func (_m *Fooer) Foo(f func(string) string) error {
 }
 
 type NewFooerT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1365,7 +1362,7 @@ func (_m *AsyncProducer) Whatever() chan bool {
 }
 
 type NewAsyncProducerT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1410,7 +1407,7 @@ func (_m *MyReader) Read(p []byte) (int, error) {
 }
 
 type NewMyReaderT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1471,7 +1468,7 @@ func (_m *ConsulLock) Unlock() error {
 }
 
 type NewConsulLockT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1509,7 +1506,7 @@ func (_m *Blank) Create(x interface{}) error {
 }
 
 type NewBlankT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1547,7 +1544,7 @@ func (_m *MapFunc) Get(m map[string]func(string) string) error {
 }
 
 type NewMapFuncT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1576,7 +1573,7 @@ func (_m *UsesOtherPkgIface) DoSomethingElse(obj test.Sibling) {
 }
 
 type NewUsesOtherPkgIfaceT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1605,7 +1602,7 @@ func (_m *MockUsesOtherPkgIface) DoSomethingElse(obj Sibling) {
 }
 
 type NewMockUsesOtherPkgIfaceT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1659,7 +1656,7 @@ func (_m *Example) B(_a0 string) fixtureshttp.MyStruct {
 }
 
 type NewExampleT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1704,7 +1701,7 @@ func (_m *MapToInterface) Foo(arg1 ...map[string]interface{}) {
 }
 
 type NewMapToInterfaceT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1743,7 +1740,7 @@ func (_m *FuncArgsCollision) Foo(ret interface{}) error {
 }
 
 type NewFuncArgsCollisionT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1802,7 +1799,7 @@ func (_m *ImportsSameAsPackage) C(_a0 fixtures.C) {
 }
 
 type NewImportsSameAsPackageT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1831,7 +1828,7 @@ func (_m *UnsafeInterface) Do(ptr *unsafe.Pointer) {
 }
 
 type NewUnsafeInterfaceT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1857,7 +1854,6 @@ func (s *GeneratorSuite) TestPrologueWithImportSameAsLocalPackage() {
 import fixtures "` + generator.iface.QualifiedName + `"
 import mock "github.com/stretchr/testify/mock"
 import test "github.com/vektra/mockery/v2/pkg/fixtures/test"
-import testing "testing"
 
 `
 	s.checkPrologueGeneration(generator, expected)
@@ -1873,7 +1869,6 @@ import fixtureshttp "github.com/vektra/mockery/v2/pkg/fixtures/http"
 import http "net/http"
 import mock "github.com/stretchr/testify/mock"
 import test "github.com/vektra/mockery/v2/pkg/fixtures"
-import testing "testing"
 
 `
 
@@ -1908,7 +1903,7 @@ func (_m *A) Call() (test.B, error) {
 }
 
 type NewAT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1946,7 +1941,7 @@ func (_m *Requester2OverrideName) Get(path string) error {
 }
 
 type NewRequester2OverrideNameT interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
@@ -1976,14 +1971,12 @@ func (s *GeneratorSuite) TestKeepTreeInPackageCombined() {
 import fixturesexample_project "github.com/vektra/mockery/v2/pkg/fixtures/example_project"
 import foo "github.com/vektra/mockery/v2/pkg/fixtures/example_project/foo"
 import mock "github.com/stretchr/testify/mock"
-import testing "testing"
 
 `},
 		{path: filepath.Join("example_project", "foo", "foo.go"), name: "Foo", expected: `package foo
 
 import example_projectfoo "github.com/vektra/mockery/v2/pkg/fixtures/example_project/foo"
 import mock "github.com/stretchr/testify/mock"
-import testing "testing"
 
 `},
 	}
@@ -2004,7 +1997,6 @@ func (s *GeneratorSuite) TestInPackagePackageCollision() {
 
 import barfoo "github.com/vektra/mockery/v2/pkg/fixtures/example_project/bar/foo"
 import mock "github.com/stretchr/testify/mock"
-import testing "testing"
 
 `
 	generator := NewGenerator(
@@ -2021,7 +2013,6 @@ func (s *GeneratorSuite) TestImportCollideWithStdLib() {
 
 import context2 "context"
 import mock "github.com/stretchr/testify/mock"
-import testing "testing"
 
 `
 	generator := NewGenerator(

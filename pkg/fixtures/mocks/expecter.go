@@ -3,8 +3,6 @@
 package mocks
 
 import (
-	"testing"
-
 	"github.com/stretchr/testify/mock"
 )
 
@@ -231,8 +229,13 @@ func (_c *ExpecterTest_VariadicMany_Call) Return(_a0 error) *ExpecterTest_Variad
 	return _c
 }
 
+type NewExpecterTestT interface {
+	mock.TestingT
+	Cleanup(func())
+}
+
 // NewExpecterTest creates a new instance of ExpecterTest. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
-func NewExpecterTest(t testing.TB) *ExpecterTest {
+func NewExpecterTest(t NewExpecterTestT) *ExpecterTest {
 	mock := &ExpecterTest{}
 	mock.Mock.Test(t)
 

@@ -62,7 +62,6 @@ func NewGenerator(ctx context.Context, c config.Config, iface *Interface, pkg st
 	}
 
 	g.addPackageImportWithName(ctx, "github.com/stretchr/testify/mock", "mock")
-	g.addPackageImportWithName(ctx, "testing", "testing")
 
 	return g
 }
@@ -716,7 +715,7 @@ func (_c *{{.CallStruct}}) Return({{range .Returns.Params}}{{.}},{{end}}) *{{.Ca
 func (g *Generator) generateConstructor() {
 	const constructorTemplate = `
 type {{ .ConstructorTestingInterfaceName }} interface {
-	testing.T
+	mock.TestingT
 	Cleanup(func())
 }
 
