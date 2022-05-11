@@ -28,7 +28,7 @@ type NewMapFuncT interface {
 	Cleanup(func())
 }
 
-// NewMapFunc creates a new instance of MapFunc. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewMapFunc creates a new instance of MapFunc. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewMapFunc(t NewMapFuncT) *MapFunc {
 	mock := &MapFunc{}
 	mock.Mock.Test(t)

@@ -23,7 +23,7 @@ type NewCollideWithStdLibT interface {
 	Cleanup(func())
 }
 
-// NewCollideWithStdLib creates a new instance of CollideWithStdLib. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewCollideWithStdLib creates a new instance of CollideWithStdLib. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewCollideWithStdLib(t NewCollideWithStdLibT) *CollideWithStdLib {
 	mock := &CollideWithStdLib{}
 	mock.Mock.Test(t)

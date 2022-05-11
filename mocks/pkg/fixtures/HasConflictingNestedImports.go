@@ -55,7 +55,7 @@ type NewHasConflictingNestedImportsT interface {
 	Cleanup(func())
 }
 
-// NewHasConflictingNestedImports creates a new instance of HasConflictingNestedImports. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewHasConflictingNestedImports creates a new instance of HasConflictingNestedImports. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewHasConflictingNestedImports(t NewHasConflictingNestedImportsT) *HasConflictingNestedImports {
 	mock := &HasConflictingNestedImports{}
 	mock.Mock.Test(t)

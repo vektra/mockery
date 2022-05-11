@@ -92,7 +92,7 @@ type NewRequesterVariadicT interface {
 	Cleanup(func())
 }
 
-// NewRequesterVariadic creates a new instance of RequesterVariadic. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterVariadic creates a new instance of RequesterVariadic. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterVariadic(t NewRequesterVariadicT) *RequesterVariadic {
 	mock := &RequesterVariadic{}
 	mock.Mock.Test(t)

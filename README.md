@@ -111,7 +111,7 @@ func (m *Stringer) String() string {
 	return r0
 }
 
-// NewStringer creates a new instance of Stringer. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewStringer creates a new instance of Stringer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewStringer(t testing.TB) *Stringer {
 	mock := &Stringer{}
 	mock.Mock.Test(t)
@@ -168,7 +168,7 @@ func (_m *SendFunc) Execute(data string) (int, error) {
 	return r0, r1
 }
 
-// NewSendFunc creates a new instance of SendFunc. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewSendFunc creates a new instance of SendFunc. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewSendFunc(t testing.TB) *SendFunc {
 	mock := &SendFunc{}
 	mock.Mock.Test(t)

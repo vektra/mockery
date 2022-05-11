@@ -34,7 +34,7 @@ type NewRequesterIfaceT interface {
 	Cleanup(func())
 }
 
-// NewRequesterIface creates a new instance of RequesterIface. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterIface creates a new instance of RequesterIface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterIface(t NewRequesterIfaceT) *RequesterIface {
 	mock := &RequesterIface{}
 	mock.Mock.Test(t)

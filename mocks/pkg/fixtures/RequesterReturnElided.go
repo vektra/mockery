@@ -49,7 +49,7 @@ type NewRequesterReturnElidedT interface {
 	Cleanup(func())
 }
 
-// NewRequesterReturnElided creates a new instance of RequesterReturnElided. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterReturnElided creates a new instance of RequesterReturnElided. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterReturnElided(t NewRequesterReturnElidedT) *RequesterReturnElided {
 	mock := &RequesterReturnElided{}
 	mock.Mock.Test(t)

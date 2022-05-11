@@ -37,7 +37,7 @@ type NewRequesterPtrT interface {
 	Cleanup(func())
 }
 
-// NewRequesterPtr creates a new instance of RequesterPtr. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterPtr creates a new instance of RequesterPtr. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterPtr(t NewRequesterPtrT) *RequesterPtr {
 	mock := &RequesterPtr{}
 	mock.Mock.Test(t)

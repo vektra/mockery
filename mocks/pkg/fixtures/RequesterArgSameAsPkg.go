@@ -19,7 +19,7 @@ type NewRequesterArgSameAsPkgT interface {
 	Cleanup(func())
 }
 
-// NewRequesterArgSameAsPkg creates a new instance of RequesterArgSameAsPkg. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterArgSameAsPkg creates a new instance of RequesterArgSameAsPkg. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterArgSameAsPkg(t NewRequesterArgSameAsPkgT) *RequesterArgSameAsPkg {
 	mock := &RequesterArgSameAsPkg{}
 	mock.Mock.Test(t)

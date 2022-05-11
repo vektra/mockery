@@ -157,7 +157,7 @@ type NewRequesterT interface {
 	Cleanup(func())
 }
 
-// NewRequester creates a new instance of Requester. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequester creates a new instance of Requester. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequester(t NewRequesterT) *Requester {
 	mock := &Requester{}
 	mock.Mock.Test(t)
@@ -233,7 +233,7 @@ type NewRequesterT interface {
 	Cleanup(func())
 }
 
-// NewRequester creates a new instance of Requester. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequester creates a new instance of Requester. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequester(t NewRequesterT) *Requester {
 	mock := &Requester{}
 	mock.Mock.Test(t)
@@ -252,12 +252,13 @@ func NewRequester(t NewRequesterT) *Requester {
 }
 
 func (s *GeneratorSuite) TestGeneratorExpecterComplete() {
-	expectedBytes, err := ioutil.ReadFile(getMocksPath("ExpecterTest.go"))
+	expectedBytes, err := ioutil.ReadFile(getMocksPath("ExpecterTestWithExpecter.go"))
 	require.NoError(s.T(), err)
 	expected := string(expectedBytes)
-	expected = expected[strings.Index(expected, "// ExpecterTest is"):]
+	expected = expected[strings.Index(expected, "// ExpecterTestWithExpecter is"):]
 
 	cfg := config.Config{
+		StructName:     "ExpecterTestWithExpecter",
 		WithExpecter:   true,
 		UnrollVariadic: true,
 	}
@@ -307,7 +308,7 @@ type NewSendFuncT interface {
 	Cleanup(func())
 }
 
-// NewSendFunc creates a new instance of SendFunc. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewSendFunc creates a new instance of SendFunc. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewSendFunc(t NewSendFuncT) *SendFunc {
 	mock := &SendFunc{}
 	mock.Mock.Test(t)
@@ -345,7 +346,7 @@ type NewRequester2T interface {
 	Cleanup(func())
 }
 
-// NewRequester2 creates a new instance of Requester2. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequester2 creates a new instance of Requester2. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequester2(t NewRequester2T) *Requester2 {
 	mock := &Requester2{}
 	mock.Mock.Test(t)
@@ -383,7 +384,7 @@ type NewRequester3T interface {
 	Cleanup(func())
 }
 
-// NewRequester3 creates a new instance of Requester3. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequester3 creates a new instance of Requester3. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequester3(t NewRequester3T) *Requester3 {
 	mock := &Requester3{}
 	mock.Mock.Test(t)
@@ -412,7 +413,7 @@ type NewRequester4T interface {
 	Cleanup(func())
 }
 
-// NewRequester4 creates a new instance of Requester4. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequester4 creates a new instance of Requester4. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequester4(t NewRequester4T) *Requester4 {
 	mock := &Requester4{}
 	mock.Mock.Test(t)
@@ -441,7 +442,7 @@ type newMockRequester_unexportedT interface {
 	Cleanup(func())
 }
 
-// newMockRequester_unexported creates a new instance of mockRequester_unexported. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// newMockRequester_unexported creates a new instance of mockRequester_unexported. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func newMockRequester_unexported(t newMockRequester_unexportedT) *mockRequester_unexported {
 	mock := &mockRequester_unexported{}
 	mock.Mock.Test(t)
@@ -470,7 +471,7 @@ type NewMockrequester_unexportedT interface {
 	Cleanup(func())
 }
 
-// NewMockrequester_unexported creates a new instance of Mockrequester_unexported. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewMockrequester_unexported creates a new instance of Mockrequester_unexported. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewMockrequester_unexported(t NewMockrequester_unexportedT) *Mockrequester_unexported {
 	mock := &Mockrequester_unexported{}
 	mock.Mock.Test(t)
@@ -518,7 +519,7 @@ type NewRequester_unexportedT interface {
 	Cleanup(func())
 }
 
-// NewRequester_unexported creates a new instance of Requester_unexported. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequester_unexported creates a new instance of Requester_unexported. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequester_unexported(t NewRequester_unexportedT) *Requester_unexported {
 	mock := &Requester_unexported{}
 	mock.Mock.Test(t)
@@ -669,7 +670,7 @@ type NewRequesterIfaceT interface {
 	Cleanup(func())
 }
 
-// NewRequesterIface creates a new instance of RequesterIface. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterIface creates a new instance of RequesterIface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterIface(t NewRequesterIfaceT) *RequesterIface {
 	mock := &RequesterIface{}
 	mock.Mock.Test(t)
@@ -716,7 +717,7 @@ type NewRequesterPtrT interface {
 	Cleanup(func())
 }
 
-// NewRequesterPtr creates a new instance of RequesterPtr. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterPtr creates a new instance of RequesterPtr. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterPtr(t NewRequesterPtrT) *RequesterPtr {
 	mock := &RequesterPtr{}
 	mock.Mock.Test(t)
@@ -763,7 +764,7 @@ type NewRequesterSliceT interface {
 	Cleanup(func())
 }
 
-// NewRequesterSlice creates a new instance of RequesterSlice. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterSlice creates a new instance of RequesterSlice. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterSlice(t NewRequesterSliceT) *RequesterSlice {
 	mock := &RequesterSlice{}
 	mock.Mock.Test(t)
@@ -810,7 +811,7 @@ type NewRequesterArrayT interface {
 	Cleanup(func())
 }
 
-// NewRequesterArray creates a new instance of RequesterArray. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterArray creates a new instance of RequesterArray. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterArray(t NewRequesterArrayT) *RequesterArray {
 	mock := &RequesterArray{}
 	mock.Mock.Test(t)
@@ -855,7 +856,7 @@ type NewRequesterNST interface {
 	Cleanup(func())
 }
 
-// NewRequesterNS creates a new instance of RequesterNS. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterNS creates a new instance of RequesterNS. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterNS(t NewRequesterNST) *RequesterNS {
 	mock := &RequesterNS{}
 	mock.Mock.Test(t)
@@ -895,7 +896,7 @@ type NewRequesterArgSameAsImportT interface {
 	Cleanup(func())
 }
 
-// NewRequesterArgSameAsImport creates a new instance of RequesterArgSameAsImport. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterArgSameAsImport creates a new instance of RequesterArgSameAsImport. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterArgSameAsImport(t NewRequesterArgSameAsImportT) *RequesterArgSameAsImport {
 	mock := &RequesterArgSameAsImport{}
 	mock.Mock.Test(t)
@@ -935,7 +936,7 @@ type NewRequesterArgSameAsNamedImportT interface {
 	Cleanup(func())
 }
 
-// NewRequesterArgSameAsNamedImport creates a new instance of RequesterArgSameAsNamedImport. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterArgSameAsNamedImport creates a new instance of RequesterArgSameAsNamedImport. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterArgSameAsNamedImport(t NewRequesterArgSameAsNamedImportT) *RequesterArgSameAsNamedImport {
 	mock := &RequesterArgSameAsNamedImport{}
 	mock.Mock.Test(t)
@@ -964,7 +965,7 @@ type NewRequesterArgSameAsPkgT interface {
 	Cleanup(func())
 }
 
-// NewRequesterArgSameAsPkg creates a new instance of RequesterArgSameAsPkg. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterArgSameAsPkg creates a new instance of RequesterArgSameAsPkg. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterArgSameAsPkg(t NewRequesterArgSameAsPkgT) *RequesterArgSameAsPkg {
 	mock := &RequesterArgSameAsPkg{}
 	mock.Mock.Test(t)
@@ -1013,7 +1014,7 @@ type NewKeyManagerT interface {
 	Cleanup(func())
 }
 
-// NewKeyManager creates a new instance of KeyManager. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewKeyManager creates a new instance of KeyManager. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewKeyManager(t NewKeyManagerT) *KeyManager {
 	mock := &KeyManager{}
 	mock.Mock.Test(t)
@@ -1051,7 +1052,7 @@ type NewRequesterElidedT interface {
 	Cleanup(func())
 }
 
-// NewRequesterElided creates a new instance of RequesterElided. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterElided creates a new instance of RequesterElided. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterElided(t NewRequesterElidedT) *RequesterElided {
 	mock := &RequesterElided{}
 	mock.Mock.Test(t)
@@ -1110,7 +1111,7 @@ type NewRequesterReturnElidedT interface {
 	Cleanup(func())
 }
 
-// NewRequesterReturnElided creates a new instance of RequesterReturnElided. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterReturnElided creates a new instance of RequesterReturnElided. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterReturnElided(t NewRequesterReturnElidedT) *RequesterReturnElided {
 	mock := &RequesterReturnElided{}
 	mock.Mock.Test(t)
@@ -1294,7 +1295,7 @@ type NewFooerT interface {
 	Cleanup(func())
 }
 
-// NewFooer creates a new instance of Fooer. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewFooer creates a new instance of Fooer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewFooer(t NewFooerT) *Fooer {
 	mock := &Fooer{}
 	mock.Mock.Test(t)
@@ -1366,7 +1367,7 @@ type NewAsyncProducerT interface {
 	Cleanup(func())
 }
 
-// NewAsyncProducer creates a new instance of AsyncProducer. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewAsyncProducer creates a new instance of AsyncProducer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewAsyncProducer(t NewAsyncProducerT) *AsyncProducer {
 	mock := &AsyncProducer{}
 	mock.Mock.Test(t)
@@ -1411,7 +1412,7 @@ type NewMyReaderT interface {
 	Cleanup(func())
 }
 
-// NewMyReader creates a new instance of MyReader. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewMyReader creates a new instance of MyReader. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewMyReader(t NewMyReaderT) *MyReader {
 	mock := &MyReader{}
 	mock.Mock.Test(t)
@@ -1472,7 +1473,7 @@ type NewConsulLockT interface {
 	Cleanup(func())
 }
 
-// NewConsulLock creates a new instance of ConsulLock. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewConsulLock creates a new instance of ConsulLock. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewConsulLock(t NewConsulLockT) *ConsulLock {
 	mock := &ConsulLock{}
 	mock.Mock.Test(t)
@@ -1510,7 +1511,7 @@ type NewBlankT interface {
 	Cleanup(func())
 }
 
-// NewBlank creates a new instance of Blank. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewBlank creates a new instance of Blank. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewBlank(t NewBlankT) *Blank {
 	mock := &Blank{}
 	mock.Mock.Test(t)
@@ -1548,7 +1549,7 @@ type NewMapFuncT interface {
 	Cleanup(func())
 }
 
-// NewMapFunc creates a new instance of MapFunc. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewMapFunc creates a new instance of MapFunc. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewMapFunc(t NewMapFuncT) *MapFunc {
 	mock := &MapFunc{}
 	mock.Mock.Test(t)
@@ -1577,7 +1578,7 @@ type NewUsesOtherPkgIfaceT interface {
 	Cleanup(func())
 }
 
-// NewUsesOtherPkgIface creates a new instance of UsesOtherPkgIface. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewUsesOtherPkgIface creates a new instance of UsesOtherPkgIface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewUsesOtherPkgIface(t NewUsesOtherPkgIfaceT) *UsesOtherPkgIface {
 	mock := &UsesOtherPkgIface{}
 	mock.Mock.Test(t)
@@ -1606,7 +1607,7 @@ type NewMockUsesOtherPkgIfaceT interface {
 	Cleanup(func())
 }
 
-// NewMockUsesOtherPkgIface creates a new instance of MockUsesOtherPkgIface. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewMockUsesOtherPkgIface creates a new instance of MockUsesOtherPkgIface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewMockUsesOtherPkgIface(t NewMockUsesOtherPkgIfaceT) *MockUsesOtherPkgIface {
 	mock := &MockUsesOtherPkgIface{}
 	mock.Mock.Test(t)
@@ -1660,7 +1661,7 @@ type NewExampleT interface {
 	Cleanup(func())
 }
 
-// NewExample creates a new instance of Example. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewExample creates a new instance of Example. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewExample(t NewExampleT) *Example {
 	mock := &Example{}
 	mock.Mock.Test(t)
@@ -1705,7 +1706,7 @@ type NewMapToInterfaceT interface {
 	Cleanup(func())
 }
 
-// NewMapToInterface creates a new instance of MapToInterface. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewMapToInterface creates a new instance of MapToInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewMapToInterface(t NewMapToInterfaceT) *MapToInterface {
 	mock := &MapToInterface{}
 	mock.Mock.Test(t)
@@ -1744,7 +1745,7 @@ type NewFuncArgsCollisionT interface {
 	Cleanup(func())
 }
 
-// NewFuncArgsCollision creates a new instance of FuncArgsCollision. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewFuncArgsCollision creates a new instance of FuncArgsCollision. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewFuncArgsCollision(t NewFuncArgsCollisionT) *FuncArgsCollision {
 	mock := &FuncArgsCollision{}
 	mock.Mock.Test(t)
@@ -1803,7 +1804,7 @@ type NewImportsSameAsPackageT interface {
 	Cleanup(func())
 }
 
-// NewImportsSameAsPackage creates a new instance of ImportsSameAsPackage. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewImportsSameAsPackage creates a new instance of ImportsSameAsPackage. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewImportsSameAsPackage(t NewImportsSameAsPackageT) *ImportsSameAsPackage {
 	mock := &ImportsSameAsPackage{}
 	mock.Mock.Test(t)
@@ -1832,7 +1833,7 @@ type NewUnsafeInterfaceT interface {
 	Cleanup(func())
 }
 
-// NewUnsafeInterface creates a new instance of UnsafeInterface. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewUnsafeInterface creates a new instance of UnsafeInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewUnsafeInterface(t NewUnsafeInterfaceT) *UnsafeInterface {
 	mock := &UnsafeInterface{}
 	mock.Mock.Test(t)
@@ -1907,7 +1908,7 @@ type NewAT interface {
 	Cleanup(func())
 }
 
-// NewA creates a new instance of A. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewA creates a new instance of A. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewA(t NewAT) *A {
 	mock := &A{}
 	mock.Mock.Test(t)
@@ -1945,7 +1946,7 @@ type NewRequester2OverrideNameT interface {
 	Cleanup(func())
 }
 
-// NewRequester2OverrideName creates a new instance of Requester2OverrideName. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequester2OverrideName creates a new instance of Requester2OverrideName. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequester2OverrideName(t NewRequester2OverrideNameT) *Requester2OverrideName {
 	mock := &Requester2OverrideName{}
 	mock.Mock.Test(t)

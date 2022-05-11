@@ -719,7 +719,7 @@ type {{ .ConstructorTestingInterfaceName }} interface {
 	Cleanup(func())
 }
 
-// {{ .ConstructorName }} creates a new instance of {{ .MockName }}. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// {{ .ConstructorName }} creates a new instance of {{ .MockName }}. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func {{ .ConstructorName }}(t {{ .ConstructorTestingInterfaceName }}) *{{ .MockName }} {
 	mock := &{{ .MockName }}{}
 	mock.Mock.Test(t)

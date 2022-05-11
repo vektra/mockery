@@ -28,7 +28,7 @@ type NewRequester2T interface {
 	Cleanup(func())
 }
 
-// NewRequester2 creates a new instance of Requester2. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequester2 creates a new instance of Requester2. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequester2(t NewRequester2T) *Requester2 {
 	mock := &Requester2{}
 	mock.Mock.Test(t)

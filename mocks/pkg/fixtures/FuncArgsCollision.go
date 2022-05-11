@@ -28,7 +28,7 @@ type NewFuncArgsCollisionT interface {
 	Cleanup(func())
 }
 
-// NewFuncArgsCollision creates a new instance of FuncArgsCollision. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewFuncArgsCollision creates a new instance of FuncArgsCollision. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewFuncArgsCollision(t NewFuncArgsCollisionT) *FuncArgsCollision {
 	mock := &FuncArgsCollision{}
 	mock.Mock.Test(t)

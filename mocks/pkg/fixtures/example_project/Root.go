@@ -45,7 +45,7 @@ type NewRootT interface {
 	Cleanup(func())
 }
 
-// NewRoot creates a new instance of Root. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRoot creates a new instance of Root. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRoot(t NewRootT) *Root {
 	mock := &Root{}
 	mock.Mock.Test(t)

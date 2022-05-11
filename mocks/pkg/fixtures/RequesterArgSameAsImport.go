@@ -34,7 +34,7 @@ type NewRequesterArgSameAsImportT interface {
 	Cleanup(func())
 }
 
-// NewRequesterArgSameAsImport creates a new instance of RequesterArgSameAsImport. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterArgSameAsImport creates a new instance of RequesterArgSameAsImport. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterArgSameAsImport(t NewRequesterArgSameAsImportT) *RequesterArgSameAsImport {
 	mock := &RequesterArgSameAsImport{}
 	mock.Mock.Test(t)

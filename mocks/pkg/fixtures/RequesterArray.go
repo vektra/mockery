@@ -37,7 +37,7 @@ type NewRequesterArrayT interface {
 	Cleanup(func())
 }
 
-// NewRequesterArray creates a new instance of RequesterArray. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterArray creates a new instance of RequesterArray. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterArray(t NewRequesterArrayT) *RequesterArray {
 	mock := &RequesterArray{}
 	mock.Mock.Test(t)

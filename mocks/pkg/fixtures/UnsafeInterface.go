@@ -23,7 +23,7 @@ type NewUnsafeInterfaceT interface {
 	Cleanup(func())
 }
 
-// NewUnsafeInterface creates a new instance of UnsafeInterface. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewUnsafeInterface creates a new instance of UnsafeInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewUnsafeInterface(t NewUnsafeInterfaceT) *UnsafeInterface {
 	mock := &UnsafeInterface{}
 	mock.Mock.Test(t)

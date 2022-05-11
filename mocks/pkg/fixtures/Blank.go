@@ -28,7 +28,7 @@ type NewBlankT interface {
 	Cleanup(func())
 }
 
-// NewBlank creates a new instance of Blank. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewBlank creates a new instance of Blank. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewBlank(t NewBlankT) *Blank {
 	mock := &Blank{}
 	mock.Mock.Test(t)

@@ -38,7 +38,7 @@ type NewAT interface {
 	Cleanup(func())
 }
 
-// NewA creates a new instance of A. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewA creates a new instance of A. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewA(t NewAT) *A {
 	mock := &A{}
 	mock.Mock.Test(t)

@@ -37,7 +37,7 @@ type NewRequesterSliceT interface {
 	Cleanup(func())
 }
 
-// NewRequesterSlice creates a new instance of RequesterSlice. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterSlice creates a new instance of RequesterSlice. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterSlice(t NewRequesterSliceT) *RequesterSlice {
 	mock := &RequesterSlice{}
 	mock.Mock.Test(t)

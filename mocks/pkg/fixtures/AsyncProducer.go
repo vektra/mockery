@@ -62,7 +62,7 @@ type NewAsyncProducerT interface {
 	Cleanup(func())
 }
 
-// NewAsyncProducer creates a new instance of AsyncProducer. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewAsyncProducer creates a new instance of AsyncProducer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewAsyncProducer(t NewAsyncProducerT) *AsyncProducer {
 	mock := &AsyncProducer{}
 	mock.Mock.Test(t)

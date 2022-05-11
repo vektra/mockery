@@ -54,7 +54,7 @@ type NewImportsSameAsPackageT interface {
 	Cleanup(func())
 }
 
-// NewImportsSameAsPackage creates a new instance of ImportsSameAsPackage. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewImportsSameAsPackage creates a new instance of ImportsSameAsPackage. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewImportsSameAsPackage(t NewImportsSameAsPackageT) *ImportsSameAsPackage {
 	mock := &ImportsSameAsPackage{}
 	mock.Mock.Test(t)

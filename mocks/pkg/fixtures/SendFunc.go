@@ -39,7 +39,7 @@ type NewSendFuncT interface {
 	Cleanup(func())
 }
 
-// NewSendFunc creates a new instance of SendFunc. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewSendFunc creates a new instance of SendFunc. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewSendFunc(t NewSendFuncT) *SendFunc {
 	mock := &SendFunc{}
 	mock.Mock.Test(t)

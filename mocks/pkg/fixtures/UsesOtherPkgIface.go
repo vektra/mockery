@@ -22,7 +22,7 @@ type NewUsesOtherPkgIfaceT interface {
 	Cleanup(func())
 }
 
-// NewUsesOtherPkgIface creates a new instance of UsesOtherPkgIface. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewUsesOtherPkgIface creates a new instance of UsesOtherPkgIface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewUsesOtherPkgIface(t NewUsesOtherPkgIfaceT) *UsesOtherPkgIface {
 	mock := &UsesOtherPkgIface{}
 	mock.Mock.Test(t)

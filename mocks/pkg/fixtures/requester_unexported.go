@@ -19,7 +19,7 @@ type newRequester_unexportedT interface {
 	Cleanup(func())
 }
 
-// newRequester_unexported creates a new instance of requester_unexported. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// newRequester_unexported creates a new instance of requester_unexported. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func newRequester_unexported(t newRequester_unexportedT) *requester_unexported {
 	mock := &requester_unexported{}
 	mock.Mock.Test(t)

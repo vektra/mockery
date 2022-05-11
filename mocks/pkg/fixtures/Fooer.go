@@ -49,7 +49,7 @@ type NewFooerT interface {
 	Cleanup(func())
 }
 
-// NewFooer creates a new instance of Fooer. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewFooer creates a new instance of Fooer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewFooer(t NewFooerT) *Fooer {
 	mock := &Fooer{}
 	mock.Mock.Test(t)

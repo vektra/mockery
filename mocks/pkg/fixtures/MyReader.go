@@ -35,7 +35,7 @@ type NewMyReaderT interface {
 	Cleanup(func())
 }
 
-// NewMyReader creates a new instance of MyReader. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewMyReader creates a new instance of MyReader. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewMyReader(t NewMyReaderT) *MyReader {
 	mock := &MyReader{}
 	mock.Mock.Test(t)

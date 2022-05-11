@@ -39,7 +39,7 @@ type NewRequesterNST interface {
 	Cleanup(func())
 }
 
-// NewRequesterNS creates a new instance of RequesterNS. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewRequesterNS creates a new instance of RequesterNS. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterNS(t NewRequesterNST) *RequesterNS {
 	mock := &RequesterNS{}
 	mock.Mock.Test(t)

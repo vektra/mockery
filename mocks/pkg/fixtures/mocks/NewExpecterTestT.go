@@ -40,7 +40,7 @@ type NewNewExpecterTestTT interface {
 	Cleanup(func())
 }
 
-// NewNewExpecterTestT creates a new instance of NewExpecterTestT. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewNewExpecterTestT creates a new instance of NewExpecterTestT. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewNewExpecterTestT(t NewNewExpecterTestTT) *NewExpecterTestT {
 	mock := &NewExpecterTestT{}
 	mock.Mock.Test(t)

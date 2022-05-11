@@ -31,7 +31,7 @@ type NewIfaceWithBuildTagInCommentT interface {
 	Cleanup(func())
 }
 
-// NewIfaceWithBuildTagInComment creates a new instance of IfaceWithBuildTagInComment. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewIfaceWithBuildTagInComment creates a new instance of IfaceWithBuildTagInComment. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewIfaceWithBuildTagInComment(t NewIfaceWithBuildTagInCommentT) *IfaceWithBuildTagInComment {
 	mock := &IfaceWithBuildTagInComment{}
 	mock.Mock.Test(t)

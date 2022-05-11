@@ -31,7 +31,7 @@ type NewIfaceWithBuildTagInFilenameT interface {
 	Cleanup(func())
 }
 
-// NewIfaceWithBuildTagInFilename creates a new instance of IfaceWithBuildTagInFilename. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+// NewIfaceWithBuildTagInFilename creates a new instance of IfaceWithBuildTagInFilename. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewIfaceWithBuildTagInFilename(t NewIfaceWithBuildTagInFilenameT) *IfaceWithBuildTagInFilename {
 	mock := &IfaceWithBuildTagInFilename{}
 	mock.Mock.Test(t)
