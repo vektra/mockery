@@ -814,9 +814,8 @@ type {{ .ConstructorTestingInterfaceName }} interface {
 }
 
 // {{ .ConstructorName }} creates a new instance of {{ .MockName }}. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func {{ .ConstructorName }}{{ .TypeConstraint }}(t {{ .ConstructorTestingInterfaceName }}) *{{ .MockName }}{{ .TypeParams }} {
+func {{ .ConstructorName }}{{ .TypeConstraint }}(t {{ .ConstructorTestingInterfaceName }}) *{{ .MockName }}{{ .InstantiatedTypeString }} {
 	mock := &{{ .MockName }}{{ .InstantiatedTypeString }}{}
-
 	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
@@ -833,7 +832,6 @@ func {{ .ConstructorName }}{{ .TypeConstraint }}(t {{ .ConstructorTestingInterfa
 		InstantiatedTypeString          string
 		MockName                        string
 		TypeConstraint                  string
-		TypeParams                      string
 	}{
 		ConstructorName:                 constructorName,
 		ConstructorTestingInterfaceName: constructorName + "T",

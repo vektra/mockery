@@ -2091,11 +2091,16 @@ func (_m *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TG
 	return r0
 }
 
-// NewRequesterGenerics creates a new instance of RequesterGenerics. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+type NewRequesterGenericsT interface {
+	mock.TestingT
+	Cleanup(func())
+}
+
+// NewRequesterGenerics creates a new instance of RequesterGenerics. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewRequesterGenerics[TAny interface{}, TComparable comparable, TSigned constraints.Signed, TIntf test.GetInt, TExternalIntf io.Writer, TGenIntf test.GetGeneric[TSigned], TInlineType interface{ ~int | ~uint }, TInlineTypeGeneric interface {
 	~int | test.GenericType[int, test.GetInt]
 	comparable
-}](t testing.TB) *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+}](t NewRequesterGenericsT) *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
 	mock := &RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]{}
 	mock.Mock.Test(t)
 
@@ -2173,11 +2178,16 @@ func (_m *MockRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf
 	return r0
 }
 
-// NewMockRequesterGenerics creates a new instance of MockRequesterGenerics. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
+type NewMockRequesterGenericsT interface {
+	mock.TestingT
+	Cleanup(func())
+}
+
+// NewMockRequesterGenerics creates a new instance of MockRequesterGenerics. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewMockRequesterGenerics[TAny interface{}, TComparable comparable, TSigned constraints.Signed, TIntf GetInt, TExternalIntf io.Writer, TGenIntf GetGeneric[TSigned], TInlineType interface{ ~int | ~uint }, TInlineTypeGeneric interface {
 	~int | GenericType[int, GetInt]
 	comparable
-}](t testing.TB) *MockRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+}](t NewMockRequesterGenericsT) *MockRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
 	mock := &MockRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]{}
 	mock.Mock.Test(t)
 
