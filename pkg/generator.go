@@ -71,6 +71,20 @@ func (g *Generator) populateImports(ctx context.Context) {
 
 	log.Debug().Msgf("populating imports")
 
+	// imports from generic type constraints
+	if tParams := g.iface.NamedType.TypeParams(); tParams != nil && tParams.Len() > 0 {
+		for i := 0; i < tParams.Len(); i++ {
+			g.renderType(ctx, tParams.At(i).Constraint())
+		}
+	}
+
+	// imports from type arguments
+	if tArgs := g.iface.NamedType.TypeArgs(); tArgs != nil && tArgs.Len() > 0 {
+		for i := 0; i < tArgs.Len(); i++ {
+			g.renderType(ctx, tArgs.At(i))
+		}
+	}
+
 	for _, method := range g.iface.Methods() {
 		ftype := method.Signature
 		g.addImportsFromTuple(ctx, ftype.Params())
@@ -86,6 +100,18 @@ func (g *Generator) addImportsFromTuple(ctx context.Context, list *types.Tuple) 
 		// will appear in the interface file are known
 		g.renderType(ctx, list.At(i).Type())
 	}
+}
+
+// getPackageScopedType returns the appropriate string representation for the
+// object TypeName. The string may either be the unqualified name (in the case
+// the mock will live in the same package as the interface being mocked, e.g.
+// `Foo`) or the package pathname (in the case the type lives in a package
+// external to the mock, e.g. `packagename.Foo`).
+func (g *Generator) getPackageScopedType(ctx context.Context, o *types.TypeName) string {
+	if o.Pkg() == nil || o.Pkg().Name() == "main" || (!g.KeepTree && g.InPackage && o.Pkg() == g.iface.Pkg) {
+		return o.Name()
+	}
+	return g.addPackageImport(ctx, o.Pkg()) + "." + o.Name()
 }
 
 func (g *Generator) addPackageImport(ctx context.Context, pkg *types.Package) string {
@@ -231,6 +257,44 @@ func (g *Generator) mockName() string {
 	return g.maybeMakeNameExported(g.iface.Name, g.Exported)
 }
 
+// getTypeConstraintString returns type constraint string for a given interface.
+//  For instance, a method using this constraint:
+//
+//    func Foo[T Stringer](s []T) (ret []string) {
+//
+//    }
+//
+// The constraint returned will be "[T Stringer]"
+//
+// https://go.googlesource.com/proposal/+/refs/heads/master/design/43651-type-parameters.md#type-parameters
+func (g *Generator) getTypeConstraintString(ctx context.Context) string {
+	tp := g.iface.NamedType.TypeParams()
+	if tp == nil || tp.Len() == 0 {
+		return ""
+	}
+	qualifiedParams := make([]string, 0, tp.Len())
+	for i := 0; i < tp.Len(); i++ {
+		param := tp.At(i)
+		qualifiedParams = append(qualifiedParams, fmt.Sprintf("%s %s", param.String(), g.renderType(ctx, param.Constraint())))
+	}
+	return fmt.Sprintf("[%s]", strings.Join(qualifiedParams, ", "))
+}
+
+// getInstantiatedTypeString returns the "instantiated" type names for a given
+// constraint list. For instance, if your interface has the constraints
+// `[S Stringer, I int, C Comparable]`, this method would return: `[S, I, C]`
+func (g *Generator) getInstantiatedTypeString() string {
+	tp := g.iface.NamedType.TypeParams()
+	if tp == nil || tp.Len() == 0 {
+		return ""
+	}
+	params := make([]string, 0, tp.Len())
+	for i := 0; i < tp.Len(); i++ {
+		params = append(params, tp.At(i).String())
+	}
+	return fmt.Sprintf("[%s]", strings.Join(params, ", "))
+}
+
 func (g *Generator) expecterName() string {
 	return g.mockName() + "_Expecter"
 }
@@ -335,11 +399,21 @@ type namer interface {
 func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 	switch t := typ.(type) {
 	case *types.Named:
-		o := t.Obj()
-		if o.Pkg() == nil || o.Pkg().Name() == "main" || (!g.KeepTree && g.InPackage && o.Pkg() == g.iface.Pkg) {
-			return o.Name()
+		name := g.getPackageScopedType(ctx, t.Obj())
+		if t.TypeArgs() == nil || t.TypeArgs().Len() == 0 {
+			return name
 		}
-		return g.addPackageImport(ctx, o.Pkg()) + "." + o.Name()
+		args := make([]string, 0, t.TypeArgs().Len())
+		for i := 0; i < t.TypeArgs().Len(); i++ {
+			arg := t.TypeArgs().At(i)
+			args = append(args, g.renderType(ctx, arg))
+		}
+		return fmt.Sprintf("%s[%s]", name, strings.Join(args, ","))
+	case *types.TypeParam:
+		if t.Constraint() != nil {
+			return t.Obj().Name()
+		}
+		return g.getPackageScopedType(ctx, t.Obj())
 	case *types.Basic:
 		if t.Kind() == types.UnsafePointer {
 			return "unsafe.Pointer"
@@ -404,7 +478,27 @@ func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 			panic("Unable to mock inline interfaces with methods")
 		}
 
-		return "interface{}"
+		rv := []string{"interface{"}
+		for i := 0; i < t.NumEmbeddeds(); i++ {
+			rv = append(rv, g.renderType(ctx, t.EmbeddedType(i)))
+		}
+		rv = append(rv, "}")
+		sep := ""
+		if t.NumEmbeddeds() > 1 {
+			sep = "\n"
+		}
+		return strings.Join(rv, sep)
+	case *types.Union:
+		rv := make([]string, 0, t.Len())
+		for i := 0; i < t.Len(); i++ {
+			term := t.Term(i)
+			if term.Tilde() {
+				rv = append(rv, "~"+g.renderType(ctx, term.Type()))
+			} else {
+				rv = append(rv, g.renderType(ctx, term.Type()))
+			}
+		}
+		return strings.Join(rv, "|")
 	case namer:
 		return t.Name()
 	default:
@@ -512,7 +606,7 @@ func (g *Generator) Generate(ctx context.Context) error {
 	)
 
 	g.printf(
-		"type %s struct {\n\tmock.Mock\n}\n\n", g.mockName(),
+		"type %s%s struct {\n\tmock.Mock\n}\n\n", g.mockName(), g.getTypeConstraintString(ctx),
 	)
 
 	if g.WithExpecter {
@@ -541,7 +635,7 @@ func (g *Generator) Generate(ctx context.Context) error {
 			)
 		}
 		g.printf(
-			"func (_m *%s) %s(%s) ", g.mockName(), fname,
+			"func (_m *%s%s) %s(%s) ", g.mockName(), g.getInstantiatedTypeString(), fname,
 			strings.Join(params.Params, ", "),
 		)
 
@@ -612,7 +706,7 @@ func (g *Generator) Generate(ctx context.Context) error {
 		}
 	}
 
-	g.generateConstructor()
+	g.generateConstructor(ctx)
 
 	return nil
 }
@@ -712,7 +806,7 @@ func (_c *{{.CallStruct}}) Return({{range .Returns.Params}}{{.}},{{end}}) *{{.Ca
 `)
 }
 
-func (g *Generator) generateConstructor() {
+func (g *Generator) generateConstructor(ctx context.Context) {
 	const constructorTemplate = `
 type {{ .ConstructorTestingInterfaceName }} interface {
 	mock.TestingT
@@ -720,8 +814,8 @@ type {{ .ConstructorTestingInterfaceName }} interface {
 }
 
 // {{ .ConstructorName }} creates a new instance of {{ .MockName }}. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func {{ .ConstructorName }}(t {{ .ConstructorTestingInterfaceName }}) *{{ .MockName }} {
-	mock := &{{ .MockName }}{}
+func {{ .ConstructorName }}{{ .TypeConstraint }}(t {{ .ConstructorTestingInterfaceName }}) *{{ .MockName }}{{ .InstantiatedTypeString }} {
+	mock := &{{ .MockName }}{{ .InstantiatedTypeString }}{}
 	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
@@ -735,11 +829,15 @@ func {{ .ConstructorName }}(t {{ .ConstructorTestingInterfaceName }}) *{{ .MockN
 	data := struct {
 		ConstructorName                 string
 		ConstructorTestingInterfaceName string
+		InstantiatedTypeString          string
 		MockName                        string
+		TypeConstraint                  string
 	}{
 		ConstructorName:                 constructorName,
 		ConstructorTestingInterfaceName: constructorName + "T",
+		InstantiatedTypeString:          g.getInstantiatedTypeString(),
 		MockName:                        mockName,
+		TypeConstraint:                  g.getTypeConstraintString(ctx),
 	}
 	g.printTemplate(data, constructorTemplate)
 }
