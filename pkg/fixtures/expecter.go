@@ -1,6 +1,6 @@
 package test
 
-type ExpecterTest interface {
+type Expecter interface {
 	NoArg() string
 	NoReturn(str string)
 	ManyArgsReturns(str string, i int) (strs []string, err error)
