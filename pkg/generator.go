@@ -62,7 +62,6 @@ func NewGenerator(ctx context.Context, c config.Config, iface *Interface, pkg st
 	}
 
 	g.addPackageImportWithName(ctx, "github.com/stretchr/testify/mock", "mock")
-	g.addPackageImportWithName(ctx, "testing", "testing")
 
 	return g
 }
@@ -714,10 +713,15 @@ func (_c *{{.CallStruct}}) Return({{range .Returns.Params}}{{.}},{{end}}) *{{.Ca
 }
 
 func (g *Generator) generateConstructor() {
-	const constructor = `
-// %[1]s creates a new instance of %[2]s. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
-func %[1]s(t testing.TB) *%[2]s {
-	mock := &%[2]s{}
+	const constructorTemplate = `
+type {{ .ConstructorTestingInterfaceName }} interface {
+	mock.TestingT
+	Cleanup(func())
+}
+
+// {{ .ConstructorName }} creates a new instance of {{ .MockName }}. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+func {{ .ConstructorName }}(t {{ .ConstructorTestingInterfaceName }}) *{{ .MockName }} {
+	mock := &{{ .MockName }}{}
 	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
@@ -725,11 +729,19 @@ func %[1]s(t testing.TB) *%[2]s {
 	return mock
 }
 `
-
 	mockName := g.mockName()
 	constructorName := g.maybeMakeNameExported("new"+g.makeNameExported(mockName), ast.IsExported(mockName))
 
-	g.printf(constructor, constructorName, mockName)
+	data := struct {
+		ConstructorName                 string
+		ConstructorTestingInterfaceName string
+		MockName                        string
+	}{
+		ConstructorName:                 constructorName,
+		ConstructorTestingInterfaceName: constructorName + "T",
+		MockName:                        mockName,
+	}
+	g.printTemplate(data, constructorTemplate)
 }
 
 // generateCalled returns the Mock.Called invocation string and, if necessary, prints the
