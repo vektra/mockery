@@ -77,7 +77,7 @@ func (_m *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TG
 	return r0
 }
 
-type NewRequesterGenericsT interface {
+type mockConstructorTestingTNewRequesterGenerics interface {
 	mock.TestingT
 	Cleanup(func())
 }
@@ -86,7 +86,7 @@ type NewRequesterGenericsT interface {
 func NewRequesterGenerics[TAny interface{}, TComparable comparable, TSigned constraints.Signed, TIntf test.GetInt, TExternalIntf io.Writer, TGenIntf test.GetGeneric[TSigned], TInlineType interface{ ~int | ~uint }, TInlineTypeGeneric interface {
 	~int | test.GenericType[int, test.GetInt]
 	comparable
-}](t NewRequesterGenericsT) *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+}](t mockConstructorTestingTNewRequesterGenerics) *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
 	mock := &RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]{}
 	mock.Mock.Test(t)
 

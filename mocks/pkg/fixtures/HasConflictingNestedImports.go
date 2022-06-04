@@ -50,13 +50,13 @@ func (_m *HasConflictingNestedImports) Z() fixtureshttp.MyStruct {
 	return r0
 }
 
-type NewHasConflictingNestedImportsT interface {
+type mockConstructorTestingTNewHasConflictingNestedImports interface {
 	mock.TestingT
 	Cleanup(func())
 }
 
 // NewHasConflictingNestedImports creates a new instance of HasConflictingNestedImports. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewHasConflictingNestedImports(t NewHasConflictingNestedImportsT) *HasConflictingNestedImports {
+func NewHasConflictingNestedImports(t mockConstructorTestingTNewHasConflictingNestedImports) *HasConflictingNestedImports {
 	mock := &HasConflictingNestedImports{}
 	mock.Mock.Test(t)
 

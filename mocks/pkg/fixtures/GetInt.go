@@ -23,13 +23,13 @@ func (_m *GetInt) Get() int {
 	return r0
 }
 
-type NewGetIntT interface {
+type mockConstructorTestingTNewGetInt interface {
 	mock.TestingT
 	Cleanup(func())
 }
 
 // NewGetInt creates a new instance of GetInt. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewGetInt(t NewGetIntT) *GetInt {
+func NewGetInt(t mockConstructorTestingTNewGetInt) *GetInt {
 	mock := &GetInt{}
 	mock.Mock.Test(t)
 

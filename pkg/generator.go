@@ -24,6 +24,8 @@ import (
 	"golang.org/x/tools/imports"
 )
 
+const mockConstructorParamTypeNamePrefix = "mockConstructorTestingT"
+
 var invalidIdentifierChar = regexp.MustCompile("[^[:digit:][:alpha:]_]")
 
 // Generator is responsible for generating the string containing
@@ -834,7 +836,7 @@ func {{ .ConstructorName }}{{ .TypeConstraint }}(t {{ .ConstructorTestingInterfa
 		TypeConstraint                  string
 	}{
 		ConstructorName:                 constructorName,
-		ConstructorTestingInterfaceName: constructorName + "T",
+		ConstructorTestingInterfaceName: mockConstructorParamTypeNamePrefix + constructorName,
 		InstantiatedTypeString:          g.getInstantiatedTypeString(),
 		MockName:                        mockName,
 		TypeConstraint:                  g.getTypeConstraintString(ctx),

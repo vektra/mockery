@@ -18,13 +18,13 @@ func (_m *UnsafeInterface) Do(ptr *unsafe.Pointer) {
 	_m.Called(ptr)
 }
 
-type NewUnsafeInterfaceT interface {
+type mockConstructorTestingTNewUnsafeInterface interface {
 	mock.TestingT
 	Cleanup(func())
 }
 
 // NewUnsafeInterface creates a new instance of UnsafeInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewUnsafeInterface(t NewUnsafeInterfaceT) *UnsafeInterface {
+func NewUnsafeInterface(t mockConstructorTestingTNewUnsafeInterface) *UnsafeInterface {
 	mock := &UnsafeInterface{}
 	mock.Mock.Test(t)
 

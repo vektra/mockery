@@ -9,13 +9,13 @@ type Signed struct {
 	mock.Mock
 }
 
-type NewSignedT interface {
+type mockConstructorTestingTNewSigned interface {
 	mock.TestingT
 	Cleanup(func())
 }
 
 // NewSigned creates a new instance of Signed. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewSigned(t NewSignedT) *Signed {
+func NewSigned(t mockConstructorTestingTNewSigned) *Signed {
 	mock := &Signed{}
 	mock.Mock.Test(t)
 

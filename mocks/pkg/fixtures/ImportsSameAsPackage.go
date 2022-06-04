@@ -49,13 +49,13 @@ func (_m *ImportsSameAsPackage) C(_a0 fixtures.C) {
 	_m.Called(_a0)
 }
 
-type NewImportsSameAsPackageT interface {
+type mockConstructorTestingTNewImportsSameAsPackage interface {
 	mock.TestingT
 	Cleanup(func())
 }
 
 // NewImportsSameAsPackage creates a new instance of ImportsSameAsPackage. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewImportsSameAsPackage(t NewImportsSameAsPackageT) *ImportsSameAsPackage {
+func NewImportsSameAsPackage(t mockConstructorTestingTNewImportsSameAsPackage) *ImportsSameAsPackage {
 	mock := &ImportsSameAsPackage{}
 	mock.Mock.Test(t)
 

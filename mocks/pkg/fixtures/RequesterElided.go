@@ -23,13 +23,13 @@ func (_m *RequesterElided) Get(path string, url string) error {
 	return r0
 }
 
-type NewRequesterElidedT interface {
+type mockConstructorTestingTNewRequesterElided interface {
 	mock.TestingT
 	Cleanup(func())
 }
 
 // NewRequesterElided creates a new instance of RequesterElided. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewRequesterElided(t NewRequesterElidedT) *RequesterElided {
+func NewRequesterElided(t mockConstructorTestingTNewRequesterElided) *RequesterElided {
 	mock := &RequesterElided{}
 	mock.Mock.Test(t)
 
