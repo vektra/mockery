@@ -60,9 +60,9 @@ Install through [brew](https://brew.sh/)
 
 ### go install
 
-[DEPRECATED](https://github.com/vektra/mockery/pull/456#issuecomment-1105365611)
+Supported, but not recommended: [see wiki page](https://github.com/vektra/mockery/wiki/Installation-Methods#go-install) and [related discussions](https://github.com/vektra/mockery/pull/456).
 
-Alternatively, you can use the go install method (not recommended, do not use this for production deployments! See linked deprecation note above):
+Alternatively, you can use the go install method to compile the project using your local environment:
 
     go install github.com/vektra/mockery/v2@latest
 
