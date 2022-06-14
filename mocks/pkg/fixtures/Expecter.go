@@ -227,13 +227,13 @@ func (_c *Expecter_VariadicMany_Call) Return(_a0 error) *Expecter_VariadicMany_C
 	return _c
 }
 
-type NewExpecterT interface {
+type mockConstructorTestingTNewExpecter interface {
 	mock.TestingT
 	Cleanup(func())
 }
 
 // NewExpecter creates a new instance of Expecter. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewExpecter(t NewExpecterT) *Expecter {
+func NewExpecter(t mockConstructorTestingTNewExpecter) *Expecter {
 	mock := &Expecter{}
 	mock.Mock.Test(t)
 

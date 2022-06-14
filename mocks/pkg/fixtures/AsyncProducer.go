@@ -57,13 +57,13 @@ func (_m *AsyncProducer) Whatever() chan bool {
 	return r0
 }
 
-type NewAsyncProducerT interface {
+type mockConstructorTestingTNewAsyncProducer interface {
 	mock.TestingT
 	Cleanup(func())
 }
 
 // NewAsyncProducer creates a new instance of AsyncProducer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewAsyncProducer(t NewAsyncProducerT) *AsyncProducer {
+func NewAsyncProducer(t mockConstructorTestingTNewAsyncProducer) *AsyncProducer {
 	mock := &AsyncProducer{}
 	mock.Mock.Test(t)
 

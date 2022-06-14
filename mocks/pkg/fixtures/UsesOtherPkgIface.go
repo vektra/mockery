@@ -17,13 +17,13 @@ func (_m *UsesOtherPkgIface) DoSomethingElse(obj test.Sibling) {
 	_m.Called(obj)
 }
 
-type NewUsesOtherPkgIfaceT interface {
+type mockConstructorTestingTNewUsesOtherPkgIface interface {
 	mock.TestingT
 	Cleanup(func())
 }
 
 // NewUsesOtherPkgIface creates a new instance of UsesOtherPkgIface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewUsesOtherPkgIface(t NewUsesOtherPkgIfaceT) *UsesOtherPkgIface {
+func NewUsesOtherPkgIface(t mockConstructorTestingTNewUsesOtherPkgIface) *UsesOtherPkgIface {
 	mock := &UsesOtherPkgIface{}
 	mock.Mock.Test(t)
 

@@ -46,13 +46,13 @@ func (_m *ConsulLock) Unlock() error {
 	return r0
 }
 
-type NewConsulLockT interface {
+type mockConstructorTestingTNewConsulLock interface {
 	mock.TestingT
 	Cleanup(func())
 }
 
 // NewConsulLock creates a new instance of ConsulLock. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewConsulLock(t NewConsulLockT) *ConsulLock {
+func NewConsulLock(t mockConstructorTestingTNewConsulLock) *ConsulLock {
 	mock := &ConsulLock{}
 	mock.Mock.Test(t)
 

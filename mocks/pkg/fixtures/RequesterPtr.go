@@ -32,13 +32,13 @@ func (_m *RequesterPtr) Get(path string) (*string, error) {
 	return r0, r1
 }
 
-type NewRequesterPtrT interface {
+type mockConstructorTestingTNewRequesterPtr interface {
 	mock.TestingT
 	Cleanup(func())
 }
 
 // NewRequesterPtr creates a new instance of RequesterPtr. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewRequesterPtr(t NewRequesterPtrT) *RequesterPtr {
+func NewRequesterPtr(t mockConstructorTestingTNewRequesterPtr) *RequesterPtr {
 	mock := &RequesterPtr{}
 	mock.Mock.Test(t)
 

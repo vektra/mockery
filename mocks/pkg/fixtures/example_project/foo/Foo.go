@@ -49,13 +49,13 @@ func (_m *Foo) GetBaz() (*foo.Baz, error) {
 	return r0, r1
 }
 
-type NewFooT interface {
+type mockConstructorTestingTNewFoo interface {
 	mock.TestingT
 	Cleanup(func())
 }
 
 // NewFoo creates a new instance of Foo. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewFoo(t NewFooT) *Foo {
+func NewFoo(t mockConstructorTestingTNewFoo) *Foo {
 	mock := &Foo{}
 	mock.Mock.Test(t)
 

@@ -9,13 +9,13 @@ type Integer struct {
 	mock.Mock
 }
 
-type NewIntegerT interface {
+type mockConstructorTestingTNewInteger interface {
 	mock.TestingT
 	Cleanup(func())
 }
 
 // NewInteger creates a new instance of Integer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewInteger(t NewIntegerT) *Integer {
+func NewInteger(t mockConstructorTestingTNewInteger) *Integer {
 	mock := &Integer{}
 	mock.Mock.Test(t)
 

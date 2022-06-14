@@ -18,13 +18,13 @@ func (_m *CollideWithStdLib) NewClient(ctx context.Context) {
 	_m.Called(ctx)
 }
 
-type NewCollideWithStdLibT interface {
+type mockConstructorTestingTNewCollideWithStdLib interface {
 	mock.TestingT
 	Cleanup(func())
 }
 
 // NewCollideWithStdLib creates a new instance of CollideWithStdLib. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewCollideWithStdLib(t NewCollideWithStdLibT) *CollideWithStdLib {
+func NewCollideWithStdLib(t mockConstructorTestingTNewCollideWithStdLib) *CollideWithStdLib {
 	mock := &CollideWithStdLib{}
 	mock.Mock.Test(t)
 

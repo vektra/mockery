@@ -34,13 +34,13 @@ func (_m *RequesterNS) Get(path string) (http.Response, error) {
 	return r0, r1
 }
 
-type NewRequesterNST interface {
+type mockConstructorTestingTNewRequesterNS interface {
 	mock.TestingT
 	Cleanup(func())
 }
 
 // NewRequesterNS creates a new instance of RequesterNS. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewRequesterNS(t NewRequesterNST) *RequesterNS {
+func NewRequesterNS(t mockConstructorTestingTNewRequesterNS) *RequesterNS {
 	mock := &RequesterNS{}
 	mock.Mock.Test(t)
 
