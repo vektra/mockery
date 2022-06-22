@@ -1,3 +1,8 @@
+PLEASE READ
+-------------
+
+DO NOT submit tickets without _first_ using the latest version of Golang, clearing your local golang package cache, and re-building mockery using the _latest_ Golang version and the _latest_ version of mockery. Please provide evidence this has been done in your issue. Failure to provide this evidence will likely result in your issue being closed.
+
 Description
 -------------
 
