@@ -2433,6 +2433,26 @@ func NewMockRequesterGenerics[TAny interface{}, TComparable comparable, TSigned 
 	s.checkGeneration("generic.go", "RequesterGenerics", true, "", expected)
 }
 
+func (s *GeneratorSuite) TestGetLocalizedPathVendored() {
+	generator := s.getGenerator(testFile, "Requester", false, "")
+	result := generator.getLocalizedPath(context.Background(), "vendor/github.com/nats-io/nats.go/js.go")
+
+	s.Equal(
+		"github.com/nats-io/nats.go", result,
+		"The generator produced unexpected output.",
+	)
+}
+
+func (s *GeneratorSuite) TestGetLocalizedPathModule() {
+	generator := s.getGenerator(testFile, "Requester", false, "")
+	result := generator.getLocalizedPath(context.Background(), "github.com/nats-io/nats.go")
+
+	s.Equal(
+		"github.com/nats-io/nats.go", result,
+		"The generator produced unexpected output.",
+	)
+}
+
 func TestGeneratorSuite(t *testing.T) {
 	generatorSuite := new(GeneratorSuite)
 	suite.Run(t, generatorSuite)

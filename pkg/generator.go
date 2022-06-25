@@ -194,7 +194,7 @@ func (g *Generator) getLocalizedPath(ctx context.Context, path string) string {
 	log := zerolog.Ctx(ctx).With().Str(logging.LogKeyPath, path).Logger()
 	ctx = log.WithContext(ctx)
 
-	if strings.HasSuffix(path, ".go") {
+	if strings.HasSuffix(path, ".go") && strings.Contains(path, "vendor"+string(filepath.Separator)) {
 		path, _ = filepath.Split(path)
 	}
 	if localized, ok := g.localizationCache[path]; ok {
