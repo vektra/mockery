@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -70,7 +69,7 @@ func (w *Walker) doWalk(ctx context.Context, p *Parser, dir string, visitor Walk
 	log := zerolog.Ctx(ctx)
 	ctx = log.WithContext(ctx)
 
-	files, err := ioutil.ReadDir(dir)
+	files, err := os.ReadDir(dir)
 	if err != nil {
 		return
 	}

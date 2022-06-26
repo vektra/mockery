@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"go/ast"
 	"go/types"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -73,7 +73,7 @@ func (p *Parser) Parse(ctx context.Context, path string) error {
 
 	dir := filepath.Dir(path)
 
-	files, err := ioutil.ReadDir(dir)
+	files, err := os.ReadDir(dir)
 	if err != nil {
 		return err
 	}
