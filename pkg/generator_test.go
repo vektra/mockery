@@ -5,7 +5,7 @@ import (
 	"context"
 	"go/format"
 	"io"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -1359,7 +1359,7 @@ func NewRequesterReturnElided(t mockConstructorTestingTNewRequesterReturnElided)
 }
 
 func (s *GeneratorSuite) TestGeneratorVariadicArgs() {
-	expectedBytes, err := ioutil.ReadFile(getMocksPath("RequesterVariadic.go"))
+	expectedBytes, err := os.ReadFile(getMocksPath("RequesterVariadic.go"))
 	s.NoError(err)
 	expected := string(expectedBytes)
 	expected = expected[strings.Index(expected, "// RequesterVariadic is"):]
@@ -1367,7 +1367,7 @@ func (s *GeneratorSuite) TestGeneratorVariadicArgs() {
 }
 
 func (s *GeneratorSuite) TestGeneratorVariadicArgsAsOneArg() {
-	expectedBytes, err := ioutil.ReadFile(getMocksPath("RequesterVariadicOneArgument.go"))
+	expectedBytes, err := os.ReadFile(getMocksPath("RequesterVariadicOneArgument.go"))
 	s.NoError(err)
 	expected := string(expectedBytes)
 	expected = expected[strings.Index(expected, "// RequesterVariadicOneArgument is"):]
