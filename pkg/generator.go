@@ -188,8 +188,9 @@ func calculateImport(ctx context.Context, set []string, path string) string {
 	return path
 }
 
-// TODO(@IvanMalison): Is there not a better way to get the actual
-// import path of a package?
+// getLocalizedPath, given a path to a file or an importable URL,
+// returns the proper string needed to import the package. See tests
+// for specific examples of what this should return.
 func (g *Generator) getLocalizedPath(ctx context.Context, path string) string {
 	log := zerolog.Ctx(ctx).With().Str(logging.LogKeyPath, path).Logger()
 	ctx = log.WithContext(ctx)
