@@ -35,7 +35,7 @@ Installation
 
 ### Github Release
 
-Visit the [releases page](https://github.com/vektra/mockery/releases) to download one of the pre-built binaries for your platform. 
+Visit the [releases page](https://github.com/vektra/mockery/releases) to download one of the pre-built binaries for your platform.
 
 ### Docker
 
@@ -352,6 +352,7 @@ The following descriptions provide additional elaboration on a few common parame
 | `--all`  |  It's common for a big package to have a lot of interfaces, so mockery provides `--all`. This option will tell mockery to scan all files under the directory named by `--dir` ("." by default) and generates mocks for any interfaces it finds. This option implies `--recursive=true`. |
 | `--recursive`  |  Use the `--recursive` option to search subdirectories for the interface(s). This option is only compatible with `--name`. The `--all` option implies `--recursive=true`. |
 | `--output` | mockery always generates files with the package `mocks` to keep things clean and simple. You can control which mocks directory is used by using `--output`, which defaults to `./mocks`. |
+|`--outpkg`| Use `--outpkg` to specify the package name of the generated mocks.|
 | `--inpackage` and `--keeptree` | For some complex repositories, there could be multiple interfaces with the same name but in different packages. In that case, `--inpackage` allows generating the mocked interfaces directly in the package that it mocks. In the case you don't want to generate the mocks into the package but want to keep a similar structure, use the option `--keeptree`. |
 | `--filename` | Use the `--filename` and `--structname` to override the default generated file and struct name. These options are only compatible with non-regular expressions in `--name`, where only one mock is generated. |
 | `--case` | mockery generates files using the casing of the original interface name.  This can be modified by specifying `--case underscore` to format the generated file name using underscore casing. |
@@ -419,7 +420,7 @@ v1 is the original version of the software, and is no longer supported.
 
 ### v2
 
-`mockery` is currently in v2, which iterates on v1 and includes mostly cosmetic and configuration improvements. 
+`mockery` is currently in v2, which iterates on v1 and includes mostly cosmetic and configuration improvements.
 
 ### v3
 
@@ -429,8 +430,8 @@ v1 is the original version of the software, and is no longer supported.
   * You specify the packages you want mocked, instead of relying on it auto-discovering your package. Auto-discovery in theory sounds great, but in practice it leads to a great amount of complexity for very little benefit.
   * Package- or interface-specific overrides can be given that change mock generation settings on a granular level. This will allow your mocks to be generated in a heterogenous manner, and will be made explicit by yaml configuration.
  - Proper error reporting. Errors across the board will be done in accordance with modern Golang practices
- - Variables in generated mocks will be given meaningful names. 
- 
+ - Variables in generated mocks will be given meaningful names.
+
 
 
 Stargazers
