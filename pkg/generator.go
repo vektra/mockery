@@ -613,7 +613,7 @@ func (g *Generator) Generate(ctx context.Context) error {
 	)
 
 	if g.WithExpecter {
-		g.generateExpecterStruct()
+		g.generateExpecterStruct(ctx)
 	}
 
 	for _, method := range g.iface.Methods() {
@@ -705,7 +705,7 @@ func (g *Generator) Generate(ctx context.Context) error {
 
 		// Construct expecter helper functions
 		if g.WithExpecter {
-			g.generateExpecterMethodCall(method, params, returns)
+			g.generateExpecterMethodCall(ctx, method, params, returns)
 		}
 	}
 
@@ -714,23 +714,29 @@ func (g *Generator) Generate(ctx context.Context) error {
 	return nil
 }
 
-func (g *Generator) generateExpecterStruct() {
-	data := struct{ MockName, ExpecterName string }{
-		MockName:     g.mockName(),
-		ExpecterName: g.expecterName(),
+func (g *Generator) generateExpecterStruct(ctx context.Context) {
+	data := struct {
+		MockName, ExpecterName string
+		InstantiatedTypeString string
+		TypeConstraint         string
+	}{
+		MockName:               g.mockName(),
+		ExpecterName:           g.expecterName(),
+		InstantiatedTypeString: g.getInstantiatedTypeString(),
+		TypeConstraint:         g.getTypeConstraintString(ctx),
 	}
 	g.printTemplate(data, `
-type {{.ExpecterName}} struct {
+type {{.ExpecterName}}{{ .TypeConstraint }} struct {
 	mock *mock.Mock
 }
 
-func (_m *{{.MockName}}) EXPECT() *{{.ExpecterName}} {
-	return &{{.ExpecterName}}{mock: &_m.Mock}
+func (_m *{{.MockName}}{{ .InstantiatedTypeString }}) EXPECT() *{{.ExpecterName}}{{ .InstantiatedTypeString }} {
+	return &{{.ExpecterName}}{{ .InstantiatedTypeString }}{mock: &_m.Mock}
 }
 `)
 }
 
-func (g *Generator) generateExpecterMethodCall(method *Method, params, returns *paramList) {
+func (g *Generator) generateExpecterMethodCall(ctx context.Context, method *Method, params, returns *paramList) {
 
 	data := struct {
 		MockName, ExpecterName string
@@ -740,13 +746,17 @@ func (g *Generator) generateExpecterMethodCall(method *Method, params, returns *
 		LastParamName          string
 		LastParamType          string
 		NbNonVariadic          int
+		InstantiatedTypeString string
+		TypeConstraint         string
 	}{
-		MockName:     g.mockName(),
-		ExpecterName: g.expecterName(),
-		CallStruct:   fmt.Sprintf("%s_%s_Call", g.mockName(), method.Name),
-		MethodName:   method.Name,
-		Params:       params,
-		Returns:      returns,
+		MockName:               g.mockName(),
+		ExpecterName:           g.expecterName(),
+		CallStruct:             fmt.Sprintf("%s_%s_Call", g.mockName(), method.Name),
+		MethodName:             method.Name,
+		Params:                 params,
+		Returns:                returns,
+		InstantiatedTypeString: g.getInstantiatedTypeString(),
+		TypeConstraint:         g.getTypeConstraintString(ctx),
 	}
 
 	// Get some info about parameters for variadic methods, way easier than doing it in golang template directly
@@ -758,16 +768,16 @@ func (g *Generator) generateExpecterMethodCall(method *Method, params, returns *
 
 	g.printTemplate(data, `
 // {{.CallStruct}} is a *mock.Call that shadows Run/Return methods with type explicit version for method '{{.MethodName}}'
-type {{.CallStruct}} struct {
+type {{.CallStruct}}{{ .TypeConstraint }} struct {
 	*mock.Call
 }
 
 // {{.MethodName}} is a helper method to define mock.On call
 {{- range .Params.Params}}
-//  - {{.}} 
+//  - {{.}}
 {{- end}}
-func (_e *{{.ExpecterName}}) {{.MethodName}}({{range .Params.ParamsIntf}}{{.}},{{end}}) *{{.CallStruct}} {
-	return &{{.CallStruct}}{Call: _e.mock.On("{{.MethodName}}",
+func (_e *{{.ExpecterName}}{{ .InstantiatedTypeString }}) {{.MethodName}}({{range .Params.ParamsIntf}}{{.}},{{end}}) *{{.CallStruct}}{{ .InstantiatedTypeString }} {
+	return &{{.CallStruct}}{{ .InstantiatedTypeString }}{Call: _e.mock.On("{{.MethodName}}",
 			{{- if not .Params.Variadic }}
 				{{- range .Params.Names}}{{.}},{{end}}
 			{{- else }}
@@ -780,7 +790,7 @@ func (_e *{{.ExpecterName}}) {{.MethodName}}({{range .Params.ParamsIntf}}{{.}},{
 			{{- end }} )}
 }
 
-func (_c *{{.CallStruct}}) Run(run func({{range .Params.Params}}{{.}},{{end}})) *{{.CallStruct}} {
+func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) Run(run func({{range .Params.Params}}{{.}},{{end}})) *{{.CallStruct}}{{ .InstantiatedTypeString }} {
 	_c.Call.Run(func(args mock.Arguments) {
 	{{- if not .Params.Variadic }}
 		run({{range $i, $type := .Params.Types }}args[{{$i}}].({{$type}}),{{end}})
@@ -802,7 +812,7 @@ func (_c *{{.CallStruct}}) Run(run func({{range .Params.Params}}{{.}},{{end}})) 
 	return _c
 }
 
-func (_c *{{.CallStruct}}) Return({{range .Returns.Params}}{{.}},{{end}}) *{{.CallStruct}} {
+func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) Return({{range .Returns.Params}}{{.}},{{end}}) *{{.CallStruct}}{{ .InstantiatedTypeString }} {
 	_c.Call.Return({{range .Returns.Names}}{{.}},{{end}})
 	return _c
 }
