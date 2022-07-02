@@ -2,7 +2,6 @@ package pkg
 
 import (
 	"bufio"
-	"bytes"
 	"context"
 	"go/format"
 	"io"
@@ -115,14 +114,6 @@ func (s *GeneratorSuite) checkPrologueGeneration(
 		expected, generator.buf.String(),
 		"The generator produced an unexpected prologue.",
 	)
-}
-
-func (s *GeneratorSuite) TestCalculateImport() {
-	gp := []string{"a/src", "b/src"}
-
-	s.Equal("c", calculateImport(ctx, gp, "a/src/c"))
-	s.Equal("c", calculateImport(ctx, gp, "b/src/c"))
-	s.Equal("d/src/c", calculateImport(ctx, gp, "d/src/c"))
 }
 
 func (s *GeneratorSuite) TestGenerator() {
@@ -2620,73 +2611,4 @@ func NewMockRequesterGenerics[TAny interface{}, TComparable comparable, TSigned 
 func TestGeneratorSuite(t *testing.T) {
 	generatorSuite := new(GeneratorSuite)
 	suite.Run(t, generatorSuite)
-}
-
-func TestGenerator_getLocalizedPath(t *testing.T) {
-	type fields struct {
-		Config            config.Config
-		buf               bytes.Buffer
-		iface             *Interface
-		pkg               string
-		localizationCache map[string]string
-		packagePathToName map[string]string
-		nameToPackagePath map[string]string
-		packageRoots      []string
-	}
-	type args struct {
-		ctx  context.Context
-		path string
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   string
-	}{
-		{
-			name:   "test on-disk",
-			fields: fields{localizationCache: make(map[string]string)},
-			args:   args{ctx: context.Background(), path: "path/to/file.go"},
-			want:   "path/to/",
-		},
-		{
-			name:   "test vendored",
-			fields: fields{localizationCache: make(map[string]string)},
-			args:   args{ctx: context.Background(), path: "vendor/path/to/file.go"},
-			want:   "path/to",
-		},
-		{
-			name:   "test URL",
-			fields: fields{localizationCache: make(map[string]string)},
-			args:   args{ctx: context.Background(), path: "github.com/vektra/mockery"},
-			want:   "github.com/vektra/mockery",
-		},
-		{
-			// NOTE: This test is currently testing for behavior that _should_ be
-			// fixed. This is a special case where the import path ends in .go,
-			// but we should be getting the full importable URL here.
-			// https://github.com/vektra/mockery/pull/487
-			name:   "test nats.go",
-			fields: fields{localizationCache: make(map[string]string)},
-			args:   args{ctx: context.Background(), path: "github.com/nats-io/nats.go"},
-			want:   "github.com/nats-io/",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			g := &Generator{
-				Config:            tt.fields.Config,
-				buf:               tt.fields.buf,
-				iface:             tt.fields.iface,
-				pkg:               tt.fields.pkg,
-				localizationCache: tt.fields.localizationCache,
-				packagePathToName: tt.fields.packagePathToName,
-				nameToPackagePath: tt.fields.nameToPackagePath,
-				packageRoots:      tt.fields.packageRoots,
-			}
-			if got := g.getLocalizedPath(tt.args.ctx, tt.args.path); got != tt.want {
-				t.Errorf("Generator.getLocalizedPath() = %v, want %v", got, tt.want)
-			}
-		})
-	}
 }
