@@ -14,10 +14,11 @@ Table of Contents
   * [Docker](#docker)
   * [Homebrew](#homebrew)
   * [go install](#go-install)
-- [Requirement](#requirement)
 - [Examples](#examples)
     + [Simplest case](#simplest-case)
+    + [Function type case](#function-type-case)
     + [Next level case](#next-level-case)
+    + [Note](#note)
 - [Return Value Provider Functions](#return-value-provider-functions)
     + [Requirements](#requirements)
     + [Notes](#notes)
@@ -42,8 +43,6 @@ Visit the [releases page](https://github.com/vektra/mockery/releases) to downloa
 
 Use the [Docker image](https://hub.docker.com/r/vektra/mockery)
 
-Get mockery verion:
-
     docker pull vektra/mockery
 
 Generate all the mocks for your project:
@@ -64,11 +63,6 @@ Supported, but not recommended: [see wiki page](https://github.com/vektra/mocker
 Alternatively, you can use the go install method to compile the project using your local environment:
 
     go install github.com/vektra/mockery/v2@latest
-
-Requirement
------------
-
-For mockery to correctly generate mocks, the command has to be run on a module (i.e. your project has to have a go.mod file)
 
 Examples
 --------
@@ -234,6 +228,10 @@ func main() {
 }
 ```
 
+#### Note
+
+For mockery to correctly generate mocks, the command has to be run on a module (i.e. your project has to have a go.mod file)
+
 
 Return Value Provider Functions
 --------------------------------
@@ -371,7 +369,6 @@ The following descriptions provide additional elaboration on a few common parame
 | `--print` | Use `mockery --print` to have the resulting code printed out instead of written to disk. |
 | `--exported` | Use `mockery --exported` to generate public mocks for private interfaces. |
 | `--with-expecter` | Use `mockery --with-expecter` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
-| `--log-level` | Use `--log-level` to generate useful logs. Possible values are `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `panic` |
 
 Mocking interfaces in `main`
 ----------------------------
