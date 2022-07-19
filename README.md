@@ -16,7 +16,9 @@ Table of Contents
   * [go install](#go-install)
 - [Examples](#examples)
     + [Simplest case](#simplest-case)
+    + [Function type case](#function-type-case)
     + [Next level case](#next-level-case)
+    + [Note](#note)
 - [Return Value Provider Functions](#return-value-provider-functions)
     + [Requirements](#requirements)
     + [Notes](#notes)
@@ -42,6 +44,10 @@ Visit the [releases page](https://github.com/vektra/mockery/releases) to downloa
 Use the [Docker image](https://hub.docker.com/r/vektra/mockery)
 
     docker pull vektra/mockery
+
+Generate all the mocks for your project:
+
+	docker run -v "$PWD":/src -w /src vektra/mockery --all
 
 ### Homebrew
 
@@ -221,6 +227,10 @@ func main() {
 	}
 }
 ```
+
+#### Note
+
+For mockery to correctly generate mocks, the command has to be run on a module (i.e. your project has to have a go.mod file)
 
 
 Return Value Provider Functions
