@@ -3,14 +3,14 @@ mockery
 =======
 [![Release](https://github.com/vektra/mockery/actions/workflows/release.yml/badge.svg)](https://github.com/vektra/mockery/actions/workflows/release.yml) [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/vektra/mockery/v2?tab=overview) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/vektra/mockery) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/vektra/mockery) [![Go Report Card](https://goreportcard.com/badge/github.com/vektra/mockery)](https://goreportcard.com/report/github.com/vektra/mockery) [![codecov](https://codecov.io/gh/vektra/mockery/branch/master/graph/badge.svg)](https://codecov.io/gh/vektra/mockery)
 
-mockery provides the ability to easily generate mocks for golang interfaces using the [stretchr/testify/mock](https://pkg.go.dev/github.com/stretchr/testify/mock?tab=doc) package. It removes
+mockery provides the ability to easily generate mocks for Golang interfaces using the [stretchr/testify/mock](https://pkg.go.dev/github.com/stretchr/testify/mock?tab=doc) package. It removes
 the boilerplate coding required to use mocks.
 
 Table of Contents
 -----------------
 
 - [Installation](#installation)
-  * [Github Release](#github-release)
+  * [GitHub Release](#github-release)
   * [Docker](#docker)
   * [Homebrew](#homebrew)
   * [go install](#go-install)
@@ -35,7 +35,7 @@ Table of Contents
 Installation
 ------------
 
-### Github Release
+### GitHub Release
 
 Visit the [releases page](https://github.com/vektra/mockery/releases) to download one of the pre-built binaries for your platform.
 
@@ -307,7 +307,7 @@ Expecter Interfaces
 
 New in [v2.10.0](https://github.com/vektra/mockery/pull/396).
 
-Mockery now supports an "expecter" interface which allows your tests to use type-safe methods to generate call expectations. When enabled through the `with-expecter: True` mockery configuration, you can enter into the expecter interface by simply calling `.EXPECT()` on your mock object.
+Mockery now supports an "expecter" interface, which allows your tests to use type-safe methods to generate call expectations. When enabled through the `with-expecter: True` mockery configuration, you can enter into the expecter interface by simply calling `.EXPECT()` on your mock object.
 
 For example, given an interface such as
 ```go
@@ -358,7 +358,7 @@ The following descriptions provide additional elaboration on a few common parame
 
 | flag name  | description  |
 |---|---|
-| `--name`  | The `--name` option takes either the name or matching regular expression of interface to generate mock(s) for. |
+| `--name`  | The `--name` option takes either the name or matching regular expression of the interface to generate mock(s) for. |
 | `--all`  |  It's common for a big package to have a lot of interfaces, so mockery provides `--all`. This option will tell mockery to scan all files under the directory named by `--dir` ("." by default) and generates mocks for any interfaces it finds. This option implies `--recursive=true`. |
 | `--recursive`  |  Use the `--recursive` option to search subdirectories for the interface(s). This option is only compatible with `--name`. The `--all` option implies `--recursive=true`. |
 | `--output` | mockery always generates files with the package `mocks` to keep things clean and simple. You can control which mocks directory is used by using `--output`, which defaults to `./mocks`. |
@@ -373,8 +373,8 @@ The following descriptions provide additional elaboration on a few common parame
 Mocking interfaces in `main`
 ----------------------------
 
-When your interfaces are in the main package you should supply the `--inpackage` flag.
-This will generate mocks in the same package as the target code avoiding import issues.
+When your interfaces are in the main package, you should supply the `--inpackage` flag.
+This will generate mocks in the same package as the target code, avoiding import issues.
 
 Configuration
 --------------
@@ -403,7 +403,7 @@ mockery uses [spf13/viper](https://github.com/spf13/viper) under the hood for it
 	Using config file: /home/ltclipp/git/vektra/mockery/.mockery.yaml
 	structname: config_from_file
 
-By default it searches the current working directory for a file named `.mockery.[extension]` where [extension] is any of the [recognized extensions](https://pkg.go.dev/github.com/spf13/viper@v1.7.0?tab=doc#pkg-variables).
+By default, it searches the current working directory for a file named `.mockery.[extension]` where [extension] is any of the [recognized extensions](https://pkg.go.dev/github.com/spf13/viper@v1.7.0?tab=doc#pkg-variables).
 
 Semantic Versioning
 -------------------
@@ -435,10 +435,10 @@ v1 is the original version of the software, and is no longer supported.
 ### v3
 
 [v3](https://github.com/vektra/mockery/projects/3) will include a ground-up overhaul of the entire codebase and will completely change how mockery works internally and externally. The highlights of the project are:
-- Moving towards a package-based model instead of a file-based model. `mockery` currently iterates over every file in a project and calls `package.Load` on each one, which is time consuming. Moving towards a model where the entire package is loaded at once will dramtically reduce runtime, and will simplify logic. Additionally, supporting only a single mode of operation (package mode) will greatly increase the intuitiveness of the software.
+- Moving towards a package-based model instead of a file-based model. `mockery` currently iterates over every file in a project and calls `package.Load` on each one, which is time-consuming. Moving towards a model where the entire package is loaded at once will dramatically reduce runtime, and will simplify logic. Additionally, supporting only a single mode of operation (package mode) will greatly increase the intuitiveness of the software.
 - Configuration-driven generation. `v3` will be entirely driven by configuration, meaning:
   * You specify the packages you want mocked, instead of relying on it auto-discovering your package. Auto-discovery in theory sounds great, but in practice it leads to a great amount of complexity for very little benefit.
-  * Package- or interface-specific overrides can be given that change mock generation settings on a granular level. This will allow your mocks to be generated in a heterogenous manner, and will be made explicit by yaml configuration.
+  * Package- or interface-specific overrides can be given that change mock generation settings on a granular level. This will allow your mocks to be generated in a heterogeneous manner, and will be made explicit by YAML configuration.
  - Proper error reporting. Errors across the board will be done in accordance with modern Golang practices
  - Variables in generated mocks will be given meaningful names.
 
