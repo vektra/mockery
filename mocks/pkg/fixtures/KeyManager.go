@@ -37,13 +37,11 @@ func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 	return r0, r1
 }
 
-type mockConstructorTestingTNewKeyManager interface {
+// NewKeyManager creates a new instance of KeyManager. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+func NewKeyManager(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewKeyManager creates a new instance of KeyManager. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewKeyManager(t mockConstructorTestingTNewKeyManager) *KeyManager {
+}) *KeyManager {
 	mock := &KeyManager{}
 	mock.Mock.Test(t)
 

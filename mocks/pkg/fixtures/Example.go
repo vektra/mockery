@@ -45,13 +45,11 @@ func (_m *Example) B(_a0 string) fixtureshttp.MyStruct {
 	return r0
 }
 
-type mockConstructorTestingTNewExample interface {
+// NewExample creates a new instance of Example. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+func NewExample(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewExample creates a new instance of Example. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewExample(t mockConstructorTestingTNewExample) *Example {
+}) *Example {
 	mock := &Example{}
 	mock.Mock.Test(t)
 

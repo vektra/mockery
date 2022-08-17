@@ -29,13 +29,11 @@ func (_m *RequesterArgSameAsImport) Get(_a0 string) *json.RawMessage {
 	return r0
 }
 
-type mockConstructorTestingTNewRequesterArgSameAsImport interface {
+// NewRequesterArgSameAsImport creates a new instance of RequesterArgSameAsImport. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+func NewRequesterArgSameAsImport(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewRequesterArgSameAsImport creates a new instance of RequesterArgSameAsImport. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewRequesterArgSameAsImport(t mockConstructorTestingTNewRequesterArgSameAsImport) *RequesterArgSameAsImport {
+}) *RequesterArgSameAsImport {
 	mock := &RequesterArgSameAsImport{}
 	mock.Mock.Test(t)
 

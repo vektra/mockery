@@ -23,13 +23,11 @@ func (_m *Requester3) Get() error {
 	return r0
 }
 
-type mockConstructorTestingTNewRequester3 interface {
+// NewRequester3 creates a new instance of Requester3. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+func NewRequester3(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewRequester3 creates a new instance of Requester3. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewRequester3(t mockConstructorTestingTNewRequester3) *Requester3 {
+}) *Requester3 {
 	mock := &Requester3{}
 	mock.Mock.Test(t)
 

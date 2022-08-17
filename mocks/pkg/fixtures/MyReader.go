@@ -30,13 +30,11 @@ func (_m *MyReader) Read(p []byte) (int, error) {
 	return r0, r1
 }
 
-type mockConstructorTestingTNewMyReader interface {
+// NewMyReader creates a new instance of MyReader. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+func NewMyReader(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewMyReader creates a new instance of MyReader. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewMyReader(t mockConstructorTestingTNewMyReader) *MyReader {
+}) *MyReader {
 	mock := &MyReader{}
 	mock.Mock.Test(t)
 

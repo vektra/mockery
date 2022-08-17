@@ -821,13 +821,11 @@ func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) Return({{range .Returns.
 
 func (g *Generator) generateConstructor(ctx context.Context) {
 	const constructorTemplate = `
-type {{ .ConstructorTestingInterfaceName }} interface {
+// {{ .ConstructorName }} creates a new instance of {{ .MockName }}. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+func {{ .ConstructorName }}{{ .TypeConstraint }}(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// {{ .ConstructorName }} creates a new instance of {{ .MockName }}. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func {{ .ConstructorName }}{{ .TypeConstraint }}(t {{ .ConstructorTestingInterfaceName }}) *{{ .MockName }}{{ .InstantiatedTypeString }} {
+}) *{{ .MockName }}{{ .InstantiatedTypeString }} {
 	mock := &{{ .MockName }}{{ .InstantiatedTypeString }}{}
 	mock.Mock.Test(t)
 
@@ -840,17 +838,15 @@ func {{ .ConstructorName }}{{ .TypeConstraint }}(t {{ .ConstructorTestingInterfa
 	constructorName := g.maybeMakeNameExported("new"+g.makeNameExported(mockName), ast.IsExported(mockName))
 
 	data := struct {
-		ConstructorName                 string
-		ConstructorTestingInterfaceName string
-		InstantiatedTypeString          string
-		MockName                        string
-		TypeConstraint                  string
+		ConstructorName        string
+		InstantiatedTypeString string
+		MockName               string
+		TypeConstraint         string
 	}{
-		ConstructorName:                 constructorName,
-		ConstructorTestingInterfaceName: mockConstructorParamTypeNamePrefix + constructorName,
-		InstantiatedTypeString:          g.getInstantiatedTypeString(),
-		MockName:                        mockName,
-		TypeConstraint:                  g.getTypeConstraintString(ctx),
+		ConstructorName:        constructorName,
+		InstantiatedTypeString: g.getInstantiatedTypeString(),
+		MockName:               mockName,
+		TypeConstraint:         g.getTypeConstraintString(ctx),
 	}
 	g.printTemplate(data, constructorTemplate)
 }

@@ -44,10 +44,6 @@ func (w *Walker) Walk(ctx context.Context, visitor WalkerVisitor) (generated boo
 	}
 
 	for _, iface := range parser.Interfaces() {
-		if strings.HasPrefix(iface.Name, mockConstructorParamTypeNamePrefix) {
-			continue
-		}
-
 		if !w.Filter.MatchString(iface.Name) {
 			continue
 		}

@@ -23,13 +23,11 @@ func (_m *FuncArgsCollision) Foo(ret interface{}) error {
 	return r0
 }
 
-type mockConstructorTestingTNewFuncArgsCollision interface {
+// NewFuncArgsCollision creates a new instance of FuncArgsCollision. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+func NewFuncArgsCollision(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewFuncArgsCollision creates a new instance of FuncArgsCollision. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewFuncArgsCollision(t mockConstructorTestingTNewFuncArgsCollision) *FuncArgsCollision {
+}) *FuncArgsCollision {
 	mock := &FuncArgsCollision{}
 	mock.Mock.Test(t)
 

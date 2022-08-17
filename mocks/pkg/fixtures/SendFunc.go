@@ -34,13 +34,11 @@ func (_m *SendFunc) Execute(ctx context.Context, data string) (int, error) {
 	return r0, r1
 }
 
-type mockConstructorTestingTNewSendFunc interface {
+// NewSendFunc creates a new instance of SendFunc. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+func NewSendFunc(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewSendFunc creates a new instance of SendFunc. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewSendFunc(t mockConstructorTestingTNewSendFunc) *SendFunc {
+}) *SendFunc {
 	mock := &SendFunc{}
 	mock.Mock.Test(t)
 

@@ -26,13 +26,11 @@ func (_m *IfaceWithBuildTagInComment) Sprintf(format string, a ...interface{}) s
 	return r0
 }
 
-type mockConstructorTestingTNewIfaceWithBuildTagInComment interface {
+// NewIfaceWithBuildTagInComment creates a new instance of IfaceWithBuildTagInComment. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+func NewIfaceWithBuildTagInComment(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewIfaceWithBuildTagInComment creates a new instance of IfaceWithBuildTagInComment. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewIfaceWithBuildTagInComment(t mockConstructorTestingTNewIfaceWithBuildTagInComment) *IfaceWithBuildTagInComment {
+}) *IfaceWithBuildTagInComment {
 	mock := &IfaceWithBuildTagInComment{}
 	mock.Mock.Test(t)
 

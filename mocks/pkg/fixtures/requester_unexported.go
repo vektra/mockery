@@ -14,13 +14,11 @@ func (_m *requester_unexported) Get() {
 	_m.Called()
 }
 
-type mockConstructorTestingTnewRequester_unexported interface {
+// newRequester_unexported creates a new instance of requester_unexported. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+func newRequester_unexported(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// newRequester_unexported creates a new instance of requester_unexported. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func newRequester_unexported(t mockConstructorTestingTnewRequester_unexported) *requester_unexported {
+}) *requester_unexported {
 	mock := &requester_unexported{}
 	mock.Mock.Test(t)
 

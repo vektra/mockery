@@ -44,13 +44,11 @@ func (_m *Fooer) Foo(f func(string) string) error {
 	return r0
 }
 
-type mockConstructorTestingTNewFooer interface {
+// NewFooer creates a new instance of Fooer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+func NewFooer(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewFooer creates a new instance of Fooer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewFooer(t mockConstructorTestingTNewFooer) *Fooer {
+}) *Fooer {
 	mock := &Fooer{}
 	mock.Mock.Test(t)
 

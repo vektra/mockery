@@ -40,13 +40,11 @@ func (_m *Root) TakesBaz(_a0 *foo.Baz) {
 	_m.Called(_a0)
 }
 
-type mockConstructorTestingTNewRoot interface {
+// NewRoot creates a new instance of Root. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+func NewRoot(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewRoot creates a new instance of Root. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewRoot(t mockConstructorTestingTNewRoot) *Root {
+}) *Root {
 	mock := &Root{}
 	mock.Mock.Test(t)
 
