@@ -261,11 +261,12 @@ func (g *Generator) mockName() string {
 }
 
 // getTypeConstraintString returns type constraint string for a given interface.
-//  For instance, a method using this constraint:
 //
-//    func Foo[T Stringer](s []T) (ret []string) {
+//	For instance, a method using this constraint:
 //
-//    }
+//	  func Foo[T Stringer](s []T) (ret []string) {
+//
+//	  }
 //
 // The constraint returned will be "[T Stringer]"
 //
@@ -629,6 +630,54 @@ func (g *Generator) Generate(ctx context.Context) error {
 		params := g.genList(ctx, ftype.Params(), ftype.Variadic())
 		returns := g.genList(ctx, ftype.Results(), false)
 
+		// Generate OnFunc(params) (CallType) {}
+		if len(returns.Types) > 0 {
+			callType := fmt.Sprintf("%s_%s", g.mockName(), fname)
+			g.printf("type %s%s struct {\n\t*mock.Call\n}\n\n", callType, g.getTypeConstraintString(ctx))
+
+			g.printf("func (_m *%s%s) Return(%s) *%s%s {\n",
+				callType,
+				g.getInstantiatedTypeString(),
+				strings.Join(returns.Params, ", "),
+				callType,
+				g.getInstantiatedTypeString())
+			{
+				g.printf("\treturn &%s%s{Call: _m.Call.Return(%s)}\n", callType, g.getInstantiatedTypeString(), strings.Join(returns.Names, ", "))
+			}
+			g.printf("}\n\n")
+
+			g.printf(
+				"func (_m *%s%s) On%s(%s) *%s%s {\n",
+				g.mockName(),
+				g.getInstantiatedTypeString(),
+				fname,
+				strings.Join(params.Params, ", "),
+				callType,
+				g.getInstantiatedTypeString(),
+			)
+			{
+				g.printf("\tc := _m.On(%s)\n", strings.Join(append(
+					[]string{fmt.Sprintf("\"%s\"", fname)}, params.Names...), ","))
+				g.printf("\treturn &%s%s{Call: c}\n", callType, g.getInstantiatedTypeString())
+			}
+			g.printf("}\n\n")
+
+			g.printf(
+				"func (_m *%s%s) On%sMatch(matchers ...interface{}) *%s%s {\n",
+				g.mockName(),
+				g.getInstantiatedTypeString(),
+				fname,
+				callType,
+				g.getInstantiatedTypeString(),
+			)
+			{
+				g.printf("\tc := _m.On(\"%s\", matchers...)\n", fname)
+				g.printf("\treturn &%s%s{Call: c}\n", callType, g.getInstantiatedTypeString())
+			}
+			g.printf("}\n")
+		}
+
+		// Generate Func(params) (return types) {...}
 		if len(params.Names) == 0 {
 			g.printf("// %s provides a mock function with given fields:\n", fname)
 		} else {
@@ -637,6 +686,7 @@ func (g *Generator) Generate(ctx context.Context) error {
 				strings.Join(params.Names, ", "),
 			)
 		}
+
 		g.printf(
 			"func (_m *%s%s) %s(%s) ", g.mockName(), g.getInstantiatedTypeString(), fname,
 			strings.Join(params.Params, ", "),
