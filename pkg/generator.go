@@ -261,11 +261,12 @@ func (g *Generator) mockName() string {
 }
 
 // getTypeConstraintString returns type constraint string for a given interface.
-//  For instance, a method using this constraint:
 //
-//    func Foo[T Stringer](s []T) (ret []string) {
+//	For instance, a method using this constraint:
 //
-//    }
+//	  func Foo[T Stringer](s []T) (ret []string) {
+//
+//	  }
 //
 // The constraint returned will be "[T Stringer]"
 //

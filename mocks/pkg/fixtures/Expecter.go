@@ -46,8 +46,8 @@ type Expecter_ManyArgsReturns_Call struct {
 }
 
 // ManyArgsReturns is a helper method to define mock.On call
-//  - str string
-//  - i int
+//   - str string
+//   - i int
 func (_e *Expecter_Expecter) ManyArgsReturns(str interface{}, i interface{}) *Expecter_ManyArgsReturns_Call {
 	return &Expecter_ManyArgsReturns_Call{Call: _e.mock.On("ManyArgsReturns", str, i)}
 }
@@ -111,7 +111,7 @@ type Expecter_NoReturn_Call struct {
 }
 
 // NoReturn is a helper method to define mock.On call
-//  - str string
+//   - str string
 func (_e *Expecter_Expecter) NoReturn(str interface{}) *Expecter_NoReturn_Call {
 	return &Expecter_NoReturn_Call{Call: _e.mock.On("NoReturn", str)}
 }
@@ -154,7 +154,7 @@ type Expecter_Variadic_Call struct {
 }
 
 // Variadic is a helper method to define mock.On call
-//  - ints ...int
+//   - ints ...int
 func (_e *Expecter_Expecter) Variadic(ints ...interface{}) *Expecter_Variadic_Call {
 	return &Expecter_Variadic_Call{Call: _e.mock.On("Variadic",
 		append([]interface{}{}, ints...)...)}
@@ -201,9 +201,9 @@ type Expecter_VariadicMany_Call struct {
 }
 
 // VariadicMany is a helper method to define mock.On call
-//  - i int
-//  - a string
-//  - intfs ...interface{}
+//   - i int
+//   - a string
+//   - intfs ...interface{}
 func (_e *Expecter_Expecter) VariadicMany(i interface{}, a interface{}, intfs ...interface{}) *Expecter_VariadicMany_Call {
 	return &Expecter_VariadicMany_Call{Call: _e.mock.On("VariadicMany",
 		append([]interface{}{i, a}, intfs...)...)}
