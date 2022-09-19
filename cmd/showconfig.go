@@ -24,7 +24,7 @@ func NewShowConfigCmd() *cobra.Command {
 			}
 			out, err := yaml.Marshal(config)
 			if err != nil {
-				return errors.Wrapf(err, "Failed to marsrhal yaml")
+				return errors.Wrapf(err, "Failed to marshal yaml")
 			}
 			fmt.Printf("%s", string(out))
 			return nil
