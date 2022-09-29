@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog"
+
 	"github.com/vektra/mockery/v2/pkg/config"
 	"github.com/vektra/mockery/v2/pkg/logging"
 )
@@ -56,6 +57,9 @@ func (p *FileOutputStreamProvider) GetWriter(ctx context.Context, iface *Interfa
 		relativePath := strings.TrimPrefix(
 			filepath.Join(filepath.Dir(iface.FileName), p.filename(caseName)),
 			absOriginalDir)
+
+		relativePath = strings.Replace(relativePath, "/internal/", "/_internal/", -1)
+
 		path = filepath.Join(p.BaseDir, relativePath)
 		if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
 			return nil, err, func() error { return nil }
