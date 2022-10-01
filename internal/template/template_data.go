@@ -2,6 +2,7 @@ package template
 
 import (
 	"fmt"
+	"go/types"
 	"strings"
 
 	"github.com/matryer/moq/internal/registry"
@@ -33,6 +34,7 @@ func (d Data) MocksSomeMethod() bool {
 type MockData struct {
 	InterfaceName string
 	MockName      string
+	TypeParams    []TypeParamData
 	Methods       []MethodData
 }
 
@@ -85,6 +87,11 @@ func (m MethodData) ReturnArgNameList() string {
 		params[i] = p.Name()
 	}
 	return strings.Join(params, ", ")
+}
+
+type TypeParamData struct {
+	ParamData
+	Constraint types.Type
 }
 
 // ParamData is the data which represents a parameter to some method of
