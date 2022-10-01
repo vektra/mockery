@@ -52,17 +52,23 @@ func (r Registry) SrcPkgName() string {
 
 // LookupInterface returns the underlying interface definition of the
 // given interface name.
-func (r Registry) LookupInterface(name string) (*types.Interface, error) {
+func (r Registry) LookupInterface(name string) (*types.Interface, *types.TypeParamList, error) {
 	obj := r.SrcPkg().Scope().Lookup(name)
 	if obj == nil {
-		return nil, fmt.Errorf("interface not found: %s", name)
+		return nil, nil, fmt.Errorf("interface not found: %s", name)
 	}
 
 	if !types.IsInterface(obj.Type()) {
-		return nil, fmt.Errorf("%s (%s) is not an interface", name, obj.Type())
+		return nil, nil, fmt.Errorf("%s (%s) is not an interface", name, obj.Type())
 	}
 
-	return obj.Type().Underlying().(*types.Interface).Complete(), nil
+	var tparams *types.TypeParamList
+	named, ok := obj.Type().(*types.Named)
+	if ok {
+		tparams = named.TypeParams()
+	}
+
+	return obj.Type().Underlying().(*types.Interface).Complete(), tparams, nil
 }
 
 // MethodScope returns a new MethodScope.
