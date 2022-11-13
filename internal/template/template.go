@@ -68,21 +68,21 @@ var _ {{$.SrcPkgQualifier}}{{.InterfaceName -}}
 
 // {{.MockName}} is a mock implementation of {{$.SrcPkgQualifier}}{{.InterfaceName}}.
 //
-// 	func TestSomethingThatUses{{.InterfaceName}}(t *testing.T) {
+//	func TestSomethingThatUses{{.InterfaceName}}(t *testing.T) {
 //
-// 		// make and configure a mocked {{$.SrcPkgQualifier}}{{.InterfaceName}}
-// 		mocked{{.InterfaceName}} := &{{.MockName}}{ 
+//		// make and configure a mocked {{$.SrcPkgQualifier}}{{.InterfaceName}}
+//		mocked{{.InterfaceName}} := &{{.MockName}}{
 			{{- range .Methods}}
-// 			{{.Name}}Func: func({{.ArgList}}) {{.ReturnArgTypeList}} {
-// 				panic("mock out the {{.Name}} method")
-// 			},
+//			{{.Name}}Func: func({{.ArgList}}) {{.ReturnArgTypeList}} {
+//				panic("mock out the {{.Name}} method")
+//			},
 			{{- end}}
-// 		}
+//		}
 //
-// 		// use mocked{{.InterfaceName}} in code that requires {{$.SrcPkgQualifier}}{{.InterfaceName}}
-// 		// and then make assertions.
+//		// use mocked{{.InterfaceName}} in code that requires {{$.SrcPkgQualifier}}{{.InterfaceName}}
+//		// and then make assertions.
 //
-// 	}
+//	}
 type {{.MockName}} 
 {{- if .TypeParams -}}
 	[{{- range $index, $param := .TypeParams}}
@@ -159,7 +159,8 @@ func (mock *{{$mock.MockName}}
 
 // {{.Name}}Calls gets all the calls that were made to {{.Name}}.
 // Check the length with:
-//     len(mocked{{$mock.InterfaceName}}.{{.Name}}Calls())
+//
+//	len(mocked{{$mock.InterfaceName}}.{{.Name}}Calls())
 func (mock *{{$mock.MockName}}
 {{- if $mock.TypeParams -}}
 	[{{- range $index, $param := $mock.TypeParams}}
