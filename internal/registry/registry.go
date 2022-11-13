@@ -96,7 +96,7 @@ func (r *Registry) AddImport(pkg *types.Package) *Package {
 	imprt := Package{pkg: pkg, Alias: r.aliases[path]}
 
 	if conflict, ok := r.searchImport(imprt.Qualifier()); ok {
-		resolveImportConflict(&imprt, conflict, 0)
+		r.resolveImportConflict(&imprt, conflict, 0)
 	}
 
 	r.imports[path] = &imprt
@@ -124,6 +124,30 @@ func (r Registry) searchImport(name string) (*Package, bool) {
 	}
 
 	return nil, false
+}
+
+// resolveImportConflict generates and assigns a unique alias for
+// packages with conflicting qualifiers.
+func (r Registry) resolveImportConflict(a, b *Package, lvl int) {
+	if a.uniqueName(lvl) == b.uniqueName(lvl) {
+		r.resolveImportConflict(a, b, lvl+1)
+		return
+	}
+
+	for _, p := range []*Package{a, b} {
+		name := p.uniqueName(lvl)
+		// Even though the name is not conflicting with the other package we
+		// got, the new name we want to pick might already be taken. So check
+		// again for conflicts and resolve them as well. Since the name for
+		// this package would also get set in the recursive function call, skip
+		// setting the alias after it.
+		if conflict, ok := r.searchImport(name); ok && conflict != p {
+			r.resolveImportConflict(p, conflict, lvl+1)
+			continue
+		}
+
+		p.Alias = name
+	}
 }
 
 func pkgInfoFromPath(srcDir string, mode packages.LoadMode) (*packages.Package, error) {
@@ -181,16 +205,4 @@ func parseImportsAliases(pkg *packages.Package) map[string]string {
 		}
 	}
 	return aliases
-}
-
-// resolveImportConflict generates and assigns a unique alias for
-// packages with conflicting qualifiers.
-func resolveImportConflict(a, b *Package, lvl int) {
-	u1, u2 := a.uniqueName(lvl), b.uniqueName(lvl)
-	if u1 != u2 {
-		a.Alias, b.Alias = u1, u2
-		return
-	}
-
-	resolveImportConflict(a, b, lvl+1)
 }
