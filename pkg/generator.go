@@ -6,11 +6,9 @@ import (
 	"errors"
 	"fmt"
 	"go/ast"
-	"go/build"
 	"go/types"
 	"io"
 	"os"
-	"path/filepath"
 	"regexp"
 	"sort"
 	"strings"
@@ -40,19 +38,10 @@ type Generator struct {
 	localizationCache map[string]string
 	packagePathToName map[string]string
 	nameToPackagePath map[string]string
-
-	packageRoots []string
 }
 
 // NewGenerator builds a Generator.
 func NewGenerator(ctx context.Context, c config.Config, iface *Interface, pkg string) *Generator {
-
-	var roots []string
-
-	for _, root := range filepath.SplitList(build.Default.GOPATH) {
-		roots = append(roots, filepath.Join(root, "src"))
-	}
-
 	g := &Generator{
 		Config:            c,
 		iface:             iface,
@@ -60,7 +49,6 @@ func NewGenerator(ctx context.Context, c config.Config, iface *Interface, pkg st
 		localizationCache: make(map[string]string),
 		packagePathToName: make(map[string]string),
 		nameToPackagePath: make(map[string]string),
-		packageRoots:      roots,
 	}
 
 	g.addPackageImportWithName(ctx, "github.com/stretchr/testify/mock", "mock")
@@ -121,7 +109,6 @@ func (g *Generator) addPackageImport(ctx context.Context, pkg *types.Package) st
 }
 
 func (g *Generator) addPackageImportWithName(ctx context.Context, path, name string) string {
-	path = g.getLocalizedPath(ctx, path)
 	if existingName, pathExists := g.packagePathToName[path]; pathExists {
 		return existingName
 	}
@@ -138,8 +125,7 @@ func (g *Generator) getNonConflictingName(path, name string) string {
 		return name
 	}
 
-	// The path will always contain '/' because it is enforced in getLocalizedPath
-	// regardless of OS.
+	// The path will always contain '/' because it is enforced by Go import system
 	directories := strings.Split(path, "/")
 
 	cleanedDirectories := make([]string, 0, len(directories))
@@ -170,60 +156,6 @@ func (g *Generator) getNonConflictingName(path, name string) string {
 func (g *Generator) importNameExists(name string) bool {
 	_, nameExists := g.nameToPackagePath[name]
 	return nameExists
-}
-
-func calculateImport(ctx context.Context, set []string, path string) string {
-	log := zerolog.Ctx(ctx).With().Str(logging.LogKeyPath, path).Logger()
-	ctx = log.WithContext(ctx)
-
-	for _, root := range set {
-		if strings.HasPrefix(path, root) {
-			packagePath, err := filepath.Rel(root, path)
-			if err == nil {
-				return packagePath
-			}
-			log.Err(err).Msgf("Unable to localize path")
-		}
-	}
-	return path
-}
-
-// getLocalizedPath, given a path to a file or an importable URL,
-// returns the proper string needed to import the package. See tests
-// for specific examples of what this should return.
-func (g *Generator) getLocalizedPath(ctx context.Context, path string) string {
-	log := zerolog.Ctx(ctx).With().Str(logging.LogKeyPath, path).Logger()
-	ctx = log.WithContext(ctx)
-
-	if strings.HasSuffix(path, ".go") {
-		path, _ = filepath.Split(path)
-	}
-	if localized, ok := g.localizationCache[path]; ok {
-		return localized
-	}
-	directories := strings.Split(path, string(filepath.Separator))
-	numDirectories := len(directories)
-	vendorIndex := -1
-	for i := 1; i <= numDirectories; i++ {
-		dir := directories[numDirectories-i]
-		if dir == "vendor" {
-			vendorIndex = numDirectories - i
-			break
-		}
-	}
-
-	toReturn := path
-	if vendorIndex >= 0 {
-		toReturn = filepath.Join(directories[vendorIndex+1:]...)
-	} else if filepath.IsAbs(path) {
-		toReturn = calculateImport(ctx, g.packageRoots, path)
-	}
-
-	// Enforce '/' slashes for import paths in every OS.
-	toReturn = filepath.ToSlash(toReturn)
-
-	g.localizationCache[path] = toReturn
-	return toReturn
 }
 
 func (g *Generator) maybeMakeNameExported(name string, export bool) string {
