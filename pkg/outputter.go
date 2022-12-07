@@ -58,7 +58,8 @@ func (p *FileOutputStreamProvider) GetWriter(ctx context.Context, iface *Interfa
 			filepath.Join(filepath.Dir(iface.FileName), p.filename(caseName)),
 			absOriginalDir)
 
-		relativePath = strings.Replace(relativePath, "/internal/", "/_internal/", -1)
+		// as it's not possible to import from internal path, we have to replace it in mocks when KepTree is used
+		relativePath = strings.Replace(relativePath, "/internal/", "/internal_/", -1)
 
 		path = filepath.Join(p.BaseDir, relativePath)
 		if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
