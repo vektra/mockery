@@ -14,6 +14,9 @@ Table of Contents
   * [Docker](#docker)
   * [Homebrew](#homebrew)
   * [go install](#go-install)
+- [Configuration](#configuration)
+  * [Example](#example)
+  * [Config Search Path](#config-search-path)
 - [Examples](#examples)
     + [Simplest case](#simplest-case)
     + [Function type case](#function-type-case)
@@ -25,10 +28,12 @@ Table of Contents
 - [Expecter Interfaces](#expecter-interfaces)
 - [Mock constructors](#mock-constructors)
 - [Extended Flag Descriptions](#extended-flag-descriptions)
-- [Mocking interfaces in `main`](#mocking-interfaces-in-main)
-- [Configuration](#configuration)
-  * [Example](#example)
+- [Mocking interfaces in `main`](#mocking-interfaces-in--main-)
 - [Semantic Versioning](#semantic-versioning)
+- [Development Efforts](#development-efforts)
+  * [v1](#v1)
+  * [v2](#v2)
+  * [v3](#v3)
 - [Stargazers](#stargazers)
 
 
@@ -63,6 +68,41 @@ Supported, but not recommended: [see wiki page](https://github.com/vektra/mocker
 Alternatively, you can use the go install method to compile the project using your local environment:
 
     go install github.com/vektra/mockery/v2@latest
+
+Configuration
+--------------
+
+mockery uses [spf13/viper](https://github.com/spf13/viper) under the hood for its configuration parsing. It is bound to three different configuration sources, in order of decreasing precedence:
+
+1. Command line
+2. Environment variables
+3. Configuration file
+
+### Example
+
+	$ export MOCKERY_STRUCTNAME=config_from_env
+	$ echo $MOCKERY_STRUCTNAME
+	config_from_env
+	$ grep structname .mockery.yaml
+	structname: config_from_file
+	$ ./mockery showconfig --structname config_from_cli | grep structname
+	Using config file: /home/ltclipp/git/vektra/mockery/.mockery.yaml
+	structname: config_from_cli
+	$ ./mockery showconfig  | grep structname
+	Using config file: /home/ltclipp/git/vektra/mockery/.mockery.yaml
+	structname: config_from_env
+	$ unset MOCKERY_STRUCTNAME
+	$ ./mockery showconfig  | grep structname
+	Using config file: /home/ltclipp/git/vektra/mockery/.mockery.yaml
+	structname: config_from_file
+
+By default, it searches the current working directory for a file named `.mockery.[extension]` where [extension] is any of the [recognized extensions](https://pkg.go.dev/github.com/spf13/viper@v1.7.0?tab=doc#pkg-variables).
+
+### Config Search Path
+
+New in [v2.16.0](https://github.com/vektra/mockery/pull/527)
+
+Mockery will iteratively search every directory from the current working directory up to the root path for a `.mockery.yaml` file, if one is not explicitly provided.
 
 Examples
 --------
@@ -375,35 +415,6 @@ Mocking interfaces in `main`
 
 When your interfaces are in the main package, you should supply the `--inpackage` flag.
 This will generate mocks in the same package as the target code, avoiding import issues.
-
-Configuration
---------------
-
-mockery uses [spf13/viper](https://github.com/spf13/viper) under the hood for its configuration parsing. It is bound to three different configuration sources, in order of decreasing precedence:
-
-1. Command line
-2. Environment variables
-3. Configuration file
-
-### Example
-
-	$ export MOCKERY_STRUCTNAME=config_from_env
-	$ echo $MOCKERY_STRUCTNAME
-	config_from_env
-	$ grep structname .mockery.yaml
-	structname: config_from_file
-	$ ./mockery showconfig --structname config_from_cli | grep structname
-	Using config file: /home/ltclipp/git/vektra/mockery/.mockery.yaml
-	structname: config_from_cli
-	$ ./mockery showconfig  | grep structname
-	Using config file: /home/ltclipp/git/vektra/mockery/.mockery.yaml
-	structname: config_from_env
-	$ unset MOCKERY_STRUCTNAME
-	$ ./mockery showconfig  | grep structname
-	Using config file: /home/ltclipp/git/vektra/mockery/.mockery.yaml
-	structname: config_from_file
-
-By default, it searches the current working directory for a file named `.mockery.[extension]` where [extension] is any of the [recognized extensions](https://pkg.go.dev/github.com/spf13/viper@v1.7.0?tab=doc#pkg-variables).
 
 Semantic Versioning
 -------------------
