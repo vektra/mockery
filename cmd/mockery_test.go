@@ -3,8 +3,10 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 	"testing"
 
+	"github.com/chigopher/pathlib"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -76,7 +78,7 @@ func TestConfigEnvFlags(t *testing.T) {
 	env(t, "EXPORTED", fmt.Sprint(expected.Exported))
 	env(t, "WITH_EXPECTER", fmt.Sprint(expected.WithExpecter))
 
-	initConfig()
+	initConfig(nil, nil)
 
 	app, err := GetRootAppFromViper(viper.GetViper())
 	require.NoError(t, err)
@@ -88,4 +90,38 @@ func env(t *testing.T, key, value string) {
 	key = "MOCKERY_" + key
 	t.Cleanup(func() { os.Unsetenv(key) })
 	os.Setenv(key, value)
+}
+
+func Test_initConfig(t *testing.T) {
+	tests := []struct {
+		name       string
+		base_path  string
+		configPath string
+	}{
+		{
+			name:       "test config at base directory",
+			base_path:  "1/2/3/4",
+			configPath: "1/2/3/4/.mockery.yaml",
+		},
+		{
+			name:       "test config at upper directory",
+			base_path:  "1/2/3/4",
+			configPath: "1/.mockery.yaml",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tmpDir := pathlib.NewPath(t.TempDir())
+			baseDir := tmpDir.Join(strings.Split(tt.base_path, "/")...)
+			require.NoError(t, baseDir.MkdirAll())
+			configPath := tmpDir.Join(strings.Split(tt.configPath, "/")...)
+			configPath.WriteFile([]byte("all: True"))
+
+			viperObj := viper.New()
+
+			initConfig(baseDir, viperObj)
+
+			assert.Equal(t, configPath.String(), viperObj.ConfigFileUsed())
+		})
+	}
 }

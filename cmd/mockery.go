@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/chigopher/pathlib"
 	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -28,7 +29,7 @@ var (
 )
 
 func init() {
-	cobra.OnInitialize(initConfig)
+	cobra.OnInitialize(func() { initConfig(nil, nil) })
 }
 
 func NewRootCmd() *cobra.Command {
@@ -103,16 +104,27 @@ func Execute() {
 	}
 }
 
-func initConfig() {
-	viper.SetEnvPrefix("mockery")
-	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
-	viper.AutomaticEnv()
+func initConfig(baseSearchPath *pathlib.Path, viperObj *viper.Viper) {
+	if baseSearchPath == nil {
+		currentWorkingDir, err := os.Getwd()
+		if err != nil {
+			panic(err)
+		}
+		baseSearchPath = pathlib.NewPath(currentWorkingDir)
+	}
+	if viperObj == nil {
+		viperObj = viper.GetViper()
+	}
+
+	viperObj.SetEnvPrefix("mockery")
+	viperObj.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
+	viperObj.AutomaticEnv()
 
 	if cfgFile != "" {
 		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else if viper.IsSet("config") {
-		viper.SetConfigFile(viper.GetString("config"))
+		viperObj.SetConfigFile(cfgFile)
+	} else if viperObj.IsSet("config") {
+		viperObj.SetConfigFile(viperObj.GetString("config"))
 	} else {
 		// Find home directory.
 		home, err := homedir.Dir()
@@ -120,15 +132,20 @@ func initConfig() {
 			log.Fatal().Err(err).Msgf("Failed to find homedir")
 		}
 
-		// Search config in home directory with name ".cobra" (without extension).
-		viper.AddConfigPath(".")
-		viper.AddConfigPath(home)
-		viper.SetConfigName(".mockery")
+		currentDir := baseSearchPath
+
+		for len(currentDir.Parts()) != 1 {
+			viperObj.AddConfigPath(currentDir.String())
+			currentDir = currentDir.Parent()
+		}
+
+		viperObj.AddConfigPath(home)
+		viperObj.SetConfigName(".mockery")
 	}
 
 	// Note we purposely ignore the error. Don't care if we can't find a config file.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Fprintf(os.Stderr, "Using config file: %s\n", viper.ConfigFileUsed())
+	if err := viperObj.ReadInConfig(); err == nil {
+		fmt.Fprintf(os.Stderr, "Using config file: %s\n", viperObj.ConfigFileUsed())
 	}
 }
 
@@ -143,6 +160,7 @@ func GetRootAppFromViper(v *viper.Viper) (*RootApp, error) {
 	if err := v.UnmarshalExact(&r.Config); err != nil {
 		return nil, errors.Wrapf(err, "failed to get config")
 	}
+	r.Config.Config = v.ConfigFileUsed()
 	return r, nil
 }
 
@@ -164,6 +182,7 @@ func (r *RootApp) Run() error {
 	}
 	log = log.With().Bool(logging.LogKeyDryRun, r.Config.DryRun).Logger()
 	log.Info().Msgf("Starting mockery")
+	log.Info().Msgf("Using config: %s", r.Config.Config)
 	ctx := log.WithContext(context.Background())
 
 	if r.Config.Version {
