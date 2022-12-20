@@ -134,7 +134,7 @@ func initConfig(baseSearchPath *pathlib.Path, viperObj *viper.Viper) {
 
 		currentDir := baseSearchPath
 
-		for len(currentDir.Parts()) != 1 {
+		for len(currentDir.Parts()) > 1 {
 			viperObj.AddConfigPath(currentDir.String())
 			currentDir = currentDir.Parent()
 		}

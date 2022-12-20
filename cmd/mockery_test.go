@@ -108,14 +108,22 @@ func Test_initConfig(t *testing.T) {
 			base_path:  "1/2/3/4",
 			configPath: "1/.mockery.yaml",
 		},
+		{
+			name:      "no config file found",
+			base_path: "1/2/3/4",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tmpDir := pathlib.NewPath(t.TempDir())
 			baseDir := tmpDir.Join(strings.Split(tt.base_path, "/")...)
 			require.NoError(t, baseDir.MkdirAll())
-			configPath := tmpDir.Join(strings.Split(tt.configPath, "/")...)
-			configPath.WriteFile([]byte("all: True"))
+
+			configPath := pathlib.NewPath("")
+			if tt.configPath != "" {
+				configPath = tmpDir.Join(strings.Split(tt.configPath, "/")...)
+				configPath.WriteFile([]byte("all: True"))
+			}
 
 			viperObj := viper.New()
 
