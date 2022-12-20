@@ -17,8 +17,8 @@ import (
 	"unicode/utf8"
 
 	"github.com/rs/zerolog"
-	"github.com/vektra/mockery/v2/pkg/config"
-	"github.com/vektra/mockery/v2/pkg/logging"
+	"github.com/vektra/mockery/v3/pkg/config"
+	"github.com/vektra/mockery/v3/pkg/logging"
 	"golang.org/x/tools/imports"
 )
 

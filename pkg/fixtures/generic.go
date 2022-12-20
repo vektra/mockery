@@ -3,7 +3,7 @@ package test
 import (
 	"io"
 
-	"github.com/vektra/mockery/v2/pkg/fixtures/constraints"
+	"github.com/vektra/mockery/v3/pkg/fixtures/constraints"
 )
 
 type RequesterGenerics[

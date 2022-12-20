@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	mocks "github.com/vektra/mockery/v2/mocks/pkg/fixtures"
+	mocks "github.com/vektra/mockery/v3/mocks/pkg/fixtures"
 )
 
 var (
