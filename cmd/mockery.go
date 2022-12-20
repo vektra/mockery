@@ -134,8 +134,11 @@ func initConfig(baseSearchPath *pathlib.Path, viperObj *viper.Viper) {
 
 		currentDir := baseSearchPath
 
-		for len(currentDir.Parts()) > 1 {
+		for {
 			viperObj.AddConfigPath(currentDir.String())
+			if len(currentDir.Parts()) <= 1 {
+				break
+			}
 			currentDir = currentDir.Parent()
 		}
 
@@ -144,9 +147,8 @@ func initConfig(baseSearchPath *pathlib.Path, viperObj *viper.Viper) {
 	}
 
 	// Note we purposely ignore the error. Don't care if we can't find a config file.
-	if err := viperObj.ReadInConfig(); err == nil {
-		fmt.Fprintf(os.Stderr, "Using config file: %s\n", viperObj.ConfigFileUsed())
-	}
+	viperObj.ReadInConfig()
+	viperObj.Set("config", viperObj.ConfigFileUsed())
 }
 
 const regexMetadataChars = "\\.+*?()|[]{}^$"
