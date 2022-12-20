@@ -13,6 +13,10 @@ jobs:
       matrix:
         os: [ macos-latest, ubuntu-latest]
         go_vers: [1.19]
+        major_version: [v2, v3]
+    defaults:
+      run:
+        working-directory: ${{ matrix.major_version }}
     steps:
       - uses: actions/checkout@v2
         with:
