@@ -3,6 +3,7 @@ module github.com/vektra/mockery/v3
 go 1.19
 
 require (
+	github.com/chigopher/pathlib v0.12.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.27.0
