@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/vektra/mockery/v2/pkg/config"
+	"github.com/vektra/mockery/v3/pkg/config"
 )
 
 func TestNewRootCmd(t *testing.T) {

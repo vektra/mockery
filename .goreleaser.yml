@@ -7,7 +7,7 @@ builds:
   - main: ./main.go
     binary: mockery
     ldflags:
-      - -s -w -X github.com/vektra/mockery/v2/pkg/config.SemVer=v{{.Version}}
+      - -s -w -X github.com/vektra/mockery/v3/pkg/config.SemVer=v{{.Version}}
     env:
       - CGO_ENABLED=0
     goos:

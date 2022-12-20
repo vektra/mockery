@@ -2,9 +2,9 @@ name: Go Test
 
 on:
   push:
-    branches: [ master ]
+    branches: [ v3 ]
   pull_request:
-    branches: [ master ]
+    branches: [ v3 ]
 
 jobs:
   build:
@@ -13,6 +13,7 @@ jobs:
       matrix:
         os: [ macos-latest, ubuntu-latest]
         go_vers: [1.19]
+
     steps:
       - uses: actions/checkout@v2
         with:

@@ -9,8 +9,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/vektra/mockery/v2/pkg/config"
-	"github.com/vektra/mockery/v2/pkg/logging"
+	"github.com/vektra/mockery/v3/pkg/config"
+	"github.com/vektra/mockery/v3/pkg/logging"
 
 	"github.com/rs/zerolog"
 )
