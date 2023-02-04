@@ -14,6 +14,7 @@ func (_m *GetInt) Get() int {
 	ret := _m.Called()
 
 	var r0 int
+
 	if rf, ok := ret.Get(0).(func() int); ok {
 		r0 = rf()
 	} else {

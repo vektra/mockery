@@ -17,6 +17,7 @@ func (_m *IfaceWithBuildTagInFilename) Sprintf(format string, a ...interface{}) 
 	ret := _m.Called(_ca...)
 
 	var r0 string
+
 	if rf, ok := ret.Get(0).(func(string, ...interface{}) string); ok {
 		r0 = rf(format, a...)
 	} else {

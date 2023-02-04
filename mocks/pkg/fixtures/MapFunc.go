@@ -14,6 +14,7 @@ func (_m *MapFunc) Get(m map[string]func(string) string) error {
 	ret := _m.Called(m)
 
 	var r0 error
+
 	if rf, ok := ret.Get(0).(func(map[string]func(string) string) error); ok {
 		r0 = rf(m)
 	} else {

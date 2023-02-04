@@ -18,6 +18,7 @@ func (_m *RequesterArgSameAsImport) Get(_a0 string) *json.RawMessage {
 	ret := _m.Called(_a0)
 
 	var r0 *json.RawMessage
+
 	if rf, ok := ret.Get(0).(func(string) *json.RawMessage); ok {
 		r0 = rf(_a0)
 	} else {

@@ -19,6 +19,7 @@ func (_m *Fooer) Baz(path string) func(string) string {
 	ret := _m.Called(path)
 
 	var r0 func(string) string
+
 	if rf, ok := ret.Get(0).(func(string) func(string) string); ok {
 		r0 = rf(path)
 	} else {
@@ -35,6 +36,7 @@ func (_m *Fooer) Foo(f func(string) string) error {
 	ret := _m.Called(f)
 
 	var r0 error
+
 	if rf, ok := ret.Get(0).(func(func(string) string) error); ok {
 		r0 = rf(f)
 	} else {

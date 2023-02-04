@@ -17,6 +17,7 @@ func (_m *PackageNameSameAsImport) NewClient() foo.Client {
 	ret := _m.Called()
 
 	var r0 foo.Client
+
 	if rf, ok := ret.Get(0).(func() foo.Client); ok {
 		r0 = rf()
 	} else {

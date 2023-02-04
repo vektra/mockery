@@ -18,6 +18,7 @@ func (_m *RequesterVariadicOneArgument) Get(values ...string) bool {
 	ret := _m.Called(values)
 
 	var r0 bool
+
 	if rf, ok := ret.Get(0).(func(...string) bool); ok {
 		r0 = rf(values...)
 	} else {
@@ -32,6 +33,7 @@ func (_m *RequesterVariadicOneArgument) MultiWriteToFile(filename string, w ...i
 	ret := _m.Called(filename, w)
 
 	var r0 string
+
 	if rf, ok := ret.Get(0).(func(string, ...io.Writer) string); ok {
 		r0 = rf(filename, w...)
 	} else {
@@ -46,6 +48,7 @@ func (_m *RequesterVariadicOneArgument) OneInterface(a ...interface{}) bool {
 	ret := _m.Called(a)
 
 	var r0 bool
+
 	if rf, ok := ret.Get(0).(func(...interface{}) bool); ok {
 		r0 = rf(a...)
 	} else {
@@ -60,6 +63,7 @@ func (_m *RequesterVariadicOneArgument) Sprintf(format string, a ...interface{})
 	ret := _m.Called(format, a)
 
 	var r0 string
+
 	if rf, ok := ret.Get(0).(func(string, ...interface{}) string); ok {
 		r0 = rf(format, a...)
 	} else {

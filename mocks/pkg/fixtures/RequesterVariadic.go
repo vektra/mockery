@@ -24,6 +24,7 @@ func (_m *RequesterVariadic) Get(values ...string) bool {
 	ret := _m.Called(_ca...)
 
 	var r0 bool
+
 	if rf, ok := ret.Get(0).(func(...string) bool); ok {
 		r0 = rf(values...)
 	} else {
@@ -45,6 +46,7 @@ func (_m *RequesterVariadic) MultiWriteToFile(filename string, w ...io.Writer) s
 	ret := _m.Called(_ca...)
 
 	var r0 string
+
 	if rf, ok := ret.Get(0).(func(string, ...io.Writer) string); ok {
 		r0 = rf(filename, w...)
 	} else {
@@ -61,6 +63,7 @@ func (_m *RequesterVariadic) OneInterface(a ...interface{}) bool {
 	ret := _m.Called(_ca...)
 
 	var r0 bool
+
 	if rf, ok := ret.Get(0).(func(...interface{}) bool); ok {
 		r0 = rf(a...)
 	} else {
@@ -78,6 +81,7 @@ func (_m *RequesterVariadic) Sprintf(format string, a ...interface{}) string {
 	ret := _m.Called(_ca...)
 
 	var r0 string
+
 	if rf, ok := ret.Get(0).(func(string, ...interface{}) string); ok {
 		r0 = rf(format, a...)
 	} else {

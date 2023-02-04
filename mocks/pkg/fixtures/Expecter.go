@@ -22,19 +22,24 @@ func (_m *Expecter) ManyArgsReturns(str string, i int) ([]string, error) {
 	ret := _m.Called(str, i)
 
 	var r0 []string
-	if rf, ok := ret.Get(0).(func(string, int) []string); ok {
-		r0 = rf(str, i)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]string)
-		}
-	}
-
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string, int) error); ok {
-		r1 = rf(str, i)
+
+	if rf, ok := ret.Get(0).(func(string, int) ([]string, error)); ok {
+		r0, r1 = rf(str, i)
 	} else {
-		r1 = ret.Error(1)
+		if rf, ok := ret.Get(0).(func(string, int) []string); ok {
+			r0 = rf(str, i)
+		} else {
+			if ret.Get(0) != nil {
+				r0 = ret.Get(0).([]string)
+			}
+		}
+
+		if rf, ok := ret.Get(1).(func(string, int) error); ok {
+			r1 = rf(str, i)
+		} else {
+			r1 = ret.Error(1)
+		}
 	}
 
 	return r0, r1
@@ -64,11 +69,17 @@ func (_c *Expecter_ManyArgsReturns_Call) Return(strs []string, err error) *Expec
 	return _c
 }
 
+func (_c *Expecter_ManyArgsReturns_Call) RunAndReturn(run func(string, int) ([]string, error)) *Expecter_ManyArgsReturns_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // NoArg provides a mock function with given fields:
 func (_m *Expecter) NoArg() string {
 	ret := _m.Called()
 
 	var r0 string
+
 	if rf, ok := ret.Get(0).(func() string); ok {
 		r0 = rf()
 	} else {
@@ -100,6 +111,11 @@ func (_c *Expecter_NoArg_Call) Return(_a0 string) *Expecter_NoArg_Call {
 	return _c
 }
 
+func (_c *Expecter_NoArg_Call) RunAndReturn(run func() string) *Expecter_NoArg_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // NoReturn provides a mock function with given fields: str
 func (_m *Expecter) NoReturn(str string) {
 	_m.Called(str)
@@ -128,6 +144,11 @@ func (_c *Expecter_NoReturn_Call) Return() *Expecter_NoReturn_Call {
 	return _c
 }
 
+func (_c *Expecter_NoReturn_Call) RunAndReturn(run func(string)) *Expecter_NoReturn_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Variadic provides a mock function with given fields: ints
 func (_m *Expecter) Variadic(ints ...int) error {
 	_va := make([]interface{}, len(ints))
@@ -139,6 +160,7 @@ func (_m *Expecter) Variadic(ints ...int) error {
 	ret := _m.Called(_ca...)
 
 	var r0 error
+
 	if rf, ok := ret.Get(0).(func(...int) error); ok {
 		r0 = rf(ints...)
 	} else {
@@ -178,6 +200,11 @@ func (_c *Expecter_Variadic_Call) Return(_a0 error) *Expecter_Variadic_Call {
 	return _c
 }
 
+func (_c *Expecter_Variadic_Call) RunAndReturn(run func(...int) error) *Expecter_Variadic_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // VariadicMany provides a mock function with given fields: i, a, intfs
 func (_m *Expecter) VariadicMany(i int, a string, intfs ...interface{}) error {
 	var _ca []interface{}
@@ -186,6 +213,7 @@ func (_m *Expecter) VariadicMany(i int, a string, intfs ...interface{}) error {
 	ret := _m.Called(_ca...)
 
 	var r0 error
+
 	if rf, ok := ret.Get(0).(func(int, string, ...interface{}) error); ok {
 		r0 = rf(i, a, intfs...)
 	} else {
@@ -224,6 +252,11 @@ func (_c *Expecter_VariadicMany_Call) Run(run func(i int, a string, intfs ...int
 
 func (_c *Expecter_VariadicMany_Call) Return(_a0 error) *Expecter_VariadicMany_Call {
 	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *Expecter_VariadicMany_Call) RunAndReturn(run func(int, string, ...interface{}) error) *Expecter_VariadicMany_Call {
+	_c.Call.Return(run)
 	return _c
 }
 

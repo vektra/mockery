@@ -18,6 +18,7 @@ func (_m *RequesterIface) Get() io.Reader {
 	ret := _m.Called()
 
 	var r0 io.Reader
+
 	if rf, ok := ret.Get(0).(func() io.Reader); ok {
 		r0 = rf()
 	} else {

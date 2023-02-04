@@ -22,31 +22,36 @@ func (_m *RequesterReturnElided) Get(path string) (int, int, int, error) {
 	ret := _m.Called(path)
 
 	var r0 int
-	if rf, ok := ret.Get(0).(func(string) int); ok {
-		r0 = rf(path)
-	} else {
-		r0 = ret.Get(0).(int)
-	}
-
 	var r1 int
-	if rf, ok := ret.Get(1).(func(string) int); ok {
-		r1 = rf(path)
-	} else {
-		r1 = ret.Get(1).(int)
-	}
-
 	var r2 int
-	if rf, ok := ret.Get(2).(func(string) int); ok {
-		r2 = rf(path)
-	} else {
-		r2 = ret.Get(2).(int)
-	}
-
 	var r3 error
-	if rf, ok := ret.Get(3).(func(string) error); ok {
-		r3 = rf(path)
+
+	if rf, ok := ret.Get(0).(func(string) (int, int, int, error)); ok {
+		r0, r1, r2, r3 = rf(path)
 	} else {
-		r3 = ret.Error(3)
+		if rf, ok := ret.Get(0).(func(string) int); ok {
+			r0 = rf(path)
+		} else {
+			r0 = ret.Get(0).(int)
+		}
+
+		if rf, ok := ret.Get(1).(func(string) int); ok {
+			r1 = rf(path)
+		} else {
+			r1 = ret.Get(1).(int)
+		}
+
+		if rf, ok := ret.Get(2).(func(string) int); ok {
+			r2 = rf(path)
+		} else {
+			r2 = ret.Get(2).(int)
+		}
+
+		if rf, ok := ret.Get(3).(func(string) error); ok {
+			r3 = rf(path)
+		} else {
+			r3 = ret.Error(3)
+		}
 	}
 
 	return r0, r1, r2, r3
@@ -75,22 +80,32 @@ func (_c *RequesterReturnElided_Get_Call) Return(a int, b int, c int, err error)
 	return _c
 }
 
+func (_c *RequesterReturnElided_Get_Call) RunAndReturn(run func(string) (int, int, int, error)) *RequesterReturnElided_Get_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Put provides a mock function with given fields: path
 func (_m *RequesterReturnElided) Put(path string) (int, error) {
 	ret := _m.Called(path)
 
 	var r0 int
-	if rf, ok := ret.Get(0).(func(string) int); ok {
-		r0 = rf(path)
-	} else {
-		r0 = ret.Get(0).(int)
-	}
-
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string) error); ok {
-		r1 = rf(path)
+
+	if rf, ok := ret.Get(0).(func(string) (int, error)); ok {
+		r0, r1 = rf(path)
 	} else {
-		r1 = ret.Error(1)
+		if rf, ok := ret.Get(0).(func(string) int); ok {
+			r0 = rf(path)
+		} else {
+			r0 = ret.Get(0).(int)
+		}
+
+		if rf, ok := ret.Get(1).(func(string) error); ok {
+			r1 = rf(path)
+		} else {
+			r1 = ret.Error(1)
+		}
 	}
 
 	return r0, r1
@@ -116,6 +131,11 @@ func (_c *RequesterReturnElided_Put_Call) Run(run func(path string)) *RequesterR
 
 func (_c *RequesterReturnElided_Put_Call) Return(_a0 int, err error) *RequesterReturnElided_Put_Call {
 	_c.Call.Return(_a0, err)
+	return _c
+}
+
+func (_c *RequesterReturnElided_Put_Call) RunAndReturn(run func(string) (int, error)) *RequesterReturnElided_Put_Call {
+	_c.Call.Return(run)
 	return _c
 }
 

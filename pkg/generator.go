@@ -611,26 +611,47 @@ func (g *Generator) Generate(ctx context.Context) error {
 			ret := make([]string, len(returns.Types))
 
 			for idx, typ := range returns.Types {
-				g.printf("\tvar r%d %s\n", idx, typ)
-				g.printf("\tif rf, ok := %s.Get(%d).(func(%s) %s); ok {\n",
-					retVariable, idx, strings.Join(params.Types, ", "), typ)
-				g.printf("\t\tr%d = rf(%s)\n", idx, formattedParamNames)
-				g.printf("\t} else {\n")
-				if typ == "error" {
-					g.printf("\t\tr%d = %s.Error(%d)\n", idx, retVariable, idx)
-				} else if returns.Nilable[idx] {
-					g.printf("\t\tif %s.Get(%d) != nil {\n", retVariable, idx)
-					g.printf("\t\t\tr%d = %s.Get(%d).(%s)\n", idx, retVariable, idx, typ)
-					g.printf("\t\t}\n")
-				} else {
-					g.printf("\t\tr%d = %s.Get(%d).(%s)\n", idx, retVariable, idx, typ)
-				}
-				g.printf("\t}\n\n")
-
 				ret[idx] = fmt.Sprintf("r%d", idx)
+				g.printf("\tvar r%d %s\n", idx, typ)
 			}
 
-			g.printf("\treturn %s\n", strings.Join(ret, ", "))
+			g.printf("\n")
+
+			var tab string
+			if len(returns.Types) > 1 {
+				tab = "\t"
+				g.printf("\tif rf, ok := %s.Get(0).(func(%s) (%s)); ok {\n",
+					retVariable, strings.Join(params.Types, ", "), strings.Join(returns.Types, ", "))
+				g.printf("\t\t%s = rf(%s)\n", strings.Join(ret, ", "), formattedParamNames)
+				g.printf("\t} else {\n")
+			}
+
+			for idx, typ := range returns.Types {
+				if idx > 0 {
+					g.printf("\n")
+				}
+
+				g.printf("%s\tif rf, ok := %s.Get(%d).(func(%s) %s); ok {\n",
+					tab, retVariable, idx, strings.Join(params.Types, ", "), typ)
+				g.printf("%s\t\tr%d = rf(%s)\n", tab, idx, formattedParamNames)
+				g.printf("%s\t} else {\n", tab)
+				if typ == "error" {
+					g.printf("%s\t\tr%d = %s.Error(%d)\n", tab, idx, retVariable, idx)
+				} else if returns.Nilable[idx] {
+					g.printf("%s\t\tif %s.Get(%d) != nil {\n", tab, retVariable, idx)
+					g.printf("%s\t\t\tr%d = %s.Get(%d).(%s)\n", tab, idx, retVariable, idx, typ)
+					g.printf("%s\t\t}\n", tab)
+				} else {
+					g.printf("%s\t\tr%d = %s.Get(%d).(%s)\n", tab, idx, retVariable, idx, typ)
+				}
+				g.printf("%s\t}\n", tab)
+			}
+
+			if len(returns.Types) > 1 {
+				g.printf("\t}\n")
+			}
+
+			g.printf("\n\treturn %s\n", strings.Join(ret, ", "))
 		} else {
 			g.printf("\t%s\n", called)
 		}
@@ -748,6 +769,11 @@ func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) Run(run func({{range .Pa
 
 func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) Return({{range .Returns.Params}}{{.}},{{end}}) *{{.CallStruct}}{{ .InstantiatedTypeString }} {
 	_c.Call.Return({{range .Returns.Names}}{{.}},{{end}})
+	return _c
+}
+
+func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) RunAndReturn(run func({{range .Params.Types}}{{.}},{{end}})({{range .Returns.Types}}{{.}},{{end}})) *{{.CallStruct}}{{ .InstantiatedTypeString }} {
+	_c.Call.Return(run)
 	return _c
 }
 `)

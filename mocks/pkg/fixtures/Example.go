@@ -20,6 +20,7 @@ func (_m *Example) A() http.Flusher {
 	ret := _m.Called()
 
 	var r0 http.Flusher
+
 	if rf, ok := ret.Get(0).(func() http.Flusher); ok {
 		r0 = rf()
 	} else {
@@ -36,6 +37,7 @@ func (_m *Example) B(_a0 string) fixtureshttp.MyStruct {
 	ret := _m.Called(_a0)
 
 	var r0 fixtureshttp.MyStruct
+
 	if rf, ok := ret.Get(0).(func(string) fixtureshttp.MyStruct); ok {
 		r0 = rf(_a0)
 	} else {

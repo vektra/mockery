@@ -14,6 +14,7 @@ func (_m *AsyncProducer) Input() chan<- bool {
 	ret := _m.Called()
 
 	var r0 chan<- bool
+
 	if rf, ok := ret.Get(0).(func() chan<- bool); ok {
 		r0 = rf()
 	} else {
@@ -30,6 +31,7 @@ func (_m *AsyncProducer) Output() <-chan bool {
 	ret := _m.Called()
 
 	var r0 <-chan bool
+
 	if rf, ok := ret.Get(0).(func() <-chan bool); ok {
 		r0 = rf()
 	} else {
@@ -46,6 +48,7 @@ func (_m *AsyncProducer) Whatever() chan bool {
 	ret := _m.Called()
 
 	var r0 chan bool
+
 	if rf, ok := ret.Get(0).(func() chan bool); ok {
 		r0 = rf()
 	} else {

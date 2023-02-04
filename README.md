@@ -140,6 +140,7 @@ func (m *Stringer) String() string {
 	ret := m.Called()
 
 	var r0 string
+
 	if rf, ok := ret.Get(0).(func() string); ok {
 		r0 = rf()
 	} else {
@@ -190,17 +191,22 @@ func (_m *SendFunc) Execute(data string) (int, error) {
 	ret := _m.Called(data)
 
 	var r0 int
-	if rf, ok := ret.Get(0).(func(string) int); ok {
-		r0 = rf(data)
-	} else {
-		r0 = ret.Get(0).(int)
-	}
-
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string) error); ok {
-		r1 = rf(data)
+
+	if rf, ok := ret.Get(0).(func(string) (int, error); ok {
+		r0, r1 = rf(data)
 	} else {
-		r1 = ret.Error(1)
+		if rf, ok := ret.Get(0).(func(string) int); ok {
+			r0 = rf(data)
+		} else {
+			r0 = ret.Get(0).(int)
+		}
+
+		if rf, ok := ret.Get(1).(func(string) error); ok {
+			r1 = rf(data)
+		} else {
+			r1 = ret.Error(1)
+		}
 	}
 
 	return r0, r1
@@ -237,21 +243,19 @@ import (
 func main() {
 	mockS3 := &mocks.S3API{}
 
-	mockResultFn := func(input *s3.ListObjectsInput) *s3.ListObjectsOutput {
+	mockResultFn := func(input *s3.ListObjectsInput) (*s3.ListObjectsOutput, error) {
 		output := &s3.ListObjectsOutput{}
 		output.SetCommonPrefixes([]*s3.CommonPrefix{
 			&s3.CommonPrefix{
 				Prefix: aws.String("2017-01-01"),
 			},
 		})
-		return output
+		return output, nil
 	}
 
-	// NB: .Return(...) must return the same signature as the method being mocked.
-	//     In this case it's (*s3.ListObjectsOutput, error).
 	mockS3.On("ListObjects", mock.MatchedBy(func(input *s3.ListObjectsInput) bool {
 		return input.Delimiter != nil && *input.Delimiter == "/" && input.Prefix == nil
-	})).Return(mockResultFn, nil)
+	})).Return(mockResultFn)
 
 	listingInput := &s3.ListObjectsInput{
 		Bucket:    aws.String("foo"),
@@ -302,13 +306,28 @@ proxyMock.On("passthrough", mock.AnythingOfType("context.Context"), mock.Anythin
 
 #### Requirements
 
-`Return` must be passed the same argument count and types as expected by the interface. Then, for each of the return values of the mocked function, `Return` needs a function which takes the same arguments as the mocked function, and returns one of the return values. For example, if the return argument signature of `passthrough` in the above example was instead `(string, error)` in the interface, `Return` would also need a second function argument to define the error value:
+Return Value Providers can be used one of two ways.  You may either define a single function with the exact same signature (number and type of input and return parameters) and pass that as a single value to `Return`, or you may pass multiple values to `Return` (one for each return parameter of the mocked function.)  If you are using the second form, for each of the return values of the mocked function, `Return` needs a function which takes the same arguments as the mocked function, and returns one of the return values. For example, if the return argument signature of `passthrough` in the above example was instead `(string, error)` in the interface, `Return` would also need a second function argument to define the error value:
 
 ```go
 type Proxy interface {
   passthrough(ctx context.Context, s string) (string, error)
 }
 ```
+
+First form:
+
+```go
+proxyMock := mocks.NewProxy(t)
+proxyMock.On("passthrough", mock.AnythingOfType("context.Context"), mock.AnythingOfType("string")).
+	Return(
+		func(ctx context.Context, s string) (string, error) {
+			return s, nil
+		}
+	)
+```
+
+
+Second form:
 
 ```go
 proxyMock := mocks.NewProxy(t)
@@ -323,16 +342,7 @@ proxyMock.On("passthrough", mock.AnythingOfType("context.Context"), mock.Anythin
 	)
 ```
 
-Note that the following is incorrect (you can't return all the return values with one function):
-```go
-proxyMock := mocks.NewProxy(t)
-proxyMock.On("passthrough", mock.AnythingOfType("context.Context"), mock.AnythingOfType("string")).
-	Return(func(ctx context.Context, s string) (string, error) {
-		return s, nil
-	})
-```
-
-If any return argument is missing, `github.com/stretchr/testify/mock.Arguments.Get` will emit a panic.
+If using the second form and any return argument is missing, `github.com/stretchr/testify/mock.Arguments.Get` will emit a panic.
 
 For example, `panic: assert: arguments: Cannot call Get(0) because there are 0 argument(s). [recovered]` indicates that `Return` was not provided any arguments but (at least one) was expected based on the interface. `Get(1)` would indicate that the `Return` call is missing a second argument, and so on.
 
