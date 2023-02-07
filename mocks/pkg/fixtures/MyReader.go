@@ -15,7 +15,6 @@ func (_m *MyReader) Read(p []byte) (int, error) {
 
 	var r0 int
 	var r1 error
-
 	if rf, ok := ret.Get(0).(func([]byte) (int, error)); ok {
 		r0, r1 = rf(p)
 	} else {

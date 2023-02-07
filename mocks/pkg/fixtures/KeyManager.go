@@ -18,7 +18,6 @@ func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 
 	var r0 []byte
 	var r1 *test.Err
-
 	if rf, ok := ret.Get(0).(func(string, uint16) ([]byte, *test.Err)); ok {
 		r0, r1 = rf(_a0, _a1)
 	} else {

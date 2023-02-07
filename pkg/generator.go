@@ -615,8 +615,6 @@ func (g *Generator) Generate(ctx context.Context) error {
 				g.printf("\tvar r%d %s\n", idx, typ)
 			}
 
-			g.printf("\n")
-
 			var tab string
 			if len(returns.Types) > 1 {
 				tab = "\t"

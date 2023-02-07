@@ -14,7 +14,6 @@ func (_m *Requester3) Get() error {
 	ret := _m.Called()
 
 	var r0 error
-
 	if rf, ok := ret.Get(0).(func() error); ok {
 		r0 = rf()
 	} else {

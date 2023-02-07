@@ -14,7 +14,6 @@ func (_m *RequesterElided) Get(path string, url string) error {
 	ret := _m.Called(path, url)
 
 	var r0 error
-
 	if rf, ok := ret.Get(0).(func(string, string) error); ok {
 		r0 = rf(path, url)
 	} else {

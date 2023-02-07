@@ -140,7 +140,6 @@ func (m *Stringer) String() string {
 	ret := m.Called()
 
 	var r0 string
-
 	if rf, ok := ret.Get(0).(func() string); ok {
 		r0 = rf()
 	} else {
@@ -192,7 +191,6 @@ func (_m *SendFunc) Execute(data string) (int, error) {
 
 	var r0 int
 	var r1 error
-
 	if rf, ok := ret.Get(0).(func(string) (int, error); ok {
 		r0, r1 = rf(data)
 	} else {

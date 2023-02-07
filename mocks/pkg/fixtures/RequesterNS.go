@@ -19,7 +19,6 @@ func (_m *RequesterNS) Get(path string) (http.Response, error) {
 
 	var r0 http.Response
 	var r1 error
-
 	if rf, ok := ret.Get(0).(func(string) (http.Response, error)); ok {
 		r0, r1 = rf(path)
 	} else {

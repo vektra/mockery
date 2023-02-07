@@ -23,7 +23,6 @@ func (_m *Expecter) ManyArgsReturns(str string, i int) ([]string, error) {
 
 	var r0 []string
 	var r1 error
-
 	if rf, ok := ret.Get(0).(func(string, int) ([]string, error)); ok {
 		r0, r1 = rf(str, i)
 	} else {
@@ -79,7 +78,6 @@ func (_m *Expecter) NoArg() string {
 	ret := _m.Called()
 
 	var r0 string
-
 	if rf, ok := ret.Get(0).(func() string); ok {
 		r0 = rf()
 	} else {
@@ -160,7 +158,6 @@ func (_m *Expecter) Variadic(ints ...int) error {
 	ret := _m.Called(_ca...)
 
 	var r0 error
-
 	if rf, ok := ret.Get(0).(func(...int) error); ok {
 		r0 = rf(ints...)
 	} else {
@@ -213,7 +210,6 @@ func (_m *Expecter) VariadicMany(i int, a string, intfs ...interface{}) error {
 	ret := _m.Called(_ca...)
 
 	var r0 error
-
 	if rf, ok := ret.Get(0).(func(int, string, ...interface{}) error); ok {
 		r0 = rf(i, a, intfs...)
 	} else {

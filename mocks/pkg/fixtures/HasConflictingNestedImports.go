@@ -21,7 +21,6 @@ func (_m *HasConflictingNestedImports) Get(path string) (http.Response, error) {
 
 	var r0 http.Response
 	var r1 error
-
 	if rf, ok := ret.Get(0).(func(string) (http.Response, error)); ok {
 		r0, r1 = rf(path)
 	} else {
@@ -46,7 +45,6 @@ func (_m *HasConflictingNestedImports) Z() fixtureshttp.MyStruct {
 	ret := _m.Called()
 
 	var r0 fixtureshttp.MyStruct
-
 	if rf, ok := ret.Get(0).(func() fixtureshttp.MyStruct); ok {
 		r0 = rf()
 	} else {

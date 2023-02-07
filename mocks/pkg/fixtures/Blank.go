@@ -14,7 +14,6 @@ func (_m *Blank) Create(x interface{}) error {
 	ret := _m.Called(x)
 
 	var r0 error
-
 	if rf, ok := ret.Get(0).(func(interface{}) error); ok {
 		r0 = rf(x)
 	} else {

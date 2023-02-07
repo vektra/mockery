@@ -29,7 +29,6 @@ func (_m *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TG
 	var r0 struct {
 		Type2 test.GenericType[string, test.EmbeddedGet[int]]
 	}
-
 	if rf, ok := ret.Get(0).(func(struct{ Type1 TExternalIntf }) struct {
 		Type2 test.GenericType[string, test.EmbeddedGet[int]]
 	}); ok {
@@ -49,7 +48,6 @@ func (_m *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TG
 
 	var r0 TSigned
 	var r1 TIntf
-
 	if rf, ok := ret.Get(0).(func(TAny, TComparable) (TSigned, TIntf)); ok {
 		r0, r1 = rf(_a0, _a1)
 	} else {
@@ -74,7 +72,6 @@ func (_m *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TG
 	ret := _m.Called(_a0)
 
 	var r0 test.GenericType[TSigned, TIntf]
-
 	if rf, ok := ret.Get(0).(func(test.GenericType[TAny, TIntf]) test.GenericType[TSigned, TIntf]); ok {
 		r0 = rf(_a0)
 	} else {

@@ -18,7 +18,6 @@ func (_m *Root) ReturnsFoo() (foo.Foo, error) {
 
 	var r0 foo.Foo
 	var r1 error
-
 	if rf, ok := ret.Get(0).(func() (foo.Foo, error)); ok {
 		r0, r1 = rf()
 	} else {

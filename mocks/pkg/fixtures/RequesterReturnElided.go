@@ -25,7 +25,6 @@ func (_m *RequesterReturnElided) Get(path string) (int, int, int, error) {
 	var r1 int
 	var r2 int
 	var r3 error
-
 	if rf, ok := ret.Get(0).(func(string) (int, int, int, error)); ok {
 		r0, r1, r2, r3 = rf(path)
 	} else {
@@ -91,7 +90,6 @@ func (_m *RequesterReturnElided) Put(path string) (int, error) {
 
 	var r0 int
 	var r1 error
-
 	if rf, ok := ret.Get(0).(func(string) (int, error)); ok {
 		r0, r1 = rf(path)
 	} else {

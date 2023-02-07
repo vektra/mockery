@@ -18,7 +18,6 @@ func (_m *A) Call() (test.B, error) {
 
 	var r0 test.B
 	var r1 error
-
 	if rf, ok := ret.Get(0).(func() (test.B, error)); ok {
 		r0, r1 = rf()
 	} else {

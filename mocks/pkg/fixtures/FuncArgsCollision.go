@@ -14,7 +14,6 @@ func (_m *FuncArgsCollision) Foo(ret interface{}) error {
 	ret_1 := _m.Called(ret)
 
 	var r0 error
-
 	if rf, ok := ret_1.Get(0).(func(interface{}) error); ok {
 		r0 = rf(ret)
 	} else {

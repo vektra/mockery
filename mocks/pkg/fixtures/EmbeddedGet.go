@@ -17,7 +17,6 @@ func (_m *EmbeddedGet[T]) Get() T {
 	ret := _m.Called()
 
 	var r0 T
-
 	if rf, ok := ret.Get(0).(func() T); ok {
 		r0 = rf()
 	} else {

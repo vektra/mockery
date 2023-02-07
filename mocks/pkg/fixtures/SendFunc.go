@@ -19,7 +19,6 @@ func (_m *SendFunc) Execute(ctx context.Context, data string) (int, error) {
 
 	var r0 int
 	var r1 error
-
 	if rf, ok := ret.Get(0).(func(context.Context, string) (int, error)); ok {
 		r0, r1 = rf(ctx, data)
 	} else {

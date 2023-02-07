@@ -19,7 +19,6 @@ func (_m *ImportsSameAsPackage) A() test.B {
 	ret := _m.Called()
 
 	var r0 test.B
-
 	if rf, ok := ret.Get(0).(func() test.B); ok {
 		r0 = rf()
 	} else {
@@ -34,7 +33,6 @@ func (_m *ImportsSameAsPackage) B() fixtures.KeyManager {
 	ret := _m.Called()
 
 	var r0 fixtures.KeyManager
-
 	if rf, ok := ret.Get(0).(func() fixtures.KeyManager); ok {
 		r0 = rf()
 	} else {

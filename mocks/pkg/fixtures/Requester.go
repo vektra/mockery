@@ -15,7 +15,6 @@ func (_m *Requester) Get(path string) (string, error) {
 
 	var r0 string
 	var r1 error
-
 	if rf, ok := ret.Get(0).(func(string) (string, error)); ok {
 		r0, r1 = rf(path)
 	} else {
