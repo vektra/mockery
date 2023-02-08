@@ -117,25 +117,6 @@ func (g *Generator) addPackageImport(ctx context.Context, pkg *types.Package) st
 	return g.addPackageImportWithName(ctx, pkg.Path(), pkg.Name())
 }
 
-type replaceType struct {
-	alias string
-	pkg   string
-	typ   string
-}
-
-func parseReplaceType(t string) replaceType {
-	ret := replaceType{}
-	r := strings.SplitN(t, ":", 2)
-	if len(r) > 1 {
-		ret.alias = r[0]
-		t = r[1]
-	}
-	lastInd := strings.LastIndex(t, ".")
-	ret.pkg = t[:lastInd]
-	ret.typ = t[lastInd+1:]
-	return ret
-}
-
 func (g *Generator) checkReplaceType(ctx context.Context, f func(from replaceType, to replaceType) bool) {
 	for _, replace := range g.ReplaceType {
 		r := strings.SplitN(replace, "=", 2)
@@ -933,5 +914,24 @@ func resolveCollision(names map[string]struct{}, variable string) string {
 		ret = fmt.Sprintf("%s_%d", variable, i)
 	}
 
+	return ret
+}
+
+type replaceType struct {
+	alias string
+	pkg   string
+	typ   string
+}
+
+func parseReplaceType(t string) replaceType {
+	ret := replaceType{}
+	r := strings.SplitN(t, ":", 2)
+	if len(r) > 1 {
+		ret.alias = r[0]
+		t = r[1]
+	}
+	lastInd := strings.LastIndex(t, ".")
+	ret.pkg = t[:lastInd]
+	ret.typ = t[lastInd+1:]
 	return ret
 }
