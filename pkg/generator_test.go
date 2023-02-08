@@ -2775,3 +2775,28 @@ func TestGeneratorSuite(t *testing.T) {
 	generatorSuite := new(GeneratorSuite)
 	suite.Run(t, generatorSuite)
 }
+
+func TestParseReplaceType(t *testing.T) {
+	tests := []struct {
+		value    string
+		expected replaceType
+	}{
+		{
+			value:    "github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz/internal/foo.InternalBaz",
+			expected: replaceType{alias: "", pkg: "github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz/internal/foo", typ: "InternalBaz"},
+		},
+		{
+			value:    "baz:github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz.Baz",
+			expected: replaceType{alias: "baz", pkg: "github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz", typ: "Baz"},
+		},
+		{
+			value:    "github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz",
+			expected: replaceType{alias: "", pkg: "github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz", typ: ""},
+		},
+	}
+
+	for _, test := range tests {
+		actual := parseReplaceType(test.value)
+		assert.Equal(t, test.expected, actual)
+	}
+}

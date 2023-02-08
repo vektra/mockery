@@ -930,8 +930,13 @@ func parseReplaceType(t string) replaceType {
 		ret.alias = r[0]
 		t = r[1]
 	}
-	lastInd := strings.LastIndex(t, ".")
-	ret.pkg = t[:lastInd]
-	ret.typ = t[lastInd+1:]
+	lastDot := strings.LastIndex(t, ".")
+	lastSlash := strings.LastIndex(t, "/")
+	if lastDot == -1 || (lastSlash > -1 && lastDot < lastSlash) {
+		ret.pkg = t
+	} else {
+		ret.pkg = t[:lastDot]
+		ret.typ = t[lastDot+1:]
+	}
 	return ret
 }
