@@ -27,6 +27,7 @@ Table of Contents
     + [Notes](#notes)
 - [Expecter Interfaces](#expecter-interfaces)
 - [Mock constructors](#mock-constructors)
+- [Replace Types](#replace-types)
 - [Extended Flag Descriptions](#extended-flag-descriptions)
 - [Mocking interfaces in `main`](#mocking-interfaces-in--main-)
 - [Semantic Versioning](#semantic-versioning)
