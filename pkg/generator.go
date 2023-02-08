@@ -101,14 +101,67 @@ func (g *Generator) getPackageScopedType(ctx context.Context, o *types.TypeName)
 	if o.Pkg() == nil || o.Pkg().Name() == "main" || (!g.KeepTree && g.InPackage && o.Pkg() == g.iface.Pkg) {
 		return o.Name()
 	}
-	return g.addPackageImport(ctx, o.Pkg()) + "." + o.Name()
+	pkg := g.addPackageImport(ctx, o.Pkg())
+	name := o.Name()
+	g.checkReplaceType(ctx, func(from replaceType, to replaceType) bool {
+		if o.Pkg().Path() == from.pkg && name == from.typ {
+			name = to.typ
+			return false
+		}
+		return true
+	})
+	return pkg + "." + name
 }
 
 func (g *Generator) addPackageImport(ctx context.Context, pkg *types.Package) string {
 	return g.addPackageImportWithName(ctx, pkg.Path(), pkg.Name())
 }
 
+type replaceType struct {
+	alias string
+	pkg   string
+	typ   string
+}
+
+func parseReplaceType(t string) replaceType {
+	ret := replaceType{}
+	r := strings.SplitN(t, ":", 2)
+	if len(r) > 1 {
+		ret.alias = r[0]
+		t = r[1]
+	}
+	lastInd := strings.LastIndex(t, ".")
+	ret.pkg = t[:lastInd]
+	ret.typ = t[lastInd+1:]
+	return ret
+}
+
+func (g *Generator) checkReplaceType(ctx context.Context, f func(from replaceType, to replaceType) bool) {
+	for _, replace := range g.ReplaceType {
+		r := strings.SplitN(replace, "=", 2)
+		if len(r) == 2 {
+			if !f(parseReplaceType(r[0]), parseReplaceType(r[1])) {
+				break
+			}
+		} else {
+			log := zerolog.Ctx(ctx)
+			log.Error().Msgf("invalid replace type value: %s", replace)
+		}
+	}
+}
+
 func (g *Generator) addPackageImportWithName(ctx context.Context, path, name string) string {
+	g.checkReplaceType(ctx, func(from replaceType, to replaceType) bool {
+		if path == from.pkg {
+			path = to.pkg
+			if to.alias != "" {
+				name = to.alias
+			}
+			return false
+		}
+		return true
+	})
+
 	if existingName, pathExists := g.packagePathToName[path]; pathExists {
 		return existingName
 	}

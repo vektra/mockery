@@ -75,6 +75,7 @@ func NewRootCmd() *cobra.Command {
 	pFlags.Bool("unroll-variadic", true, "For functions with variadic arguments, do not unroll the arguments into the underlying testify call. Instead, pass variadic slice as-is.")
 	pFlags.Bool("exported", false, "Generates public mocks for private interfaces.")
 	pFlags.Bool("with-expecter", false, "Generate expecter utility around mock's On, Run and Return methods with explicit types. This option is NOT compatible with -unroll-variadic=false")
+	pFlags.StringArray("replace-type", nil, "Replace types")
 
 	viper.BindPFlags(pFlags)
 
