@@ -47,6 +47,7 @@ func TestConfigEnvFlags(t *testing.T) {
 		UnrollVariadic:       false,
 		Exported:             true,
 		WithExpecter:         true,
+		ReplaceType:          []string{},
 	}
 
 	env(t, "CONFIG", expected.Config)
@@ -77,6 +78,7 @@ func TestConfigEnvFlags(t *testing.T) {
 	env(t, "UNROLL_VARIADIC", fmt.Sprint(expected.UnrollVariadic))
 	env(t, "EXPORTED", fmt.Sprint(expected.Exported))
 	env(t, "WITH_EXPECTER", fmt.Sprint(expected.WithExpecter))
+	env(t, "REPLACE_TYPE", strings.Join(expected.ReplaceType, ","))
 
 	initConfig(nil, nil)
 
