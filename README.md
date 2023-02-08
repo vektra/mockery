@@ -391,24 +391,106 @@ The constructor sets up common functionalities automatically
 - The `AssertExpectations` method is registered to be called at the end of the tests via `t.Cleanup()` method.
 - The testing.TB interface is registered on the `mock.Mock` so that tests don't panic when a call on the mock is unexpected.
 
+Replace Types
+-------------
+
+The `replace-type` parameter allows adding a list of type replacements to be made in package and/or type names.
+This can help overcome some parsing problems like type aliases that the Go parser doesn't provide enough information.
+
+```shell
+mockery --replace-type github.com/vektra/mockery/v2/baz/internal/foo.InternalBaz=baz:github.com/vektra/mockery/v2/baz.Baz
+```
+
+This parameter can be specified multiple times.
+
+This will replace any imported named `"github.com/vektra/mockery/v2/baz/internal/foo"`
+with `baz "github.com/vektra/mockery/v2/baz"`. The alias is defined with `:` before
+the package name. Also, the `InternalBaz` type that comes from this package will be renamed to `Baz´. 
+
+This next example fixes a common problem of type aliases that point to an internal package.
+
+`cloud.google.com/go/pubsub.Message` is a type alias defined like this:
+
+```go
+import (
+	ipubsub "cloud.google.com/go/internal/pubsub"
+)
+
+type Message = ipubsub.Message
+```
+
+The Go parser that mockery uses doesn't provide a way to detect this alias and sends the application the package and
+type name of the type in the internal package, which will not work.
+
+We can use "replace-type" with only the package part to replace any import of `cloud.google.com/go/internal/pubsub` to
+`cloud.google.com/go/pubsub`. We don't need to change the alias or type name in this case, because they are `pubsub` 
+and `Message` in both cases.
+
+```shell
+mockery --replace-type cloud.google.com/go/internal/pubsub=cloud.google.com/go/pubsub
+```
+
+Original source:
+
+```go
+import (
+	"cloud.google.com/go/pubsub"
+)
+
+type Handler struct {
+    HandleMessage(m pubsub.Message) error
+}
+```
+
+Mock generated without this parameter:
+
+```go
+import (
+	mock "github.com/stretchr/testify/mock"
+
+	pubsub "cloud.google.com/go/internal/pubsub"
+)
+
+func (_m *Handler) HandleMessage(m pubsub.Message) error {
+	// ...
+	return nil
+}
+```
+
+Mock generated with this parameter.
+
+```go
+import (
+	mock "github.com/stretchr/testify/mock"
+
+	pubsub "cloud.google.com/go/pubsub"
+)
+
+func (_m *Handler) HandleMessage(m pubsub.Message) error {
+	// ...
+	return nil
+}
+```
+
 Extended Flag Descriptions
 --------------------------
 
 The following descriptions provide additional elaboration on a few common parameters.
 
-| flag name  | description  |
-|---|---|
-| `--name`  | The `--name` option takes either the name or matching regular expression of the interface to generate mock(s) for. |
-| `--all`  |  It's common for a big package to have a lot of interfaces, so mockery provides `--all`. This option will tell mockery to scan all files under the directory named by `--dir` ("." by default) and generates mocks for any interfaces it finds. This option implies `--recursive=true`. |
-| `--recursive`  |  Use the `--recursive` option to search subdirectories for the interface(s). This option is only compatible with `--name`. The `--all` option implies `--recursive=true`. |
-| `--output` | mockery always generates files with the package `mocks` to keep things clean and simple. You can control which mocks directory is used by using `--output`, which defaults to `./mocks`. |
-|`--outpkg`| Use `--outpkg` to specify the package name of the generated mocks.|
-| `--inpackage` and `--keeptree` | For some complex repositories, there could be multiple interfaces with the same name but in different packages. In that case, `--inpackage` allows generating the mocked interfaces directly in the package that it mocks. In the case you don't want to generate the mocks into the package but want to keep a similar structure, use the option `--keeptree`. |
-| `--filename` | Use the `--filename` and `--structname` to override the default generated file and struct name. These options are only compatible with non-regular expressions in `--name`, where only one mock is generated. |
-| `--case` | mockery generates files using the casing of the original interface name.  This can be modified by specifying `--case underscore` to format the generated file name using underscore casing. |
-| `--print` | Use `mockery --print` to have the resulting code printed out instead of written to disk. |
-| `--exported` | Use `mockery --exported` to generate public mocks for private interfaces. |
-| `--with-expecter` | Use `mockery --with-expecter` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
+| flag name                           | description                                                                                                                                                                                                                                                                                                                                                     |
+|-------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `--name`                            | The `--name` option takes either the name or matching regular expression of the interface to generate mock(s) for.                                                                                                                                                                                                                                              |
+| `--all`                             | It's common for a big package to have a lot of interfaces, so mockery provides `--all`. This option will tell mockery to scan all files under the directory named by `--dir` ("." by default) and generates mocks for any interfaces it finds. This option implies `--recursive=true`.                                                                          |
+| `--recursive`                       | Use the `--recursive` option to search subdirectories for the interface(s). This option is only compatible with `--name`. The `--all` option implies `--recursive=true`.                                                                                                                                                                                        |
+| `--output`                          | mockery always generates files with the package `mocks` to keep things clean and simple. You can control which mocks directory is used by using `--output`, which defaults to `./mocks`.                                                                                                                                                                        |
+| `--outpkg`                          | Use `--outpkg` to specify the package name of the generated mocks.                                                                                                                                                                                                                                                                                              |
+| `--inpackage` and `--keeptree`      | For some complex repositories, there could be multiple interfaces with the same name but in different packages. In that case, `--inpackage` allows generating the mocked interfaces directly in the package that it mocks. In the case you don't want to generate the mocks into the package but want to keep a similar structure, use the option `--keeptree`. |
+| `--filename`                        | Use the `--filename` and `--structname` to override the default generated file and struct name. These options are only compatible with non-regular expressions in `--name`, where only one mock is generated.                                                                                                                                                   |
+| `--case`                            | mockery generates files using the casing of the original interface name.  This can be modified by specifying `--case underscore` to format the generated file name using underscore casing.                                                                                                                                                                     |
+| `--print`                           | Use `mockery --print` to have the resulting code printed out instead of written to disk.                                                                                                                                                                                                                                                                        |
+| `--exported`                        | Use `mockery --exported` to generate public mocks for private interfaces.                                                                                                                                                                                                                                                                                       |
+| `--with-expecter`                   | Use `mockery --with-expecter` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks.                                                                                                                                                                                                                                     |
+| `--replace-type source=destination` | Replaces aliases, packages and/or types during generation.                                                                                                                                                                                                                                                                                                      |
 
 Mocking interfaces in `main`
 ----------------------------
