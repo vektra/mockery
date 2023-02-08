@@ -406,7 +406,7 @@ This parameter can be specified multiple times.
 
 This will replace any imported named `"github.com/vektra/mockery/v2/baz/internal/foo"`
 with `baz "github.com/vektra/mockery/v2/baz"`. The alias is defined with `:` before
-the package name. Also, the `InternalBaz` type that comes from this package will be renamed to `Baz´. 
+the package name. Also, the `InternalBaz` type that comes from this package will be renamed to `baz.Baz`. 
 
 This next example fixes a common problem of type aliases that point to an internal package.
 
@@ -414,7 +414,7 @@ This next example fixes a common problem of type aliases that point to an intern
 
 ```go
 import (
-	ipubsub "cloud.google.com/go/internal/pubsub"
+    ipubsub "cloud.google.com/go/internal/pubsub"
 )
 
 type Message = ipubsub.Message
@@ -435,7 +435,7 @@ Original source:
 
 ```go
 import (
-	"cloud.google.com/go/pubsub"
+    "cloud.google.com/go/pubsub"
 )
 
 type Handler struct {
@@ -447,14 +447,14 @@ Mock generated without this parameter:
 
 ```go
 import (
-	mock "github.com/stretchr/testify/mock"
+    mock "github.com/stretchr/testify/mock"
 
-	pubsub "cloud.google.com/go/internal/pubsub"
+    pubsub "cloud.google.com/go/internal/pubsub"
 )
 
 func (_m *Handler) HandleMessage(m pubsub.Message) error {
-	// ...
-	return nil
+    // ...
+    return nil
 }
 ```
 
@@ -462,14 +462,14 @@ Mock generated with this parameter.
 
 ```go
 import (
-	mock "github.com/stretchr/testify/mock"
+    mock "github.com/stretchr/testify/mock"
 
-	pubsub "cloud.google.com/go/pubsub"
+    pubsub "cloud.google.com/go/pubsub"
 )
 
 func (_m *Handler) HandleMessage(m pubsub.Message) error {
-	// ...
-	return nil
+    // ...
+    return nil
 }
 ```
 
