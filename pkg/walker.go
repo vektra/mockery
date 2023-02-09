@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -45,6 +44,10 @@ func (w *Walker) Walk(ctx context.Context, visitor WalkerVisitor) (generated boo
 	}
 
 	for _, iface := range parser.Interfaces() {
+		if strings.HasPrefix(iface.Name, mockConstructorParamTypeNamePrefix) {
+			continue
+		}
+
 		if !w.Filter.MatchString(iface.Name) {
 			continue
 		}
@@ -66,7 +69,7 @@ func (w *Walker) doWalk(ctx context.Context, p *Parser, dir string, visitor Walk
 	log := zerolog.Ctx(ctx)
 	ctx = log.WithContext(ctx)
 
-	files, err := ioutil.ReadDir(dir)
+	files, err := os.ReadDir(dir)
 	if err != nil {
 		return
 	}

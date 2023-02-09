@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog"
+
 	"github.com/vektra/mockery/v2/pkg/config"
 	"github.com/vektra/mockery/v2/pkg/logging"
 )
@@ -57,6 +58,10 @@ func (p *FileOutputStreamProvider) GetWriter(ctx context.Context, iface *Interfa
 		relativePath := strings.TrimPrefix(
 			filepath.Join(filepath.Dir(iface.FileName), p.filename(caseName)),
 			absOriginalDir)
+
+		// as it's not possible to import from internal path, we have to replace it in mocks when KepTree is used
+		relativePath = strings.Replace(relativePath, "/internal/", "/internal_/", -1)
+
 		path = filepath.Join(p.BaseDir, relativePath)
 		if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
 			return nil, err, func() error { return nil }

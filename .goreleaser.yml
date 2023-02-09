@@ -34,13 +34,10 @@ snapshot:
 changelog:
     sort: asc
 dockers:
-  - goos: linux
+  - image_templates: ["vektra/mockery:{{ .Tag }}-amd64"]
     goarch: amd64
-    image_templates:
-      - 'vektra/mockery:{{ .Tag }}'
-      - 'vektra/mockery:v{{ .Major }}'
-      - 'vektra/mockery:v{{ .Major }}.{{ .Minor }}'
-      - 'vektra/mockery:latest'
+    dockerfile: Dockerfile
+    use: buildx
     build_flag_templates:
       - "--pull"
       - "--label=org.opencontainers.image.created={{.Date}}"
@@ -48,6 +45,36 @@ dockers:
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--platform=linux/amd64"
+  - image_templates: ["vektra/mockery:{{ .Tag }}-arm64"]
+    goarch: arm64
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.name={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--platform=linux/arm64"
+docker_manifests:
+  - name_template: vektra/mockery:{{ .Tag }}
+    image_templates:
+      - vektra/mockery:{{ .Tag }}-amd64
+      - vektra/mockery:{{ .Tag }}-arm64
+  - name_template: vektra/mockery:v{{ .Major }}
+    image_templates:
+      - vektra/mockery:{{ .Tag }}-amd64
+      - vektra/mockery:{{ .Tag }}-arm64
+  - name_template: vektra/mockery:v{{ .Major }}.{{ .Minor }}
+    image_templates:
+      - vektra/mockery:{{ .Tag }}-amd64
+      - vektra/mockery:{{ .Tag }}-arm64
+  - name_template: vektra/mockery:latest
+    image_templates:
+      - vektra/mockery:{{ .Tag }}-amd64
+      - vektra/mockery:{{ .Tag }}-arm64
 brews:
   - homepage: https://github.com/vektra/mockery
     description: "A mock code autogenerator for Go"

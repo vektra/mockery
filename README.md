@@ -3,53 +3,63 @@ mockery
 =======
 [![Release](https://github.com/vektra/mockery/actions/workflows/release.yml/badge.svg)](https://github.com/vektra/mockery/actions/workflows/release.yml) [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/vektra/mockery/v2?tab=overview) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/vektra/mockery) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/vektra/mockery) [![Go Report Card](https://goreportcard.com/badge/github.com/vektra/mockery)](https://goreportcard.com/report/github.com/vektra/mockery) [![codecov](https://codecov.io/gh/vektra/mockery/branch/master/graph/badge.svg)](https://codecov.io/gh/vektra/mockery)
 
-
-
-
-mockery provides the ability to easily generate mocks for golang interfaces using the [stretchr/testify/mock](https://pkg.go.dev/github.com/stretchr/testify/mock?tab=doc) package. It removes
+mockery provides the ability to easily generate mocks for Golang interfaces using the [stretchr/testify/mock](https://pkg.go.dev/github.com/stretchr/testify/mock?tab=doc) package. It removes
 the boilerplate coding required to use mocks.
-
-NOTE ON Golang 1.18
---------------------
-
-Mockery currently does not support various 1.18 Golang features, namely generics. PRs are welcome!
 
 Table of Contents
 -----------------
 
+- [Deprecations](#deprecations)
 - [Installation](#installation)
-  * [Github Release](#github-release)
+  * [GitHub Release](#github-release)
   * [Docker](#docker)
   * [Homebrew](#homebrew)
   * [go install](#go-install)
+- [Configuration](#configuration)
+  * [Example](#example)
+  * [Config Search Path](#config-search-path)
 - [Examples](#examples)
     + [Simplest case](#simplest-case)
+    + [Function type case](#function-type-case)
     + [Next level case](#next-level-case)
+    + [Note](#note)
 - [Return Value Provider Functions](#return-value-provider-functions)
     + [Requirements](#requirements)
     + [Notes](#notes)
 - [Expecter Interfaces](#expecter-interfaces)
 - [Mock constructors](#mock-constructors)
 - [Extended Flag Descriptions](#extended-flag-descriptions)
-- [Mocking interfaces in `main`](#mocking-interfaces-in-main)
-- [Configuration](#configuration)
-  * [Example](#example)
+- [Mocking interfaces in `main`](#mocking-interfaces-in--main-)
 - [Semantic Versioning](#semantic-versioning)
+- [Development Efforts](#development-efforts)
+  * [v1](#v1)
+  * [v2](#v2)
+  * [v3](#v3)
 - [Stargazers](#stargazers)
 
+Deprecations
+------------
+
+| Name | Deprecation Date | Description |
+|------|------------------|-------------|
+| `with-expecter: false` (the defualt) | 2023-02-09 | In v3, the Expecter methods will be the only way to generate assertions. Please set this to `true` |
 
 Installation
 ------------
 
-### Github Release
+### GitHub Release
 
-Visit the [releases page](https://github.com/vektra/mockery/releases) to download one of the pre-built binaries for your platform. 
+Visit the [releases page](https://github.com/vektra/mockery/releases) to download one of the pre-built binaries for your platform.
 
 ### Docker
 
 Use the [Docker image](https://hub.docker.com/r/vektra/mockery)
 
     docker pull vektra/mockery
+
+Generate all the mocks for your project:
+
+	docker run -v "$PWD":/src -w /src vektra/mockery --all
 
 ### Homebrew
 
@@ -60,9 +70,46 @@ Install through [brew](https://brew.sh/)
 
 ### go install
 
-Alternatively, you can use the go install method:
+Supported, but not recommended: [see wiki page](https://github.com/vektra/mockery/wiki/Installation-Methods#go-install) and [related discussions](https://github.com/vektra/mockery/pull/456).
+
+Alternatively, you can use the go install method to compile the project using your local environment:
 
     go install github.com/vektra/mockery/v2@latest
+
+Configuration
+--------------
+
+mockery uses [spf13/viper](https://github.com/spf13/viper) under the hood for its configuration parsing. It is bound to three different configuration sources, in order of decreasing precedence:
+
+1. Command line
+2. Environment variables
+3. Configuration file
+
+### Example
+
+	$ export MOCKERY_STRUCTNAME=config_from_env
+	$ echo $MOCKERY_STRUCTNAME
+	config_from_env
+	$ grep structname .mockery.yaml
+	structname: config_from_file
+	$ ./mockery showconfig --structname config_from_cli | grep structname
+	Using config file: /home/ltclipp/git/vektra/mockery/.mockery.yaml
+	structname: config_from_cli
+	$ ./mockery showconfig  | grep structname
+	Using config file: /home/ltclipp/git/vektra/mockery/.mockery.yaml
+	structname: config_from_env
+	$ unset MOCKERY_STRUCTNAME
+	$ ./mockery showconfig  | grep structname
+	Using config file: /home/ltclipp/git/vektra/mockery/.mockery.yaml
+	structname: config_from_file
+
+By default, it searches the current working directory for a file named `.mockery.[extension]` where [extension] is any of the [recognized extensions](https://pkg.go.dev/github.com/spf13/viper@v1.7.0?tab=doc#pkg-variables).
+
+### Config Search Path
+
+New in [v2.16.0](https://github.com/vektra/mockery/pull/527)
+
+Mockery will iteratively search every directory from the current working directory up to the root path for a `.mockery.yaml` file, if one is not explicitly provided.
 
 Examples
 --------
@@ -109,9 +156,10 @@ func (m *Stringer) String() string {
 	return r0
 }
 
-// NewStringer creates a new instance of Stringer. It also registers a cleanup function to assert the mocks expectations.
+// NewStringer creates a new instance of Stringer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewStringer(t testing.TB) *Stringer {
 	mock := &Stringer{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 
@@ -165,9 +213,10 @@ func (_m *SendFunc) Execute(data string) (int, error) {
 	return r0, r1
 }
 
-// NewSendFunc creates a new instance of SendFunc. It also registers a cleanup function to assert the mocks expectations.
+// NewSendFunc creates a new instance of SendFunc. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 func NewSendFunc(t testing.TB) *SendFunc {
 	mock := &SendFunc{}
+	mock.Mock.Test(t)
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 
@@ -225,6 +274,10 @@ func main() {
 	}
 }
 ```
+
+#### Note
+
+For mockery to correctly generate mocks, the command has to be run on a module (i.e. your project has to have a go.mod file)
 
 
 Return Value Provider Functions
@@ -301,7 +354,7 @@ Expecter Interfaces
 
 New in [v2.10.0](https://github.com/vektra/mockery/pull/396).
 
-Mockery now supports an "expecter" interface which allows your tests to use type-safe methods to generate call expectations. When enabled through the `with-expecter: True` mockery configuration, you can enter into the expecter interface by simply calling `.EXPECT()` on your mock object.
+Mockery now supports an "expecter" interface, which allows your tests to use type-safe methods to generate call expectations. When enabled through the `with-expecter: True` mockery configuration, you can enter into the expecter interface by simply calling `.EXPECT()` on your mock object.
 
 For example, given an interface such as
 ```go
@@ -332,6 +385,7 @@ less error-prone (you won't have to worry about forgetting the `AssertExpectatio
 Before v2.11:
 ```go
 factory := &mocks.Factory{}
+factory.Test(t) // so that mock does not panic when a method is unexpected
 defer factory.AssertExpectations(t)
 ```
 
@@ -340,7 +394,9 @@ After v2.11:
 factory := mocks.NewFactory(t)
 ```
 
-The `AssertExpectations` method is registered automatically inside the constructor via `t.Cleanup()` method.
+The constructor sets up common functionalities automatically
+- The `AssertExpectations` method is registered to be called at the end of the tests via `t.Cleanup()` method.
+- The testing.TB interface is registered on the `mock.Mock` so that tests don't panic when a call on the mock is unexpected.
 
 Extended Flag Descriptions
 --------------------------
@@ -349,10 +405,11 @@ The following descriptions provide additional elaboration on a few common parame
 
 | flag name  | description  |
 |---|---|
-| `--name`  | The `--name` option takes either the name or matching regular expression of interface to generate mock(s) for. |
+| `--name`  | The `--name` option takes either the name or matching regular expression of the interface to generate mock(s) for. |
 | `--all`  |  It's common for a big package to have a lot of interfaces, so mockery provides `--all`. This option will tell mockery to scan all files under the directory named by `--dir` ("." by default) and generates mocks for any interfaces it finds. This option implies `--recursive=true`. |
 | `--recursive`  |  Use the `--recursive` option to search subdirectories for the interface(s). This option is only compatible with `--name`. The `--all` option implies `--recursive=true`. |
 | `--output` | mockery always generates files with the package `mocks` to keep things clean and simple. You can control which mocks directory is used by using `--output`, which defaults to `./mocks`. |
+|`--outpkg`| Use `--outpkg` to specify the package name of the generated mocks.|
 | `--inpackage` and `--keeptree` | For some complex repositories, there could be multiple interfaces with the same name but in different packages. In that case, `--inpackage` allows generating the mocked interfaces directly in the package that it mocks. In the case you don't want to generate the mocks into the package but want to keep a similar structure, use the option `--keeptree`. |
 | `--filename` | Use the `--filename` and `--structname` to override the default generated file and struct name. These options are only compatible with non-regular expressions in `--name`, where only one mock is generated. |
 | `--case` | mockery generates files using the casing of the original interface name.  This can be modified by specifying `--case underscore` to format the generated file name using underscore casing. |
@@ -363,37 +420,8 @@ The following descriptions provide additional elaboration on a few common parame
 Mocking interfaces in `main`
 ----------------------------
 
-When your interfaces are in the main package you should supply the `--inpackage` flag.
-This will generate mocks in the same package as the target code avoiding import issues.
-
-Configuration
---------------
-
-mockery uses [spf13/viper](https://github.com/spf13/viper) under the hood for its configuration parsing. It is bound to three different configuration sources, in order of decreasing precedence:
-
-1. Command line
-2. Environment variables
-3. Configuration file
-
-### Example
-
-	$ export MOCKERY_STRUCTNAME=config_from_env
-	$ echo $MOCKERY_STRUCTNAME
-	config_from_env
-	$ grep structname .mockery.yaml
-	structname: config_from_file
-	$ ./mockery showconfig --structname config_from_cli | grep structname
-	Using config file: /home/ltclipp/git/vektra/mockery/.mockery.yaml
-	structname: config_from_cli
-	$ ./mockery showconfig  | grep structname
-	Using config file: /home/ltclipp/git/vektra/mockery/.mockery.yaml
-	structname: config_from_env
-	$ unset MOCKERY_STRUCTNAME
-	$ ./mockery showconfig  | grep structname
-	Using config file: /home/ltclipp/git/vektra/mockery/.mockery.yaml
-	structname: config_from_file
-
-By default it searches the current working directory for a file named `.mockery.[extension]` where [extension] is any of the [recognized extensions](https://pkg.go.dev/github.com/spf13/viper@v1.7.0?tab=doc#pkg-variables).
+When your interfaces are in the main package, you should supply the `--inpackage` flag.
+This will generate mocks in the same package as the target code, avoiding import issues.
 
 Semantic Versioning
 -------------------
@@ -420,18 +448,18 @@ v1 is the original version of the software, and is no longer supported.
 
 ### v2
 
-`mockery` is currently in v2, which iterates on v1 and includes mostly cosmetic and configuration improvements. 
+`mockery` is currently in v2, which iterates on v1 and includes mostly cosmetic and configuration improvements.
 
 ### v3
 
 [v3](https://github.com/vektra/mockery/projects/3) will include a ground-up overhaul of the entire codebase and will completely change how mockery works internally and externally. The highlights of the project are:
-- Moving towards a package-based model instead of a file-based model. `mockery` currently iterates over every file in a project and calls `package.Load` on each one, which is time consuming. Moving towards a model where the entire package is loaded at once will dramtically reduce runtime, and will simplify logic. Additionally, supporting only a single mode of operation (package mode) will greatly increase the intuitiveness of the software.
+- Moving towards a package-based model instead of a file-based model. `mockery` currently iterates over every file in a project and calls `package.Load` on each one, which is time-consuming. Moving towards a model where the entire package is loaded at once will dramatically reduce runtime, and will simplify logic. Additionally, supporting only a single mode of operation (package mode) will greatly increase the intuitiveness of the software.
 - Configuration-driven generation. `v3` will be entirely driven by configuration, meaning:
   * You specify the packages you want mocked, instead of relying on it auto-discovering your package. Auto-discovery in theory sounds great, but in practice it leads to a great amount of complexity for very little benefit.
-  * Package- or interface-specific overrides can be given that change mock generation settings on a granular level. This will allow your mocks to be generated in a heterogenous manner, and will be made explicit by yaml configuration.
+  * Package- or interface-specific overrides can be given that change mock generation settings on a granular level. This will allow your mocks to be generated in a heterogeneous manner, and will be made explicit by YAML configuration.
  - Proper error reporting. Errors across the board will be done in accordance with modern Golang practices
- - Variables in generated mocks will be given meaningful names. 
- 
+ - Variables in generated mocks will be given meaningful names.
+
 
 
 Stargazers

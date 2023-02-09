@@ -23,6 +23,8 @@ Version of Golang used when building/testing:
 - [ ] 1.16
 - [ ] 1.17
 - [ ] 1.18
+- [ ] 1.19
+- [ ] 1.20
 
 How Has This Been Tested?
 ---------------------------

@@ -8,7 +8,7 @@ import (
 	mocks "github.com/vektra/mockery/v2/mocks/pkg/fixtures"
 )
 
-// CompatSuite covers compatbility with github.com/stretchr/testify/mock.
+// CompatSuite covers compatibility with github.com/stretchr/testify/mock.
 type CompatSuite struct {
 	suite.Suite
 }

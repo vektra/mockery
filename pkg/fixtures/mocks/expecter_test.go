@@ -7,6 +7,7 @@ import (
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	mocks "github.com/vektra/mockery/v2/mocks/pkg/fixtures"
 )
 
 var (
@@ -17,7 +18,8 @@ var (
 
 // Test that the generated code for ExpecterTest interface is usable
 func TestExpecter(t *testing.T) {
-	expMock := &ExpecterTest{}
+
+	expMock := mocks.Expecter{}
 
 	t.Run("NoArg", func(t *testing.T) {
 		var runCalled bool
