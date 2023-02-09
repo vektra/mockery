@@ -32,6 +32,7 @@ type Config struct {
 	Exported             bool `mapstructure:"exported"`
 	FileName             string
 	InPackage            bool
+	InPackageSuffix      bool `mapstructure:"inpackage-suffix"`
 	KeepTree             bool
 	LogLevel             string `mapstructure:"log-level"`
 	Name                 string

@@ -57,6 +57,7 @@ func NewRootCmd() *cobra.Command {
 	pFlags.BoolP("recursive", "r", false, "recurse search into sub-directories")
 	pFlags.Bool("all", false, "generates mocks for all found interfaces in all sub-directories")
 	pFlags.Bool("inpackage", false, "generate a mock that goes inside the original package")
+	pFlags.Bool("inpackage-suffix", false, "use filename '_mock' suffix instead of 'mock_' prefix for InPackage mocks")
 	pFlags.Bool("testonly", false, "generate a mock in a _test.go file")
 	pFlags.String("case", "camel", "name the mocked file using casing convention [camel, snake, underscore]")
 	pFlags.String("note", "", "comment to insert into prologue of each generated file")
@@ -233,6 +234,7 @@ func (r *RootApp) Run() error {
 			Config:                    r.Config,
 			BaseDir:                   r.Config.Output,
 			InPackage:                 r.Config.InPackage,
+			InPackageSuffix:           r.Config.InPackageSuffix,
 			TestOnly:                  r.Config.TestOnly,
 			Case:                      r.Config.Case,
 			KeepTree:                  r.Config.KeepTree,

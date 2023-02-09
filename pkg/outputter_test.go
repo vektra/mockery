@@ -16,9 +16,19 @@ func TestFilenameMockOnly(t *testing.T) {
 	assert.Equal(t, "mock_name.go", out.filename("name"))
 }
 
+func TestFilenameMockOnlyWithSuffix(t *testing.T) {
+	out := FileOutputStreamProvider{InPackage: true, InPackageSuffix: true, TestOnly: false}
+	assert.Equal(t, "name_mock.go", out.filename("name"))
+}
+
 func TestFilenameMockTest(t *testing.T) {
 	out := FileOutputStreamProvider{InPackage: true, TestOnly: true}
 	assert.Equal(t, "mock_name_test.go", out.filename("name"))
+}
+
+func TestFilenameMockTestWithSuffix(t *testing.T) {
+	out := FileOutputStreamProvider{InPackage: true, InPackageSuffix: true, TestOnly: true}
+	assert.Equal(t, "name_mock_test.go", out.filename("name"))
 }
 
 func TestFilenameKeepTreeInPackage(t *testing.T) {
