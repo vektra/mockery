@@ -42,7 +42,7 @@ Deprecations
 
 | Name | Deprecation Date | Description |
 |------|------------------|-------------|
-| `with-expecter: false` (the defualt | 2023-02-09 | In v3, the Expecter methods will be the only way to generate assertions. Please set this to `true` |
+| `with-expecter: false` (the defualt) | 2023-02-09 | In v3, the Expecter methods will be the only way to generate assertions. Please set this to `true` |
 
 Installation
 ------------
