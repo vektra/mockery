@@ -16,21 +16,20 @@ func (_m *Client) Search(query string) ([]string, error) {
 	var r0 []string
 	var r1 error
 	if rf, ok := ret.Get(0).(func(string) ([]string, error)); ok {
-		r0, r1 = rf(query)
+		return rf(query)
+	}
+	if rf, ok := ret.Get(0).(func(string) []string); ok {
+		r0 = rf(query)
 	} else {
-		if rf, ok := ret.Get(0).(func(string) []string); ok {
-			r0 = rf(query)
-		} else {
-			if ret.Get(0) != nil {
-				r0 = ret.Get(0).([]string)
-			}
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
 		}
+	}
 
-		if rf, ok := ret.Get(1).(func(string) error); ok {
-			r1 = rf(query)
-		} else {
-			r1 = ret.Error(1)
-		}
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(query)
+	} else {
+		r1 = ret.Error(1)
 	}
 
 	return r0, r1

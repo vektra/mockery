@@ -129,19 +129,18 @@ func (_m *Requester) Get(path string) (string, error) {
 	var r0 string
 	var r1 error
 	if rf, ok := ret.Get(0).(func(string) (string, error)); ok {
-		r0, r1 = rf(path)
+		return rf(path)
+	}
+	if rf, ok := ret.Get(0).(func(string) string); ok {
+		r0 = rf(path)
 	} else {
-		if rf, ok := ret.Get(0).(func(string) string); ok {
-			r0 = rf(path)
-		} else {
-			r0 = ret.Get(0).(string)
-		}
+		r0 = ret.Get(0).(string)
+	}
 
-		if rf, ok := ret.Get(1).(func(string) error); ok {
-			r1 = rf(path)
-		} else {
-			r1 = ret.Error(1)
-		}
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(path)
+	} else {
+		r1 = ret.Error(1)
 	}
 
 	return r0, r1
@@ -186,19 +185,18 @@ func (_m *Requester) Get(path string) (string, error) {
 	var r0 string
 	var r1 error
 	if rf, ok := ret.Get(0).(func(string) (string, error)); ok {
-		r0, r1 = rf(path)
+		return rf(path)
+	}
+	if rf, ok := ret.Get(0).(func(string) string); ok {
+		r0 = rf(path)
 	} else {
-		if rf, ok := ret.Get(0).(func(string) string); ok {
-			r0 = rf(path)
-		} else {
-			r0 = ret.Get(0).(string)
-		}
+		r0 = ret.Get(0).(string)
+	}
 
-		if rf, ok := ret.Get(1).(func(string) error); ok {
-			r1 = rf(path)
-		} else {
-			r1 = ret.Error(1)
-		}
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(path)
+	} else {
+		r1 = ret.Error(1)
 	}
 
 	return r0, r1
@@ -276,21 +274,20 @@ func (_m *Expecter) ManyArgsReturns(str string, i int) ([]string, error) {
 	var r0 []string
 	var r1 error
 	if rf, ok := ret.Get(0).(func(string, int) ([]string, error)); ok {
-		r0, r1 = rf(str, i)
+		return rf(str, i)
+	}
+	if rf, ok := ret.Get(0).(func(string, int) []string); ok {
+		r0 = rf(str, i)
 	} else {
-		if rf, ok := ret.Get(0).(func(string, int) []string); ok {
-			r0 = rf(str, i)
-		} else {
-			if ret.Get(0) != nil {
-				r0 = ret.Get(0).([]string)
-			}
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
 		}
+	}
 
-		if rf, ok := ret.Get(1).(func(string, int) error); ok {
-			r1 = rf(str, i)
-		} else {
-			r1 = ret.Error(1)
-		}
+	if rf, ok := ret.Get(1).(func(string, int) error); ok {
+		r1 = rf(str, i)
+	} else {
+		r1 = ret.Error(1)
 	}
 
 	return r0, r1
@@ -556,19 +553,18 @@ func (_m *SendFunc) Execute(ctx context.Context, data string) (int, error) {
 	var r0 int
 	var r1 error
 	if rf, ok := ret.Get(0).(func(context.Context, string) (int, error)); ok {
-		r0, r1 = rf(ctx, data)
+		return rf(ctx, data)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, string) int); ok {
+		r0 = rf(ctx, data)
 	} else {
-		if rf, ok := ret.Get(0).(func(context.Context, string) int); ok {
-			r0 = rf(ctx, data)
-		} else {
-			r0 = ret.Get(0).(int)
-		}
+		r0 = ret.Get(0).(int)
+	}
 
-		if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
-			r1 = rf(ctx, data)
-		} else {
-			r1 = ret.Error(1)
-		}
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, data)
+	} else {
+		r1 = ret.Error(1)
 	}
 
 	return r0, r1
@@ -967,21 +963,20 @@ func (_m *RequesterPtr) Get(path string) (*string, error) {
 	var r0 *string
 	var r1 error
 	if rf, ok := ret.Get(0).(func(string) (*string, error)); ok {
-		r0, r1 = rf(path)
+		return rf(path)
+	}
+	if rf, ok := ret.Get(0).(func(string) *string); ok {
+		r0 = rf(path)
 	} else {
-		if rf, ok := ret.Get(0).(func(string) *string); ok {
-			r0 = rf(path)
-		} else {
-			if ret.Get(0) != nil {
-				r0 = ret.Get(0).(*string)
-			}
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*string)
 		}
+	}
 
-		if rf, ok := ret.Get(1).(func(string) error); ok {
-			r1 = rf(path)
-		} else {
-			r1 = ret.Error(1)
-		}
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(path)
+	} else {
+		r1 = ret.Error(1)
 	}
 
 	return r0, r1
@@ -1018,21 +1013,20 @@ func (_m *RequesterSlice) Get(path string) ([]string, error) {
 	var r0 []string
 	var r1 error
 	if rf, ok := ret.Get(0).(func(string) ([]string, error)); ok {
-		r0, r1 = rf(path)
+		return rf(path)
+	}
+	if rf, ok := ret.Get(0).(func(string) []string); ok {
+		r0 = rf(path)
 	} else {
-		if rf, ok := ret.Get(0).(func(string) []string); ok {
-			r0 = rf(path)
-		} else {
-			if ret.Get(0) != nil {
-				r0 = ret.Get(0).([]string)
-			}
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
 		}
+	}
 
-		if rf, ok := ret.Get(1).(func(string) error); ok {
-			r1 = rf(path)
-		} else {
-			r1 = ret.Error(1)
-		}
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(path)
+	} else {
+		r1 = ret.Error(1)
 	}
 
 	return r0, r1
@@ -1069,21 +1063,20 @@ func (_m *RequesterArray) Get(path string) ([2]string, error) {
 	var r0 [2]string
 	var r1 error
 	if rf, ok := ret.Get(0).(func(string) ([2]string, error)); ok {
-		r0, r1 = rf(path)
+		return rf(path)
+	}
+	if rf, ok := ret.Get(0).(func(string) [2]string); ok {
+		r0 = rf(path)
 	} else {
-		if rf, ok := ret.Get(0).(func(string) [2]string); ok {
-			r0 = rf(path)
-		} else {
-			if ret.Get(0) != nil {
-				r0 = ret.Get(0).([2]string)
-			}
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([2]string)
 		}
+	}
 
-		if rf, ok := ret.Get(1).(func(string) error); ok {
-			r1 = rf(path)
-		} else {
-			r1 = ret.Error(1)
-		}
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(path)
+	} else {
+		r1 = ret.Error(1)
 	}
 
 	return r0, r1
@@ -1120,19 +1113,18 @@ func (_m *RequesterNS) Get(path string) (http.Response, error) {
 	var r0 http.Response
 	var r1 error
 	if rf, ok := ret.Get(0).(func(string) (http.Response, error)); ok {
-		r0, r1 = rf(path)
+		return rf(path)
+	}
+	if rf, ok := ret.Get(0).(func(string) http.Response); ok {
+		r0 = rf(path)
 	} else {
-		if rf, ok := ret.Get(0).(func(string) http.Response); ok {
-			r0 = rf(path)
-		} else {
-			r0 = ret.Get(0).(http.Response)
-		}
+		r0 = ret.Get(0).(http.Response)
+	}
 
-		if rf, ok := ret.Get(1).(func(string) error); ok {
-			r1 = rf(path)
-		} else {
-			r1 = ret.Error(1)
-		}
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(path)
+	} else {
+		r1 = ret.Error(1)
 	}
 
 	return r0, r1
@@ -1278,22 +1270,21 @@ func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 	var r0 []byte
 	var r1 *test.Err
 	if rf, ok := ret.Get(0).(func(string, uint16) ([]byte, *test.Err)); ok {
-		r0, r1 = rf(_a0, _a1)
+		return rf(_a0, _a1)
+	}
+	if rf, ok := ret.Get(0).(func(string, uint16) []byte); ok {
+		r0 = rf(_a0, _a1)
 	} else {
-		if rf, ok := ret.Get(0).(func(string, uint16) []byte); ok {
-			r0 = rf(_a0, _a1)
-		} else {
-			if ret.Get(0) != nil {
-				r0 = ret.Get(0).([]byte)
-			}
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]byte)
 		}
+	}
 
-		if rf, ok := ret.Get(1).(func(string, uint16) *test.Err); ok {
-			r1 = rf(_a0, _a1)
-		} else {
-			if ret.Get(1) != nil {
-				r1 = ret.Get(1).(*test.Err)
-			}
+	if rf, ok := ret.Get(1).(func(string, uint16) *test.Err); ok {
+		r1 = rf(_a0, _a1)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*test.Err)
 		}
 	}
 
@@ -1379,31 +1370,30 @@ func (_m *RequesterReturnElided) Get(path string) (int, int, int, error) {
 	var r2 int
 	var r3 error
 	if rf, ok := ret.Get(0).(func(string) (int, int, int, error)); ok {
-		r0, r1, r2, r3 = rf(path)
+		return rf(path)
+	}
+	if rf, ok := ret.Get(0).(func(string) int); ok {
+		r0 = rf(path)
 	} else {
-		if rf, ok := ret.Get(0).(func(string) int); ok {
-			r0 = rf(path)
-		} else {
-			r0 = ret.Get(0).(int)
-		}
+		r0 = ret.Get(0).(int)
+	}
 
-		if rf, ok := ret.Get(1).(func(string) int); ok {
-			r1 = rf(path)
-		} else {
-			r1 = ret.Get(1).(int)
-		}
+	if rf, ok := ret.Get(1).(func(string) int); ok {
+		r1 = rf(path)
+	} else {
+		r1 = ret.Get(1).(int)
+	}
 
-		if rf, ok := ret.Get(2).(func(string) int); ok {
-			r2 = rf(path)
-		} else {
-			r2 = ret.Get(2).(int)
-		}
+	if rf, ok := ret.Get(2).(func(string) int); ok {
+		r2 = rf(path)
+	} else {
+		r2 = ret.Get(2).(int)
+	}
 
-		if rf, ok := ret.Get(3).(func(string) error); ok {
-			r3 = rf(path)
-		} else {
-			r3 = ret.Error(3)
-		}
+	if rf, ok := ret.Get(3).(func(string) error); ok {
+		r3 = rf(path)
+	} else {
+		r3 = ret.Error(3)
 	}
 
 	return r0, r1, r2, r3
@@ -1444,19 +1434,18 @@ func (_m *RequesterReturnElided) Put(path string) (int, error) {
 	var r0 int
 	var r1 error
 	if rf, ok := ret.Get(0).(func(string) (int, error)); ok {
-		r0, r1 = rf(path)
+		return rf(path)
+	}
+	if rf, ok := ret.Get(0).(func(string) int); ok {
+		r0 = rf(path)
 	} else {
-		if rf, ok := ret.Get(0).(func(string) int); ok {
-			r0 = rf(path)
-		} else {
-			r0 = ret.Get(0).(int)
-		}
+		r0 = ret.Get(0).(int)
+	}
 
-		if rf, ok := ret.Get(1).(func(string) error); ok {
-			r1 = rf(path)
-		} else {
-			r1 = ret.Error(1)
-		}
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(path)
+	} else {
+		r1 = ret.Error(1)
 	}
 
 	return r0, r1
@@ -1781,19 +1770,18 @@ func (_m *MyReader) Read(p []byte) (int, error) {
 	var r0 int
 	var r1 error
 	if rf, ok := ret.Get(0).(func([]byte) (int, error)); ok {
-		r0, r1 = rf(p)
+		return rf(p)
+	}
+	if rf, ok := ret.Get(0).(func([]byte) int); ok {
+		r0 = rf(p)
 	} else {
-		if rf, ok := ret.Get(0).(func([]byte) int); ok {
-			r0 = rf(p)
-		} else {
-			r0 = ret.Get(0).(int)
-		}
+		r0 = ret.Get(0).(int)
+	}
 
-		if rf, ok := ret.Get(1).(func([]byte) error); ok {
-			r1 = rf(p)
-		} else {
-			r1 = ret.Error(1)
-		}
+	if rf, ok := ret.Get(1).(func([]byte) error); ok {
+		r1 = rf(p)
+	} else {
+		r1 = ret.Error(1)
 	}
 
 	return r0, r1
@@ -1830,21 +1818,20 @@ func (_m *ConsulLock) Lock(_a0 <-chan struct{}) (<-chan struct{}, error) {
 	var r0 <-chan struct{}
 	var r1 error
 	if rf, ok := ret.Get(0).(func(<-chan struct{}) (<-chan struct{}, error)); ok {
-		r0, r1 = rf(_a0)
+		return rf(_a0)
+	}
+	if rf, ok := ret.Get(0).(func(<-chan struct{}) <-chan struct{}); ok {
+		r0 = rf(_a0)
 	} else {
-		if rf, ok := ret.Get(0).(func(<-chan struct{}) <-chan struct{}); ok {
-			r0 = rf(_a0)
-		} else {
-			if ret.Get(0) != nil {
-				r0 = ret.Get(0).(<-chan struct{})
-			}
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(<-chan struct{})
 		}
+	}
 
-		if rf, ok := ret.Get(1).(func(<-chan struct{}) error); ok {
-			r1 = rf(_a0)
-		} else {
-			r1 = ret.Error(1)
-		}
+	if rf, ok := ret.Get(1).(func(<-chan struct{}) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
 	}
 
 	return r0, r1
@@ -2285,19 +2272,18 @@ func (_m *A) Call() (test.B, error) {
 	var r0 test.B
 	var r1 error
 	if rf, ok := ret.Get(0).(func() (test.B, error)); ok {
-		r0, r1 = rf()
+		return rf()
+	}
+	if rf, ok := ret.Get(0).(func() test.B); ok {
+		r0 = rf()
 	} else {
-		if rf, ok := ret.Get(0).(func() test.B); ok {
-			r0 = rf()
-		} else {
-			r0 = ret.Get(0).(test.B)
-		}
+		r0 = ret.Get(0).(test.B)
+	}
 
-		if rf, ok := ret.Get(1).(func() error); ok {
-			r1 = rf()
-		} else {
-			r1 = ret.Error(1)
-		}
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
 	}
 
 	return r0, r1
@@ -2463,19 +2449,18 @@ func (_m *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TG
 	var r0 TSigned
 	var r1 TIntf
 	if rf, ok := ret.Get(0).(func(TAny, TComparable) (TSigned, TIntf)); ok {
-		r0, r1 = rf(_a0, _a1)
+		return rf(_a0, _a1)
+	}
+	if rf, ok := ret.Get(0).(func(TAny, TComparable) TSigned); ok {
+		r0 = rf(_a0, _a1)
 	} else {
-		if rf, ok := ret.Get(0).(func(TAny, TComparable) TSigned); ok {
-			r0 = rf(_a0, _a1)
-		} else {
-			r0 = ret.Get(0).(TSigned)
-		}
+		r0 = ret.Get(0).(TSigned)
+	}
 
-		if rf, ok := ret.Get(1).(func(TAny, TComparable) TIntf); ok {
-			r1 = rf(_a0, _a1)
-		} else {
-			r1 = ret.Get(1).(TIntf)
-		}
+	if rf, ok := ret.Get(1).(func(TAny, TComparable) TIntf); ok {
+		r1 = rf(_a0, _a1)
+	} else {
+		r1 = ret.Get(1).(TIntf)
 	}
 
 	return r0, r1
@@ -2600,19 +2585,18 @@ func (_m *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TG
 	var r0 TSigned
 	var r1 TIntf
 	if rf, ok := ret.Get(0).(func(TAny, TComparable) (TSigned, TIntf)); ok {
-		r0, r1 = rf(_a0, _a1)
+		return rf(_a0, _a1)
+	}
+	if rf, ok := ret.Get(0).(func(TAny, TComparable) TSigned); ok {
+		r0 = rf(_a0, _a1)
 	} else {
-		if rf, ok := ret.Get(0).(func(TAny, TComparable) TSigned); ok {
-			r0 = rf(_a0, _a1)
-		} else {
-			r0 = ret.Get(0).(TSigned)
-		}
+		r0 = ret.Get(0).(TSigned)
+	}
 
-		if rf, ok := ret.Get(1).(func(TAny, TComparable) TIntf); ok {
-			r1 = rf(_a0, _a1)
-		} else {
-			r1 = ret.Get(1).(TIntf)
-		}
+	if rf, ok := ret.Get(1).(func(TAny, TComparable) TIntf); ok {
+		r1 = rf(_a0, _a1)
+	} else {
+		r1 = ret.Get(1).(TIntf)
 	}
 
 	return r0, r1
@@ -2759,19 +2743,18 @@ func (_m *MockRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf
 	var r0 TSigned
 	var r1 TIntf
 	if rf, ok := ret.Get(0).(func(TAny, TComparable) (TSigned, TIntf)); ok {
-		r0, r1 = rf(_a0, _a1)
+		return rf(_a0, _a1)
+	}
+	if rf, ok := ret.Get(0).(func(TAny, TComparable) TSigned); ok {
+		r0 = rf(_a0, _a1)
 	} else {
-		if rf, ok := ret.Get(0).(func(TAny, TComparable) TSigned); ok {
-			r0 = rf(_a0, _a1)
-		} else {
-			r0 = ret.Get(0).(TSigned)
-		}
+		r0 = ret.Get(0).(TSigned)
+	}
 
-		if rf, ok := ret.Get(1).(func(TAny, TComparable) TIntf); ok {
-			r1 = rf(_a0, _a1)
-		} else {
-			r1 = ret.Get(1).(TIntf)
-		}
+	if rf, ok := ret.Get(1).(func(TAny, TComparable) TIntf); ok {
+		r1 = rf(_a0, _a1)
+	} else {
+		r1 = ret.Get(1).(TIntf)
 	}
 
 	return r0, r1

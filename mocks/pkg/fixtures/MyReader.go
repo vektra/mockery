@@ -16,19 +16,18 @@ func (_m *MyReader) Read(p []byte) (int, error) {
 	var r0 int
 	var r1 error
 	if rf, ok := ret.Get(0).(func([]byte) (int, error)); ok {
-		r0, r1 = rf(p)
+		return rf(p)
+	}
+	if rf, ok := ret.Get(0).(func([]byte) int); ok {
+		r0 = rf(p)
 	} else {
-		if rf, ok := ret.Get(0).(func([]byte) int); ok {
-			r0 = rf(p)
-		} else {
-			r0 = ret.Get(0).(int)
-		}
+		r0 = ret.Get(0).(int)
+	}
 
-		if rf, ok := ret.Get(1).(func([]byte) error); ok {
-			r1 = rf(p)
-		} else {
-			r1 = ret.Error(1)
-		}
+	if rf, ok := ret.Get(1).(func([]byte) error); ok {
+		r1 = rf(p)
+	} else {
+		r1 = ret.Error(1)
 	}
 
 	return r0, r1

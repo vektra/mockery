@@ -24,21 +24,20 @@ func (_m *Expecter) ManyArgsReturns(str string, i int) ([]string, error) {
 	var r0 []string
 	var r1 error
 	if rf, ok := ret.Get(0).(func(string, int) ([]string, error)); ok {
-		r0, r1 = rf(str, i)
+		return rf(str, i)
+	}
+	if rf, ok := ret.Get(0).(func(string, int) []string); ok {
+		r0 = rf(str, i)
 	} else {
-		if rf, ok := ret.Get(0).(func(string, int) []string); ok {
-			r0 = rf(str, i)
-		} else {
-			if ret.Get(0) != nil {
-				r0 = ret.Get(0).([]string)
-			}
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
 		}
+	}
 
-		if rf, ok := ret.Get(1).(func(string, int) error); ok {
-			r1 = rf(str, i)
-		} else {
-			r1 = ret.Error(1)
-		}
+	if rf, ok := ret.Get(1).(func(string, int) error); ok {
+		r1 = rf(str, i)
+	} else {
+		r1 = ret.Error(1)
 	}
 
 	return r0, r1

@@ -16,19 +16,18 @@ func (_m *Requester) Get(path string) (string, error) {
 	var r0 string
 	var r1 error
 	if rf, ok := ret.Get(0).(func(string) (string, error)); ok {
-		r0, r1 = rf(path)
+		return rf(path)
+	}
+	if rf, ok := ret.Get(0).(func(string) string); ok {
+		r0 = rf(path)
 	} else {
-		if rf, ok := ret.Get(0).(func(string) string); ok {
-			r0 = rf(path)
-		} else {
-			r0 = ret.Get(0).(string)
-		}
+		r0 = ret.Get(0).(string)
+	}
 
-		if rf, ok := ret.Get(1).(func(string) error); ok {
-			r1 = rf(path)
-		} else {
-			r1 = ret.Error(1)
-		}
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(path)
+	} else {
+		r1 = ret.Error(1)
 	}
 
 	return r0, r1

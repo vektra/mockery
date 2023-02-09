@@ -19,19 +19,18 @@ func (_m *A) Call() (test.B, error) {
 	var r0 test.B
 	var r1 error
 	if rf, ok := ret.Get(0).(func() (test.B, error)); ok {
-		r0, r1 = rf()
+		return rf()
+	}
+	if rf, ok := ret.Get(0).(func() test.B); ok {
+		r0 = rf()
 	} else {
-		if rf, ok := ret.Get(0).(func() test.B); ok {
-			r0 = rf()
-		} else {
-			r0 = ret.Get(0).(test.B)
-		}
+		r0 = ret.Get(0).(test.B)
+	}
 
-		if rf, ok := ret.Get(1).(func() error); ok {
-			r1 = rf()
-		} else {
-			r1 = ret.Error(1)
-		}
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
 	}
 
 	return r0, r1
