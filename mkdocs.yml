@@ -16,6 +16,8 @@ theme:
         name: Switch to light mode
   features:
     - content.code.copy
+    - content.action.edit
+    - content.action.view
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
