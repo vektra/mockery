@@ -9,7 +9,6 @@ the boilerplate coding required to use mocks.
 Table of Contents
 -----------------
 
-- [Deprecations](#deprecations)
 - [Installation](#installation)
   * [GitHub Release](#github-release)
   * [Docker](#docker)
@@ -36,13 +35,6 @@ Table of Contents
   * [v2](#v2)
   * [v3](#v3)
 - [Stargazers](#stargazers)
-
-Deprecations
-------------
-
-| Name | Deprecation Date | Description |
-|------|------------------|-------------|
-| `with-expecter: false` (the defualt) | 2023-02-09 | In v3, the Expecter methods will be the only way to generate assertions. Please set this to `true` |
 
 Installation
 ------------
