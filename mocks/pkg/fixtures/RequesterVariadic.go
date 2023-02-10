@@ -4,6 +4,7 @@ package mocks
 
 import (
 	io "io"
+	"reflect"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -15,13 +16,15 @@ type RequesterVariadic struct {
 
 // Get provides a mock function with given fields: values
 func (_m *RequesterVariadic) Get(values ...string) bool {
-	_va := make([]interface{}, len(values))
-	for _i := range values {
-		_va[_i] = values[_i]
+	var vararg []interface{}
+	if len(values) > 0 {
+		vararg = make([]interface{}, len(values))
+		for _i, _a := range values {
+			vararg[_i] = _a
+		}
 	}
-	var _ca []interface{}
-	_ca = append(_ca, _va...)
-	ret := _m.Called(_ca...)
+
+	ret := _m.Called(vararg)
 
 	var r0 bool
 	if rf, ok := ret.Get(0).(func(...string) bool); ok {
@@ -35,14 +38,15 @@ func (_m *RequesterVariadic) Get(values ...string) bool {
 
 // MultiWriteToFile provides a mock function with given fields: filename, w
 func (_m *RequesterVariadic) MultiWriteToFile(filename string, w ...io.Writer) string {
-	_va := make([]interface{}, len(w))
-	for _i := range w {
-		_va[_i] = w[_i]
+	var vararg []interface{}
+	if len(w) > 0 {
+		vararg = make([]interface{}, len(w))
+		for _i, _a := range w {
+			vararg[_i] = _a
+		}
 	}
-	var _ca []interface{}
-	_ca = append(_ca, filename)
-	_ca = append(_ca, _va...)
-	ret := _m.Called(_ca...)
+
+	ret := _m.Called(filename, vararg)
 
 	var r0 string
 	if rf, ok := ret.Get(0).(func(string, ...io.Writer) string); ok {
@@ -56,9 +60,15 @@ func (_m *RequesterVariadic) MultiWriteToFile(filename string, w ...io.Writer) s
 
 // OneInterface provides a mock function with given fields: a
 func (_m *RequesterVariadic) OneInterface(a ...interface{}) bool {
-	var _ca []interface{}
-	_ca = append(_ca, a...)
-	ret := _m.Called(_ca...)
+	var vararg []interface{}
+	if len(a) > 0 {
+		vararg = make([]interface{}, len(a))
+		for _i, _a := range a {
+			vararg[_i] = _a
+		}
+	}
+
+	ret := _m.Called(vararg)
 
 	var r0 bool
 	if rf, ok := ret.Get(0).(func(...interface{}) bool); ok {
@@ -72,10 +82,15 @@ func (_m *RequesterVariadic) OneInterface(a ...interface{}) bool {
 
 // Sprintf provides a mock function with given fields: format, a
 func (_m *RequesterVariadic) Sprintf(format string, a ...interface{}) string {
-	var _ca []interface{}
-	_ca = append(_ca, format)
-	_ca = append(_ca, a...)
-	ret := _m.Called(_ca...)
+	var vararg []interface{}
+	if len(a) > 0 {
+		vararg = make([]interface{}, len(a))
+		for _i, _a := range a {
+			vararg[_i] = _a
+		}
+	}
+
+	ret := _m.Called(format, vararg)
 
 	var r0 string
 	if rf, ok := ret.Get(0).(func(string, ...interface{}) string); ok {
@@ -100,4 +115,59 @@ func NewRequesterVariadic(t mockConstructorTestingTNewRequesterVariadic) *Reques
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 
 	return mock
+}
+
+func (_m *RequesterVariadic) rollVariadic(methodName string, arguments ...interface{}) []interface{} {
+	sig := _m.getMethodSignature(methodName)
+
+	if !sig.IsVariadic() {
+		return arguments
+	}
+
+	variadicIndex := sig.NumIn() - 1
+	if len(arguments) == sig.NumIn() && arguments[variadicIndex] == mock.Anything {
+		return arguments
+	}
+
+	newArgs := make([]interface{}, sig.NumIn())
+
+	copy(newArgs, arguments[0:variadicIndex])
+
+	if len(arguments) >= sig.NumIn() {
+		newArgs[variadicIndex] = arguments[variadicIndex:]
+	} else {
+		newArgs[variadicIndex] = []interface{}(nil)
+	}
+
+	return newArgs
+}
+
+func (_m *RequesterVariadic) getMethodSignature(methodName string) reflect.Type {
+	switch methodName {
+	case "Get":
+		return reflect.TypeOf(_m.Get)
+	case "MultiWriteToFile":
+		return reflect.TypeOf(_m.MultiWriteToFile)
+	case "OneInterface":
+		return reflect.TypeOf(_m.OneInterface)
+	case "Sprintf":
+		return reflect.TypeOf(_m.Sprintf)
+	default:
+		panic("Invalid method name")
+	}
+}
+
+func (_m *RequesterVariadic) On(methodName string, arguments ...interface{}) *mock.Call {
+	arguments = _m.rollVariadic(methodName, arguments...)
+	return _m.Mock.On(methodName, arguments...)
+}
+
+func (_m *RequesterVariadic) AssertCalled(t mock.TestingT, methodName string, arguments ...interface{}) bool {
+	arguments = _m.rollVariadic(methodName, arguments...)
+	return _m.Mock.AssertCalled(t, methodName, arguments...)
+}
+
+func (_m *RequesterVariadic) AssertNotCalled(t mock.TestingT, methodName string, arguments ...interface{}) bool {
+	arguments = _m.rollVariadic(methodName, arguments...)
+	return _m.Mock.AssertNotCalled(t, methodName, arguments...)
 }

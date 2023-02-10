@@ -580,16 +580,20 @@ func (g *Generator) Generate(ctx context.Context) error {
 		g.generateExpecterStruct(ctx)
 	}
 
-	for _, method := range g.iface.Methods() {
-		// It's probably possible, but not worth the trouble for prototype
-		if method.Signature.Variadic() && g.WithExpecter && !g.UnrollVariadic {
-			return fmt.Errorf("cannot generate a valid expecter for variadic method with unroll-variadic=false")
-		}
+	hasVariadicMethods := false
 
+	for _, method := range g.iface.Methods() {
+		if method.Signature.Variadic() {
+			hasVariadicMethods = true
+		}
 		g.generateMethod(ctx, method)
 	}
 
 	g.generateConstructor(ctx)
+
+	if hasVariadicMethods {
+		g.generateVariadicHelperMethods(ctx)
+	}
 
 	return nil
 }
@@ -600,7 +604,13 @@ func (g *Generator) generateMethod(ctx context.Context, method *Method) {
 
 	params := g.genList(ctx, ftype.Params(), ftype.Variadic())
 	returns := g.genList(ctx, ftype.Results(), false)
-	preamble, called := g.generateCalled(params)
+
+	varArgName := resolveCollision(params.Names, "vararg")
+	paramNames := make([]string, len(params.Names))
+	copy(paramNames, params.Names)
+	if params.Variadic {
+		paramNames[len(paramNames)-1] = varArgName
+	}
 
 	data := struct {
 		FunctionName           string
@@ -609,8 +619,9 @@ func (g *Generator) generateMethod(ctx context.Context, method *Method) {
 		MockName               string
 		InstantiatedTypeString string
 		RetVariableName        string
-		Preamble               string
-		Called                 string
+		CallParamNames         []string
+		VarArgName             string
+		LastParamName          string
 	}{
 		FunctionName:           fname,
 		Params:                 params,
@@ -618,18 +629,31 @@ func (g *Generator) generateMethod(ctx context.Context, method *Method) {
 		MockName:               g.mockName(),
 		InstantiatedTypeString: g.getInstantiatedTypeString(),
 		RetVariableName:        resolveCollision(params.Names, "ret"),
-		Preamble:               preamble,
-		Called:                 called,
+		CallParamNames:         paramNames,
+		VarArgName:             varArgName,
+	}
+
+	if params.Variadic {
+		data.LastParamName = params.Names[len(params.Names)-1]
 	}
 
 	g.printTemplate(data, `
 // {{.FunctionName}} provides a mock function with given fields: {{join .Params.Names ", "}}
 func (_m *{{.MockName}}{{.InstantiatedTypeString}}) {{.FunctionName}}({{join .Params.Params ", "}}) {{if (gt (len .Returns.Types) 1)}}({{end}}{{join .Returns.Types ", "}}{{if (gt (len .Returns.Types) 1)}}){{end}} {
-{{- .Preamble -}}
+{{- if .Params.Variadic -}}
+	var {{.VarArgName}} []interface{}
+	if len({{.LastParamName}}) > 0 {
+		{{.VarArgName}} = make([]interface{}, len({{.LastParamName}}))
+		for _i, _a := range {{.LastParamName}} {
+			{{.VarArgName}}[_i] = _a
+		}
+	}
+
+{{end -}}
 {{- if not .Returns.Types}}
-	{{- .Called}}
+	_m.Called({{join .CallParamNames ", "}})
 {{- else}}
-	{{- .RetVariableName}} := {{.Called}}
+	{{- .RetVariableName}} := _m.Called({{join .CallParamNames ", "}})
 
 	{{range $idx, $name := .Returns.ReturnNames}}
 	var {{$name}} {{index $.Returns.Types $idx -}}
@@ -693,6 +717,12 @@ func (_m *{{.MockName}}{{ .InstantiatedTypeString }}) EXPECT() *{{.ExpecterName}
 }
 
 func (g *Generator) generateExpecterMethodCall(ctx context.Context, method *Method, params, returns *paramList) {
+	varArgName := resolveCollision(params.Names, "vararg")
+	paramNames := make([]string, len(params.Names))
+	copy(paramNames, params.Names)
+	if params.Variadic {
+		paramNames[len(paramNames)-1] = varArgName
+	}
 
 	data := struct {
 		MockName, ExpecterName string
@@ -704,6 +734,8 @@ func (g *Generator) generateExpecterMethodCall(ctx context.Context, method *Meth
 		NbNonVariadic          int
 		InstantiatedTypeString string
 		TypeConstraint         string
+		VarArgName             string
+		CallParamNames         []string
 	}{
 		MockName:               g.mockName(),
 		ExpecterName:           g.expecterName(),
@@ -713,6 +745,8 @@ func (g *Generator) generateExpecterMethodCall(ctx context.Context, method *Meth
 		Returns:                returns,
 		InstantiatedTypeString: g.getInstantiatedTypeString(),
 		TypeConstraint:         g.getTypeConstraintString(ctx),
+		VarArgName:             varArgName,
+		CallParamNames:         paramNames,
 	}
 
 	// Get some info about parameters for variadic methods, way easier than doing it in golang template directly
@@ -733,17 +767,13 @@ type {{.CallStruct}}{{ .TypeConstraint }} struct {
 //  - {{.}}
 {{- end}}
 func (_e *{{.ExpecterName}}{{ .InstantiatedTypeString }}) {{.MethodName}}({{range .Params.ParamsIntf}}{{.}},{{end}}) *{{.CallStruct}}{{ .InstantiatedTypeString }} {
-	return &{{.CallStruct}}{{ .InstantiatedTypeString }}{Call: _e.mock.On("{{.MethodName}}",
-			{{- if not .Params.Variadic }}
-				{{- range .Params.Names}}{{.}},{{end}}
-			{{- else }}
-				append([]interface{}{
-					{{- range $i, $name := .Params.Names }}
-						{{- if (lt $i $.NbNonVariadic)}} {{$name}},
-						{{- else}} }, {{$name}}...
-						{{- end}}
-					{{- end}} )...
-			{{- end }} )}
+	{{- if .Params.Variadic }}
+	var {{.VarArgName}} interface{} = {{.LastParamName}}
+	if len({{.LastParamName}}) == 1 && {{.LastParamName}}[0] == mock.Anything {
+		{{.VarArgName}} = {{.LastParamName}}[0]
+	}
+	{{- end}}
+	return &{{.CallStruct}}{{ .InstantiatedTypeString }}{Call: _e.mock.On("{{.MethodName}}", {{join .CallParamNames ", "}})}
 }
 
 func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) Run(run func({{range .Params.Params}}{{.}},{{end}})) *{{.CallStruct}}{{ .InstantiatedTypeString }} {
@@ -751,8 +781,9 @@ func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) Run(run func({{range .Pa
 	{{- if not .Params.Variadic }}
 		run({{range $i, $type := .Params.Types }}args[{{$i}}].({{$type}}),{{end}})
 	{{- else}}
-		variadicArgs := make([]{{.LastParamType}}, len(args) - {{.NbNonVariadic}})
-		for i, a := range args[{{.NbNonVariadic}}:] {
+		variadicIntfs := args[{{.NbNonVariadic}}].([]interface{})
+		variadicArgs := make([]{{.LastParamType}}, len(variadicIntfs))
+		for i, a := range variadicIntfs {
 			if a != nil {
 				variadicArgs[i] = a.({{.LastParamType}})
 			}
@@ -816,63 +847,68 @@ func {{ .ConstructorName }}{{ .TypeConstraint }}(t {{ .ConstructorTestingInterfa
 	g.printTemplate(data, constructorTemplate)
 }
 
-// generateCalled returns the Mock.Called invocation string and, if necessary, a preamble with the
-// steps to prepare its argument list.
-//
-// It is separate from Generate to avoid cyclomatic complexity through early return statements.
-func (g *Generator) generateCalled(list *paramList) (preamble string, called string) {
-	namesLen := len(list.Names)
-	if namesLen == 0 || !list.Variadic || !g.UnrollVariadic {
-		called = "_m.Called(" + strings.Join(list.Names, ", ") + ")"
-		return
+func (g *Generator) generateVariadicHelperMethods(ctx context.Context) {
+	data := struct {
+		InstantiatedTypeString string
+		MockName               string
+		Methods                []*Method
+	}{
+		MockName:               g.mockName(),
+		InstantiatedTypeString: g.getInstantiatedTypeString(),
+		Methods:                g.iface.Methods(),
+	}
+	g.printTemplate(data, `
+func (_m *{{.MockName}}{{.InstantiatedTypeString}}) rollVariadic(methodName string, arguments ...interface{}) []interface{} {
+	sig := _m.getMethodSignature(methodName)
+
+	if !sig.IsVariadic() {
+		return arguments
 	}
 
-	var variadicArgsName string
-	variadicName := list.Names[namesLen-1]
+	variadicIndex := sig.NumIn() - 1
+	if len(arguments) == sig.NumIn() && arguments[variadicIndex] == mock.Anything {
+		return arguments
+	}
 
-	// list.Types[] will contain a leading '...'. Strip this from the string to
-	// do easier comparison.
-	strippedIfaceType := strings.Trim(list.Types[namesLen-1], "...")
-	variadicIface := strippedIfaceType == "interface{}" || strippedIfaceType == "any"
+	newArgs := make([]interface{}, sig.NumIn())
 
-	if variadicIface {
-		// Variadic is already of the interface{} type, so we don't need special handling.
-		variadicArgsName = variadicName
+	copy(newArgs, arguments[0:variadicIndex])
+
+	if len(arguments) >= sig.NumIn() {
+		newArgs[variadicIndex] = arguments[variadicIndex:]
 	} else {
-		// Define _va to avoid "cannot use t (type T) as type []interface {} in append" error
-		// whenever the variadic type is non-interface{}.
-		preamble += fmt.Sprintf("\t_va := make([]interface{}, len(%s))\n", variadicName)
-		preamble += fmt.Sprintf("\tfor _i := range %s {\n\t\t_va[_i] = %s[_i]\n\t}\n", variadicName, variadicName)
-		variadicArgsName = "_va"
+		newArgs[variadicIndex] = []interface{}(nil)
 	}
 
-	// _ca will hold all arguments we'll mirror into Called, one argument per distinct value
-	// passed to the method.
-	//
-	// For example, if the second argument is variadic and consists of three values,
-	// a total of 4 arguments will be passed to Called. The alternative is to
-	// pass a total of 2 arguments where the second is a slice with those 3 values from
-	// the variadic argument. But the alternative is less accessible because it requires
-	// building a []interface{} before calling Mock methods like On and AssertCalled for
-	// the variadic argument, and creates incompatibility issues with the diff algorithm
-	// in github.com/stretchr/testify/mock.
-	//
-	// This mirroring will allow argument lists for methods like On and AssertCalled to
-	// always resemble the expected calls they describe and retain compatibility.
-	//
-	// It's okay for us to use the interface{} type, regardless of the actual types, because
-	// Called receives only interface{} anyway.
-	preamble += ("\tvar _ca []interface{}\n")
+	return newArgs
+}
 
-	if namesLen > 1 {
-		formattedParamNames := list.FormattedParamNames()
-		nonVariadicParamNames := formattedParamNames[0:strings.LastIndex(formattedParamNames, ",")]
-		preamble += fmt.Sprintf("\t_ca = append(_ca, %s)\n", nonVariadicParamNames)
+func (_m *{{.MockName}}{{.InstantiatedTypeString}}) getMethodSignature(methodName string) reflect.Type {
+	switch methodName {
+	{{- range $m := .Methods}}
+	case "{{$m.Name}}":
+		return reflect.TypeOf(_m.{{$m.Name}})
+	{{- end}}
+	default:
+		panic("Invalid method name")
 	}
-	preamble += fmt.Sprintf("\t_ca = append(_ca, %s...)\n", variadicArgsName)
+}
 
-	called = "_m.Called(_ca...)"
-	return
+func (_m *{{.MockName}}{{.InstantiatedTypeString}}) On(methodName string, arguments ...interface{}) *mock.Call {
+	arguments = _m.rollVariadic(methodName, arguments...)
+	return _m.Mock.On(methodName, arguments...)
+}
+
+func (_m *{{.MockName}}{{.InstantiatedTypeString}}) AssertCalled(t mock.TestingT, methodName string, arguments ...interface{}) bool {
+	arguments = _m.rollVariadic(methodName, arguments...)
+	return _m.Mock.AssertCalled(t, methodName, arguments...)
+}
+
+func (_m *{{.MockName}}{{.InstantiatedTypeString}}) AssertNotCalled(t mock.TestingT, methodName string, arguments ...interface{}) bool {
+	arguments = _m.rollVariadic(methodName, arguments...)
+	return _m.Mock.AssertNotCalled(t, methodName, arguments...)
+}
+`)
 }
 
 func (g *Generator) Write(w io.Writer) error {

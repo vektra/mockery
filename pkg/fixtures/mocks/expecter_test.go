@@ -154,6 +154,42 @@ func TestExpecter(t *testing.T) {
 		})
 		require.NoError(t, expMock.VariadicMany(defaultInt, defaultString, 1, nil, "blah"))
 
+		// make sure mock.Anything matches multiple variadic args
+		expMock.EXPECT().VariadicMany(defaultInt, defaultString, mock.Anything).Run(func(i int, a string, intfs ...interface{}) {
+			require.Equal(t, defaultInt, i)
+			require.Equal(t, defaultString, a)
+			require.Equal(t, []interface{}{1, nil, "blah"}, intfs)
+			runCalled++
+		}).Return(defaultError).Once()
+		require.Panics(t, func() {
+			expMock.VariadicMany(1000, "other string", 1, nil, "blah")
+		})
+		err := expMock.VariadicMany(defaultInt, defaultString, 1, nil, "blah")
+		require.Equal(t, defaultError, err)
+
+		// make sure mock.Anything matches zero variadic args
+		expMock.EXPECT().VariadicMany(defaultInt, defaultString, mock.Anything).Run(func(i int, a string, intfs ...interface{}) {
+			require.Equal(t, defaultInt, i)
+			require.Equal(t, defaultString, a)
+			require.Equal(t, []interface{}{}, intfs)
+			runCalled++
+		}).Return(defaultError).Once()
+		err = expMock.VariadicMany(defaultInt, defaultString)
+		require.Equal(t, defaultError, err)
+
+		// make sure we can declare the expected call with zero variadic args and have it match exactly that
+		expMock.EXPECT().VariadicMany(defaultInt, defaultString).Run(func(i int, a string, intfs ...interface{}) {
+			require.Equal(t, defaultInt, i)
+			require.Equal(t, defaultString, a)
+			require.Equal(t, []interface{}{}, intfs)
+			runCalled++
+		}).Return(defaultError).Once()
+		require.Panics(t, func() {
+			expMock.VariadicMany(defaultInt, defaultString, "a variadic arg")
+		})
+		err = expMock.VariadicMany(defaultInt, defaultString)
+		require.Equal(t, defaultError, err)
+
 		expMock.EXPECT().VariadicMany(mock.Anything, mock.Anything, 1, nil, "blah").Run(func(i int, a string, intfs ...interface{}) {
 			require.Equal(t, defaultInt, i)
 			require.Equal(t, defaultString, a)
@@ -163,7 +199,7 @@ func TestExpecter(t *testing.T) {
 		require.Panics(t, func() {
 			expMock.VariadicMany(defaultInt, defaultString, 1, nil, "other string")
 		})
-		err := expMock.VariadicMany(defaultInt, defaultString, 1, nil, "blah")
+		err = expMock.VariadicMany(defaultInt, defaultString, 1, nil, "blah")
 		require.Equal(t, defaultError, err)
 
 		args := []interface{}{1, 2, 3, 4, 5}
@@ -175,7 +211,7 @@ func TestExpecter(t *testing.T) {
 		}).Return(nil).Once()
 		require.NoError(t, expMock.VariadicMany(defaultInt, defaultString, args...))
 
-		require.Equal(t, runCalled, 5)
+		require.Equal(t, runCalled, 8)
 		expMock.AssertExpectations(t)
 	})
 

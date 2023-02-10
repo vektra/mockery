@@ -91,17 +91,15 @@ func (s *GeneratorSuite) getGenerator(
 	filepath, interfaceName string, inPackage bool, structName string,
 ) *Generator {
 	return s.getGeneratorWithConfig(filepath, interfaceName, config.Config{
-		StructName:     structName,
-		InPackage:      inPackage,
-		UnrollVariadic: true,
+		StructName: structName,
+		InPackage:  inPackage,
 	})
 }
 
 func (s *GeneratorSuite) checkGeneration(filepath, interfaceName string, inPackage bool, structName string, expected string) *Generator {
 	cfg := config.Config{
-		StructName:     structName,
-		InPackage:      inPackage,
-		UnrollVariadic: true,
+		StructName: structName,
+		InPackage:  inPackage,
 	}
 	return s.checkGenerationWithConfig(filepath, interfaceName, cfg, expected)
 }
@@ -247,8 +245,7 @@ func NewRequester(t mockConstructorTestingTNewRequester) *Requester {
 `
 
 	cfg := config.Config{
-		WithExpecter:   true,
-		UnrollVariadic: false, // it's okay if the interface doesn't have any variadic method
+		WithExpecter: true,
 	}
 	s.checkGenerationWithConfig(testFile, "Requester", cfg, expected)
 }
@@ -398,13 +395,15 @@ func (_c *Expecter_NoReturn_Call) RunAndReturn(run func(string)) *Expecter_NoRet
 
 // Variadic provides a mock function with given fields: ints
 func (_m *Expecter) Variadic(ints ...int) error {
-	_va := make([]interface{}, len(ints))
-	for _i := range ints {
-		_va[_i] = ints[_i]
+	var vararg []interface{}
+	if len(ints) > 0 {
+		vararg = make([]interface{}, len(ints))
+		for _i, _a := range ints {
+			vararg[_i] = _a
+		}
 	}
-	var _ca []interface{}
-	_ca = append(_ca, _va...)
-	ret := _m.Called(_ca...)
+
+	ret := _m.Called(vararg)
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(...int) error); ok {
@@ -424,14 +423,18 @@ type Expecter_Variadic_Call struct {
 // Variadic is a helper method to define mock.On call
 //   - ints ...int
 func (_e *Expecter_Expecter) Variadic(ints ...interface{}) *Expecter_Variadic_Call {
-	return &Expecter_Variadic_Call{Call: _e.mock.On("Variadic",
-		append([]interface{}{}, ints...)...)}
+	var vararg interface{} = ints
+	if len(ints) == 1 && ints[0] == mock.Anything {
+		vararg = ints[0]
+	}
+	return &Expecter_Variadic_Call{Call: _e.mock.On("Variadic", vararg)}
 }
 
 func (_c *Expecter_Variadic_Call) Run(run func(ints ...int)) *Expecter_Variadic_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		variadicArgs := make([]int, len(args)-0)
-		for i, a := range args[0:] {
+		variadicIntfs := args[0].([]interface{})
+		variadicArgs := make([]int, len(variadicIntfs))
+		for i, a := range variadicIntfs {
 			if a != nil {
 				variadicArgs[i] = a.(int)
 			}
@@ -453,10 +456,15 @@ func (_c *Expecter_Variadic_Call) RunAndReturn(run func(...int) error) *Expecter
 
 // VariadicMany provides a mock function with given fields: i, a, intfs
 func (_m *Expecter) VariadicMany(i int, a string, intfs ...interface{}) error {
-	var _ca []interface{}
-	_ca = append(_ca, i, a)
-	_ca = append(_ca, intfs...)
-	ret := _m.Called(_ca...)
+	var vararg []interface{}
+	if len(intfs) > 0 {
+		vararg = make([]interface{}, len(intfs))
+		for _i, _a := range intfs {
+			vararg[_i] = _a
+		}
+	}
+
+	ret := _m.Called(i, a, vararg)
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(int, string, ...interface{}) error); ok {
@@ -478,14 +486,18 @@ type Expecter_VariadicMany_Call struct {
 //   - a string
 //   - intfs ...interface{}
 func (_e *Expecter_Expecter) VariadicMany(i interface{}, a interface{}, intfs ...interface{}) *Expecter_VariadicMany_Call {
-	return &Expecter_VariadicMany_Call{Call: _e.mock.On("VariadicMany",
-		append([]interface{}{i, a}, intfs...)...)}
+	var vararg interface{} = intfs
+	if len(intfs) == 1 && intfs[0] == mock.Anything {
+		vararg = intfs[0]
+	}
+	return &Expecter_VariadicMany_Call{Call: _e.mock.On("VariadicMany", i, a, vararg)}
 }
 
 func (_c *Expecter_VariadicMany_Call) Run(run func(i int, a string, intfs ...interface{})) *Expecter_VariadicMany_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		variadicArgs := make([]interface{}, len(args)-2)
-		for i, a := range args[2:] {
+		variadicIntfs := args[2].([]interface{})
+		variadicArgs := make([]interface{}, len(variadicIntfs))
+		for i, a := range variadicIntfs {
 			if a != nil {
 				variadicArgs[i] = a.(interface{})
 			}
@@ -519,25 +531,70 @@ func NewExpecter(t mockConstructorTestingTNewExpecter) *Expecter {
 
 	return mock
 }
+
+func (_m *Expecter) rollVariadic(methodName string, arguments ...interface{}) []interface{} {
+	sig := _m.getMethodSignature(methodName)
+
+	if !sig.IsVariadic() {
+		return arguments
+	}
+
+	variadicIndex := sig.NumIn() - 1
+	if len(arguments) == sig.NumIn() && arguments[variadicIndex] == mock.Anything {
+		return arguments
+	}
+
+	newArgs := make([]interface{}, sig.NumIn())
+
+	copy(newArgs, arguments[0:variadicIndex])
+
+	if len(arguments) >= sig.NumIn() {
+		newArgs[variadicIndex] = arguments[variadicIndex:]
+	} else {
+		newArgs[variadicIndex] = []interface{}(nil)
+	}
+
+	return newArgs
+}
+
+func (_m *Expecter) getMethodSignature(methodName string) reflect.Type {
+	switch methodName {
+	case "ManyArgsReturns":
+		return reflect.TypeOf(_m.ManyArgsReturns)
+	case "NoArg":
+		return reflect.TypeOf(_m.NoArg)
+	case "NoReturn":
+		return reflect.TypeOf(_m.NoReturn)
+	case "Variadic":
+		return reflect.TypeOf(_m.Variadic)
+	case "VariadicMany":
+		return reflect.TypeOf(_m.VariadicMany)
+	default:
+		panic("Invalid method name")
+	}
+}
+
+func (_m *Expecter) On(methodName string, arguments ...interface{}) *mock.Call {
+	arguments = _m.rollVariadic(methodName, arguments...)
+	return _m.Mock.On(methodName, arguments...)
+}
+
+func (_m *Expecter) AssertCalled(t mock.TestingT, methodName string, arguments ...interface{}) bool {
+	arguments = _m.rollVariadic(methodName, arguments...)
+	return _m.Mock.AssertCalled(t, methodName, arguments...)
+}
+
+func (_m *Expecter) AssertNotCalled(t mock.TestingT, methodName string, arguments ...interface{}) bool {
+	arguments = _m.rollVariadic(methodName, arguments...)
+	return _m.Mock.AssertNotCalled(t, methodName, arguments...)
+}
 `
 
 	cfg := config.Config{
-		StructName:     "Expecter",
-		WithExpecter:   true,
-		UnrollVariadic: true,
+		StructName:   "Expecter",
+		WithExpecter: true,
 	}
 	s.checkGenerationWithConfig("expecter.go", "Expecter", cfg, expected)
-}
-
-func (s *GeneratorSuite) TestGeneratorExpecterFailsWithoutUnrolledVariadic() {
-	cfg := config.Config{
-		WithExpecter:   true,
-		UnrollVariadic: false,
-	}
-	gen := s.getGeneratorWithConfig("expecter.go", "Expecter", cfg)
-	err := gen.Generate(s.ctx)
-	s.Error(err)
-	s.Contains(err.Error(), "cannot generate a valid expecter for variadic method with unroll-variadic=false")
 }
 
 func (s *GeneratorSuite) TestGeneratorFunction() {
@@ -1516,9 +1573,8 @@ func (s *GeneratorSuite) TestGeneratorVariadicArgsAsOneArg() {
 	expected = expected[strings.Index(expected, "// RequesterVariadicOneArgument is"):]
 	generator := NewGenerator(
 		s.ctx, config.Config{
-			StructName:     "RequesterVariadicOneArgument",
-			InPackage:      true,
-			UnrollVariadic: false,
+			StructName: "RequesterVariadicOneArgument",
+			InPackage:  true,
 		}, s.getInterfaceFromFile("requester_variadic.go", "RequesterVariadic"), pkg,
 	)
 	s.NoError(generator.Generate(s.ctx), "The generator ran without errors.")
@@ -1539,25 +1595,23 @@ func (s *GeneratorSuite) TestGeneratorVariadicArgsAsOneArg() {
 func TestRequesterVariadicOneArgument(t *testing.T) {
 	t.Run("Get \"1\", \"2\", \"3\"", func(t *testing.T) {
 		m := mocks.RequesterVariadicOneArgument{}
-		args := []string{"1", "2", "3"}
-		m.On("Get", args).Return(true).Once()
-		res := m.Get(args...)
+		m.On("Get", "1", "2", "3").Return(true).Once()
+		res := m.Get("1", "2", "3")
 		assert.True(t, res)
 		m.AssertExpectations(t)
 	})
 
 	t.Run("Get mock.Anything", func(t *testing.T) {
 		m := mocks.RequesterVariadicOneArgument{}
-		args := []string{"1", "2", "3"}
 		m.On("Get", mock.Anything).Return(true).Once()
-		res := m.Get(args...)
+		res := m.Get("1", "2", "3")
 		assert.True(t, res)
 		m.AssertExpectations(t)
 	})
 
 	t.Run("Get no arguments", func(t *testing.T) {
 		m := mocks.RequesterVariadicOneArgument{}
-		m.On("Get", []string(nil)).Return(true).Once()
+		m.On("Get").Return(true).Once()
 		res := m.Get()
 		assert.True(t, res)
 		m.AssertExpectations(t)
@@ -1568,7 +1622,7 @@ func TestRequesterVariadicOneArgument(t *testing.T) {
 		args := []io.Writer{&strings.Builder{}, &strings.Builder{}}
 		expected := "res"
 		filename := "testFilename"
-		m.On("MultiWriteToFile", filename, args).Return(expected).Once()
+		m.On("MultiWriteToFile", filename, args[0], args[1]).Return(expected).Once()
 		res := m.MultiWriteToFile(filename, args...)
 		assert.Equal(t, expected, res)
 		m.AssertExpectations(t)
@@ -1588,7 +1642,7 @@ func TestRequesterVariadicOneArgument(t *testing.T) {
 	t.Run("OneInterface \"1\", \"2\", \"3\"", func(t *testing.T) {
 		m := mocks.RequesterVariadicOneArgument{}
 		args := []interface{}{"1", "2", "3"}
-		m.On("OneInterface", args).Return(true).Once()
+		m.On("OneInterface", "1", "2", "3").Return(true).Once()
 		res := m.OneInterface(args...)
 		assert.True(t, res)
 		m.AssertExpectations(t)
@@ -1608,7 +1662,7 @@ func TestRequesterVariadicOneArgument(t *testing.T) {
 		args := []interface{}{&strings.Builder{}, &strings.Builder{}}
 		expected := "res"
 		filename := "testFilename"
-		m.On("Sprintf", filename, args).Return(expected).Once()
+		m.On("Sprintf", filename, args[0], args[1]).Return(expected).Once()
 		res := m.Sprintf(filename, args...)
 		assert.Equal(t, expected, res)
 		m.AssertExpectations(t)
@@ -2075,13 +2129,15 @@ type MapToInterface struct {
 
 // Foo provides a mock function with given fields: arg1
 func (_m *MapToInterface) Foo(arg1 ...map[string]interface{}) {
-	_va := make([]interface{}, len(arg1))
-	for _i := range arg1 {
-		_va[_i] = arg1[_i]
+	var vararg []interface{}
+	if len(arg1) > 0 {
+		vararg = make([]interface{}, len(arg1))
+		for _i, _a := range arg1 {
+			vararg[_i] = _a
+		}
 	}
-	var _ca []interface{}
-	_ca = append(_ca, _va...)
-	_m.Called(_ca...)
+
+	_m.Called(vararg)
 }
 
 type mockConstructorTestingTNewMapToInterface interface {
@@ -2097,6 +2153,55 @@ func NewMapToInterface(t mockConstructorTestingTNewMapToInterface) *MapToInterfa
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 
 	return mock
+}
+
+func (_m *MapToInterface) rollVariadic(methodName string, arguments ...interface{}) []interface{} {
+	sig := _m.getMethodSignature(methodName)
+
+	if !sig.IsVariadic() {
+		return arguments
+	}
+
+	variadicIndex := sig.NumIn() - 1
+	if len(arguments) == sig.NumIn() && arguments[variadicIndex] == mock.Anything {
+		return arguments
+	}
+
+	newArgs := make([]interface{}, sig.NumIn())
+
+	copy(newArgs, arguments[0:variadicIndex])
+
+	if len(arguments) >= sig.NumIn() {
+		newArgs[variadicIndex] = arguments[variadicIndex:]
+	} else {
+		newArgs[variadicIndex] = []interface{}(nil)
+	}
+
+	return newArgs
+}
+
+func (_m *MapToInterface) getMethodSignature(methodName string) reflect.Type {
+	switch methodName {
+	case "Foo":
+		return reflect.TypeOf(_m.Foo)
+	default:
+		panic("Invalid method name")
+	}
+}
+
+func (_m *MapToInterface) On(methodName string, arguments ...interface{}) *mock.Call {
+	arguments = _m.rollVariadic(methodName, arguments...)
+	return _m.Mock.On(methodName, arguments...)
+}
+
+func (_m *MapToInterface) AssertCalled(t mock.TestingT, methodName string, arguments ...interface{}) bool {
+	arguments = _m.rollVariadic(methodName, arguments...)
+	return _m.Mock.AssertCalled(t, methodName, arguments...)
+}
+
+func (_m *MapToInterface) AssertNotCalled(t mock.TestingT, methodName string, arguments ...interface{}) bool {
+	arguments = _m.rollVariadic(methodName, arguments...)
+	return _m.Mock.AssertNotCalled(t, methodName, arguments...)
 }
 `
 	s.checkGeneration("MapToInterface.go", "MapToInterface", false, "", expected)
@@ -2698,9 +2803,8 @@ func NewRequesterGenerics[TAny interface{}, TComparable comparable, TSigned cons
 }
 `
 	cfg := config.Config{
-		StructName:     "RequesterGenerics",
-		WithExpecter:   true,
-		UnrollVariadic: true,
+		StructName:   "RequesterGenerics",
+		WithExpecter: true,
 	}
 	s.checkGenerationWithConfig("generic.go", "RequesterGenerics", cfg, expected)
 }

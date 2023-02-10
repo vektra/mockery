@@ -3,6 +3,7 @@ package pkg
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 	mocks "github.com/vektra/mockery/v2/mocks/pkg/fixtures"
@@ -33,6 +34,16 @@ func (s *CompatSuite) TestOnAnythingOfTypeVariadicArgs() {
 	m.Sprintf("int: %d string: %s", 22, "twenty two")
 	m.AssertExpectations(s.T())
 	m.AssertCalled(t, "Sprintf", "int: %d string: %s", 22, "twenty two")
+}
+
+// TestVariadicMockAnything asserts that you can use mock.Anything to match any combination of
+// zero or more arguments passed to the variadic parameter of a function.
+func (s *CompatSuite) TestVariadicMockAnything() {
+	t := s.T()
+	m := new(mocks.RequesterVariadic)
+	m.On("Sprintf", mock.Anything, mock.Anything).Return("passed")
+	assert.Equal(t, "passed", m.Sprintf("format string", "and", "many", "varidic", "arguments"))
+	assert.Equal(t, "passed", m.Sprintf("Format string and zero variadic arguments"))
 }
 
 func TestCompatSuite(t *testing.T) {
