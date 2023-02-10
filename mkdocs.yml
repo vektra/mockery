@@ -1,4 +1,5 @@
 site_name: mockery
+repo_url: https://github.com/vektra/mockery
 theme:
   name: material
   palette:
