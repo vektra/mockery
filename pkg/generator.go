@@ -816,7 +816,7 @@ func {{ .ConstructorName }}{{ .TypeConstraint }}(t {{ .ConstructorTestingInterfa
 	g.printTemplate(data, constructorTemplate)
 }
 
-// generateCalled returns the Mock.Called invocation string and, if necessary, prints the
+// generateCalled returns the Mock.Called invocation string and, if necessary, a preamble with the
 // steps to prepare its argument list.
 //
 // It is separate from Generate to avoid cyclomatic complexity through early return statements.
