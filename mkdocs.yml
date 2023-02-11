@@ -45,8 +45,7 @@ markdown_extensions:
   
 
 nav:
-  - Home:
-    - Mockery: mockery.md
+  - Home: index.md
   - Getting Started:
     - Installation: installation.md
     - Configuration: configuration.md
