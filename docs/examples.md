@@ -119,7 +119,3 @@ proxyMock.On("passthrough", mock.AnythingOfType("context.Context"), mock.Anythin
 		return s
 	})
 ```
-
-### Note
-
-For mockery to correctly generate mocks, the command has to be run on a module (i.e. your project has to have a go.mod file)
