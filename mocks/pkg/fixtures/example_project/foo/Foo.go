@@ -31,6 +31,10 @@ func (_m *Foo) GetBaz() (*foo.Baz, error) {
 	ret := _m.Called()
 
 	var r0 *foo.Baz
+	var r1 error
+	if rf, ok := ret.Get(0).(func() (*foo.Baz, error)); ok {
+		return rf()
+	}
 	if rf, ok := ret.Get(0).(func() *foo.Baz); ok {
 		r0 = rf()
 	} else {
@@ -39,7 +43,6 @@ func (_m *Foo) GetBaz() (*foo.Baz, error) {
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func() error); ok {
 		r1 = rf()
 	} else {

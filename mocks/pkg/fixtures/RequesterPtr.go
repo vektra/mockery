@@ -14,6 +14,10 @@ func (_m *RequesterPtr) Get(path string) (*string, error) {
 	ret := _m.Called(path)
 
 	var r0 *string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (*string, error)); ok {
+		return rf(path)
+	}
 	if rf, ok := ret.Get(0).(func(string) *string); ok {
 		r0 = rf(path)
 	} else {
@@ -22,7 +26,6 @@ func (_m *RequesterPtr) Get(path string) (*string, error) {
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(string) error); ok {
 		r1 = rf(path)
 	} else {

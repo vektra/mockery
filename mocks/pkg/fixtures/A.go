@@ -17,13 +17,16 @@ func (_m *A) Call() (test.B, error) {
 	ret := _m.Called()
 
 	var r0 test.B
+	var r1 error
+	if rf, ok := ret.Get(0).(func() (test.B, error)); ok {
+		return rf()
+	}
 	if rf, ok := ret.Get(0).(func() test.B); ok {
 		r0 = rf()
 	} else {
 		r0 = ret.Get(0).(test.B)
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func() error); ok {
 		r1 = rf()
 	} else {

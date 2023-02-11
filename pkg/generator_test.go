@@ -127,13 +127,16 @@ func (_m *Requester) Get(path string) (string, error) {
 	ret := _m.Called(path)
 
 	var r0 string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (string, error)); ok {
+		return rf(path)
+	}
 	if rf, ok := ret.Get(0).(func(string) string); ok {
 		r0 = rf(path)
 	} else {
 		r0 = ret.Get(0).(string)
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(string) error); ok {
 		r1 = rf(path)
 	} else {
@@ -180,13 +183,16 @@ func (_m *Requester) Get(path string) (string, error) {
 	ret := _m.Called(path)
 
 	var r0 string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (string, error)); ok {
+		return rf(path)
+	}
 	if rf, ok := ret.Get(0).(func(string) string); ok {
 		r0 = rf(path)
 	} else {
 		r0 = ret.Get(0).(string)
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(string) error); ok {
 		r1 = rf(path)
 	} else {
@@ -216,6 +222,11 @@ func (_c *Requester_Get_Call) Run(run func(path string)) *Requester_Get_Call {
 
 func (_c *Requester_Get_Call) Return(_a0 string, _a1 error) *Requester_Get_Call {
 	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Requester_Get_Call) RunAndReturn(run func(string) (string, error)) *Requester_Get_Call {
+	_c.Call.Return(run)
 	return _c
 }
 
@@ -261,6 +272,10 @@ func (_m *Expecter) ManyArgsReturns(str string, i int) ([]string, error) {
 	ret := _m.Called(str, i)
 
 	var r0 []string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, int) ([]string, error)); ok {
+		return rf(str, i)
+	}
 	if rf, ok := ret.Get(0).(func(string, int) []string); ok {
 		r0 = rf(str, i)
 	} else {
@@ -269,7 +284,6 @@ func (_m *Expecter) ManyArgsReturns(str string, i int) ([]string, error) {
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(string, int) error); ok {
 		r1 = rf(str, i)
 	} else {
@@ -300,6 +314,11 @@ func (_c *Expecter_ManyArgsReturns_Call) Run(run func(str string, i int)) *Expec
 
 func (_c *Expecter_ManyArgsReturns_Call) Return(strs []string, err error) *Expecter_ManyArgsReturns_Call {
 	_c.Call.Return(strs, err)
+	return _c
+}
+
+func (_c *Expecter_ManyArgsReturns_Call) RunAndReturn(run func(string, int) ([]string, error)) *Expecter_ManyArgsReturns_Call {
+	_c.Call.Return(run)
 	return _c
 }
 
@@ -339,6 +358,11 @@ func (_c *Expecter_NoArg_Call) Return(_a0 string) *Expecter_NoArg_Call {
 	return _c
 }
 
+func (_c *Expecter_NoArg_Call) RunAndReturn(run func() string) *Expecter_NoArg_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // NoReturn provides a mock function with given fields: str
 func (_m *Expecter) NoReturn(str string) {
 	_m.Called(str)
@@ -364,6 +388,11 @@ func (_c *Expecter_NoReturn_Call) Run(run func(str string)) *Expecter_NoReturn_C
 
 func (_c *Expecter_NoReturn_Call) Return() *Expecter_NoReturn_Call {
 	_c.Call.Return()
+	return _c
+}
+
+func (_c *Expecter_NoReturn_Call) RunAndReturn(run func(string)) *Expecter_NoReturn_Call {
+	_c.Call.Return(run)
 	return _c
 }
 
@@ -417,6 +446,11 @@ func (_c *Expecter_Variadic_Call) Return(_a0 error) *Expecter_Variadic_Call {
 	return _c
 }
 
+func (_c *Expecter_Variadic_Call) RunAndReturn(run func(...int) error) *Expecter_Variadic_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // VariadicMany provides a mock function with given fields: i, a, intfs
 func (_m *Expecter) VariadicMany(i int, a string, intfs ...interface{}) error {
 	var _ca []interface{}
@@ -466,6 +500,11 @@ func (_c *Expecter_VariadicMany_Call) Return(_a0 error) *Expecter_VariadicMany_C
 	return _c
 }
 
+func (_c *Expecter_VariadicMany_Call) RunAndReturn(run func(int, string, ...interface{}) error) *Expecter_VariadicMany_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 type mockConstructorTestingTNewExpecter interface {
 	mock.TestingT
 	Cleanup(func())
@@ -512,13 +551,16 @@ func (_m *SendFunc) Execute(ctx context.Context, data string) (int, error) {
 	ret := _m.Called(ctx, data)
 
 	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) (int, error)); ok {
+		return rf(ctx, data)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, string) int); ok {
 		r0 = rf(ctx, data)
 	} else {
 		r0 = ret.Get(0).(int)
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
 		r1 = rf(ctx, data)
 	} else {
@@ -919,6 +961,10 @@ func (_m *RequesterPtr) Get(path string) (*string, error) {
 	ret := _m.Called(path)
 
 	var r0 *string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (*string, error)); ok {
+		return rf(path)
+	}
 	if rf, ok := ret.Get(0).(func(string) *string); ok {
 		r0 = rf(path)
 	} else {
@@ -927,7 +973,6 @@ func (_m *RequesterPtr) Get(path string) (*string, error) {
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(string) error); ok {
 		r1 = rf(path)
 	} else {
@@ -966,6 +1011,10 @@ func (_m *RequesterSlice) Get(path string) ([]string, error) {
 	ret := _m.Called(path)
 
 	var r0 []string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) ([]string, error)); ok {
+		return rf(path)
+	}
 	if rf, ok := ret.Get(0).(func(string) []string); ok {
 		r0 = rf(path)
 	} else {
@@ -974,7 +1023,6 @@ func (_m *RequesterSlice) Get(path string) ([]string, error) {
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(string) error); ok {
 		r1 = rf(path)
 	} else {
@@ -1013,6 +1061,10 @@ func (_m *RequesterArray) Get(path string) ([2]string, error) {
 	ret := _m.Called(path)
 
 	var r0 [2]string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) ([2]string, error)); ok {
+		return rf(path)
+	}
 	if rf, ok := ret.Get(0).(func(string) [2]string); ok {
 		r0 = rf(path)
 	} else {
@@ -1021,7 +1073,6 @@ func (_m *RequesterArray) Get(path string) ([2]string, error) {
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(string) error); ok {
 		r1 = rf(path)
 	} else {
@@ -1060,13 +1111,16 @@ func (_m *RequesterNS) Get(path string) (http.Response, error) {
 	ret := _m.Called(path)
 
 	var r0 http.Response
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (http.Response, error)); ok {
+		return rf(path)
+	}
 	if rf, ok := ret.Get(0).(func(string) http.Response); ok {
 		r0 = rf(path)
 	} else {
 		r0 = ret.Get(0).(http.Response)
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(string) error); ok {
 		r1 = rf(path)
 	} else {
@@ -1214,6 +1268,10 @@ func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 []byte
+	var r1 *test.Err
+	if rf, ok := ret.Get(0).(func(string, uint16) ([]byte, *test.Err)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(string, uint16) []byte); ok {
 		r0 = rf(_a0, _a1)
 	} else {
@@ -1222,7 +1280,6 @@ func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 		}
 	}
 
-	var r1 *test.Err
 	if rf, ok := ret.Get(1).(func(string, uint16) *test.Err); ok {
 		r1 = rf(_a0, _a1)
 	} else {
@@ -1309,27 +1366,30 @@ func (_m *RequesterReturnElided) Get(path string) (int, int, int, error) {
 	ret := _m.Called(path)
 
 	var r0 int
+	var r1 int
+	var r2 int
+	var r3 error
+	if rf, ok := ret.Get(0).(func(string) (int, int, int, error)); ok {
+		return rf(path)
+	}
 	if rf, ok := ret.Get(0).(func(string) int); ok {
 		r0 = rf(path)
 	} else {
 		r0 = ret.Get(0).(int)
 	}
 
-	var r1 int
 	if rf, ok := ret.Get(1).(func(string) int); ok {
 		r1 = rf(path)
 	} else {
 		r1 = ret.Get(1).(int)
 	}
 
-	var r2 int
 	if rf, ok := ret.Get(2).(func(string) int); ok {
 		r2 = rf(path)
 	} else {
 		r2 = ret.Get(2).(int)
 	}
 
-	var r3 error
 	if rf, ok := ret.Get(3).(func(string) error); ok {
 		r3 = rf(path)
 	} else {
@@ -1362,18 +1422,26 @@ func (_c *RequesterReturnElided_Get_Call) Return(a int, b int, c int, err error)
 	return _c
 }
 
+func (_c *RequesterReturnElided_Get_Call) RunAndReturn(run func(string) (int, int, int, error)) *RequesterReturnElided_Get_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Put provides a mock function with given fields: path
 func (_m *RequesterReturnElided) Put(path string) (int, error) {
 	ret := _m.Called(path)
 
 	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (int, error)); ok {
+		return rf(path)
+	}
 	if rf, ok := ret.Get(0).(func(string) int); ok {
 		r0 = rf(path)
 	} else {
 		r0 = ret.Get(0).(int)
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(string) error); ok {
 		r1 = rf(path)
 	} else {
@@ -1403,6 +1471,11 @@ func (_c *RequesterReturnElided_Put_Call) Run(run func(path string)) *RequesterR
 
 func (_c *RequesterReturnElided_Put_Call) Return(_a0 int, err error) *RequesterReturnElided_Put_Call {
 	_c.Call.Return(_a0, err)
+	return _c
+}
+
+func (_c *RequesterReturnElided_Put_Call) RunAndReturn(run func(string) (int, error)) *RequesterReturnElided_Put_Call {
+	_c.Call.Return(run)
 	return _c
 }
 
@@ -1695,13 +1768,16 @@ func (_m *MyReader) Read(p []byte) (int, error) {
 	ret := _m.Called(p)
 
 	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func([]byte) (int, error)); ok {
+		return rf(p)
+	}
 	if rf, ok := ret.Get(0).(func([]byte) int); ok {
 		r0 = rf(p)
 	} else {
 		r0 = ret.Get(0).(int)
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func([]byte) error); ok {
 		r1 = rf(p)
 	} else {
@@ -1740,6 +1816,10 @@ func (_m *ConsulLock) Lock(_a0 <-chan struct{}) (<-chan struct{}, error) {
 	ret := _m.Called(_a0)
 
 	var r0 <-chan struct{}
+	var r1 error
+	if rf, ok := ret.Get(0).(func(<-chan struct{}) (<-chan struct{}, error)); ok {
+		return rf(_a0)
+	}
 	if rf, ok := ret.Get(0).(func(<-chan struct{}) <-chan struct{}); ok {
 		r0 = rf(_a0)
 	} else {
@@ -1748,7 +1828,6 @@ func (_m *ConsulLock) Lock(_a0 <-chan struct{}) (<-chan struct{}, error) {
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(<-chan struct{}) error); ok {
 		r1 = rf(_a0)
 	} else {
@@ -2191,13 +2270,16 @@ func (_m *A) Call() (test.B, error) {
 	ret := _m.Called()
 
 	var r0 test.B
+	var r1 error
+	if rf, ok := ret.Get(0).(func() (test.B, error)); ok {
+		return rf()
+	}
 	if rf, ok := ret.Get(0).(func() test.B); ok {
 		r0 = rf()
 	} else {
 		r0 = ret.Get(0).(test.B)
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func() error); ok {
 		r1 = rf()
 	} else {
@@ -2365,13 +2447,16 @@ func (_m *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TG
 	ret := _m.Called(_a0, _a1)
 
 	var r0 TSigned
+	var r1 TIntf
+	if rf, ok := ret.Get(0).(func(TAny, TComparable) (TSigned, TIntf)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(TAny, TComparable) TSigned); ok {
 		r0 = rf(_a0, _a1)
 	} else {
 		r0 = ret.Get(0).(TSigned)
 	}
 
-	var r1 TIntf
 	if rf, ok := ret.Get(1).(func(TAny, TComparable) TIntf); ok {
 		r1 = rf(_a0, _a1)
 	} else {
@@ -2486,18 +2571,28 @@ func (_c *RequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, TSig
 	return _c
 }
 
+func (_c *RequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) RunAndReturn(run func(struct{ Type1 TExternalIntf }) struct {
+	Type2 test.GenericType[string, test.EmbeddedGet[int]]
+}) *RequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GenericArguments provides a mock function with given fields: _a0, _a1
 func (_m *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericArguments(_a0 TAny, _a1 TComparable) (TSigned, TIntf) {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 TSigned
+	var r1 TIntf
+	if rf, ok := ret.Get(0).(func(TAny, TComparable) (TSigned, TIntf)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(TAny, TComparable) TSigned); ok {
 		r0 = rf(_a0, _a1)
 	} else {
 		r0 = ret.Get(0).(TSigned)
 	}
 
-	var r1 TIntf
 	if rf, ok := ret.Get(1).(func(TAny, TComparable) TIntf); ok {
 		r1 = rf(_a0, _a1)
 	} else {
@@ -2531,6 +2626,11 @@ func (_c *RequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned, TI
 
 func (_c *RequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) Return(_a0 TSigned, _a1 TIntf) *RequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
 	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *RequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) RunAndReturn(run func(TAny, TComparable) (TSigned, TIntf)) *RequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	_c.Call.Return(run)
 	return _c
 }
 
@@ -2571,6 +2671,11 @@ func (_c *RequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, TInt
 
 func (_c *RequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) Return(_a0 test.GenericType[TSigned, TIntf]) *RequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
 	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *RequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) RunAndReturn(run func(test.GenericType[TAny, TIntf]) test.GenericType[TSigned, TIntf]) *RequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	_c.Call.Return(run)
 	return _c
 }
 
@@ -2636,13 +2741,16 @@ func (_m *MockRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf
 	ret := _m.Called(_a0, _a1)
 
 	var r0 TSigned
+	var r1 TIntf
+	if rf, ok := ret.Get(0).(func(TAny, TComparable) (TSigned, TIntf)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(TAny, TComparable) TSigned); ok {
 		r0 = rf(_a0, _a1)
 	} else {
 		r0 = ret.Get(0).(TSigned)
 	}
 
-	var r1 TIntf
 	if rf, ok := ret.Get(1).(func(TAny, TComparable) TIntf); ok {
 		r1 = rf(_a0, _a1)
 	} else {

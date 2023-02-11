@@ -18,13 +18,16 @@ func (_m *SendFunc) Execute(ctx context.Context, data string) (int, error) {
 	ret := _m.Called(ctx, data)
 
 	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) (int, error)); ok {
+		return rf(ctx, data)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, string) int); ok {
 		r0 = rf(ctx, data)
 	} else {
 		r0 = ret.Get(0).(int)
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
 		r1 = rf(ctx, data)
 	} else {
