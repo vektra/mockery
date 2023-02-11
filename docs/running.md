@@ -38,4 +38,10 @@ $ mockery
 09 Feb 23 22:47 CST INF Generating mock dry-run=false interface=A qualified-name=github.com/vektra/mockery/v2/pkg/fixtures version=v2.18.0
 ```
 
-Note that in some cases, using `//go:generate` may turn out to be slower than running for entire packages. `go:generate` calls mockery once for each `generate` directive, which means that mockery may need to parse the package multiple times, which is wasteful. Good judgement is recommended when determining the best option for your own project.
+!!! note
+
+        Note that in some cases, using `//go:generate` may turn out to be slower than running for entire packages. `go:generate` calls mockery once for each `generate` directive, which means that mockery may need to parse the package multiple times, which is wasteful. Good judgement is recommended when determining the best option for your own project.
+
+!!! note
+
+        For mockery to correctly generate mocks, the command has to be run on a module (i.e. your project has to have a go.mod file)

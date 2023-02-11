@@ -15,8 +15,10 @@ Visit the [releases page](https://github.com/vektra/mockery/releases) to downloa
 Supported, but not recommended: [see wiki page](https://github.com/vektra/mockery/wiki/Installation-Methods#go-install) and [related discussions](https://github.com/vektra/mockery/pull/456).
 
     go install github.com/vektra/mockery/v2@v2.20.0
-    
-Do _not_ use `@latest` as this will pull from the latest, potentially untagged, commit on master.
+
+!!! warning
+
+    Do _not_ use `@latest` as this will pull from the latest, potentially untagged, commit on master.
 
 ### Docker
 

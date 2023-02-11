@@ -12,7 +12,7 @@ If a parameter is named `with-expecter` and we want a value of `True`, then thes
 | source | value |
 |--------|-------|
 | command line | `--with-expecter=true` |
-| Environment variable | `MOCKERY_WITH_EXPECTER=` |
+| Environment variable | `MOCKERY_WITH_EXPECTER=True` |
 | yaml | `with-expecter: True` |
 
 Recommended Basic Config

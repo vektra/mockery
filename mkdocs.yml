@@ -12,14 +12,12 @@ theme:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: red
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: red
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -34,11 +32,13 @@ theme:
     - navigation.tracking
     - toc.follow
 markdown_extensions:
+  - admonition
   - attr_list
   - md_in_html
   - pymdownx.highlight:
       anchor_linenums: true
       auto_title: true
+  - pymdownx.details
   - pymdownx.superfences
   - toc:
       permalink: true
