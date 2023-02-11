@@ -17,6 +17,8 @@ Supported, but not recommended: [see wiki page](https://github.com/vektra/mocker
 Alternatively, you can use the go install method to compile the project using your local environment:
 
     go install github.com/vektra/mockery/v2@latest
+    
+Do _not_ use `@latest` as this will pull from the latest, potentially untagged, commit on master.
 
 ### Docker
 
