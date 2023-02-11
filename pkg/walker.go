@@ -35,7 +35,7 @@ func (w *Walker) Walk(ctx context.Context, visitor WalkerVisitor) (generated boo
 	log.Info().Msgf("Walking")
 
 	parser := NewParser(w.BuildTags)
-	w.doWalk(ctx, parser, w.BaseDir, visitor)
+	w.doWalk(ctx, parser, w.BaseDir)
 
 	err := parser.Load()
 	if err != nil {
@@ -65,7 +65,7 @@ func (w *Walker) Walk(ctx context.Context, visitor WalkerVisitor) (generated boo
 	return
 }
 
-func (w *Walker) doWalk(ctx context.Context, p *Parser, dir string, visitor WalkerVisitor) (generated bool) {
+func (w *Walker) doWalk(ctx context.Context, parser *Parser, dir string) (generated bool) {
 	log := zerolog.Ctx(ctx)
 	ctx = log.WithContext(ctx)
 
@@ -83,7 +83,7 @@ func (w *Walker) doWalk(ctx context.Context, p *Parser, dir string, visitor Walk
 
 		if file.IsDir() {
 			if w.Recursive {
-				generated = w.doWalk(ctx, p, path, visitor) || generated
+				generated = w.doWalk(ctx, parser, path) || generated
 				if generated && w.LimitOne {
 					return
 				}
@@ -95,7 +95,7 @@ func (w *Walker) doWalk(ctx context.Context, p *Parser, dir string, visitor Walk
 			continue
 		}
 
-		err = p.Parse(ctx, path)
+		err = parser.Parse(ctx, path)
 		if err != nil {
 			log.Err(err).Msgf("Error parsing file")
 			continue
@@ -111,6 +111,7 @@ type GeneratorVisitor struct {
 	Note        string
 	Boilerplate string
 	Osp         OutputStreamProvider
+	Packages    map[string][]string
 	// The name of the output package, if InPackage is false (defaults to "mocks")
 	PackageName       string
 	PackageNamePrefix string

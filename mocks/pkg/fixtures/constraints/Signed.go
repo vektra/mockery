@@ -9,6 +9,14 @@ type Signed struct {
 	mock.Mock
 }
 
+type Signed_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *Signed) EXPECT() *Signed_Expecter {
+	return &Signed_Expecter{mock: &_m.Mock}
+}
+
 type mockConstructorTestingTNewSigned interface {
 	mock.TestingT
 	Cleanup(func())

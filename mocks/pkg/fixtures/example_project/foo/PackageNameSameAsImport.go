@@ -12,6 +12,14 @@ type PackageNameSameAsImport struct {
 	mock.Mock
 }
 
+type PackageNameSameAsImport_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *PackageNameSameAsImport) EXPECT() *PackageNameSameAsImport_Expecter {
+	return &PackageNameSameAsImport_Expecter{mock: &_m.Mock}
+}
+
 // NewClient provides a mock function with given fields:
 func (_m *PackageNameSameAsImport) NewClient() foo.Client {
 	ret := _m.Called()
@@ -26,6 +34,33 @@ func (_m *PackageNameSameAsImport) NewClient() foo.Client {
 	}
 
 	return r0
+}
+
+// PackageNameSameAsImport_NewClient_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'NewClient'
+type PackageNameSameAsImport_NewClient_Call struct {
+	*mock.Call
+}
+
+// NewClient is a helper method to define mock.On call
+func (_e *PackageNameSameAsImport_Expecter) NewClient() *PackageNameSameAsImport_NewClient_Call {
+	return &PackageNameSameAsImport_NewClient_Call{Call: _e.mock.On("NewClient")}
+}
+
+func (_c *PackageNameSameAsImport_NewClient_Call) Run(run func()) *PackageNameSameAsImport_NewClient_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *PackageNameSameAsImport_NewClient_Call) Return(_a0 foo.Client) *PackageNameSameAsImport_NewClient_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *PackageNameSameAsImport_NewClient_Call) RunAndReturn(run func() foo.Client) *PackageNameSameAsImport_NewClient_Call {
+	_c.Call.Return(run)
+	return _c
 }
 
 type mockConstructorTestingTNewPackageNameSameAsImport interface {

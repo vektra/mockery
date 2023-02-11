@@ -12,6 +12,14 @@ type Root struct {
 	mock.Mock
 }
 
+type Root_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *Root) EXPECT() *Root_Expecter {
+	return &Root_Expecter{mock: &_m.Mock}
+}
+
 // ReturnsFoo provides a mock function with given fields:
 func (_m *Root) ReturnsFoo() (foo.Foo, error) {
 	ret := _m.Called()
@@ -38,9 +46,64 @@ func (_m *Root) ReturnsFoo() (foo.Foo, error) {
 	return r0, r1
 }
 
+// Root_ReturnsFoo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ReturnsFoo'
+type Root_ReturnsFoo_Call struct {
+	*mock.Call
+}
+
+// ReturnsFoo is a helper method to define mock.On call
+func (_e *Root_Expecter) ReturnsFoo() *Root_ReturnsFoo_Call {
+	return &Root_ReturnsFoo_Call{Call: _e.mock.On("ReturnsFoo")}
+}
+
+func (_c *Root_ReturnsFoo_Call) Run(run func()) *Root_ReturnsFoo_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *Root_ReturnsFoo_Call) Return(_a0 foo.Foo, _a1 error) *Root_ReturnsFoo_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Root_ReturnsFoo_Call) RunAndReturn(run func() (foo.Foo, error)) *Root_ReturnsFoo_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // TakesBaz provides a mock function with given fields: _a0
 func (_m *Root) TakesBaz(_a0 *foo.Baz) {
 	_m.Called(_a0)
+}
+
+// Root_TakesBaz_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'TakesBaz'
+type Root_TakesBaz_Call struct {
+	*mock.Call
+}
+
+// TakesBaz is a helper method to define mock.On call
+//   - _a0 *foo.Baz
+func (_e *Root_Expecter) TakesBaz(_a0 interface{}) *Root_TakesBaz_Call {
+	return &Root_TakesBaz_Call{Call: _e.mock.On("TakesBaz", _a0)}
+}
+
+func (_c *Root_TakesBaz_Call) Run(run func(_a0 *foo.Baz)) *Root_TakesBaz_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(*foo.Baz))
+	})
+	return _c
+}
+
+func (_c *Root_TakesBaz_Call) Return() *Root_TakesBaz_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *Root_TakesBaz_Call) RunAndReturn(run func(*foo.Baz)) *Root_TakesBaz_Call {
+	_c.Call.Return(run)
+	return _c
 }
 
 type mockConstructorTestingTNewRoot interface {

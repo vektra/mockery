@@ -9,6 +9,14 @@ type FuncArgsCollision struct {
 	mock.Mock
 }
 
+type FuncArgsCollision_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *FuncArgsCollision) EXPECT() *FuncArgsCollision_Expecter {
+	return &FuncArgsCollision_Expecter{mock: &_m.Mock}
+}
+
 // Foo provides a mock function with given fields: ret
 func (_m *FuncArgsCollision) Foo(ret interface{}) error {
 	ret_1 := _m.Called(ret)
@@ -21,6 +29,34 @@ func (_m *FuncArgsCollision) Foo(ret interface{}) error {
 	}
 
 	return r0
+}
+
+// FuncArgsCollision_Foo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Foo'
+type FuncArgsCollision_Foo_Call struct {
+	*mock.Call
+}
+
+// Foo is a helper method to define mock.On call
+//   - ret interface{}
+func (_e *FuncArgsCollision_Expecter) Foo(ret interface{}) *FuncArgsCollision_Foo_Call {
+	return &FuncArgsCollision_Foo_Call{Call: _e.mock.On("Foo", ret)}
+}
+
+func (_c *FuncArgsCollision_Foo_Call) Run(run func(ret interface{})) *FuncArgsCollision_Foo_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(interface{}))
+	})
+	return _c
+}
+
+func (_c *FuncArgsCollision_Foo_Call) Return(_a0 error) *FuncArgsCollision_Foo_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *FuncArgsCollision_Foo_Call) RunAndReturn(run func(interface{}) error) *FuncArgsCollision_Foo_Call {
+	_c.Call.Return(run)
+	return _c
 }
 
 type mockConstructorTestingTNewFuncArgsCollision interface {

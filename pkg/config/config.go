@@ -38,8 +38,9 @@ type Config struct {
 	Name                 string
 	Note                 string
 	Outpkg               string
-	Packageprefix        string
 	Output               string
+	Packages             []string `mapstructure:"packages"`
+	Packageprefix        string
 	Print                bool
 	Profile              string
 	Quiet                bool

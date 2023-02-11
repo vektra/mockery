@@ -15,6 +15,14 @@ type Example struct {
 	mock.Mock
 }
 
+type Example_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *Example) EXPECT() *Example_Expecter {
+	return &Example_Expecter{mock: &_m.Mock}
+}
+
 // A provides a mock function with given fields:
 func (_m *Example) A() http.Flusher {
 	ret := _m.Called()
@@ -31,6 +39,33 @@ func (_m *Example) A() http.Flusher {
 	return r0
 }
 
+// Example_A_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'A'
+type Example_A_Call struct {
+	*mock.Call
+}
+
+// A is a helper method to define mock.On call
+func (_e *Example_Expecter) A() *Example_A_Call {
+	return &Example_A_Call{Call: _e.mock.On("A")}
+}
+
+func (_c *Example_A_Call) Run(run func()) *Example_A_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *Example_A_Call) Return(_a0 http.Flusher) *Example_A_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *Example_A_Call) RunAndReturn(run func() http.Flusher) *Example_A_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // B provides a mock function with given fields: _a0
 func (_m *Example) B(_a0 string) fixtureshttp.MyStruct {
 	ret := _m.Called(_a0)
@@ -43,6 +78,34 @@ func (_m *Example) B(_a0 string) fixtureshttp.MyStruct {
 	}
 
 	return r0
+}
+
+// Example_B_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'B'
+type Example_B_Call struct {
+	*mock.Call
+}
+
+// B is a helper method to define mock.On call
+//   - _a0 string
+func (_e *Example_Expecter) B(_a0 interface{}) *Example_B_Call {
+	return &Example_B_Call{Call: _e.mock.On("B", _a0)}
+}
+
+func (_c *Example_B_Call) Run(run func(_a0 string)) *Example_B_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(string))
+	})
+	return _c
+}
+
+func (_c *Example_B_Call) Return(_a0 fixtureshttp.MyStruct) *Example_B_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *Example_B_Call) RunAndReturn(run func(string) fixtureshttp.MyStruct) *Example_B_Call {
+	_c.Call.Return(run)
+	return _c
 }
 
 type mockConstructorTestingTNewExample interface {

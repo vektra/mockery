@@ -9,6 +9,14 @@ type Integer struct {
 	mock.Mock
 }
 
+type Integer_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *Integer) EXPECT() *Integer_Expecter {
+	return &Integer_Expecter{mock: &_m.Mock}
+}
+
 type mockConstructorTestingTNewInteger interface {
 	mock.TestingT
 	Cleanup(func())

@@ -2,3 +2,14 @@ quiet: False
 all: True
 keeptree: True
 disable-version-string: True
+with-expecter: True
+packages:
+  - github.com/vektra/mockery/v2/pkg
+  - github.com/vektra/mockery/v2/pkg/fixtures
+  - github.com/vektra/mockery/v2/pkg/fixtures/buildtag
+  - github.com/vektra/mockery/v2/pkg/fixtures/constraints
+  - github.com/vektra/mockery/v2/pkg/fixtures/example_project
+  - github.com/vektra/mockery/v2/pkg/fixtures/http
+  - github.com/vektra/mockery/v2/pkg/fixtures/mocks
+  - github.com/vektra/mockery/v2/pkg/fixtures/test
+  - github.com/vektra/mockery/v2/pkg/logging

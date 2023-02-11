@@ -266,7 +266,6 @@ func (r *RootApp) Run() error {
 		}
 		baseDir = filepath.Dir(pkg.GoFiles[0])
 	}
-
 	var boilerplate string
 	if r.Config.BoilerplateFile != "" {
 		data, err := os.ReadFile(r.Config.BoilerplateFile)
@@ -274,6 +273,16 @@ func (r *RootApp) Run() error {
 			log.Fatal().Msgf("Failed to read boilerplate file %s: %v", r.Config.BoilerplateFile, err)
 		}
 		boilerplate = string(data)
+	}
+
+	buildTags := strings.Split(r.Config.BuildTags, " ")
+	walker := pkg.Walker{
+		Config:    r.Config,
+		BaseDir:   baseDir,
+		Recursive: recursive,
+		Filter:    filter,
+		LimitOne:  limitOne,
+		BuildTags: buildTags,
 	}
 
 	visitor := &pkg.GeneratorVisitor{
@@ -287,20 +296,52 @@ func (r *RootApp) Run() error {
 		StructName:        r.Config.StructName,
 	}
 
-	walker := pkg.Walker{
-		Config:    r.Config,
-		BaseDir:   baseDir,
-		Recursive: recursive,
-		Filter:    filter,
-		LimitOne:  limitOne,
-		BuildTags: strings.Split(r.Config.BuildTags, " "),
+	if r.Config.Packages != nil {
+		warnAlpha(
+			ctx,
+			"use of the 'packages' config variable is currently in an alpha state. Use at your own risk.",
+			map[string]any{
+				"discussion": "https://github.com/vektra/mockery/discussions/549",
+			})
+		parser := pkg.NewParser(buildTags)
+
+		if err := parser.ParsePackages(ctx, r.Config.Packages); err != nil {
+			log.Error().Err(err).Msg("unable to parse packages")
+			return err
+		}
+		log.Info().Msg("done parsing, loading")
+		if err := parser.Load(); err != nil {
+			log.Err(err).Msgf("failed to load parser")
+			return nil
+		}
+		log.Info().Msg("done loading, visiting interfeace nodes")
+		for _, iface := range parser.Interfaces() {
+			log.Info().
+				Str("interface", iface.QualifiedName).
+				Msg("generating interface")
+
+			if err := visitor.VisitWalk(ctx, iface); err != nil {
+				log.Err(err).Msg("error visiting interface node")
+				return err
+			}
+		}
+	} else {
+		warnDiscussion(
+			ctx,
+			"dynamic walking of project is being considered for removal "+
+				"in v3. Please provide your feedback at the linked discussion.",
+			map[string]any{
+				"pr":         "https://github.com/vektra/mockery/pull/548",
+				"discussion": "https://github.com/vektra/mockery/discussions/549",
+			})
+
+		generated := walker.Walk(ctx, visitor)
+
+		if r.Config.Name != "" && !generated {
+			log.Fatal().Msgf("Unable to find '%s' in any go files under this path", r.Config.Name)
+		}
 	}
 
-	generated := walker.Walk(ctx, visitor)
-
-	if r.Config.Name != "" && !generated {
-		log.Fatal().Msgf("Unable to find '%s' in any go files under this path", r.Config.Name)
-	}
 	return nil
 }
 
@@ -331,4 +372,24 @@ func getLogger(levelStr string) (zerolog.Logger, error) {
 		Logger()
 
 	return log, nil
+}
+
+func warn(ctx context.Context, prefix string, message string, fields map[string]any) {
+	log := zerolog.Ctx(ctx)
+	event := log.Warn()
+	if fields != nil {
+		event = event.Fields(fields)
+	}
+	event.Msgf("%s: %s", prefix, message)
+}
+func warnDeprecation(ctx context.Context, message string, fields map[string]any) {
+	warn(ctx, "DEPRECATION", message, fields)
+}
+
+func warnDiscussion(ctx context.Context, message string, fields map[string]any) {
+	warn(ctx, "DISCUSSION", message, fields)
+}
+
+func warnAlpha(ctx context.Context, message string, fields map[string]any) {
+	warn(ctx, "ALPHA FEATURE", message, fields)
 }

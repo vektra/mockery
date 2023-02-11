@@ -13,9 +13,45 @@ type UnsafeInterface struct {
 	mock.Mock
 }
 
+type UnsafeInterface_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *UnsafeInterface) EXPECT() *UnsafeInterface_Expecter {
+	return &UnsafeInterface_Expecter{mock: &_m.Mock}
+}
+
 // Do provides a mock function with given fields: ptr
 func (_m *UnsafeInterface) Do(ptr *unsafe.Pointer) {
 	_m.Called(ptr)
+}
+
+// UnsafeInterface_Do_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Do'
+type UnsafeInterface_Do_Call struct {
+	*mock.Call
+}
+
+// Do is a helper method to define mock.On call
+//   - ptr *unsafe.Pointer
+func (_e *UnsafeInterface_Expecter) Do(ptr interface{}) *UnsafeInterface_Do_Call {
+	return &UnsafeInterface_Do_Call{Call: _e.mock.On("Do", ptr)}
+}
+
+func (_c *UnsafeInterface_Do_Call) Run(run func(ptr *unsafe.Pointer)) *UnsafeInterface_Do_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(*unsafe.Pointer))
+	})
+	return _c
+}
+
+func (_c *UnsafeInterface_Do_Call) Return() *UnsafeInterface_Do_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *UnsafeInterface_Do_Call) RunAndReturn(run func(*unsafe.Pointer)) *UnsafeInterface_Do_Call {
+	_c.Call.Return(run)
+	return _c
 }
 
 type mockConstructorTestingTNewUnsafeInterface interface {

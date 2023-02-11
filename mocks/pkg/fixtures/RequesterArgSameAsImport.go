@@ -13,6 +13,14 @@ type RequesterArgSameAsImport struct {
 	mock.Mock
 }
 
+type RequesterArgSameAsImport_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *RequesterArgSameAsImport) EXPECT() *RequesterArgSameAsImport_Expecter {
+	return &RequesterArgSameAsImport_Expecter{mock: &_m.Mock}
+}
+
 // Get provides a mock function with given fields: _a0
 func (_m *RequesterArgSameAsImport) Get(_a0 string) *json.RawMessage {
 	ret := _m.Called(_a0)
@@ -27,6 +35,34 @@ func (_m *RequesterArgSameAsImport) Get(_a0 string) *json.RawMessage {
 	}
 
 	return r0
+}
+
+// RequesterArgSameAsImport_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
+type RequesterArgSameAsImport_Get_Call struct {
+	*mock.Call
+}
+
+// Get is a helper method to define mock.On call
+//   - _a0 string
+func (_e *RequesterArgSameAsImport_Expecter) Get(_a0 interface{}) *RequesterArgSameAsImport_Get_Call {
+	return &RequesterArgSameAsImport_Get_Call{Call: _e.mock.On("Get", _a0)}
+}
+
+func (_c *RequesterArgSameAsImport_Get_Call) Run(run func(_a0 string)) *RequesterArgSameAsImport_Get_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(string))
+	})
+	return _c
+}
+
+func (_c *RequesterArgSameAsImport_Get_Call) Return(_a0 *json.RawMessage) *RequesterArgSameAsImport_Get_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *RequesterArgSameAsImport_Get_Call) RunAndReturn(run func(string) *json.RawMessage) *RequesterArgSameAsImport_Get_Call {
+	_c.Call.Return(run)
+	return _c
 }
 
 type mockConstructorTestingTNewRequesterArgSameAsImport interface {

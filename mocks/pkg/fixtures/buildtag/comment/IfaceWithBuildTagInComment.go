@@ -9,6 +9,14 @@ type IfaceWithBuildTagInComment struct {
 	mock.Mock
 }
 
+type IfaceWithBuildTagInComment_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *IfaceWithBuildTagInComment) EXPECT() *IfaceWithBuildTagInComment_Expecter {
+	return &IfaceWithBuildTagInComment_Expecter{mock: &_m.Mock}
+}
+
 // Sprintf provides a mock function with given fields: format, a
 func (_m *IfaceWithBuildTagInComment) Sprintf(format string, a ...interface{}) string {
 	var _ca []interface{}
@@ -24,6 +32,42 @@ func (_m *IfaceWithBuildTagInComment) Sprintf(format string, a ...interface{}) s
 	}
 
 	return r0
+}
+
+// IfaceWithBuildTagInComment_Sprintf_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Sprintf'
+type IfaceWithBuildTagInComment_Sprintf_Call struct {
+	*mock.Call
+}
+
+// Sprintf is a helper method to define mock.On call
+//   - format string
+//   - a ...interface{}
+func (_e *IfaceWithBuildTagInComment_Expecter) Sprintf(format interface{}, a ...interface{}) *IfaceWithBuildTagInComment_Sprintf_Call {
+	return &IfaceWithBuildTagInComment_Sprintf_Call{Call: _e.mock.On("Sprintf",
+		append([]interface{}{format}, a...)...)}
+}
+
+func (_c *IfaceWithBuildTagInComment_Sprintf_Call) Run(run func(format string, a ...interface{})) *IfaceWithBuildTagInComment_Sprintf_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		variadicArgs := make([]interface{}, len(args)-1)
+		for i, a := range args[1:] {
+			if a != nil {
+				variadicArgs[i] = a.(interface{})
+			}
+		}
+		run(args[0].(string), variadicArgs...)
+	})
+	return _c
+}
+
+func (_c *IfaceWithBuildTagInComment_Sprintf_Call) Return(_a0 string) *IfaceWithBuildTagInComment_Sprintf_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *IfaceWithBuildTagInComment_Sprintf_Call) RunAndReturn(run func(string, ...interface{}) string) *IfaceWithBuildTagInComment_Sprintf_Call {
+	_c.Call.Return(run)
+	return _c
 }
 
 type mockConstructorTestingTNewIfaceWithBuildTagInComment interface {

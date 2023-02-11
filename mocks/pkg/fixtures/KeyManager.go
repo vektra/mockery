@@ -12,6 +12,14 @@ type KeyManager struct {
 	mock.Mock
 }
 
+type KeyManager_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *KeyManager) EXPECT() *KeyManager_Expecter {
+	return &KeyManager_Expecter{mock: &_m.Mock}
+}
+
 // GetKey provides a mock function with given fields: _a0, _a1
 func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 	ret := _m.Called(_a0, _a1)
@@ -38,6 +46,35 @@ func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 	}
 
 	return r0, r1
+}
+
+// KeyManager_GetKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetKey'
+type KeyManager_GetKey_Call struct {
+	*mock.Call
+}
+
+// GetKey is a helper method to define mock.On call
+//   - _a0 string
+//   - _a1 uint16
+func (_e *KeyManager_Expecter) GetKey(_a0 interface{}, _a1 interface{}) *KeyManager_GetKey_Call {
+	return &KeyManager_GetKey_Call{Call: _e.mock.On("GetKey", _a0, _a1)}
+}
+
+func (_c *KeyManager_GetKey_Call) Run(run func(_a0 string, _a1 uint16)) *KeyManager_GetKey_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(string), args[1].(uint16))
+	})
+	return _c
+}
+
+func (_c *KeyManager_GetKey_Call) Return(_a0 []byte, _a1 *test.Err) *KeyManager_GetKey_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *KeyManager_GetKey_Call) RunAndReturn(run func(string, uint16) ([]byte, *test.Err)) *KeyManager_GetKey_Call {
+	_c.Call.Return(run)
+	return _c
 }
 
 type mockConstructorTestingTNewKeyManager interface {
