@@ -1,17 +1,25 @@
 site_name: mockery
+site_url: https://vektra.github.io/mockery/
+site_description: >-
+  Create mock implementations of your Golang interfaces using mockery and testify.
+
+repo_name: vektra/mockery
 repo_url: https://github.com/vektra/mockery
+
 theme:
   name: material
   palette:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
+      primary: red
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: red
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -19,8 +27,36 @@ theme:
     - content.code.copy
     - content.action.edit
     - content.action.view
+    - navigation.indexes
+    - navigation.sections
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.tracking
+    - toc.follow
 markdown_extensions:
+  - attr_list
+  - md_in_html
   - pymdownx.highlight:
       anchor_linenums: true
       auto_title: true
   - pymdownx.superfences
+  - toc:
+      permalink: true
+  
+
+nav:
+  - Home:
+    - Mockery: mockery.md
+  - Getting Started:
+    - Installation: installation.md
+    - Configuration: configuration.md
+    - Running: running.md
+    - Using Mocks:
+      - Examples: examples.md
+  - Features:
+    - Changelog: changelog.md
+    - Features: features.md
+    - Additional Notes: notes.md
+
+extra_css:
+  - stylesheets/extra.css
