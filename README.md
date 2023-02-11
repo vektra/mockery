@@ -13,15 +13,13 @@ Documentation is found at out Github Pages site: [http://vektra.github.io/mocker
 Development Efforts
 -------------------
 
-> v2 is in a soft change freeze due to the complexity of the software and the fact that functionality addition generally requires messing with logic that has been thoroughly tested, but is sensitive to change.
-
 ### v1
 
 v1 is the original version of the software, and is no longer supported.
 
 ### v2
 
-`mockery` is currently in v2, which iterates on v1 and includes mostly cosmetic and configuration improvements.
+`mockery` is currently in v2, which originally included cosmetic and configuration improvements over v1, but also implements a number of quality-of-life additions.
 
 ### v3
 
