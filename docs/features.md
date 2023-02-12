@@ -1,6 +1,35 @@
 Features
 ========
 
+Expecter Structs
+----------------
+
+|config|`with-expecter: True`|
+|-|-|
+
+Mockery now supports an "expecter" struct, which allows your tests to use type-safe methods to generate call expectations. When enabled through the `with-expecter: True` mockery configuration, you can enter into the expecter interface by simply calling `.EXPECT()` on your mock object.
+
+For example, given an interface such as
+```go
+type Requester interface {
+	Get(path string) (string, error)
+}
+```
+
+You can use the expecter interface as such:
+```go
+requesterMock := mocks.NewRequester(t)
+requesterMock.EXPECT().Get("some path").Return("result", nil)
+requesterMock.EXPECT().
+	Get(mock.Anything).
+	Run(func(path string) { fmt.Println(path, "was called") }).
+	// Can still use return functions by getting the embedded mock.Call
+	Call.Return(func(path string) string { return "result for " + path }, nil)
+```
+
+Note that the types of the arguments on the `EXPECT` methods are `interface{}`, not the actual type of your interface. The reason for this is that you may want to pass `mock.Any` as an argument, which means that the argument you pass may be an arbitrary type. The types are still provided in the expecter method docstrings.
+
+
 Return Value Providers
 ----------------------
 
