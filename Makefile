@@ -11,12 +11,9 @@ fmt:
 test: mocks
 	go test ./...
 
-mocks: $(shell find . -type f -name '*.go' -not -name '*_test.go')
+.PHONY: mocks
+mocks:
 	go run . 
-	go run . --print --dir pkg/fixtures --name RequesterVariadic --structname RequesterVariadicOneArgument --unroll-variadic=False > mocks/pkg/fixtures/RequesterVariadicOneArgument.go
-	go run . --print --dir pkg/fixtures --name Expecter --with-expecter > mocks/pkg/fixtures/Expecter.go
-	go run . --print --dir pkg/fixtures --name RequesterReturnElided --with-expecter > mocks/pkg/fixtures/RequesterReturnElided.go
-	@touch mocks
 
 .PHONY: install
 install:

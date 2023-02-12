@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"go/ast"
 	"go/types"
@@ -37,7 +38,15 @@ type Parser struct {
 
 func NewParser(buildTags []string) *Parser {
 	var conf packages.Config
-	conf.Mode = packages.LoadSyntax
+	conf.Mode = packages.NeedTypes |
+		packages.NeedTypesSizes |
+		packages.NeedSyntax |
+		packages.NeedTypesInfo |
+		packages.NeedImports |
+		packages.NeedName |
+		packages.NeedFiles |
+		packages.NeedCompiledGoFiles
+
 	if len(buildTags) > 0 {
 		conf.BuildFlags = []string{"-tags", strings.Join(buildTags, ",")}
 	}
@@ -60,11 +69,18 @@ func (p *Parser) loadPackages(fpath string) ([]*packages.Package, error) {
 
 func (p *Parser) ParsePackages(ctx context.Context, packageNames []string) error {
 	log := zerolog.Ctx(ctx)
+
 	packages, err := packages.Load(&p.conf, packageNames...)
 	if err != nil {
 		return err
 	}
 	for _, pkg := range packages {
+		for _, err := range pkg.Errors {
+			log.Err(err).Msg("encountered error when loading package")
+		}
+		if len(pkg.Errors) != 0 {
+			return errors.New("error occurred when loading packages")
+		}
 		for fileIdx, file := range pkg.GoFiles {
 			log.Debug().
 				Str("package", pkg.PkgPath).
@@ -250,6 +266,11 @@ type Method struct {
 	Signature *types.Signature
 }
 
+type TypesPackage interface {
+	Name() string
+	Path() string
+}
+
 // Interface type represents the target type that we will generate a mock for.
 // It could be an interface, or a function type.
 // Function type emulates: an interface it has 1 method with the function signature
@@ -259,7 +280,7 @@ type Interface struct {
 	QualifiedName   string // Path to the package of the target type.
 	FileName        string
 	File            *ast.File
-	Pkg             *types.Package
+	Pkg             TypesPackage
 	NamedType       *types.Named
 	IsFunction      bool             // If true, this instance represents a function, otherwise it's an interface.
 	ActualInterface *types.Interface // Holds the actual interface type, in case it's an interface.

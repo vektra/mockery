@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 var ctx = context.Background()
@@ -88,4 +89,11 @@ func TestCustomBuildTag(t *testing.T) {
 		}
 	}
 	assert.True(t, found, "IfaceWithCustomBuildTagInComment not parsed")
+}
+
+func TestParsePackages(t *testing.T) {
+	parser := NewParser([]string{})
+	require.NoError(t, parser.ParsePackages(context.Background(), []string{"github.com/vektra/mockery/v2/pkg/fixtures"}))
+	assert.NotEqual(t, 0, len(parser.entries))
+
 }

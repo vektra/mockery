@@ -105,17 +105,37 @@ func (w *Walker) doWalk(ctx context.Context, parser *Parser, dir string) (genera
 	return
 }
 
-type GeneratorVisitor struct {
-	config.Config
-	InPackage   bool
-	Note        string
-	Boilerplate string
-	Osp         OutputStreamProvider
-	Packages    map[string][]string
+type GeneratorVisitorConfig struct {
+	Boilerplate          string
+	DisableVersionString bool
+	Exported             bool
+	InPackage            bool
+	KeepTree             bool
+	Note                 string
 	// The name of the output package, if InPackage is false (defaults to "mocks")
 	PackageName       string
 	PackageNamePrefix string
 	StructName        string
+	UnrollVariadic    bool
+	WithExpecter      bool
+}
+
+type GeneratorVisitor struct {
+	config       GeneratorVisitorConfig
+	dryRun       bool
+	outputStream OutputStreamProvider
+}
+
+func NewGeneratorVisitor(
+	config GeneratorVisitorConfig,
+	outputStream OutputStreamProvider,
+	dryRun bool,
+) *GeneratorVisitor {
+	return &GeneratorVisitor{
+		config:       config,
+		dryRun:       dryRun,
+		outputStream: outputStream,
+	}
 }
 
 func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) error {
@@ -133,38 +153,37 @@ func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) erro
 	}()
 
 	var out io.Writer
-	var pkg string
 
-	if v.KeepTree && v.InPackage {
-		pkg = filepath.Dir(iface.FileName)
-	} else if v.InPackage {
-		pkg = filepath.Dir(iface.FileName)
-	} else if (v.PackageName == "" || v.PackageName == "mocks") && v.PackageNamePrefix != "" {
-		// go with package name prefix only when package name is empty or default and package name prefix is specified
-		pkg = fmt.Sprintf("%s%s", v.PackageNamePrefix, iface.Pkg.Name())
-	} else {
-		pkg = v.PackageName
-	}
-
-	out, err, closer := v.Osp.GetWriter(ctx, iface)
+	out, err, closer := v.outputStream.GetWriter(ctx, iface)
 	if err != nil {
 		log.Err(err).Msgf("Unable to get writer")
 		os.Exit(1)
 	}
 	defer closer()
 
-	gen := NewGenerator(ctx, v.Config, iface, pkg)
-	gen.GenerateBoilerplate(v.Boilerplate)
-	gen.GeneratePrologueNote(v.Note)
-	gen.GeneratePrologue(ctx, pkg)
+	generatorConfig := GeneratorConfig{
+		Boilerplate:          v.config.Boilerplate,
+		DisableVersionString: v.config.DisableVersionString,
+		Exported:             v.config.Exported,
+		InPackage:            v.config.InPackage,
+		KeepTree:             v.config.KeepTree,
+		Note:                 v.config.Note,
+		PackageName:          v.config.PackageName,
+		PackageNamePrefix:    v.config.PackageNamePrefix,
+		StructName:           v.config.StructName,
+		UnrollVariadic:       v.config.UnrollVariadic,
+		WithExpecter:         v.config.WithExpecter,
+	}
 
-	err = gen.Generate(ctx)
-	if err != nil {
+	gen := NewGenerator(ctx, generatorConfig, iface, "")
+	log.Info().Msgf("Generating mock")
+	if err := gen.GenerateAll(ctx); err != nil {
+		log.Err(err).Msg("generation failed")
 		return err
 	}
 
-	log.Info().Msgf("Generating mock")
-	if !v.Config.DryRun {
+	if !v.dryRun {
+		log.Info().Msgf("writing mock to file")
 		err = gen.Write(out)
 		if err != nil {
 			return err

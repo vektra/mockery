@@ -5,8 +5,8 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"github.com/vektra/mockery/v2/pkg/config"
+	"github.com/vektra/mockery/v2/pkg/logging"
 	"gopkg.in/yaml.v2"
 )
 
@@ -20,14 +20,14 @@ func NewShowConfigCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			config := &config.Config{}
-			if err := viper.UnmarshalExact(config); err != nil {
+			if err := viperCfg.UnmarshalExact(config); err != nil {
 				return errors.Wrapf(err, "failed to unmarshal config")
 			}
 			out, err := yaml.Marshal(config)
 			if err != nil {
 				return errors.Wrapf(err, "Failed to marshal yaml")
 			}
-			log, err := getLogger(config.LogLevel)
+			log, err := logging.GetLogger(config.LogLevel)
 			if err != nil {
 				panic(err)
 			}

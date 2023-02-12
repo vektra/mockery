@@ -9,6 +9,7 @@ import (
 	"go/types"
 	"io"
 	"os"
+	"path/filepath"
 	"regexp"
 	"sort"
 	"strings"
@@ -17,7 +18,6 @@ import (
 	"unicode/utf8"
 
 	"github.com/rs/zerolog"
-	"github.com/vektra/mockery/v2/pkg/config"
 	"github.com/vektra/mockery/v2/pkg/logging"
 	"golang.org/x/tools/imports"
 )
@@ -26,10 +26,48 @@ const mockConstructorParamTypeNamePrefix = "mockConstructorTestingT"
 
 var invalidIdentifierChar = regexp.MustCompile("[^[:digit:][:alpha:]_]")
 
+func DetermineOutputPackageName(
+	interfaceFileName string,
+	interfacePackageName string,
+	packageNamePrefix string,
+	packageName string,
+	keepTree bool,
+	inPackage bool,
+) string {
+	var pkg string
+
+	if keepTree && inPackage {
+		pkg = filepath.Dir(interfaceFileName)
+	} else if inPackage {
+		pkg = filepath.Dir(interfaceFileName)
+	} else if (packageName == "" || packageName == "mocks") && packageNamePrefix != "" {
+		// go with package name prefix only when package name is empty or default and package name prefix is specified
+		pkg = fmt.Sprintf("%s%s", packageNamePrefix, interfacePackageName)
+	} else {
+		pkg = packageName
+	}
+	return pkg
+}
+
+type GeneratorConfig struct {
+	Boilerplate          string
+	DisableVersionString bool
+	Exported             bool
+	InPackage            bool
+	KeepTree             bool
+	Note                 string
+	PackageName          string
+	PackageNamePrefix    string
+	StructName           string
+	UnrollVariadic       bool
+	WithExpecter         bool
+}
+
 // Generator is responsible for generating the string containing
 // imports and the mock struct that will later be written out as file.
 type Generator struct {
-	config.Config
+	config GeneratorConfig
+
 	buf bytes.Buffer
 
 	iface *Interface
@@ -41,9 +79,19 @@ type Generator struct {
 }
 
 // NewGenerator builds a Generator.
-func NewGenerator(ctx context.Context, c config.Config, iface *Interface, pkg string) *Generator {
+func NewGenerator(ctx context.Context, c GeneratorConfig, iface *Interface, pkg string) *Generator {
+	if pkg == "" {
+		pkg = DetermineOutputPackageName(
+			iface.FileName,
+			iface.Pkg.Name(),
+			c.PackageNamePrefix,
+			c.PackageName,
+			c.KeepTree,
+			c.InPackage,
+		)
+	}
 	g := &Generator{
-		Config:            c,
+		config:            c,
 		iface:             iface,
 		pkg:               pkg,
 		localizationCache: make(map[string]string),
@@ -54,6 +102,13 @@ func NewGenerator(ctx context.Context, c config.Config, iface *Interface, pkg st
 	g.addPackageImportWithName(ctx, "github.com/stretchr/testify/mock", "mock")
 
 	return g
+}
+
+func (g *Generator) GenerateAll(ctx context.Context) error {
+	g.GenerateBoilerplate(g.config.Boilerplate)
+	g.GeneratePrologueNote(g.config.Note)
+	g.GeneratePrologue(ctx, g.pkg)
+	return g.Generate(ctx)
 }
 
 func (g *Generator) populateImports(ctx context.Context) {
@@ -98,7 +153,8 @@ func (g *Generator) addImportsFromTuple(ctx context.Context, list *types.Tuple) 
 // `Foo`) or the package pathname (in the case the type lives in a package
 // external to the mock, e.g. `packagename.Foo`).
 func (g *Generator) getPackageScopedType(ctx context.Context, o *types.TypeName) string {
-	if o.Pkg() == nil || o.Pkg().Name() == "main" || (!g.KeepTree && g.InPackage && o.Pkg() == g.iface.Pkg) {
+	if o.Pkg() == nil || o.Pkg().Name() == "main" ||
+		(!g.config.KeepTree && g.config.InPackage && o.Pkg() == g.iface.Pkg) {
 		return o.Name()
 	}
 	return g.addPackageImport(ctx, o.Pkg()) + "." + o.Name()
@@ -120,7 +176,7 @@ func (g *Generator) addPackageImportWithName(ctx context.Context, path, name str
 }
 
 func (g *Generator) getNonConflictingName(path, name string) string {
-	if !g.importNameExists(name) && (!g.InPackage || g.iface.Pkg.Name() != name) {
+	if !g.importNameExists(name) && (!g.config.InPackage || g.iface.Pkg.Name() != name) {
 		// do not allow imports with the same name as the package when inPackage
 		return name
 	}
@@ -137,7 +193,7 @@ func (g *Generator) getNonConflictingName(path, name string) string {
 	var prospectiveName string
 	for i := 1; i <= numDirectories; i++ {
 		prospectiveName = strings.Join(cleanedDirectories[numDirectories-i:], "")
-		if !g.importNameExists(prospectiveName) && (!g.InPackage || g.iface.Pkg.Name() != prospectiveName) {
+		if !g.importNameExists(prospectiveName) && (!g.config.InPackage || g.iface.Pkg.Name() != prospectiveName) {
 			// do not allow imports with the same name as the package when inPackage
 			return prospectiveName
 		}
@@ -177,19 +233,19 @@ func (g *Generator) makeNameExported(name string) string {
 }
 
 func (g *Generator) mockName() string {
-	if g.StructName != "" {
-		return g.StructName
+	if g.config.StructName != "" {
+		return g.config.StructName
 	}
 
-	if !g.KeepTree && g.InPackage {
-		if g.Exported || ast.IsExported(g.iface.Name) {
+	if !g.config.KeepTree && g.config.InPackage {
+		if g.config.Exported || ast.IsExported(g.iface.Name) {
 			return "Mock" + g.iface.Name
 		}
 
 		return "mock" + g.makeNameExported(g.iface.Name)
 	}
 
-	return g.maybeMakeNameExported(g.iface.Name, g.Exported)
+	return g.maybeMakeNameExported(g.iface.Name, g.config.Exported)
 }
 
 // getTypeConstraintString returns type constraint string for a given interface.
@@ -245,7 +301,6 @@ func (g *Generator) generateImports(ctx context.Context) {
 	log := zerolog.Ctx(ctx)
 
 	log.Debug().Msgf("generating imports")
-	log.Debug().Msgf("%v", g.nameToPackagePath)
 
 	pkgPath := g.nameToPackagePath[g.iface.Pkg.Name()]
 	// Sort by import name so that we get a deterministic order
@@ -254,7 +309,7 @@ func (g *Generator) generateImports(ctx context.Context) {
 		logImport.Debug().Msgf("found import")
 
 		path := g.nameToPackagePath[name]
-		if !g.KeepTree && g.InPackage && path == pkgPath {
+		if !g.config.KeepTree && g.config.InPackage && path == pkgPath {
 			logImport.Debug().Msgf("import (%s) equals interface's package path (%s), skipping", path, pkgPath)
 			continue
 		}
@@ -265,7 +320,7 @@ func (g *Generator) generateImports(ctx context.Context) {
 // GeneratePrologue generates the prologue of the mock.
 func (g *Generator) GeneratePrologue(ctx context.Context, pkg string) {
 	g.populateImports(ctx)
-	if g.InPackage {
+	if g.config.InPackage {
 		g.printf("package %s\n\n", g.iface.Pkg.Name())
 	} else {
 		g.printf("package %v\n\n", pkg)
@@ -279,8 +334,8 @@ func (g *Generator) GeneratePrologue(ctx context.Context, pkg string) {
 // string.
 func (g *Generator) GeneratePrologueNote(note string) {
 	prologue := "// Code generated by mockery"
-	if !g.Config.DisableVersionString {
-		prologue += fmt.Sprintf(" %s", config.GetSemverInfo())
+	if !g.config.DisableVersionString {
+		prologue += fmt.Sprintf(" %s", logging.GetSemverInfo())
 	}
 	prologue += ". DO NOT EDIT.\n"
 
@@ -576,13 +631,13 @@ func (g *Generator) Generate(ctx context.Context) error {
 		"type %s%s struct {\n\tmock.Mock\n}\n\n", g.mockName(), g.getTypeConstraintString(ctx),
 	)
 
-	if g.WithExpecter {
+	if g.config.WithExpecter {
 		g.generateExpecterStruct(ctx)
 	}
 
 	for _, method := range g.iface.Methods() {
 		// It's probably possible, but not worth the trouble for prototype
-		if method.Signature.Variadic() && g.WithExpecter && !g.UnrollVariadic {
+		if method.Signature.Variadic() && g.config.WithExpecter && !g.config.UnrollVariadic {
 			return fmt.Errorf("cannot generate a valid expecter for variadic method with unroll-variadic=false")
 		}
 
@@ -665,7 +720,7 @@ func (_m *{{.MockName}}{{.InstantiatedTypeString}}) {{.FunctionName}}({{join .Pa
 `)
 
 	// Construct expecter helper functions
-	if g.WithExpecter {
+	if g.config.WithExpecter {
 		g.generateExpecterMethodCall(ctx, method, params, returns)
 	}
 }
@@ -822,7 +877,7 @@ func {{ .ConstructorName }}{{ .TypeConstraint }}(t {{ .ConstructorTestingInterfa
 // It is separate from Generate to avoid cyclomatic complexity through early return statements.
 func (g *Generator) generateCalled(list *paramList) (preamble string, called string) {
 	namesLen := len(list.Names)
-	if namesLen == 0 || !list.Variadic || !g.UnrollVariadic {
+	if namesLen == 0 || !list.Variadic || !g.config.UnrollVariadic {
 		called = "_m.Called(" + strings.Join(list.Names, ", ") + ")"
 		return
 	}
