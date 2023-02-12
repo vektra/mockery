@@ -9,14 +9,6 @@ type ConsulLock struct {
 	mock.Mock
 }
 
-type ConsulLock_Expecter struct {
-	mock *mock.Mock
-}
-
-func (_m *ConsulLock) EXPECT() *ConsulLock_Expecter {
-	return &ConsulLock_Expecter{mock: &_m.Mock}
-}
-
 // Lock provides a mock function with given fields: _a0
 func (_m *ConsulLock) Lock(_a0 <-chan struct{}) (<-chan struct{}, error) {
 	ret := _m.Called(_a0)
@@ -43,34 +35,6 @@ func (_m *ConsulLock) Lock(_a0 <-chan struct{}) (<-chan struct{}, error) {
 	return r0, r1
 }
 
-// ConsulLock_Lock_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Lock'
-type ConsulLock_Lock_Call struct {
-	*mock.Call
-}
-
-// Lock is a helper method to define mock.On call
-//   - _a0 <-chan struct{}
-func (_e *ConsulLock_Expecter) Lock(_a0 interface{}) *ConsulLock_Lock_Call {
-	return &ConsulLock_Lock_Call{Call: _e.mock.On("Lock", _a0)}
-}
-
-func (_c *ConsulLock_Lock_Call) Run(run func(_a0 <-chan struct{})) *ConsulLock_Lock_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(<-chan struct{}))
-	})
-	return _c
-}
-
-func (_c *ConsulLock_Lock_Call) Return(_a0 <-chan struct{}, _a1 error) *ConsulLock_Lock_Call {
-	_c.Call.Return(_a0, _a1)
-	return _c
-}
-
-func (_c *ConsulLock_Lock_Call) RunAndReturn(run func(<-chan struct{}) (<-chan struct{}, error)) *ConsulLock_Lock_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // Unlock provides a mock function with given fields:
 func (_m *ConsulLock) Unlock() error {
 	ret := _m.Called()
@@ -83,33 +47,6 @@ func (_m *ConsulLock) Unlock() error {
 	}
 
 	return r0
-}
-
-// ConsulLock_Unlock_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Unlock'
-type ConsulLock_Unlock_Call struct {
-	*mock.Call
-}
-
-// Unlock is a helper method to define mock.On call
-func (_e *ConsulLock_Expecter) Unlock() *ConsulLock_Unlock_Call {
-	return &ConsulLock_Unlock_Call{Call: _e.mock.On("Unlock")}
-}
-
-func (_c *ConsulLock_Unlock_Call) Run(run func()) *ConsulLock_Unlock_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run()
-	})
-	return _c
-}
-
-func (_c *ConsulLock_Unlock_Call) Return(_a0 error) *ConsulLock_Unlock_Call {
-	_c.Call.Return(_a0)
-	return _c
-}
-
-func (_c *ConsulLock_Unlock_Call) RunAndReturn(run func() error) *ConsulLock_Unlock_Call {
-	_c.Call.Return(run)
-	return _c
 }
 
 type mockConstructorTestingTNewConsulLock interface {

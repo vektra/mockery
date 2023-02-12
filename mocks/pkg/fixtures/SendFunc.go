@@ -13,14 +13,6 @@ type SendFunc struct {
 	mock.Mock
 }
 
-type SendFunc_Expecter struct {
-	mock *mock.Mock
-}
-
-func (_m *SendFunc) EXPECT() *SendFunc_Expecter {
-	return &SendFunc_Expecter{mock: &_m.Mock}
-}
-
 // Execute provides a mock function with given fields: ctx, data
 func (_m *SendFunc) Execute(ctx context.Context, data string) (int, error) {
 	ret := _m.Called(ctx, data)
@@ -43,35 +35,6 @@ func (_m *SendFunc) Execute(ctx context.Context, data string) (int, error) {
 	}
 
 	return r0, r1
-}
-
-// SendFunc_Execute_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Execute'
-type SendFunc_Execute_Call struct {
-	*mock.Call
-}
-
-// Execute is a helper method to define mock.On call
-//   - ctx context.Context
-//   - data string
-func (_e *SendFunc_Expecter) Execute(ctx interface{}, data interface{}) *SendFunc_Execute_Call {
-	return &SendFunc_Execute_Call{Call: _e.mock.On("Execute", ctx, data)}
-}
-
-func (_c *SendFunc_Execute_Call) Run(run func(ctx context.Context, data string)) *SendFunc_Execute_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(string))
-	})
-	return _c
-}
-
-func (_c *SendFunc_Execute_Call) Return(_a0 int, _a1 error) *SendFunc_Execute_Call {
-	_c.Call.Return(_a0, _a1)
-	return _c
-}
-
-func (_c *SendFunc_Execute_Call) RunAndReturn(run func(context.Context, string) (int, error)) *SendFunc_Execute_Call {
-	_c.Call.Return(run)
-	return _c
 }
 
 type mockConstructorTestingTNewSendFunc interface {

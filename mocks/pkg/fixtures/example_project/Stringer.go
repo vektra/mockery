@@ -9,14 +9,6 @@ type Stringer struct {
 	mock.Mock
 }
 
-type Stringer_Expecter struct {
-	mock *mock.Mock
-}
-
-func (_m *Stringer) EXPECT() *Stringer_Expecter {
-	return &Stringer_Expecter{mock: &_m.Mock}
-}
-
 // String provides a mock function with given fields:
 func (_m *Stringer) String() string {
 	ret := _m.Called()
@@ -29,33 +21,6 @@ func (_m *Stringer) String() string {
 	}
 
 	return r0
-}
-
-// Stringer_String_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'String'
-type Stringer_String_Call struct {
-	*mock.Call
-}
-
-// String is a helper method to define mock.On call
-func (_e *Stringer_Expecter) String() *Stringer_String_Call {
-	return &Stringer_String_Call{Call: _e.mock.On("String")}
-}
-
-func (_c *Stringer_String_Call) Run(run func()) *Stringer_String_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run()
-	})
-	return _c
-}
-
-func (_c *Stringer_String_Call) Return(_a0 string) *Stringer_String_Call {
-	_c.Call.Return(_a0)
-	return _c
-}
-
-func (_c *Stringer_String_Call) RunAndReturn(run func() string) *Stringer_String_Call {
-	_c.Call.Return(run)
-	return _c
 }
 
 type mockConstructorTestingTNewStringer interface {

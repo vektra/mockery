@@ -1,8 +1,7 @@
 quiet: False
-all: True
+all: False
 keeptree: True
 disable-version-string: True
-with-expecter: True
 packages:
   - github.com/vektra/mockery/v2/pkg
   - github.com/vektra/mockery/v2/pkg/fixtures

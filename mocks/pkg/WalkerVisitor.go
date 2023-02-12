@@ -14,14 +14,6 @@ type WalkerVisitor struct {
 	mock.Mock
 }
 
-type WalkerVisitor_Expecter struct {
-	mock *mock.Mock
-}
-
-func (_m *WalkerVisitor) EXPECT() *WalkerVisitor_Expecter {
-	return &WalkerVisitor_Expecter{mock: &_m.Mock}
-}
-
 // VisitWalk provides a mock function with given fields: _a0, _a1
 func (_m *WalkerVisitor) VisitWalk(_a0 context.Context, _a1 *pkg.Interface) error {
 	ret := _m.Called(_a0, _a1)
@@ -34,35 +26,6 @@ func (_m *WalkerVisitor) VisitWalk(_a0 context.Context, _a1 *pkg.Interface) erro
 	}
 
 	return r0
-}
-
-// WalkerVisitor_VisitWalk_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'VisitWalk'
-type WalkerVisitor_VisitWalk_Call struct {
-	*mock.Call
-}
-
-// VisitWalk is a helper method to define mock.On call
-//   - _a0 context.Context
-//   - _a1 *pkg.Interface
-func (_e *WalkerVisitor_Expecter) VisitWalk(_a0 interface{}, _a1 interface{}) *WalkerVisitor_VisitWalk_Call {
-	return &WalkerVisitor_VisitWalk_Call{Call: _e.mock.On("VisitWalk", _a0, _a1)}
-}
-
-func (_c *WalkerVisitor_VisitWalk_Call) Run(run func(_a0 context.Context, _a1 *pkg.Interface)) *WalkerVisitor_VisitWalk_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(*pkg.Interface))
-	})
-	return _c
-}
-
-func (_c *WalkerVisitor_VisitWalk_Call) Return(_a0 error) *WalkerVisitor_VisitWalk_Call {
-	_c.Call.Return(_a0)
-	return _c
-}
-
-func (_c *WalkerVisitor_VisitWalk_Call) RunAndReturn(run func(context.Context, *pkg.Interface) error) *WalkerVisitor_VisitWalk_Call {
-	_c.Call.Return(run)
-	return _c
 }
 
 type mockConstructorTestingTNewWalkerVisitor interface {

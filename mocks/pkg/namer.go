@@ -9,14 +9,6 @@ type namer struct {
 	mock.Mock
 }
 
-type namer_Expecter struct {
-	mock *mock.Mock
-}
-
-func (_m *namer) EXPECT() *namer_Expecter {
-	return &namer_Expecter{mock: &_m.Mock}
-}
-
 // Name provides a mock function with given fields:
 func (_m *namer) Name() string {
 	ret := _m.Called()
@@ -29,33 +21,6 @@ func (_m *namer) Name() string {
 	}
 
 	return r0
-}
-
-// namer_Name_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Name'
-type namer_Name_Call struct {
-	*mock.Call
-}
-
-// Name is a helper method to define mock.On call
-func (_e *namer_Expecter) Name() *namer_Name_Call {
-	return &namer_Name_Call{Call: _e.mock.On("Name")}
-}
-
-func (_c *namer_Name_Call) Run(run func()) *namer_Name_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run()
-	})
-	return _c
-}
-
-func (_c *namer_Name_Call) Return(_a0 string) *namer_Name_Call {
-	_c.Call.Return(_a0)
-	return _c
-}
-
-func (_c *namer_Name_Call) RunAndReturn(run func() string) *namer_Name_Call {
-	_c.Call.Return(run)
-	return _c
 }
 
 type mockConstructorTestingTnewNamer interface {

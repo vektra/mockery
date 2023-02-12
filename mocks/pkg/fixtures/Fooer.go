@@ -9,45 +9,9 @@ type Fooer struct {
 	mock.Mock
 }
 
-type Fooer_Expecter struct {
-	mock *mock.Mock
-}
-
-func (_m *Fooer) EXPECT() *Fooer_Expecter {
-	return &Fooer_Expecter{mock: &_m.Mock}
-}
-
 // Bar provides a mock function with given fields: f
 func (_m *Fooer) Bar(f func([]int)) {
 	_m.Called(f)
-}
-
-// Fooer_Bar_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Bar'
-type Fooer_Bar_Call struct {
-	*mock.Call
-}
-
-// Bar is a helper method to define mock.On call
-//   - f func([]int)
-func (_e *Fooer_Expecter) Bar(f interface{}) *Fooer_Bar_Call {
-	return &Fooer_Bar_Call{Call: _e.mock.On("Bar", f)}
-}
-
-func (_c *Fooer_Bar_Call) Run(run func(f func([]int))) *Fooer_Bar_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(func([]int)))
-	})
-	return _c
-}
-
-func (_c *Fooer_Bar_Call) Return() *Fooer_Bar_Call {
-	_c.Call.Return()
-	return _c
-}
-
-func (_c *Fooer_Bar_Call) RunAndReturn(run func(func([]int))) *Fooer_Bar_Call {
-	_c.Call.Return(run)
-	return _c
 }
 
 // Baz provides a mock function with given fields: path
@@ -66,34 +30,6 @@ func (_m *Fooer) Baz(path string) func(string) string {
 	return r0
 }
 
-// Fooer_Baz_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Baz'
-type Fooer_Baz_Call struct {
-	*mock.Call
-}
-
-// Baz is a helper method to define mock.On call
-//   - path string
-func (_e *Fooer_Expecter) Baz(path interface{}) *Fooer_Baz_Call {
-	return &Fooer_Baz_Call{Call: _e.mock.On("Baz", path)}
-}
-
-func (_c *Fooer_Baz_Call) Run(run func(path string)) *Fooer_Baz_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(string))
-	})
-	return _c
-}
-
-func (_c *Fooer_Baz_Call) Return(_a0 func(string) string) *Fooer_Baz_Call {
-	_c.Call.Return(_a0)
-	return _c
-}
-
-func (_c *Fooer_Baz_Call) RunAndReturn(run func(string) func(string) string) *Fooer_Baz_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // Foo provides a mock function with given fields: f
 func (_m *Fooer) Foo(f func(string) string) error {
 	ret := _m.Called(f)
@@ -106,34 +42,6 @@ func (_m *Fooer) Foo(f func(string) string) error {
 	}
 
 	return r0
-}
-
-// Fooer_Foo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Foo'
-type Fooer_Foo_Call struct {
-	*mock.Call
-}
-
-// Foo is a helper method to define mock.On call
-//   - f func(string) string
-func (_e *Fooer_Expecter) Foo(f interface{}) *Fooer_Foo_Call {
-	return &Fooer_Foo_Call{Call: _e.mock.On("Foo", f)}
-}
-
-func (_c *Fooer_Foo_Call) Run(run func(f func(string) string)) *Fooer_Foo_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(func(string) string))
-	})
-	return _c
-}
-
-func (_c *Fooer_Foo_Call) Return(_a0 error) *Fooer_Foo_Call {
-	_c.Call.Return(_a0)
-	return _c
-}
-
-func (_c *Fooer_Foo_Call) RunAndReturn(run func(func(string) string) error) *Fooer_Foo_Call {
-	_c.Call.Return(run)
-	return _c
 }
 
 type mockConstructorTestingTNewFooer interface {

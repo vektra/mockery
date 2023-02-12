@@ -1,6 +1,6 @@
 module github.com/vektra/mockery/v2
 
-go 1.19
+go 1.20
 
 require (
 	github.com/chigopher/pathlib v0.12.0

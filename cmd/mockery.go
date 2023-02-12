@@ -212,7 +212,7 @@ func (r *RootApp) Run() error {
 	} else if r.Config.All {
 		recursive = true
 		filter = regexp.MustCompile(".*")
-	} else {
+	} else if r.Config.Packages == nil {
 		log.Fatal().Msgf("Use --name to specify the name of the interface or --all for all interfaces found")
 	}
 
@@ -296,7 +296,7 @@ func (r *RootApp) Run() error {
 		StructName:        r.Config.StructName,
 	}
 
-	if r.Config.Packages != nil {
+	if !r.Config.All && r.Config.Name == "" && r.Config.Packages != nil {
 		warnAlpha(
 			ctx,
 			"use of the 'packages' config variable is currently in an alpha state. Use at your own risk.",

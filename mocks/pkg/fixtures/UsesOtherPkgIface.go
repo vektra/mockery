@@ -12,45 +12,9 @@ type UsesOtherPkgIface struct {
 	mock.Mock
 }
 
-type UsesOtherPkgIface_Expecter struct {
-	mock *mock.Mock
-}
-
-func (_m *UsesOtherPkgIface) EXPECT() *UsesOtherPkgIface_Expecter {
-	return &UsesOtherPkgIface_Expecter{mock: &_m.Mock}
-}
-
 // DoSomethingElse provides a mock function with given fields: obj
 func (_m *UsesOtherPkgIface) DoSomethingElse(obj test.Sibling) {
 	_m.Called(obj)
-}
-
-// UsesOtherPkgIface_DoSomethingElse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DoSomethingElse'
-type UsesOtherPkgIface_DoSomethingElse_Call struct {
-	*mock.Call
-}
-
-// DoSomethingElse is a helper method to define mock.On call
-//   - obj test.Sibling
-func (_e *UsesOtherPkgIface_Expecter) DoSomethingElse(obj interface{}) *UsesOtherPkgIface_DoSomethingElse_Call {
-	return &UsesOtherPkgIface_DoSomethingElse_Call{Call: _e.mock.On("DoSomethingElse", obj)}
-}
-
-func (_c *UsesOtherPkgIface_DoSomethingElse_Call) Run(run func(obj test.Sibling)) *UsesOtherPkgIface_DoSomethingElse_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(test.Sibling))
-	})
-	return _c
-}
-
-func (_c *UsesOtherPkgIface_DoSomethingElse_Call) Return() *UsesOtherPkgIface_DoSomethingElse_Call {
-	_c.Call.Return()
-	return _c
-}
-
-func (_c *UsesOtherPkgIface_DoSomethingElse_Call) RunAndReturn(run func(test.Sibling)) *UsesOtherPkgIface_DoSomethingElse_Call {
-	_c.Call.Return(run)
-	return _c
 }
 
 type mockConstructorTestingTNewUsesOtherPkgIface interface {

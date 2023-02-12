@@ -9,14 +9,6 @@ type RequesterElided struct {
 	mock.Mock
 }
 
-type RequesterElided_Expecter struct {
-	mock *mock.Mock
-}
-
-func (_m *RequesterElided) EXPECT() *RequesterElided_Expecter {
-	return &RequesterElided_Expecter{mock: &_m.Mock}
-}
-
 // Get provides a mock function with given fields: path, url
 func (_m *RequesterElided) Get(path string, url string) error {
 	ret := _m.Called(path, url)
@@ -29,35 +21,6 @@ func (_m *RequesterElided) Get(path string, url string) error {
 	}
 
 	return r0
-}
-
-// RequesterElided_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
-type RequesterElided_Get_Call struct {
-	*mock.Call
-}
-
-// Get is a helper method to define mock.On call
-//   - path string
-//   - url string
-func (_e *RequesterElided_Expecter) Get(path interface{}, url interface{}) *RequesterElided_Get_Call {
-	return &RequesterElided_Get_Call{Call: _e.mock.On("Get", path, url)}
-}
-
-func (_c *RequesterElided_Get_Call) Run(run func(path string, url string)) *RequesterElided_Get_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(string), args[1].(string))
-	})
-	return _c
-}
-
-func (_c *RequesterElided_Get_Call) Return(_a0 error) *RequesterElided_Get_Call {
-	_c.Call.Return(_a0)
-	return _c
-}
-
-func (_c *RequesterElided_Get_Call) RunAndReturn(run func(string, string) error) *RequesterElided_Get_Call {
-	_c.Call.Return(run)
-	return _c
 }
 
 type mockConstructorTestingTNewRequesterElided interface {

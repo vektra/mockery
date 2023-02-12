@@ -9,14 +9,6 @@ type RequesterArray struct {
 	mock.Mock
 }
 
-type RequesterArray_Expecter struct {
-	mock *mock.Mock
-}
-
-func (_m *RequesterArray) EXPECT() *RequesterArray_Expecter {
-	return &RequesterArray_Expecter{mock: &_m.Mock}
-}
-
 // Get provides a mock function with given fields: path
 func (_m *RequesterArray) Get(path string) ([2]string, error) {
 	ret := _m.Called(path)
@@ -41,34 +33,6 @@ func (_m *RequesterArray) Get(path string) ([2]string, error) {
 	}
 
 	return r0, r1
-}
-
-// RequesterArray_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
-type RequesterArray_Get_Call struct {
-	*mock.Call
-}
-
-// Get is a helper method to define mock.On call
-//   - path string
-func (_e *RequesterArray_Expecter) Get(path interface{}) *RequesterArray_Get_Call {
-	return &RequesterArray_Get_Call{Call: _e.mock.On("Get", path)}
-}
-
-func (_c *RequesterArray_Get_Call) Run(run func(path string)) *RequesterArray_Get_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(string))
-	})
-	return _c
-}
-
-func (_c *RequesterArray_Get_Call) Return(_a0 [2]string, _a1 error) *RequesterArray_Get_Call {
-	_c.Call.Return(_a0, _a1)
-	return _c
-}
-
-func (_c *RequesterArray_Get_Call) RunAndReturn(run func(string) ([2]string, error)) *RequesterArray_Get_Call {
-	_c.Call.Return(run)
-	return _c
 }
 
 type mockConstructorTestingTNewRequesterArray interface {

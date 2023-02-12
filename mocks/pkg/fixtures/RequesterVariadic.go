@@ -13,14 +13,6 @@ type RequesterVariadic struct {
 	mock.Mock
 }
 
-type RequesterVariadic_Expecter struct {
-	mock *mock.Mock
-}
-
-func (_m *RequesterVariadic) EXPECT() *RequesterVariadic_Expecter {
-	return &RequesterVariadic_Expecter{mock: &_m.Mock}
-}
-
 // Get provides a mock function with given fields: values
 func (_m *RequesterVariadic) Get(values ...string) bool {
 	_va := make([]interface{}, len(values))
@@ -39,41 +31,6 @@ func (_m *RequesterVariadic) Get(values ...string) bool {
 	}
 
 	return r0
-}
-
-// RequesterVariadic_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
-type RequesterVariadic_Get_Call struct {
-	*mock.Call
-}
-
-// Get is a helper method to define mock.On call
-//   - values ...string
-func (_e *RequesterVariadic_Expecter) Get(values ...interface{}) *RequesterVariadic_Get_Call {
-	return &RequesterVariadic_Get_Call{Call: _e.mock.On("Get",
-		append([]interface{}{}, values...)...)}
-}
-
-func (_c *RequesterVariadic_Get_Call) Run(run func(values ...string)) *RequesterVariadic_Get_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		variadicArgs := make([]string, len(args)-0)
-		for i, a := range args[0:] {
-			if a != nil {
-				variadicArgs[i] = a.(string)
-			}
-		}
-		run(variadicArgs...)
-	})
-	return _c
-}
-
-func (_c *RequesterVariadic_Get_Call) Return(_a0 bool) *RequesterVariadic_Get_Call {
-	_c.Call.Return(_a0)
-	return _c
-}
-
-func (_c *RequesterVariadic_Get_Call) RunAndReturn(run func(...string) bool) *RequesterVariadic_Get_Call {
-	_c.Call.Return(run)
-	return _c
 }
 
 // MultiWriteToFile provides a mock function with given fields: filename, w
@@ -97,42 +54,6 @@ func (_m *RequesterVariadic) MultiWriteToFile(filename string, w ...io.Writer) s
 	return r0
 }
 
-// RequesterVariadic_MultiWriteToFile_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'MultiWriteToFile'
-type RequesterVariadic_MultiWriteToFile_Call struct {
-	*mock.Call
-}
-
-// MultiWriteToFile is a helper method to define mock.On call
-//   - filename string
-//   - w ...io.Writer
-func (_e *RequesterVariadic_Expecter) MultiWriteToFile(filename interface{}, w ...interface{}) *RequesterVariadic_MultiWriteToFile_Call {
-	return &RequesterVariadic_MultiWriteToFile_Call{Call: _e.mock.On("MultiWriteToFile",
-		append([]interface{}{filename}, w...)...)}
-}
-
-func (_c *RequesterVariadic_MultiWriteToFile_Call) Run(run func(filename string, w ...io.Writer)) *RequesterVariadic_MultiWriteToFile_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		variadicArgs := make([]io.Writer, len(args)-1)
-		for i, a := range args[1:] {
-			if a != nil {
-				variadicArgs[i] = a.(io.Writer)
-			}
-		}
-		run(args[0].(string), variadicArgs...)
-	})
-	return _c
-}
-
-func (_c *RequesterVariadic_MultiWriteToFile_Call) Return(_a0 string) *RequesterVariadic_MultiWriteToFile_Call {
-	_c.Call.Return(_a0)
-	return _c
-}
-
-func (_c *RequesterVariadic_MultiWriteToFile_Call) RunAndReturn(run func(string, ...io.Writer) string) *RequesterVariadic_MultiWriteToFile_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // OneInterface provides a mock function with given fields: a
 func (_m *RequesterVariadic) OneInterface(a ...interface{}) bool {
 	var _ca []interface{}
@@ -147,41 +68,6 @@ func (_m *RequesterVariadic) OneInterface(a ...interface{}) bool {
 	}
 
 	return r0
-}
-
-// RequesterVariadic_OneInterface_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'OneInterface'
-type RequesterVariadic_OneInterface_Call struct {
-	*mock.Call
-}
-
-// OneInterface is a helper method to define mock.On call
-//   - a ...interface{}
-func (_e *RequesterVariadic_Expecter) OneInterface(a ...interface{}) *RequesterVariadic_OneInterface_Call {
-	return &RequesterVariadic_OneInterface_Call{Call: _e.mock.On("OneInterface",
-		append([]interface{}{}, a...)...)}
-}
-
-func (_c *RequesterVariadic_OneInterface_Call) Run(run func(a ...interface{})) *RequesterVariadic_OneInterface_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		variadicArgs := make([]interface{}, len(args)-0)
-		for i, a := range args[0:] {
-			if a != nil {
-				variadicArgs[i] = a.(interface{})
-			}
-		}
-		run(variadicArgs...)
-	})
-	return _c
-}
-
-func (_c *RequesterVariadic_OneInterface_Call) Return(_a0 bool) *RequesterVariadic_OneInterface_Call {
-	_c.Call.Return(_a0)
-	return _c
-}
-
-func (_c *RequesterVariadic_OneInterface_Call) RunAndReturn(run func(...interface{}) bool) *RequesterVariadic_OneInterface_Call {
-	_c.Call.Return(run)
-	return _c
 }
 
 // Sprintf provides a mock function with given fields: format, a
@@ -199,42 +85,6 @@ func (_m *RequesterVariadic) Sprintf(format string, a ...interface{}) string {
 	}
 
 	return r0
-}
-
-// RequesterVariadic_Sprintf_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Sprintf'
-type RequesterVariadic_Sprintf_Call struct {
-	*mock.Call
-}
-
-// Sprintf is a helper method to define mock.On call
-//   - format string
-//   - a ...interface{}
-func (_e *RequesterVariadic_Expecter) Sprintf(format interface{}, a ...interface{}) *RequesterVariadic_Sprintf_Call {
-	return &RequesterVariadic_Sprintf_Call{Call: _e.mock.On("Sprintf",
-		append([]interface{}{format}, a...)...)}
-}
-
-func (_c *RequesterVariadic_Sprintf_Call) Run(run func(format string, a ...interface{})) *RequesterVariadic_Sprintf_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		variadicArgs := make([]interface{}, len(args)-1)
-		for i, a := range args[1:] {
-			if a != nil {
-				variadicArgs[i] = a.(interface{})
-			}
-		}
-		run(args[0].(string), variadicArgs...)
-	})
-	return _c
-}
-
-func (_c *RequesterVariadic_Sprintf_Call) Return(_a0 string) *RequesterVariadic_Sprintf_Call {
-	_c.Call.Return(_a0)
-	return _c
-}
-
-func (_c *RequesterVariadic_Sprintf_Call) RunAndReturn(run func(string, ...interface{}) string) *RequesterVariadic_Sprintf_Call {
-	_c.Call.Return(run)
-	return _c
 }
 
 type mockConstructorTestingTNewRequesterVariadic interface {

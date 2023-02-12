@@ -16,14 +16,6 @@ type OutputStreamProvider struct {
 	mock.Mock
 }
 
-type OutputStreamProvider_Expecter struct {
-	mock *mock.Mock
-}
-
-func (_m *OutputStreamProvider) EXPECT() *OutputStreamProvider_Expecter {
-	return &OutputStreamProvider_Expecter{mock: &_m.Mock}
-}
-
 // GetWriter provides a mock function with given fields: _a0, _a1
 func (_m *OutputStreamProvider) GetWriter(_a0 context.Context, _a1 *pkg.Interface) (io.Writer, error, pkg.Cleanup) {
 	ret := _m.Called(_a0, _a1)
@@ -57,35 +49,6 @@ func (_m *OutputStreamProvider) GetWriter(_a0 context.Context, _a1 *pkg.Interfac
 	}
 
 	return r0, r1, r2
-}
-
-// OutputStreamProvider_GetWriter_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetWriter'
-type OutputStreamProvider_GetWriter_Call struct {
-	*mock.Call
-}
-
-// GetWriter is a helper method to define mock.On call
-//   - _a0 context.Context
-//   - _a1 *pkg.Interface
-func (_e *OutputStreamProvider_Expecter) GetWriter(_a0 interface{}, _a1 interface{}) *OutputStreamProvider_GetWriter_Call {
-	return &OutputStreamProvider_GetWriter_Call{Call: _e.mock.On("GetWriter", _a0, _a1)}
-}
-
-func (_c *OutputStreamProvider_GetWriter_Call) Run(run func(_a0 context.Context, _a1 *pkg.Interface)) *OutputStreamProvider_GetWriter_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(*pkg.Interface))
-	})
-	return _c
-}
-
-func (_c *OutputStreamProvider_GetWriter_Call) Return(_a0 io.Writer, _a1 error, _a2 pkg.Cleanup) *OutputStreamProvider_GetWriter_Call {
-	_c.Call.Return(_a0, _a1, _a2)
-	return _c
-}
-
-func (_c *OutputStreamProvider_GetWriter_Call) RunAndReturn(run func(context.Context, *pkg.Interface) (io.Writer, error, pkg.Cleanup)) *OutputStreamProvider_GetWriter_Call {
-	_c.Call.Return(run)
-	return _c
 }
 
 type mockConstructorTestingTNewOutputStreamProvider interface {
