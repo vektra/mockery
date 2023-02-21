@@ -1,6 +1,28 @@
 Features
 ========
 
+Mock Constructors
+-----------------
+
+All mock objects have constructor functions. These constructors do basic test setup so that the expectations you set in the code are asserted before the test exist.
+
+Previously something like this would need to be done:
+```go
+factory := &mocks.Factory{}
+factory.Test(t) // so that mock does not panic when a method is unexpected
+defer factory.AssertExpectations(t)
+```
+
+Instead, you may simply use the constructor:
+```go
+factory := mocks.NewFactory(t)
+```
+
+The constructor sets up common functionalities automatically
+- The `AssertExpectations` method is registered to be called at the end of the tests via `t.Cleanup()` method.
+- The testing.TB interface is registered on the `mock.Mock` so that tests don't panic when a call on the mock is unexpected.
+
+
 Expecter Structs
 ----------------
 
