@@ -42,14 +42,22 @@ You can use the expecter interface as such:
 ```go
 requesterMock := mocks.NewRequester(t)
 requesterMock.EXPECT().Get("some path").Return("result", nil)
-requesterMock.EXPECT().
-	Get(mock.Anything).
-	Run(func(path string) { fmt.Println(path, "was called") }).
-	// Can still use return functions by getting the embedded mock.Call
-	Call.Return(func(path string) string { return "result for " + path }, nil)
 ```
 
-Note that the types of the arguments on the `EXPECT` methods are `interface{}`, not the actual type of your interface. The reason for this is that you may want to pass `mock.Any` as an argument, which means that the argument you pass may be an arbitrary type. The types are still provided in the expecter method docstrings.
+A `RunAndReturn` method is also available on the expecter struct that allows you to dynamically set a return value based on the input to the mock's call.
+
+```go
+requesterMock.EXPECT().
+	Get(mock.Anything).
+	RunAndReturn(func(path string) string { 
+		fmt.Println(path, "was called")
+		return "result for " + path
+	})
+```
+
+!!! note 
+
+	Note that the types of the arguments on the `EXPECT` methods are `interface{}`, not the actual type of your interface. The reason for this is that you may want to pass `mock.Any` as an argument, which means that the argument you pass may be an arbitrary type. The types are still provided in the expecter method docstrings.
 
 
 Return Value Providers
