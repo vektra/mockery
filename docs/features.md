@@ -1,6 +1,28 @@
 Features
 ========
 
+Mock Constructors
+-----------------
+
+All mock objects have constructor functions. These constructors do basic test setup so that the expectations you set in the code are asserted before the test exist.
+
+Previously something like this would need to be done:
+```go
+factory := &mocks.Factory{}
+factory.Test(t) // so that mock does not panic when a method is unexpected
+defer factory.AssertExpectations(t)
+```
+
+Instead, you may simply use the constructor:
+```go
+factory := mocks.NewFactory(t)
+```
+
+The constructor sets up common functionalities automatically
+- The `AssertExpectations` method is registered to be called at the end of the tests via `t.Cleanup()` method.
+- The testing.TB interface is registered on the `mock.Mock` so that tests don't panic when a call on the mock is unexpected.
+
+
 Expecter Structs
 ----------------
 
@@ -20,14 +42,22 @@ You can use the expecter interface as such:
 ```go
 requesterMock := mocks.NewRequester(t)
 requesterMock.EXPECT().Get("some path").Return("result", nil)
-requesterMock.EXPECT().
-	Get(mock.Anything).
-	Run(func(path string) { fmt.Println(path, "was called") }).
-	// Can still use return functions by getting the embedded mock.Call
-	Call.Return(func(path string) string { return "result for " + path }, nil)
 ```
 
-Note that the types of the arguments on the `EXPECT` methods are `interface{}`, not the actual type of your interface. The reason for this is that you may want to pass `mock.Any` as an argument, which means that the argument you pass may be an arbitrary type. The types are still provided in the expecter method docstrings.
+A `RunAndReturn` method is also available on the expecter struct that allows you to dynamically set a return value based on the input to the mock's call.
+
+```go
+requesterMock.EXPECT().
+	Get(mock.Anything).
+	RunAndReturn(func(path string) string { 
+		fmt.Println(path, "was called")
+		return "result for " + path
+	})
+```
+
+!!! note 
+
+	Note that the types of the arguments on the `EXPECT` methods are `interface{}`, not the actual type of your interface. The reason for this is that you may want to pass `mock.Any` as an argument, which means that the argument you pass may be an arbitrary type. The types are still provided in the expecter method docstrings.
 
 
 Return Value Providers
