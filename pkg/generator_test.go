@@ -2455,6 +2455,10 @@ func (_m *Foo) GetBaz() (*baz.Baz, error) {
 	ret := _m.Called()
 
 	var r0 *baz.Baz
+	var r1 error
+	if rf, ok := ret.Get(0).(func() (*baz.Baz, error)); ok {
+		return rf()
+	}
 	if rf, ok := ret.Get(0).(func() *baz.Baz); ok {
 		r0 = rf()
 	} else {
@@ -2463,7 +2467,6 @@ func (_m *Foo) GetBaz() (*baz.Baz, error) {
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func() error); ok {
 		r1 = rf()
 	} else {
@@ -2905,6 +2908,6 @@ func TestParseReplaceType(t *testing.T) {
 
 	for _, test := range tests {
 		actual := parseReplaceType(test.value)
-		assert.Equal(t, test.expected, actual)
+		assert.Equal(t, test.expected, *actual)
 	}
 }

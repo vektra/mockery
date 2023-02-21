@@ -105,11 +105,11 @@ Replace Types
 The `replace-type` parameter allows adding a list of type replacements to be made in package and/or type names.
 This can help overcome some parsing problems like type aliases that the Go parser doesn't provide enough information.
 
+This parameter can be specified multiple times.
+
 ```shell
 mockery --replace-type github.com/vektra/mockery/v2/baz/internal/foo.InternalBaz=baz:github.com/vektra/mockery/v2/baz.Baz
 ```
-
-This parameter can be specified multiple times.
 
 This will replace any imported named `"github.com/vektra/mockery/v2/baz/internal/foo"`
 with `baz "github.com/vektra/mockery/v2/baz"`. The alias is defined with `:` before
@@ -150,7 +150,7 @@ type Handler struct {
 }
 ```
 
-Mock generated without this parameter:
+Invalid mock generated without this parameter (points to an `internal` folder):
 
 ```go
 import (
@@ -165,7 +165,7 @@ func (_m *Handler) HandleMessage(m pubsub.Message) error {
 }
 ```
 
-Mock generated with this parameter.
+Correct mock generated with this parameter.
 
 ```go
 import (
