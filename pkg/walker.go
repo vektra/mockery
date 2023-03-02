@@ -150,7 +150,7 @@ func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) erro
 		log.Err(err).Msgf("Unable to get writer")
 		os.Exit(1)
 	}
-	defer closer()
+	// defer closer()
 
 	gen := NewGenerator(ctx, v.Config, iface, pkg)
 	gen.GenerateBoilerplate(v.Boilerplate)
@@ -160,6 +160,7 @@ func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) erro
 	err = gen.Generate(ctx)
 	if err != nil {
 		return err
+
 	}
 
 	log.Info().Msgf("Generating mock")
@@ -170,5 +171,36 @@ func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) erro
 		}
 	}
 
+	closer()
+
+	if v.Config.Print {
+		log.Info().Msgf("Generating Helper not compatible with print")
+		return nil
+	}
+	gen = NewGenerator(ctx, v.Config, iface, pkg)
+	gen.GenerateBoilerplate(v.Boilerplate)
+	gen.GeneratePrologueNote(v.Note)
+	gen.GeneratePrologue(ctx, pkg)
+
+	err = gen.GenerateHelper(ctx)
+	if err != nil {
+		return err
+	}
+
+	iface.Name = iface.Name + "_helper"
+
+	out, err, closer = v.Osp.GetWriter(ctx, iface)
+	if err != nil {
+		log.Err(err).Msgf("Unable to get writer")
+		os.Exit(1)
+	}
+	defer closer()
+	log.Info().Msgf("Generating Helper")
+	if !v.Config.DryRun {
+		err = gen.Write(out)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
