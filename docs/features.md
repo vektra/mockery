@@ -21,7 +21,6 @@ Usage of the `packages` config section is desirable for mutiple reasons:
 Here is an example configuration set:
 
 ```yaml
-keeptree: True
 with-expecter: True
 packages:
   github.com/vektra/mockery/v2/pkg: # (1)!
