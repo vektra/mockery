@@ -27,18 +27,26 @@ packages:
   github.com/vektra/mockery/v2/pkg: # (1)!
     interfaces:
       TypesPackage:
+      RequesterVariadic:
+        config: # (2)!
+          with-expecter: False 
+        configs:
+          - structname: RequesterVariadicOneArgument
+            unroll-variadic: False
+          - structname: RequesterVariadic
   io:
     config:
-      all: True # (2)!
+      all: True # (3)!
     interfaces:
       Writer:
         config:
-          with-expecter: False # (3)!
+          with-expecter: False # (4)!
 ```
 
 1.  For this package, we provide no package-level config (which means we inherit the deafults at the top-level). Since our default of `all:` is `False`, mockery will only generate the interfaces we specify. We tell it which interface to generate by using the `interfaces` section and specifying an empty map, one for each interface.
-2. This is telling mockery to generate _all_ interfaces in the `io` package.
-3. We can provide interface-specifc overrides to the generation config.
+2. There might be cases where you want multiple mocks generated from the same interface. To do this, you can define a default `config` section for the interface, and further `configs` (plural) section, one for each mock. You _must_ specify a `structname` for the mocks in this section to differentiate them.
+3. This is telling mockery to generate _all_ interfaces in the `io` package.
+4. We can provide interface-specifc overrides to the generation config.
 
 ### Templated directory and filenames
 
