@@ -66,7 +66,7 @@ The template variables available for your use are:
 |------|-------------|
 | InterfaceName | The name of the original interface being mocked |
 | PackageName | The name of the package from the original interface |
-| Package Path | The fully qualified package path of the original interface |
+| PackagePath | The fully qualified package path of the original interface |
 | MockName | The name of the generated mock |
 
 Mock Constructors
