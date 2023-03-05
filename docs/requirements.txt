@@ -1,1 +1,3 @@
 mkdocs-material
+pillow
+cairosvg
