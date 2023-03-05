@@ -35,7 +35,7 @@ func (w *Walker) Walk(ctx context.Context, visitor WalkerVisitor) (generated boo
 	log.Info().Msgf("Walking")
 
 	parser := NewParser(w.BuildTags)
-	w.doWalk(ctx, parser, w.BaseDir, visitor)
+	w.doWalk(ctx, parser, w.BaseDir)
 
 	err := parser.Load()
 	if err != nil {
@@ -65,7 +65,7 @@ func (w *Walker) Walk(ctx context.Context, visitor WalkerVisitor) (generated boo
 	return
 }
 
-func (w *Walker) doWalk(ctx context.Context, p *Parser, dir string, visitor WalkerVisitor) (generated bool) {
+func (w *Walker) doWalk(ctx context.Context, parser *Parser, dir string) (generated bool) {
 	log := zerolog.Ctx(ctx)
 	ctx = log.WithContext(ctx)
 
@@ -83,7 +83,7 @@ func (w *Walker) doWalk(ctx context.Context, p *Parser, dir string, visitor Walk
 
 		if file.IsDir() {
 			if w.Recursive {
-				generated = w.doWalk(ctx, p, path, visitor) || generated
+				generated = w.doWalk(ctx, parser, path) || generated
 				if generated && w.LimitOne {
 					return
 				}
@@ -95,7 +95,7 @@ func (w *Walker) doWalk(ctx context.Context, p *Parser, dir string, visitor Walk
 			continue
 		}
 
-		err = p.Parse(ctx, path)
+		err = parser.Parse(ctx, path)
 		if err != nil {
 			log.Err(err).Msgf("Error parsing file")
 			continue
@@ -105,16 +105,37 @@ func (w *Walker) doWalk(ctx context.Context, p *Parser, dir string, visitor Walk
 	return
 }
 
-type GeneratorVisitor struct {
-	config.Config
-	InPackage   bool
-	Note        string
-	Boilerplate string
-	Osp         OutputStreamProvider
+type GeneratorVisitorConfig struct {
+	Boilerplate          string
+	DisableVersionString bool
+	Exported             bool
+	InPackage            bool
+	KeepTree             bool
+	Note                 string
 	// The name of the output package, if InPackage is false (defaults to "mocks")
 	PackageName       string
 	PackageNamePrefix string
 	StructName        string
+	UnrollVariadic    bool
+	WithExpecter      bool
+}
+
+type GeneratorVisitor struct {
+	config       GeneratorVisitorConfig
+	dryRun       bool
+	outputStream OutputStreamProvider
+}
+
+func NewGeneratorVisitor(
+	config GeneratorVisitorConfig,
+	outputStream OutputStreamProvider,
+	dryRun bool,
+) *GeneratorVisitor {
+	return &GeneratorVisitor{
+		config:       config,
+		dryRun:       dryRun,
+		outputStream: outputStream,
+	}
 }
 
 func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) error {
@@ -132,38 +153,37 @@ func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) erro
 	}()
 
 	var out io.Writer
-	var pkg string
 
-	if v.KeepTree && v.InPackage {
-		pkg = filepath.Dir(iface.FileName)
-	} else if v.InPackage {
-		pkg = filepath.Dir(iface.FileName)
-	} else if (v.PackageName == "" || v.PackageName == "mocks") && v.PackageNamePrefix != "" {
-		// go with package name prefix only when package name is empty or default and package name prefix is specified
-		pkg = fmt.Sprintf("%s%s", v.PackageNamePrefix, iface.Pkg.Name())
-	} else {
-		pkg = v.PackageName
-	}
-
-	out, err, closer := v.Osp.GetWriter(ctx, iface)
+	out, err, closer := v.outputStream.GetWriter(ctx, iface)
 	if err != nil {
 		log.Err(err).Msgf("Unable to get writer")
 		os.Exit(1)
 	}
 	defer closer()
 
-	gen := NewGenerator(ctx, v.Config, iface, pkg)
-	gen.GenerateBoilerplate(v.Boilerplate)
-	gen.GeneratePrologueNote(v.Note)
-	gen.GeneratePrologue(ctx, pkg)
+	generatorConfig := GeneratorConfig{
+		Boilerplate:          v.config.Boilerplate,
+		DisableVersionString: v.config.DisableVersionString,
+		Exported:             v.config.Exported,
+		InPackage:            v.config.InPackage,
+		KeepTree:             v.config.KeepTree,
+		Note:                 v.config.Note,
+		PackageName:          v.config.PackageName,
+		PackageNamePrefix:    v.config.PackageNamePrefix,
+		StructName:           v.config.StructName,
+		UnrollVariadic:       v.config.UnrollVariadic,
+		WithExpecter:         v.config.WithExpecter,
+	}
 
-	err = gen.Generate(ctx)
-	if err != nil {
+	gen := NewGenerator(ctx, generatorConfig, iface, "")
+	log.Info().Msgf("Generating mock")
+	if err := gen.GenerateAll(ctx); err != nil {
+		log.Err(err).Msg("generation failed")
 		return err
 	}
 
-	log.Info().Msgf("Generating mock")
-	if !v.Config.DryRun {
+	if !v.dryRun {
+		log.Info().Msgf("writing mock to file")
 		err = gen.Write(out)
 		if err != nil {
 			return err

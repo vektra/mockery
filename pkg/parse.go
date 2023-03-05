@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"go/ast"
 	"go/types"
@@ -37,7 +38,15 @@ type Parser struct {
 
 func NewParser(buildTags []string) *Parser {
 	var conf packages.Config
-	conf.Mode = packages.LoadSyntax
+	conf.Mode = packages.NeedTypes |
+		packages.NeedTypesSizes |
+		packages.NeedSyntax |
+		packages.NeedTypesInfo |
+		packages.NeedImports |
+		packages.NeedName |
+		packages.NeedFiles |
+		packages.NeedCompiledGoFiles
+
 	if len(buildTags) > 0 {
 		conf.BuildFlags = []string{"-tags", strings.Join(buildTags, ",")}
 	}
@@ -50,12 +59,43 @@ func NewParser(buildTags []string) *Parser {
 }
 
 func (p *Parser) loadPackages(fpath string) ([]*packages.Package, error) {
-	if result, ok := p.packageLoadCache[fpath]; ok {
+	if result, ok := p.packageLoadCache[filepath.Dir(fpath)]; ok {
 		return result.pkgs, result.err
 	}
 	pkgs, err := packages.Load(&p.conf, "file="+fpath)
 	p.packageLoadCache[fpath] = packageLoadEntry{pkgs, err}
 	return pkgs, err
+}
+
+func (p *Parser) ParsePackages(ctx context.Context, packageNames []string) error {
+	log := zerolog.Ctx(ctx)
+
+	packages, err := packages.Load(&p.conf, packageNames...)
+	if err != nil {
+		return err
+	}
+	for _, pkg := range packages {
+		for _, err := range pkg.Errors {
+			log.Err(err).Msg("encountered error when loading package")
+		}
+		if len(pkg.Errors) != 0 {
+			return errors.New("error occurred when loading packages")
+		}
+		for fileIdx, file := range pkg.GoFiles {
+			log.Debug().
+				Str("package", pkg.PkgPath).
+				Str("file", file).
+				Msgf("found file")
+			entry := parserEntry{
+				fileName: file,
+				pkg:      pkg,
+				syntax:   pkg.Syntax[fileIdx],
+			}
+			p.entries = append(p.entries, &entry)
+			p.entriesByFileName[file] = &entry
+		}
+	}
+	return nil
 }
 
 func (p *Parser) Parse(ctx context.Context, path string) error {
@@ -137,31 +177,6 @@ func (p *Parser) Parse(ctx context.Context, path string) error {
 	return nil
 }
 
-type NodeVisitor struct {
-	declaredInterfaces []string
-}
-
-func NewNodeVisitor() *NodeVisitor {
-	return &NodeVisitor{
-		declaredInterfaces: make([]string, 0),
-	}
-}
-
-func (nv *NodeVisitor) DeclaredInterfaces() []string {
-	return nv.declaredInterfaces
-}
-
-func (nv *NodeVisitor) Visit(node ast.Node) ast.Visitor {
-	switch n := node.(type) {
-	case *ast.TypeSpec:
-		switch n.Type.(type) {
-		case *ast.InterfaceType, *ast.FuncType:
-			nv.declaredInterfaces = append(nv.declaredInterfaces, n.Name.Name)
-		}
-	}
-	return nv
-}
-
 func (p *Parser) Load() error {
 	for _, entry := range p.entries {
 		nv := NewNodeVisitor()
@@ -183,53 +198,6 @@ func (p *Parser) Find(name string) (*Interface, error) {
 		}
 	}
 	return nil, ErrNotInterface
-}
-
-type Method struct {
-	Name      string
-	Signature *types.Signature
-}
-
-// Interface type represents the target type that we will generate a mock for.
-// It could be an interface, or a function type.
-// Function type emulates: an interface it has 1 method with the function signature
-// and a general name, e.g. "Execute".
-type Interface struct {
-	Name            string // Name of the type to be mocked.
-	QualifiedName   string // Path to the package of the target type.
-	FileName        string
-	File            *ast.File
-	Pkg             *types.Package
-	NamedType       *types.Named
-	IsFunction      bool             // If true, this instance represents a function, otherwise it's an interface.
-	ActualInterface *types.Interface // Holds the actual interface type, in case it's an interface.
-	SingleFunction  *Method          // Holds the function type information, in case it's a function type.
-}
-
-func (iface *Interface) Methods() []*Method {
-	if iface.IsFunction {
-		return []*Method{iface.SingleFunction}
-	}
-	methods := make([]*Method, iface.ActualInterface.NumMethods())
-	for i := 0; i < iface.ActualInterface.NumMethods(); i++ {
-		fn := iface.ActualInterface.Method(i)
-		methods[i] = &Method{Name: fn.Name(), Signature: fn.Type().(*types.Signature)}
-	}
-	return methods
-}
-
-type sortableIFaceList []*Interface
-
-func (s sortableIFaceList) Len() int {
-	return len(s)
-}
-
-func (s sortableIFaceList) Swap(i, j int) {
-	s[i], s[j] = s[j], s[i]
-}
-
-func (s sortableIFaceList) Less(i, j int) bool {
-	return strings.Compare(s[i].Name, s[j].Name) == -1
 }
 
 func (p *Parser) Interfaces() []*Interface {
@@ -291,4 +259,81 @@ func (p *Parser) packageInterfaces(
 	}
 
 	return ifaces
+}
+
+type Method struct {
+	Name      string
+	Signature *types.Signature
+}
+
+type TypesPackage interface {
+	Name() string
+	Path() string
+}
+
+// Interface type represents the target type that we will generate a mock for.
+// It could be an interface, or a function type.
+// Function type emulates: an interface it has 1 method with the function signature
+// and a general name, e.g. "Execute".
+type Interface struct {
+	Name            string // Name of the type to be mocked.
+	QualifiedName   string // Path to the package of the target type.
+	FileName        string
+	File            *ast.File
+	Pkg             TypesPackage
+	NamedType       *types.Named
+	IsFunction      bool             // If true, this instance represents a function, otherwise it's an interface.
+	ActualInterface *types.Interface // Holds the actual interface type, in case it's an interface.
+	SingleFunction  *Method          // Holds the function type information, in case it's a function type.
+}
+
+func (iface *Interface) Methods() []*Method {
+	if iface.IsFunction {
+		return []*Method{iface.SingleFunction}
+	}
+	methods := make([]*Method, iface.ActualInterface.NumMethods())
+	for i := 0; i < iface.ActualInterface.NumMethods(); i++ {
+		fn := iface.ActualInterface.Method(i)
+		methods[i] = &Method{Name: fn.Name(), Signature: fn.Type().(*types.Signature)}
+	}
+	return methods
+}
+
+type sortableIFaceList []*Interface
+
+func (s sortableIFaceList) Len() int {
+	return len(s)
+}
+
+func (s sortableIFaceList) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+
+func (s sortableIFaceList) Less(i, j int) bool {
+	return strings.Compare(s[i].Name, s[j].Name) == -1
+}
+
+type NodeVisitor struct {
+	declaredInterfaces []string
+}
+
+func NewNodeVisitor() *NodeVisitor {
+	return &NodeVisitor{
+		declaredInterfaces: make([]string, 0),
+	}
+}
+
+func (nv *NodeVisitor) DeclaredInterfaces() []string {
+	return nv.declaredInterfaces
+}
+
+func (nv *NodeVisitor) Visit(node ast.Node) ast.Visitor {
+	switch n := node.(type) {
+	case *ast.TypeSpec:
+		switch n.Type.(type) {
+		case *ast.InterfaceType, *ast.FuncType:
+			nv.declaredInterfaces = append(nv.declaredInterfaces, n.Name.Name)
+		}
+	}
+	return nv
 }
