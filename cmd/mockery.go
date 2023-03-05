@@ -226,7 +226,7 @@ func (r *RootApp) Run() error {
 		boilerplate = string(data)
 	}
 
-	if len(configuredPackages) != 0 && r.Config.Name != "" {
+	if len(configuredPackages) != 0 && r.Config.Name == "" {
 		warnAlpha(
 			ctx,
 			"use of the 'packages' config variable is currently in an alpha state. Use at your own risk.",
