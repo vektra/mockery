@@ -209,45 +209,13 @@ func (r *RootApp) Run() error {
 	if r.Config.Version {
 		fmt.Println(logging.GetSemverInfo())
 		return nil
-	} else if r.Config.Name != "" && r.Config.All {
-		log.Fatal().Msgf("Specify --name or --all, but not both")
-	} else if (r.Config.FileName != "" || r.Config.StructName != "") && r.Config.All {
-		log.Fatal().Msgf("Cannot specify --filename or --structname with --all")
-	} else if r.Config.Dir != "" && r.Config.Dir != "." && r.Config.SrcPkg != "" {
-		log.Fatal().Msgf("Specify -dir or -srcpkg, but not both")
-	} else if r.Config.Name != "" {
-		recursive = r.Config.Recursive
-		if strings.ContainsAny(r.Config.Name, regexMetadataChars) {
-			if filter, err = regexp.Compile(r.Config.Name); err != nil {
-				log.Fatal().Err(err).Msgf("Invalid regular expression provided to -name")
-			} else if r.Config.FileName != "" || r.Config.StructName != "" {
-				log.Fatal().Msgf("Cannot specify --filename or --structname with regex in --name")
-			}
-		} else {
-			filter = regexp.MustCompile(fmt.Sprintf("^%s$", r.Config.Name))
-			limitOne = true
-		}
-	} else if r.Config.All {
-		recursive = true
-		filter = regexp.MustCompile(".*")
-	} else if len(configuredPackages) == 0 {
-		log.Fatal().Msgf("Use --name to specify the name of the interface or --all for all interfaces found")
-	}
-
-	if r.Config.Profile != "" {
-		f, err := os.Create(r.Config.Profile)
-		if err != nil {
-			return errors.Wrapf(err, "Failed to create profile file")
-		}
-
-		pprof.StartCPUProfile(f)
-		defer pprof.StopCPUProfile()
 	}
 
 	var osp pkg.OutputStreamProvider
 	if r.Config.Print {
 		osp = &pkg.StdoutStreamProvider{}
 	}
+	buildTags := strings.Split(r.Config.BuildTags, " ")
 
 	var boilerplate string
 	if r.Config.BoilerplateFile != "" {
@@ -258,10 +226,7 @@ func (r *RootApp) Run() error {
 		boilerplate = string(data)
 	}
 
-	baseDir := r.Config.Dir
-	buildTags := strings.Split(r.Config.BuildTags, " ")
-
-	if len(configuredPackages) != 0 && !r.Config.All && r.Config.Name == "" {
+	if len(configuredPackages) != 0 && r.Config.Name != "" {
 		warnAlpha(
 			ctx,
 			"use of the 'packages' config variable is currently in an alpha state. Use at your own risk.",
@@ -310,6 +275,31 @@ func (r *RootApp) Run() error {
 			}
 		}
 	} else {
+		if r.Config.Name != "" && r.Config.All {
+			log.Fatal().Msgf("Specify --name or --all, but not both")
+		} else if (r.Config.FileName != "" || r.Config.StructName != "") && r.Config.All {
+			log.Fatal().Msgf("Cannot specify --filename or --structname with --all")
+		} else if r.Config.Dir != "" && r.Config.Dir != "." && r.Config.SrcPkg != "" {
+			log.Fatal().Msgf("Specify -dir or -srcpkg, but not both")
+		} else if r.Config.Name != "" {
+			recursive = r.Config.Recursive
+			if strings.ContainsAny(r.Config.Name, regexMetadataChars) {
+				if filter, err = regexp.Compile(r.Config.Name); err != nil {
+					log.Fatal().Err(err).Msgf("Invalid regular expression provided to -name")
+				} else if r.Config.FileName != "" || r.Config.StructName != "" {
+					log.Fatal().Msgf("Cannot specify --filename or --structname with regex in --name")
+				}
+			} else {
+				filter = regexp.MustCompile(fmt.Sprintf("^%s$", r.Config.Name))
+				limitOne = true
+			}
+		} else if r.Config.All {
+			recursive = true
+			filter = regexp.MustCompile(".*")
+		} else if len(configuredPackages) == 0 {
+			log.Fatal().Msgf("Use --name to specify the name of the interface or --all for all interfaces found")
+		}
+
 		infoDiscussion(
 			ctx,
 			"dynamic walking of project is being considered for removal "+
@@ -318,6 +308,19 @@ func (r *RootApp) Run() error {
 				"pr":         "https://github.com/vektra/mockery/pull/548",
 				"discussion": "https://github.com/vektra/mockery/discussions/549",
 			})
+
+		if r.Config.Profile != "" {
+			f, err := os.Create(r.Config.Profile)
+			if err != nil {
+				return errors.Wrapf(err, "Failed to create profile file")
+			}
+
+			pprof.StartCPUProfile(f)
+			defer pprof.StopCPUProfile()
+		}
+
+		baseDir := r.Config.Dir
+
 		if osp == nil {
 			osp = &pkg.FileOutputStreamProvider{
 				Config:                    r.Config,
