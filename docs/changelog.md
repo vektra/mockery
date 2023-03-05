@@ -3,9 +3,9 @@ Changelog
 
 This changelog describes major feature additions. Please view the `releases` page for more details on commits and minor changes.
 
-### :octicons-tag-24: [`v2.21.0`](https://github.com/vektra/mockery/releases/tag/v2.21.0): `packages` configuration
+### :octicons-tag-24: [`v2.21.0`](https://github.com/vektra/mockery/releases/tag/v2.21.0): `#!yaml packages` configuration
 
-In this version we release the `packages` configuration section. This new parameter allows defining specific packages to generate mocks for, while also giving fine-grained control over which interfaces are mocked, where they are located, and how they are configured. Details are provided [here](/mockery/features/#packages-configuration).
+In this version we release the `#!yaml packages` configuration section. This new parameter allows defining specific packages to generate mocks for, while also giving fine-grained control over which interfaces are mocked, where they are located, and how they are configured. Details are provided [here](/mockery/features/#packages-configuration).
 
 Community input is desired before we consider deprecations of dynamic walking (via `#!yaml all: True`): https://github.com/vektra/mockery/discussions/549
 
