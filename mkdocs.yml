@@ -69,3 +69,4 @@ extra_css:
 
 plugins:
 - social
+- search
