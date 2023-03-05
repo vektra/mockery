@@ -3,9 +3,6 @@ Changelog
 
 This changelog describes major feature additions. Please view the `releases` page for more details on commits and minor changes.
 
-mockery
--------
-
 ### :octicons-tag-24: [`v2.21.0`](https://github.com/vektra/mockery/releases/tag/v2.21.0): `packages` configuration
 
 In this version we release the `packages` configuration section. This new parameter allows defining specific packages to generate mocks for, while also giving fine-grained control over which interfaces are mocked, where they are located, and how they are configured. Details are provided [here](/mockery/features/#packages-configuration).
