@@ -12,12 +12,14 @@ theme:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
+      primary: light blue
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: light blue
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -64,3 +66,6 @@ nav:
 
 extra_css:
   - stylesheets/extra.css
+
+plugins:
+- social
