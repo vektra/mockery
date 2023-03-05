@@ -24,6 +24,7 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
   features:
+    - content.code.annotate
     - content.code.copy
     - content.action.edit
     - content.action.view
@@ -37,9 +38,13 @@ markdown_extensions:
   - admonition
   - attr_list
   - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
   - pymdownx.highlight:
       anchor_linenums: true
       auto_title: true
+  - pymdownx.inlinehilite
   - pymdownx.details
   - pymdownx.superfences
   - toc:
@@ -54,10 +59,10 @@ nav:
     - Running: running.md
     - Using Mocks:
       - Examples: examples.md
-  - Features:
-    - Changelog: changelog.md
-    - Features: features.md
+  - Features: features.md
+  - Notes: 
     - Additional Notes: notes.md
+    - Changelog: changelog.md
 
 extra_css:
   - stylesheets/extra.css

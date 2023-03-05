@@ -2,3 +2,10 @@ coverage:
   precision: 5
   round: down
   range: "65...100"
+  status:
+    patch:
+      default:
+        target: 65%
+        threshold: 5%
+        base: auto 
+
