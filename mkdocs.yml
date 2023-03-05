@@ -42,6 +42,7 @@ markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
       auto_title: true
+  - pymdownx.inlinehilite
   - pymdownx.details
   - pymdownx.superfences
   - toc:
