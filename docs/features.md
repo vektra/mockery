@@ -5,6 +5,8 @@ Features
 ------------------------
 :octicons-tag-24: 2.21.0 · :material-test-tube: Alpha Feature
 
+[Github Discussion](https://github.com/vektra/mockery/discussions/549)
+
 Mockery has a configuration parameter called `packages`. This config represents a huge paradigm shift that is highly recommended for the large amount of flexibility it grants you.
 
 In this config section, you define the packages and the intefaces you want mocks generated for. The packages can be any arbitrary package, either your own project or anything within the Go ecosystem. You may provide package-level or interface-level overrides to the default config you provide.
