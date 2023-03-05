@@ -7,7 +7,7 @@ This changelog describes major feature additions. Please view the `releases` pag
 
 In this version we release the `packages` configuration section. This new parameter allows defining specific packages to generate mocks for, while also giving fine-grained control over which interfaces are mocked, where they are located, and how they are configured. Details are provided [here](/mockery/features/#packages-configuration).
 
-Community input is desired before we consider deprecations of dynamic walking (via `all: True`): https://github.com/vektra/mockery/discussions/549
+Community input is desired before we consider deprecations of dynamic walking (via `#!yaml all: True`): https://github.com/vektra/mockery/discussions/549
 
 ### :octicons-tag-24: [`v2.20.0`](https://github.com/vektra/mockery/pull/538): Improved Return Value Functions
 
