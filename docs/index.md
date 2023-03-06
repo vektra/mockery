@@ -41,7 +41,7 @@ testonly: True # (3)!
 
 1. Generate our mocks next to the original interface
 2. Create [expecter methods](/mockery/features/#expecter-structs)
-3. Prepend `_test.go` to the filename so the mock object is not packaged 
+3. Append `_test.go` to the filename so the mock object is not packaged 
 
 ```bash
 $ go generate  
