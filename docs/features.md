@@ -5,8 +5,6 @@ Features
 ------------------------
 :octicons-tag-24: 2.21.0 · :material-test-tube: Alpha Feature
 
-[Github Discussion](https://github.com/vektra/mockery/discussions/549)
-
 Mockery has a configuration parameter called `packages`. This config represents a huge paradigm shift that is highly recommended for the large amount of flexibility it grants you.
 
 In this config section, you define the packages and the intefaces you want mocks generated for. The packages can be any arbitrary package, either your own project or anything within the Go ecosystem. You may provide package-level or interface-level overrides to the default config you provide.
@@ -17,9 +15,6 @@ Usage of the `packages` config section is desirable for mutiple reasons:
 2. Granular control over interface generation, location, and file names
 3. Singular location for all config, instead of spread around by `//go:generate` statements
 4. Clean, easy to understand.
-
-!!! note
-    Most of the meanings of the config options have either changed, or are not used when using `packages`. Please refer to this section on config option details.
 
 ### Examples
 
@@ -69,8 +64,12 @@ The template variables available for your use are:
 |------|-------------|
 | InterfaceName | The name of the original interface being mocked |
 | PackageName | The name of the package from the original interface |
-| PackagePath | The fully qualified package path of the original interface |
+| Package Path | The fully qualified package path of the original interface |
 | MockName | The name of the generated mock |
+
+
+!!! warn
+    Many of the config options when using `packages` have either changed meanings or are no longer used.
 
 Mock Constructors
 -----------------

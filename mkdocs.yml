@@ -68,5 +68,6 @@ extra_css:
   - stylesheets/extra.css
 
 plugins:
+- glightbox
 - social
 - search
