@@ -8,7 +8,7 @@ fmt:
 	go fmt ./...
 
 .PHONY: test
-test: mocks
+test:
 	go test ./...
 
 .PHONY: mocks

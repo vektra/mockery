@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"testing"
 
@@ -77,6 +78,12 @@ name: Foo
 	assert.Error(t, app.Run())
 }
 
+func newViper(tmpDir string) *viper.Viper {
+	v := viper.New()
+	v.Set("dir", tmpDir)
+	return v
+}
+
 func TestRunPackagesGeneration(t *testing.T) {
 	tmpDir := t.TempDir()
 	configFmt := `
@@ -94,8 +101,38 @@ packages:
 	require.NoError(t, configPath.WriteFile([]byte(config)))
 	mockPath := pathlib.NewPath(tmpDir).Join("mock_Writer.go")
 
-	v := viper.New()
+	v := newViper(tmpDir)
 	initConfig(nil, v, configPath)
+	app, err := GetRootAppFromViper(v)
+	require.NoError(t, err)
+	require.NoError(t, app.Run())
+
+	exists, err := mockPath.Exists()
+	require.NoError(t, err)
+	assert.True(t, exists)
+}
+
+func TestRunLegacyNoConfig(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	mockPath := pathlib.NewPath(tmpDir).Join("Foo.go")
+	codePath := pathlib.NewPath(tmpDir).Join("foo.go")
+	codePath.WriteFile([]byte(`
+package test
+
+type Foo interface {
+	Get(str string) string
+}`))
+
+	v := viper.New()
+	v.Set("log-level", "debug")
+	v.Set("outpkg", "foobar")
+	v.Set("name", "Foo")
+	v.Set("output", tmpDir)
+	v.Set("disable-config-search", true)
+	os.Chdir(tmpDir)
+
+	initConfig(nil, v, nil)
 	app, err := GetRootAppFromViper(v)
 	require.NoError(t, err)
 	require.NoError(t, app.Run())
