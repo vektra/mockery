@@ -18,6 +18,9 @@ Usage of the `packages` config section is desirable for mutiple reasons:
 3. Singular location for all config, instead of spread around by `//go:generate` statements
 4. Clean, easy to understand.
 
+!!! note
+    Most of the meanings of the config options have either changed, or are not used when using `packages`. Please refer to this section on config option details.
+
 ### Examples
 
 Here is an example configuration set:
