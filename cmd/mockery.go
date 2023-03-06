@@ -105,6 +105,12 @@ func Execute() {
 	}
 }
 
+func configDefaults(v *viper.Viper) {
+	if !v.IsSet("packages") {
+		v.SetDefault("dir", ".")
+	}
+}
+
 func initConfig(
 	baseSearchPath *pathlib.Path,
 	viperObj *viper.Viper,
@@ -163,6 +169,7 @@ func initConfig(
 	}
 
 	viperObj.Set("config", viperObj.ConfigFileUsed())
+	configDefaults(viperObj)
 	return viperObj
 }
 
@@ -202,10 +209,6 @@ func (r *RootApp) Run() error {
 	log.Info().Msgf("Using config: %s", r.Config.Config)
 	ctx := log.WithContext(context.Background())
 
-	configuredPackages, err := r.Config.GetPackages(ctx)
-	if err != nil {
-		return fmt.Errorf("failed to get package from config: %w", err)
-	}
 	if r.Config.Version {
 		fmt.Println(logging.GetSemverInfo())
 		return nil
@@ -226,7 +229,11 @@ func (r *RootApp) Run() error {
 		boilerplate = string(data)
 	}
 
-	if len(configuredPackages) != 0 && r.Config.Name == "" {
+	if r.Config.Packages != nil && r.Config.Name == "" {
+		configuredPackages, err := r.Config.GetPackages(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to get package from config: %w", err)
+		}
 		warnAlpha(
 			ctx,
 			"use of the 'packages' config variable is currently in an alpha state. Use at your own risk.",
@@ -296,7 +303,7 @@ func (r *RootApp) Run() error {
 		} else if r.Config.All {
 			recursive = true
 			filter = regexp.MustCompile(".*")
-		} else if len(configuredPackages) == 0 {
+		} else {
 			log.Fatal().Msgf("Use --name to specify the name of the interface or --all for all interfaces found")
 		}
 
