@@ -87,7 +87,9 @@ func NewConfigFromViper(v *viper.Viper) (*Config, error) {
 
 	// Set defaults
 	if _, packagesExists := cfgMap["packages"]; !packagesExists {
-		c.Dir = "."
+		if c.Dir == "" {
+			c.Dir = "."
+		}
 	} else {
 		c.Dir = "mocks/{{.PackagePath}}"
 		c.FileName = "mock_{{.InterfaceName}}.go"
