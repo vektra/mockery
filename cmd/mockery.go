@@ -105,12 +105,6 @@ func Execute() {
 	}
 }
 
-func configDefaults(v *viper.Viper) {
-	if !v.IsSet("packages") {
-		v.SetDefault("dir", ".")
-	}
-}
-
 func initConfig(
 	baseSearchPath *pathlib.Path,
 	viperObj *viper.Viper,
@@ -170,7 +164,6 @@ func initConfig(
 	}
 
 	viperObj.Set("config", viperObj.ConfigFileUsed())
-	configDefaults(viperObj)
 	return viperObj
 }
 
@@ -182,10 +175,11 @@ type RootApp struct {
 
 func GetRootAppFromViper(v *viper.Viper) (*RootApp, error) {
 	r := &RootApp{}
-	if err := v.UnmarshalExact(&r.Config); err != nil {
+	config, err := config.NewConfigFromViper(v)
+	if err != nil {
 		return nil, errors.Wrapf(err, "failed to get config")
 	}
-	r.Config.Config = v.ConfigFileUsed()
+	r.Config = *config
 	return r, nil
 }
 
@@ -230,7 +224,11 @@ func (r *RootApp) Run() error {
 		boilerplate = string(data)
 	}
 
-	if r.Config.Packages != nil && r.Config.Name == "" {
+	configuredPackages, err := r.Config.GetPackages(ctx)
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
+		return fmt.Errorf("failed to determine configured packages: %w", err)
+	}
+	if len(configuredPackages) != 0 && r.Config.Name == "" {
 		configuredPackages, err := r.Config.GetPackages(ctx)
 		if err != nil {
 			return fmt.Errorf("failed to get package from config: %w", err)

@@ -140,12 +140,6 @@ func outputFilePath(
 	outputFileTemplateString := interfaceConfig.FileName
 	outputDirTemplate := interfaceConfig.Dir
 
-	if outputFileTemplateString == "" {
-		outputFileTemplateString = "mock_{{.InterfaceName}}.go"
-	}
-	if outputDirTemplate == "" {
-		outputDirTemplate = "mocks/{{.PackagePath}}"
-	}
 	log.Debug().Msgf("output filename template is: %v", outputFileTemplateString)
 	log.Debug().Msgf("output dir template is: %v", outputDirTemplate)
 

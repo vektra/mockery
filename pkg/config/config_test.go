@@ -3,6 +3,7 @@ package config
 import (
 	"bytes"
 	"context"
+	"reflect"
 	"testing"
 
 	"github.com/chigopher/pathlib"
@@ -506,4 +507,50 @@ func writeConfigFile(t *testing.T, c *Config) string {
 	require.NoError(t, encoder.Encode(c))
 	require.NoError(t, configFile.WriteFile(yamlBuffer.Bytes()))
 	return configFile.String()
+}
+
+func TestConfig_GetPackages(t *testing.T) {
+	tests := []struct {
+		name    string
+		yaml    string
+		want    []string
+		wantErr bool
+	}{
+		{
+			name: "empty config",
+			yaml: ``,
+			want: []string{},
+		},
+		{
+			name:    "packages defined but no value",
+			yaml:    `packages:`,
+			want:    []string{},
+			wantErr: true,
+		},
+		{
+			name: "packages defined with single package",
+			yaml: `packages:
+  github.com/vektra/mockery/v2/pkg:`,
+			want: []string{"github.com/vektra/mockery/v2/pkg"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tmpDir := pathlib.NewPath(t.TempDir())
+			configFile := tmpDir.Join(".mockery.yaml")
+			require.NoError(t, configFile.WriteFile([]byte(tt.yaml)))
+
+			c := &Config{
+				Config: configFile.String(),
+			}
+			got, err := c.GetPackages(context.Background())
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Config.GetPackages() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Config.GetPackages() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }

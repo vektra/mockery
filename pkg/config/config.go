@@ -3,7 +3,7 @@ package config
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"reflect"
 
 	"github.com/chigopher/pathlib"
@@ -11,8 +11,13 @@ import (
 	"github.com/mitchellh/mapstructure"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
+	"github.com/spf13/viper"
 	"github.com/vektra/mockery/v2/pkg/logging"
 	"gopkg.in/yaml.v3"
+)
+
+var (
+	ErrNoConfigFile = fmt.Errorf("no config file exists")
 )
 
 type Interface struct {
@@ -70,6 +75,26 @@ type Config struct {
 	pkgConfigCache map[string]*Config
 }
 
+func NewConfigFromViper(v *viper.Viper) (*Config, error) {
+	c := &Config{}
+	if err := v.UnmarshalExact(c); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal config: %w", err)
+	}
+	cfgMap, err := c.cfgAsMap(context.Background())
+	if err != nil {
+		return nil, fmt.Errorf("failed to read config as map: %w", err)
+	}
+
+	// Set defaults
+	if _, packagesExists := cfgMap["packages"]; !packagesExists {
+		c.Dir = "."
+	} else {
+		c.Dir = "mocks/{{.PackagePath}}"
+		c.FileName = "mock_{{.InterfaceName}}.go"
+	}
+	return c, nil
+}
+
 // cfgAsMap reads in the config file and returns a map representation, instead of a
 // struct representation. This is mainly needed because viper throws away case-sensitivity
 // in the `packages` section, which won't work when defining interface names 😞
@@ -82,8 +107,12 @@ func (c *Config) cfgAsMap(ctx context.Context) (map[string]any, error) {
 		log.Debug().Msgf("config map is nil, reading: %v", configPath)
 		newCfg := make(map[string]any)
 
-		fileBytes, err := ioutil.ReadFile(configPath.String())
+		fileBytes, err := os.ReadFile(configPath.String())
 		if err != nil {
+			if os.IsNotExist(err) {
+				log.Debug().Msg("config file doesn't exist, returning empty config map")
+				return map[string]any{}, nil
+			}
 			return nil, errors.Wrapf(err, "failed to read file: %v", configPath)
 		}
 
@@ -111,13 +140,21 @@ func (c *Config) GetPackages(ctx context.Context) ([]string, error) {
 	// away maps with no values. Our config allows empty maps,
 	// so this breaks our logic. We need to manually parse this section
 	// instead. See: https://github.com/spf13/viper/issues/819
+	log := zerolog.Ctx(ctx)
 	cfgMap, err := c.cfgAsMap(ctx)
 	if err != nil {
 		return nil, err
 	}
-	packageSection, ok := cfgMap["packages"].(map[string]any)
+	packagesSection, ok := cfgMap["packages"]
 	if !ok {
+		log.Debug().Msg("packages section is not defined")
 		return []string{}, nil
+	}
+	packageSection, ok := packagesSection.(map[string]any)
+	if !ok {
+		msg := "packages section is of the wrong type"
+		log.Error().Msg(msg)
+		return []string{}, fmt.Errorf(msg)
 	}
 	packages := []string{}
 	for key := range packageSection {
