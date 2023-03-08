@@ -5,6 +5,9 @@ Features
 ------------------------
 :octicons-tag-24: 2.21.0 · :material-test-tube: Alpha Feature
 
+!!! danger
+	This feature is considered alpha. It is like that bugs exist, and subfeatures may be added/subtracted/modified at any time. Use at your own risk. This warning will be updated as this feature matures.
+
 Mockery has a configuration parameter called `packages`. This config represents a huge paradigm shift that is highly recommended for the large amount of flexibility it grants you.
 
 In this config section, you define the packages and the intefaces you want mocks generated for. The packages can be any arbitrary package, either your own project or anything within the Go ecosystem. You may provide package-level or interface-level overrides to the default config you provide.
