@@ -8,28 +8,28 @@ func (_m *StructWithTag) MethodA(v *struct {
 	FieldA int `json:"field_a"`
 	FieldB int `json:"field_b" xml:"field_b"`
 }) *struct {
-	FieldA int `json:"field_a"`
-	FieldB int `json:"field_b" xml:"field_b"`
+	FieldC int `json:"field_c"`
+	FieldD int `json:"field_d" xml:"field_d"`
 } {
 	ret := _m.Called(v)
 
 	var r0 *struct {
-		FieldA int `json:"field_a"`
-		FieldB int `json:"field_b" xml:"field_b"`
+		FieldC int `json:"field_c"`
+		FieldD int `json:"field_d" xml:"field_d"`
 	}
 	if rf, ok := ret.Get(0).(func(*struct {
 		FieldA int `json:"field_a"`
 		FieldB int `json:"field_b" xml:"field_b"`
 	}) *struct {
-		FieldA int `json:"field_a"`
-		FieldB int `json:"field_b" xml:"field_b"`
+		FieldC int `json:"field_c"`
+		FieldD int `json:"field_d" xml:"field_d"`
 	}); ok {
 		r0 = rf(v)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*struct {
-				FieldA int `json:"field_a"`
-				FieldB int `json:"field_b" xml:"field_b"`
+				FieldC int `json:"field_c"`
+				FieldD int `json:"field_d" xml:"field_d"`
 			})
 		}
 	}

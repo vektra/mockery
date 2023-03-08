@@ -5,7 +5,7 @@ type StructWithTag interface {
 		FieldA int `json:"field_a"`
 		FieldB int `json:"field_b" xml:"field_b"`
 	}) *struct {
-		FieldA int `json:"field_a"`
-		FieldB int `json:"field_b" xml:"field_b"`
+		FieldC int `json:"field_c"`
+		FieldD int `json:"field_d" xml:"field_d"`
 	}
 }
