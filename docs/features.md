@@ -6,7 +6,7 @@ Features
 :octicons-tag-24: 2.21.0 · :material-test-tube: Alpha Feature
 
 !!! danger
-	This feature is considered alpha. It is like that bugs exist, and subfeatures may be added/subtracted/modified at any time. Use at your own risk. This warning will be updated as this feature matures.
+	This feature is considered alpha. It is likely that bugs exist, and subfeatures may be added/subtracted/modified at any time. Use at your own risk. This warning will be updated as this feature matures.
 
 Mockery has a configuration parameter called `packages`. This config represents a huge paradigm shift that is highly recommended for the large amount of flexibility it grants you.
 
