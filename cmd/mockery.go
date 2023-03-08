@@ -162,7 +162,8 @@ func initConfig(
 		}
 		if err := viperObj.ReadInConfig(); err != nil {
 			log, _ := logging.GetLogger("debug")
-			log.Warn().Err(err).Msg("failed to read in config")
+			log.Debug().Err(err).Msg("failed to read in config")
+			log.Info().Msg("couldn't read any config file")
 		}
 	} else {
 		fmt.Printf("config search disabled\n")
