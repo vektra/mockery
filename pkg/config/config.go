@@ -11,6 +11,7 @@ import (
 	"github.com/mitchellh/mapstructure"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
+	"github.com/spf13/viper"
 	"github.com/vektra/mockery/v2/pkg/logging"
 	"gopkg.in/yaml.v3"
 )
@@ -74,6 +75,26 @@ type Config struct {
 	pkgConfigCache map[string]*Config
 }
 
+func NewConfigFromViper(v *viper.Viper) (*Config, error) {
+	c := &Config{}
+	if err := v.UnmarshalExact(c); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal config: %w", err)
+	}
+	cfgMap, err := c.cfgAsMap(context.Background())
+	if err != nil {
+		return nil, fmt.Errorf("failed to read config as map: %w", err)
+	}
+
+	// Set defaults
+	if _, packagesExists := cfgMap["packages"]; !packagesExists {
+		c.Dir = "."
+	} else {
+		c.Dir = "mocks/{{.PackagePath}}"
+		c.FileName = "mock_{{.InterfaceName}}.go"
+	}
+	return c, nil
+}
+
 // cfgAsMap reads in the config file and returns a map representation, instead of a
 // struct representation. This is mainly needed because viper throws away case-sensitivity
 // in the `packages` section, which won't work when defining interface names 😞
@@ -88,6 +109,10 @@ func (c *Config) cfgAsMap(ctx context.Context) (map[string]any, error) {
 
 		fileBytes, err := os.ReadFile(configPath.String())
 		if err != nil {
+			if os.IsNotExist(err) {
+				log.Debug().Msg("config file doesn't exist, returning empty config map")
+				return map[string]any{}, nil
+			}
 			return nil, errors.Wrapf(err, "failed to read file: %v", configPath)
 		}
 

@@ -105,12 +105,6 @@ func Execute() {
 	}
 }
 
-func configDefaults(v *viper.Viper) {
-	if !v.IsSet("packages") {
-		v.SetDefault("dir", ".")
-	}
-}
-
 func initConfig(
 	baseSearchPath *pathlib.Path,
 	viperObj *viper.Viper,
@@ -170,7 +164,6 @@ func initConfig(
 	}
 
 	viperObj.Set("config", viperObj.ConfigFileUsed())
-	configDefaults(viperObj)
 	return viperObj
 }
 
@@ -182,10 +175,11 @@ type RootApp struct {
 
 func GetRootAppFromViper(v *viper.Viper) (*RootApp, error) {
 	r := &RootApp{}
-	if err := v.UnmarshalExact(&r.Config); err != nil {
+	config, err := config.NewConfigFromViper(v)
+	if err != nil {
 		return nil, errors.Wrapf(err, "failed to get config")
 	}
-	r.Config.Config = v.ConfigFileUsed()
+	r.Config = *config
 	return r, nil
 }
 

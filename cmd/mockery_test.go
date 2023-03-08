@@ -125,7 +125,7 @@ inpackage: True
 testonly: True
 log-level: debug
 packages:
-  github.com/nicjohnson145/mockerypackages/internal/foopkg:
+  github.com/testuser/testpackage/internal/foopkg:
     interfaces:
       FooInterface:
 `
@@ -135,7 +135,7 @@ packages:
 
 	goModPath := pathlib.NewPath(tmpDir).Join("go.mod")
 	err := goModPath.WriteFile([]byte(`
-module github.com/nicjohnson145/mockerypackages
+module github.com/testuser/testpackage
                                                                                                                                                                                  
 go 1.20`))
 	require.NoError(t, err)
@@ -150,7 +150,14 @@ type FooInterface interface {
 		Bar()
 }`))
 
-	mockPath := pathlib.NewPath(tmpDir).Join("mock_FooInterface.go")
+	mockPath := pathlib.NewPath(tmpDir).Join(
+		"mocks",
+		"github.com",
+		"testuser",
+		"testpackage",
+		"internal",
+		"foopkg",
+		"mock_FooInterface.go")
 
 	os.Chdir(tmpDir)
 
