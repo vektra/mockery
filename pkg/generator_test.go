@@ -2098,8 +2098,7 @@ func NewMapToInterface(t mockConstructorTestingTNewMapToInterface) *MapToInterfa
 	return mock
 }
 `
-	s.checkGeneration("MapToInterface.go", "MapToInterface", false, "", expected)
-
+	s.checkGeneration("map_to_interface.go", "MapToInterface", false, "", expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorFunctionArgsNamesCollision() {
