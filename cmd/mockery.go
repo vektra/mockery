@@ -230,7 +230,11 @@ func (r *RootApp) Run() error {
 		boilerplate = string(data)
 	}
 
-	if r.Config.Packages != nil && r.Config.Name == "" {
+	configuredPackages, err := r.Config.GetPackages(ctx)
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
+		return fmt.Errorf("failed to determine configured packages: %w", err)
+	}
+	if len(configuredPackages) != 0 && r.Config.Name == "" {
 		configuredPackages, err := r.Config.GetPackages(ctx)
 		if err != nil {
 			return fmt.Errorf("failed to get package from config: %w", err)

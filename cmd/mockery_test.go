@@ -112,6 +112,59 @@ packages:
 	assert.True(t, exists)
 }
 
+func TestIssue565(t *testing.T) {
+	// An issue was posed in https://github.com/vektra/mockery/issues/565
+	// where mockery wasn't entering the `packages` config section. I think
+	// this is some kind of bug with viper. We should instead parse the yaml
+	// directly instead of relying on the struct unmarshalling from viper,
+	// which is kind of buggy.
+	tmpDir := t.TempDir()
+	config := `
+with-expecter: True
+inpackage: True
+testonly: True
+log-level: debug
+packages:
+  github.com/nicjohnson145/mockerypackages/internal/foopkg:
+    interfaces:
+      FooInterface:
+`
+	//config := fmt.Sprintf(configFmt, tmpDir)
+	configPath := pathlib.NewPath(tmpDir).Join("config.yaml")
+	require.NoError(t, configPath.WriteFile([]byte(config)))
+
+	goModPath := pathlib.NewPath(tmpDir).Join("go.mod")
+	err := goModPath.WriteFile([]byte(`
+module github.com/nicjohnson145/mockerypackages
+                                                                                                                                                                                 
+go 1.20`))
+	require.NoError(t, err)
+
+	interfacePath := pathlib.NewPath(tmpDir).Join("internal", "foopkg", "interface.go")
+	require.NoError(t, interfacePath.Parent().MkdirAll())
+	interfacePath.WriteFile([]byte(`
+package foopkg
+																																												
+type FooInterface interface {
+		Foo()
+		Bar()
+}`))
+
+	mockPath := pathlib.NewPath(tmpDir).Join("mock_FooInterface.go")
+
+	os.Chdir(tmpDir)
+
+	v := newViper(tmpDir)
+	initConfig(nil, v, configPath)
+	app, err := GetRootAppFromViper(v)
+	require.NoError(t, err)
+	require.NoError(t, app.Run())
+
+	exists, err := mockPath.Exists()
+	require.NoError(t, err)
+	assert.True(t, exists)
+}
+
 func TestRunLegacyNoConfig(t *testing.T) {
 	tmpDir := t.TempDir()
 

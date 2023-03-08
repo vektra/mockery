@@ -3,7 +3,7 @@ package config
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"reflect"
 
 	"github.com/chigopher/pathlib"
@@ -13,6 +13,10 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/vektra/mockery/v2/pkg/logging"
 	"gopkg.in/yaml.v3"
+)
+
+var (
+	ErrNoConfigFile = fmt.Errorf("no config file exists")
 )
 
 type Interface struct {
@@ -82,7 +86,7 @@ func (c *Config) cfgAsMap(ctx context.Context) (map[string]any, error) {
 		log.Debug().Msgf("config map is nil, reading: %v", configPath)
 		newCfg := make(map[string]any)
 
-		fileBytes, err := ioutil.ReadFile(configPath.String())
+		fileBytes, err := os.ReadFile(configPath.String())
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to read file: %v", configPath)
 		}
@@ -111,13 +115,21 @@ func (c *Config) GetPackages(ctx context.Context) ([]string, error) {
 	// away maps with no values. Our config allows empty maps,
 	// so this breaks our logic. We need to manually parse this section
 	// instead. See: https://github.com/spf13/viper/issues/819
+	log := zerolog.Ctx(ctx)
 	cfgMap, err := c.cfgAsMap(ctx)
 	if err != nil {
 		return nil, err
 	}
-	packageSection, ok := cfgMap["packages"].(map[string]any)
+	packagesSection, ok := cfgMap["packages"]
 	if !ok {
+		log.Debug().Msg("packages section is not defined")
 		return []string{}, nil
+	}
+	packageSection, ok := packagesSection.(map[string]any)
+	if !ok {
+		msg := "packages section is of the wrong type"
+		log.Error().Msg(msg)
+		return []string{}, fmt.Errorf(msg)
 	}
 	packages := []string{}
 	for key := range packageSection {
