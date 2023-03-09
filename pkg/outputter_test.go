@@ -95,6 +95,7 @@ func Test_outputFilePath(t *testing.T) {
 		packageName      string
 		packagePath      string
 		interfaceName    string
+		fileName         string
 		fileNameTemplate string
 		dirTemplate      string
 		mockName         string
@@ -128,6 +129,19 @@ func Test_outputFilePath(t *testing.T) {
 			},
 			want: pathlib.NewPath("github.com/vektra/mockery/MockFoo_pkg_Foo.go"),
 		},
+		{
+			name: "mock next to original interface",
+			params: parameters{
+				packageName:      "pkg",
+				packagePath:      "github.com/vektra/mockery/pkg/internal",
+				interfaceName:    "Foo",
+				fileName:         "pkg/internal/foo.go",
+				dirTemplate:      "{{.InterfaceDir}}",
+				fileNameTemplate: "mock_{{.InterfaceName}}.go",
+				mockName:         "MockFoo",
+			},
+			want: pathlib.NewPath("pkg/internal/mock_Foo.go"),
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -136,8 +150,9 @@ func Test_outputFilePath(t *testing.T) {
 			mockPackage.EXPECT().Path().Return(tt.params.packagePath)
 
 			iface := &Interface{
-				Name: tt.params.interfaceName,
-				Pkg:  mockPackage,
+				Name:     tt.params.interfaceName,
+				Pkg:      mockPackage,
+				FileName: tt.params.fileName,
 			}
 
 			got, err := outputFilePath(
