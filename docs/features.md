@@ -65,6 +65,7 @@ The template variables available for your use are:
 
 | name | description |
 |------|-------------|
+| InterfaceDir | The path of the original interface being mocked. This can be used as `#!yaml dir: "{{.InterfaceDir}}"` to place your mocks adjacent to the original interface. This should not be used for external interfaces. |
 | InterfaceName | The name of the original interface being mocked |
 | PackageName | The name of the package from the original interface |
 | Package Path | The fully qualified package path of the original interface |
