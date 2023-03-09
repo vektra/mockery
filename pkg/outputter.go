@@ -147,11 +147,13 @@ func outputFilePath(
 
 	// The fields available to the template strings
 	data := struct {
+		InterfaceDir  string
 		InterfaceName string
 		PackageName   string
 		PackagePath   string
 		MockName      string
 	}{
+		InterfaceDir:  filepath.Dir(iface.FileName),
 		InterfaceName: iface.Name,
 		PackageName:   iface.Pkg.Name(),
 		PackagePath:   iface.Pkg.Path(),
