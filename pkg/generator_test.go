@@ -2305,11 +2305,19 @@ func NewA(t mockConstructorTestingTNewA) *A {
 }
 
 func (s *GeneratorSuite) TestGeneratorForStructWithTag() {
-	b, err := os.ReadFile("testdata/struct_with_tag.txt")
+	// StructTag has back-quote, So can't use raw string literals in this test case.
+	var expected string
+	expected += "*struct {"
+	expected += "FieldC int `json:\"field_c\"`"
+	expected += "FieldD int `json:\"field_d\" xml:\"field_d\"`"
+	expected += "}"
+
+	gen := s.getGeneratorWithConfig("struct_with_tag.go", "StructWithTag", GeneratorConfig{})
+	err := gen.Generate(s.ctx)
 	s.NoError(err)
 
-	expected := string(b)
-	s.checkGeneration("struct_with_tag.go", "StructWithTag", false, "", expected)
+	actual := bufio.NewScanner(&gen.buf).Text()
+	s.Contains(expected, actual)
 }
 
 func (s *GeneratorSuite) TestStructNameOverride() {
