@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/chigopher/pathlib"
+	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/vektra/mockery/v2/pkg/logging"
@@ -550,6 +551,95 @@ func TestConfig_GetPackages(t *testing.T) {
 			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Config.GetPackages() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestNewConfigFromViper(t *testing.T) {
+	tests := []struct {
+		name    string
+		v       func(t *testing.T) *viper.Viper
+		yaml    string
+		want    *Config
+		wantErr bool
+	}{
+		{
+			name: "default dir",
+			v: func(t *testing.T) *viper.Viper {
+				return viper.New()
+			},
+			want: &Config{
+				Dir: ".",
+			},
+		},
+		{
+			name: "dir set",
+			v: func(t *testing.T) *viper.Viper {
+				v := viper.New()
+				v.Set("dir", "foobar")
+				return v
+			},
+			want: &Config{
+				Dir: "foobar",
+			},
+		},
+		{
+			name: "default packages variables",
+			yaml: `
+packages:
+  github.com/vektra/mockery/v2/pkg:
+`,
+			want: &Config{
+				Dir:      "mocks/{{.PackagePath}}",
+				FileName: "mock_{{.InterfaceName}}.go",
+			},
+		},
+		{
+			name: "packages filename set at top level",
+			yaml: `
+dir: barfoo
+filename: foobar.go
+packages:
+  github.com/vektra/mockery/v2/pkg:
+`,
+			want: &Config{
+				Dir:      "barfoo",
+				FileName: "foobar.go",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var viperObj *viper.Viper
+			if tt.v == nil {
+				viperObj = viper.New()
+			} else {
+				viperObj = tt.v(t)
+			}
+
+			viperObj.SetConfigName((".mockery"))
+			if tt.yaml != "" {
+				confPath := pathlib.NewPath(t.TempDir()).Join(".mockery.yaml")
+				require.NoError(t, confPath.WriteFile([]byte(tt.yaml)))
+				viperObj.AddConfigPath(confPath.Parent().String())
+				require.NoError(t, viperObj.ReadInConfig())
+
+				tt.want.Config = confPath.String()
+			}
+			got, err := NewConfigFromViper(viperObj)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("NewConfigFromViper() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			// zero these out as it's an implementation detail we don't
+			// are about testing
+			got._cfgAsMap = nil
+			tt.want._cfgAsMap = nil
+
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewConfigFromViper() = %v, want %v", got, tt.want)
 			}
 		})
 	}
