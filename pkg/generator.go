@@ -461,7 +461,12 @@ func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 			if f.Anonymous() {
 				fields = append(fields, g.renderType(ctx, f.Type()))
 			} else {
-				fields = append(fields, fmt.Sprintf("%s %s", f.Name(), g.renderType(ctx, f.Type())))
+				field := fmt.Sprintf("%s %s", f.Name(), g.renderType(ctx, f.Type()))
+				tag := t.Tag(i)
+				if tag != "" {
+					field += " `" + tag + "`"
+				}
+				fields = append(fields, field)
 			}
 		}
 
