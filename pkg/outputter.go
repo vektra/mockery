@@ -3,11 +3,13 @@ package pkg
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
+	"text/template"
 
 	"github.com/chigopher/pathlib"
 	"github.com/iancoleman/strcase"
@@ -125,28 +127,11 @@ func (*FileOutputStreamProvider) underscoreCaseName(caseName string) string {
 	return strings.ToLower(rxp2.ReplaceAllString(s1, "${1}_${2}"))
 }
 
-// outputFilePath determines where a particular mock should reside on-disk. This function is
-// specific to the `packages` config option. It respects the configuration provided in the
-// `packages` section, but provides sensible defaults.
-func outputFilePath(
-	ctx context.Context,
-	iface *Interface,
-	interfaceConfig *config.Config,
-	mockName string,
-) (*pathlib.Path, error) {
-	var filename string
-	var outputdir string
-	log := zerolog.Ctx(ctx)
-
-	outputFileTemplateString := interfaceConfig.FileName
-	outputDirTemplate := interfaceConfig.Dir
-
-	log.Debug().Msgf("output filename template is: %v", outputFileTemplateString)
-	log.Debug().Msgf("output dir template is: %v", outputDirTemplate)
-
-	templ := templates.New("output-file-template")
-
-	// The fields available to the template strings
+// parseConfigTemplates parses various templated strings
+// in the config struct into their fully defined values. This mutates
+// the config object passed.
+func parseConfigTemplates(c *config.Config, iface *Interface) error {
+	// data is the struct sent to the template parser
 	data := struct {
 		InterfaceDir            string
 		InterfaceName           string
@@ -155,7 +140,6 @@ func outputFilePath(
 		InterfaceNameSnake      string
 		PackageName             string
 		PackagePath             string
-		MockName                string
 	}{
 		InterfaceDir:            filepath.Dir(iface.FileName),
 		InterfaceName:           iface.Name,
@@ -164,35 +148,34 @@ func outputFilePath(
 		InterfaceNameSnake:      strcase.ToSnake(iface.Name),
 		PackageName:             iface.Pkg.Name(),
 		PackagePath:             iface.Pkg.Path(),
-		MockName:                mockName,
+	}
+	templ := template.New("interface-template")
+
+	// These are the config options that we allow
+	// to be parsed by the templater. The keys are
+	// just labels we're using for logs/errors
+	templateMap := map[string]*string{
+		"filename":   &c.FileName,
+		"dir":        &c.Dir,
+		"structname": &c.StructName,
+		"outpkg":     &c.Outpkg,
 	}
 
-	// Get the name of the file from a template string
-	filenameTempl, err := templ.Parse(outputFileTemplateString)
-	if err != nil {
-		return nil, err
+	for name, attributePointer := range templateMap {
+		attributeTempl, err := templ.Parse(*attributePointer)
+		if err != nil {
+			return fmt.Errorf("failed to parse %s template: %w", name, err)
+		}
+		var parsedBuffer bytes.Buffer
+
+		if err := attributeTempl.Execute(&parsedBuffer, data); err != nil {
+			return fmt.Errorf("failed to execute %s template: %w", name, err)
+		}
+		*attributePointer = parsedBuffer.String()
 	}
 
-	var filenameBuffer bytes.Buffer
+	return nil
 
-	if err := filenameTempl.Execute(&filenameBuffer, data); err != nil {
-		return nil, err
-	}
-	filename = filenameBuffer.String()
-	log.Debug().Msgf("filename is: %v", filename)
-
-	// Get the name of the output dir
-	outputDirTempl, err := templ.Parse(outputDirTemplate)
-	if err != nil {
-		return nil, err
-	}
-	var outputDirBuffer bytes.Buffer
-	if err := outputDirTempl.Execute(&outputDirBuffer, data); err != nil {
-		return nil, err
-	}
-	outputdir = outputDirBuffer.String()
-
-	return pathlib.NewPath(outputdir).Join(filename), nil
 }
 
 // Outputter wraps the Generator struct. It calls the generator
@@ -242,6 +225,9 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 
 	for _, interfaceConfig := range interfaceConfigs {
 		log.Debug().Msg("getting mock generator")
+
+		parseConfigTemplates(interfaceConfig, iface)
+
 		g := GeneratorConfig{
 			Boilerplate:          m.boilerplate,
 			DisableVersionString: interfaceConfig.DisableVersionString,
@@ -262,15 +248,7 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 			return err
 		}
 
-		outputPath, err := outputFilePath(
-			ctx,
-			iface,
-			interfaceConfig,
-			generator.mockName(),
-		)
-		if err != nil {
-			return errors.Wrap(err, "failed to determine file path")
-		}
+		outputPath := pathlib.NewPath(interfaceConfig.Dir).Join(interfaceConfig.FileName)
 		if err := outputPath.Parent().MkdirAll(); err != nil {
 			return errors.Wrapf(err, "failed to mkdir parents of: %v", outputPath)
 		}

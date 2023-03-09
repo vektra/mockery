@@ -54,32 +54,30 @@ packages:
 
 Included with this feature is the ability to use templated strings for the destination directory and filenames of the generated mocks.
 
-The default parameters are:
+The following options are capable of using template variables. These are their defaults:
 
 ```yaml title="Defaults"
 filename: "mock_{{.InterfaceName}}.go"
 dir: "mocks/{{.PackagePath}}"
+structname: "Mock{{.InterfaceName}}"
+outpkg: "{{.PackageName}}"
 ```
 
 The template variables available for your use are:
-		InterfaceNameCamel      string
-		InterfaceNameLowerCamel string
-		InterfaceNameSnake      string
 
 | name | description |
 |------|-------------|
 | InterfaceDir | The path of the original interface being mocked. This can be used as `#!yaml dir: "{{.InterfaceDir}}"` to place your mocks adjacent to the original interface. This should not be used for external interfaces. |
 | InterfaceName | The name of the original interface being mocked |
-| InterfaceNameCamel | Converts the `InterfaceName` to camel case |
+| InterfaceNameCamel | Converts a string `interface_name` to `InterfaceName` |
 | InterfaceNameLowerCamel | Converts `InterfaceName` to `interfaceName` |
 | InterfaceNameSnake | Converts `InterfaceName` to `interface_name` |
 | PackageName | The name of the package from the original interface |
-| Package Path | The fully qualified package path of the original interface |
-| MockName | The name of the generated mock |
+| PackagePath | The fully qualified package path of the original interface |
 
 
-!!! warn
-    Many of the config options when using `packages` have either changed meanings or are no longer used.
+!!! warning
+    Many of the config options when using `packages` have either changed meanings or are no longer used. It's recommended to delete all previous configuration you have as their meanings may have changed.
 
 Mock Constructors
 -----------------

@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"context"
 	"reflect"
 	"testing"
 
@@ -73,103 +72,60 @@ func newConfig(t *testing.T) *config.Config {
 	return &config.Config{}
 }
 
-func Test_foobar(t *testing.T) {
-	mockPackage := pkgMocks.NewTypesPackage(t)
-	mockPackage.EXPECT().Name().Return("pkg")
-	mockPackage.EXPECT().Path().Return("github.com/vektra/mockery")
-
-	iface := &Interface{
-		Name: "interfaceName",
-		Pkg:  mockPackage,
-	}
-	path, err := outputFilePath(context.Background(), iface, &config.Config{
-		FileName: "filename.go",
-		Dir:      "dirname",
-	}, "")
-	assert.NoError(t, err)
-	assert.Equal(t, pathlib.NewPath("dirname/filename.go"), path)
-}
-
-func Test_outputFilePath(t *testing.T) {
-	type parameters struct {
-		packageName      string
-		packagePath      string
-		interfaceName    string
-		fileName         string
-		fileNameTemplate string
-		dirTemplate      string
-		mockName         string
+func Test_parseConfigTemplates(t *testing.T) {
+	type args struct {
+		c     *config.Config
+		iface *Interface
 	}
 	tests := []struct {
-		name    string
-		params  parameters
-		want    *pathlib.Path
+		name string
+		args args
+
+		// pkg is used to generate a mock types.Package object.
+		// It has to take in the testing.T object so we can
+		// assert expectations.
+		pkg     func(t *testing.T) *pkgMocks.TypesPackage
+		want    *config.Config
 		wantErr bool
 	}{
 		{
-			name: "defaults",
-			params: parameters{
-				packageName:      "pkg",
-				packagePath:      "github.com/vektra/mockery",
-				interfaceName:    "Foo",
-				fileNameTemplate: "mock_{{.InterfaceName}}.go",
-				dirTemplate:      "mocks/{{.PackagePath}}",
+			name: "standards",
+			args: args{
+				c: &config.Config{
+					Dir:        "{{.InterfaceDir}}/{{.PackagePath}}",
+					FileName:   "{{.InterfaceName}}_{{.InterfaceNameCamel}}_{{.InterfaceNameSnake}}.go",
+					StructName: "{{.InterfaceNameLowerCamel}}",
+					Outpkg:     "{{.PackageName}}",
+				},
+
+				iface: &Interface{
+					Name:     "FooBar",
+					FileName: "path/to/foobar.go",
+				},
 			},
-			want: pathlib.NewPath("mocks/github.com/vektra/mockery/mock_Foo.go"),
-		},
-		{
-			name: "dir and filename templates",
-			params: parameters{
-				packageName:      "pkg",
-				packagePath:      "github.com/vektra/mockery",
-				interfaceName:    "Foo",
-				fileNameTemplate: "{{.MockName}}_{{.PackageName}}_{{.InterfaceName}}.go",
-				dirTemplate:      "{{.PackagePath}}",
-				mockName:         "MockFoo",
+			pkg: func(t *testing.T) *pkgMocks.TypesPackage {
+				m := pkgMocks.NewTypesPackage(t)
+				m.EXPECT().Path().Return("github.com/user/project/package")
+				m.EXPECT().Name().Return("packageName")
+				return m
 			},
-			want: pathlib.NewPath("github.com/vektra/mockery/MockFoo_pkg_Foo.go"),
-		},
-		{
-			name: "mock next to original interface",
-			params: parameters{
-				packageName:      "pkg",
-				packagePath:      "github.com/vektra/mockery/pkg/internal",
-				interfaceName:    "Foo",
-				fileName:         "pkg/internal/foo.go",
-				dirTemplate:      "{{.InterfaceDir}}",
-				fileNameTemplate: "mock_{{.InterfaceName}}.go",
-				mockName:         "MockFoo",
+			want: &config.Config{
+				Dir:        "path/to/github.com/user/project/package",
+				FileName:   "FooBar_FooBar_foo_bar.go",
+				StructName: "fooBar",
+				Outpkg:     "packageName",
 			},
-			want: pathlib.NewPath("pkg/internal/mock_Foo.go"),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockPackage := pkgMocks.NewTypesPackage(t)
-			mockPackage.EXPECT().Name().Return(tt.params.packageName)
-			mockPackage.EXPECT().Path().Return(tt.params.packagePath)
+			tt.args.iface.Pkg = tt.pkg(t)
 
-			iface := &Interface{
-				Name:     tt.params.interfaceName,
-				Pkg:      mockPackage,
-				FileName: tt.params.fileName,
+			if err := parseConfigTemplates(tt.args.c, tt.args.iface); (err != nil) != tt.wantErr {
+				t.Errorf("parseConfigTemplates() error = %v, wantErr %v", err, tt.wantErr)
 			}
-
-			got, err := outputFilePath(
-				context.Background(),
-				iface,
-				&config.Config{
-					FileName: tt.params.fileNameTemplate,
-					Dir:      tt.params.dirTemplate,
-				},
-				tt.params.mockName,
-			)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("outputFilePath() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("outputFilePath() = %v, want %v", got, tt.want)
+			if !reflect.DeepEqual(tt.args.c, tt.want) {
+				t.Errorf("*config.Config = %v, want %v", tt.args.c, tt.want)
 			}
 		})
 	}
