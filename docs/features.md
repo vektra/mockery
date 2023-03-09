@@ -62,11 +62,17 @@ dir: "mocks/{{.PackagePath}}"
 ```
 
 The template variables available for your use are:
+		InterfaceNameCamel      string
+		InterfaceNameLowerCamel string
+		InterfaceNameSnake      string
 
 | name | description |
 |------|-------------|
 | InterfaceDir | The path of the original interface being mocked. This can be used as `#!yaml dir: "{{.InterfaceDir}}"` to place your mocks adjacent to the original interface. This should not be used for external interfaces. |
 | InterfaceName | The name of the original interface being mocked |
+| InterfaceNameCamel | Converts the `InterfaceName` to camel case |
+| InterfaceNameLowerCamel | Converts `InterfaceName` to `interfaceName` |
+| InterfaceNameSnake | Converts `InterfaceName` to `interface_name` |
 | PackageName | The name of the package from the original interface |
 | Package Path | The fully qualified package path of the original interface |
 | MockName | The name of the generated mock |

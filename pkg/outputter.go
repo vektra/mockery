@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/chigopher/pathlib"
+	"github.com/iancoleman/strcase"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 
@@ -147,17 +148,23 @@ func outputFilePath(
 
 	// The fields available to the template strings
 	data := struct {
-		InterfaceDir  string
-		InterfaceName string
-		PackageName   string
-		PackagePath   string
-		MockName      string
+		InterfaceDir            string
+		InterfaceName           string
+		InterfaceNameCamel      string
+		InterfaceNameLowerCamel string
+		InterfaceNameSnake      string
+		PackageName             string
+		PackagePath             string
+		MockName                string
 	}{
-		InterfaceDir:  filepath.Dir(iface.FileName),
-		InterfaceName: iface.Name,
-		PackageName:   iface.Pkg.Name(),
-		PackagePath:   iface.Pkg.Path(),
-		MockName:      mockName,
+		InterfaceDir:            filepath.Dir(iface.FileName),
+		InterfaceName:           iface.Name,
+		InterfaceNameCamel:      strcase.ToCamel(iface.Name),
+		InterfaceNameLowerCamel: strcase.ToLowerCamel(iface.Name),
+		InterfaceNameSnake:      strcase.ToSnake(iface.Name),
+		PackageName:             iface.Pkg.Name(),
+		PackagePath:             iface.Pkg.Path(),
+		MockName:                mockName,
 	}
 
 	// Get the name of the file from a template string
