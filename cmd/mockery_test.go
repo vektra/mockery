@@ -84,6 +84,34 @@ func newViper(tmpDir string) *viper.Viper {
 	return v
 }
 
+func TestRunPackagesGenerationGlobalDefaults(t *testing.T) {
+	tmpDir := t.TempDir()
+	configFmt := `
+log-level: info
+filename: "hello_{{.InterfaceName}}.go"
+packages:
+  io:
+    config:
+      outpkg: mock_io
+      dir: %s
+    interfaces:
+      Writer:`
+	config := fmt.Sprintf(configFmt, tmpDir)
+	configPath := pathlib.NewPath(tmpDir).Join("config.yaml")
+	require.NoError(t, configPath.WriteFile([]byte(config)))
+	mockPath := pathlib.NewPath(tmpDir).Join("hello_Writer.go")
+
+	v := newViper(tmpDir)
+	initConfig(nil, v, configPath)
+	app, err := GetRootAppFromViper(v)
+	require.NoError(t, err)
+	require.NoError(t, app.Run())
+
+	exists, err := mockPath.Exists()
+	require.NoError(t, err)
+	assert.True(t, exists)
+}
+
 func TestRunPackagesGeneration(t *testing.T) {
 	tmpDir := t.TempDir()
 	configFmt := `
@@ -161,7 +189,7 @@ type FooInterface interface {
 
 	os.Chdir(tmpDir)
 
-	v := newViper(tmpDir)
+	v := viper.New()
 	initConfig(nil, v, configPath)
 	app, err := GetRootAppFromViper(v)
 	require.NoError(t, err)
@@ -173,10 +201,10 @@ type FooInterface interface {
 }
 
 func TestRunLegacyNoConfig(t *testing.T) {
-	tmpDir := t.TempDir()
+	tmpDir := pathlib.NewPath(t.TempDir())
 
-	mockPath := pathlib.NewPath(tmpDir).Join("Foo.go")
-	codePath := pathlib.NewPath(tmpDir).Join("foo.go")
+	mockPath := tmpDir.Join("Foo.go")
+	codePath := tmpDir.Join("foo.go")
 	codePath.WriteFile([]byte(`
 package test
 
@@ -188,9 +216,46 @@ type Foo interface {
 	v.Set("log-level", "debug")
 	v.Set("outpkg", "foobar")
 	v.Set("name", "Foo")
-	v.Set("output", tmpDir)
+	v.Set("output", tmpDir.String())
 	v.Set("disable-config-search", true)
-	os.Chdir(tmpDir)
+	os.Chdir(tmpDir.String())
+
+	initConfig(nil, v, nil)
+	app, err := GetRootAppFromViper(v)
+	require.NoError(t, err)
+	require.NoError(t, app.Run())
+
+	exists, err := mockPath.Exists()
+	require.NoError(t, err)
+	assert.True(t, exists)
+}
+
+func TestRunLegacyNoConfigDirSet(t *testing.T) {
+	tmpDir := pathlib.NewPath(t.TempDir())
+
+	subdir := tmpDir.Join("subdir")
+	require.NoError(t, subdir.MkdirAll())
+
+	mockPath := subdir.Join("Foo.go")
+	codePath := subdir.Join("foo.go")
+
+	err := codePath.WriteFile([]byte(`
+package test
+
+type Foo interface {
+	Get(str string) string
+}`))
+	require.NoError(t, err, "failed to write go file")
+
+	v := viper.New()
+	v.Set("log-level", "debug")
+	v.Set("outpkg", "foobar")
+	v.Set("name", "Foo")
+	v.Set("output", subdir.String())
+	v.Set("disable-config-search", true)
+	v.Set("dir", subdir.String())
+	v.Set("recursive", true)
+	os.Chdir(tmpDir.String())
 
 	initConfig(nil, v, nil)
 	app, err := GetRootAppFromViper(v)

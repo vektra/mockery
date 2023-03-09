@@ -76,24 +76,27 @@ type Config struct {
 }
 
 func NewConfigFromViper(v *viper.Viper) (*Config, error) {
-	c := &Config{}
-	if err := v.UnmarshalExact(c); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal config: %w", err)
+	c := &Config{
+		Config: v.ConfigFileUsed(),
 	}
-	cfgMap, err := c.cfgAsMap(context.Background())
+
+	packages, err := c.GetPackages(context.Background())
 	if err != nil {
-		return nil, fmt.Errorf("failed to read config as map: %w", err)
+		return c, fmt.Errorf("failed to get packages: %w", err)
 	}
 
 	// Set defaults
-	if _, packagesExists := cfgMap["packages"]; !packagesExists {
-		if c.Dir == "" {
-			c.Dir = "."
-		}
+	if len(packages) == 0 {
+		v.SetDefault("dir", ".")
 	} else {
-		c.Dir = "mocks/{{.PackagePath}}"
-		c.FileName = "mock_{{.InterfaceName}}.go"
+		v.SetDefault("dir", "mocks/{{.PackagePath}}")
+		v.SetDefault("filename", "mock_{{.InterfaceName}}.go")
 	}
+
+	if err := v.UnmarshalExact(c); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal config: %w", err)
+	}
+
 	return c, nil
 }
 

@@ -33,6 +33,7 @@ func (w *Walker) Walk(ctx context.Context, visitor WalkerVisitor) (generated boo
 	ctx = log.WithContext(ctx)
 
 	log.Info().Msgf("Walking")
+	log.Debug().Str("baseDir", w.BaseDir).Msg("starting walk at base dir")
 
 	parser := NewParser(w.BuildTags)
 	w.doWalk(ctx, parser, w.BaseDir)
@@ -80,7 +81,6 @@ func (w *Walker) doWalk(ctx context.Context, parser *Parser, dir string) (genera
 		}
 
 		path := filepath.Join(dir, file.Name())
-
 		if file.IsDir() {
 			if w.Recursive {
 				generated = w.doWalk(ctx, parser, path) || generated
