@@ -91,6 +91,8 @@ func NewConfigFromViper(v *viper.Viper) (*Config, error) {
 	} else {
 		v.SetDefault("dir", "mocks/{{.PackagePath}}")
 		v.SetDefault("filename", "mock_{{.InterfaceName}}.go")
+		v.SetDefault("structname", "Mock{{.InterfaceName}}")
+		v.SetDefault("outpkg", "{{.PackageName}}")
 	}
 
 	if err := v.UnmarshalExact(c); err != nil {

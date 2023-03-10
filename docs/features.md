@@ -50,16 +50,110 @@ packages:
 3. This is telling mockery to generate _all_ interfaces in the `io` package.
 4. We can provide interface-specifc overrides to the generation config.
 
-### Templated directory and filenames
+### Templated variables
 
-Included with this feature is the ability to use templated strings for the destination directory and filenames of the generated mocks.
+Included with this feature is the ability to use templated strings for various configuration options. This is useful to define where your mocks are placed and how to name them.
+    
+These are various strategies you may want to adopt:
 
-The default parameters are:
+#### Strategies
 
-```yaml title="Defaults"
-filename: "mock_{{.InterfaceName}}.go"
-dir: "mocks/{{.PackagePath}}"
-```
+!!! info "Strategies"
+
+    === "defaults"
+
+        ```yaml
+        filename: "mock_{{.InterfaceName}}.go"
+        dir: "mocks/{{.PackagePath}}"
+        structname: "Mock{{.InterfaceName}}"
+        outpkg: "{{.PackageName}}"
+        ```
+
+        If these variables aren't specified, the above values will be applied to the config options. This strategy places your mocks into a separate `mocks/` directory.
+
+        **Interface Description**
+
+        | name | value |
+        |------|-------|
+        | `InterfaceName` | `MyDatabase` |
+        | `PackagePath` | `github.com/user/project/pkgName` |
+        | `PackageName` | `pkgName` |
+
+        **Output**
+
+        The mock will be generated at:
+
+        ```
+        mocks/github.com/user/project/pkgName/mock_MyDatabase.go
+        ```
+
+        The mock file will look like:
+
+        ```go
+        package pkgName
+
+        import mock "github.com/stretchr/testify/mock"
+
+        type MockMyDatabase struct {
+          mock.Mock
+        }
+        ```
+    === "adjacent to interface"
+
+        !!! failure
+
+            This strategy is not yet functional.
+        
+        ```yaml
+        filename: "mock_{{.InterfaceName}}.go"
+        dir: "{{.PackagePathRelative}}"
+        structname: "Mock{{.InterfaceName}}"
+        outpkg: "{{.PackageName}}"
+        ```
+
+        Instead of the mocks being generated in a different folder, you may elect to generate the mocks alongside the original interface in your package. This may be the way most people define their configs, as it removes circular import issues that can happen with the default config.
+
+        For example, the mock might be generated along side the original source file like this:
+
+        ```
+        ./path/to/pkg/db.go
+        ./path/to/pkg/mock_MyDatabase.go
+        ```
+
+        **Interface Description**
+
+        | name | value |
+        |------|-------|
+        | `InterfaceName` | `MyDatabase` |
+        | `PackagePath` | `github.com/user/project/path/to/pkg`
+        | `PackagePathRelative` | `path/to/pkg` |
+        | `PackageName` | `pkgName` |
+        | `SourceFile` | `./path/to/pkg/db.go` |
+
+        **Output**
+
+        Mock file will be generated at:
+
+        ```
+        ./path/to/pkg/mock_MyDatabase.go
+        ```
+
+        The mock file will look like:
+
+        ```go
+        package pkgName
+
+        import mock "github.com/stretchr/testify/mock"
+
+        type MockMyDatabase struct {
+          mock.Mock
+        }
+        ```
+        
+        
+
+
+#### Template Variable Descriptions
 
 The template variables available for your use are:
 
@@ -67,13 +161,15 @@ The template variables available for your use are:
 |------|-------------|
 | InterfaceDir | The path of the original interface being mocked. This can be used as `#!yaml dir: "{{.InterfaceDir}}"` to place your mocks adjacent to the original interface. This should not be used for external interfaces. |
 | InterfaceName | The name of the original interface being mocked |
+| InterfaceNameCamel | Converts a string `interface_name` to `InterfaceName` |
+| InterfaceNameLowerCamel | Converts `InterfaceName` to `interfaceName` |
+| InterfaceNameSnake | Converts `InterfaceName` to `interface_name` |
 | PackageName | The name of the package from the original interface |
-| Package Path | The fully qualified package path of the original interface |
-| MockName | The name of the generated mock |
+| PackagePath | The fully qualified package path of the original interface |
 
 
-!!! warn
-    Many of the config options when using `packages` have either changed meanings or are no longer used.
+!!! warning
+    Many of the config options when using `packages` have either changed meanings or are no longer used. It's recommended to delete all previous configuration you have as their meanings may have changed.
 
 Mock Constructors
 -----------------
