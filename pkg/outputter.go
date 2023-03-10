@@ -240,6 +240,7 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 			StructName:           interfaceConfig.StructName,
 			UnrollVariadic:       interfaceConfig.UnrollVariadic,
 			WithExpecter:         interfaceConfig.WithExpecter,
+			ReplaceType:          interfaceConfig.ReplaceType,
 		}
 		generator := NewGenerator(ctx, g, iface, "")
 

@@ -61,6 +61,7 @@ type GeneratorConfig struct {
 	StructName           string
 	UnrollVariadic       bool
 	WithExpecter         bool
+	ReplaceType          []string
 }
 
 // Generator is responsible for generating the string containing
@@ -206,7 +207,7 @@ func (g *Generator) addPackageImportWithName(ctx context.Context, path, name str
 }
 
 func (g *Generator) parseReplaceTypes(ctx context.Context) {
-	for _, replace := range g.Config.ReplaceType {
+	for _, replace := range g.config.ReplaceType {
 		r := strings.SplitN(replace, "=", 2)
 		if len(r) != 2 {
 			log := zerolog.Ctx(ctx)

@@ -2433,7 +2433,7 @@ import mock "github.com/stretchr/testify/mock"
 `
 	generator := NewGenerator(
 		s.ctx,
-		config.Config{InPackage: false, LogLevel: "debug", ReplaceType: []string{
+		GeneratorConfig{InPackage: false, ReplaceType: []string{
 			"github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz/internal/foo.InternalBaz=baz:github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz.Baz",
 		}},
 		s.getInterfaceFromFile("example_project/baz/foo.go", "Foo"),
@@ -2504,7 +2504,7 @@ func NewFoo(t mockConstructorTestingTNewFoo) *Foo {
 	return mock
 }
 `
-	cfg := config.Config{InPackage: false, LogLevel: "debug", ReplaceType: []string{
+	cfg := GeneratorConfig{InPackage: false, ReplaceType: []string{
 		"github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz/internal/foo.InternalBaz=baz:github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz.Baz",
 	}}
 
