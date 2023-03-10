@@ -1,4 +1,24 @@
 quiet: False
-all: True
 keeptree: True
 disable-version-string: True
+with-expecter: True
+filename: "{{.MockName}}.go"
+packages:
+  github.com/vektra/mockery/v2/pkg:
+    interfaces:
+      TypesPackage:
+  github.com/vektra/mockery/v2/pkg/fixtures:
+    interfaces:
+      RequesterArgSameAsNamedImport:
+      RequesterVariadic:
+        config:
+          with-expecter: False
+        configs:
+          - structname: RequesterVariadicOneArgument
+            unroll-variadic: False
+          - structname: RequesterVariadic
+      Expecter:
+      RequesterReturnElided:
+
+
+ 

@@ -1,9 +1,13 @@
 package pkg
 
 import (
+	"reflect"
 	"testing"
 
+	"github.com/chigopher/pathlib"
 	"github.com/stretchr/testify/assert"
+	pkgMocks "github.com/vektra/mockery/v2/mocks/github.com/vektra/mockery/v2/pkg"
+	"github.com/vektra/mockery/v2/pkg/config"
 )
 
 func TestFilenameBare(t *testing.T) {
@@ -53,4 +57,76 @@ func TestUnderscoreCaseName(t *testing.T) {
 	assert.Equal(t, "awesome_http_server", (&FileOutputStreamProvider{}).underscoreCaseName("AwesomeHTTPServer"))
 	assert.Equal(t, "csv", (&FileOutputStreamProvider{}).underscoreCaseName("CSV"))
 	assert.Equal(t, "position0_size", (&FileOutputStreamProvider{}).underscoreCaseName("Position0Size"))
+}
+
+func configPath(t *testing.T) *pathlib.Path {
+	return pathlib.NewPath(t.TempDir()).Join("config.yaml")
+}
+
+func configString() string {
+	return `
+packages:
+	`
+}
+func newConfig(t *testing.T) *config.Config {
+	return &config.Config{}
+}
+
+func Test_parseConfigTemplates(t *testing.T) {
+	type args struct {
+		c     *config.Config
+		iface *Interface
+	}
+	tests := []struct {
+		name string
+		args args
+
+		// pkg is used to generate a mock types.Package object.
+		// It has to take in the testing.T object so we can
+		// assert expectations.
+		pkg     func(t *testing.T) *pkgMocks.TypesPackage
+		want    *config.Config
+		wantErr bool
+	}{
+		{
+			name: "standards",
+			args: args{
+				c: &config.Config{
+					Dir:        "{{.InterfaceDir}}/{{.PackagePath}}",
+					FileName:   "{{.InterfaceName}}_{{.InterfaceNameCamel}}_{{.InterfaceNameSnake}}.go",
+					StructName: "{{.InterfaceNameLowerCamel}}",
+					Outpkg:     "{{.PackageName}}",
+				},
+
+				iface: &Interface{
+					Name:     "FooBar",
+					FileName: "path/to/foobar.go",
+				},
+			},
+			pkg: func(t *testing.T) *pkgMocks.TypesPackage {
+				m := pkgMocks.NewTypesPackage(t)
+				m.EXPECT().Path().Return("github.com/user/project/package")
+				m.EXPECT().Name().Return("packageName")
+				return m
+			},
+			want: &config.Config{
+				Dir:        "path/to/github.com/user/project/package",
+				FileName:   "FooBar_FooBar_foo_bar.go",
+				StructName: "fooBar",
+				Outpkg:     "packageName",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.args.iface.Pkg = tt.pkg(t)
+
+			if err := parseConfigTemplates(tt.args.c, tt.args.iface); (err != nil) != tt.wantErr {
+				t.Errorf("parseConfigTemplates() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			if !reflect.DeepEqual(tt.args.c, tt.want) {
+				t.Errorf("*config.Config = %v, want %v", tt.args.c, tt.want)
+			}
+		})
+	}
 }

@@ -3,10 +3,13 @@ Changelog
 
 This changelog describes major feature additions. Please view the `releases` page for more details on commits and minor changes.
 
-mockery
--------
+### :octicons-tag-24: [`v2.21.0`](https://github.com/vektra/mockery/releases/tag/v2.21.0): `#!yaml packages` configuration
 
-### [`v2.20.0`](https://github.com/vektra/mockery/pull/538): Improved Return Value Functions
+In this version we release the `#!yaml packages` configuration section. This new parameter allows defining specific packages to generate mocks for, while also giving fine-grained control over which interfaces are mocked, where they are located, and how they are configured. Details are provided [here](/mockery/features/#packages-configuration).
+
+Community input is desired before we consider deprecations of dynamic walking (via `#!yaml all: True`): https://github.com/vektra/mockery/discussions/549
+
+### :octicons-tag-24: [`v2.20.0`](https://github.com/vektra/mockery/pull/538): Improved Return Value Functions
 
 Return value functions that return an entire method's return value signature can now be provided.
 
@@ -35,20 +38,20 @@ Return(
 )
 ```
 
-### [`2.19.0`](https://github.com/vektra/mockery/releases/tag/v2.19.0): `inpackage-suffix` option
+### :octicons-tag-24: [`2.19.0`](https://github.com/vektra/mockery/releases/tag/v2.19.0): `inpackage-suffix` option
 
 When `inpackage-suffix` is set to `True`, mock files are suffixed with `_mock` instead of being prefixed with `mock_` for InPackage mocks
 
 
-### [`v2.16.0`](https://github.com/vektra/mockery/pull/527): Config Search Path
+### :octicons-tag-24: [`v2.16.0`](https://github.com/vektra/mockery/pull/527): Config Search Path
 
 Mockery will iteratively search every directory from the current working directory up to the root path for a `.mockery.yaml` file, if one is not explicitly provided.
 
-### [`v2.13.0`](https://github.com/vektra/mockery/pull/456): Generics support
+### :octicons-tag-24: [`v2.13.0`](https://github.com/vektra/mockery/pull/456): Generics support
 
 Mocks are now capable of supporting Golang generics.
 
-### [`v2.11.0`](https://github.com/vektra/mockery/pull/406): Mock constructors
+### :octicons-tag-24: [`v2.11.0`](https://github.com/vektra/mockery/pull/406): Mock constructors
 
 Mockery v2.11 introduces constructors for all mocks. This makes instantiation and mock registration a bit easier and
 less error-prone (you won't have to worry about forgetting the `AssertExpectations` method call anymore).
@@ -69,7 +72,7 @@ The constructor sets up common functionalities automatically
 - The `AssertExpectations` method is registered to be called at the end of the tests via `t.Cleanup()` method.
 - The testing.TB interface is registered on the `mock.Mock` so that tests don't panic when a call on the mock is unexpected.
 
-### [`v2.10.0`](https://github.com/vektra/mockery/pull/396): Expecter Structs
+### :octicons-tag-24: [`v2.10.0`](https://github.com/vektra/mockery/pull/396): Expecter Structs
 
 Mockery now supports an "expecter" struct, which allows your tests to use type-safe methods to generate call expectations. When enabled through the `with-expecter: True` mockery configuration, you can enter into the expecter interface by simply calling `.EXPECT()` on your mock object.
 
@@ -91,7 +94,7 @@ requesterMock.EXPECT().
 	Call.Return(func(path string) string { return "result for " + path }, nil)
 ```
 
-### [`v2.0.0`](https://github.com/vektra/mockery/releases/tag/v2.0.0): Major Update
+### :octicons-tag-24: [`v2.0.0`](https://github.com/vektra/mockery/releases/tag/v2.0.0): Major Update
 
 This is the first major update of mockery. Version 2 brings a handful of improvements to mockery:
 

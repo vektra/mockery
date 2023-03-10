@@ -32,5 +32,12 @@ func getFixturePath(subdirOrBasename ...string) string {
 // getMocksPath("src.go") returns "/path/to/mocks/pkg/fixtures/src.go"
 // getMocksPath("a", "b", "c", "src.go") returns "/path/to/mocks/pkg/fixtures/a/b/c/src.go"
 func getMocksPath(subdirOrBasename ...string) string {
-	return filepath.Join(append([]string{rootPath, "mocks", "pkg", "fixtures"}, subdirOrBasename...)...)
+	return filepath.Join(
+		append(
+			[]string{
+				rootPath,
+				"mocks", "github.com", "vektra", "mockery", "v2", "pkg", "fixtures",
+			},
+			subdirOrBasename...)...,
+	)
 }

@@ -12,16 +12,19 @@ theme:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
+      primary: light blue
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: light blue
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
   features:
+    - content.code.annotate
     - content.code.copy
     - content.action.edit
     - content.action.view
@@ -35,11 +38,17 @@ markdown_extensions:
   - admonition
   - attr_list
   - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
   - pymdownx.highlight:
       anchor_linenums: true
       auto_title: true
+  - pymdownx.inlinehilite
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true 
   - toc:
       permalink: true
   
@@ -52,10 +61,15 @@ nav:
     - Running: running.md
     - Using Mocks:
       - Examples: examples.md
-  - Features:
-    - Changelog: changelog.md
-    - Features: features.md
+  - Features: features.md
+  - Notes: 
     - Additional Notes: notes.md
+    - Changelog: changelog.md
 
 extra_css:
   - stylesheets/extra.css
+
+plugins:
+- glightbox
+- social
+- search

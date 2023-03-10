@@ -110,13 +110,12 @@ func TestPackagePrefix(t *testing.T) {
 	}
 
 	bufferedProvider := NewBufferedProvider()
-	gv := &GeneratorVisitor{
+	visitor := NewGeneratorVisitor(GeneratorVisitorConfig{
 		InPackage:         false,
-		Osp:               bufferedProvider,
 		PackageName:       "mocks",
 		PackageNamePrefix: "prefix_test_",
-	}
+	}, bufferedProvider, false)
 
-	w.Walk(context.Background(), gv)
+	w.Walk(context.Background(), visitor)
 	assert.Regexp(t, regexp.MustCompile("package prefix_test_test"), bufferedProvider.String())
 }
