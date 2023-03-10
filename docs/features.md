@@ -54,11 +54,11 @@ packages:
 
 Included with this feature is the ability to use templated strings for various configuration options. This is useful to define where your mocks are placed and how to name them.
     
-These are various strategies you may want to adopt:
+These are various layouts you may want to adopt:
 
-#### Strategies
+#### Layouts
 
-!!! info "Strategies"
+!!! info "layouts"
 
     === "defaults"
 
@@ -100,13 +100,9 @@ These are various strategies you may want to adopt:
         ```
     === "adjacent to interface"
 
-        !!! failure
-
-            This strategy is not yet functional.
-        
         ```yaml
         filename: "mock_{{.InterfaceName}}.go"
-        dir: "{{.PackagePathRelative}}"
+        dir: "{{.InterfaceDir}}"
         structname: "Mock{{.InterfaceName}}"
         outpkg: "{{.PackageName}}"
         ```
