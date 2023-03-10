@@ -14,6 +14,10 @@ func (_m *ConsulLock) Lock(_a0 <-chan struct{}) (<-chan struct{}, error) {
 	ret := _m.Called(_a0)
 
 	var r0 <-chan struct{}
+	var r1 error
+	if rf, ok := ret.Get(0).(func(<-chan struct{}) (<-chan struct{}, error)); ok {
+		return rf(_a0)
+	}
 	if rf, ok := ret.Get(0).(func(<-chan struct{}) <-chan struct{}); ok {
 		r0 = rf(_a0)
 	} else {
@@ -22,7 +26,6 @@ func (_m *ConsulLock) Lock(_a0 <-chan struct{}) (<-chan struct{}, error) {
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(<-chan struct{}) error); ok {
 		r1 = rf(_a0)
 	} else {

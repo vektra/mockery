@@ -17,6 +17,10 @@ func (_m *Root) ReturnsFoo() (foo.Foo, error) {
 	ret := _m.Called()
 
 	var r0 foo.Foo
+	var r1 error
+	if rf, ok := ret.Get(0).(func() (foo.Foo, error)); ok {
+		return rf()
+	}
 	if rf, ok := ret.Get(0).(func() foo.Foo); ok {
 		r0 = rf()
 	} else {
@@ -25,7 +29,6 @@ func (_m *Root) ReturnsFoo() (foo.Foo, error) {
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func() error); ok {
 		r1 = rf()
 	} else {

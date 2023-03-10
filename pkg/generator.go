@@ -38,6 +38,7 @@ type Generator struct {
 	localizationCache map[string]string
 	packagePathToName map[string]string
 	nameToPackagePath map[string]string
+	replaceTypeCache  []*replaceTypeItem
 }
 
 // NewGenerator builds a Generator.
@@ -51,6 +52,7 @@ func NewGenerator(ctx context.Context, c config.Config, iface *Interface, pkg st
 		nameToPackagePath: make(map[string]string),
 	}
 
+	g.parseReplaceTypes(ctx)
 	g.addPackageImportWithName(ctx, "github.com/stretchr/testify/mock", "mock")
 
 	return g
@@ -103,7 +105,7 @@ func (g *Generator) getPackageScopedType(ctx context.Context, o *types.TypeName)
 	}
 	pkg := g.addPackageImport(ctx, o.Pkg())
 	name := o.Name()
-	g.checkReplaceType(ctx, func(from replaceType, to replaceType) bool {
+	g.checkReplaceType(ctx, func(from *replaceType, to *replaceType) bool {
 		if o.Pkg().Path() == from.pkg && name == from.typ {
 			name = to.typ
 			return false
@@ -117,22 +119,16 @@ func (g *Generator) addPackageImport(ctx context.Context, pkg *types.Package) st
 	return g.addPackageImportWithName(ctx, pkg.Path(), pkg.Name())
 }
 
-func (g *Generator) checkReplaceType(ctx context.Context, f func(from replaceType, to replaceType) bool) {
-	for _, replace := range g.ReplaceType {
-		r := strings.SplitN(replace, "=", 2)
-		if len(r) == 2 {
-			if !f(parseReplaceType(r[0]), parseReplaceType(r[1])) {
-				break
-			}
-		} else {
-			log := zerolog.Ctx(ctx)
-			log.Error().Msgf("invalid replace type value: %s", replace)
+func (g *Generator) checkReplaceType(ctx context.Context, f func(from *replaceType, to *replaceType) bool) {
+	for _, item := range g.replaceTypeCache {
+		if !f(item.from, item.to) {
+			break
 		}
 	}
 }
 
 func (g *Generator) addPackageImportWithName(ctx context.Context, path, name string) string {
-	g.checkReplaceType(ctx, func(from replaceType, to replaceType) bool {
+	g.checkReplaceType(ctx, func(from *replaceType, to *replaceType) bool {
 		if path == from.pkg {
 			path = to.pkg
 			if to.alias != "" {
@@ -151,6 +147,22 @@ func (g *Generator) addPackageImportWithName(ctx context.Context, path, name str
 	g.packagePathToName[path] = nonConflictingName
 	g.nameToPackagePath[nonConflictingName] = path
 	return nonConflictingName
+}
+
+func (g *Generator) parseReplaceTypes(ctx context.Context) {
+	for _, replace := range g.Config.ReplaceType {
+		r := strings.SplitN(replace, "=", 2)
+		if len(r) != 2 {
+			log := zerolog.Ctx(ctx)
+			log.Error().Msgf("invalid replace type value: %s", replace)
+			continue
+		}
+
+		g.replaceTypeCache = append(g.replaceTypeCache, &replaceTypeItem{
+			from: parseReplaceType(r[0]),
+			to:   parseReplaceType(r[1]),
+		})
+	}
 }
 
 func (g *Generator) getNonConflictingName(path, name string) string {
@@ -347,16 +359,20 @@ func (g *Generator) printf(s string, vals ...interface{}) {
 var templates = template.New("base template")
 
 func (g *Generator) printTemplate(data interface{}, templateString string) {
-	err := templates.ExecuteTemplate(&g.buf, templateString, data)
+	tmpl := templates.New(templateString).Funcs(
+		template.FuncMap{
+			"join": strings.Join,
+		},
+	)
+
+	tmpl, err := tmpl.Parse(templateString)
 	if err != nil {
-		tmpl, err := templates.New(templateString).Parse(templateString)
-		if err != nil {
-			// couldn't compile template
-			panic(err)
-		}
-		if err := tmpl.Execute(&g.buf, data); err != nil {
-			panic(err)
-		}
+		// couldn't compile template
+		panic(err)
+	}
+
+	if err := tmpl.Execute(&g.buf, data); err != nil {
+		panic(err)
 	}
 }
 
@@ -505,6 +521,32 @@ type paramList struct {
 	Variadic   bool
 }
 
+func (p *paramList) FormattedParamNames() string {
+	formattedParamNames := ""
+	for i, name := range p.Names {
+		if i > 0 {
+			formattedParamNames += ", "
+		}
+
+		paramType := p.Types[i]
+		// for variable args, move the ... to the end.
+		if strings.Index(paramType, "...") == 0 {
+			name += "..."
+		}
+		formattedParamNames += name
+	}
+
+	return formattedParamNames
+}
+
+func (p *paramList) ReturnNames() []string {
+	var names = make([]string, 0, len(p.Names))
+	for i := 0; i < len(p.Names); i++ {
+		names = append(names, fmt.Sprintf("r%d", i))
+	}
+	return names
+}
+
 func (g *Generator) genList(ctx context.Context, list *types.Tuple, variadic bool) *paramList {
 	var params paramList
 
@@ -585,101 +627,93 @@ func (g *Generator) Generate(ctx context.Context) error {
 	}
 
 	for _, method := range g.iface.Methods() {
-
 		// It's probably possible, but not worth the trouble for prototype
 		if method.Signature.Variadic() && g.WithExpecter && !g.UnrollVariadic {
 			return fmt.Errorf("cannot generate a valid expecter for variadic method with unroll-variadic=false")
 		}
 
-		ftype := method.Signature
-		fname := method.Name
-
-		params := g.genList(ctx, ftype.Params(), ftype.Variadic())
-		returns := g.genList(ctx, ftype.Results(), false)
-
-		if len(params.Names) == 0 {
-			g.printf("// %s provides a mock function with given fields:\n", fname)
-		} else {
-			g.printf(
-				"// %s provides a mock function with given fields: %s\n", fname,
-				strings.Join(params.Names, ", "),
-			)
-		}
-		g.printf(
-			"func (_m *%s%s) %s(%s) ", g.mockName(), g.getInstantiatedTypeString(), fname,
-			strings.Join(params.Params, ", "),
-		)
-
-		switch len(returns.Types) {
-		case 0:
-			g.printf("{\n")
-		case 1:
-			g.printf("%s {\n", returns.Types[0])
-		default:
-			g.printf("(%s) {\n", strings.Join(returns.Types, ", "))
-		}
-
-		formattedParamNames := ""
-		setOfParamNames := make(map[string]struct{}, len(params.Names))
-		for i, name := range params.Names {
-			if i > 0 {
-				formattedParamNames += ", "
-			}
-
-			paramType := params.Types[i]
-			// for variable args, move the ... to the end.
-			if strings.Index(paramType, "...") == 0 {
-				name += "..."
-			}
-			formattedParamNames += name
-
-			setOfParamNames[name] = struct{}{}
-		}
-
-		called := g.generateCalled(params, formattedParamNames) // _m.Called invocation string
-
-		if len(returns.Types) > 0 {
-			retVariable := resolveCollision(setOfParamNames, "ret")
-			g.printf("\t%s := %s\n\n", retVariable, called)
-
-			ret := make([]string, len(returns.Types))
-
-			for idx, typ := range returns.Types {
-				g.printf("\tvar r%d %s\n", idx, typ)
-				g.printf("\tif rf, ok := %s.Get(%d).(func(%s) %s); ok {\n",
-					retVariable, idx, strings.Join(params.Types, ", "), typ)
-				g.printf("\t\tr%d = rf(%s)\n", idx, formattedParamNames)
-				g.printf("\t} else {\n")
-				if typ == "error" {
-					g.printf("\t\tr%d = %s.Error(%d)\n", idx, retVariable, idx)
-				} else if returns.Nilable[idx] {
-					g.printf("\t\tif %s.Get(%d) != nil {\n", retVariable, idx)
-					g.printf("\t\t\tr%d = %s.Get(%d).(%s)\n", idx, retVariable, idx, typ)
-					g.printf("\t\t}\n")
-				} else {
-					g.printf("\t\tr%d = %s.Get(%d).(%s)\n", idx, retVariable, idx, typ)
-				}
-				g.printf("\t}\n\n")
-
-				ret[idx] = fmt.Sprintf("r%d", idx)
-			}
-
-			g.printf("\treturn %s\n", strings.Join(ret, ", "))
-		} else {
-			g.printf("\t%s\n", called)
-		}
-
-		g.printf("}\n")
-
-		// Construct expecter helper functions
-		if g.WithExpecter {
-			g.generateExpecterMethodCall(ctx, method, params, returns)
-		}
+		g.generateMethod(ctx, method)
 	}
 
 	g.generateConstructor(ctx)
 
 	return nil
+}
+
+func (g *Generator) generateMethod(ctx context.Context, method *Method) {
+	ftype := method.Signature
+	fname := method.Name
+
+	params := g.genList(ctx, ftype.Params(), ftype.Variadic())
+	returns := g.genList(ctx, ftype.Results(), false)
+	preamble, called := g.generateCalled(params)
+
+	data := struct {
+		FunctionName           string
+		Params                 *paramList
+		Returns                *paramList
+		MockName               string
+		InstantiatedTypeString string
+		RetVariableName        string
+		Preamble               string
+		Called                 string
+	}{
+		FunctionName:           fname,
+		Params:                 params,
+		Returns:                returns,
+		MockName:               g.mockName(),
+		InstantiatedTypeString: g.getInstantiatedTypeString(),
+		RetVariableName:        resolveCollision(params.Names, "ret"),
+		Preamble:               preamble,
+		Called:                 called,
+	}
+
+	g.printTemplate(data, `
+// {{.FunctionName}} provides a mock function with given fields: {{join .Params.Names ", "}}
+func (_m *{{.MockName}}{{.InstantiatedTypeString}}) {{.FunctionName}}({{join .Params.Params ", "}}) {{if (gt (len .Returns.Types) 1)}}({{end}}{{join .Returns.Types ", "}}{{if (gt (len .Returns.Types) 1)}}){{end}} {
+{{- .Preamble -}}
+{{- if not .Returns.Types}}
+	{{- .Called}}
+{{- else}}
+	{{- .RetVariableName}} := {{.Called}}
+
+	{{range $idx, $name := .Returns.ReturnNames}}
+	var {{$name}} {{index $.Returns.Types $idx -}}
+	{{end}}
+	{{if gt (len .Returns.Types) 1 -}}
+	if rf, ok := {{.RetVariableName}}.Get(0).(func({{join .Params.Types ", "}}) ({{join .Returns.Types ", "}})); ok {
+		return rf({{.Params.FormattedParamNames}})
+	}
+	{{end}}
+	{{- range $idx, $name := .Returns.ReturnNames}}
+	{{- if $idx}}
+
+	{{end}}
+	{{- $typ := index $.Returns.Types $idx -}}
+	if rf, ok := {{$.RetVariableName}}.Get({{$idx}}).(func({{join $.Params.Types ", "}}) {{$typ}}); ok {
+		r{{$idx}} = rf({{$.Params.FormattedParamNames}})
+	} else {
+		{{- if eq "error" $typ -}}
+		r{{$idx}} = {{$.RetVariableName}}.Error({{$idx}})
+		{{- else if (index $.Returns.Nilable $idx) -}}
+		if {{$.RetVariableName}}.Get({{$idx}}) != nil {
+			r{{$idx}} = {{$.RetVariableName}}.Get({{$idx}}).({{$typ}})	
+		}
+		{{- else -}}
+		r{{$idx}} = {{$.RetVariableName}}.Get({{$idx}}).({{$typ}})
+		{{- end -}}
+	}
+	{{- end}}
+
+	return {{join .Returns.ReturnNames ", "}}
+{{- end}}
+}
+`)
+
+	// Construct expecter helper functions
+	if g.WithExpecter {
+		g.generateExpecterMethodCall(ctx, method, params, returns)
+	}
 }
 
 func (g *Generator) generateExpecterStruct(ctx context.Context) {
@@ -784,6 +818,11 @@ func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) Return({{range .Returns.
 	_c.Call.Return({{range .Returns.Names}}{{.}},{{end}})
 	return _c
 }
+
+func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) RunAndReturn(run func({{range .Params.Types}}{{.}},{{end}})({{range .Returns.Types}}{{.}},{{end}})) *{{.CallStruct}}{{ .InstantiatedTypeString }} {
+	_c.Call.Return(run)
+	return _c
+}
 `)
 }
 
@@ -823,22 +862,15 @@ func {{ .ConstructorName }}{{ .TypeConstraint }}(t {{ .ConstructorTestingInterfa
 	g.printTemplate(data, constructorTemplate)
 }
 
-// generateCalled returns the Mock.Called invocation string and, if necessary, prints the
+// generateCalled returns the Mock.Called invocation string and, if necessary, a preamble with the
 // steps to prepare its argument list.
 //
 // It is separate from Generate to avoid cyclomatic complexity through early return statements.
-func (g *Generator) generateCalled(list *paramList, formattedParamNames string) string {
+func (g *Generator) generateCalled(list *paramList) (preamble string, called string) {
 	namesLen := len(list.Names)
-	if namesLen == 0 {
-		return "_m.Called()"
-	}
-
-	if !list.Variadic {
-		return "_m.Called(" + formattedParamNames + ")"
-	}
-
-	if !g.UnrollVariadic {
-		return "_m.Called(" + strings.Join(list.Names, ", ") + ")"
+	if namesLen == 0 || !list.Variadic || !g.UnrollVariadic {
+		called = "_m.Called(" + strings.Join(list.Names, ", ") + ")"
+		return
 	}
 
 	var variadicArgsName string
@@ -847,7 +879,7 @@ func (g *Generator) generateCalled(list *paramList, formattedParamNames string) 
 	// list.Types[] will contain a leading '...'. Strip this from the string to
 	// do easier comparison.
 	strippedIfaceType := strings.Trim(list.Types[namesLen-1], "...")
-	variadicIface := strippedIfaceType == "interface{}"
+	variadicIface := strippedIfaceType == "interface{}" || strippedIfaceType == "any"
 
 	if variadicIface {
 		// Variadic is already of the interface{} type, so we don't need special handling.
@@ -855,8 +887,8 @@ func (g *Generator) generateCalled(list *paramList, formattedParamNames string) 
 	} else {
 		// Define _va to avoid "cannot use t (type T) as type []interface {} in append" error
 		// whenever the variadic type is non-interface{}.
-		g.printf("\t_va := make([]interface{}, len(%s))\n", variadicName)
-		g.printf("\tfor _i := range %s {\n\t\t_va[_i] = %s[_i]\n\t}\n", variadicName, variadicName)
+		preamble += fmt.Sprintf("\t_va := make([]interface{}, len(%s))\n", variadicName)
+		preamble += fmt.Sprintf("\tfor _i := range %s {\n\t\t_va[_i] = %s[_i]\n\t}\n", variadicName, variadicName)
 		variadicArgsName = "_va"
 	}
 
@@ -876,15 +908,17 @@ func (g *Generator) generateCalled(list *paramList, formattedParamNames string) 
 	//
 	// It's okay for us to use the interface{} type, regardless of the actual types, because
 	// Called receives only interface{} anyway.
-	g.printf("\tvar _ca []interface{}\n")
+	preamble += ("\tvar _ca []interface{}\n")
 
 	if namesLen > 1 {
+		formattedParamNames := list.FormattedParamNames()
 		nonVariadicParamNames := formattedParamNames[0:strings.LastIndex(formattedParamNames, ",")]
-		g.printf("\t_ca = append(_ca, %s)\n", nonVariadicParamNames)
+		preamble += fmt.Sprintf("\t_ca = append(_ca, %s)\n", nonVariadicParamNames)
 	}
-	g.printf("\t_ca = append(_ca, %s...)\n", variadicArgsName)
+	preamble += fmt.Sprintf("\t_ca = append(_ca, %s...)\n", variadicArgsName)
 
-	return "_m.Called(_ca...)"
+	called = "_m.Called(_ca...)"
+	return
 }
 
 func (g *Generator) Write(w io.Writer) error {
@@ -902,11 +936,15 @@ func (g *Generator) Write(w io.Writer) error {
 	return nil
 }
 
-func resolveCollision(names map[string]struct{}, variable string) string {
+func resolveCollision(names []string, variable string) string {
 	ret := variable
+	set := make(map[string]struct{})
+	for _, n := range names {
+		set[n] = struct{}{}
+	}
 
 	for i := len(names); true; i++ {
-		_, ok := names[ret]
+		_, ok := set[ret]
 		if !ok {
 			break
 		}
@@ -923,8 +961,13 @@ type replaceType struct {
 	typ   string
 }
 
-func parseReplaceType(t string) replaceType {
-	ret := replaceType{}
+type replaceTypeItem struct {
+	from *replaceType
+	to   *replaceType
+}
+
+func parseReplaceType(t string) *replaceType {
+	ret := &replaceType{}
 	r := strings.SplitN(t, ":", 2)
 	if len(r) > 1 {
 		ret.alias = r[0]

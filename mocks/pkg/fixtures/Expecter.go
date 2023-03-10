@@ -22,6 +22,10 @@ func (_m *Expecter) ManyArgsReturns(str string, i int) ([]string, error) {
 	ret := _m.Called(str, i)
 
 	var r0 []string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, int) ([]string, error)); ok {
+		return rf(str, i)
+	}
 	if rf, ok := ret.Get(0).(func(string, int) []string); ok {
 		r0 = rf(str, i)
 	} else {
@@ -30,7 +34,6 @@ func (_m *Expecter) ManyArgsReturns(str string, i int) ([]string, error) {
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(string, int) error); ok {
 		r1 = rf(str, i)
 	} else {
@@ -61,6 +64,11 @@ func (_c *Expecter_ManyArgsReturns_Call) Run(run func(str string, i int)) *Expec
 
 func (_c *Expecter_ManyArgsReturns_Call) Return(strs []string, err error) *Expecter_ManyArgsReturns_Call {
 	_c.Call.Return(strs, err)
+	return _c
+}
+
+func (_c *Expecter_ManyArgsReturns_Call) RunAndReturn(run func(string, int) ([]string, error)) *Expecter_ManyArgsReturns_Call {
+	_c.Call.Return(run)
 	return _c
 }
 
@@ -100,6 +108,11 @@ func (_c *Expecter_NoArg_Call) Return(_a0 string) *Expecter_NoArg_Call {
 	return _c
 }
 
+func (_c *Expecter_NoArg_Call) RunAndReturn(run func() string) *Expecter_NoArg_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // NoReturn provides a mock function with given fields: str
 func (_m *Expecter) NoReturn(str string) {
 	_m.Called(str)
@@ -125,6 +138,11 @@ func (_c *Expecter_NoReturn_Call) Run(run func(str string)) *Expecter_NoReturn_C
 
 func (_c *Expecter_NoReturn_Call) Return() *Expecter_NoReturn_Call {
 	_c.Call.Return()
+	return _c
+}
+
+func (_c *Expecter_NoReturn_Call) RunAndReturn(run func(string)) *Expecter_NoReturn_Call {
+	_c.Call.Return(run)
 	return _c
 }
 
@@ -178,6 +196,11 @@ func (_c *Expecter_Variadic_Call) Return(_a0 error) *Expecter_Variadic_Call {
 	return _c
 }
 
+func (_c *Expecter_Variadic_Call) RunAndReturn(run func(...int) error) *Expecter_Variadic_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // VariadicMany provides a mock function with given fields: i, a, intfs
 func (_m *Expecter) VariadicMany(i int, a string, intfs ...interface{}) error {
 	var _ca []interface{}
@@ -224,6 +247,11 @@ func (_c *Expecter_VariadicMany_Call) Run(run func(i int, a string, intfs ...int
 
 func (_c *Expecter_VariadicMany_Call) Return(_a0 error) *Expecter_VariadicMany_Call {
 	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *Expecter_VariadicMany_Call) RunAndReturn(run func(int, string, ...interface{}) error) *Expecter_VariadicMany_Call {
+	_c.Call.Return(run)
 	return _c
 }
 

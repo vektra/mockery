@@ -47,13 +47,16 @@ func (_m *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TG
 	ret := _m.Called(_a0, _a1)
 
 	var r0 TSigned
+	var r1 TIntf
+	if rf, ok := ret.Get(0).(func(TAny, TComparable) (TSigned, TIntf)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(TAny, TComparable) TSigned); ok {
 		r0 = rf(_a0, _a1)
 	} else {
 		r0 = ret.Get(0).(TSigned)
 	}
 
-	var r1 TIntf
 	if rf, ok := ret.Get(1).(func(TAny, TComparable) TIntf); ok {
 		r1 = rf(_a0, _a1)
 	} else {

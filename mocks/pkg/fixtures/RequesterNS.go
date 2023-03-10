@@ -18,13 +18,16 @@ func (_m *RequesterNS) Get(path string) (http.Response, error) {
 	ret := _m.Called(path)
 
 	var r0 http.Response
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (http.Response, error)); ok {
+		return rf(path)
+	}
 	if rf, ok := ret.Get(0).(func(string) http.Response); ok {
 		r0 = rf(path)
 	} else {
 		r0 = ret.Get(0).(http.Response)
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(string) error); ok {
 		r1 = rf(path)
 	} else {
