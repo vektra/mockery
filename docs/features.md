@@ -105,7 +105,7 @@ These are various layouts you may want to adopt:
         dir: "{{.InterfaceDir}}"
         structname: "Mock{{.InterfaceName}}"
         outpkg: "{{.PackageName}}"
-	inpackage: True
+        inpackage: True
         ```
 
         Instead of the mocks being generated in a different folder, you may elect to generate the mocks alongside the original interface in your package. This may be the way most people define their configs, as it removes circular import issues that can happen with the default config.
