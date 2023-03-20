@@ -61,11 +61,12 @@ type Config struct {
 	BoilerplateFile      string                 `mapstructure:"boilerplate-file"`
 	// StructName overrides the name given to the mock struct and should only be nonempty
 	// when generating for an exact match (non regex expression in -name).
-	StructName     string `mapstructure:"structname"`
-	TestOnly       bool   `mapstructure:"testonly"`
-	UnrollVariadic bool   `mapstructure:"unroll-variadic"`
-	Version        bool   `mapstructure:"version"`
-	WithExpecter   bool   `mapstructure:"with-expecter"`
+	StructName     string   `mapstructure:"structname"`
+	TestOnly       bool     `mapstructure:"testonly"`
+	UnrollVariadic bool     `mapstructure:"unroll-variadic"`
+	Version        bool     `mapstructure:"version"`
+	WithExpecter   bool     `mapstructure:"with-expecter"`
+	ReplaceType    []string `mapstructure:"replace-type"`
 
 	// Viper throws away case-sensitivity when it marshals into this struct. This
 	// destroys necessary information we need, specifically around interface names.

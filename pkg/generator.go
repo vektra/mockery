@@ -61,6 +61,7 @@ type GeneratorConfig struct {
 	StructName           string
 	UnrollVariadic       bool
 	WithExpecter         bool
+	ReplaceType          []string
 }
 
 // Generator is responsible for generating the string containing
@@ -76,6 +77,7 @@ type Generator struct {
 	localizationCache map[string]string
 	packagePathToName map[string]string
 	nameToPackagePath map[string]string
+	replaceTypeCache  []*replaceTypeItem
 }
 
 // NewGenerator builds a Generator.
@@ -99,6 +101,7 @@ func NewGenerator(ctx context.Context, c GeneratorConfig, iface *Interface, pkg 
 		nameToPackagePath: make(map[string]string),
 	}
 
+	g.parseReplaceTypes(ctx)
 	g.addPackageImportWithName(ctx, "github.com/stretchr/testify/mock", "mock")
 
 	return g
@@ -157,14 +160,42 @@ func (g *Generator) getPackageScopedType(ctx context.Context, o *types.TypeName)
 		(!g.config.KeepTree && g.config.InPackage && o.Pkg() == g.iface.Pkg) {
 		return o.Name()
 	}
-	return g.addPackageImport(ctx, o.Pkg()) + "." + o.Name()
+	pkg := g.addPackageImport(ctx, o.Pkg())
+	name := o.Name()
+	g.checkReplaceType(ctx, func(from *replaceType, to *replaceType) bool {
+		if o.Pkg().Path() == from.pkg && name == from.typ {
+			name = to.typ
+			return false
+		}
+		return true
+	})
+	return pkg + "." + name
 }
 
 func (g *Generator) addPackageImport(ctx context.Context, pkg *types.Package) string {
 	return g.addPackageImportWithName(ctx, pkg.Path(), pkg.Name())
 }
 
+func (g *Generator) checkReplaceType(ctx context.Context, f func(from *replaceType, to *replaceType) bool) {
+	for _, item := range g.replaceTypeCache {
+		if !f(item.from, item.to) {
+			break
+		}
+	}
+}
+
 func (g *Generator) addPackageImportWithName(ctx context.Context, path, name string) string {
+	g.checkReplaceType(ctx, func(from *replaceType, to *replaceType) bool {
+		if path == from.pkg {
+			path = to.pkg
+			if to.alias != "" {
+				name = to.alias
+			}
+			return false
+		}
+		return true
+	})
+
 	if existingName, pathExists := g.packagePathToName[path]; pathExists {
 		return existingName
 	}
@@ -173,6 +204,22 @@ func (g *Generator) addPackageImportWithName(ctx context.Context, path, name str
 	g.packagePathToName[path] = nonConflictingName
 	g.nameToPackagePath[nonConflictingName] = path
 	return nonConflictingName
+}
+
+func (g *Generator) parseReplaceTypes(ctx context.Context) {
+	for _, replace := range g.config.ReplaceType {
+		r := strings.SplitN(replace, "=", 2)
+		if len(r) != 2 {
+			log := zerolog.Ctx(ctx)
+			log.Error().Msgf("invalid replace type value: %s", replace)
+			continue
+		}
+
+		g.replaceTypeCache = append(g.replaceTypeCache, &replaceTypeItem{
+			from: parseReplaceType(r[0]),
+			to:   parseReplaceType(r[1]),
+		})
+	}
 }
 
 func (g *Generator) getNonConflictingName(path, name string) string {
@@ -966,5 +1013,34 @@ func resolveCollision(names []string, variable string) string {
 		ret = fmt.Sprintf("%s_%d", variable, i)
 	}
 
+	return ret
+}
+
+type replaceType struct {
+	alias string
+	pkg   string
+	typ   string
+}
+
+type replaceTypeItem struct {
+	from *replaceType
+	to   *replaceType
+}
+
+func parseReplaceType(t string) *replaceType {
+	ret := &replaceType{}
+	r := strings.SplitN(t, ":", 2)
+	if len(r) > 1 {
+		ret.alias = r[0]
+		t = r[1]
+	}
+	lastDot := strings.LastIndex(t, ".")
+	lastSlash := strings.LastIndex(t, "/")
+	if lastDot == -1 || (lastSlash > -1 && lastDot < lastSlash) {
+		ret.pkg = t
+	} else {
+		ret.pkg = t[:lastDot]
+		ret.typ = t[lastDot+1:]
+	}
 	return ret
 }
