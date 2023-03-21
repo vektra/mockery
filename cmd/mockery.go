@@ -161,7 +161,7 @@ func initConfig(
 			log.Info().Msg("couldn't read any config file")
 		}
 	} else {
-		fmt.Printf("config search disabled\n")
+		log.Debug().Msg("config search disabled")
 	}
 
 	viperObj.Set("config", viperObj.ConfigFileUsed())
