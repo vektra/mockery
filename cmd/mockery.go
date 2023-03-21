@@ -385,6 +385,7 @@ func (r *RootApp) Run() error {
 			StructName:           r.Config.StructName,
 			UnrollVariadic:       r.Config.UnrollVariadic,
 			WithExpecter:         r.Config.WithExpecter,
+			ReplaceType:          r.Config.ReplaceType,
 		}, osp, r.Config.DryRun)
 
 		generated := walker.Walk(ctx, visitor)
