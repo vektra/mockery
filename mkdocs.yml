@@ -57,8 +57,7 @@ nav:
     - Installation: installation.md
     - Configuration: configuration.md
     - Running: running.md
-    - Using Mocks:
-      - Examples: examples.md
+    - Examples: examples.md
   - Features: features.md
   - Notes: 
     - Additional Notes: notes.md
