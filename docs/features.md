@@ -272,10 +272,18 @@ Return(
 Replace Types
 -------------
 
-The `replace-type` parameter allows adding a list of type replacements to be made in package and/or type names.
-This can help overcome some parsing problems like type aliases that the Go parser doesn't provide enough information.
+:octicons-tag-24: 2.20.0
 
-This parameter can be specified multiple times.
+The `replace-type` parameter allows adding a list of type replacements to be made in package and/or type names.
+This can help overcome issues like usage of type aliases that point to internal packages.
+
+The format of the parameter is:
+
+
+`originalPackagePath.originalTypeName=newPackageName:newPackagePath.newTypeName`
+
+
+For example:
 
 ```shell
 mockery --replace-type github.com/vektra/mockery/v2/baz/internal/foo.InternalBaz=baz:github.com/vektra/mockery/v2/baz.Baz
@@ -300,7 +308,7 @@ type Message = ipubsub.Message
 The Go parser that mockery uses doesn't provide a way to detect this alias and sends the application the package and
 type name of the type in the internal package, which will not work.
 
-We can use "replace-type" with only the package part to replace any import of `cloud.google.com/go/internal/pubsub` to
+We can use `replace-type` with only the package part to replace any import of `cloud.google.com/go/internal/pubsub` to
 `cloud.google.com/go/pubsub`. We don't need to change the alias or type name in this case, because they are `pubsub`
 and `Message` in both cases.
 

@@ -3,6 +3,11 @@ Changelog
 
 This changelog describes major feature additions. Please view the `releases` page for more details on commits and minor changes.
 
+### :octicons-tag-24: [`v2.23.0`](https://github.com/vektra/mockery/releases/tag/v2.23.0) Replace Types
+
+The `replace-type` parameter allows adding a list of type replacements to be made in package and/or type names.
+This can help overcome issues like usage of type aliases that point to internal packages.
+
 ### :octicons-tag-24: [`v2.21.0`](https://github.com/vektra/mockery/releases/tag/v2.21.0): `#!yaml packages` configuration
 
 In this version we release the `#!yaml packages` configuration section. This new parameter allows defining specific packages to generate mocks for, while also giving fine-grained control over which interfaces are mocked, where they are located, and how they are configured. Details are provided [here](/mockery/features/#packages-configuration).

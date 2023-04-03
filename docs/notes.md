@@ -1,6 +1,38 @@
 Additional Notes
 ================
 
+Multiple Expectations With Identical Arguments
+-----------------------------------------------
+
+There might be instances where you want a mock to return different values on successive calls that provide the same arguments. For example we might want to test this behavior:
+
+```go
+// Return "foo" on the first call
+getter := NewGetter()
+assert(t, "foo", getter.Get("key"))
+
+// Return "bar" on the second call
+assert(t, "bar", getter.Get("key"))
+```
+
+This can be done by using the `.Once()`  method on the mock call expectation:
+
+```go
+mockGetter := NewMockGetter(t)
+mockGetter.EXPECT().Get(mock.anything).Return("foo").Once()
+mockGetter.EXPECT().Get(mock.anything).Return("bar").Once()
+```
+
+Or you can identify an arbitrary number of times each value should be returned:
+
+```go
+mockGetter := NewMockGetter(t)
+mockGetter.EXPECT().Get(mock.anything).Return("foo").Times(4)
+mockGetter.EXPECT().Get(mock.anything).Return("bar").Times(2)
+```
+
+Note that with proper Golang support in your IDE, all of the available methods are self-documented in auto-completion help contexts.
+
 Variadic Arguments
 ------------------
 
