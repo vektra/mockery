@@ -30,8 +30,6 @@ theme:
     - content.action.view
     - navigation.indexes
     - navigation.sections
-    #- navigation.tabs
-    #- navigation.tabs.sticky
     - navigation.tracking
     - toc.follow
 markdown_extensions:
