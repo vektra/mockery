@@ -1,6 +1,95 @@
 Features
 ========
 
+Replace Types
+-------------
+
+:octicons-tag-24: 2.23.0
+
+The `replace-type` parameter allows adding a list of type replacements to be made in package and/or type names.
+This can help overcome issues like usage of type aliases that point to internal packages.
+
+The format of the parameter is:
+
+
+`originalPackagePath.originalTypeName=newPackageName:newPackagePath.newTypeName`
+
+
+For example:
+
+```shell
+mockery --replace-type github.com/vektra/mockery/v2/baz/internal/foo.InternalBaz=baz:github.com/vektra/mockery/v2/baz.Baz
+```
+
+This will replace any imported named `"github.com/vektra/mockery/v2/baz/internal/foo"`
+with `baz "github.com/vektra/mockery/v2/baz"`. The alias is defined with `:` before
+the package name. Also, the `InternalBaz` type that comes from this package will be renamed to `baz.Baz`.
+
+This next example fixes a common problem of type aliases that point to an internal package.
+
+`cloud.google.com/go/pubsub.Message` is a type alias defined like this:
+
+```go
+import (
+    ipubsub "cloud.google.com/go/internal/pubsub"
+)
+
+type Message = ipubsub.Message
+```
+
+The Go parser that mockery uses doesn't provide a way to detect this alias and sends the application the package and
+type name of the type in the internal package, which will not work.
+
+We can use `replace-type` with only the package part to replace any import of `cloud.google.com/go/internal/pubsub` to
+`cloud.google.com/go/pubsub`. We don't need to change the alias or type name in this case, because they are `pubsub`
+and `Message` in both cases.
+
+```shell
+mockery --replace-type cloud.google.com/go/internal/pubsub=cloud.google.com/go/pubsub
+```
+
+Original source:
+
+```go
+import (
+    "cloud.google.com/go/pubsub"
+)
+
+type Handler struct {
+    HandleMessage(m pubsub.Message) error
+}
+```
+
+Invalid mock generated without this parameter (points to an `internal` folder):
+
+```go
+import (
+    mock "github.com/stretchr/testify/mock"
+
+    pubsub "cloud.google.com/go/internal/pubsub"
+)
+
+func (_m *Handler) HandleMessage(m pubsub.Message) error {
+    // ...
+    return nil
+}
+```
+
+Correct mock generated with this parameter.
+
+```go
+import (
+    mock "github.com/stretchr/testify/mock"
+
+    pubsub "cloud.google.com/go/pubsub"
+)
+
+func (_m *Handler) HandleMessage(m pubsub.Message) error {
+    // ...
+    return nil
+}
+```
+
 `packages` configuration
 ------------------------
 :octicons-tag-24: 2.21.0 · :material-test-tube: Alpha Feature
@@ -267,93 +356,4 @@ Return(
         return nil
     },
 )
-```
-
-Replace Types
--------------
-
-:octicons-tag-24: 2.20.0
-
-The `replace-type` parameter allows adding a list of type replacements to be made in package and/or type names.
-This can help overcome issues like usage of type aliases that point to internal packages.
-
-The format of the parameter is:
-
-
-`originalPackagePath.originalTypeName=newPackageName:newPackagePath.newTypeName`
-
-
-For example:
-
-```shell
-mockery --replace-type github.com/vektra/mockery/v2/baz/internal/foo.InternalBaz=baz:github.com/vektra/mockery/v2/baz.Baz
-```
-
-This will replace any imported named `"github.com/vektra/mockery/v2/baz/internal/foo"`
-with `baz "github.com/vektra/mockery/v2/baz"`. The alias is defined with `:` before
-the package name. Also, the `InternalBaz` type that comes from this package will be renamed to `baz.Baz`.
-
-This next example fixes a common problem of type aliases that point to an internal package.
-
-`cloud.google.com/go/pubsub.Message` is a type alias defined like this:
-
-```go
-import (
-    ipubsub "cloud.google.com/go/internal/pubsub"
-)
-
-type Message = ipubsub.Message
-```
-
-The Go parser that mockery uses doesn't provide a way to detect this alias and sends the application the package and
-type name of the type in the internal package, which will not work.
-
-We can use `replace-type` with only the package part to replace any import of `cloud.google.com/go/internal/pubsub` to
-`cloud.google.com/go/pubsub`. We don't need to change the alias or type name in this case, because they are `pubsub`
-and `Message` in both cases.
-
-```shell
-mockery --replace-type cloud.google.com/go/internal/pubsub=cloud.google.com/go/pubsub
-```
-
-Original source:
-
-```go
-import (
-    "cloud.google.com/go/pubsub"
-)
-
-type Handler struct {
-    HandleMessage(m pubsub.Message) error
-}
-```
-
-Invalid mock generated without this parameter (points to an `internal` folder):
-
-```go
-import (
-    mock "github.com/stretchr/testify/mock"
-
-    pubsub "cloud.google.com/go/internal/pubsub"
-)
-
-func (_m *Handler) HandleMessage(m pubsub.Message) error {
-    // ...
-    return nil
-}
-```
-
-Correct mock generated with this parameter.
-
-```go
-import (
-    mock "github.com/stretchr/testify/mock"
-
-    pubsub "cloud.google.com/go/pubsub"
-)
-
-func (_m *Handler) HandleMessage(m pubsub.Message) error {
-    // ...
-    return nil
-}
 ```
