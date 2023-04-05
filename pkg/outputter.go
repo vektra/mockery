@@ -20,6 +20,10 @@ import (
 	"github.com/vektra/mockery/v2/pkg/logging"
 )
 
+var (
+	ErrInfiniteLoop = fmt.Errorf("infintie loop in template variables detected")
+)
+
 type Cleanup func() error
 
 type OutputStreamProvider interface {
@@ -175,7 +179,7 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 				l := log.With().Str("variable-name", key).Str("variable-value", *val).Logger()
 				l.Error().Msg("config variable value")
 			}
-			return fmt.Errorf("infintie loop in template variables detected")
+			return ErrInfiniteLoop
 		}
 		// Templated variables can refer to other templated variables,
 		// so we need to continue parsing the templates until it can't
