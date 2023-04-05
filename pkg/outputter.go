@@ -20,6 +20,10 @@ import (
 	"github.com/vektra/mockery/v2/pkg/logging"
 )
 
+var (
+	ErrInfiniteLoop = fmt.Errorf("infintie loop in template variables detected")
+)
+
 type Cleanup func() error
 
 type OutputStreamProvider interface {
@@ -130,7 +134,9 @@ func (*FileOutputStreamProvider) underscoreCaseName(caseName string) string {
 // parseConfigTemplates parses various templated strings
 // in the config struct into their fully defined values. This mutates
 // the config object passed.
-func parseConfigTemplates(c *config.Config, iface *Interface) error {
+func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interface) error {
+	log := zerolog.Ctx(ctx)
+
 	// data is the struct sent to the template parser
 	data := struct {
 		InterfaceDir            string
@@ -138,6 +144,7 @@ func parseConfigTemplates(c *config.Config, iface *Interface) error {
 		InterfaceNameCamel      string
 		InterfaceNameLowerCamel string
 		InterfaceNameSnake      string
+		MockName                string
 		PackageName             string
 		PackagePath             string
 	}{
@@ -146,6 +153,7 @@ func parseConfigTemplates(c *config.Config, iface *Interface) error {
 		InterfaceNameCamel:      strcase.ToCamel(iface.Name),
 		InterfaceNameLowerCamel: strcase.ToLowerCamel(iface.Name),
 		InterfaceNameSnake:      strcase.ToSnake(iface.Name),
+		MockName:                c.MockName,
 		PackageName:             iface.Pkg.Name(),
 		PackagePath:             iface.Pkg.Path(),
 	}
@@ -155,23 +163,46 @@ func parseConfigTemplates(c *config.Config, iface *Interface) error {
 	// to be parsed by the templater. The keys are
 	// just labels we're using for logs/errors
 	templateMap := map[string]*string{
-		"filename":   &c.FileName,
-		"dir":        &c.Dir,
-		"structname": &c.StructName,
-		"outpkg":     &c.Outpkg,
+		"filename": &c.FileName,
+		"dir":      &c.Dir,
+		"mockname": &c.MockName,
+		"outpkg":   &c.Outpkg,
 	}
 
-	for name, attributePointer := range templateMap {
-		attributeTempl, err := templ.Parse(*attributePointer)
-		if err != nil {
-			return fmt.Errorf("failed to parse %s template: %w", name, err)
+	numIterations := 0
+	changesMade := true
+	for changesMade {
+		if numIterations >= 20 {
+			msg := "infintie loop in template variables detected"
+			log.Error().Msg(msg)
+			for key, val := range templateMap {
+				l := log.With().Str("variable-name", key).Str("variable-value", *val).Logger()
+				l.Error().Msg("config variable value")
+			}
+			return ErrInfiniteLoop
 		}
-		var parsedBuffer bytes.Buffer
+		// Templated variables can refer to other templated variables,
+		// so we need to continue parsing the templates until it can't
+		// be parsed anymore.
+		changesMade = false
+		for name, attributePointer := range templateMap {
+			oldVal := *attributePointer
 
-		if err := attributeTempl.Execute(&parsedBuffer, data); err != nil {
-			return fmt.Errorf("failed to execute %s template: %w", name, err)
+			attributeTempl, err := templ.Parse(*attributePointer)
+			if err != nil {
+				return fmt.Errorf("failed to parse %s template: %w", name, err)
+			}
+			var parsedBuffer bytes.Buffer
+
+			if err := attributeTempl.Execute(&parsedBuffer, data); err != nil {
+				return fmt.Errorf("failed to execute %s template: %w", name, err)
+			}
+			*attributePointer = parsedBuffer.String()
+			if *attributePointer != oldVal {
+				changesMade = true
+			}
 		}
-		*attributePointer = parsedBuffer.String()
+		numIterations += 1
 	}
 
 	return nil
@@ -226,7 +257,9 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 	for _, interfaceConfig := range interfaceConfigs {
 		log.Debug().Msg("getting mock generator")
 
-		parseConfigTemplates(interfaceConfig, iface)
+		if err := parseConfigTemplates(ctx, interfaceConfig, iface); err != nil {
+			return fmt.Errorf("failed to parse config template: %w", err)
+		}
 
 		g := GeneratorConfig{
 			Boilerplate:          m.boilerplate,
@@ -237,7 +270,7 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 			Note:                 interfaceConfig.Note,
 			PackageName:          interfaceConfig.Outpkg,
 			PackageNamePrefix:    interfaceConfig.Packageprefix,
-			StructName:           interfaceConfig.StructName,
+			StructName:           interfaceConfig.MockName,
 			UnrollVariadic:       interfaceConfig.UnrollVariadic,
 			WithExpecter:         interfaceConfig.WithExpecter,
 			ReplaceType:          interfaceConfig.ReplaceType,

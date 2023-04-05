@@ -122,9 +122,9 @@ packages:
         config: # (2)!
           with-expecter: False 
         configs:
-          - structname: RequesterVariadicOneArgument
+          - mockname: MockRequesterVariadicOneArgument
             unroll-variadic: False
-          - structname: RequesterVariadic
+          - mockname: MockRequesterVariadic
   io:
     config:
       all: True # (3)!
@@ -250,6 +250,7 @@ The template variables available for your use are:
 | InterfaceNameCamel | Converts a string `interface_name` to `InterfaceName` |
 | InterfaceNameLowerCamel | Converts `InterfaceName` to `interfaceName` |
 | InterfaceNameSnake | Converts `InterfaceName` to `interface_name` |
+| MockName | The name of the mock that will be generated. Note that this is simply the `mockname` configuration variable |
 | PackageName | The name of the package from the original interface |
 | PackagePath | The fully qualified package path of the original interface |
 

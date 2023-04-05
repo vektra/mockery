@@ -591,10 +591,10 @@ packages:
   github.com/vektra/mockery/v2/pkg:
 `,
 			want: &Config{
-				Dir:        "mocks/{{.PackagePath}}",
-				FileName:   "mock_{{.InterfaceName}}.go",
-				StructName: "Mock{{.InterfaceName}}",
-				Outpkg:     "{{.PackageName}}",
+				Dir:      "mocks/{{.PackagePath}}",
+				FileName: "mock_{{.InterfaceName}}.go",
+				MockName: "Mock{{.InterfaceName}}",
+				Outpkg:   "{{.PackageName}}",
 			},
 		},
 		{
@@ -606,10 +606,10 @@ packages:
   github.com/vektra/mockery/v2/pkg:
 `,
 			want: &Config{
-				Dir:        "barfoo",
-				FileName:   "foobar.go",
-				StructName: "Mock{{.InterfaceName}}",
-				Outpkg:     "{{.PackageName}}",
+				Dir:      "barfoo",
+				FileName: "foobar.go",
+				MockName: "Mock{{.InterfaceName}}",
+				Outpkg:   "{{.PackageName}}",
 			},
 		},
 	}
