@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"context"
 	"reflect"
 	"testing"
 
@@ -92,10 +93,10 @@ func Test_parseConfigTemplates(t *testing.T) {
 			name: "standards",
 			args: args{
 				c: &config.Config{
-					Dir:        "{{.InterfaceDir}}/{{.PackagePath}}",
-					FileName:   "{{.InterfaceName}}_{{.InterfaceNameCamel}}_{{.InterfaceNameSnake}}.go",
-					StructName: "{{.InterfaceNameLowerCamel}}",
-					Outpkg:     "{{.PackageName}}",
+					Dir:      "{{.InterfaceDir}}/{{.PackagePath}}",
+					FileName: "{{.InterfaceName}}_{{.InterfaceNameCamel}}_{{.InterfaceNameSnake}}.go",
+					MockName: "{{.InterfaceNameLowerCamel}}",
+					Outpkg:   "{{.PackageName}}",
 				},
 
 				iface: &Interface{
@@ -110,10 +111,10 @@ func Test_parseConfigTemplates(t *testing.T) {
 				return m
 			},
 			want: &config.Config{
-				Dir:        "path/to/github.com/user/project/package",
-				FileName:   "FooBar_FooBar_foo_bar.go",
-				StructName: "fooBar",
-				Outpkg:     "packageName",
+				Dir:      "path/to/github.com/user/project/package",
+				FileName: "FooBar_FooBar_foo_bar.go",
+				MockName: "fooBar",
+				Outpkg:   "packageName",
 			},
 		},
 	}
@@ -121,7 +122,7 @@ func Test_parseConfigTemplates(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.args.iface.Pkg = tt.pkg(t)
 
-			if err := parseConfigTemplates(tt.args.c, tt.args.iface); (err != nil) != tt.wantErr {
+			if err := parseConfigTemplates(context.Background(), tt.args.c, tt.args.iface); (err != nil) != tt.wantErr {
 				t.Errorf("parseConfigTemplates() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			if !reflect.DeepEqual(tt.args.c, tt.want) {

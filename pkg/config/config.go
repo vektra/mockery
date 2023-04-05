@@ -47,6 +47,7 @@ type Config struct {
 	InPackageSuffix      bool                   `mapstructure:"inpackage-suffix"`
 	KeepTree             bool                   `mapstructure:"keeptree"`
 	LogLevel             string                 `mapstructure:"log-level"`
+	MockName             string                 `mapstructure:"mockname"`
 	Name                 string                 `mapstructure:"name"`
 	Note                 string                 `mapstructure:"note"`
 	Outpkg               string                 `mapstructure:"outpkg"`
@@ -92,7 +93,7 @@ func NewConfigFromViper(v *viper.Viper) (*Config, error) {
 	} else {
 		v.SetDefault("dir", "mocks/{{.PackagePath}}")
 		v.SetDefault("filename", "mock_{{.InterfaceName}}.go")
-		v.SetDefault("structname", "Mock{{.InterfaceName}}")
+		v.SetDefault("mockname", "Mock{{.InterfaceName}}")
 		v.SetDefault("outpkg", "{{.PackageName}}")
 	}
 

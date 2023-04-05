@@ -27,7 +27,7 @@ jobs:
         run: go mod download -x
 
       - name: Test
-        run: go test -v -coverprofile=coverage.txt ./...
+        run: make test.ci
 
       - name: Upload coverage to codecov
         uses: codecov/codecov-action@v2

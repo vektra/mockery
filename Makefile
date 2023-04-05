@@ -1,7 +1,7 @@
 SHELL=bash
 
 .PHONY: all
-all: fmt mocks test install docker integration
+all: fmt mocks test install docker
 
 .PHONY: fmt
 fmt:
@@ -9,7 +9,14 @@ fmt:
 
 .PHONY: test
 test:
-	go test ./...
+	go test -v -coverprofile=coverage.txt ./...
+
+.PHONY: test.ci
+test.ci: test fmt mocks
+
+.PHONY: lint
+lint:
+	go run github.com/golangci/golangci-lint/cmd/golangci-lint@v1.52.2 run
 
 .PHONY: mocks
 mocks:
@@ -22,10 +29,6 @@ install:
 .PHONY: docker
 docker:
 	docker build -t vektra/mockery .
-
-.PHONY: integration
-integration: docker install
-	./hack/run-e2e.sh
 
 .PHONY: clean
 clean:

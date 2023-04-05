@@ -4,3 +4,5 @@ dist
 docs/ve
 ve
 .cache
+coverage.txt
+site/
