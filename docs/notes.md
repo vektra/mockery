@@ -73,10 +73,11 @@ m.On("Bar", mock.Anything).Return(nil)
 ```
 
 This is impossible to distinguish between these two intentions:
+
 1. Any number of variadic arguments of any value
 2. A single variadic argument of any value
 
-This is fixed in https://github.com/vektra/mockery/pull/359 where you can provide `unroll-variadic: False` to get back to the old behavior. Thus, if you want to assert the first case, you can then do:
+This is fixed in [#359](https://github.com/vektra/mockery/pull/359) where you can provide `unroll-variadic: False` to get back to the old behavior. Thus, if you want to assert the first case, you can then do:
 
 ```go
 m.On("Bar", mock.Anything).Return(nil)
@@ -88,7 +89,7 @@ If you want to specify the second case, you must set `unroll-variadic: True`. Th
 m.On("Bar", mock.Anything).Return(nil)
 ```
 
-An upstream patch to `testify` is currently underway to allow passing `mock.Anything` directly to the variadic slice: https://github.com/stretchr/testify/pull/1348
+An upstream patch to `testify` is currently underway to allow passing `mock.Anything` directly to the variadic slice: [https://github.com/stretchr/testify/pull/1348](https://github.com/stretchr/testify/pull/1348)
 
 If this is merged, it would become possible to describe the above two cases respectively:
 
@@ -100,10 +101,11 @@ m.On("Bar", []interface{}{mock.Anything}).Return(nil)
 ```
 
 References:
-- https://github.com/vektra/mockery/pull/359
-- https://github.com/vektra/mockery/pull/123
-- https://github.com/vektra/mockery/pull/550
-- https://github.com/vektra/mockery/issues/541
+
+- [https://github.com/vektra/mockery/pull/359](https://github.com/vektra/mockery/pull/359)
+- [https://github.com/vektra/mockery/pull/123](https://github.com/vektra/mockery/pull/123)
+- [https://github.com/vektra/mockery/pull/550](https://github.com/vektra/mockery/pull/550)
+- [https://github.com/vektra/mockery/issues/541](https://github.com/vektra/mockery/issues/541)
 
 Semantic Versioning
 -------------------
