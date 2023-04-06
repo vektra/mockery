@@ -1,6 +1,15 @@
 Additional Notes
 ================
 
+internal error: package without types was imported
+---------------------------------------------------
+
+[https://github.com/vektra/mockery/issues/475](https://github.com/vektra/mockery/issues/475)
+
+This issue indicates an incompatability that exists with one of your cached Golang packages. The solution is to run `go clean -modcache`.
+
+This issue also happens when compiling from source, such as with `go install` or `brew install`. You would not encounter this issue if using one of the pre-built binaries on the Releases page of GitHub.
+
 Multiple Expectations With Identical Arguments
 -----------------------------------------------
 
