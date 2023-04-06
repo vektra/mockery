@@ -141,11 +141,12 @@ packages:
 
 ### Templated variables
 
-Included with this feature is the ability to use templated strings for various configuration options. This is useful to define where your mocks are placed and how to name them.
-    
-These are various layouts you may want to adopt:
+Included with this feature is the ability to use templated strings for various configuration options. This is useful to define where your mocks are placed and how to name them. You can view the template variables available in the [Configuration](/mockery/configuration/#parameter-descriptions) section of the docs, under the `packages config` tab.
+  
 
-#### Layouts
+### Layouts
+
+Using different configuration parameters, we can deploy our mocks on-disk in various ways. These are some common layouts:
 
 !!! info "layouts"
 
@@ -235,28 +236,6 @@ These are various layouts you may want to adopt:
           mock.Mock
         }
         ```
-        
-        
-
-
-#### Template Variable Descriptions
-
-The template variables available for your use are:
-
-| name | description |
-|------|-------------|
-| InterfaceDir | The path of the original interface being mocked. This can be used as `#!yaml dir: "{{.InterfaceDir}}"` to place your mocks adjacent to the original interface. This should not be used for external interfaces. |
-| InterfaceName | The name of the original interface being mocked |
-| InterfaceNameCamel | Converts a string `interface_name` to `InterfaceName` |
-| InterfaceNameLowerCamel | Converts `InterfaceName` to `interfaceName` |
-| InterfaceNameSnake | Converts `InterfaceName` to `interface_name` |
-| MockName | The name of the mock that will be generated. Note that this is simply the `mockname` configuration variable |
-| PackageName | The name of the package from the original interface |
-| PackagePath | The fully qualified package path of the original interface |
-
-
-!!! warning
-    Many of the config options when using `packages` have either changed meanings or are no longer used. It's recommended to delete all previous configuration you have as their meanings may have changed.
 
 Mock Constructors
 -----------------

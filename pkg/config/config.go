@@ -95,6 +95,9 @@ func NewConfigFromViper(v *viper.Viper) (*Config, error) {
 		v.SetDefault("filename", "mock_{{.InterfaceName}}.go")
 		v.SetDefault("mockname", "Mock{{.InterfaceName}}")
 		v.SetDefault("outpkg", "{{.PackageName}}")
+		v.SetDefault("with-expecter", true)
+		v.SetDefault("dry-run", false)
+		v.SetDefault("log-level", "info")
 	}
 
 	if err := v.UnmarshalExact(c); err != nil {
