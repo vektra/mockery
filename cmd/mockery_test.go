@@ -47,7 +47,7 @@ func Test_initConfig(t *testing.T) {
 			configPath := pathlib.NewPath("")
 			if tt.configPath != "" {
 				configPath = tmpDir.Join(strings.Split(tt.configPath, "/")...)
-				configPath.WriteFile([]byte("all: True"))
+				require.NoError(t, configPath.WriteFile([]byte("all: True")))
 			}
 
 			viperObj := viper.New()
@@ -170,13 +170,13 @@ go 1.20`))
 
 	interfacePath := pathlib.NewPath(tmpDir).Join("internal", "foopkg", "interface.go")
 	require.NoError(t, interfacePath.Parent().MkdirAll())
-	interfacePath.WriteFile([]byte(`
+	require.NoError(t, interfacePath.WriteFile([]byte(`
 package foopkg
 																																												
 type FooInterface interface {
 		Foo()
 		Bar()
-}`))
+}`)))
 
 	mockPath := pathlib.NewPath(tmpDir).Join(
 		"mocks",
@@ -187,7 +187,7 @@ type FooInterface interface {
 		"foopkg",
 		"mock_FooInterface.go")
 
-	os.Chdir(tmpDir)
+	require.NoError(t, os.Chdir(tmpDir))
 
 	v := viper.New()
 	initConfig(nil, v, configPath)
@@ -205,12 +205,12 @@ func TestRunLegacyNoConfig(t *testing.T) {
 
 	mockPath := tmpDir.Join("Foo.go")
 	codePath := tmpDir.Join("foo.go")
-	codePath.WriteFile([]byte(`
+	require.NoError(t, codePath.WriteFile([]byte(`
 package test
 
 type Foo interface {
 	Get(str string) string
-}`))
+}`)))
 
 	v := viper.New()
 	v.Set("log-level", "debug")
@@ -218,7 +218,7 @@ type Foo interface {
 	v.Set("name", "Foo")
 	v.Set("output", tmpDir.String())
 	v.Set("disable-config-search", true)
-	os.Chdir(tmpDir.String())
+	require.NoError(t, os.Chdir(tmpDir.String()))
 
 	initConfig(nil, v, nil)
 	app, err := GetRootAppFromViper(v)
@@ -255,7 +255,7 @@ type Foo interface {
 	v.Set("disable-config-search", true)
 	v.Set("dir", subdir.String())
 	v.Set("recursive", true)
-	os.Chdir(tmpDir.String())
+	require.NoError(t, os.Chdir(tmpDir.String()))
 
 	initConfig(nil, v, nil)
 	app, err := GetRootAppFromViper(v)

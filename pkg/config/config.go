@@ -197,7 +197,9 @@ func (c *Config) GetPackageConfig(ctx context.Context, packageName string) (*Con
 	}
 
 	pkgConfig := reflect.New(reflect.ValueOf(c).Elem().Type()).Interface()
-	copier.Copy(pkgConfig, c)
+	if err := copier.Copy(pkgConfig, c); err != nil {
+		return nil, fmt.Errorf("failed to copy config: %w", err)
+	}
 	pkgConfigTyped := pkgConfig.(*Config)
 
 	configMap, err := c.getPackageConfigMap(ctx, packageName)

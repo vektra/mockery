@@ -2266,7 +2266,7 @@ func (s *GeneratorSuite) TestPrologueWithImportSameAsLocalPackage() {
 
 import fixtures "` + generator.iface.QualifiedName + `"
 import mock "github.com/stretchr/testify/mock"
-import test "github.com/vektra/mockery/v2/pkg/fixtures/test"
+import test "github.com/vektra/mockery/v2/pkg/fixtures/redefined_type_b"
 
 `
 	s.checkPrologueGeneration(generator, expected)

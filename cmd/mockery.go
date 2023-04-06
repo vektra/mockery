@@ -78,7 +78,9 @@ func NewRootCmd() *cobra.Command {
 	pFlags.Bool("with-expecter", false, "Generate expecter utility around mock's On, Run and Return methods with explicit types. This option is NOT compatible with -unroll-variadic=false")
 	pFlags.StringArray("replace-type", nil, "Replace types")
 
-	viperCfg.BindPFlags(pFlags)
+	if err := viperCfg.BindPFlags(pFlags); err != nil {
+		panic(fmt.Sprintf("failed to bind PFlags: %v", err))
+	}
 
 	cmd.AddCommand(NewShowConfigCmd())
 	return cmd
@@ -322,7 +324,9 @@ func (r *RootApp) Run() error {
 				return errors.Wrapf(err, "Failed to create profile file")
 			}
 
-			pprof.StartCPUProfile(f)
+			if err := pprof.StartCPUProfile(f); err != nil {
+				return fmt.Errorf("failed to start CPU profile: %w", err)
+			}
 			defer pprof.StopCPUProfile()
 		}
 

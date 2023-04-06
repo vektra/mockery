@@ -160,7 +160,11 @@ func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) erro
 		log.Err(err).Msgf("Unable to get writer")
 		os.Exit(1)
 	}
-	defer closer()
+	defer func() {
+		if err := closer(); err != nil {
+			log.Err(err).Msgf("Failed to close output stream")
+		}
+	}()
 
 	generatorConfig := GeneratorConfig{
 		Boilerplate:          v.config.Boilerplate,
