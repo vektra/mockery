@@ -67,22 +67,22 @@ Parameter Descriptions
 
     | name | templated | default | description |
     |------|-----------|---------|-------------|
-    | `all`  |  :octicons-x-16: | `#!yaml false` | Generate all interfaces for the specified packages. |
-    | `tags` | :octicons-x-16: | `#!yaml ""` | Set the build tags of the generated mocks. |
-    | `config` | :octicons-x-16: | `#!yaml ""` | Set the location of the mockery config file. |
-    | `dir` | :material-check: | `#!yaml "mocks/{{.PackagePath}}"` | The directory where the mock file will be outputted to. |
-    | `disable-config-search` | :octicons-x-16: | `#!yaml false` | Disable searching for configuration files |
-    | `disable-version-string` | :octicons-x-16: | `#!yaml false` | Disable the version string in the generated mock files. |
-    | `dry-run` | :octicons-x-16: | `#!yaml false` | Print the actions that would be taken, but don't perform the actions. |
-    | `filename` | :material-check: | `#!yaml "mock_{{.InterfaceName}}.go"` | The name of the file the mock will reside in. |
-    | `inpackage` | :octicons-x-16: | `#!yaml false` | When generating mocks alongside the original interfaces, you must specify `inpackage: True` to inform mockery that the mock is being placed in the same package as the original interface. |
-    | `mockname` | :material-check: | `#!yaml "Mock{{.InterfaceName}}"` | The name of the generated mock. | 
-    | `outpkg` | :material-check: | `#!yaml "{{.PackageName}}"` | Use `outpkg` to specify the package name of the generated mocks. |
-    | `log-level` | :octicons-x-16: | `#!yaml "info"` | Set the level of the logger |
-    | [`packages`](/mockery/features/#packages-configuration) | :octicons-x-16: | `#!yaml null` | A dictionary containing configuration describing the packages and interfaces to generate mocks for. |
-    | `print` | :octicons-x-16: | `#!yaml false` | Use `print: True` to have the resulting code printed out instead of written to disk. |
-    | [`with-expecter`](/mockery/features/#expecter-structs) | :octicons-x-16: | `#!yaml true` | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
-    | [`replace-type`](/mockery/features/#replace-types) | :octicons-x-16: | `#!yaml null` | Replaces aliases, packages and/or types during generation.|
+    | `all`  |  :fontawesome-solid-x: | `#!yaml false` | Generate all interfaces for the specified packages. |
+    | `tags` | :fontawesome-solid-x: | `#!yaml ""` | Set the build tags of the generated mocks. |
+    | `config` | :fontawesome-solid-x: | `#!yaml ""` | Set the location of the mockery config file. |
+    | `dir` | :fontawesome-solid-check: | `#!yaml "mocks/{{.PackagePath}}"` | The directory where the mock file will be outputted to. |
+    | `disable-config-search` | :fontawesome-solid-x: | `#!yaml false` | Disable searching for configuration files |
+    | `disable-version-string` | :fontawesome-solid-x: | `#!yaml false` | Disable the version string in the generated mock files. |
+    | `dry-run` | :fontawesome-solid-x: | `#!yaml false` | Print the actions that would be taken, but don't perform the actions. |
+    | `filename` | :fontawesome-solid-check: | `#!yaml "mock_{{.InterfaceName}}.go"` | The name of the file the mock will reside in. |
+    | `inpackage` | :fontawesome-solid-x: | `#!yaml false` | When generating mocks alongside the original interfaces, you must specify `inpackage: True` to inform mockery that the mock is being placed in the same package as the original interface. |
+    | `mockname` | :fontawesome-solid-check: | `#!yaml "Mock{{.InterfaceName}}"` | The name of the generated mock. | 
+    | `outpkg` | :fontawesome-solid-check: | `#!yaml "{{.PackageName}}"` | Use `outpkg` to specify the package name of the generated mocks. |
+    | `log-level` | :fontawesome-solid-x: | `#!yaml "info"` | Set the level of the logger |
+    | [`packages`](/mockery/features/#packages-configuration) | :fontawesome-solid-x: | `#!yaml null` | A dictionary containing configuration describing the packages and interfaces to generate mocks for. |
+    | `print` | :fontawesome-solid-x: | `#!yaml false` | Use `print: True` to have the resulting code printed out instead of written to disk. |
+    | [`with-expecter`](/mockery/features/#expecter-structs) | :fontawesome-solid-x: | `#!yaml true` | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
+    | [`replace-type`](/mockery/features/#replace-types) | :fontawesome-solid-x: | `#!yaml null` | Replaces aliases, packages and/or types during generation.|
 
     #### Template variables 
 
