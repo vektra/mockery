@@ -1,9 +1,10 @@
 mockery
 ========
 
-Mockery is a project that aims to make the generation of mock implementations of Golang interfaces. The mocks generated in this project are based off of the `github.com/stretchr/testify` suite of packages.
+Mockery is a project that creates mock implementations of Golang interfaces. The mocks generated in this project are based off of the [github.com/stretchr/testify](https://github.com/stretchr/testify) suite of testing packages.
 
-![](https://raw.githubusercontent.com/vektra/mockery/master/docs/Peek%202020-06-28%2000-08.gif)
+![](assets/images/demo.gif)
+![](assets/images/MockScreenshot.png)
 
 Why mockery?
 -------------
