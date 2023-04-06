@@ -7,7 +7,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 )
 
 const (
@@ -54,7 +54,7 @@ func GetLogger(levelStr string) (zerolog.Logger, error) {
 		Out:        out,
 		TimeFormat: time.RFC822,
 	}
-	if !terminal.IsTerminal(int(out.Fd())) || os.Getenv("TERM") == "dumb" {
+	if !term.IsTerminal(int(out.Fd())) || os.Getenv("TERM") == "dumb" {
 		writer.NoColor = true
 	}
 	log := zerolog.New(writer).

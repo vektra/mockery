@@ -1,10 +1,11 @@
-package mocks
+package test
 
 import (
 	"errors"
 	"reflect"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	mocks "github.com/vektra/mockery/v2/mocks/github.com/vektra/mockery/v2/pkg/fixtures"
@@ -150,7 +151,7 @@ func TestExpecter(t *testing.T) {
 				runCalled++
 			}).Once()
 		require.Panics(t, func() {
-			expMock.VariadicMany(defaultInt, defaultString, 1, nil, 123)
+			assert.NoError(t, expMock.VariadicMany(defaultInt, defaultString, 1, nil, 123))
 		})
 		require.NoError(t, expMock.VariadicMany(defaultInt, defaultString, 1, nil, "blah"))
 
@@ -161,7 +162,7 @@ func TestExpecter(t *testing.T) {
 			runCalled++
 		}).Return(defaultError).Once()
 		require.Panics(t, func() {
-			expMock.VariadicMany(defaultInt, defaultString, 1, nil, "other string")
+			assert.NoError(t, expMock.VariadicMany(defaultInt, defaultString, 1, nil, "other string"))
 		})
 		err := expMock.VariadicMany(defaultInt, defaultString, 1, nil, "blah")
 		require.Equal(t, defaultError, err)

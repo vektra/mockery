@@ -6,7 +6,6 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/chigopher/pathlib"
 	"github.com/stretchr/testify/assert"
 	pkgMocks "github.com/vektra/mockery/v2/mocks/github.com/vektra/mockery/v2/pkg"
 	"github.com/vektra/mockery/v2/pkg/config"
@@ -59,19 +58,6 @@ func TestUnderscoreCaseName(t *testing.T) {
 	assert.Equal(t, "awesome_http_server", (&FileOutputStreamProvider{}).underscoreCaseName("AwesomeHTTPServer"))
 	assert.Equal(t, "csv", (&FileOutputStreamProvider{}).underscoreCaseName("CSV"))
 	assert.Equal(t, "position0_size", (&FileOutputStreamProvider{}).underscoreCaseName("Position0Size"))
-}
-
-func configPath(t *testing.T) *pathlib.Path {
-	return pathlib.NewPath(t.TempDir()).Join("config.yaml")
-}
-
-func configString() string {
-	return `
-packages:
-	`
-}
-func newConfig(t *testing.T) *config.Config {
-	return &config.Config{}
 }
 
 func Test_parseConfigTemplates(t *testing.T) {

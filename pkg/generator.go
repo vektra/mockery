@@ -993,7 +993,10 @@ func (g *Generator) Write(w io.Writer) error {
 		return err
 	}
 
-	w.Write(res)
+	_, err = w.Write(res)
+	if err != nil {
+		return fmt.Errorf("failed to write generator: %w", err)
+	}
 	return nil
 }
 
