@@ -242,7 +242,7 @@ Mock Constructors
 
 :octicons-tag-24: 2.11.0
 
-All mock objects have constructor functions. These constructors do basic test setup so that the expectations you set in the code are asserted before the test exist.
+All mock objects have constructor functions. These constructors do basic test setup so that the expectations you set in the code are asserted before the test exits.
 
 Previously something like this would need to be done:
 ```go
