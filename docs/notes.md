@@ -59,7 +59,7 @@ func TestFoo(t *testing.T) {
 
 This introduces ambiguities because if you want to do something like this:
 
-```
+```go
 m.On("Bar", mock.Anything).Return(nil)
 ```
 
@@ -69,13 +69,13 @@ This is impossible to distinguish between these two intentions:
 
 This is fixed in https://github.com/vektra/mockery/pull/359 where you can provide `unroll-variadic: False` to get back to the old behavior. Thus, if you want to assert the first case, you can then do:
 
-```
+```go
 m.On("Bar", mock.Anything).Return(nil)
 ```
 
 If you want to specify the second case, you must set `unroll-variadic: True`. Then this assertion's intention will be modified to mean the second case:
 
-```
+```go
 m.On("Bar", mock.Anything).Return(nil)
 ```
 

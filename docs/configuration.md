@@ -32,19 +32,69 @@ mockery will search upwards from your current-working-directory up to the root p
 Parameter Descriptions
 -----------------------
 
-| name | description |
-|------|-------------|
-| `name`  | The `name` option takes either the name or matching regular expression of the interface to generate mock(s) for. |
-| `all`  |  It's common for a big package to have a lot of interfaces, so mockery provides `all`. This option will tell mockery to scan all files under the directory named by `--dir` ("." by default) and generates mocks for any interfaces it finds. This option implies `recursive: True`. |
-| `recursive`  |  Use the `recursive` option to search subdirectories for the interface(s). This option is only compatible with `name`. The `all` option implies `recursive: True`. |
-| `output` | mockery always generates files with the package `mocks` to keep things clean and simple. You can control which mocks directory is used by using `output`, which defaults to `./mocks`. |
-|`outpkg`| Use `outpkg` to specify the package name of the generated mocks.|
-| `inpackage` and `keeptree` | For some complex repositories, there could be multiple interfaces with the same name but in different packages. In that case, `inpackage` allows generating the mocked interfaces directly in the package that it mocks. In the case you don't want to generate the mocks into the package but want to keep a similar structure, use the option `keeptree`. |
-| `filename` | Use the `filename` and `structname` to override the default generated file and struct name. These options are only compatible with non-regular expressions in `name`, where only one mock is generated. |
-| `case` | mockery generates files using the casing of the original interface name.  This can be modified by specifying `case: underscore` to format the generated file name using underscore casing. |
-| `print` | Use `print: True` to have the resulting code printed out instead of written to disk. |
-| `exported` | Use `exported: True` to generate public mocks for private interfaces. |
-| `with-expecter` | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
-| `testonly` | Prepend every mock file with `_test.go`. This is useful in cases where you are generating mocks `inpackage` but don't want the mocks to be visible to code outside of tests. |
-| `inpackage-suffix` | When `inpackage-suffix` is set to `True`, mock files are suffixed with `_mock` instead of being prefixed with `mock_` for InPackage mocks |
-| `replace-type source=destination` | Replaces aliases, packages and/or types during generation.|
+=== "non-`packages` config"
+
+    ### non-`packages`
+
+
+    #### Config Variables
+    These are the configuration options when not using the [`packages`](/mockery/features/#packages-configuration) config
+
+    | name | description |
+    |------|-------------|
+    | `name`  | The `name` option takes either the name or matching regular expression of the interface to generate mock(s) for. |
+    | `all`  |  It's common for a big package to have a lot of interfaces, so mockery provides `all`. This option will tell mockery to scan all files under the directory named by `--dir` ("." by default) and generates mocks for any interfaces it finds. This option implies `recursive: True`. |
+    | `recursive`  |  Use the `recursive` option to search subdirectories for the interface(s). This option is only compatible with `name`. The `all` option implies `recursive: True`. |
+    | `output` | mockery always generates files with the package `mocks` to keep things clean and simple. You can control which mocks directory is used by using `output`, which defaults to `./mocks`. |
+    |`outpkg`| Use `outpkg` to specify the package name of the generated mocks.|
+    | `inpackage` and `keeptree` | For some complex repositories, there could be multiple interfaces with the same name but in different packages. In that case, `inpackage` allows generating the mocked interfaces directly in the package that it mocks. In the case you don't want to generate the mocks into the package but want to keep a similar structure, use the option `keeptree`. |
+    | `filename` | Use the `filename` and `structname` to override the default generated file and struct name. These options are only compatible with non-regular expressions in `name`, where only one mock is generated. |
+    | `case` | mockery generates files using the casing of the original interface name.  This can be modified by specifying `case: underscore` to format the generated file name using underscore casing. |
+    | `print` | Use `print: True` to have the resulting code printed out instead of written to disk. |
+    | `exported` | Use `exported: True` to generate public mocks for private interfaces. |
+    | `with-expecter` | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
+    | `testonly` | Prepend every mock file with `_test.go`. This is useful in cases where you are generating mocks `inpackage` but don't want the mocks to be visible to code outside of tests. |
+    | `inpackage-suffix` | When `inpackage-suffix` is set to `True`, mock files are suffixed with `_mock` instead of being prefixed with `mock_` for InPackage mocks |
+    | `replace-type source=destination` | Replaces aliases, packages and/or types during generation.|
+
+=== "`packages` config"
+
+    ### [`packages` config](/mockery/features/#packages-configuration)
+
+    These are the config options when using the `packages` config option. Config variables may have changed meanings or have been substracted entirely, compared to the non-`packages` config.
+
+    #### Config Variables
+
+    | name | templated | default | description |
+    |------|-----------|---------|-------------|
+    | `all`  |  :octicons-x-16: | `#!yaml false` | Generate all interfaces for the specified packages. |
+    | `tags` | :octicons-x-16: | `#!yaml ""` | Set the build tags of the generated mocks. |
+    | `config` | :octicons-x-16: | `#!yaml ""` | Set the location of the mockery config file. |
+    | `dir` | :material-check: | `#!yaml "mocks/{{.PackagePath}}"` | The directory where the mock file will be outputted to. |
+    | `disable-config-search` | :octicons-x-16: | `#!yaml false` | Disable searching for configuration files |
+    | `disable-version-string` | :octicons-x-16: | `#!yaml false` | Disable the version string in the generated mock files. |
+    | `dry-run` | :octicons-x-16: | `#!yaml false` | Print the actions that would be taken, but don't perform the actions. |
+    | `filename` | :material-check: | `#!yaml "mock_{{.InterfaceName}}.go"` | The name of the file the mock will reside in. |
+    | `inpackage` | :octicons-x-16: | `#!yaml false` | When generating mocks alongside the original interfaces, you must specify `inpackage: True` to inform mockery that the mock is being placed in the same package as the original interface. |
+    | `mockname` | :material-check: | `#!yaml "Mock{{.InterfaceName}}"` | The name of the generated mock. | 
+    | `outpkg` | :material-check: | `#!yaml "{{.PackageName}}"` | Use `outpkg` to specify the package name of the generated mocks. |
+    | `log-level` | :octicons-x-16: | `#!yaml "info"` | Set the level of the logger |
+    | [`packages`](/mockery/features/#packages-configuration) | :octicons-x-16: | `#!yaml null` | A dictionary containing configuration describing the packages and interfaces to generate mocks for. |
+    | `print` | :octicons-x-16: | `#!yaml false` | Use `print: True` to have the resulting code printed out instead of written to disk. |
+    | [`with-expecter`](/mockery/features/#expecter-structs) | :octicons-x-16: | `#!yaml true` | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
+    | [`replace-type`](/mockery/features/#replace-types) | :octicons-x-16: | `#!yaml null` | Replaces aliases, packages and/or types during generation.|
+
+    #### Template variables 
+
+    Variables that are marked as being templated are capable of using mockery-provided template parameters.
+
+    | name | description |
+    |------|-------------|
+    | InterfaceDir | The path of the original interface being mocked. This can be used as `#!yaml dir: "{{.InterfaceDir}}"` to place your mocks adjacent to the original interface. This should not be used for external interfaces. |
+    | InterfaceName | The name of the original interface being mocked |
+    | InterfaceNameCamel | Converts a string `interface_name` to `InterfaceName` |
+    | InterfaceNameLowerCamel | Converts `InterfaceName` to `interfaceName` |
+    | InterfaceNameSnake | Converts `InterfaceName` to `interface_name` |
+    | MockName | The name of the mock that will be generated. Note that this is simply the `mockname` configuration variable |
+    | PackageName | The name of the package from the original interface |
+    | PackagePath | The fully qualified package path of the original interface |
