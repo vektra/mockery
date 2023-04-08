@@ -781,3 +781,194 @@ packages:
 		})
 	}
 }
+
+func TestConfig_Initialize(t *testing.T) {
+	tests := []struct {
+		name       string
+		cfgYaml    string
+		wantCfgMap string
+		wantErr    bool
+	}{
+		{
+			name: "test with no subpackages present",
+			cfgYaml: `
+packages:
+  github.com/vektra/mockery/v2/pkg/fixtures/example_project/foo:
+    config:
+      recursive: True
+      all: True`,
+			wantCfgMap: `packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/foo:
+        config:
+            all: true
+            recursive: true
+`,
+		},
+		{
+			name: "test with one subpackage present",
+			cfgYaml: `
+with-expecter: False
+dir: foobar
+packages:
+  github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+    config:
+      recursive: True
+      with-expecter: True
+      all: True`,
+			wantCfgMap: `dir: foobar
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+        config:
+            all: true
+            dir: foobar
+            recursive: true
+            with-expecter: true
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+        config:
+            all: true
+            dir: foobar
+            recursive: true
+            with-expecter: true
+with-expecter: false
+`,
+		},
+		{
+			name: "test with one subpackage, config already defined",
+			cfgYaml: `
+with-expecter: False
+dir: foobar
+packages:
+  github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+    config:
+      recursive: True
+      with-expecter: True
+      all: True
+  github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+    config:
+      recursive: True
+      with-expecter: True
+      all: false
+      note: note
+      dir: barbaz`,
+			wantCfgMap: `dir: foobar
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+        config:
+            all: true
+            dir: foobar
+            recursive: true
+            with-expecter: true
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+        config:
+            all: false
+            dir: barbaz
+            note: note
+            recursive: true
+            with-expecter: true
+with-expecter: false
+`,
+		},
+		{
+			name: "test with one subpackage, config not defined",
+			cfgYaml: `
+with-expecter: False
+dir: foobar
+packages:
+  github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+    config:
+      recursive: True
+      with-expecter: True
+      all: True
+  github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3: {}
+`,
+			wantCfgMap: `dir: foobar
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+        config:
+            all: true
+            dir: foobar
+            recursive: true
+            with-expecter: true
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+        config:
+            all: true
+            dir: foobar
+            recursive: true
+            with-expecter: true
+with-expecter: false
+`,
+		},
+		{
+			name: "test with subpackage's interfaces defined",
+			cfgYaml: `
+with-expecter: False
+dir: foobar
+packages:
+  github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+    config:
+      recursive: True
+      with-expecter: True
+      all: True
+  github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+    interfaces:
+      Getter:
+        config:
+          with-expecter: False`,
+			wantCfgMap: `dir: foobar
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+        config:
+            all: true
+            dir: foobar
+            recursive: true
+            with-expecter: true
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+        config:
+            all: true
+            dir: foobar
+            recursive: true
+            with-expecter: true
+        interfaces:
+            Getter:
+                config:
+                    all: true
+                    dir: foobar
+                    recursive: true
+                    with-expecter: false
+with-expecter: false
+`,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tmpdir := pathlib.NewPath(t.TempDir())
+			cfg := tmpdir.Join("config.yaml")
+			require.NoError(t, cfg.WriteFile([]byte(tt.cfgYaml)))
+
+			c := &Config{
+				Config: cfg.String(),
+			}
+			log, err := logging.GetLogger("TRACE")
+			require.NoError(t, err)
+
+			if err := c.Initialize(log.WithContext(context.Background())); (err != nil) != tt.wantErr {
+				t.Errorf("Config.Initialize() error = %v, wantErr %v", err, tt.wantErr)
+			}
+
+			cfgAsStr, err := yaml.Marshal(c._cfgAsMap)
+			require.NoError(t, err)
+
+			if !reflect.DeepEqual(string(cfgAsStr), tt.wantCfgMap) {
+				t.Errorf(`Config.Initialize resultant config map
+got
+----
+%v
+
+want
+------
+%v`, string(cfgAsStr), tt.wantCfgMap)
+			}
+
+		})
+	}
+}

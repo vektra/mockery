@@ -208,6 +208,10 @@ func (r *RootApp) Run() error {
 	log.Info().Msgf("Using config: %s", r.Config.Config)
 	ctx := log.WithContext(context.Background())
 
+	if err := r.Config.Initialize(ctx); err != nil {
+		return err
+	}
+
 	if r.Config.Version {
 		fmt.Println(logging.GetSemverInfo())
 		return nil
@@ -290,7 +294,7 @@ func (r *RootApp) Run() error {
 		} else if (r.Config.FileName != "" || r.Config.StructName != "") && r.Config.All {
 			log.Fatal().Msgf("Cannot specify --filename or --structname with --all")
 		} else if r.Config.Dir != "" && r.Config.Dir != "." && r.Config.SrcPkg != "" {
-			log.Fatal().Msgf("Specify -dir or -srcpkg, but not both")
+			log.Fatal().Msgf("Specify --dir or --srcpkg, but not both")
 		} else if r.Config.Name != "" {
 			recursive = r.Config.Recursive
 			if strings.ContainsAny(r.Config.Name, regexMetadataChars) {
