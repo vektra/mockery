@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"strings"
 
 	"github.com/chigopher/pathlib"
 	"github.com/jinzhu/copier"
@@ -58,6 +59,7 @@ type Config struct {
 	Profile              string                 `mapstructure:"profile"`
 	Quiet                bool                   `mapstructure:"quiet"`
 	Recursive            bool                   `mapstructure:"recursive"`
+	Exclude              []string               `mapstructure:"exclude"`
 	SrcPkg               string                 `mapstructure:"srcpkg"`
 	BoilerplateFile      string                 `mapstructure:"boilerplate-file"`
 	// StructName overrides the name given to the mock struct and should only be nonempty
@@ -225,6 +227,15 @@ func (c *Config) GetPackageConfig(ctx context.Context, packageName string) (*Con
 	}
 	c.pkgConfigCache[packageName] = pkgConfigTyped
 	return pkgConfigTyped, nil
+}
+
+func (c *Config) ExcludePath(path string) bool {
+	for _, ex := range c.Exclude {
+		if strings.HasPrefix(path, ex) {
+			return true
+		}
+	}
+	return false
 }
 
 func (c *Config) ShouldGenerateInterface(ctx context.Context, packageName, interfaceName string) (bool, error) {
