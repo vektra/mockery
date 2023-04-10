@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/vektra/mockery/v2/pkg/config"
 )
 
 type GatheringVisitor struct {
@@ -118,4 +119,33 @@ func TestPackagePrefix(t *testing.T) {
 
 	w.Walk(context.Background(), visitor)
 	assert.Regexp(t, regexp.MustCompile("package prefix_test_test"), bufferedProvider.String())
+}
+
+func TestWalkerExclude(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping recursive walker test")
+	}
+
+	wd, err := os.Getwd()
+	assert.NoError(t, err)
+
+	w := Walker{
+		BaseDir:   wd,
+		Recursive: true,
+		LimitOne:  false,
+		Config: config.Config{
+			Exclude: []string{
+				getFixturePath("requester"),
+				getFixturePath("generic.go")},
+		},
+		Filter: regexp.MustCompile(".*"),
+	}
+
+	gv := NewGatheringVisitor()
+
+	w.Walk(context.Background(), gv)
+	for _, iface := range gv.Interfaces {
+		assert.NotContains(t, iface.Name, "Requester",
+			"Interface %s should have been excluded but found in file: %s", iface.Name, iface.FileName)
+	}
 }

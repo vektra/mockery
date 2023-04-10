@@ -49,6 +49,10 @@ func (w *Walker) Walk(ctx context.Context, visitor WalkerVisitor) (generated boo
 			continue
 		}
 
+		if w.ExcludePath(iface.FileName) {
+			continue
+		}
+
 		if !w.Filter.MatchString(iface.Name) {
 			continue
 		}
@@ -81,6 +85,10 @@ func (w *Walker) doWalk(ctx context.Context, parser *Parser, dir string) (genera
 		}
 
 		path := filepath.Join(dir, file.Name())
+		if w.ExcludePath(path) {
+			continue
+		}
+
 		if file.IsDir() {
 			if w.Recursive {
 				generated = w.doWalk(ctx, parser, path) || generated

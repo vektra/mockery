@@ -556,6 +556,135 @@ func TestConfig_GetPackages(t *testing.T) {
 	}
 }
 
+func TestConfig_ShouldGenerateInterface(t *testing.T) {
+	tests := []struct {
+		name    string
+		c       *Config
+		want    bool
+		wantErr bool
+	}{
+		{
+			name: "no packages return error",
+			c: &Config{
+				Packages: map[string]interface{}{},
+			},
+			want:    false,
+			wantErr: true,
+		},
+		{
+			name: "should generate all interfaces",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{},
+				},
+				All: true,
+			},
+			want: true,
+		},
+		{
+			name: "should generate this package",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"all": true,
+						},
+					},
+				},
+			},
+			want: true,
+		},
+		{
+			name: "should generate this interface",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"interfaces": map[string]interface{}{
+							"SomeInterface": struct{}{},
+						},
+					},
+				},
+			},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.c.Config = writeConfigFile(t, tt.c)
+
+			got, err := tt.c.ShouldGenerateInterface(context.Background(), "some_package", "SomeInterface")
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Config.ShouldGenerateInterface() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			if got != tt.want {
+				t.Errorf("Config.ShouldGenerateInterface() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestConfig_ExcludePath(t *testing.T) {
+	tests := []struct {
+		name string
+		file string
+		c    *Config
+		want bool
+	}{
+		{
+			name: "should not exclude",
+			file: "some_foo.go",
+			c: &Config{
+				Exclude: []string{"foo"},
+			},
+			want: false,
+		},
+		{
+			name: "should not exclude both",
+			file: "some_foo.go",
+			c: &Config{
+				Exclude: []string{"foo", "bar"},
+			},
+			want: false,
+		},
+		{
+			name: "should exclude",
+			file: "foo/some_foo.go",
+			c: &Config{
+				Exclude: []string{"foo"},
+			},
+			want: true,
+		},
+		{
+			name: "should exclude specific file",
+			file: "foo/some_foo.go",
+			c: &Config{
+				Exclude: []string{"foo/some_foo.go"},
+			},
+			want: true,
+		},
+		{
+			name: "should exclude both paths",
+			file: "foo/bar/some_foo.go",
+			c: &Config{
+				Exclude: []string{"foo", "foo/bar"},
+			},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.c.Config = writeConfigFile(t, tt.c)
+
+			got := tt.c.ExcludePath(tt.file)
+			if got != tt.want {
+				t.Errorf("Config.ExcludePath() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestNewConfigFromViper(t *testing.T) {
 	tests := []struct {
 		name    string
