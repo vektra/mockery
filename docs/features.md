@@ -189,6 +189,11 @@ Using different configuration parameters, we can deploy our mocks on-disk in var
         }
         ```
     === "adjacent to interface"
+    
+    	!!! warning
+
+            Mockery does not protect against modifying original source code. Do not generate mocks using this config with uncommitted code changes.
+
 
         ```yaml
         filename: "mock_{{.InterfaceName}}.go"
