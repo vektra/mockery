@@ -3,6 +3,10 @@ Changelog
 
 This changelog describes major feature additions. Please view the `releases` page for more details on commits and minor changes.
 
+### :octicons-tag-24: [`v2.24.0`](https://github.com/vektra/mockery/releases/tag/v2.24.0) `exclude` config
+
+The `exclude` parameter allows you to define subpaths to ignore. This is currently only compatible when using non-`packages` config.
+
 ### :octicons-tag-24: [`v2.23.0`](https://github.com/vektra/mockery/releases/tag/v2.23.0) Replace Types
 
 The `replace-type` parameter allows adding a list of type replacements to be made in package and/or type names.
