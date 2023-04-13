@@ -27,7 +27,7 @@ jobs:
         run: go mod download -x
 
       - name: Test
-        run: make test.ci
+        run: go run github.com/go-task/task/v3/cmd/task test.ci
 
       - name: Upload coverage to codecov
         uses: codecov/codecov-action@v2
