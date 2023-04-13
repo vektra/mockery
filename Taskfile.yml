@@ -1,0 +1,25 @@
+version: '3'
+
+tasks:
+  test:
+    cmds:
+      - go test -v -coverprofile=coverage.txt ./...
+
+  fmt:
+    cmds:
+      - go fmt ./...
+  
+  mocks:
+    cmds:
+      - go run .
+  
+  docker:
+    cmds:
+      - docker build -t vektra/mockery .
+
+  lint:
+    cmds:
+      - go run github.com/golangci/golangci-lint/cmd/golangci-lint run
+  
+  test.ci:
+    deps: [test, fmt, mocks, lint]

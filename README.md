@@ -10,6 +10,22 @@ Documentation
 
 Documentation is found at out [Github Pages site](https://vektra.github.io/mockery/).
 
+Development
+------------
+
+taskfile.dev is used for build tasks. Initialize all go build tools:
+
+```
+go mod download -x
+```
+
+You can run any of the steps listed in `Taskfile.yml`:
+
+```
+$ task test
+task: [test] go test -v -coverprofile=coverage.txt ./...
+```
+
 Development Efforts
 -------------------
 
