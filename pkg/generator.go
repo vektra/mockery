@@ -185,16 +185,24 @@ func (g *Generator) checkReplaceType(ctx context.Context, f func(from *replaceTy
 }
 
 func (g *Generator) addPackageImportWithName(ctx context.Context, path, name string) string {
+	log := zerolog.Ctx(ctx)
+	replaced := false
 	g.checkReplaceType(ctx, func(from *replaceType, to *replaceType) bool {
 		if path == from.pkg {
+			log.Debug().Str("from", path).Str("to", to.pkg).Msg("changing package path")
+			replaced = true
 			path = to.pkg
 			if to.alias != "" {
+				log.Debug().Str("from", name).Str("to", to.alias).Msg("changing alias name")
 				name = to.alias
 			}
 			return false
 		}
 		return true
 	})
+	if replaced {
+		log.Debug().Str("to-path", path).Str("to-name", name).Msg("successfully replaced type")
+	}
 
 	if existingName, pathExists := g.packagePathToName[path]; pathExists {
 		return existingName

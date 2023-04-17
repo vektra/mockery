@@ -4,22 +4,44 @@ tasks:
   test:
     cmds:
       - go test -v -coverprofile=coverage.txt ./...
+    desc: run unit tests
+    sources:
+      - "**/*.go"
+    generates:
+      - coverage.txt
+
+  coverage:
+    deps: [test]
+    desc: run unit tests and create HTML coverage file
+    cmds:
+      - go tool cover -html=coverage.txt
 
   fmt:
+    desc: auto-format all go files
+    sources:
+      - "**/*.go"
     cmds:
       - go fmt ./...
   
   mocks:
+    desc: generate mockery mocks
     cmds:
       - go run .
   
   docker:
+    desc: build the mockery docker image
     cmds:
       - docker build -t vektra/mockery .
 
   lint:
+    desc: run all the defined linters
+    sources:
+      - "**/*.go"
     cmds:
       - go run github.com/golangci/golangci-lint/cmd/golangci-lint run
   
   test.ci:
     deps: [test, fmt, mocks, lint]
+
+  default:
+    deps: [test.ci]

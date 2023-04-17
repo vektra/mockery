@@ -1,6 +1,7 @@
 package config
 
 import (
+	"bufio"
 	"context"
 	"fmt"
 	"os"
@@ -14,23 +15,18 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
 	"github.com/vektra/mockery/v2/pkg/logging"
+	"golang.org/x/tools/go/packages"
 	"gopkg.in/yaml.v3"
 )
 
 var (
 	ErrNoConfigFile = fmt.Errorf("no config file exists")
+	ErrPkgNotFound  = fmt.Errorf("package not found in config")
 )
 
 type Interface struct {
 	Config Config `mapstructure:"config"`
 }
-
-type Package struct {
-	Config     Config               `mapstructure:"config"`
-	Interfaces map[string]Interface `mapstructure:"interfaces"`
-}
-
-type Packages map[string]Package
 
 type Config struct {
 	All                  bool                   `mapstructure:"all"`
@@ -109,10 +105,23 @@ func NewConfigFromViper(v *viper.Viper) (*Config, error) {
 	return c, nil
 }
 
-// cfgAsMap reads in the config file and returns a map representation, instead of a
+func (c *Config) Initialize(ctx context.Context) error {
+	log := zerolog.Ctx(ctx)
+	if err := c.discoverRecursivePackages(ctx); err != nil {
+		return fmt.Errorf("failed to discover recursive packages: %w", err)
+	}
+
+	log.Trace().Msg("merging in config")
+	if err := c.mergeInConfig(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
+// CfgAsMap reads in the config file and returns a map representation, instead of a
 // struct representation. This is mainly needed because viper throws away case-sensitivity
 // in the `packages` section, which won't work when defining interface names 😞
-func (c *Config) cfgAsMap(ctx context.Context) (map[string]any, error) {
+func (c *Config) CfgAsMap(ctx context.Context) (map[string]any, error) {
 	log := zerolog.Ctx(ctx)
 
 	configPath := pathlib.NewPath(c.Config)
@@ -155,7 +164,7 @@ func (c *Config) GetPackages(ctx context.Context) ([]string, error) {
 	// so this breaks our logic. We need to manually parse this section
 	// instead. See: https://github.com/spf13/viper/issues/819
 	log := zerolog.Ctx(ctx)
-	cfgMap, err := c.cfgAsMap(ctx)
+	cfgMap, err := c.CfgAsMap(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -178,16 +187,20 @@ func (c *Config) GetPackages(ctx context.Context) ([]string, error) {
 }
 
 func (c *Config) getPackageConfigMap(ctx context.Context, packageName string) (map[string]any, error) {
-	cfgMap, err := c.cfgAsMap(ctx)
+	cfgMap, err := c.CfgAsMap(ctx)
 	if err != nil {
 		return nil, err
 	}
 	packageSection := cfgMap["packages"].(map[string]any)
 	configUnmerged, ok := packageSection[packageName]
 	if !ok {
-		return nil, fmt.Errorf("package %s is not found in config", packageName)
+		return nil, ErrPkgNotFound
 	}
-	return configUnmerged.(map[string]any), nil
+	configAsMap, isMap := configUnmerged.(map[string]any)
+	if isMap {
+		return configAsMap, nil
+	}
+	return map[string]any{}, nil
 
 }
 func (c *Config) GetPackageConfig(ctx context.Context, packageName string) (*Config, error) {
@@ -244,7 +257,7 @@ func (c *Config) ShouldGenerateInterface(ctx context.Context, packageName, inter
 		return false, err
 	}
 
-	interfacesSection, err := c.getInterfacesSection(ctx, packageName, interfaceName)
+	interfacesSection, err := c.getInterfacesSection(ctx, packageName)
 	if err != nil {
 		return false, err
 	}
@@ -252,7 +265,7 @@ func (c *Config) ShouldGenerateInterface(ctx context.Context, packageName, inter
 	return pkgConfig.All || interfaceExists, nil
 }
 
-func (c *Config) getInterfacesSection(ctx context.Context, packageName string, interfaceName string) (map[string]any, error) {
+func (c *Config) getInterfacesSection(ctx context.Context, packageName string) (map[string]any, error) {
 	pkgMap, err := c.getPackageConfigMap(ctx, packageName)
 	if err != nil {
 		return nil, err
@@ -278,7 +291,7 @@ func (c *Config) GetInterfaceConfig(ctx context.Context, packageName string, int
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to get config for package when iterating over interface")
 	}
-	interfacesSection, err := c.getInterfacesSection(ctx, packageName, interfaceName)
+	interfacesSection, err := c.getInterfacesSection(ctx, packageName)
 	if err != nil {
 		return nil, err
 	}
@@ -358,4 +371,305 @@ func (c *Config) GetInterfaceConfig(ctx context.Context, packageName string, int
 		configs = append(configs, baseConfigTyped)
 	}
 	return configs, nil
+}
+
+// addSubPkgConfig injects the given pkgPath into the `packages` config section.
+// You specify a parentPkgPath to inherit the config from.
+func (c *Config) addSubPkgConfig(ctx context.Context, subPkgPath string, parentPkgPath string) error {
+	log := zerolog.Ctx(ctx).With().
+		Str("parent-package", parentPkgPath).
+		Str("sub-package", subPkgPath).Logger()
+
+	log.Trace().Msg("adding sub-package to config map")
+	parentPkgConfig, err := c.getPackageConfigMap(ctx, parentPkgPath)
+	if err != nil {
+		log.Err(err).
+			Msg("failed to get package config for parent package")
+		return fmt.Errorf("failed to get package config: %w", err)
+	}
+
+	log.Trace().Msg("getting config")
+	cfg, err := c.CfgAsMap(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to get configuration map: %w", err)
+	}
+
+	log.Trace().Msg("getting packages section")
+	packagesSection := cfg["packages"].(map[string]any)
+
+	// Don't overwrite any config that already exists
+	_, pkgExists := packagesSection[subPkgPath]
+	if !pkgExists {
+		log.Trace().Msg("sub-package doesn't exist in config")
+		packagesSection[subPkgPath] = map[string]any{}
+		newPkgSection := packagesSection[subPkgPath].(map[string]any)
+		newPkgSection["config"] = parentPkgConfig["config"]
+	} else {
+		log.Trace().Msg("sub-package exists in config")
+		// The sub-package exists in config. Check if it has its
+		// own `config` section and merge with the parent package
+		// if so.
+		subPkgConfig, err := c.getPackageConfigMap(ctx, subPkgPath)
+
+		if err != nil {
+			log.Err(err).Msg("could not get child package config")
+			return fmt.Errorf("failed to get sub-package config: %w", err)
+		}
+
+		for key, val := range parentPkgConfig {
+			if _, keyInSubPkg := subPkgConfig[key]; !keyInSubPkg {
+				subPkgConfig[key] = val
+			}
+
+		}
+	}
+
+	return nil
+}
+
+func (c *Config) subPackages(ctx context.Context, pkgPath string, pkgConfig *Config) ([]string, error) {
+	log := zerolog.Ctx(ctx)
+
+	pkgs, err := packages.Load(&packages.Config{
+		Mode: packages.NeedName | packages.NeedFiles,
+	}, pkgPath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to load packages: %w", err)
+	}
+	pkg := pkgs[0]
+
+	representativeFile := pathlib.NewPath(pkg.GoFiles[0])
+	searchRoot := representativeFile.Parent()
+	packageRootName := pathlib.NewPath(pkg.PkgPath)
+	packageRootPath := searchRoot
+	subPackages := []string{}
+
+	walker, err := pathlib.NewWalk(
+		searchRoot,
+		pathlib.WalkAlgorithm(pathlib.AlgorithmBasic),
+		pathlib.WalkFollowSymlinks(false),
+		pathlib.WalkVisitDirs(false),
+		pathlib.WalkVisitFiles(true),
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create filesystem walker: %w", err)
+	}
+
+	visitedDirs := map[string]any{}
+	subdirectoriesWithGoFiles := []*pathlib.Path{}
+
+	// We consider the searchRoot to already be visited because
+	// we know it's already in the configuration.
+	visitedDirs[searchRoot.String()] = nil
+
+	// Walk the filesystem path, starting at the root of the package we've
+	// been given. Note that this will always work because Golang downloads
+	// the package when we call `packages.Load`
+	walkErr := walker.Walk(func(path *pathlib.Path, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		file, err := path.OpenFile(os.O_RDONLY)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+
+		_, haveVisitedDir := visitedDirs[path.Parent().String()]
+		if !haveVisitedDir && strings.HasSuffix(path.Name(), ".go") {
+			// Skip auto-generated files
+			scanner := bufio.NewScanner(file)
+			for scanner.Scan() {
+				text := scanner.Text()
+				if strings.Contains(text, "DO NOT EDIT") {
+					log.Debug().Stringer("path", path).Msg("skipping file as auto-generated")
+					return nil
+				} else if strings.HasPrefix(text, "package ") {
+					break
+				}
+			}
+
+			l := log.With().Stringer("path", path.Parent()).Logger()
+			l.Debug().Msg("subdirectory has a .go file, adding this path to packages config")
+			subdirectoriesWithGoFiles = append(subdirectoriesWithGoFiles, path.Parent())
+			visitedDirs[path.Parent().String()] = nil
+		}
+		return nil
+	})
+	if walkErr != nil {
+		return nil, fmt.Errorf("error occured during filesystem walk: %w", err)
+	}
+
+	// Parse the subdirectories we found into their respective fully qualified
+	// package paths
+	for _, d := range subdirectoriesWithGoFiles {
+		relativeFilesystemPath, err := d.RelativeTo(packageRootPath)
+		if err != nil {
+			log.Err(err).Stringer("root", packageRootPath).Stringer("subRoot", d).Msg("failed to make subroot relative to root")
+			return nil, fmt.Errorf("failed to make subroot relative to root: %w", err)
+		}
+		absolutePackageName := packageRootName.Join(relativeFilesystemPath.Parts()...)
+		subPackages = append(subPackages, absolutePackageName.String())
+	}
+
+	return subPackages, nil
+}
+
+// discoverRecursivePackages parses the provided config for packages marked as
+// recursive and recurses the file tree to find all sub-packages.
+func (c *Config) discoverRecursivePackages(ctx context.Context) error {
+	log := zerolog.Ctx(ctx)
+	recursivePackages := map[string]*Config{}
+	packages, err := c.GetPackages(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to get packages: %w", err)
+	}
+	for _, pkg := range packages {
+		pkgConfig, err := c.GetPackageConfig(ctx, pkg)
+		if err != nil {
+			return fmt.Errorf("failed to get package config: %w", err)
+		}
+		if pkgConfig.Recursive {
+			recursivePackages[pkg] = pkgConfig
+		}
+	}
+	if len(recursivePackages) == 0 {
+		return nil
+	}
+	for pkgPath, conf := range recursivePackages {
+		pkgLog := log.With().Str("package-name", pkgPath).Logger()
+		pkgCtx := pkgLog.WithContext(ctx)
+		pkgLog.Debug().Msg("discovering sub-packages")
+		subPkgs, err := c.subPackages(pkgCtx, pkgPath, conf)
+		if err != nil {
+			return fmt.Errorf("failed to get subpackages: %w", err)
+		}
+		for _, subPkg := range subPkgs {
+			subPkgLog := pkgLog.With().Str("sub-package", subPkg).Logger()
+			subPkgCtx := subPkgLog.WithContext(pkgCtx)
+
+			subPkgLog.Debug().Msg("adding sub-package config")
+			if err := c.addSubPkgConfig(subPkgCtx, subPkg, pkgPath); err != nil {
+				subPkgLog.Err(err).Msg("failed to add sub-package config")
+				return fmt.Errorf("failed to add sub-package config: %w", err)
+			}
+		}
+	}
+	log.Trace().Msg("done discovering recursive packages")
+
+	return nil
+
+}
+
+func contains[T comparable](slice []T, elem T) bool {
+	for _, element := range slice {
+		if elem == element {
+			return true
+		}
+	}
+	return false
+}
+
+// mergeInConfig takes care of merging inheritable configuration
+// in the config map. For example, it merges default config, then
+// package-level config, then interface-level config.
+func (c *Config) mergeInConfig(ctx context.Context) error {
+	log := zerolog.Ctx(ctx)
+
+	log.Trace().Msg("getting packages")
+	pkgs, err := c.GetPackages(ctx)
+	if err != nil {
+		return err
+	}
+
+	log.Trace().Msg("getting default config")
+	defaultCfg, err := c.CfgAsMap(ctx)
+	if err != nil {
+		return err
+	}
+	for _, pkgPath := range pkgs {
+		pkgLog := log.With().Str("package-path", pkgPath).Logger()
+		pkgLog.Trace().Msg("merging for package")
+		packageConfig, err := c.getPackageConfigMap(ctx, pkgPath)
+		if err != nil {
+			pkgLog.Err(err).Msg("failed to get package config")
+			return fmt.Errorf("failed to get package config: %w", err)
+		}
+		configSectionUntyped, configExists := packageConfig["config"]
+		if !configExists {
+			packageConfig["config"] = defaultCfg
+			continue
+		}
+		packageConfigSection := configSectionUntyped.(map[string]any)
+
+		for key, value := range defaultCfg {
+			if contains([]string{"packages", "config"}, key) {
+				continue
+			}
+			_, keyExists := packageConfigSection[key]
+			if !keyExists {
+				packageConfigSection[key] = value
+			}
+		}
+		interfaces, err := c.getInterfacesForPackage(ctx, pkgPath)
+		if err != nil {
+			return fmt.Errorf("failed to get interfaces for package: %w", err)
+		}
+		for _, interfaceName := range interfaces {
+			interfacesSection, err := c.getInterfacesSection(ctx, pkgPath)
+			if err != nil {
+				return err
+			}
+			interfaceSectionUntyped, exists := interfacesSection[interfaceName]
+			if !exists {
+				continue
+			}
+			interfaceSection, ok := interfaceSectionUntyped.(map[string]any)
+			if !ok {
+				// assume interfaceSection value is nil
+				continue
+			}
+
+			interfaceConfigSectionUntyped, exists := interfaceSection["config"]
+			if !exists {
+				interfaceSection["config"] = map[string]any{}
+			}
+
+			interfaceConfigSection, ok := interfaceConfigSectionUntyped.(map[string]any)
+			if !ok {
+				// Assume this interface's value in the map is nil. Just skip it.
+				continue
+			}
+			for key, value := range packageConfigSection {
+				if key == "packages" {
+					continue
+				}
+				if _, keyExists := interfaceConfigSection[key]; !keyExists {
+					interfaceConfigSection[key] = value
+				}
+			}
+		}
+	}
+
+	return nil
+
+}
+
+func (c *Config) getInterfacesForPackage(ctx context.Context, pkgPath string) ([]string, error) {
+	interfaces := []string{}
+	packageMap, err := c.getPackageConfigMap(ctx, pkgPath)
+	if err != nil {
+		return nil, err
+	}
+	interfacesUntyped, exists := packageMap["interfaces"]
+	if !exists {
+		return interfaces, nil
+	}
+
+	interfacesMap := interfacesUntyped.(map[string]any)
+	for key := range interfacesMap {
+		interfaces = append(interfaces, key)
+	}
+	return interfaces, nil
 }
