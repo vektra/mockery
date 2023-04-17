@@ -4,7 +4,7 @@ Features
 Replace Types
 -------------
 
-:octicons-tag-24: 2.23.0
+:octicons-tag-24: v2.23.0
 
 The `replace-type` parameter allows adding a list of type replacements to be made in package and/or type names.
 This can help overcome issues like usage of type aliases that point to internal packages.
@@ -92,7 +92,7 @@ func (_m *Handler) HandleMessage(m pubsub.Message) error {
 
 `packages` configuration
 ------------------------
-:octicons-tag-24: 2.21.0 · :material-test-tube: Alpha Feature
+:octicons-tag-24: v2.21.0 · :material-test-tube: Alpha Feature
 
 !!! danger
 	This feature is considered alpha. It is likely that bugs exist, and subfeatures may be added/subtracted/modified at any time. Use at your own risk. This warning will be updated as this feature matures.
@@ -143,7 +143,6 @@ packages:
 
 Included with this feature is the ability to use templated strings for various configuration options. This is useful to define where your mocks are placed and how to name them. You can view the template variables available in the [Configuration](/mockery/configuration/#parameter-descriptions) section of the docs, under the `packages config` tab.
   
-
 ### Layouts
 
 Using different configuration parameters, we can deploy our mocks on-disk in various ways. These are some common layouts:
@@ -242,10 +241,48 @@ Using different configuration parameters, we can deploy our mocks on-disk in var
         }
         ```
 
+### Recursive package discovery
+
+:octicons-tag-24: v2.25.0
+
+When `#!yaml recursive: true` is set on a particular package:
+
+```yaml
+packages:
+  github.com/user/project:
+    config:
+      recursive: true
+      with-expecter: true
+```
+
+mockery will dynamically discover all sub-packages within the specified package. This is done by calling `packages.Load` on the specified package, which induces Go to download the package from the internet (or simply your local project). Mockery then recursively discovers all sub-directories from the root package that also contain `.go` files and injects the respective package path into the config map as if you had specified them manually. As an example, your in-memory config map may end up looking like this:
+
+```yaml
+packages:
+  github.com/user/project:
+    config:
+      recursive: true
+      with-expecter: true
+  github.com/user/project/subpkg1:
+    config:
+      recursive: true
+      with-expecter: true
+  github.com/user/project/subpkg2:
+    config:
+      recursive: true
+      with-expecter: true
+```
+
+You can use the `showconfig` command to see the config mockery injects. The output of `showconfig` theoretically could be copy-pasted into your yaml file as it is semantically equivalent.
+
+??? note "performance characteristics"
+    The performance when using `#!yaml recursive: true` may be worse than manually specifying all packages statically in the yaml file. This is because of the fact that mockery has to recursively walk the filesystem path that contains the package in question. It may unnecessarily walk down unrelated paths (for example, a Python virtual environment that is in the same path as your package). For this reason, it is recommended _not_ to use `#!yaml recursive: true` if it can be avoided.
+
+
 Mock Constructors
 -----------------
 
-:octicons-tag-24: 2.11.0
+:octicons-tag-24: v2.11.0
 
 All mock objects have constructor functions. These constructors do basic test setup so that the expectations you set in the code are asserted before the test exits.
 
@@ -269,7 +306,7 @@ The constructor sets up common functionalities automatically
 Expecter Structs
 ----------------
 
-:octicons-tag-24: 2.10.0 · `with-expecter: True`
+:octicons-tag-24: v2.10.0 · `with-expecter: True`
 
 Mockery now supports an "expecter" struct, which allows your tests to use type-safe methods to generate call expectations. When enabled through the `with-expecter: True` mockery configuration, you can enter into the expecter interface by simply calling `.EXPECT()` on your mock object.
 
@@ -305,7 +342,7 @@ requesterMock.EXPECT().
 Return Value Providers
 ----------------------
 
-:octicons-tag-24: 2.20.0
+:octicons-tag-24: v2.20.0
 
 Return Value Providers can be used one of two ways.  You may either define a single function with the exact same signature (number and type of input and return parameters) and pass that as a single value to `Return`, or you may pass multiple values to `Return` (one for each return parameter of the mocked function.)  If you are using the second form, for each of the return values of the mocked function, `Return` needs a function which takes the same arguments as the mocked function, and returns one of the return values. For example, if the return argument signature of `passthrough` in the above example was instead `(string, error)` in the interface, `Return` would also need a second function argument to define the error value:
 
