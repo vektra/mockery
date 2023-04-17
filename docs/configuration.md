@@ -82,6 +82,7 @@ Parameter Descriptions
     | `log-level` | :fontawesome-solid-x: | `#!yaml "info"` | Set the level of the logger |
     | [`packages`](/mockery/features/#packages-configuration) | :fontawesome-solid-x: | `#!yaml null` | A dictionary containing configuration describing the packages and interfaces to generate mocks for. |
     | `print` | :fontawesome-solid-x: | `#!yaml false` | Use `print: True` to have the resulting code printed out instead of written to disk. |
+    | [`recursive`](/mockery/features/#recursive-package-discovery) | :fontawesome-solid-x: | `#!yaml false` | When set to `true` on a particular package, mockery will recursively search for all sub-packages and inject those packages into the config map. |
     | [`with-expecter`](/mockery/features/#expecter-structs) | :fontawesome-solid-x: | `#!yaml true` | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
     | [`replace-type`](/mockery/features/#replace-types) | :fontawesome-solid-x: | `#!yaml null` | Replaces aliases, packages and/or types during generation.|
 
