@@ -163,8 +163,6 @@ func initConfig(
 			log.Debug().Err(err).Msg("failed to read in config")
 			log.Info().Msg("couldn't read any config file")
 		}
-	} else {
-		log.Debug().Msg("config search disabled")
 	}
 
 	viperObj.Set("config", viperObj.ConfigFileUsed())
