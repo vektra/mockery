@@ -288,7 +288,7 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 
 		fileLog := log.With().Stringer(logging.LogKeyFile, outputPath).Logger()
 		fileLog.Info().Msg("writing to file")
-		file, err := outputPath.OpenFile(os.O_RDWR | os.O_CREATE)
+		file, err := outputPath.OpenFile(os.O_RDWR | os.O_CREATE | os.O_TRUNC)
 		if err != nil {
 			return errors.Wrapf(err, "failed to open output file for mock: %v", outputPath)
 		}
