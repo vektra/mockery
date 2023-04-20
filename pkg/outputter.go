@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"go/ast"
 	"io"
 	"os"
 	"path/filepath"
@@ -136,6 +137,13 @@ func (*FileOutputStreamProvider) underscoreCaseName(caseName string) string {
 func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interface) error {
 	log := zerolog.Ctx(ctx)
 
+	isExported := ast.IsExported(iface.Name)
+	var mock string
+	if isExported {
+		mock = "Mock"
+	} else {
+		mock = "mock"
+	}
 	// data is the struct sent to the template parser
 	data := struct {
 		InterfaceDir            string
@@ -143,6 +151,7 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 		InterfaceNameCamel      string
 		InterfaceNameLowerCamel string
 		InterfaceNameSnake      string
+		Mock                    string
 		MockName                string
 		PackageName             string
 		PackagePath             string
@@ -152,6 +161,7 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 		InterfaceNameCamel:      strcase.ToCamel(iface.Name),
 		InterfaceNameLowerCamel: strcase.ToLowerCamel(iface.Name),
 		InterfaceNameSnake:      strcase.ToSnake(iface.Name),
+		Mock:                    mock,
 		MockName:                c.MockName,
 		PackageName:             iface.Pkg.Name(),
 		PackagePath:             iface.Pkg.Path(),
