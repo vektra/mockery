@@ -36,6 +36,8 @@ Parameter Descriptions
 
     ### non-`packages`
 
+    These are the configuration options available when using the legacy, non-`packages` configuration semantics.
+
 
     #### Config Variables
     These are the configuration options when not using the [`packages`](/mockery/features/#packages-configuration) config
@@ -87,6 +89,9 @@ Parameter Descriptions
     | [`replace-type`](/mockery/features/#replace-types) | :fontawesome-solid-x: | `#!yaml null` | Replaces aliases, packages and/or types during generation.|
 
     #### Template variables 
+
+    !!! note
+        Templated variables are only available when using the `packages` config feature.
 
     Variables that are marked as being templated are capable of using mockery-provided template parameters.
 
