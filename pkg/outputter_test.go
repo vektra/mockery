@@ -3,12 +3,16 @@ package pkg
 import (
 	"context"
 	"errors"
+	"fmt"
 	"reflect"
 	"testing"
 
+	"github.com/chigopher/pathlib"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	pkgMocks "github.com/vektra/mockery/v2/mocks/github.com/vektra/mockery/v2/pkg"
 	"github.com/vektra/mockery/v2/pkg/config"
+	"github.com/vektra/mockery/v2/pkg/logging"
 )
 
 func TestFilenameBare(t *testing.T) {
@@ -140,6 +144,69 @@ func Test_parseConfigTemplates(t *testing.T) {
 			}
 			if !tt.disableWantCheck && !reflect.DeepEqual(tt.args.c, tt.want) {
 				t.Errorf("*config.Config = %v, want %v", tt.args.c, tt.want)
+			}
+		})
+	}
+}
+
+func TestOutputter_Generate(t *testing.T) {
+	type fields struct {
+		boilerplate string
+		config      *config.Config
+	}
+
+	tests := []struct {
+		name        string
+		packagePath string
+		fields      fields
+		wantErr     bool
+	}{
+		{
+			name:        "generate normal",
+			packagePath: "github.com/vektra/mockery/v2/pkg/fixtures/example_project",
+		},
+	}
+	for _, tt := range tests {
+		if tt.fields.config == nil {
+			tt.fields.config = &config.Config{}
+		}
+		tt.fields.config.Dir = t.TempDir()
+		tt.fields.config.MockName = "Mock{{.InterfaceName}}"
+		tt.fields.config.FileName = "mock_{{.InterfaceName}}.go"
+
+		t.Run(tt.name, func(t *testing.T) {
+			m := &Outputter{
+				boilerplate: tt.fields.boilerplate,
+				config:      tt.fields.config,
+				dryRun:      true,
+			}
+			parser := NewParser([]string{})
+
+			log, err := logging.GetLogger("INFO")
+			require.NoError(t, err)
+			ctx := log.WithContext(context.Background())
+
+			confPath := pathlib.NewPath(t.TempDir()).Join("config.yaml")
+			ymlContents := fmt.Sprintf(`
+packages:
+  %s:
+    config: 
+      all: True
+`, tt.packagePath)
+			require.NoError(t, confPath.WriteFile([]byte(ymlContents)))
+			m.config.Config = confPath.String()
+
+			require.NoError(t, parser.ParsePackages(ctx, []string{tt.packagePath}))
+			require.NoError(t, parser.Load())
+			for _, intf := range parser.Interfaces() {
+				t.Logf("generating interface: %s %s", intf.QualifiedName, intf.Name)
+				require.NoError(t, m.Generate(ctx, intf))
+				mockPath := pathlib.NewPath(tt.fields.config.Dir).Join("mock_" + intf.Name + ".go")
+
+				t.Logf("checking if path exists: %v", mockPath)
+				exists, err := mockPath.Exists()
+				require.NoError(t, err)
+				assert.True(t, exists)
 			}
 		})
 	}
