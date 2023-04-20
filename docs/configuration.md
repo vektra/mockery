@@ -97,11 +97,12 @@ Parameter Descriptions
 
     | name | description |
     |------|-------------|
-    | InterfaceDir | The path of the original interface being mocked. This can be used as `#!yaml dir: "{{.InterfaceDir}}"` to place your mocks adjacent to the original interface. This should not be used for external interfaces. |
+    | InterfaceDir | The path of the original interface being mocked. This can be used as <br>`#!yaml dir: "{{.InterfaceDir}}"` to place your mocks adjacent to the original interface. This should not be used for external interfaces. |
     | InterfaceName | The name of the original interface being mocked |
     | InterfaceNameCamel | Converts a string `interface_name` to `InterfaceName` |
     | InterfaceNameLowerCamel | Converts `InterfaceName` to `interfaceName` |
     | InterfaceNameSnake | Converts `InterfaceName` to `interface_name` |
+    | Mock | A string that is `Mock` if the interface is exported, or `mock` if it is not exported. Useful when setting the name of your mock to something like: <br>`#!yaml mockname: "{{.Mock}}{{.InterfaceName}}"`<br> This way, the mock name will retain the exported-ness of the original interface.
     | MockName | The name of the mock that will be generated. Note that this is simply the `mockname` configuration variable |
     | PackageName | The name of the package from the original interface |
     | PackagePath | The fully qualified package path of the original interface |
