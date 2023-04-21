@@ -32,15 +32,11 @@ mockery will search upwards from your current-working-directory up to the root p
 Parameter Descriptions
 -----------------------
 
-=== "non-`packages` config"
+### non-`packages`
 
-    ### non-`packages`
+These are the configuration options available when using the legacy, non-`packages` configuration semantics.
 
-    These are the configuration options available when using the legacy, non-`packages` configuration semantics.
-
-
-    #### Config Variables
-    These are the configuration options when not using the [`packages`](/mockery/features/#packages-configuration) config
+!!! info "non-`packages` config"
 
     | name | description |
     |------|-------------|
@@ -60,13 +56,11 @@ Parameter Descriptions
     | `testonly` | Prepend every mock file with `_test.go`. This is useful in cases where you are generating mocks `inpackage` but don't want the mocks to be visible to code outside of tests. |
     | `with-expecter` | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
 
-=== "`packages` config"
+### [`packages` config](/mockery/features/#packages-configuration)
 
-    ### [`packages` config](/mockery/features/#packages-configuration)
+These are the config options when using the `packages` config option. Use of the `packages` config semantics puts mockery into a completely different code path. Config variables may have changed meanings or have been substracted entirely, compared to the non-`packages` config.
 
-    These are the config options when using the `packages` config option. Config variables may have changed meanings or have been substracted entirely, compared to the non-`packages` config.
-
-    #### Config Variables
+!!! info "`packages` config"
 
     | name | templated | default | description |
     |------|-----------|---------|-------------|
@@ -88,7 +82,10 @@ Parameter Descriptions
     | [`with-expecter`](/mockery/features/#expecter-structs) | :fontawesome-solid-x: | `#!yaml true` | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
     | [`replace-type`](/mockery/features/#replace-types) | :fontawesome-solid-x: | `#!yaml null` | Replaces aliases, packages and/or types during generation.|
 
-    #### Template variables 
+    -------------
+
+    #### Template Variables
+    
 
     !!! note
         Templated variables are only available when using the `packages` config feature.
