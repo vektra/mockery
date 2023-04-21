@@ -42,11 +42,12 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true
       auto_title: true
   - pymdownx.inlinehilite
-  - pymdownx.details
+  - pymdownx.magiclink
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true 
@@ -63,7 +64,7 @@ nav:
     - Examples: examples.md
   - Features: features.md
   - Notes: 
-    - Additional Notes: notes.md
+    - FAQ: notes.md
     - Changelog: changelog.md
 
 extra_css:
