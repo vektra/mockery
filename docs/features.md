@@ -144,7 +144,7 @@ packages:
 !!! note
     Templated variables are only available when using the `packages` config feature.
 
-Included with this feature is the ability to use templated strings for various configuration options. This is useful to define where your mocks are placed and how to name them. You can view the template variables available in the [Configuration](/mockery/configuration/#parameter-descriptions) section of the docs, under the `packages config` tab.
+Included with this feature is the ability to use templated strings for various configuration options. This is useful to define where your mocks are placed and how to name them. You can view the template variables available in the [Configuration]([/mockery/configuration/#parameter-descriptions](https://vektra.github.io/mockery/configuration/#template-variables)) section of the docs.
   
 ### Layouts
 
