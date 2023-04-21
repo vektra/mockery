@@ -1,5 +1,5 @@
-Additional Notes
-================
+Frequently Asked Questions
+===========================
 
 internal error: package without types was imported
 ---------------------------------------------------
@@ -118,6 +118,7 @@ The versioning in this project applies only to the behavior of the mockery binar
 4. Behavior of mockery given a set of arguments.
 
 What the version does _not_ track:
+
 1. The interfaces, objects, methods etc. in the vektra/mockery package.
 2. Compatibility of `go get`-ing mockery with new or old versions of Golang.
 
