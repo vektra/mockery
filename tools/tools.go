@@ -1,6 +1,6 @@
 //go:build tools
 
-package pkg
+package tools
 
 import (
 	_ "github.com/go-task/task/v3/cmd/task"
