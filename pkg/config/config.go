@@ -11,7 +11,6 @@ import (
 	"github.com/chigopher/pathlib"
 	"github.com/jinzhu/copier"
 	"github.com/mitchellh/mapstructure"
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
 	"github.com/vektra/mockery/v2/pkg/logging"
@@ -136,11 +135,11 @@ func (c *Config) CfgAsMap(ctx context.Context) (map[string]any, error) {
 				log.Debug().Msg("config file doesn't exist, returning empty config map")
 				return map[string]any{}, nil
 			}
-			return nil, errors.Wrapf(err, "failed to read file: %v", configPath)
+			return nil, fmt.Errorf("failed to read file: %v: %w", configPath, err)
 		}
 
 		if err := yaml.Unmarshal(fileBytes, newCfg); err != nil {
-			return nil, errors.Wrapf(err, "failed to unmarshal yaml")
+			return nil, fmt.Errorf("failed to unmarshal yaml: %w", err)
 		}
 		c._cfgAsMap = newCfg
 	}
@@ -222,7 +221,7 @@ func (c *Config) GetPackageConfig(ctx context.Context, packageName string) (*Con
 
 	configMap, err := c.getPackageConfigMap(ctx, packageName)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get map config for package")
+		return nil, fmt.Errorf("unable to get map config for package: %w", err)
 	}
 
 	configSection, ok := configMap["config"]
@@ -233,7 +232,7 @@ func (c *Config) GetPackageConfig(ctx context.Context, packageName string) (*Con
 
 	decoder, err := c.getDecoder(pkgConfigTyped)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to get decoder")
+		return nil, fmt.Errorf("failed to get decoder: %w", err)
 	}
 	if err := decoder.Decode(configSection); err != nil {
 		return nil, err
@@ -289,7 +288,7 @@ func (c *Config) GetInterfaceConfig(ctx context.Context, packageName string, int
 
 	pkgConfig, err := c.GetPackageConfig(ctx, packageName)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to get config for package when iterating over interface")
+		return nil, fmt.Errorf("failed to get config for package when iterating over interface: %w", err)
 	}
 	interfacesSection, err := c.getInterfacesSection(ctx, packageName)
 	if err != nil {
@@ -299,7 +298,7 @@ func (c *Config) GetInterfaceConfig(ctx context.Context, packageName string, int
 	// Copy the package-level config to our interface-level config
 	pkgConfigCopy := reflect.New(reflect.ValueOf(pkgConfig).Elem().Type()).Interface()
 	if err := copier.Copy(pkgConfigCopy, pkgConfig); err != nil {
-		return nil, errors.Wrap(err, "failed to create a copy of package config")
+		return nil, fmt.Errorf("failed to create a copy of package config: %w", err)
 	}
 	baseConfigTyped := pkgConfigCopy.(*Config)
 
@@ -319,7 +318,7 @@ func (c *Config) GetInterfaceConfig(ctx context.Context, packageName string, int
 		}
 		msgString := "bad type provided for interface config"
 		log.Error().Msgf(msgString)
-		return nil, errors.New(msgString)
+		return nil, fmt.Errorf(msgString)
 	}
 
 	configSection, ok := interfaceSectionTyped["config"]
@@ -332,10 +331,10 @@ func (c *Config) GetInterfaceConfig(ctx context.Context, packageName string, int
 		// `configs` section.
 		decoder, err := c.getDecoder(baseConfigTyped)
 		if err != nil {
-			return nil, errors.Wrapf(err, "unable to create mapstructure decoder")
+			return nil, fmt.Errorf("unable to create mapstructure decoder: %w", err)
 		}
 		if err := decoder.Decode(configSection); err != nil {
-			return nil, errors.Wrapf(err, "unable to decode interface config")
+			return nil, fmt.Errorf("unable to decode interface config: %w", err)
 		}
 	} else {
 		log.Debug().Msg("config section for interface doesn't exist")
@@ -349,16 +348,16 @@ func (c *Config) GetInterfaceConfig(ctx context.Context, packageName string, int
 			// Create a copy of the package-level config
 			currentInterfaceConfig := reflect.New(reflect.ValueOf(baseConfigTyped).Elem().Type()).Interface()
 			if err := copier.Copy(currentInterfaceConfig, baseConfigTyped); err != nil {
-				return nil, errors.Wrap(err, "failed to copy package config")
+				return nil, fmt.Errorf("failed to copy package config: %w", err)
 			}
 
 			// decode the new values into the struct
 			decoder, err := c.getDecoder(currentInterfaceConfig)
 			if err != nil {
-				return nil, errors.Wrapf(err, "unable to create mapstructure decoder")
+				return nil, fmt.Errorf("unable to create mapstructure decoder: %w", err)
 			}
 			if err := decoder.Decode(configMap); err != nil {
-				return nil, errors.Wrapf(err, "unable to decode interface config")
+				return nil, fmt.Errorf("unable to decode interface config: %w", err)
 			}
 
 			configs = append(configs, currentInterfaceConfig.(*Config))

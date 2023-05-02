@@ -14,7 +14,6 @@ import (
 
 	"github.com/chigopher/pathlib"
 	"github.com/iancoleman/strcase"
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 
 	"github.com/vektra/mockery/v2/pkg/config"
@@ -293,18 +292,18 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 
 		outputPath := pathlib.NewPath(interfaceConfig.Dir).Join(interfaceConfig.FileName)
 		if err := outputPath.Parent().MkdirAll(); err != nil {
-			return errors.Wrapf(err, "failed to mkdir parents of: %v", outputPath)
+			return fmt.Errorf("failed to mkdir parents of: %v: %w", outputPath, err)
 		}
 
 		fileLog := log.With().Stringer(logging.LogKeyFile, outputPath).Logger()
 		fileLog.Info().Msg("writing to file")
 		file, err := outputPath.OpenFile(os.O_RDWR | os.O_CREATE | os.O_TRUNC)
 		if err != nil {
-			return errors.Wrapf(err, "failed to open output file for mock: %v", outputPath)
+			return fmt.Errorf("failed to open output file for mock: %v: %w", outputPath, err)
 		}
 		defer file.Close()
 		if err := generator.Write(file); err != nil {
-			return errors.Wrapf(err, "failed to write to file")
+			return fmt.Errorf("failed to write to file: %w", err)
 		}
 	}
 	return nil

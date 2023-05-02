@@ -6,7 +6,6 @@ import (
 	"io"
 	"os"
 
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/vektra/mockery/v2/pkg/config"
@@ -35,7 +34,7 @@ func showConfig(
 	ctx := context.Background()
 	config, err := config.NewConfigFromViper(v)
 	if err != nil {
-		return errors.Wrapf(err, "failed to unmarshal config")
+		return fmt.Errorf("failed to unmarshal config: %w", err)
 	}
 	if err := config.Initialize(ctx); err != nil {
 		return err
@@ -46,7 +45,7 @@ func showConfig(
 	}
 	out, err := yaml.Marshal(cfgMap)
 	if err != nil {
-		return errors.Wrapf(err, "Failed to marshal yaml")
+		return fmt.Errorf("failed to marshal yaml: %w", err)
 	}
 	log, err := logging.GetLogger(config.LogLevel)
 	if err != nil {

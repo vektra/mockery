@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -11,7 +12,6 @@ import (
 
 	"github.com/chigopher/pathlib"
 	"github.com/mitchellh/go-homedir"
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
@@ -39,7 +39,7 @@ func NewRootCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			r, err := GetRootAppFromViper(viperCfg)
 			if err != nil {
-				printStackTrace(err)
+				fmt.Printf("%v\n", err)
 				return err
 			}
 			return r.Run()
@@ -85,20 +85,6 @@ func NewRootCmd() *cobra.Command {
 
 	cmd.AddCommand(NewShowConfigCmd())
 	return cmd
-}
-
-type stackTracer interface {
-	StackTrace() errors.StackTrace
-}
-
-func printStackTrace(e error) {
-	fmt.Printf("%v\n", e)
-	if err, ok := e.(stackTracer); ok {
-		for _, f := range err.StackTrace() {
-			fmt.Printf("%+s:%d\n", f, f)
-		}
-	}
-
 }
 
 // Execute executes the cobra CLI workflow
@@ -178,7 +164,7 @@ func GetRootAppFromViper(v *viper.Viper) (*RootApp, error) {
 	r := &RootApp{}
 	config, err := config.NewConfigFromViper(v)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to get config")
+		return nil, fmt.Errorf("failed to get config: %w", err)
 	}
 	r.Config = *config
 	return r, nil
@@ -323,7 +309,7 @@ func (r *RootApp) Run() error {
 		if r.Config.Profile != "" {
 			f, err := os.Create(r.Config.Profile)
 			if err != nil {
-				return errors.Wrapf(err, "Failed to create profile file")
+				return fmt.Errorf("failed to create profile file: %w", err)
 			}
 
 			if err := pprof.StartCPUProfile(f); err != nil {

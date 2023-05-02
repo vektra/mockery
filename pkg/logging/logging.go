@@ -1,11 +1,11 @@
 package logging
 
 import (
+	"fmt"
 	"os"
 	"runtime/debug"
 	"time"
 
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"golang.org/x/term"
 )
@@ -25,7 +25,7 @@ const (
 
 // SemVer is the version of mockery at build time.
 var SemVer = ""
-var ErrPkgNotExist = errors.New("package does not exist")
+var ErrPkgNotExist = fmt.Errorf("package does not exist")
 
 func GetSemverInfo() string {
 	if SemVer != "" {
@@ -47,7 +47,7 @@ func (t timeHook) Run(e *zerolog.Event, level zerolog.Level, msg string) {
 func GetLogger(levelStr string) (zerolog.Logger, error) {
 	level, err := zerolog.ParseLevel(levelStr)
 	if err != nil {
-		return zerolog.Logger{}, errors.Wrapf(err, "Couldn't parse log level")
+		return zerolog.Logger{}, fmt.Errorf("couldn't parse log level: %w", err)
 	}
 	out := os.Stderr
 	writer := zerolog.ConsoleWriter{
