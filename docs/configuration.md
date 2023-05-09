@@ -41,6 +41,7 @@ These are the configuration options available when using the legacy, non-`packag
     | name | description |
     |------|-------------|
     | `all`  |  It's common for a big package to have a lot of interfaces, so mockery provides `all`. This option will tell mockery to scan all files under the directory named by `--dir` ("." by default) and generates mocks for any interfaces it finds. This option implies `recursive: True`. |
+    | `boilerplate-file` | Specify a path to a file that contains comments you want displayed at the top of all generated mock files. This is commonly used to display license headers at the top of your source code. |
     | `case` | mockery generates files using the casing of the original interface name.  This can be modified by specifying `case: underscore` to format the generated file name using underscore casing. |
     | `exclude` | This parameter is a list of strings representing path prefixes that should be excluded from mock generation. |
     | `exported` | Use `exported: True` to generate public mocks for private interfaces. |
@@ -65,7 +66,7 @@ These are the config options when using the `packages` config option. Use of the
     | name | templated | default | description |
     |------|-----------|---------|-------------|
     | `all`  |  :fontawesome-solid-x: | `#!yaml false` | Generate all interfaces for the specified packages. |
-    | `tags` | :fontawesome-solid-x: | `#!yaml ""` | Set the build tags of the generated mocks. |
+    | `boilerplate-file` | :fontawesome-solid-x: | | `#!yaml ""` | Specify a path to a file that contains comments you want displayed at the top of all generated mock files. This is commonly used to display license headers at the top of your source code. |
     | `config` | :fontawesome-solid-x: | `#!yaml ""` | Set the location of the mockery config file. |
     | `dir` | :fontawesome-solid-check: | `#!yaml "mocks/{{.PackagePath}}"` | The directory where the mock file will be outputted to. |
     | `disable-config-search` | :fontawesome-solid-x: | `#!yaml false` | Disable searching for configuration files |
@@ -79,6 +80,7 @@ These are the config options when using the `packages` config option. Use of the
     | [`packages`](/mockery/features/#packages-configuration) | :fontawesome-solid-x: | `#!yaml null` | A dictionary containing configuration describing the packages and interfaces to generate mocks for. |
     | `print` | :fontawesome-solid-x: | `#!yaml false` | Use `print: True` to have the resulting code printed out instead of written to disk. |
     | [`recursive`](/mockery/features/#recursive-package-discovery) | :fontawesome-solid-x: | `#!yaml false` | When set to `true` on a particular package, mockery will recursively search for all sub-packages and inject those packages into the config map. |
+    | `tags` | :fontawesome-solid-x: | `#!yaml ""` | Set the build tags of the generated mocks. |
     | [`with-expecter`](/mockery/features/#expecter-structs) | :fontawesome-solid-x: | `#!yaml true` | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
     | [`replace-type`](/mockery/features/#replace-types) | :fontawesome-solid-x: | `#!yaml null` | Replaces aliases, packages and/or types during generation.|
 
