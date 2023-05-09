@@ -66,7 +66,7 @@ These are the config options when using the `packages` config option. Use of the
     | name | templated | default | description |
     |------|-----------|---------|-------------|
     | `all`  |  :fontawesome-solid-x: | `#!yaml false` | Generate all interfaces for the specified packages. |
-    | `boilerplate-file` | :fontawesome-solid-x: | | `#!yaml ""` | Specify a path to a file that contains comments you want displayed at the top of all generated mock files. This is commonly used to display license headers at the top of your source code. |
+    | `boilerplate-file` | :fontawesome-solid-x: | `#!yaml ""` | Specify a path to a file that contains comments you want displayed at the top of all generated mock files. This is commonly used to display license headers at the top of your source code. |
     | `config` | :fontawesome-solid-x: | `#!yaml ""` | Set the location of the mockery config file. |
     | `dir` | :fontawesome-solid-check: | `#!yaml "mocks/{{.PackagePath}}"` | The directory where the mock file will be outputted to. |
     | `disable-config-search` | :fontawesome-solid-x: | `#!yaml false` | Disable searching for configuration files |
