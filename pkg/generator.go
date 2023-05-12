@@ -50,18 +50,19 @@ func DetermineOutputPackageName(
 }
 
 type GeneratorConfig struct {
-	Boilerplate          string
-	DisableVersionString bool
-	Exported             bool
-	InPackage            bool
-	KeepTree             bool
-	Note                 string
-	PackageName          string
-	PackageNamePrefix    string
-	StructName           string
-	UnrollVariadic       bool
-	WithExpecter         bool
-	ReplaceType          []string
+	Boilerplate             string
+	DisableVersionString    bool
+	Exported                bool
+	InPackage               bool
+	KeepTree                bool
+	Note                    string
+	PackageName             string
+	PackageNamePrefix       string
+	StructName              string
+	UnrollVariadic          bool
+	OmitEmptyRolledVariadic bool
+	WithExpecter            bool
+	ReplaceType             []string
 }
 
 // Generator is responsible for generating the string containing
@@ -938,7 +939,16 @@ func {{ .ConstructorName }}{{ .TypeConstraint }}(t {{ .ConstructorTestingInterfa
 func (g *Generator) generateCalled(list *paramList) (preamble string, called string) {
 	namesLen := len(list.Names)
 	if namesLen == 0 || !list.Variadic || !g.config.UnrollVariadic {
-		called = "_m.Called(" + strings.Join(list.Names, ", ") + ")"
+		if !g.config.OmitEmptyRolledVariadic {
+			called = "_m.Called(" + strings.Join(list.Names, ", ") + ")"
+			return
+		}
+
+		variadicName := list.Names[namesLen-1]
+		tmpRet := resolveCollision(list.Names, "tmpRet")
+
+		preamble = fmt.Sprintf("\n\tvar " + tmpRet + " mock.Arguments\n\tif len(" + variadicName + ") > 0 {\n\t\t" + tmpRet + " = _m.Called(" + strings.Join(list.Names, ", ") + ")\n\t} else {\n\t\t" + tmpRet + " = _m.Called(" + strings.Join(list.Names[:len(list.Names)-1], ", ") + ")\n\t}\n\n\t")
+		called = tmpRet
 		return
 	}
 

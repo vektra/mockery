@@ -271,18 +271,19 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 		}
 
 		g := GeneratorConfig{
-			Boilerplate:          m.boilerplate,
-			DisableVersionString: interfaceConfig.DisableVersionString,
-			Exported:             interfaceConfig.Exported,
-			InPackage:            interfaceConfig.InPackage,
-			KeepTree:             interfaceConfig.KeepTree,
-			Note:                 interfaceConfig.Note,
-			PackageName:          interfaceConfig.Outpkg,
-			PackageNamePrefix:    interfaceConfig.Packageprefix,
-			StructName:           interfaceConfig.MockName,
-			UnrollVariadic:       interfaceConfig.UnrollVariadic,
-			WithExpecter:         interfaceConfig.WithExpecter,
-			ReplaceType:          interfaceConfig.ReplaceType,
+			Boilerplate:             m.boilerplate,
+			DisableVersionString:    interfaceConfig.DisableVersionString,
+			Exported:                interfaceConfig.Exported,
+			InPackage:               interfaceConfig.InPackage,
+			KeepTree:                interfaceConfig.KeepTree,
+			Note:                    interfaceConfig.Note,
+			PackageName:             interfaceConfig.Outpkg,
+			PackageNamePrefix:       interfaceConfig.Packageprefix,
+			StructName:              interfaceConfig.MockName,
+			UnrollVariadic:          interfaceConfig.UnrollVariadic,
+			OmitEmptyRolledVariadic: interfaceConfig.OmitEmptyRolledVariadic,
+			WithExpecter:            interfaceConfig.WithExpecter,
+			ReplaceType:             interfaceConfig.ReplaceType,
 		}
 		generator := NewGenerator(ctx, g, iface, "")
 

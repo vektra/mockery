@@ -75,6 +75,7 @@ func NewRootCmd() *cobra.Command {
 	pFlags.Bool("disable-version-string", false, "Do not insert the version string into the generated mock file.")
 	pFlags.String("boilerplate-file", "", "File to read a boilerplate text from. Text should be a go block comment, i.e. /* ... */")
 	pFlags.Bool("unroll-variadic", true, "For functions with variadic arguments, do not unroll the arguments into the underlying testify call. Instead, pass variadic slice as-is.")
+	pFlags.Bool("omit-empty-rolled-variadic", false, "For functions with variadic arguments, omit passing empty slice to underlying testify call. Used in tandem with unroll-variadic set to false.")
 	pFlags.Bool("exported", false, "Generates public mocks for private interfaces.")
 	pFlags.Bool("with-expecter", false, "Generate expecter utility around mock's On, Run and Return methods with explicit types. This option is NOT compatible with -unroll-variadic=false")
 	pFlags.StringArray("replace-type", nil, "Replace types")
@@ -380,18 +381,19 @@ func (r *RootApp) Run() error {
 		}
 
 		visitor := pkg.NewGeneratorVisitor(pkg.GeneratorVisitorConfig{
-			Boilerplate:          boilerplate,
-			DisableVersionString: r.Config.DisableVersionString,
-			Exported:             r.Config.Exported,
-			InPackage:            r.Config.InPackage,
-			KeepTree:             r.Config.KeepTree,
-			Note:                 r.Config.Note,
-			PackageName:          r.Config.Outpkg,
-			PackageNamePrefix:    r.Config.Packageprefix,
-			StructName:           r.Config.StructName,
-			UnrollVariadic:       r.Config.UnrollVariadic,
-			WithExpecter:         r.Config.WithExpecter,
-			ReplaceType:          r.Config.ReplaceType,
+			Boilerplate:             boilerplate,
+			DisableVersionString:    r.Config.DisableVersionString,
+			Exported:                r.Config.Exported,
+			InPackage:               r.Config.InPackage,
+			KeepTree:                r.Config.KeepTree,
+			Note:                    r.Config.Note,
+			PackageName:             r.Config.Outpkg,
+			PackageNamePrefix:       r.Config.Packageprefix,
+			StructName:              r.Config.StructName,
+			UnrollVariadic:          r.Config.UnrollVariadic,
+			OmitEmptyRolledVariadic: r.Config.OmitEmptyRolledVariadic,
+			WithExpecter:            r.Config.WithExpecter,
+			ReplaceType:             r.Config.ReplaceType,
 		}, osp, r.Config.DryRun)
 
 		generated := walker.Walk(ctx, visitor)

@@ -1566,6 +1566,34 @@ func (s *GeneratorSuite) TestGeneratorVariadicArgsAsOneArg() {
 	)
 }
 
+func (s *GeneratorSuite) TestGeneratorVariadicArgsOmitEmpty() {
+	expectedBytes, err := os.ReadFile(getMocksPath("RequesterVariadicOmitEmpty.go"))
+	s.NoError(err)
+	expected := string(expectedBytes)
+	expected = expected[strings.Index(expected, "// RequesterVariadicOmitEmpty is"):]
+	generator := NewGenerator(
+		s.ctx, GeneratorConfig{
+			StructName:              "RequesterVariadicOmitEmpty",
+			InPackage:               true,
+			UnrollVariadic:          false,
+			OmitEmptyRolledVariadic: true,
+		}, s.getInterfaceFromFile("requester_variadic.go", "RequesterVariadic"), pkg,
+	)
+	s.NoError(generator.Generate(s.ctx), "The generator ran without errors.")
+
+	var actual []byte
+	actual, fmtErr := format.Source(generator.buf.Bytes())
+	s.NoError(fmtErr, "The formatter ran without errors.")
+
+	expectedLines := strings.Split(expected, "\n")
+	actualLines := strings.Split(string(actual), "\n")
+
+	s.Equal(
+		expectedLines, actualLines,
+		"The generator produced unexpected output.",
+	)
+}
+
 func TestRequesterVariadicOneArgument(t *testing.T) {
 	t.Run("Get \"1\", \"2\", \"3\"", func(t *testing.T) {
 		m := mocks.RequesterVariadicOneArgument{}

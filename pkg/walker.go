@@ -121,12 +121,13 @@ type GeneratorVisitorConfig struct {
 	KeepTree             bool
 	Note                 string
 	// The name of the output package, if InPackage is false (defaults to "mocks")
-	PackageName       string
-	PackageNamePrefix string
-	StructName        string
-	UnrollVariadic    bool
-	WithExpecter      bool
-	ReplaceType       []string
+	PackageName             string
+	PackageNamePrefix       string
+	StructName              string
+	UnrollVariadic          bool
+	OmitEmptyRolledVariadic bool
+	WithExpecter            bool
+	ReplaceType             []string
 }
 
 type GeneratorVisitor struct {
@@ -175,18 +176,19 @@ func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) erro
 	}()
 
 	generatorConfig := GeneratorConfig{
-		Boilerplate:          v.config.Boilerplate,
-		DisableVersionString: v.config.DisableVersionString,
-		Exported:             v.config.Exported,
-		InPackage:            v.config.InPackage,
-		KeepTree:             v.config.KeepTree,
-		Note:                 v.config.Note,
-		PackageName:          v.config.PackageName,
-		PackageNamePrefix:    v.config.PackageNamePrefix,
-		StructName:           v.config.StructName,
-		UnrollVariadic:       v.config.UnrollVariadic,
-		WithExpecter:         v.config.WithExpecter,
-		ReplaceType:          v.config.ReplaceType,
+		Boilerplate:             v.config.Boilerplate,
+		DisableVersionString:    v.config.DisableVersionString,
+		Exported:                v.config.Exported,
+		InPackage:               v.config.InPackage,
+		KeepTree:                v.config.KeepTree,
+		Note:                    v.config.Note,
+		PackageName:             v.config.PackageName,
+		PackageNamePrefix:       v.config.PackageNamePrefix,
+		StructName:              v.config.StructName,
+		UnrollVariadic:          v.config.UnrollVariadic,
+		OmitEmptyRolledVariadic: v.config.OmitEmptyRolledVariadic,
+		WithExpecter:            v.config.WithExpecter,
+		ReplaceType:             v.config.ReplaceType,
 	}
 
 	gen := NewGenerator(ctx, generatorConfig, iface, "")
