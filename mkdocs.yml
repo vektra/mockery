@@ -10,7 +10,6 @@ theme:
   name: material
   icon:
     logo: fontawesome/brands/golang
-    favicon: fontawesome/brands/golang
   palette:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
@@ -66,6 +65,7 @@ nav:
   - Notes: 
     - FAQ: notes.md
     - Changelog: changelog.md
+    - Migrating to Packages: migrating_to_packages.md
 
 extra_css:
   - stylesheets/extra.css
