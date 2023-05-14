@@ -19,7 +19,7 @@ Configuration Changes
 
 The existence of the `#!yaml packages:` map in your configuration acts as a feature flag that enables the feature.
 
-The configuration parameters used in `packages` have either changed meanings, been removed, or been renamed. It is recommended to wipe out all previous configuration and command-line parameters previously used.
+The configuration parameters used in `packages` should be considered to have no relation to their meanings in the legacy scheme. It is recommended to wipe out all previous configuration and command-line parameters previously used.
 
 The [configuration docs](/mockery/configuration/#packages-config) show the parameters that are available for use in the `packages` scheme. You should only use the parameters shown in this section. Mockery will not prevent you from using the legacy parameter set, but doing so will result in undefined behavior.
 
