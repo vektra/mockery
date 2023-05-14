@@ -94,8 +94,8 @@ func (_m *Handler) HandleMessage(m pubsub.Message) error {
 ------------------------
 :octicons-tag-24: v2.21.0 · :material-test-tube: Alpha Feature
 
-!!! danger
-    This feature is considered alpha. It is likely that bugs exist, and subfeatures may be added/subtracted/modified at any time. Use at your own risk. This warning will be updated as this feature matures.
+!!! warning
+    This feature is considered beta. The feature set has been solidifed, but we are asking users to beta-test for any bugs. Use at your own risk. This warning will be updated as this feature matures.
 
 !!! info
     See the [Migration Docs](/mockery/migrating_to_packages/) on how to migrate to this new feature.

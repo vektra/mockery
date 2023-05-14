@@ -238,9 +238,9 @@ func (r *RootApp) Run() error {
 		if err != nil {
 			return fmt.Errorf("failed to get package from config: %w", err)
 		}
-		warnAlpha(
+		warnBeta(
 			ctx,
-			"use of the 'packages' config variable is currently in an alpha state. Use at your own risk.",
+			"use of the 'packages' config variable is currently in a beta state. Use at your own risk.",
 			map[string]any{
 				"discussion": "https://github.com/vektra/mockery/discussions/549",
 			})
@@ -427,6 +427,6 @@ func infoDiscussion(ctx context.Context, message string, fields map[string]any) 
 	info(ctx, "DISCUSSION", message, fields)
 }
 
-func warnAlpha(ctx context.Context, message string, fields map[string]any) {
-	warn(ctx, "ALPHA FEATURE", message, fields)
+func warnBeta(ctx context.Context, message string, fields map[string]any) {
+	warn(ctx, "BETA FEATURE", message, fields)
 }
