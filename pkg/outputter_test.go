@@ -4,10 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"reflect"
 	"testing"
 
 	"github.com/chigopher/pathlib"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	pkgMocks "github.com/vektra/mockery/v2/mocks/github.com/vektra/mockery/v2/pkg"
@@ -65,6 +67,15 @@ func TestUnderscoreCaseName(t *testing.T) {
 }
 
 func Test_parseConfigTemplates(t *testing.T) {
+	mockPkg := func(t *testing.T) *pkgMocks.TypesPackage {
+		m := pkgMocks.NewTypesPackage(t)
+		m.EXPECT().Path().Return("github.com/user/project/package")
+		m.EXPECT().Name().Return("packageName")
+		return m
+	}
+	cwd, err := os.Getwd()
+	require.NoError(t, err)
+
 	type args struct {
 		c     *config.Config
 		iface *Interface
@@ -96,17 +107,46 @@ func Test_parseConfigTemplates(t *testing.T) {
 					FileName: "path/to/foobar.go",
 				},
 			},
-			pkg: func(t *testing.T) *pkgMocks.TypesPackage {
-				m := pkgMocks.NewTypesPackage(t)
-				m.EXPECT().Path().Return("github.com/user/project/package")
-				m.EXPECT().Name().Return("packageName")
-				return m
-			},
+			pkg: mockPkg,
 			want: &config.Config{
 				Dir:      "path/to/github.com/user/project/package",
 				FileName: "FooBar_FooBar_foo_bar.go",
 				MockName: "fooBar",
 				Outpkg:   "packageName",
+			},
+		},
+		{
+			name: "InterfaceDirRelative in current working directory",
+			args: args{
+				c: &config.Config{
+					Dir: "{{.InterfaceDirRelative}}",
+				},
+
+				iface: &Interface{
+					Name:     "FooBar",
+					FileName: cwd + "/path/to/foobar.go",
+				},
+			},
+			pkg: mockPkg,
+			want: &config.Config{
+				Dir: "path/to",
+			},
+		},
+		{
+			name: "InterfaceDirRelative not in current working directory",
+			args: args{
+				c: &config.Config{
+					Dir: "mocks/{{.InterfaceDirRelative}}",
+				},
+
+				iface: &Interface{
+					Name:     "FooBar",
+					FileName: "/path/to/foobar.go",
+				},
+			},
+			pkg: mockPkg,
+			want: &config.Config{
+				Dir: "mocks/github.com/user/project/package",
 			},
 		},
 		{
@@ -124,12 +164,7 @@ func Test_parseConfigTemplates(t *testing.T) {
 					FileName: "path/to/foobar.go",
 				},
 			},
-			pkg: func(t *testing.T) *pkgMocks.TypesPackage {
-				m := pkgMocks.NewTypesPackage(t)
-				m.EXPECT().Path().Return("github.com/user/project/package")
-				m.EXPECT().Name().Return("packageName")
-				return m
-			},
+			pkg:              mockPkg,
 			disableWantCheck: true,
 			wantErr:          ErrInfiniteLoop,
 		},
@@ -143,7 +178,7 @@ func Test_parseConfigTemplates(t *testing.T) {
 				t.Errorf("parseConfigTemplates() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			if !tt.disableWantCheck && !reflect.DeepEqual(tt.args.c, tt.want) {
-				t.Errorf("*config.Config = %v, want %v", tt.args.c, tt.want)
+				t.Errorf("*config.Config = %s\n, want %+v", spew.Sdump(tt.args.c), spew.Sdump(tt.want))
 			}
 		})
 	}
@@ -173,6 +208,7 @@ func TestOutputter_Generate(t *testing.T) {
 		tt.fields.config.Dir = t.TempDir()
 		tt.fields.config.MockName = "Mock{{.InterfaceName}}"
 		tt.fields.config.FileName = "mock_{{.InterfaceName}}.go"
+		tt.fields.config.Outpkg = "{{.PackageName}}"
 
 		t.Run(tt.name, func(t *testing.T) {
 			m := &Outputter{
