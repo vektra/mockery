@@ -100,9 +100,7 @@ func (_m *Handler) HandleMessage(m pubsub.Message) error {
 !!! info
     See the [Migration Docs](/mockery/migrating_to_packages/) on how to migrate to this new feature.
 
-Mockery has a configuration parameter called `packages`. This config represents a huge paradigm shift that is highly recommended for the large amount of flexibility it grants you.
-
-In this config section, you define the packages and the intefaces you want mocks generated for. The packages can be any arbitrary package, either your own project or anything within the Go ecosystem. You may provide package-level or interface-level overrides to the default config you provide.
+Mockery has a configuration parameter called `packages`. In this config section, you define the packages and the intefaces you want mocks generated for. The packages can be any arbitrary package, either your own project or anything within the Go ecosystem. You may provide package-level or interface-level overrides to the default config you provide.
 
 Usage of the `packages` config section is desirable for mutiple reasons:
 
