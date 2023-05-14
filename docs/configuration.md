@@ -96,7 +96,8 @@ These are the config options when using the `packages` config option. Use of the
 
     | name | description |
     |------|-------------|
-    | InterfaceDir | The path of the original interface being mocked. This can be used as <br>`#!yaml dir: "{{.InterfaceDir}}"` to place your mocks adjacent to the original interface. This should not be used for external interfaces. |
+    | InterfaceDir | The directory path of the original interface being mocked. This can be used as <br>`#!yaml dir: "{{.InterfaceDir}}"` to place your mocks adjacent to the original interface. This should not be used for external interfaces. |
+    | InterfaceDirRelative | The directory path of the original interface being mocked, relative to the current working directory. If the path cannot be made relative to the current working directory, this variable will be set equal to `PackagePath` |
     | InterfaceName | The name of the original interface being mocked |
     | InterfaceNameCamel | Converts a string `interface_name` to `InterfaceName` |
     | InterfaceNameLowerCamel | Converts `InterfaceName` to `interfaceName` |

@@ -144,9 +144,29 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 	} else {
 		mock = "mock"
 	}
+
+	workingDir, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("get working directory: %w", err)
+	}
+	var interfaceDirRelative string
+	interfaceDir := pathlib.NewPath(iface.FileName).Parent()
+	interfaceDirRelativePath, err := interfaceDir.RelativeToStr(workingDir)
+	if errors.Is(err, pathlib.ErrRelativeTo) {
+		log.Debug().
+			Stringer("interface-dir", interfaceDir).
+			Str("working-dir", workingDir).
+			Msg("can't make interfaceDir relative to working dir. Setting InterfaceDirRelative to package path.")
+
+		interfaceDirRelative = iface.Pkg.Path()
+	} else {
+		interfaceDirRelative = interfaceDirRelativePath.String()
+	}
+
 	// data is the struct sent to the template parser
 	data := struct {
 		InterfaceDir            string
+		InterfaceDirRelative    string
 		InterfaceName           string
 		InterfaceNameCamel      string
 		InterfaceNameLowerCamel string
@@ -157,6 +177,7 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 		PackagePath             string
 	}{
 		InterfaceDir:            filepath.Dir(iface.FileName),
+		InterfaceDirRelative:    interfaceDirRelative,
 		InterfaceName:           iface.Name,
 		InterfaceNameCamel:      strcase.ToCamel(iface.Name),
 		InterfaceNameLowerCamel: strcase.ToLowerCamel(iface.Name),
@@ -166,8 +187,6 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 		PackageName:             iface.Pkg.Name(),
 		PackagePath:             iface.Pkg.Path(),
 	}
-	templ := template.New("interface-template")
-
 	// These are the config options that we allow
 	// to be parsed by the templater. The keys are
 	// just labels we're using for logs/errors
@@ -197,7 +216,7 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 		for name, attributePointer := range templateMap {
 			oldVal := *attributePointer
 
-			attributeTempl, err := templ.Parse(*attributePointer)
+			attributeTempl, err := template.New("interface-template").Parse(*attributePointer)
 			if err != nil {
 				return fmt.Errorf("failed to parse %s template: %w", name, err)
 			}

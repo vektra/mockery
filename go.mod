@@ -3,7 +3,7 @@ module github.com/vektra/mockery/v2
 go 1.19
 
 require (
-	github.com/chigopher/pathlib v0.13.0
+	github.com/chigopher/pathlib v1.0.0
 	github.com/iancoleman/strcase v0.2.0
 	github.com/jinzhu/copier v0.3.5
 	github.com/mitchellh/go-homedir v1.1.0
