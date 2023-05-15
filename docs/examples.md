@@ -8,7 +8,7 @@ Given this interface:
 ```go title="string.go"
 package example_project
 
-//go:generate --name Stringer
+//go:generate mockery --name Stringer
 type Stringer interface {
 	String() string
 }
