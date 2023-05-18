@@ -45,20 +45,7 @@ Note that with proper Golang support in your IDE, all of the available methods a
 Variadic Arguments
 ------------------
 
-When mocking methods with variadic arguments, some complexities are introduced. Before this PR: https://github.com/vektra/mockery/pull/123, mocking a variadic method looked like this:
-
-```go
-type Foo interface {
-  Bar(s ...string) error
-}
-
-func TestFoo(t *testing.T) {
-  m := NewMockFoo(t)
-  m.On("Bar", []string{"hello", "world"}).Return(nil)
-}
-```
-
-After the PR, you could use this syntax:
+Consider if we have a function `#!go func Bar(message ...string) error`. A typical assertion might look like this:
 
 ```go
 func TestFoo(t *testing.T) {
@@ -66,24 +53,24 @@ func TestFoo(t *testing.T) {
   m.On("Bar", "hello", "world").Return(nil)
 ```
 
-This introduces ambiguities because if you want to do something like this:
+We might also want to make an assertion that says "any number of variadic arguments":
 
 ```go
 m.On("Bar", mock.Anything).Return(nil)
 ```
 
-This is impossible to distinguish between these two intentions:
+However, what we've given to mockery is ambiguous because it is impossible to distinguish between these two intentions:
 
 1. Any number of variadic arguments of any value
 2. A single variadic argument of any value
 
-This is fixed in [#359](https://github.com/vektra/mockery/pull/359) where you can provide `unroll-variadic: False` to get back to the old behavior. Thus, if you want to assert the first case, you can then do:
+This is fixed in [#359](https://github.com/vektra/mockery/pull/359) where you can provide `unroll-variadic: False` to get back to the old behavior. Thus, if you want to assert (1), you can then do:
 
 ```go
 m.On("Bar", mock.Anything).Return(nil)
 ```
 
-If you want to specify the second case, you must set `unroll-variadic: True`. Then this assertion's intention will be modified to mean the second case:
+If you want to assert (2), you must set `unroll-variadic: True`. Then this assertion's intention will be modified to mean the second case:
 
 ```go
 m.On("Bar", mock.Anything).Return(nil)
