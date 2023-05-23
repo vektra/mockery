@@ -34,12 +34,12 @@ func (s *GeneratorSuite) getInterfaceFromFile(interfacePath, interfaceName strin
 	if !filepath.IsAbs(interfacePath) {
 		interfacePath = getFixturePath(interfacePath)
 	}
-	s.NoError(
-		s.parser.Parse(s.ctx, interfacePath), "The parser is able to parse the given file.",
+	s.Require().NoError(
+		s.parser.Parse(s.ctx, interfacePath),
 	)
 
-	s.NoError(
-		s.parser.Load(), "The parser is able to load the config.",
+	s.Require().NoError(
+		s.parser.Load(),
 	)
 
 	iface, err := s.parser.Find(interfaceName)
@@ -59,7 +59,7 @@ func (s *GeneratorSuite) checkGenerationWithConfig(
 ) *Generator {
 	generator := s.getGeneratorWithConfig(filepath, interfaceName, cfg)
 	err := generator.Generate(s.ctx)
-	s.NoError(err, "The generator ran without errors.")
+	s.Require().NoError(err)
 	if err != nil {
 		return generator
 	}
@@ -72,7 +72,7 @@ func (s *GeneratorSuite) checkGenerationWithConfig(
 	// just formatting the source, is sufficient for the needs of the current test styles.
 	var actual []byte
 	actual, fmtErr := format.Source(generator.buf.Bytes())
-	s.NoError(fmtErr, "The formatter ran without errors.")
+	s.Require().NoError(fmtErr)
 
 	// Compare lines for easier debugging via testify's slice diff output
 	expectedLines := strings.Split(expected, "\n")
@@ -96,7 +96,7 @@ func (s *GeneratorSuite) checkGenerationRegexWithConfig(
 ) *Generator {
 	generator := s.getGeneratorWithConfig(filepath, interfaceName, cfg)
 	err := generator.Generate(s.ctx)
-	s.NoError(err, "The generator ran without errors.")
+	s.Require().NoError(err)
 	if err != nil {
 		return generator
 	}
@@ -108,7 +108,7 @@ func (s *GeneratorSuite) checkGenerationRegexWithConfig(
 	// just formatting the source, is sufficient for the needs of the current test styles.
 	var actual []byte
 	actual, fmtErr := format.Source(generator.buf.Bytes())
-	s.NoError(fmtErr, "The formatter ran without errors.")
+	s.Require().NoError(fmtErr)
 
 	for _, re := range expected {
 		s.Equalf(re.shouldMatch, re.re.Match(actual), "match '%s' should be %t", re.re.String(), re.shouldMatch)
@@ -278,7 +278,7 @@ func NewRequester(t mockConstructorTestingTNewRequester) *Requester {
 
 	cfg := GeneratorConfig{
 		WithExpecter:   true,
-		UnrollVariadic: false, // it's okay if the interface doesn't have any variadic method
+		UnrollVariadic: false,
 	}
 	s.checkGenerationWithConfig(testFile, "Requester", cfg, expected)
 }
@@ -559,15 +559,31 @@ func NewExpecter(t mockConstructorTestingTNewExpecter) *Expecter {
 	s.checkGenerationWithConfig("expecter.go", "Expecter", cfg, expected)
 }
 
-func (s *GeneratorSuite) TestGeneratorExpecterFailsWithoutUnrolledVariadic() {
-	cfg := GeneratorConfig{
-		WithExpecter:   true,
-		UnrollVariadic: false,
-	}
-	gen := s.getGeneratorWithConfig("expecter.go", "Expecter", cfg)
-	err := gen.Generate(s.ctx)
-	s.Error(err)
-	s.Contains(err.Error(), "cannot generate a valid expecter for variadic method with unroll-variadic=false")
+func (s *GeneratorSuite) TestGeneratorExpecterWithRolledVariadic() {
+	expectedBytes, err := os.ReadFile(getMocksPath("ExpecterAndRolledVariadic.go"))
+	s.Require().NoError(err)
+	expected := string(expectedBytes)
+	expected = expected[strings.Index(expected, "// ExpecterAndRolledVariadic is"):]
+	generator := NewGenerator(
+		s.ctx, GeneratorConfig{
+			StructName:     "ExpecterAndRolledVariadic",
+			WithExpecter:   true,
+			UnrollVariadic: false,
+		}, s.getInterfaceFromFile("expecter.go", "Expecter"), pkg,
+	)
+	s.Require().NoError(generator.Generate(s.ctx))
+
+	var actual []byte
+	actual, fmtErr := format.Source(generator.buf.Bytes())
+	s.Require().NoError(fmtErr)
+
+	expectedLines := strings.Split(expected, "\n")
+	actualLines := strings.Split(string(actual), "\n")
+
+	s.Require().Equal(
+		expectedLines, actualLines,
+		"The generator produced unexpected output.",
+	)
 }
 
 func (s *GeneratorSuite) TestGeneratorFunction() {
@@ -785,11 +801,11 @@ func NewMockrequester_unexported(t mockConstructorTestingTNewMockrequester_unexp
 			Exported:   true,
 		}, s.getInterfaceFromFile("requester_unexported.go", "requester_unexported"), pkg,
 	)
-	s.NoError(generator.Generate(s.ctx), "The generator ran without errors.")
+	s.Require().NoError(generator.Generate(s.ctx))
 
 	var actual []byte
 	actual, fmtErr := format.Source(generator.buf.Bytes())
-	s.NoError(fmtErr, "The formatter ran without errors.")
+	s.Require().NoError(fmtErr)
 
 	expectedLines := strings.Split(expected, "\n")
 	actualLines := strings.Split(string(actual), "\n")
@@ -833,11 +849,11 @@ func NewRequester_unexported(t mockConstructorTestingTNewRequester_unexported) *
 			Exported:   true,
 		}, s.getInterfaceFromFile("requester_unexported.go", "requester_unexported"), pkg,
 	)
-	s.NoError(generator.Generate(s.ctx), "The generator ran without errors.")
+	s.Require().NoError(generator.Generate(s.ctx))
 
 	var actual []byte
 	actual, fmtErr := format.Source(generator.buf.Bytes())
-	s.NoError(fmtErr, "The formatter ran without errors.")
+	s.Require().NoError(fmtErr)
 
 	expectedLines := strings.Split(expected, "\n")
 	actualLines := strings.Split(string(actual), "\n")
@@ -935,7 +951,7 @@ func (s *GeneratorSuite) TestVersionOnCorrectLine() {
 	gen.GeneratePrologue(s.ctx, pkg)
 	err := gen.Generate(s.ctx)
 
-	s.NoError(err)
+	s.Require().NoError(err)
 	scan := bufio.NewScanner(&gen.buf)
 	s.Contains("Code generated by", scan.Text())
 }
@@ -1533,7 +1549,7 @@ func NewRequesterReturnElided(t mockConstructorTestingTNewRequesterReturnElided)
 
 func (s *GeneratorSuite) TestGeneratorVariadicArgs() {
 	expectedBytes, err := os.ReadFile(getMocksPath("RequesterVariadic.go"))
-	s.NoError(err)
+	s.Require().NoError(err)
 	expected := string(expectedBytes)
 	expected = expected[strings.Index(expected, "// RequesterVariadic is"):]
 	s.checkGeneration("requester_variadic.go", "RequesterVariadic", false, "", expected)
@@ -1541,7 +1557,7 @@ func (s *GeneratorSuite) TestGeneratorVariadicArgs() {
 
 func (s *GeneratorSuite) TestGeneratorVariadicArgsAsOneArg() {
 	expectedBytes, err := os.ReadFile(getMocksPath("RequesterVariadicOneArgument.go"))
-	s.NoError(err)
+	s.Require().NoError(err)
 	expected := string(expectedBytes)
 	expected = expected[strings.Index(expected, "// RequesterVariadicOneArgument is"):]
 	generator := NewGenerator(
@@ -1551,11 +1567,11 @@ func (s *GeneratorSuite) TestGeneratorVariadicArgsAsOneArg() {
 			UnrollVariadic: false,
 		}, s.getInterfaceFromFile("requester_variadic.go", "RequesterVariadic"), pkg,
 	)
-	s.NoError(generator.Generate(s.ctx), "The generator ran without errors.")
+	s.Require().NoError(generator.Generate(s.ctx))
 
 	var actual []byte
 	actual, fmtErr := format.Source(generator.buf.Bytes())
-	s.NoError(fmtErr, "The formatter ran without errors.")
+	s.Require().NoError(fmtErr)
 
 	expectedLines := strings.Split(expected, "\n")
 	actualLines := strings.Split(string(actual), "\n")
@@ -2346,7 +2362,7 @@ func (s *GeneratorSuite) TestGeneratorForStructWithTag() {
 
 	gen := s.getGeneratorWithConfig("struct_with_tag.go", "StructWithTag", GeneratorConfig{})
 	err := gen.Generate(s.ctx)
-	s.NoError(err)
+	s.Require().NoError(err)
 
 	actual := bufio.NewScanner(&gen.buf).Text()
 	s.Contains(expected, actual)

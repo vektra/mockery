@@ -696,11 +696,6 @@ func (g *Generator) Generate(ctx context.Context) error {
 	}
 
 	for _, method := range g.iface.Methods() {
-		// It's probably possible, but not worth the trouble for prototype
-		if method.Signature.Variadic() && g.config.WithExpecter && !g.config.UnrollVariadic {
-			return fmt.Errorf("cannot generate a valid expecter for variadic method with unroll-variadic=false")
-		}
-
 		g.generateMethod(ctx, method)
 	}
 
@@ -938,6 +933,15 @@ func {{ .ConstructorName }}{{ .TypeConstraint }}(t {{ .ConstructorTestingInterfa
 func (g *Generator) generateCalled(list *paramList) (preamble string, called string) {
 	namesLen := len(list.Names)
 	if namesLen == 0 || !list.Variadic || !g.config.UnrollVariadic {
+		if list.Variadic && !g.config.UnrollVariadic && g.config.WithExpecter {
+			variadicName := list.Names[namesLen-1]
+			tmpRet := resolveCollision(list.Names, "tmpRet")
+
+			preamble = fmt.Sprintf("\n\tvar " + tmpRet + " mock.Arguments\n\tif len(" + variadicName + ") > 0 {\n\t\t" + tmpRet + " = _m.Called(" + strings.Join(list.Names, ", ") + ")\n\t} else {\n\t\t" + tmpRet + " = _m.Called(" + strings.Join(list.Names[:len(list.Names)-1], ", ") + ")\n\t}\n\n\t")
+			called = tmpRet
+			return
+		}
+
 		called = "_m.Called(" + strings.Join(list.Names, ", ") + ")"
 		return
 	}
