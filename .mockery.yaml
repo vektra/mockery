@@ -22,4 +22,9 @@ packages:
             unroll-variadic: False
           - mockname: RequesterVariadic
       Expecter:
+        config:
+          with-expecter: True
+        configs:
+          - mockname: ExpecterAndRolledVariadic
+            unroll-variadic: False
       RequesterReturnElided:
