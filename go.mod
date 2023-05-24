@@ -3,7 +3,8 @@ module github.com/vektra/mockery/v2
 go 1.19
 
 require (
-	github.com/chigopher/pathlib v1.0.0
+	github.com/chigopher/pathlib v0.15.0
+	github.com/davecgh/go-spew v1.1.1
 	github.com/iancoleman/strcase v0.2.0
 	github.com/jinzhu/copier v0.3.5
 	github.com/mitchellh/go-homedir v1.1.0
@@ -20,7 +21,6 @@ require (
 )
 
 require (
-	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/frankban/quicktest v1.14.4 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
