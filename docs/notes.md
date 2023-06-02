@@ -1,6 +1,13 @@
 Frequently Asked Questions
 ===========================
 
+error: `no go files found in root search path`
+---------------------------------------------
+
+When using the `packages` feature, `recursive: true` and you have specified a package that contains no `*.go` files, mockery is unable to determine the on-disk location of the package in order to continue the recursive package search. This appears to be a limitation of the [golang.org/x/tools/go/packages](https://pkg.go.dev/golang.org/x/tools/go/packages) package that is used to parse package metadata.
+
+The solution is to create a `.go` file in the package's path and add a `package [name]` directive at the top. It doesn't matter what the file is called. This allows mockery to properly read package metadata.
+
 internal error: package without types was imported
 ---------------------------------------------------
 
