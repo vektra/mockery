@@ -20,8 +20,9 @@ import (
 )
 
 var (
-	ErrNoConfigFile = fmt.Errorf("no config file exists")
-	ErrPkgNotFound  = fmt.Errorf("package not found in config")
+	ErrNoConfigFile         = fmt.Errorf("no config file exists")
+	ErrNoGoFilesFoundInRoot = fmt.Errorf("no go files found in root search path")
+	ErrPkgNotFound          = fmt.Errorf("package not found in config")
 )
 
 type Interface struct {
@@ -427,7 +428,12 @@ func (c *Config) addSubPkgConfig(ctx context.Context, subPkgPath string, parentP
 	return nil
 }
 
-func (c *Config) subPackages(ctx context.Context, pkgPath string, pkgConfig *Config) ([]string, error) {
+func (c *Config) subPackages(
+	ctx context.Context,
+	pkgPath string,
+	pkgConfig *Config,
+	currentDepth int,
+) ([]string, error) {
 	log := zerolog.Ctx(ctx)
 
 	pkgs, err := packages.Load(&packages.Config{
@@ -438,6 +444,13 @@ func (c *Config) subPackages(ctx context.Context, pkgPath string, pkgConfig *Con
 	}
 	pkg := pkgs[0]
 
+	if currentDepth == 0 && len(pkg.GoFiles) == 0 {
+		log.Error().
+			Err(ErrNoGoFilesFoundInRoot).
+			Str("documentation", "https://vektra.github.io/mockery/notes/#error-no-go-files-found-in-root-search-path").
+			Msg("package contains no go files")
+		return nil, ErrNoGoFilesFoundInRoot
+	}
 	representativeFile := pathlib.NewPath(pkg.GoFiles[0])
 	searchRoot := representativeFile.Parent()
 	packageRootName := pathlib.NewPath(pkg.PkgPath)
@@ -498,7 +511,7 @@ func (c *Config) subPackages(ctx context.Context, pkgPath string, pkgConfig *Con
 		return nil
 	})
 	if walkErr != nil {
-		return nil, fmt.Errorf("error occured during filesystem walk: %w", err)
+		return nil, fmt.Errorf("error occured during filesystem walk: %w", walkErr)
 	}
 
 	// Parse the subdirectories we found into their respective fully qualified
@@ -538,10 +551,10 @@ func (c *Config) discoverRecursivePackages(ctx context.Context) error {
 		return nil
 	}
 	for pkgPath, conf := range recursivePackages {
-		pkgLog := log.With().Str("package-name", pkgPath).Logger()
+		pkgLog := log.With().Str("package-path", pkgPath).Logger()
 		pkgCtx := pkgLog.WithContext(ctx)
 		pkgLog.Debug().Msg("discovering sub-packages")
-		subPkgs, err := c.subPackages(pkgCtx, pkgPath, conf)
+		subPkgs, err := c.subPackages(pkgCtx, pkgPath, conf, 0)
 		if err != nil {
 			return fmt.Errorf("failed to get subpackages: %w", err)
 		}

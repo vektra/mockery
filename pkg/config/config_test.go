@@ -3,6 +3,7 @@ package config
 import (
 	"bytes"
 	"context"
+	"errors"
 	"reflect"
 	"testing"
 
@@ -787,8 +788,18 @@ func TestConfig_Initialize(t *testing.T) {
 		name       string
 		cfgYaml    string
 		wantCfgMap string
-		wantErr    bool
+		wantErr    error
 	}{
+		{
+			name: "package with no go files",
+			cfgYaml: `
+packages:
+  github.com/vektra/mockery/v2/pkg/fixtures/pkg_with_no_files:
+    config:
+      recursive: True
+      all: True`,
+			wantErr: ErrNoGoFilesFoundInRoot,
+		},
 		{
 			name: "test with no subpackages present",
 			cfgYaml: `
@@ -951,14 +962,14 @@ with-expecter: false
 			log, err := logging.GetLogger("TRACE")
 			require.NoError(t, err)
 
-			if err := c.Initialize(log.WithContext(context.Background())); (err != nil) != tt.wantErr {
+			if err := c.Initialize(log.WithContext(context.Background())); !errors.Is(err, tt.wantErr) {
 				t.Errorf("Config.Initialize() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
 			cfgAsStr, err := yaml.Marshal(c._cfgAsMap)
 			require.NoError(t, err)
 
-			if !reflect.DeepEqual(string(cfgAsStr), tt.wantCfgMap) {
+			if tt.wantCfgMap != "" && !reflect.DeepEqual(string(cfgAsStr), tt.wantCfgMap) {
 				t.Errorf(`Config.Initialize resultant config map
 got
 ----

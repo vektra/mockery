@@ -36,13 +36,16 @@ func NewRootCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "mockery",
 		Short: "Generate mock objects for your Golang interfaces",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			r, err := GetRootAppFromViper(viperCfg)
 			if err != nil {
 				printStackTrace(err)
-				return err
+				os.Exit(1)
 			}
-			return r.Run()
+			if err := r.Run(); err != nil {
+				printStackTrace(err)
+				os.Exit(1)
+			}
 		},
 	}
 
@@ -104,7 +107,6 @@ func printStackTrace(e error) {
 // Execute executes the cobra CLI workflow
 func Execute() {
 	if err := NewRootCmd().Execute(); err != nil {
-		// printStackTrace(err)
 		os.Exit(1)
 	}
 }
