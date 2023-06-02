@@ -41,7 +41,7 @@ tasks:
       - go run github.com/golangci/golangci-lint/cmd/golangci-lint run
   
   test.ci:
-    deps: [test, fmt, mocks, lint]
+    deps: [fmt, lint, mocks, test]
 
   default:
     deps: [test.ci]
