@@ -8,6 +8,8 @@ When using the `packages` feature, `recursive: true` and you have specified a pa
 
 The solution is to create a `.go` file in the package's path and add a `package [name]` directive at the top. It doesn't matter what the file is called. This allows mockery to properly read package metadata.
 
+[Discussion](https://github.com/vektra/mockery/discussions/636)
+
 internal error: package without types was imported
 ---------------------------------------------------
 
