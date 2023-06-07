@@ -99,13 +99,12 @@ func (_c *TypesPackage_Path_Call) RunAndReturn(run func() string) *TypesPackage_
 	return _c
 }
 
-type mockConstructorTestingTNewTypesPackage interface {
+// NewTypesPackage creates a new instance of TypesPackage. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewTypesPackage(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewTypesPackage creates a new instance of TypesPackage. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewTypesPackage(t mockConstructorTestingTNewTypesPackage) *TypesPackage {
+}) *TypesPackage {
 	mock := &TypesPackage{}
 	mock.Mock.Test(t)
 

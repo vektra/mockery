@@ -260,13 +260,12 @@ func (_c *ExpecterAndRolledVariadic_VariadicMany_Call) RunAndReturn(run func(int
 	return _c
 }
 
-type mockConstructorTestingTNewExpecterAndRolledVariadic interface {
+// NewExpecterAndRolledVariadic creates a new instance of ExpecterAndRolledVariadic. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewExpecterAndRolledVariadic(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewExpecterAndRolledVariadic creates a new instance of ExpecterAndRolledVariadic. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewExpecterAndRolledVariadic(t mockConstructorTestingTNewExpecterAndRolledVariadic) *ExpecterAndRolledVariadic {
+}) *ExpecterAndRolledVariadic {
 	mock := &ExpecterAndRolledVariadic{}
 	mock.Mock.Test(t)
 

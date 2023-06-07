@@ -189,16 +189,15 @@ func (_c *RequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, TInt
 	return _c
 }
 
-type mockConstructorTestingTNewRequesterGenerics interface {
-	mock.TestingT
-	Cleanup(func())
-}
-
 // NewRequesterGenerics creates a new instance of RequesterGenerics. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
 func NewRequesterGenerics[TAny interface{}, TComparable comparable, TSigned constraints.Signed, TIntf test.GetInt, TExternalIntf io.Writer, TGenIntf test.GetGeneric[TSigned], TInlineType interface{ ~int | ~uint }, TInlineTypeGeneric interface {
 	~int | test.GenericType[int, test.GetInt]
 	comparable
-}](t mockConstructorTestingTNewRequesterGenerics) *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+}](t interface {
+	mock.TestingT
+	Cleanup(func())
+}) *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
 	mock := &RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]{}
 	mock.Mock.Test(t)
 

@@ -58,13 +58,12 @@ func (_c *GetInt_Get_Call) RunAndReturn(run func() int) *GetInt_Get_Call {
 	return _c
 }
 
-type mockConstructorTestingTNewGetInt interface {
+// NewGetInt creates a new instance of GetInt. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewGetInt(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewGetInt creates a new instance of GetInt. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewGetInt(t mockConstructorTestingTNewGetInt) *GetInt {
+}) *GetInt {
 	mock := &GetInt{}
 	mock.Mock.Test(t)
 

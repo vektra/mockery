@@ -94,13 +94,12 @@ func (_c *StructWithTag_MethodA_Call) RunAndReturn(run func(*struct {
 	return _c
 }
 
-type mockConstructorTestingTNewStructWithTag interface {
+// NewStructWithTag creates a new instance of StructWithTag. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewStructWithTag(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewStructWithTag creates a new instance of StructWithTag. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewStructWithTag(t mockConstructorTestingTNewStructWithTag) *StructWithTag {
+}) *StructWithTag {
 	mock := &StructWithTag{}
 	mock.Mock.Test(t)
 

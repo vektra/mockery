@@ -64,13 +64,12 @@ func (_c *RequesterIface_Get_Call) RunAndReturn(run func() io.Reader) *Requester
 	return _c
 }
 
-type mockConstructorTestingTNewRequesterIface interface {
+// NewRequesterIface creates a new instance of RequesterIface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewRequesterIface(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewRequesterIface creates a new instance of RequesterIface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewRequesterIface(t mockConstructorTestingTNewRequesterIface) *RequesterIface {
+}) *RequesterIface {
 	mock := &RequesterIface{}
 	mock.Mock.Test(t)
 

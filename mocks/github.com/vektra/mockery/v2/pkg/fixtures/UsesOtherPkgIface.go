@@ -53,13 +53,12 @@ func (_c *UsesOtherPkgIface_DoSomethingElse_Call) RunAndReturn(run func(test.Sib
 	return _c
 }
 
-type mockConstructorTestingTNewUsesOtherPkgIface interface {
+// NewUsesOtherPkgIface creates a new instance of UsesOtherPkgIface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewUsesOtherPkgIface(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewUsesOtherPkgIface creates a new instance of UsesOtherPkgIface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewUsesOtherPkgIface(t mockConstructorTestingTNewUsesOtherPkgIface) *UsesOtherPkgIface {
+}) *UsesOtherPkgIface {
 	mock := &UsesOtherPkgIface{}
 	mock.Mock.Test(t)
 

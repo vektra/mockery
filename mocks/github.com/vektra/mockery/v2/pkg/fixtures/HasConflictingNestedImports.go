@@ -116,13 +116,12 @@ func (_c *HasConflictingNestedImports_Z_Call) RunAndReturn(run func() fixturesht
 	return _c
 }
 
-type mockConstructorTestingTNewHasConflictingNestedImports interface {
+// NewHasConflictingNestedImports creates a new instance of HasConflictingNestedImports. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewHasConflictingNestedImports(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewHasConflictingNestedImports creates a new instance of HasConflictingNestedImports. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewHasConflictingNestedImports(t mockConstructorTestingTNewHasConflictingNestedImports) *HasConflictingNestedImports {
+}) *HasConflictingNestedImports {
 	mock := &HasConflictingNestedImports{}
 	mock.Mock.Test(t)
 

@@ -22,9 +22,15 @@ tasks:
       - "**/*.go"
     cmds:
       - go fmt ./...
+  
+  rm_mocks:
+    cmds:
+    - find . -name '*_mock.go' | xargs rm
+    - rm -rf mocks/
 
   mocks:
     desc: generate mockery mocks
+    deps: [rm_mocks]
     cmds:
       - go run .
 
@@ -51,8 +57,21 @@ tasks:
     cmds:
       - go run github.com/golangci/golangci-lint/cmd/golangci-lint run
 
+  test.e2e:
+    desc: run end-to-end tests
+    sources:
+      - "**/*.go"
+      - "./.mockery.yaml"
+    cmds:
+      - ./e2e/run_all.sh
+
   test.ci:
-    deps: [fmt, lint, mocks, test]
+    deps: [fmt, lint]
+    cmds:
+      - task: mocks
+      - task: test
+      - task: test.e2e
+
 
   default:
     deps: [test.ci]

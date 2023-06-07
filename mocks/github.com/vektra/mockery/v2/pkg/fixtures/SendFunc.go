@@ -74,13 +74,12 @@ func (_c *SendFunc_Execute_Call) RunAndReturn(run func(context.Context, string) 
 	return _c
 }
 
-type mockConstructorTestingTNewSendFunc interface {
+// NewSendFunc creates a new instance of SendFunc. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewSendFunc(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewSendFunc creates a new instance of SendFunc. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewSendFunc(t mockConstructorTestingTNewSendFunc) *SendFunc {
+}) *SendFunc {
 	mock := &SendFunc{}
 	mock.Mock.Test(t)
 

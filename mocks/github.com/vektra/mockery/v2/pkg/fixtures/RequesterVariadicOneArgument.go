@@ -69,13 +69,12 @@ func (_m *RequesterVariadicOneArgument) Sprintf(format string, a ...interface{})
 	return r0
 }
 
-type mockConstructorTestingTNewRequesterVariadicOneArgument interface {
+// NewRequesterVariadicOneArgument creates a new instance of RequesterVariadicOneArgument. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewRequesterVariadicOneArgument(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewRequesterVariadicOneArgument creates a new instance of RequesterVariadicOneArgument. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewRequesterVariadicOneArgument(t mockConstructorTestingTNewRequesterVariadicOneArgument) *RequesterVariadicOneArgument {
+}) *RequesterVariadicOneArgument {
 	mock := &RequesterVariadicOneArgument{}
 	mock.Mock.Test(t)
 

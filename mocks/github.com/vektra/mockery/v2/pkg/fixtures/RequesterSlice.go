@@ -71,13 +71,12 @@ func (_c *RequesterSlice_Get_Call) RunAndReturn(run func(string) ([]string, erro
 	return _c
 }
 
-type mockConstructorTestingTNewRequesterSlice interface {
+// NewRequesterSlice creates a new instance of RequesterSlice. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewRequesterSlice(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewRequesterSlice creates a new instance of RequesterSlice. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewRequesterSlice(t mockConstructorTestingTNewRequesterSlice) *RequesterSlice {
+}) *RequesterSlice {
 	mock := &RequesterSlice{}
 	mock.Mock.Test(t)
 
