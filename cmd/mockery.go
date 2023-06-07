@@ -91,15 +91,11 @@ func NewRootCmd() *cobra.Command {
 	return cmd
 }
 
-type stacker interface {
-	Stack() []byte
-}
-
 func printStackTrace(e error) {
 	fmt.Printf("%v\n", e)
-	var s stacker
-	if errors.As(e, &s) {
-		fmt.Printf("%+s\n", s.Stack())
+
+	if stack, ok := stackerr.GetStack(e); ok {
+		fmt.Printf("%+s\n", stack)
 	}
 }
 

@@ -1,6 +1,7 @@
 package stackerr
 
 import (
+	"errors"
 	"fmt"
 	"runtime/debug"
 )
@@ -33,4 +34,14 @@ func (se StackErr) Unwrap() error {
 
 func (se StackErr) Stack() []byte {
 	return se.stack
+}
+
+func GetStack(err error) ([]byte, bool) {
+	var s interface {
+		Stack() []byte
+	}
+	if errors.As(err, &s) {
+		return s.Stack(), true
+	}
+	return nil, false
 }
