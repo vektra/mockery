@@ -1,4 +1,6 @@
-mkdocs-material
-pillow
-cairosvg
+mkdocs
 mkdocs-glightbox
+mkdocs-material
+mkdocs-open-in-new-tab
+cairosvg
+pillow

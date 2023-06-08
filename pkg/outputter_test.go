@@ -226,7 +226,7 @@ func TestOutputter_Generate(t *testing.T) {
 			ymlContents := fmt.Sprintf(`
 packages:
   %s:
-    config: 
+    config:
       all: True
 `, tt.packagePath)
 			require.NoError(t, confPath.WriteFile([]byte(ymlContents)))
