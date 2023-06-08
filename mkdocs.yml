@@ -74,3 +74,4 @@ plugins:
 - glightbox
 - social
 - search
+- open-in-new-tab

@@ -21,9 +21,44 @@ import (
 	"github.com/vektra/mockery/v2/pkg/logging"
 )
 
-var (
-	ErrInfiniteLoop = fmt.Errorf("infintie loop in template variables detected")
-)
+var ErrInfiniteLoop = fmt.Errorf("infintie loop in template variables detected")
+
+// Functions available in the template for manipulating
+//
+// Since the map and its functions are stateless, it exists as
+// a package var rather than being initialized on every call
+// in [parseConfigTemplates] and [generator.printTemplate]
+var templateFuncMap = template.FuncMap{
+	// String inspection and manipulation
+	"contains":    strings.Contains,
+	"hasPrefix":   strings.HasPrefix,
+	"hasSuffix":   strings.HasSuffix,
+	"join":        strings.Join,
+	"replace":     strings.Replace,
+	"replaceAll":  strings.ReplaceAll,
+	"split":       strings.Split,
+	"splitAfter":  strings.SplitAfter,
+	"splitAfterN": strings.SplitAfterN,
+	"trim":        strings.Trim,
+	"trimLeft":    strings.TrimLeft,
+	"trimPrefix":  strings.TrimPrefix,
+	"trimRight":   strings.TrimRight,
+	"trimSpace":   strings.TrimSpace,
+	"trimSuffix":  strings.TrimSuffix,
+
+	// Regular expression matching
+	"matchString": regexp.MatchString,
+	"quoteMeta":   regexp.QuoteMeta,
+
+	// Filepath manipulation
+	"base":  filepath.Base,
+	"clean": filepath.Clean,
+	"dir":   filepath.Dir,
+
+	// Basic access to reading environment variables
+	"expandEnv": os.ExpandEnv,
+	"getenv":    os.Getenv,
+}
 
 type Cleanup func() error
 
@@ -31,8 +66,7 @@ type OutputStreamProvider interface {
 	GetWriter(context.Context, *Interface) (io.Writer, error, Cleanup)
 }
 
-type StdoutStreamProvider struct {
-}
+type StdoutStreamProvider struct{}
 
 func (*StdoutStreamProvider) GetWriter(ctx context.Context, iface *Interface) (io.Writer, error, Cleanup) {
 	return os.Stdout, nil, func() error { return nil }
@@ -52,7 +86,7 @@ type FileOutputStreamProvider struct {
 
 func (p *FileOutputStreamProvider) GetWriter(ctx context.Context, iface *Interface) (io.Writer, error, Cleanup) {
 	log := zerolog.Ctx(ctx).With().Str(logging.LogKeyInterface, iface.Name).Logger()
-	//ctx = log.WithContext(ctx)
+	// ctx = log.WithContext(ctx)
 
 	var path string
 
@@ -74,14 +108,14 @@ func (p *FileOutputStreamProvider) GetWriter(ctx context.Context, iface *Interfa
 		relativePath = strings.Replace(relativePath, "/internal/", "/internal_/", -1)
 
 		path = filepath.Join(p.BaseDir, relativePath)
-		if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 			return nil, err, func() error { return nil }
 		}
 	} else if p.InPackage {
 		path = filepath.Join(filepath.Dir(iface.FileName), p.filename(caseName))
 	} else {
 		path = filepath.Join(p.BaseDir, p.filename(caseName))
-		if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 			return nil, err, func() error { return nil }
 		}
 	}
@@ -213,10 +247,11 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 		// so we need to continue parsing the templates until it can't
 		// be parsed anymore.
 		changesMade = false
+
 		for name, attributePointer := range templateMap {
 			oldVal := *attributePointer
 
-			attributeTempl, err := template.New("interface-template").Parse(*attributePointer)
+			attributeTempl, err := template.New("interface-template").Funcs(templateFuncMap).Parse(*attributePointer)
 			if err != nil {
 				return fmt.Errorf("failed to parse %s template: %w", name, err)
 			}
@@ -234,7 +269,6 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 	}
 
 	return nil
-
 }
 
 // Outputter wraps the Generator struct. It calls the generator

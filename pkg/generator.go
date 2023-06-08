@@ -423,13 +423,7 @@ func (g *Generator) printf(s string, vals ...interface{}) {
 var templates = template.New("base template")
 
 func (g *Generator) printTemplate(data interface{}, templateString string) {
-	tmpl := templates.New(templateString).Funcs(
-		template.FuncMap{
-			"join": strings.Join,
-		},
-	)
-
-	tmpl, err := tmpl.Parse(templateString)
+	tmpl, err := templates.New(templateString).Funcs(templateFuncMap).Parse(templateString)
 	if err != nil {
 		// couldn't compile template
 		panic(err)
@@ -609,7 +603,7 @@ func (p *paramList) FormattedParamNames() string {
 }
 
 func (p *paramList) ReturnNames() []string {
-	var names = make([]string, 0, len(p.Names))
+	names := make([]string, 0, len(p.Names))
 	for i := 0; i < len(p.Names); i++ {
 		names = append(names, fmt.Sprintf("r%d", i))
 	}
@@ -761,7 +755,7 @@ func (_m *{{.MockName}}{{.InstantiatedTypeString}}) {{.FunctionName}}({{join .Pa
 		r{{$idx}} = {{$.RetVariableName}}.Error({{$idx}})
 		{{- else if (index $.Returns.Nilable $idx) -}}
 		if {{$.RetVariableName}}.Get({{$idx}}) != nil {
-			r{{$idx}} = {{$.RetVariableName}}.Get({{$idx}}).({{$typ}})	
+			r{{$idx}} = {{$.RetVariableName}}.Get({{$idx}}).({{$typ}})
 		}
 		{{- else -}}
 		r{{$idx}} = {{$.RetVariableName}}.Get({{$idx}}).({{$typ}})
@@ -803,7 +797,6 @@ func (_m *{{.MockName}}{{ .InstantiatedTypeString }}) EXPECT() *{{.ExpecterName}
 }
 
 func (g *Generator) generateExpecterMethodCall(ctx context.Context, method *Method, params, returns *paramList) {
-
 	data := struct {
 		MockName, ExpecterName string
 		CallStruct             string

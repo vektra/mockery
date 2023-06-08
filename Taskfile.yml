@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 tasks:
   test:
@@ -22,16 +22,27 @@ tasks:
       - "**/*.go"
     cmds:
       - go fmt ./...
-  
+
   mocks:
     desc: generate mockery mocks
     cmds:
       - go run .
-  
+
   docker:
     desc: build the mockery docker image
     cmds:
       - docker build -t vektra/mockery .
+
+  mkdocs.install:
+    desc: install mkdocs and plugins
+    cmds:
+      - pip install -r docs/requirements.txt
+
+  mkdocs.serve:
+    desc: serve mkdocs locally
+    deps: [mkdocs.install]
+    cmds:
+      - mkdocs serve
 
   lint:
     desc: run all the defined linters
@@ -39,7 +50,7 @@ tasks:
       - "**/*.go"
     cmds:
       - go run github.com/golangci/golangci-lint/cmd/golangci-lint run
-  
+
   test.ci:
     deps: [fmt, lint, mocks, test]
 

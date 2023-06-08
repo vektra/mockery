@@ -76,7 +76,7 @@ Please see the [features section](/mockery/features/#packages-configuration) for
     | `dry-run` | :fontawesome-solid-x: | `#!yaml false` | Print the actions that would be taken, but don't perform the actions. |
     | `filename` | :fontawesome-solid-check: | `#!yaml "mock_{{.InterfaceName}}.go"` | The name of the file the mock will reside in. |
     | `inpackage` | :fontawesome-solid-x: | `#!yaml false` | When generating mocks alongside the original interfaces, you must specify `inpackage: True` to inform mockery that the mock is being placed in the same package as the original interface. |
-    | `mockname` | :fontawesome-solid-check: | `#!yaml "Mock{{.InterfaceName}}"` | The name of the generated mock. | 
+    | `mockname` | :fontawesome-solid-check: | `#!yaml "Mock{{.InterfaceName}}"` | The name of the generated mock. |
     | `outpkg` | :fontawesome-solid-check: | `#!yaml "{{.PackageName}}"` | Use `outpkg` to specify the package name of the generated mocks. |
     | `log-level` | :fontawesome-solid-x: | `#!yaml "info"` | Set the level of the logger |
     | [`packages`](/mockery/features/#packages-configuration) | :fontawesome-solid-x: | `#!yaml null` | A dictionary containing configuration describing the packages and interfaces to generate mocks for. |
@@ -89,7 +89,7 @@ Please see the [features section](/mockery/features/#packages-configuration) for
     -------------
 
     #### Template Variables
-    
+
 
     !!! note
         Templated variables are only available when using the `packages` config feature.
@@ -108,3 +108,37 @@ Please see the [features section](/mockery/features/#packages-configuration) for
     | MockName | The name of the mock that will be generated. Note that this is simply the `mockname` configuration variable |
     | PackageName | The name of the package from the original interface |
     | PackagePath | The fully qualified package path of the original interface |
+
+    #### Template functions
+
+    !!! note
+        Templated functions are only available when using the `packages` config feature.
+
+    Template functions allow you to inspect and manipulate template variables.
+
+    All template functions are calling native Go functions under the hood, so signatures and return values matches the Go functions you are probably already familiar with.
+
+    To learn more about the templating syntax, please [see the Go `text/template` documentation](https://pkg.go.dev/text/template)
+
+    * [`contains` string substr](https://pkg.go.dev/strings#Contains)
+    * [`hasPrefix` string prefix](https://pkg.go.dev/strings#HasPrefix)
+    * [`hasSuffix` string suffix](https://pkg.go.dev/strings#HasSuffix)
+    * [`join` elems sep](https://pkg.go.dev/strings#Join)
+    * [`replace` string old new n](https://pkg.go.dev/strings#Replace)
+    * [`replaceAll` string old new](https://pkg.go.dev/strings#ReplaceAll)
+    * [`split` string sep](https://pkg.go.dev/strings#Split)
+    * [`splitAfter` string sep](https://pkg.go.dev/strings#SplitAfter)
+    * [`splitAfterN` string sep n](https://pkg.go.dev/strings#SplitAfterN)
+    * [`trim` string cutset](https://pkg.go.dev/strings#Trim)
+    * [`trimLeft` string cutset](https://pkg.go.dev/strings#TrimLeft)
+    * [`trimPrefix` string prefix](https://pkg.go.dev/strings#TrimPrefix)
+    * [`trimRight` string cutset](https://pkg.go.dev/strings#TrimRight)
+    * [`trimSpace` string](https://pkg.go.dev/strings#TrimSpace)
+    * [`trimSuffix` string suffix](https://pkg.go.dev/strings#TrimSuffix)
+    * [`matchString` pattern](https://pkg.go.dev/regexp#MatchString)
+    * [`quoteMeta` string](https://pkg.go.dev/regexp#QuoteMeta)
+    * [`base` string](https://pkg.go.dev/path/filepath#Base)
+    * [`clean` string](https://pkg.go.dev/path/filepath#Clean)
+    * [`dir` string](https://pkg.go.dev/path/filepath#Dir)
+    * [`expandEnv` string](https://pkg.go.dev/os#ExpandEnv)
+    * [`getenv` string](https://pkg.go.dev/os#Getenv)
