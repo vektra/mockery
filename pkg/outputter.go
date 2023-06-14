@@ -3,6 +3,7 @@ package pkg
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"go/ast"
 	"io"
@@ -14,11 +15,11 @@ import (
 
 	"github.com/chigopher/pathlib"
 	"github.com/iancoleman/strcase"
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 
 	"github.com/vektra/mockery/v2/pkg/config"
 	"github.com/vektra/mockery/v2/pkg/logging"
+	"github.com/vektra/mockery/v2/pkg/stackerr"
 )
 
 var ErrInfiniteLoop = fmt.Errorf("infintie loop in template variables detected")
@@ -346,18 +347,18 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 
 		outputPath := pathlib.NewPath(interfaceConfig.Dir).Join(interfaceConfig.FileName)
 		if err := outputPath.Parent().MkdirAll(); err != nil {
-			return errors.Wrapf(err, "failed to mkdir parents of: %v", outputPath)
+			return stackerr.NewStackErrf(err, "failed to mkdir parents of: %v", outputPath)
 		}
 
 		fileLog := log.With().Stringer(logging.LogKeyFile, outputPath).Logger()
 		fileLog.Info().Msg("writing to file")
 		file, err := outputPath.OpenFile(os.O_RDWR | os.O_CREATE | os.O_TRUNC)
 		if err != nil {
-			return errors.Wrapf(err, "failed to open output file for mock: %v", outputPath)
+			return stackerr.NewStackErrf(err, "failed to open output file for mock: %v", outputPath)
 		}
 		defer file.Close()
 		if err := generator.Write(file); err != nil {
-			return errors.Wrapf(err, "failed to write to file")
+			return stackerr.NewStackErrf(err, "failed to write to file")
 		}
 	}
 	return nil

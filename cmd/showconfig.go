@@ -6,11 +6,11 @@ import (
 	"io"
 	"os"
 
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/vektra/mockery/v2/pkg/config"
 	"github.com/vektra/mockery/v2/pkg/logging"
+	"github.com/vektra/mockery/v2/pkg/stackerr"
 	"gopkg.in/yaml.v2"
 )
 
@@ -35,7 +35,7 @@ func showConfig(
 	ctx := context.Background()
 	config, err := config.NewConfigFromViper(v)
 	if err != nil {
-		return errors.Wrapf(err, "failed to unmarshal config")
+		return stackerr.NewStackErrf(err, "failed to unmarshal config")
 	}
 	if err := config.Initialize(ctx); err != nil {
 		return err
@@ -46,7 +46,7 @@ func showConfig(
 	}
 	out, err := yaml.Marshal(cfgMap)
 	if err != nil {
-		return errors.Wrapf(err, "Failed to marshal yaml")
+		return stackerr.NewStackErrf(err, "failed to marshal yaml")
 	}
 	log, err := logging.GetLogger(config.LogLevel)
 	if err != nil {

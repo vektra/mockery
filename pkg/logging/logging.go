@@ -1,12 +1,13 @@
 package logging
 
 import (
+	"errors"
 	"os"
 	"runtime/debug"
 	"time"
 
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
+	"github.com/vektra/mockery/v2/pkg/stackerr"
 	"golang.org/x/term"
 )
 
@@ -47,7 +48,7 @@ func (t timeHook) Run(e *zerolog.Event, level zerolog.Level, msg string) {
 func GetLogger(levelStr string) (zerolog.Logger, error) {
 	level, err := zerolog.ParseLevel(levelStr)
 	if err != nil {
-		return zerolog.Logger{}, errors.Wrapf(err, "Couldn't parse log level")
+		return zerolog.Logger{}, stackerr.NewStackErrf(err, "Couldn't parse log level")
 	}
 	out := os.Stderr
 	writer := zerolog.ConsoleWriter{

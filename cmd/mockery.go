@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -11,7 +12,6 @@ import (
 
 	"github.com/chigopher/pathlib"
 	"github.com/mitchellh/go-homedir"
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
@@ -19,6 +19,7 @@ import (
 	"github.com/vektra/mockery/v2/pkg"
 	"github.com/vektra/mockery/v2/pkg/config"
 	"github.com/vektra/mockery/v2/pkg/logging"
+	"github.com/vektra/mockery/v2/pkg/stackerr"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -90,18 +91,12 @@ func NewRootCmd() *cobra.Command {
 	return cmd
 }
 
-type stackTracer interface {
-	StackTrace() errors.StackTrace
-}
-
 func printStackTrace(e error) {
 	fmt.Printf("%v\n", e)
-	if err, ok := e.(stackTracer); ok {
-		for _, f := range err.StackTrace() {
-			fmt.Printf("%+s:%d\n", f, f)
-		}
-	}
 
+	if stack, ok := stackerr.GetStack(e); ok {
+		fmt.Printf("%+s\n", stack)
+	}
 }
 
 // Execute executes the cobra CLI workflow
@@ -180,7 +175,7 @@ func GetRootAppFromViper(v *viper.Viper) (*RootApp, error) {
 	r := &RootApp{}
 	config, err := config.NewConfigFromViper(v)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to get config")
+		return nil, stackerr.NewStackErrf(err, "failed to get config")
 	}
 	r.Config = *config
 	return r, nil
@@ -325,7 +320,7 @@ func (r *RootApp) Run() error {
 		if r.Config.Profile != "" {
 			f, err := os.Create(r.Config.Profile)
 			if err != nil {
-				return errors.Wrapf(err, "Failed to create profile file")
+				return stackerr.NewStackErrf(err, "Failed to create profile file")
 			}
 
 			if err := pprof.StartCPUProfile(f); err != nil {
