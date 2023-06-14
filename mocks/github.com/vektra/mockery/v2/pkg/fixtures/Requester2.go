@@ -59,13 +59,12 @@ func (_c *Requester2_Get_Call) RunAndReturn(run func(string) error) *Requester2_
 	return _c
 }
 
-type mockConstructorTestingTNewRequester2 interface {
+// NewRequester2 creates a new instance of Requester2. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewRequester2(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewRequester2 creates a new instance of Requester2. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewRequester2(t mockConstructorTestingTNewRequester2) *Requester2 {
+}) *Requester2 {
 	mock := &Requester2{}
 	mock.Mock.Test(t)
 

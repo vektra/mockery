@@ -65,13 +65,12 @@ func (_c *RequesterArgSameAsNamedImport_Get_Call) RunAndReturn(run func(string) 
 	return _c
 }
 
-type mockConstructorTestingTNewRequesterArgSameAsNamedImport interface {
+// NewRequesterArgSameAsNamedImport creates a new instance of RequesterArgSameAsNamedImport. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewRequesterArgSameAsNamedImport(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewRequesterArgSameAsNamedImport creates a new instance of RequesterArgSameAsNamedImport. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewRequesterArgSameAsNamedImport(t mockConstructorTestingTNewRequesterArgSameAsNamedImport) *RequesterArgSameAsNamedImport {
+}) *RequesterArgSameAsNamedImport {
 	mock := &RequesterArgSameAsNamedImport{}
 	mock.Mock.Test(t)
 

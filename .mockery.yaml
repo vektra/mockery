@@ -21,10 +21,22 @@ packages:
           - mockname: RequesterVariadicOneArgument
             unroll-variadic: False
           - mockname: RequesterVariadic
+            unroll-variadic: True
       Expecter:
         config:
           with-expecter: True
         configs:
           - mockname: ExpecterAndRolledVariadic
             unroll-variadic: False
+          - mockname: Expecter
+            unroll-variadic: True
       RequesterReturnElided:
+  github.com/vektra/mockery/v2/pkg/fixtures/recursive_generation:
+    config:
+      recursive: True
+      all: True
+      dir: "{{.InterfaceDir}}"
+      filename: "{{.InterfaceName}}_mock.go"
+      mockname: "Mock{{.InterfaceName}}"
+      outpkg: "{{.PackageName}}"
+      inpackage: True

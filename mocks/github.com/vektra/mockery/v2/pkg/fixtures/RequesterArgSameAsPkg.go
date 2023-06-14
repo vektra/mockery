@@ -50,13 +50,12 @@ func (_c *RequesterArgSameAsPkg_Get_Call) RunAndReturn(run func(string)) *Reques
 	return _c
 }
 
-type mockConstructorTestingTNewRequesterArgSameAsPkg interface {
+// NewRequesterArgSameAsPkg creates a new instance of RequesterArgSameAsPkg. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewRequesterArgSameAsPkg(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewRequesterArgSameAsPkg creates a new instance of RequesterArgSameAsPkg. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewRequesterArgSameAsPkg(t mockConstructorTestingTNewRequesterArgSameAsPkg) *RequesterArgSameAsPkg {
+}) *RequesterArgSameAsPkg {
 	mock := &RequesterArgSameAsPkg{}
 	mock.Mock.Test(t)
 

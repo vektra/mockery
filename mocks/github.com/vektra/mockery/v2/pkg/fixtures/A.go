@@ -71,13 +71,12 @@ func (_c *A_Call_Call) RunAndReturn(run func() (test.B, error)) *A_Call_Call {
 	return _c
 }
 
-type mockConstructorTestingTNewA interface {
+// NewA creates a new instance of A. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewA(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewA creates a new instance of A. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewA(t mockConstructorTestingTNewA) *A {
+}) *A {
 	mock := &A{}
 	mock.Mock.Test(t)
 

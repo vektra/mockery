@@ -61,13 +61,12 @@ func (_c *GetGeneric_Get_Call[T]) RunAndReturn(run func() T) *GetGeneric_Get_Cal
 	return _c
 }
 
-type mockConstructorTestingTNewGetGeneric interface {
+// NewGetGeneric creates a new instance of GetGeneric. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewGetGeneric[T constraints.Integer](t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewGetGeneric creates a new instance of GetGeneric. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewGetGeneric[T constraints.Integer](t mockConstructorTestingTNewGetGeneric) *GetGeneric[T] {
+}) *GetGeneric[T] {
 	mock := &GetGeneric[T]{}
 	mock.Mock.Test(t)
 

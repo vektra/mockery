@@ -73,13 +73,12 @@ func (_c *RequesterNS_Get_Call) RunAndReturn(run func(string) (http.Response, er
 	return _c
 }
 
-type mockConstructorTestingTNewRequesterNS interface {
+// NewRequesterNS creates a new instance of RequesterNS. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewRequesterNS(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewRequesterNS creates a new instance of RequesterNS. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewRequesterNS(t mockConstructorTestingTNewRequesterNS) *RequesterNS {
+}) *RequesterNS {
 	mock := &RequesterNS{}
 	mock.Mock.Test(t)
 

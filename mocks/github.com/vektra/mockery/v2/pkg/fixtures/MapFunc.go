@@ -59,13 +59,12 @@ func (_c *MapFunc_Get_Call) RunAndReturn(run func(map[string]func(string) string
 	return _c
 }
 
-type mockConstructorTestingTNewMapFunc interface {
+// NewMapFunc creates a new instance of MapFunc. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewMapFunc(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewMapFunc creates a new instance of MapFunc. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewMapFunc(t mockConstructorTestingTNewMapFunc) *MapFunc {
+}) *MapFunc {
 	mock := &MapFunc{}
 	mock.Mock.Test(t)
 

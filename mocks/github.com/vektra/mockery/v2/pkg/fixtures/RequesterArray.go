@@ -71,13 +71,12 @@ func (_c *RequesterArray_Get_Call) RunAndReturn(run func(string) ([2]string, err
 	return _c
 }
 
-type mockConstructorTestingTNewRequesterArray interface {
+// NewRequesterArray creates a new instance of RequesterArray. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewRequesterArray(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewRequesterArray creates a new instance of RequesterArray. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewRequesterArray(t mockConstructorTestingTNewRequesterArray) *RequesterArray {
+}) *RequesterArray {
 	mock := &RequesterArray{}
 	mock.Mock.Test(t)
 

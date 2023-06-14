@@ -19,7 +19,6 @@ var (
 
 // Test that the generated code for ExpecterTest interface is usable
 func TestExpecter(t *testing.T) {
-
 	expMock := mocks.Expecter{}
 
 	t.Run("NoArg", func(t *testing.T) {

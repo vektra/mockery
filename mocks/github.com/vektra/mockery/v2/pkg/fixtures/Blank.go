@@ -59,13 +59,12 @@ func (_c *Blank_Create_Call) RunAndReturn(run func(interface{}) error) *Blank_Cr
 	return _c
 }
 
-type mockConstructorTestingTNewBlank interface {
+// NewBlank creates a new instance of Blank. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewBlank(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewBlank creates a new instance of Blank. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewBlank(t mockConstructorTestingTNewBlank) *Blank {
+}) *Blank {
 	mock := &Blank{}
 	mock.Mock.Test(t)
 

@@ -71,13 +71,12 @@ func (_c *RequesterPtr_Get_Call) RunAndReturn(run func(string) (*string, error))
 	return _c
 }
 
-type mockConstructorTestingTNewRequesterPtr interface {
+// NewRequesterPtr creates a new instance of RequesterPtr. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewRequesterPtr(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewRequesterPtr creates a new instance of RequesterPtr. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewRequesterPtr(t mockConstructorTestingTNewRequesterPtr) *RequesterPtr {
+}) *RequesterPtr {
 	mock := &RequesterPtr{}
 	mock.Mock.Test(t)
 
