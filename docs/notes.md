@@ -123,3 +123,13 @@ Mocking interfaces in `main`
 
 When your interfaces are in the main package, you should supply the `--inpackage` flag.
 This will generate mocks in the same package as the target code, avoiding import issues.
+
+mockery fails to run when `MOCKERY_VERSION` environment variable is set
+------------------------------------------------------------------------
+
+This issue was first highlighted [in this GitHub issue](https://github.com/vektra/mockery/issues/391).
+
+mockery uses the viper package for configuration mapping and parsing. Viper is set to automatically search for all config variables specified in its config struct. One of the config variables is named `version`, which gets mapped to an environment variable called `MOCKERY_VERSION`. If you set this environment variable, mockery attempts to parse it into the `version` bool config.
+
+This is an unintended side-effect of how our config parsing is set up. The solution is to rename your environment variable to something other than `MOCKERY_VERSION`.
+
