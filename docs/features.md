@@ -303,6 +303,7 @@ factory := mocks.NewFactory(t)
 ```
 
 The constructor sets up common functionalities automatically
+
 - The `AssertExpectations` method is registered to be called at the end of the tests via `t.Cleanup()` method.
 - The testing.TB interface is registered on the `mock.Mock` so that tests don't panic when a call on the mock is unexpected.
 
