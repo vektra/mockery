@@ -11,7 +11,7 @@ mockery was built during the pre-module era of Golang. Much of its codebase and 
 
 1. Orders of magnitude performance increase, due to calling `packages.Load` once or twice for an entire project, versus once per file in the legacy semantics.
 2. Hierarchical configuration model that allows interface-specific config to be inherited from package-level config, which is inherited from defaults.
-3. Single configuration file that describes the entirety of mockery's behavior, instead of spread out by `//go: generate` statements.
+3. Single configuration file that describes the entirety of mockery's behavior, instead of spread out by `//go:generate` statements.
 4. Extensive and flexible usage of a Golang string templating environment that allows users to dynamically specify parameter values.
 
 Configuration Changes
@@ -25,10 +25,10 @@ The [configuration docs](/mockery/configuration/#packages-config) show the param
 
 All of the parameters in the config section can be specified at the top level of the config file, which serves as the default values. The `packages` config section defines package-specific config. See some exampes [here](/mockery/features/#examples).
 
-`//go: generate` directives
+`//go:generate` directives
 ----------------------------
 
-Previously, the recommended way of generating mocks was to call `mockery` once per interface using `//go: generate`. Generating interface-specific mocks this way is no longer supported. You may still use `//go: generate` to call mockery, however it will generate all interfaces defined in your config file. There currently exists no semantics to specify the generation of specific interfaces from the command line (not because we reject the idea, but because it was not seen as a requirement for the initial iteration of `packages`).
+Previously, the recommended way of generating mocks was to call `mockery` once per interface using `//go:generate`. Generating interface-specific mocks this way is no longer supported. You may still use `//go:generate` to call mockery, however it will generate all interfaces defined in your config file. There currently exists no semantics to specify the generation of specific interfaces from the command line (not because we reject the idea, but because it was not seen as a requirement for the initial iteration of `packages`).
 
 Behavior Changes
 -----------------
