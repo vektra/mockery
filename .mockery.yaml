@@ -40,3 +40,12 @@ packages:
       mockname: "Mock{{.InterfaceName}}"
       outpkg: "{{.PackageName}}"
       inpackage: True
+  github.com/vektra/mockery/v2/pkg/fixtures/method_args/same_name_arg_and_type:
+    config:
+      all: True
+      dir: "{{.InterfaceDir}}"
+      mockname: "{{.InterfaceName}}Mock"
+      outpkg: "{{.PackageName}}"
+      filename: "mock_{{.InterfaceName}}_test.go"
+      inpackage: True
+      keeptree: False

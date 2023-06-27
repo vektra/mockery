@@ -634,6 +634,9 @@ func (g *Generator) genList(ctx context.Context, list *types.Tuple, variadic boo
 		}
 
 		pname := v.Name()
+		if ts == pname {
+			pname = fmt.Sprintf("%s%d", pname, i)
+		}
 
 		if g.nameCollides(pname) || pname == "" {
 			pname = fmt.Sprintf("_a%d", i)
