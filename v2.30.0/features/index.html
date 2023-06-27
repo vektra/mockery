@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://vektra.github.io/mockery/v2.30.0/features/">
+        <link rel="canonical" href="https://vektra.github.io/mockery/v2.30/features/">
       
       
         <link rel="prev" href="../examples/">
@@ -61,7 +61,7 @@
       
         <meta  property="og:description"  content="Create mock implementations of your Golang interfaces using mockery and testify." >
       
-        <meta  property="og:image"  content="https://vektra.github.io/mockery/v2.30.0/assets/images/social/features.png" >
+        <meta  property="og:image"  content="https://vektra.github.io/mockery/v2.30/assets/images/social/features.png" >
       
         <meta  property="og:image:type"  content="image/png" >
       
@@ -69,7 +69,7 @@
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://vektra.github.io/mockery/v2.30.0/features/" >
+        <meta  property="og:url"  content="https://vektra.github.io/mockery/v2.30/features/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
@@ -77,7 +77,7 @@
       
         <meta  name="twitter:description"  content="Create mock implementations of your Golang interfaces using mockery and testify." >
       
-        <meta  name="twitter:image"  content="https://vektra.github.io/mockery/v2.30.0/assets/images/social/features.png" >
+        <meta  name="twitter:image"  content="https://vektra.github.io/mockery/v2.30/assets/images/social/features.png" >
       
     
     
@@ -124,6 +124,18 @@
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+          <aside class="md-banner md-banner--warning">
+            <div class="md-banner__inner md-grid md-typeset">
+              
+  You're not viewing the latest version.
+  <a href="../.."> 
+    <strong>Click here to go to latest.</strong>
+  </a>
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),outdated=__md_get("__outdated",sessionStorage);!0===outdated&&el&&(el.hidden=!1)</script>
+          </aside>
         
       </div>
     
@@ -795,14 +807,14 @@ and <code>Message</code> in both cases.</p>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.497 1.497 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1Zm0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> v2.21.0 · <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 2v2h1v14a4 4 0 0 0 4 4 4 4 0 0 0 4-4V4h1V2H7m4 14c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1m2-4c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1m1-5h-4V4h4v3Z"/></svg></span> Beta Feature</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>This feature is considered beta. The feature set has been solidifed, but we are asking users to beta-test for any bugs. Use at your own risk. This warning will be updated as this feature matures.</p>
+<p>This feature is considered beta. The feature set has been solidified, but we are asking users to beta-test for any bugs. Use at your own risk. This warning will be updated as this feature matures.</p>
 </div>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
-<p>See the <a href="/mockery/migrating_to_packages/">Migration Docs</a> on how to migrate to this new feature.</p>
+<p>See the <a href="../migrating_to_packages/">Migration Docs</a> on how to migrate to this new feature.</p>
 </div>
-<p>Mockery has a configuration parameter called <code>packages</code>. In this config section, you define the packages and the intefaces you want mocks generated for. The packages can be any arbitrary package, either your own project or anything within the Go ecosystem. You may provide package-level or interface-level overrides to the default config you provide.</p>
-<p>Usage of the <code>packages</code> config section is desirable for mutiple reasons:</p>
+<p>Mockery has a configuration parameter called <code>packages</code>. In this config section, you define the packages and the interfaces you want mocks generated for. The packages can be any arbitrary package, either your own project or anything within the Go ecosystem. You may provide package-level or interface-level overrides to the default config you provide.</p>
+<p>Usage of the <code>packages</code> config section is desirable for multiple reasons:</p>
 <ol>
 <li>Up to 5x increase in mock generation speed over the legacy method</li>
 <li>Granular control over interface generation, location, and file names</li>
@@ -832,17 +844,17 @@ and <code>Message</code> in both cases.</p>
 <a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">          </span><span class="nt">with-expecter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"> </span><span class="c1"># (4)!</span>
 </code></pre></div>
 <ol>
-<li>For this package, we provide no package-level config (which means we inherit the deafults at the top-level). Since our default of <code>all:</code> is <code>False</code>, mockery will only generate the interfaces we specify. We tell it which interface to generate by using the <code>interfaces</code> section and specifying an empty map, one for each interface.</li>
+<li>For this package, we provide no package-level config (which means we inherit the defaults at the top-level). Since our default of <code>all:</code> is <code>False</code>, mockery will only generate the interfaces we specify. We tell it which interface to generate by using the <code>interfaces</code> section and specifying an empty map, one for each interface.</li>
 <li>There might be cases where you want multiple mocks generated from the same interface. To do this, you can define a default <code>config</code> section for the interface, and further <code>configs</code> (plural) section, one for each mock. You <em>must</em> specify a <code>mockname</code> for the mocks in this section to differentiate them.</li>
 <li>This is telling mockery to generate <em>all</em> interfaces in the <code>io</code> package.</li>
-<li>We can provide interface-specifc overrides to the generation config.</li>
+<li>We can provide interface-specific overrides to the generation config.</li>
 </ol>
 <h3 id="templated-variables">Templated variables<a class="headerlink" href="#templated-variables" title="Permanent link">&para;</a></h3>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Templated variables are only available when using the <code>packages</code> config feature.</p>
 </div>
-<p>Included with this feature is the ability to use templated strings for various configuration options. This is useful to define where your mocks are placed and how to name them. You can view the template variables available in the <a href="/mockery/configuration/#template-variables">Configuration</a> section of the docs.</p>
+<p>Included with this feature is the ability to use templated strings for various configuration options. This is useful to define where your mocks are placed and how to name them. You can view the template variables available in the <a href="../configuration/#template-variables">Configuration</a> section of the docs.</p>
 <h3 id="layouts">Layouts<a class="headerlink" href="#layouts" title="Permanent link">&para;</a></h3>
 <p>Using different configuration parameters, we can deploy our mocks on-disk in various ways. These are some common layouts:</p>
 <div class="admonition info">

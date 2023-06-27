@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://vektra.github.io/mockery/v2.30.0/migrating_to_packages/">
+        <link rel="canonical" href="https://vektra.github.io/mockery/v2.30/migrating_to_packages/">
       
       
         <link rel="prev" href="../changelog/">
@@ -59,7 +59,7 @@
       
         <meta  property="og:description"  content="Create mock implementations of your Golang interfaces using mockery and testify." >
       
-        <meta  property="og:image"  content="https://vektra.github.io/mockery/v2.30.0/assets/images/social/migrating_to_packages.png" >
+        <meta  property="og:image"  content="https://vektra.github.io/mockery/v2.30/assets/images/social/migrating_to_packages.png" >
       
         <meta  property="og:image:type"  content="image/png" >
       
@@ -67,7 +67,7 @@
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://vektra.github.io/mockery/v2.30.0/migrating_to_packages/" >
+        <meta  property="og:url"  content="https://vektra.github.io/mockery/v2.30/migrating_to_packages/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
@@ -75,7 +75,7 @@
       
         <meta  name="twitter:description"  content="Create mock implementations of your Golang interfaces using mockery and testify." >
       
-        <meta  name="twitter:image"  content="https://vektra.github.io/mockery/v2.30.0/assets/images/social/migrating_to_packages.png" >
+        <meta  name="twitter:image"  content="https://vektra.github.io/mockery/v2.30/assets/images/social/migrating_to_packages.png" >
       
     
     
@@ -122,6 +122,18 @@
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+          <aside class="md-banner md-banner--warning">
+            <div class="md-banner__inner md-grid md-typeset">
+              
+  You're not viewing the latest version.
+  <a href="../.."> 
+    <strong>Click here to go to latest.</strong>
+  </a>
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),outdated=__md_get("__outdated",sessionStorage);!0===outdated&&el&&(el.hidden=!1)</script>
+          </aside>
         
       </div>
     
@@ -658,7 +670,7 @@
 
   <h1>Migrating to Packages</h1>
 
-<p>The <a href="/mockery/features/#packages-configuration">packages</a> feature is a new configuration scheme that aims to simplify and improve a lot of legacy behavior. This will be the only way to generate mocks in v3. These docs outline general principals for migrating to the new scheme.</p>
+<p>The <a href="../features/#packages-configuration">packages</a> feature is a new configuration scheme that aims to simplify and improve a lot of legacy behavior. This will be the only way to generate mocks in v3. These docs outline general principals for migrating to the new scheme.</p>
 <h2 id="background">Background<a class="headerlink" href="#background" title="Permanent link">&para;</a></h2>
 <p>mockery was built during the pre-module era of Golang. Much of its codebase and configuration syntax was designed around file-based operations. This model became highly inefficient once Golang migrated to module-based packages. The old configuration semantics also proved limiting -- many users introduced and requested feature additions to mockery to support esoteric use-cases. This proved to be a huge maintenance burden that existed solely because the configuration model could not flexibly describe all the situations users wanted. The <code>packages</code> semantics provides us a few highly desirable traits:</p>
 <ol>
@@ -670,15 +682,15 @@
 <h2 id="configuration-changes">Configuration Changes<a class="headerlink" href="#configuration-changes" title="Permanent link">&para;</a></h2>
 <p>The existence of the <code class="highlight"><span class="nt">packages</span><span class="p">:</span></code> map in your configuration acts as a feature flag that enables the feature.</p>
 <p>The configuration parameters used in <code>packages</code> should be considered to have no relation to their meanings in the legacy scheme. It is recommended to wipe out all previous configuration and command-line parameters previously used.</p>
-<p>The <a href="/mockery/configuration/#packages-config">configuration docs</a> show the parameters that are available for use in the <code>packages</code> scheme. You should only use the parameters shown in this section. Mockery will not prevent you from using the legacy parameter set, but doing so will result in undefined behavior.</p>
-<p>All of the parameters in the config section can be specified at the top level of the config file, which serves as the default values. The <code>packages</code> config section defines package-specific config. See some exampes <a href="/mockery/features/#examples">here</a>.</p>
+<p>The <a href="../configuration/#packages-config">configuration docs</a> show the parameters that are available for use in the <code>packages</code> scheme. You should only use the parameters shown in this section. Mockery will not prevent you from using the legacy parameter set, but doing so will result in undefined behavior.</p>
+<p>All of the parameters in the config section can be specified at the top level of the config file, which serves as the default values. The <code>packages</code> config section defines package-specific config. See some examples <a href="../features/#examples">here</a>.</p>
 <h2 id="gogenerate-directives"><code>//go:generate</code> directives<a class="headerlink" href="#gogenerate-directives" title="Permanent link">&para;</a></h2>
 <p>Previously, the recommended way of generating mocks was to call <code>mockery</code> once per interface using <code>//go:generate</code>. Generating interface-specific mocks this way is no longer supported. You may still use <code>//go:generate</code> to call mockery, however it will generate all interfaces defined in your config file. There currently exists no semantics to specify the generation of specific interfaces from the command line (not because we reject the idea, but because it was not seen as a requirement for the initial iteration of <code>packages</code>).</p>
 <h2 id="behavior-changes">Behavior Changes<a class="headerlink" href="#behavior-changes" title="Permanent link">&para;</a></h2>
 <p>The legacy behavior iterated over every <code>.go</code> file in your project, called <a href="https://pkg.go.dev/golang.org/x/tools/go/packages#Load"><code>packages.Load</code></a> to parse the syntax tree, and generated mocks for every interface found in the file. The new behavior instead simply grabs the list of packages to load from the config file, or in the case of <code class="highlight"><span class="nt">recursive</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span></code>, walks the filesystem tree to discover the packages that exist (without actually parsing the files). Using this list, it calls <code>packages.Load</code> once with the list of packages that were discovered.</p>
 <h2 id="filesystem-tree-layouts">Filesystem Tree Layouts<a class="headerlink" href="#filesystem-tree-layouts" title="Permanent link">&para;</a></h2>
 <p>The legacy config provided the <code>keeptree</code> parameter which, if <code class="highlight"><span class="nt">keeptree</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span></code>, would place the mocks in the same package as your interfaces. Otherwise, it would place it in a separate directory.</p>
-<p>These two layouts are supported in the <code>packages</code> scheme. See the relevant docs <a href="/mockery/features/#layouts">here</a>.</p>
+<p>These two layouts are supported in the <code>packages</code> scheme. See the relevant docs <a href="../features/#layouts">here</a>.</p>
 
 
 

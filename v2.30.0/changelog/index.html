@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://vektra.github.io/mockery/v2.30.0/changelog/">
+        <link rel="canonical" href="https://vektra.github.io/mockery/v2.30/changelog/">
       
       
         <link rel="prev" href="../notes/">
@@ -61,7 +61,7 @@
       
         <meta  property="og:description"  content="Create mock implementations of your Golang interfaces using mockery and testify." >
       
-        <meta  property="og:image"  content="https://vektra.github.io/mockery/v2.30.0/assets/images/social/changelog.png" >
+        <meta  property="og:image"  content="https://vektra.github.io/mockery/v2.30/assets/images/social/changelog.png" >
       
         <meta  property="og:image:type"  content="image/png" >
       
@@ -69,7 +69,7 @@
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://vektra.github.io/mockery/v2.30.0/changelog/" >
+        <meta  property="og:url"  content="https://vektra.github.io/mockery/v2.30/changelog/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
@@ -77,7 +77,7 @@
       
         <meta  name="twitter:description"  content="Create mock implementations of your Golang interfaces using mockery and testify." >
       
-        <meta  name="twitter:image"  content="https://vektra.github.io/mockery/v2.30.0/assets/images/social/changelog.png" >
+        <meta  name="twitter:image"  content="https://vektra.github.io/mockery/v2.30/assets/images/social/changelog.png" >
       
     
     
@@ -124,6 +124,18 @@
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+          <aside class="md-banner md-banner--warning">
+            <div class="md-banner__inner md-grid md-typeset">
+              
+  You're not viewing the latest version.
+  <a href="../.."> 
+    <strong>Click here to go to latest.</strong>
+  </a>
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),outdated=__md_get("__outdated",sessionStorage);!0===outdated&&el&&(el.hidden=!1)</script>
+          </aside>
         
       </div>
     
@@ -774,7 +786,7 @@
 <p>The <code>replace-type</code> parameter allows adding a list of type replacements to be made in package and/or type names.
 This can help overcome issues like usage of type aliases that point to internal packages.</p>
 <h3 id="v2210-packages-configuration"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.497 1.497 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1Zm0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> <a href="https://github.com/vektra/mockery/releases/tag/v2.21.0"><code>v2.21.0</code></a>: <code class="highlight"><span class="l l-Scalar l-Scalar-Plain">packages</span></code> configuration<a class="headerlink" href="#v2210-packages-configuration" title="Permanent link">&para;</a></h3>
-<p>In this version we release the <code class="highlight"><span class="l l-Scalar l-Scalar-Plain">packages</span></code> configuration section. This new parameter allows defining specific packages to generate mocks for, while also giving fine-grained control over which interfaces are mocked, where they are located, and how they are configured. Details are provided <a href="/mockery/features/#packages-configuration">here</a>.</p>
+<p>In this version we release the <code class="highlight"><span class="l l-Scalar l-Scalar-Plain">packages</span></code> configuration section. This new parameter allows defining specific packages to generate mocks for, while also giving fine-grained control over which interfaces are mocked, where they are located, and how they are configured. Details are provided <a href="../features/#packages-configuration">here</a>.</p>
 <p>Community input is desired before we consider deprecations of dynamic walking (via <code class="highlight"><span class="nt">all</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span></code>): <a href="https://github.com/vektra/mockery/discussions/549">https://github.com/vektra/mockery/discussions/549</a></p>
 <h3 id="v2200-improved-return-value-functions"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.497 1.497 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1Zm0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> <a href="https://github.com/vektra/mockery/pull/538"><code>v2.20.0</code></a>: Improved Return Value Functions<a class="headerlink" href="#v2200-improved-return-value-functions" title="Permanent link">&para;</a></h3>
 <p>Return value functions that return an entire method's return value signature can now be provided.</p>
