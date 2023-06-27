@@ -19,5 +19,9 @@ jobs:
           path: .cache
       - run: sudo apt-get install -y libcairo2-dev libfreetype6-dev libffi-dev libjpeg-dev libpng-dev libz-dev
       - run: pip install -r docs/requirements.txt
+      - name: Setup doc deploy
+        run: |
+          git config --global user.name vektra-bot
+          git config --global user.email vektra-bot@vektra.github.io
       - name: Deploy docs
         run: "mike deploy --push --update-aliases ${{  github.ref_name }} latest"
