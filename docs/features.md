@@ -92,10 +92,7 @@ func (_m *Handler) HandleMessage(m pubsub.Message) error {
 
 `packages` configuration
 ------------------------
-:octicons-tag-24: v2.21.0 · :material-test-tube: Beta Feature
-
-!!! warning
-    This feature is considered beta. The feature set has been solidifed, but we are asking users to beta-test for any bugs. Use at your own risk. This warning will be updated as this feature matures.
+:octicons-tag-24: v2.31.0
 
 !!! info
     See the [Migration Docs](/mockery/migrating_to_packages/) on how to migrate to this new feature.
