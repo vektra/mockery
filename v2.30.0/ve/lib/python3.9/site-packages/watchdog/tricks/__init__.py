@@ -1,0 +1,236 @@
+# coding: utf-8
+#
+# Copyright 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+# Copyright 2012 Google, Inc & contributors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""
+:module: watchdog.tricks
+:synopsis: Utility event handlers.
+:author: yesudeep@google.com (Yesudeep Mangalapilly)
+:author: contact@tiger-222.fr (Mickaël Schoentgen)
+
+Classes
+-------
+.. autoclass:: Trick
+   :members:
+   :show-inheritance:
+
+.. autoclass:: LoggerTrick
+   :members:
+   :show-inheritance:
+
+.. autoclass:: ShellCommandTrick
+   :members:
+   :show-inheritance:
+
+.. autoclass:: AutoRestartTrick
+   :members:
+   :show-inheritance:
+
+"""
+
+import functools
+import logging
+import os
+import signal
+import subprocess
+import time
+
+from watchdog.events import PatternMatchingEventHandler
+from watchdog.utils import echo
+from watchdog.utils.process_watcher import ProcessWatcher
+
+logger = logging.getLogger(__name__)
+echo_events = functools.partial(echo.echo, write=lambda msg: logger.info(msg))
+
+
+class Trick(PatternMatchingEventHandler):
+
+    """Your tricks should subclass this class."""
+
+    @classmethod
+    def generate_yaml(cls):
+        context = dict(module_name=cls.__module__,
+                       klass_name=cls.__name__)
+        template_yaml = """- %(module_name)s.%(klass_name)s:
+  args:
+  - argument1
+  - argument2
+  kwargs:
+    patterns:
+    - "*.py"
+    - "*.js"
+    ignore_patterns:
+    - "version.py"
+    ignore_directories: false
+"""
+        return template_yaml % context
+
+
+class LoggerTrick(Trick):
+
+    """A simple trick that does only logs events."""
+
+    def on_any_event(self, event):
+        pass
+
+    @echo_events
+    def on_modified(self, event):
+        pass
+
+    @echo_events
+    def on_deleted(self, event):
+        pass
+
+    @echo_events
+    def on_created(self, event):
+        pass
+
+    @echo_events
+    def on_moved(self, event):
+        pass
+
+
+class ShellCommandTrick(Trick):
+
+    """Executes shell commands in response to matched events."""
+
+    def __init__(self, shell_command=None, patterns=None, ignore_patterns=None,
+                 ignore_directories=False, wait_for_process=False,
+                 drop_during_process=False):
+        super().__init__(
+            patterns=patterns, ignore_patterns=ignore_patterns,
+            ignore_directories=ignore_directories)
+        self.shell_command = shell_command
+        self.wait_for_process = wait_for_process
+        self.drop_during_process = drop_during_process
+
+        self.process = None
+        self._process_watchers = set()
+
+    def on_any_event(self, event):
+        from string import Template
+
+        if self.drop_during_process and self.is_process_running():
+            return
+
+        if event.is_directory:
+            object_type = 'directory'
+        else:
+            object_type = 'file'
+
+        context = {
+            'watch_src_path': event.src_path,
+            'watch_dest_path': '',
+            'watch_event_type': event.event_type,
+            'watch_object': object_type,
+        }
+
+        if self.shell_command is None:
+            if hasattr(event, 'dest_path'):
+                context.update({'dest_path': event.dest_path})
+                command = 'echo "${watch_event_type} ${watch_object} from ${watch_src_path} to ${watch_dest_path}"'
+            else:
+                command = 'echo "${watch_event_type} ${watch_object} ${watch_src_path}"'
+        else:
+            if hasattr(event, 'dest_path'):
+                context.update({'watch_dest_path': event.dest_path})
+            command = self.shell_command
+
+        command = Template(command).safe_substitute(**context)
+        self.process = subprocess.Popen(command, shell=True)
+        if self.wait_for_process:
+            self.process.wait()
+        else:
+            process_watcher = ProcessWatcher(self.process, None)
+            self._process_watchers.add(process_watcher)
+            process_watcher.process_termination_callback = \
+                functools.partial(self._process_watchers.discard, process_watcher)
+            process_watcher.start()
+
+    def is_process_running(self):
+        return self._process_watchers or (self.process is not None and self.process.poll() is None)
+
+
+class AutoRestartTrick(Trick):
+
+    """Starts a long-running subprocess and restarts it on matched events.
+
+    The command parameter is a list of command arguments, such as
+    `['bin/myserver', '-c', 'etc/myconfig.ini']`.
+
+    Call `start()` after creating the Trick. Call `stop()` when stopping
+    the process.
+    """
+
+    def __init__(self, command, patterns=None, ignore_patterns=None,
+                 ignore_directories=False, stop_signal=signal.SIGINT,
+                 kill_after=10):
+        super().__init__(
+            patterns=patterns, ignore_patterns=ignore_patterns,
+            ignore_directories=ignore_directories)
+        self.command = command
+        self.stop_signal = stop_signal
+        self.kill_after = kill_after
+
+        self.process = None
+        self.process_watcher = None
+
+    def start(self):
+        # windows doesn't have setsid
+        self.process = subprocess.Popen(self.command, preexec_fn=getattr(os, 'setsid', None))
+        self.process_watcher = ProcessWatcher(self.process, self._restart)
+        self.process_watcher.start()
+
+    def stop(self):
+        if self.process is None:
+            return
+
+        if self.process_watcher is not None:
+            self.process_watcher.stop()
+            self.process_watcher = None
+
+        def kill_process(stop_signal):
+            if hasattr(os, 'getpgid') and hasattr(os, 'killpg'):
+                os.killpg(os.getpgid(self.process.pid), stop_signal)
+            else:
+                os.kill(self.process.pid, self.stop_signal)
+
+        try:
+            kill_process(self.stop_signal)
+        except OSError:
+            # Process is already gone
+            pass
+        else:
+            kill_time = time.time() + self.kill_after
+            while time.time() < kill_time:
+                if self.process.poll() is not None:
+                    break
+                time.sleep(0.25)
+            else:
+                try:
+                    kill_process(9)
+                except OSError:
+                    # Process is already gone
+                    pass
+        self.process = None
+
+    @echo_events
+    def on_any_event(self, event):
+        self._restart()
+
+    def _restart(self):
+        self.stop()
+        self.start()
