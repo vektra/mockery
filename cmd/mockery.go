@@ -12,7 +12,6 @@ import (
 
 	"github.com/chigopher/pathlib"
 	"github.com/mitchellh/go-homedir"
-	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -235,12 +234,6 @@ func (r *RootApp) Run() error {
 		if err != nil {
 			return fmt.Errorf("failed to get package from config: %w", err)
 		}
-		warnBeta(
-			ctx,
-			"use of the 'packages' config variable is currently in a beta state. Use at your own risk.",
-			map[string]any{
-				"discussion": "https://github.com/vektra/mockery/discussions/549",
-			})
 		parser := pkg.NewParser(buildTags)
 
 		if err := parser.ParsePackages(ctx, configuredPackages); err != nil {
@@ -283,6 +276,10 @@ func (r *RootApp) Run() error {
 			}
 		}
 	} else {
+		log.Warn().
+			Fields(map[string]any{"url": "https://vektra.github.io/mockery/features/#packages-configuration"}).
+			Msg("DEPRECATION: use of the legacy config semantics is deprecated and will be removed in v3. " + "Please use the packages feature in the provided URL.")
+
 		if r.Config.Name != "" && r.Config.All {
 			log.Fatal().Msgf("Specify --name or --all, but not both")
 		} else if (r.Config.FileName != "" || r.Config.StructName != "") && r.Config.All {
@@ -307,15 +304,6 @@ func (r *RootApp) Run() error {
 		} else {
 			log.Fatal().Msgf("Use --name to specify the name of the interface or --all for all interfaces found")
 		}
-
-		infoDiscussion(
-			ctx,
-			"dynamic walking of project is being considered for removal "+
-				"in v3. Please provide your feedback at the linked discussion.",
-			map[string]any{
-				"pr":         "https://github.com/vektra/mockery/pull/548",
-				"discussion": "https://github.com/vektra/mockery/discussions/549",
-			})
 
 		if r.Config.Profile != "" {
 			f, err := os.Create(r.Config.Profile)
@@ -400,30 +388,4 @@ func (r *RootApp) Run() error {
 	}
 
 	return nil
-}
-
-func warn(ctx context.Context, prefix string, message string, fields map[string]any) {
-	log := zerolog.Ctx(ctx)
-	event := log.Warn()
-	if fields != nil {
-		event = event.Fields(fields)
-	}
-	event.Msgf("%s: %s", prefix, message)
-}
-
-func info(ctx context.Context, prefix string, message string, fields map[string]any) {
-	log := zerolog.Ctx(ctx)
-	event := log.Info()
-	if fields != nil {
-		event = event.Fields(fields)
-	}
-	event.Msgf("%s: %s", prefix, message)
-}
-
-func infoDiscussion(ctx context.Context, message string, fields map[string]any) {
-	info(ctx, "DISCUSSION", message, fields)
-}
-
-func warnBeta(ctx context.Context, message string, fields map[string]any) {
-	warn(ctx, "BETA FEATURE", message, fields)
 }
