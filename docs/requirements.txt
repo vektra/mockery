@@ -1,4 +1,4 @@
-mike
+mike @ git+https://github.com/jimporter/mike.git
 mkdocs
 mkdocs-glightbox
 mkdocs-material

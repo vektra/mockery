@@ -76,6 +76,9 @@ extra:
     provider: mike
 
 plugins:
+- mike:
+    alias_type: symlink
+    canonical_version: latest
 - glightbox
 - social
 - search

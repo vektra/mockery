@@ -25,4 +25,4 @@ jobs:
           git config --global user.email vektra-bot@vektra.github.io
           git fetch origin gh-pages --depth=1
       - name: Deploy docs
-        run: "mike deploy --push --update-aliases --rebase $(echo ${{ github.ref_name }} | cut -d'.' -f1-2 ) latest"
+        run: "mike deploy --push --update-aliases --rebase --no-redirect $(echo ${{ github.ref_name }} | cut -d'.' -f1-2 ) latest"
