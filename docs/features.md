@@ -95,14 +95,14 @@ func (_m *Handler) HandleMessage(m pubsub.Message) error {
 :octicons-tag-24: v2.21.0 · :material-test-tube: Beta Feature
 
 !!! warning
-    This feature is considered beta. The feature set has been solidifed, but we are asking users to beta-test for any bugs. Use at your own risk. This warning will be updated as this feature matures.
+    This feature is considered beta. The feature set has been solidified, but we are asking users to beta-test for any bugs. Use at your own risk. This warning will be updated as this feature matures.
 
 !!! info
     See the [Migration Docs](/mockery/migrating_to_packages/) on how to migrate to this new feature.
 
-Mockery has a configuration parameter called `packages`. In this config section, you define the packages and the intefaces you want mocks generated for. The packages can be any arbitrary package, either your own project or anything within the Go ecosystem. You may provide package-level or interface-level overrides to the default config you provide.
+Mockery has a configuration parameter called `packages`. In this config section, you define the packages and the interfaces you want mocks generated for. The packages can be any arbitrary package, either your own project or anything within the Go ecosystem. You may provide package-level or interface-level overrides to the default config you provide.
 
-Usage of the `packages` config section is desirable for mutiple reasons:
+Usage of the `packages` config section is desirable for multiple reasons:
 
 1. Up to 5x increase in mock generation speed over the legacy method
 2. Granular control over interface generation, location, and file names
@@ -135,10 +135,10 @@ packages:
           with-expecter: False # (4)!
 ```
 
-1.  For this package, we provide no package-level config (which means we inherit the deafults at the top-level). Since our default of `all:` is `False`, mockery will only generate the interfaces we specify. We tell it which interface to generate by using the `interfaces` section and specifying an empty map, one for each interface.
+1.  For this package, we provide no package-level config (which means we inherit the defaults at the top-level). Since our default of `all:` is `False`, mockery will only generate the interfaces we specify. We tell it which interface to generate by using the `interfaces` section and specifying an empty map, one for each interface.
 2. There might be cases where you want multiple mocks generated from the same interface. To do this, you can define a default `config` section for the interface, and further `configs` (plural) section, one for each mock. You _must_ specify a `mockname` for the mocks in this section to differentiate them.
 3. This is telling mockery to generate _all_ interfaces in the `io` package.
-4. We can provide interface-specifc overrides to the generation config.
+4. We can provide interface-specific overrides to the generation config.
 
 ### Templated variables
 

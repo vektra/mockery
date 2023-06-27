@@ -23,7 +23,7 @@ The configuration parameters used in `packages` should be considered to have no 
 
 The [configuration docs](/mockery/configuration/#packages-config) show the parameters that are available for use in the `packages` scheme. You should only use the parameters shown in this section. Mockery will not prevent you from using the legacy parameter set, but doing so will result in undefined behavior.
 
-All of the parameters in the config section can be specified at the top level of the config file, which serves as the default values. The `packages` config section defines package-specific config. See some exampes [here](/mockery/features/#examples).
+All of the parameters in the config section can be specified at the top level of the config file, which serves as the default values. The `packages` config section defines package-specific config. See some examples [here](/mockery/features/#examples).
 
 `//go:generate` directives
 ----------------------------

@@ -59,7 +59,7 @@ These are the configuration options available when using the legacy, non-`packag
 
 ### [`packages` config](/mockery/features/#packages-configuration)
 
-These are the config options when using the `packages` config option. Use of the `packages` config semantics puts mockery into a completely different code path. Config variables may have changed meanings or have been substracted entirely, compared to the non-`packages` config.
+These are the config options when using the `packages` config option. Use of the `packages` config semantics puts mockery into a completely different code path. Config variables may have changed meanings or have been subtracted entirely, compared to the non-`packages` config.
 
 Please see the [features section](/mockery/features/#packages-configuration) for more details on how `packages` works, including some example configuration.
 
