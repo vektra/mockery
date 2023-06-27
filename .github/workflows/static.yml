@@ -20,3 +20,4 @@ jobs:
       - run: sudo apt-get install -y libcairo2-dev libfreetype6-dev libffi-dev libjpeg-dev libpng-dev libz-dev
       - run: pip install -r docs/requirements.txt
       - run: mike deploy --push --update-aliases $(git describe --tags --abbrev=0) latest
+        working-directory: $GITHUB_WORKSPACE
