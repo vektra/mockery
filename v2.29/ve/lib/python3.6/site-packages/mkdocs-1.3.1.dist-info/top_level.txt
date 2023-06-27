@@ -1,0 +1,15 @@
+mkdocs
+mkdocs/commands
+mkdocs/config
+mkdocs/contrib
+mkdocs/contrib/search
+mkdocs/livereload
+mkdocs/structure
+mkdocs/tests
+mkdocs/tests/config
+mkdocs/tests/structure
+mkdocs/tests/utils
+mkdocs/themes
+mkdocs/themes/mkdocs
+mkdocs/themes/readthedocs
+mkdocs/utils

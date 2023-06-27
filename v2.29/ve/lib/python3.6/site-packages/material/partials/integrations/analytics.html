@@ -1,0 +1,9 @@
+{#-
+  This file was automatically generated - do not edit
+-#}
+{% if config.extra.analytics %}
+  {% set provider = config.extra.analytics.provider %}
+{% endif %}
+{% if provider %}
+  {% include "partials/integrations/analytics/" ~ provider ~ ".html" %}
+{% endif %}

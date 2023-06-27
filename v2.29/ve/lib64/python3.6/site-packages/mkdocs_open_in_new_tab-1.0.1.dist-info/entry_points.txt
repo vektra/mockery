@@ -1,0 +1,2 @@
+[mkdocs.plugins]
+open-in-new-tab = open_in_new_tab.plugin:OpenInNewTabPlugin

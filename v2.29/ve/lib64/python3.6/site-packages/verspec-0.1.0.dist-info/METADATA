@@ -1,0 +1,65 @@
+Metadata-Version: 2.1
+Name: verspec
+Version: 0.1.0
+Summary: Flexible version handling
+Home-page: https://github.com/jimporter/verspec
+Author: Jim Porter
+Author-email: itsjimporter@gmail.com
+License: BSD 2-Clause or Apache-2.0
+Keywords: version handling
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Description-Content-Type: text/markdown
+Provides-Extra: test
+Requires-Dist: coverage ; extra == 'test'
+Requires-Dist: flake8 (>=3.7) ; extra == 'test'
+Requires-Dist: mypy ; extra == 'test'
+Requires-Dist: pretend ; extra == 'test'
+Requires-Dist: pytest ; extra == 'test'
+
+# verspec
+**verspec** is a Python library for handling software versions and specifiers,
+adapted from the [`packaging`][packaging] package.
+
+## An Example
+
+```python
+from verspec import loose, python
+
+v1 = loose.Version('1.0')
+s1 = loose.SpecifierSet('~=1.0')
+assert v1 in s1
+
+v2 = python.Version('1.0')
+s2 = python.SpecifierSet('~=1.0')
+assert v2 in s2
+```
+
+## Documentation
+
+Forthcoming! (Sorry about that...)
+
+## Credits
+
+The real credit for this package goes to the [Python Packaging Authority][pypa].
+
+## License
+
+This project is dual-licensed under the BSD and Apache licenses.
+
+[gh-actions-image]: https://github.com/jimporter/verspec/workflows/build/badge.svg
+[gh-actions-link]: https://github.com/jimporter/verspec/actions?query=branch%3Amaster+workflow%3Abuild
+[codecov-image]: https://codecov.io/gh/jimporter/verspec/branch/master/graph/badge.svg
+[codecov-link]: https://codecov.io/gh/jimporter/verspec
+
+[packaging]: https://github.com/pypa/packaging
+[pypa]: https://www.pypa.io/
+
+

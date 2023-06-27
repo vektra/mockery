@@ -1,0 +1,26 @@
+#version-selector {
+  padding: 0 10px;
+}
+
+#version-selector > select {
+  width: auto;
+  height: auto;
+  padding: 1px;
+}
+
+/* MkDocs v1.0 */
+.navbar-header > #version-selector {
+  display: flex;
+  align-items: center;
+}
+
+/* MkDocs v1.1 */
+.container > #version-selector {
+  flex-grow: 1;
+}
+
+@media (min-width: 992px) {
+  .container > #version-selector {
+    flex-grow: 0;
+  }
+}

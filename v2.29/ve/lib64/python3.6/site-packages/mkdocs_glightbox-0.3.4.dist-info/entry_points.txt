@@ -1,0 +1,3 @@
+[mkdocs.plugins]
+glightbox = mkdocs_glightbox.plugin:LightboxPlugin
+

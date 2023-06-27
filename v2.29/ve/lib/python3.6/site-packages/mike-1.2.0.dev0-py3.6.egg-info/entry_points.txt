@@ -1,0 +1,47 @@
+[console_scripts]
+mike = mike.driver:main
+
+[mike.themes]
+amelia = mike.themes.mkdocs
+amelia-classic = mike.themes.mkdocs
+bootstrap = mike.themes.mkdocs
+bootstrap-classic = mike.themes.mkdocs
+cerulean = mike.themes.mkdocs
+cerulean-classic = mike.themes.mkdocs
+cosmo = mike.themes.mkdocs
+cosmo-classic = mike.themes.mkdocs
+cyborg = mike.themes.mkdocs
+cyborg-classic = mike.themes.mkdocs
+darkly = mike.themes.mkdocs
+flatly = mike.themes.mkdocs
+flatly-classic = mike.themes.mkdocs
+journal = mike.themes.mkdocs
+journal-classic = mike.themes.mkdocs
+litera = mike.themes.mkdocs
+lumen = mike.themes.mkdocs
+lux = mike.themes.mkdocs
+materia = mike.themes.mkdocs
+minty = mike.themes.mkdocs
+mkdocs = mike.themes.mkdocs
+mkdocs-classic = mike.themes.mkdocs
+pulse = mike.themes.mkdocs
+readable = mike.themes.mkdocs
+readable-classic = mike.themes.mkdocs
+readthedocs = mike.themes.readthedocs
+sandstone = mike.themes.mkdocs
+simplex = mike.themes.mkdocs
+simplex-classic = mike.themes.mkdocs
+slate = mike.themes.mkdocs
+slate-classic = mike.themes.mkdocs
+solar = mike.themes.mkdocs
+spacelab = mike.themes.mkdocs
+spacelab-classic = mike.themes.mkdocs
+superhero = mike.themes.mkdocs
+united = mike.themes.mkdocs
+united-classic = mike.themes.mkdocs
+yeti = mike.themes.mkdocs
+yeti-classic = mike.themes.mkdocs
+
+[mkdocs.plugins]
+mike = mike.mkdocs_plugin:MikePlugin
+

@@ -1,0 +1,12 @@
+#!/home/lclipp/git/vektra/mockery/docs/ve/bin/python3
+# EASY-INSTALL-ENTRY-SCRIPT: 'mike==1.2.0.dev0','console_scripts','mike'
+__requires__ = 'mike==1.2.0.dev0'
+import re
+import sys
+from pkg_resources import load_entry_point
+
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw?|\.exe)?$', '', sys.argv[0])
+    sys.exit(
+        load_entry_point('mike==1.2.0.dev0', 'console_scripts', 'mike')()
+    )
