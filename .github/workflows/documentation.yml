@@ -1,8 +1,8 @@
-name: static pages 
+name: documentation
 on:
   push:
-    branches:
-      - master 
+    tags:
+      - 'v*.*.*'
 permissions:
   contents: write
 jobs:
