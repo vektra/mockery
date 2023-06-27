@@ -57,11 +57,11 @@ These are the configuration options available when using the legacy, non-`packag
     | `testonly` | Prepend every mock file with `_test.go`. This is useful in cases where you are generating mocks `inpackage` but don't want the mocks to be visible to code outside of tests. |
     | `with-expecter` | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
 
-### [`packages` config](/mockery/features/#packages-configuration)
+### [`packages` config](features.md#packages-configuration)
 
 These are the config options when using the `packages` config option. Use of the `packages` config semantics puts mockery into a completely different code path. Config variables may have changed meanings or have been subtracted entirely, compared to the non-`packages` config.
 
-Please see the [features section](/mockery/features/#packages-configuration) for more details on how `packages` works, including some example configuration.
+Please see the [features section](features.md#packages-configuration) for more details on how `packages` works, including some example configuration.
 
 !!! info "`packages` config"
 
@@ -79,12 +79,12 @@ Please see the [features section](/mockery/features/#packages-configuration) for
     | `mockname` | :fontawesome-solid-check: | `#!yaml "Mock{{.InterfaceName}}"` | The name of the generated mock. |
     | `outpkg` | :fontawesome-solid-check: | `#!yaml "{{.PackageName}}"` | Use `outpkg` to specify the package name of the generated mocks. |
     | `log-level` | :fontawesome-solid-x: | `#!yaml "info"` | Set the level of the logger |
-    | [`packages`](/mockery/features/#packages-configuration) | :fontawesome-solid-x: | `#!yaml null` | A dictionary containing configuration describing the packages and interfaces to generate mocks for. |
+    | [`packages`](features.md#packages-configuration) | :fontawesome-solid-x: | `#!yaml null` | A dictionary containing configuration describing the packages and interfaces to generate mocks for. |
     | `print` | :fontawesome-solid-x: | `#!yaml false` | Use `print: True` to have the resulting code printed out instead of written to disk. |
-    | [`recursive`](/mockery/features/#recursive-package-discovery) | :fontawesome-solid-x: | `#!yaml false` | When set to `true` on a particular package, mockery will recursively search for all sub-packages and inject those packages into the config map. |
+    | [`recursive`](features.md#recursive-package-discovery) | :fontawesome-solid-x: | `#!yaml false` | When set to `true` on a particular package, mockery will recursively search for all sub-packages and inject those packages into the config map. |
     | `tags` | :fontawesome-solid-x: | `#!yaml ""` | Set the build tags of the generated mocks. |
-    | [`with-expecter`](/mockery/features/#expecter-structs) | :fontawesome-solid-x: | `#!yaml true` | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
-    | [`replace-type`](/mockery/features/#replace-types) | :fontawesome-solid-x: | `#!yaml null` | Replaces aliases, packages and/or types during generation.|
+    | [`with-expecter`](features.md#expecter-structs) | :fontawesome-solid-x: | `#!yaml true` | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
+    | [`replace-type`](features.md#replace-types) | :fontawesome-solid-x: | `#!yaml null` | Replaces aliases, packages and/or types during generation.|
 
     -------------
 

@@ -2,7 +2,7 @@
 title: Migrating To Packages
 ---
 
-The [packages](/mockery/features/#packages-configuration) feature is a new configuration scheme that aims to simplify and improve a lot of legacy behavior. This will be the only way to generate mocks in v3. These docs outline general principals for migrating to the new scheme.
+The [packages](features.md#packages-configuration) feature is a new configuration scheme that aims to simplify and improve a lot of legacy behavior. This will be the only way to generate mocks in v3. These docs outline general principals for migrating to the new scheme.
 
 Background
 ----------
@@ -21,9 +21,9 @@ The existence of the `#!yaml packages:` map in your configuration acts as a feat
 
 The configuration parameters used in `packages` should be considered to have no relation to their meanings in the legacy scheme. It is recommended to wipe out all previous configuration and command-line parameters previously used.
 
-The [configuration docs](/mockery/configuration/#packages-config) show the parameters that are available for use in the `packages` scheme. You should only use the parameters shown in this section. Mockery will not prevent you from using the legacy parameter set, but doing so will result in undefined behavior.
+The [configuration docs](configuration.md#packages-config) show the parameters that are available for use in the `packages` scheme. You should only use the parameters shown in this section. Mockery will not prevent you from using the legacy parameter set, but doing so will result in undefined behavior.
 
-All of the parameters in the config section can be specified at the top level of the config file, which serves as the default values. The `packages` config section defines package-specific config. See some examples [here](/mockery/features/#examples).
+All of the parameters in the config section can be specified at the top level of the config file, which serves as the default values. The `packages` config section defines package-specific config. See some examples [here](features.md#examples).
 
 `//go:generate` directives
 ----------------------------
@@ -40,4 +40,4 @@ Filesystem Tree Layouts
 
 The legacy config provided the `keeptree` parameter which, if `#!yaml keeptree: True`, would place the mocks in the same package as your interfaces. Otherwise, it would place it in a separate directory.
 
-These two layouts are supported in the `packages` scheme. See the relevant docs [here](/mockery/features/#layouts).
+These two layouts are supported in the `packages` scheme. See the relevant docs [here](features.md#layouts).

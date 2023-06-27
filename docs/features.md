@@ -98,7 +98,7 @@ func (_m *Handler) HandleMessage(m pubsub.Message) error {
     This feature is considered beta. The feature set has been solidified, but we are asking users to beta-test for any bugs. Use at your own risk. This warning will be updated as this feature matures.
 
 !!! info
-    See the [Migration Docs](/mockery/migrating_to_packages/) on how to migrate to this new feature.
+    See the [Migration Docs](migrating_to_packages.md) on how to migrate to this new feature.
 
 Mockery has a configuration parameter called `packages`. In this config section, you define the packages and the interfaces you want mocks generated for. The packages can be any arbitrary package, either your own project or anything within the Go ecosystem. You may provide package-level or interface-level overrides to the default config you provide.
 
@@ -145,7 +145,7 @@ packages:
 !!! note
     Templated variables are only available when using the `packages` config feature.
 
-Included with this feature is the ability to use templated strings for various configuration options. This is useful to define where your mocks are placed and how to name them. You can view the template variables available in the [Configuration](/mockery/configuration/#template-variables) section of the docs.
+Included with this feature is the ability to use templated strings for various configuration options. This is useful to define where your mocks are placed and how to name them. You can view the template variables available in the [Configuration](configuration.md#template-variables) section of the docs.
   
 ### Layouts
 

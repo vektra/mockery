@@ -41,7 +41,7 @@ testonly: True # (3)!
 ```
 
 1. Generate our mocks next to the original interface
-2. Create [expecter methods](/mockery/features/#expecter-structs)
+2. Create [expecter methods](features.md#expecter-structs)
 3. Append `_test.go` to the filename so the mock object is not packaged 
 
 ```bash
@@ -84,4 +84,4 @@ Who uses mockery?
 :simple-grafana: [grafana](https://github.com/grafana/grafana) · :simple-google: [Google Skia](https://github.com/google/skia) · [Hashicorp](https://github.com/search?q=org%3Ahashicorp%20mockery&type=code) · :simple-google: [Google Skyzkaller](https://github.com/google/syzkaller) · :fontawesome-brands-uber: [Uber Cadence](https://github.com/uber/cadence) · [Jaeger](https://github.com/jaegertracing/jaeger) · [Splunk](https://github.com/splunk/kafka-mq-go) · [Ignite CLI](https://github.com/ignite/cli) · [Tendermint](https://github.com/tendermint/tendermint) · [Datadog](https://github.com/DataDog/datadog-agent)
 
 
-[Get Started](/mockery/installation/){ .md-button .md-button--primary .md-button--stretch }
+[Get Started](installation.md){ .md-button .md-button--primary .md-button--stretch }
