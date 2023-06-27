@@ -15,7 +15,7 @@ internal error: package without types was imported
 
 [https://github.com/vektra/mockery/issues/475](https://github.com/vektra/mockery/issues/475)
 
-This issue indicates an incompatability that exists with one of your cached Golang packages. The solution is to run `go clean -modcache`.
+This issue indicates an incompatibility that exists with one of your cached Golang packages. The solution is to run `go clean -modcache`.
 
 This issue also happens when compiling from source, such as with `go install`. You would not encounter this issue if using one of the installation methods that install pre-built binaries, like downloading the `.tar.gz` binaries, or through `brew install`.
 
@@ -132,4 +132,3 @@ This issue was first highlighted [in this GitHub issue](https://github.com/vektr
 mockery uses the viper package for configuration mapping and parsing. Viper is set to automatically search for all config variables specified in its config struct. One of the config variables is named `version`, which gets mapped to an environment variable called `MOCKERY_VERSION`. If you set this environment variable, mockery attempts to parse it into the `version` bool config.
 
 This is an unintended side-effect of how our config parsing is set up. The solution is to rename your environment variable to something other than `MOCKERY_VERSION`.
-
