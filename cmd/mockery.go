@@ -282,121 +282,123 @@ func (r *RootApp) Run() error {
 				return err
 			}
 		}
-	} else {
-		if r.Config.Name != "" && r.Config.All {
-			log.Fatal().Msgf("Specify --name or --all, but not both")
-		} else if (r.Config.FileName != "" || r.Config.StructName != "") && r.Config.All {
-			log.Fatal().Msgf("Cannot specify --filename or --structname with --all")
-		} else if r.Config.Dir != "" && r.Config.Dir != "." && r.Config.SrcPkg != "" {
-			log.Fatal().Msgf("Specify --dir or --srcpkg, but not both")
-		} else if r.Config.Name != "" {
-			recursive = r.Config.Recursive
-			if strings.ContainsAny(r.Config.Name, regexMetadataChars) {
-				if filter, err = regexp.Compile(r.Config.Name); err != nil {
-					log.Fatal().Err(err).Msgf("Invalid regular expression provided to -name")
-				} else if r.Config.FileName != "" || r.Config.StructName != "" {
-					log.Fatal().Msgf("Cannot specify --filename or --structname with regex in --name")
-				}
-			} else {
-				filter = regexp.MustCompile(fmt.Sprintf("^%s$", r.Config.Name))
-				limitOne = true
+
+		return nil
+	}
+
+	if r.Config.Name != "" && r.Config.All {
+		log.Fatal().Msgf("Specify --name or --all, but not both")
+	} else if (r.Config.FileName != "" || r.Config.StructName != "") && r.Config.All {
+		log.Fatal().Msgf("Cannot specify --filename or --structname with --all")
+	} else if r.Config.Dir != "" && r.Config.Dir != "." && r.Config.SrcPkg != "" {
+		log.Fatal().Msgf("Specify --dir or --srcpkg, but not both")
+	} else if r.Config.Name != "" {
+		recursive = r.Config.Recursive
+		if strings.ContainsAny(r.Config.Name, regexMetadataChars) {
+			if filter, err = regexp.Compile(r.Config.Name); err != nil {
+				log.Fatal().Err(err).Msgf("Invalid regular expression provided to -name")
+			} else if r.Config.FileName != "" || r.Config.StructName != "" {
+				log.Fatal().Msgf("Cannot specify --filename or --structname with regex in --name")
 			}
-		} else if r.Config.All {
-			recursive = true
-			filter = regexp.MustCompile(".*")
 		} else {
-			log.Fatal().Msgf("Use --name to specify the name of the interface or --all for all interfaces found")
+			filter = regexp.MustCompile(fmt.Sprintf("^%s$", r.Config.Name))
+			limitOne = true
+		}
+	} else if r.Config.All {
+		recursive = true
+		filter = regexp.MustCompile(".*")
+	} else {
+		log.Fatal().Msgf("Use --name to specify the name of the interface or --all for all interfaces found")
+	}
+
+	infoDiscussion(
+		ctx,
+		"dynamic walking of project is being considered for removal "+
+			"in v3. Please provide your feedback at the linked discussion.",
+		map[string]any{
+			"pr":         "https://github.com/vektra/mockery/pull/548",
+			"discussion": "https://github.com/vektra/mockery/discussions/549",
+		})
+
+	if r.Config.Profile != "" {
+		f, err := os.Create(r.Config.Profile)
+		if err != nil {
+			return stackerr.NewStackErrf(err, "Failed to create profile file")
 		}
 
-		infoDiscussion(
-			ctx,
-			"dynamic walking of project is being considered for removal "+
-				"in v3. Please provide your feedback at the linked discussion.",
-			map[string]any{
-				"pr":         "https://github.com/vektra/mockery/pull/548",
-				"discussion": "https://github.com/vektra/mockery/discussions/549",
-			})
+		if err := pprof.StartCPUProfile(f); err != nil {
+			return fmt.Errorf("failed to start CPU profile: %w", err)
+		}
+		defer pprof.StopCPUProfile()
+	}
 
-		if r.Config.Profile != "" {
-			f, err := os.Create(r.Config.Profile)
-			if err != nil {
-				return stackerr.NewStackErrf(err, "Failed to create profile file")
-			}
+	baseDir := r.Config.Dir
 
-			if err := pprof.StartCPUProfile(f); err != nil {
-				return fmt.Errorf("failed to start CPU profile: %w", err)
-			}
-			defer pprof.StopCPUProfile()
+	if osp == nil {
+		osp = &pkg.FileOutputStreamProvider{
+			Config:                    r.Config,
+			BaseDir:                   r.Config.Output,
+			InPackage:                 r.Config.InPackage,
+			InPackageSuffix:           r.Config.InPackageSuffix,
+			TestOnly:                  r.Config.TestOnly,
+			Case:                      r.Config.Case,
+			KeepTree:                  r.Config.KeepTree,
+			KeepTreeOriginalDirectory: r.Config.Dir,
+			FileName:                  r.Config.FileName,
+		}
+	}
+
+	if r.Config.SrcPkg != "" {
+		pkgs, err := packages.Load(&packages.Config{
+			Mode: packages.NeedFiles,
+		}, r.Config.SrcPkg)
+		if err != nil || len(pkgs) == 0 {
+			log.Fatal().Err(err).Msgf("Failed to load package %s", r.Config.SrcPkg)
 		}
 
-		baseDir := r.Config.Dir
+		// NOTE: we only pass one package name (config.SrcPkg) to packages.Load
+		// it should return one package at most
+		pkg := pkgs[0]
 
-		if osp == nil {
-			osp = &pkg.FileOutputStreamProvider{
-				Config:                    r.Config,
-				BaseDir:                   r.Config.Output,
-				InPackage:                 r.Config.InPackage,
-				InPackageSuffix:           r.Config.InPackageSuffix,
-				TestOnly:                  r.Config.TestOnly,
-				Case:                      r.Config.Case,
-				KeepTree:                  r.Config.KeepTree,
-				KeepTreeOriginalDirectory: r.Config.Dir,
-				FileName:                  r.Config.FileName,
-			}
+		if pkg.Errors != nil {
+			log.Fatal().Err(pkg.Errors[0]).Msgf("Failed to load package %s", r.Config.SrcPkg)
 		}
 
-		if r.Config.SrcPkg != "" {
-			pkgs, err := packages.Load(&packages.Config{
-				Mode: packages.NeedFiles,
-			}, r.Config.SrcPkg)
-			if err != nil || len(pkgs) == 0 {
-				log.Fatal().Err(err).Msgf("Failed to load package %s", r.Config.SrcPkg)
-			}
-
-			// NOTE: we only pass one package name (config.SrcPkg) to packages.Load
-			// it should return one package at most
-			pkg := pkgs[0]
-
-			if pkg.Errors != nil {
-				log.Fatal().Err(pkg.Errors[0]).Msgf("Failed to load package %s", r.Config.SrcPkg)
-			}
-
-			if len(pkg.GoFiles) == 0 {
-				log.Fatal().Msgf("No go files in package %s", r.Config.SrcPkg)
-			}
-			baseDir = filepath.Dir(pkg.GoFiles[0])
+		if len(pkg.GoFiles) == 0 {
+			log.Fatal().Msgf("No go files in package %s", r.Config.SrcPkg)
 		}
+		baseDir = filepath.Dir(pkg.GoFiles[0])
+	}
 
-		walker := pkg.Walker{
-			Config:    r.Config,
-			BaseDir:   baseDir,
-			Recursive: recursive,
-			Filter:    filter,
-			LimitOne:  limitOne,
-			BuildTags: buildTags,
-		}
+	walker := pkg.Walker{
+		Config:    r.Config,
+		BaseDir:   baseDir,
+		Recursive: recursive,
+		Filter:    filter,
+		LimitOne:  limitOne,
+		BuildTags: buildTags,
+	}
 
-		visitor := pkg.NewGeneratorVisitor(pkg.GeneratorVisitorConfig{
-			Boilerplate:          boilerplate,
-			DisableVersionString: r.Config.DisableVersionString,
-			Exported:             r.Config.Exported,
-			InPackage:            r.Config.InPackage,
-			KeepTree:             r.Config.KeepTree,
-			Note:                 r.Config.Note,
-			PackageName:          r.Config.Outpkg,
-			PackageNamePrefix:    r.Config.Packageprefix,
-			StructName:           r.Config.StructName,
-			UnrollVariadic:       r.Config.UnrollVariadic,
-			WithExpecter:         r.Config.WithExpecter,
-			ReplaceType:          r.Config.ReplaceType,
-		}, osp, r.Config.DryRun)
+	visitor := pkg.NewGeneratorVisitor(pkg.GeneratorVisitorConfig{
+		Boilerplate:          boilerplate,
+		DisableVersionString: r.Config.DisableVersionString,
+		Exported:             r.Config.Exported,
+		InPackage:            r.Config.InPackage,
+		KeepTree:             r.Config.KeepTree,
+		Note:                 r.Config.Note,
+		PackageName:          r.Config.Outpkg,
+		PackageNamePrefix:    r.Config.Packageprefix,
+		StructName:           r.Config.StructName,
+		UnrollVariadic:       r.Config.UnrollVariadic,
+		WithExpecter:         r.Config.WithExpecter,
+		ReplaceType:          r.Config.ReplaceType,
+	}, osp, r.Config.DryRun)
 
-		generated := walker.Walk(ctx, visitor)
+	generated := walker.Walk(ctx, visitor)
 
-		if r.Config.Name != "" && !generated {
-			log.Error().Msgf("Unable to find '%s' in any go files under this path", r.Config.Name)
-			return fmt.Errorf("unable to find interface")
-		}
+	if r.Config.Name != "" && !generated {
+		log.Error().Msgf("Unable to find '%s' in any go files under this path", r.Config.Name)
+		return fmt.Errorf("unable to find interface")
 	}
 
 	return nil
