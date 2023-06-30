@@ -70,7 +70,6 @@ func (s *GeneratorSuite) checkGenerationWithConfig(
 	// it would require changing Write's signature to accept custom options, specifically to
 	// allow the fragments in preexisting cases. It's assumed that this approximation,
 	// just formatting the source, is sufficient for the needs of the current test styles.
-	var actual []byte
 	actual, fmtErr := format.Source(generator.buf.Bytes())
 	s.Require().NoError(fmtErr)
 
@@ -107,7 +106,6 @@ func (s *GeneratorSuite) checkGenerationRegexWithConfig(
 	// it would require changing Write's signature to accept custom options, specifically to
 	// allow the fragments in preexisting cases. It's assumed that this approximation,
 	// just formatting the source, is sufficient for the needs of the current test styles.
-	var actual []byte
 	actual, fmtErr := format.Source(generator.buf.Bytes())
 	s.Require().NoError(fmtErr)
 
@@ -182,7 +180,6 @@ func (s *GeneratorSuite) TestGeneratorExpecterWithRolledVariadic() {
 	)
 	s.Require().NoError(generator.Generate(s.ctx))
 
-	var actual []byte
 	actual, fmtErr := format.Source(generator.buf.Bytes())
 	s.Require().NoError(fmtErr)
 
@@ -377,7 +374,6 @@ func (s *GeneratorSuite) TestGeneratorVariadicArgsAsOneArg() {
 	)
 	s.Require().NoError(generator.Generate(s.ctx))
 
-	var actual []byte
 	actual, fmtErr := format.Source(generator.buf.Bytes())
 	s.Require().NoError(fmtErr)
 
@@ -578,8 +574,7 @@ func (s *GeneratorSuite) TestGeneratorForStructValueReturn() {
 
 func (s *GeneratorSuite) TestGeneratorForStructWithTag() {
 	// StructTag has back-quote, So can't use raw string literals in this test case.
-	var expected string
-	expected += "*struct {"
+	expected := "*struct {"
 	expected += "FieldC int `json:\"field_c\"`"
 	expected += "FieldD int `json:\"field_d\" xml:\"field_d\"`"
 	expected += "}"
