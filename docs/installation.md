@@ -14,7 +14,7 @@ Visit the [releases page](https://github.com/vektra/mockery/releases) to downloa
 
 Supported, but not recommended: [see wiki page](https://github.com/vektra/mockery/wiki/Installation-Methods#go-install) and [related discussions](https://github.com/vektra/mockery/pull/456).
 
-    go install github.com/vektra/mockery/v2@v2.30.1
+<div id="mockery-install-go-command"></div>
 
 !!! warning
 
@@ -37,3 +37,35 @@ Install through [brew](https://brew.sh/)
     brew install mockery
     brew upgrade mockery
 
+
+<script type="text/javascript">
+
+function insert_installation_command(element_to_override,version){
+    element_to_override.innerHTML=`go install github.com/vektra/mockery/v2@${version}`;
+}
+
+const version_key="/mockery/version";
+const element = document.getElementById('mockery-install-go-command');
+const url = `https://api.github.com/repos/vektra/mockery/releases/latest`;
+
+let version = sessionStorage.getItem(version_key);
+if (version !== null) {
+    insert_installation_command(element,version);
+} else {
+  const request = new Request(url, {
+    method: "GET",
+  });
+
+  fetch(request)
+    .then((response) => response.json())
+    .then((data) => {
+      sessionStorage.setItem(version_key, data.name);
+      insert_installation_command(element,data.name);
+    })
+    .catch((error) =>{
+          console.error(error);
+          element.innerHTML=`failed to fetch latest release info from: https://api.github.com/repos/vektra/mockery/releases/latest`;
+    }
+  );
+}
+</script>
