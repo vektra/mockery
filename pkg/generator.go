@@ -18,8 +18,9 @@ import (
 	"unicode/utf8"
 
 	"github.com/rs/zerolog"
-	"github.com/vektra/mockery/v2/pkg/logging"
 	"golang.org/x/tools/imports"
+
+	"github.com/vektra/mockery/v2/pkg/logging"
 )
 
 const mockConstructorParamTypeNamePrefix = "mockConstructorTestingT"
@@ -472,19 +473,19 @@ func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 		case 0:
 			return fmt.Sprintf(
 				"func(%s)",
-				g.renderTypeTuple(ctx, t.Params()),
+				g.renderTypeTuple(ctx, t.Params(), t.Variadic()),
 			)
 		case 1:
 			return fmt.Sprintf(
 				"func(%s) %s",
-				g.renderTypeTuple(ctx, t.Params()),
+				g.renderTypeTuple(ctx, t.Params(), t.Variadic()),
 				g.renderType(ctx, t.Results().At(0).Type()),
 			)
 		default:
 			return fmt.Sprintf(
 				"func(%s)(%s)",
-				g.renderTypeTuple(ctx, t.Params()),
-				g.renderTypeTuple(ctx, t.Results()),
+				g.renderTypeTuple(ctx, t.Params(), t.Variadic()),
+				g.renderTypeTuple(ctx, t.Results(), false),
 			)
 		}
 	case *types.Map:
@@ -553,13 +554,17 @@ func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 	}
 }
 
-func (g *Generator) renderTypeTuple(ctx context.Context, tup *types.Tuple) string {
+func (g *Generator) renderTypeTuple(ctx context.Context, tup *types.Tuple, variadic bool) string {
 	var parts []string
 
 	for i := 0; i < tup.Len(); i++ {
 		v := tup.At(i)
 
 		parts = append(parts, g.renderType(ctx, v.Type()))
+	}
+
+	if variadic {
+		parts[len(parts)-1] = fmt.Sprintf("...%s", parts[len(parts)-1][2:])
 	}
 
 	return strings.Join(parts, " , ")

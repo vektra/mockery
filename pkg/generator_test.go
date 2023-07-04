@@ -14,6 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
+
 	mocks "github.com/vektra/mockery/v2/mocks/github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
@@ -739,4 +740,12 @@ func TestParseReplaceType(t *testing.T) {
 		actual := parseReplaceType(test.value)
 		assert.Equal(t, test.expected, *actual)
 	}
+}
+
+func (s *GeneratorSuite) TestGeneratorVariadicTester() {
+	expectedBytes, err := os.ReadFile(getMocksPath("VariadicTester.go"))
+	s.Require().NoError(err)
+	expected := string(expectedBytes)
+	expected = expected[strings.Index(expected, "// VariadicTester is"):]
+	s.checkGeneration("variadic_tester.go", "VariadicTester", false, "", expected)
 }
