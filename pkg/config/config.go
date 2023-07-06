@@ -448,7 +448,7 @@ func (c *Config) subPackages(
 	if currentDepth == 0 && len(pkg.GoFiles) == 0 {
 		log.Error().
 			Err(ErrNoGoFilesFoundInRoot).
-			Str("documentation", "https://vektra.github.io/mockery/notes/#error-no-go-files-found-in-root-search-path").
+			Str("documentation", "https://vektra.github.io/mockery/latest/notes/#error-no-go-files-found-in-root-search-path").
 			Msg("package contains no go files")
 		return nil, ErrNoGoFilesFoundInRoot
 	}
