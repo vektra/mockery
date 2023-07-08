@@ -2,8 +2,10 @@ package logging
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"runtime/debug"
+	"strings"
 	"time"
 
 	"github.com/rs/zerolog"
@@ -37,6 +39,23 @@ func GetSemverInfo() string {
 		return version.Main.Version
 	}
 	return _defaultSemVer
+}
+
+func getMinorSemver(semver string) string {
+	split := strings.Split(semver, ".")
+	return strings.Join(split[0:2], ".")
+}
+
+// GetMinorSemver returns the semantic version up to and including the minor version.
+func GetMinorSemver() string {
+	return getMinorSemver(GetSemverInfo())
+}
+
+func DocsURL(relativePath string) string {
+	if string(relativePath[0]) != "/" {
+		relativePath = "/" + relativePath
+	}
+	return fmt.Sprintf("https://vektra.github.io/mockery/%s%s", GetMinorSemver(), relativePath)
 }
 
 type timeHook struct{}

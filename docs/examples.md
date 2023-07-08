@@ -1,6 +1,9 @@
 Examples
 ========
 
+!!! tip
+	IDEs are really useful when interacting with mockery objects. All mockery objects embed the [`github.com/stretchr/testify/mock.Mock`](https://pkg.go.dev/github.com/stretchr/testify/mock#Mock) object so you have access to both methods provided by mockery, and from testify itself. IDE auto-completion will show you all methods available for your use.
+
 ### Simple case
 
 Given this interface:
@@ -8,13 +11,12 @@ Given this interface:
 ```go title="string.go"
 package example_project
 
-//go:generate mockery --name Stringer
 type Stringer interface {
 	String() string
 }
 ```
 
-Run: `go generate` (using the recommended config) and the the file `mock_Stringer_test.go` will be generated. You can now use this mock to create assertions and expectations.
+Create a mock for this interface by specifying it in your config. We can then create a test using this new mock object:
 
 ```go title="string_test.go"
 package example_project
@@ -36,9 +38,31 @@ func TestString(t *testing.T) {
 }
 ```
 
-Note that in combination with using the mock's constructor and the `.EXPECT()` directives, your test will automatically fail if the expected call is not made.
+Note that in combination with using the mock's constructor and the [`.EXPECT()`](features.md#expecter-structs) directives, your test will automatically fail if the expected call is not made. 
+
+??? tip "Alternate way of specifying expectations"
+
+	You can also use the `github.com/stretchr/testify/mock.Mock` object directly (instead of using the `.EXPECT()` methods, which provide type-safe-ish assertions).
+
+	```go title="string_test.go"
+	func TestString(t *testing.T) {
+		mockStringer := NewMockStringer(t)
+		mockStringer.On("String").Return("mockery")
+		assert.Equal(t, "mockery", Foo(mockStringer))
+	}
+	```
+
+	We recommend always interacting with the assertions through `.EXPECT()` as mockery auto-generates methods that call out to `Mock.On()` themselves, providing you with some amount of compile-time safety. Consider if all your expectations for `String()` use the `Mock.On()` methods, and you decide to add an argument to `String()` to become `String(foo string)`. Now, your existing tests will only fail when you run them. If you had used `.EXPECT()` and regenerated your mocks after changing the function signature, your IDE, and the go compiler itself, would both tell you immediately that your expectations don't match the function signature. 
+
+```
+foobar
+```
+
 
 ### Function type case
+
+!!! bug
+	Generating mocks for function types is likely not functioning in the `packages` config semantics. You'll likely need to revert to the legacy semantics as shown below.
 
 Given this is in `send.go`
 

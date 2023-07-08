@@ -92,10 +92,7 @@ func (_m *Handler) HandleMessage(m pubsub.Message) error {
 
 `packages` configuration
 ------------------------
-:octicons-tag-24: v2.21.0 · :material-test-tube: Beta Feature
-
-!!! warning
-    This feature is considered beta. The feature set has been solidified, but we are asking users to beta-test for any bugs. Use at your own risk. This warning will be updated as this feature matures.
+:octicons-tag-24: v2.21.0
 
 !!! info
     See the [Migration Docs](migrating_to_packages.md) on how to migrate to this new feature.
@@ -146,104 +143,6 @@ packages:
     Templated variables are only available when using the `packages` config feature.
 
 Included with this feature is the ability to use templated strings for various configuration options. This is useful to define where your mocks are placed and how to name them. You can view the template variables available in the [Configuration](configuration.md#template-variables) section of the docs.
-  
-### Layouts
-
-Using different configuration parameters, we can deploy our mocks on-disk in various ways. These are some common layouts:
-
-!!! info "layouts"
-
-    === "defaults"
-
-        ```yaml
-        filename: "mock_{{.InterfaceName}}.go"
-        dir: "mocks/{{.PackagePath}}"
-        mockname: "Mock{{.InterfaceName}}"
-        outpkg: "{{.PackageName}}"
-        ```
-
-        If these variables aren't specified, the above values will be applied to the config options. This strategy places your mocks into a separate `mocks/` directory.
-
-        **Interface Description**
-
-        | name | value |
-        |------|-------|
-        | `InterfaceName` | `MyDatabase` |
-        | `PackagePath` | `github.com/user/project/pkgName` |
-        | `PackageName` | `pkgName` |
-
-        **Output**
-
-        The mock will be generated at:
-
-        ```
-        mocks/github.com/user/project/pkgName/mock_MyDatabase.go
-        ```
-
-        The mock file will look like:
-
-        ```go
-        package pkgName
-
-        import mock "github.com/stretchr/testify/mock"
-
-        type MockMyDatabase struct {
-          mock.Mock
-        }
-        ```
-    === "adjacent to interface"
-    
-    	!!! warning
-
-            Mockery does not protect against modifying original source code. Do not generate mocks using this config with uncommitted code changes.
-
-
-        ```yaml
-        filename: "mock_{{.InterfaceName}}.go"
-        dir: "{{.InterfaceDir}}"
-        mockname: "Mock{{.InterfaceName}}"
-        outpkg: "{{.PackageName}}"
-        inpackage: True
-        ```
-
-        Instead of the mocks being generated in a different folder, you may elect to generate the mocks alongside the original interface in your package. This may be the way most people define their configs, as it removes circular import issues that can happen with the default config.
-
-        For example, the mock might be generated along side the original source file like this:
-
-        ```
-        ./path/to/pkg/db.go
-        ./path/to/pkg/mock_MyDatabase.go
-        ```
-
-        **Interface Description**
-
-        | name | value |
-        |------|-------|
-        | `InterfaceName` | `MyDatabase` |
-        | `PackagePath` | `github.com/user/project/path/to/pkg`
-        | `PackagePathRelative` | `path/to/pkg` |
-        | `PackageName` | `pkgName` |
-        | `SourceFile` | `./path/to/pkg/db.go` |
-
-        **Output**
-
-        Mock file will be generated at:
-
-        ```
-        ./path/to/pkg/mock_MyDatabase.go
-        ```
-
-        The mock file will look like:
-
-        ```go
-        package pkgName
-
-        import mock "github.com/stretchr/testify/mock"
-
-        type MockMyDatabase struct {
-          mock.Mock
-        }
-        ```
 
 ### Recursive package discovery
 

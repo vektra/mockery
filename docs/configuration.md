@@ -1,11 +1,21 @@
 Configuration
 ==============
 
-mockery uses [spf13/viper](https://github.com/spf13/viper) under the hood for its configuration parsing. It is bound to three different configuration sources, in order of decreasing precedence:
+mockery uses [spf13/viper](https://github.com/spf13/viper) under the hood for its configuration parsing. 
 
-1. Command line
-2. Environment variables
-3. Configuration file
+Merging Precedence
+------------------
+
+The configuration applied to a specific mocked interface is merged according to the following precedence (in decreasing priority):
+
+1. Interface-specific config in `.mockery.yaml`
+2. Package-specific config in `.mockery.yaml`
+3. Command-line options
+4. Environment variables
+5. Top-level defaults in `.mockery.yaml`
+
+Formatting
+----------
 
 If a parameter is named `with-expecter` and we want a value of `True`, then these are the formats for each source:
 
@@ -21,23 +31,209 @@ Recommended Basic Config
 Copy the recommended basic configuration to a file called `.mockery.yaml` at the top-level of your repo:
 
 ```yaml title=".mockery.yaml"
-inpackage: True
-testonly: True
-with-expecter: True
-keeptree: False
+with-expecter: true
+packages:
+    github.com/your-org/your-go-project:
+        # populate your packages configuration here
 ```
 
 mockery will search upwards from your current-working-directory up to the root path, so the same configuration should be able to follow you within your project.
 
+See the [`features` section](features.md#examples) for more details on how the config is structured.
+
 Parameter Descriptions
 -----------------------
 
-### non-`packages`
+!!! success "new style `packages` config"
+    The [`packages`]() config section is the new style of configuration. All old config semantics, including `go:generate` and any config files lacking the `packages` section is officially deprecated as of v2.31.0. Legacy semantics will be completely removed in v3.
 
-These are the configuration options available when using the legacy, non-`packages` configuration semantics.
+    Please see the [features section](features.md#packages-configuration) for more details on how `packages` works, including some example configuration.
 
-!!! info "non-`packages` config"
+    Please see the [migration docs](migrating_to_packages.md) for details on how to migrate your config.
 
+| name | templated | default | description |
+|------|-----------|---------|-------------|
+| `all`  |  :fontawesome-solid-x: | `#!yaml false` | Generate all interfaces for the specified packages. |
+| `boilerplate-file` | :fontawesome-solid-x: | `#!yaml ""` | Specify a path to a file that contains comments you want displayed at the top of all generated mock files. This is commonly used to display license headers at the top of your source code. |
+| `config` | :fontawesome-solid-x: | `#!yaml ""` | Set the location of the mockery config file. |
+| `dir` | :fontawesome-solid-check: | `#!yaml "mocks/{{.PackagePath}}"` | The directory where the mock file will be outputted to. |
+| `disable-config-search` | :fontawesome-solid-x: | `#!yaml false` | Disable searching for configuration files |
+| `disable-version-string` | :fontawesome-solid-x: | `#!yaml false` | Disable the version string in the generated mock files. |
+| `dry-run` | :fontawesome-solid-x: | `#!yaml false` | Print the actions that would be taken, but don't perform the actions. |
+| `filename` | :fontawesome-solid-check: | `#!yaml "mock_{{.InterfaceName}}.go"` | The name of the file the mock will reside in. |
+| `inpackage` | :fontawesome-solid-x: | `#!yaml false` | When generating mocks alongside the original interfaces, you must specify `inpackage: True` to inform mockery that the mock is being placed in the same package as the original interface. |
+| `mockname` | :fontawesome-solid-check: | `#!yaml "Mock{{.InterfaceName}}"` | The name of the generated mock. |
+| `outpkg` | :fontawesome-solid-check: | `#!yaml "{{.PackageName}}"` | Use `outpkg` to specify the package name of the generated mocks. |
+| `log-level` | :fontawesome-solid-x: | `#!yaml "info"` | Set the level of the logger |
+| [`packages`](features.md#packages-configuration) | :fontawesome-solid-x: | `#!yaml null` | A dictionary containing configuration describing the packages and interfaces to generate mocks for. |
+| `print` | :fontawesome-solid-x: | `#!yaml false` | Use `print: True` to have the resulting code printed out instead of written to disk. |
+| [`recursive`](features.md#recursive-package-discovery) | :fontawesome-solid-x: | `#!yaml false` | When set to `true` on a particular package, mockery will recursively search for all sub-packages and inject those packages into the config map. |
+| `tags` | :fontawesome-solid-x: | `#!yaml ""` | Set the build tags of the generated mocks. |
+| [`with-expecter`](features.md#expecter-structs) | :fontawesome-solid-x: | `#!yaml true` | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
+| [`replace-type`](features.md#replace-types) | :fontawesome-solid-x: | `#!yaml null` | Replaces aliases, packages and/or types during generation.|
+
+Layouts
+-------
+
+Using different configuration parameters, we can deploy our mocks on-disk in various ways. These are some common layouts:
+
+!!! info "layouts"
+
+    === "defaults"
+
+        ```yaml
+        filename: "mock_{{.InterfaceName}}.go"
+        dir: "mocks/{{.PackagePath}}"
+        mockname: "Mock{{.InterfaceName}}"
+        outpkg: "{{.PackageName}}"
+        ```
+
+        If these variables aren't specified, the above values will be applied to the config options. This strategy places your mocks into a separate `mocks/` directory.
+
+        **Interface Description**
+
+        | name | value |
+        |------|-------|
+        | `InterfaceName` | `MyDatabase` |
+        | `PackagePath` | `github.com/user/project/pkgName` |
+        | `PackageName` | `pkgName` |
+
+        **Output**
+
+        The mock will be generated at:
+
+        ```
+        mocks/github.com/user/project/pkgName/mock_MyDatabase.go
+        ```
+
+        The mock file will look like:
+
+        ```go
+        package pkgName
+
+        import mock "github.com/stretchr/testify/mock"
+
+        type MockMyDatabase struct {
+          mock.Mock
+        }
+        ```
+    === "adjacent to interface"
+    
+    	!!! warning
+
+            Mockery does not protect against modifying original source code. Do not generate mocks using this config with uncommitted code changes.
+
+
+        ```yaml
+        filename: "mock_{{.InterfaceName}}.go"
+        dir: "{{.InterfaceDir}}"
+        mockname: "Mock{{.InterfaceName}}"
+        outpkg: "{{.PackageName}}"
+        inpackage: True
+        ```
+
+        Instead of the mocks being generated in a different folder, you may elect to generate the mocks alongside the original interface in your package. This may be the way most people define their configs, as it removes circular import issues that can happen with the default config.
+
+        For example, the mock might be generated along side the original source file like this:
+
+        ```
+        ./path/to/pkg/db.go
+        ./path/to/pkg/mock_MyDatabase.go
+        ```
+
+        **Interface Description**
+
+        | name | value |
+        |------|-------|
+        | `InterfaceName` | `MyDatabase` |
+        | `PackagePath` | `github.com/user/project/path/to/pkg`
+        | `PackagePathRelative` | `path/to/pkg` |
+        | `PackageName` | `pkgName` |
+        | `SourceFile` | `./path/to/pkg/db.go` |
+
+        **Output**
+
+        Mock file will be generated at:
+
+        ```
+        ./path/to/pkg/mock_MyDatabase.go
+        ```
+
+        The mock file will look like:
+
+        ```go
+        package pkgName
+
+        import mock "github.com/stretchr/testify/mock"
+
+        type MockMyDatabase struct {
+          mock.Mock
+        }
+        ```
+
+Template Variables
+-----------------
+
+!!! note
+    Templated variables are only available when using the `packages` config feature.
+
+Variables that are marked as being templated are capable of using mockery-provided template parameters.
+
+| name | description |
+|------|-------------|
+| InterfaceDir | The directory path of the original interface being mocked. This can be used as <br>`#!yaml dir: "{{.InterfaceDir}}"` to place your mocks adjacent to the original interface. This should not be used for external interfaces. |
+| InterfaceDirRelative | The directory path of the original interface being mocked, relative to the current working directory. If the path cannot be made relative to the current working directory, this variable will be set equal to `PackagePath` |
+| InterfaceName | The name of the original interface being mocked |
+| InterfaceNameCamel | Converts a string `interface_name` to `InterfaceName` |
+| InterfaceNameLowerCamel | Converts `InterfaceName` to `interfaceName` |
+| InterfaceNameSnake | Converts `InterfaceName` to `interface_name` |
+| Mock | A string that is `Mock` if the interface is exported, or `mock` if it is not exported. Useful when setting the name of your mock to something like: <br>`#!yaml mockname: "{{.Mock}}{{.InterfaceName}}"`<br> This way, the mock name will retain the exported-ness of the original interface.
+| MockName | The name of the mock that will be generated. Note that this is simply the `mockname` configuration variable |
+| PackageName | The name of the package from the original interface |
+| PackagePath | The fully qualified package path of the original interface |
+
+Template functions
+------------------
+
+!!! note
+    Templated functions are only available when using the `packages` config feature.
+
+Template functions allow you to inspect and manipulate template variables.
+
+All template functions are calling native Go functions under the hood, so signatures and return values matches the Go functions you are probably already familiar with.
+
+To learn more about the templating syntax, please [see the Go `text/template` documentation](https://pkg.go.dev/text/template)
+
+* [`contains` string substr](https://pkg.go.dev/strings#Contains)
+* [`hasPrefix` string prefix](https://pkg.go.dev/strings#HasPrefix)
+* [`hasSuffix` string suffix](https://pkg.go.dev/strings#HasSuffix)
+* [`join` elems sep](https://pkg.go.dev/strings#Join)
+* [`replace` string old new n](https://pkg.go.dev/strings#Replace)
+* [`replaceAll` string old new](https://pkg.go.dev/strings#ReplaceAll)
+* [`split` string sep](https://pkg.go.dev/strings#Split)
+* [`splitAfter` string sep](https://pkg.go.dev/strings#SplitAfter)
+* [`splitAfterN` string sep n](https://pkg.go.dev/strings#SplitAfterN)
+* [`trim` string cutset](https://pkg.go.dev/strings#Trim)
+* [`trimLeft` string cutset](https://pkg.go.dev/strings#TrimLeft)
+* [`trimPrefix` string prefix](https://pkg.go.dev/strings#TrimPrefix)
+* [`trimRight` string cutset](https://pkg.go.dev/strings#TrimRight)
+* [`trimSpace` string](https://pkg.go.dev/strings#TrimSpace)
+* [`trimSuffix` string suffix](https://pkg.go.dev/strings#TrimSuffix)
+* [`matchString` pattern](https://pkg.go.dev/regexp#MatchString)
+* [`quoteMeta` string](https://pkg.go.dev/regexp#QuoteMeta)
+* [`base` string](https://pkg.go.dev/path/filepath#Base)
+* [`clean` string](https://pkg.go.dev/path/filepath#Clean)
+* [`dir` string](https://pkg.go.dev/path/filepath#Dir)
+* [`expandEnv` string](https://pkg.go.dev/os#ExpandEnv)
+* [`getenv` string](https://pkg.go.dev/os#Getenv)
+
+Legacy config options
+---------------------
+
+??? danger "legacy configuration options"
+
+    The legacy config options will be removed in v3 and are deprecated (but supported) in v2.
+    
     | name | description |
     |------|-------------|
     | `all`  |  It's common for a big package to have a lot of interfaces, so mockery provides `all`. This option will tell mockery to scan all files under the directory named by `--dir` ("." by default) and generates mocks for any interfaces it finds. This option implies `recursive: True`. |
@@ -56,89 +252,3 @@ These are the configuration options available when using the legacy, non-`packag
     | `replace-type source=destination` | Replaces aliases, packages and/or types during generation.|
     | `testonly` | Prepend every mock file with `_test.go`. This is useful in cases where you are generating mocks `inpackage` but don't want the mocks to be visible to code outside of tests. |
     | `with-expecter` | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
-
-### [`packages` config](features.md#packages-configuration)
-
-These are the config options when using the `packages` config option. Use of the `packages` config semantics puts mockery into a completely different code path. Config variables may have changed meanings or have been subtracted entirely, compared to the non-`packages` config.
-
-Please see the [features section](features.md#packages-configuration) for more details on how `packages` works, including some example configuration.
-
-!!! info "`packages` config"
-
-    | name | templated | default | description |
-    |------|-----------|---------|-------------|
-    | `all`  |  :fontawesome-solid-x: | `#!yaml false` | Generate all interfaces for the specified packages. |
-    | `boilerplate-file` | :fontawesome-solid-x: | `#!yaml ""` | Specify a path to a file that contains comments you want displayed at the top of all generated mock files. This is commonly used to display license headers at the top of your source code. |
-    | `config` | :fontawesome-solid-x: | `#!yaml ""` | Set the location of the mockery config file. |
-    | `dir` | :fontawesome-solid-check: | `#!yaml "mocks/{{.PackagePath}}"` | The directory where the mock file will be outputted to. |
-    | `disable-config-search` | :fontawesome-solid-x: | `#!yaml false` | Disable searching for configuration files |
-    | `disable-version-string` | :fontawesome-solid-x: | `#!yaml false` | Disable the version string in the generated mock files. |
-    | `dry-run` | :fontawesome-solid-x: | `#!yaml false` | Print the actions that would be taken, but don't perform the actions. |
-    | `filename` | :fontawesome-solid-check: | `#!yaml "mock_{{.InterfaceName}}.go"` | The name of the file the mock will reside in. |
-    | `inpackage` | :fontawesome-solid-x: | `#!yaml false` | When generating mocks alongside the original interfaces, you must specify `inpackage: True` to inform mockery that the mock is being placed in the same package as the original interface. |
-    | `mockname` | :fontawesome-solid-check: | `#!yaml "Mock{{.InterfaceName}}"` | The name of the generated mock. |
-    | `outpkg` | :fontawesome-solid-check: | `#!yaml "{{.PackageName}}"` | Use `outpkg` to specify the package name of the generated mocks. |
-    | `log-level` | :fontawesome-solid-x: | `#!yaml "info"` | Set the level of the logger |
-    | [`packages`](features.md#packages-configuration) | :fontawesome-solid-x: | `#!yaml null` | A dictionary containing configuration describing the packages and interfaces to generate mocks for. |
-    | `print` | :fontawesome-solid-x: | `#!yaml false` | Use `print: True` to have the resulting code printed out instead of written to disk. |
-    | [`recursive`](features.md#recursive-package-discovery) | :fontawesome-solid-x: | `#!yaml false` | When set to `true` on a particular package, mockery will recursively search for all sub-packages and inject those packages into the config map. |
-    | `tags` | :fontawesome-solid-x: | `#!yaml ""` | Set the build tags of the generated mocks. |
-    | [`with-expecter`](features.md#expecter-structs) | :fontawesome-solid-x: | `#!yaml true` | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks. |
-    | [`replace-type`](features.md#replace-types) | :fontawesome-solid-x: | `#!yaml null` | Replaces aliases, packages and/or types during generation.|
-
-    -------------
-
-    #### Template Variables
-
-
-    !!! note
-        Templated variables are only available when using the `packages` config feature.
-
-    Variables that are marked as being templated are capable of using mockery-provided template parameters.
-
-    | name | description |
-    |------|-------------|
-    | InterfaceDir | The directory path of the original interface being mocked. This can be used as <br>`#!yaml dir: "{{.InterfaceDir}}"` to place your mocks adjacent to the original interface. This should not be used for external interfaces. |
-    | InterfaceDirRelative | The directory path of the original interface being mocked, relative to the current working directory. If the path cannot be made relative to the current working directory, this variable will be set equal to `PackagePath` |
-    | InterfaceName | The name of the original interface being mocked |
-    | InterfaceNameCamel | Converts a string `interface_name` to `InterfaceName` |
-    | InterfaceNameLowerCamel | Converts `InterfaceName` to `interfaceName` |
-    | InterfaceNameSnake | Converts `InterfaceName` to `interface_name` |
-    | Mock | A string that is `Mock` if the interface is exported, or `mock` if it is not exported. Useful when setting the name of your mock to something like: <br>`#!yaml mockname: "{{.Mock}}{{.InterfaceName}}"`<br> This way, the mock name will retain the exported-ness of the original interface.
-    | MockName | The name of the mock that will be generated. Note that this is simply the `mockname` configuration variable |
-    | PackageName | The name of the package from the original interface |
-    | PackagePath | The fully qualified package path of the original interface |
-
-    #### Template functions
-
-    !!! note
-        Templated functions are only available when using the `packages` config feature.
-
-    Template functions allow you to inspect and manipulate template variables.
-
-    All template functions are calling native Go functions under the hood, so signatures and return values matches the Go functions you are probably already familiar with.
-
-    To learn more about the templating syntax, please [see the Go `text/template` documentation](https://pkg.go.dev/text/template)
-
-    * [`contains` string substr](https://pkg.go.dev/strings#Contains)
-    * [`hasPrefix` string prefix](https://pkg.go.dev/strings#HasPrefix)
-    * [`hasSuffix` string suffix](https://pkg.go.dev/strings#HasSuffix)
-    * [`join` elems sep](https://pkg.go.dev/strings#Join)
-    * [`replace` string old new n](https://pkg.go.dev/strings#Replace)
-    * [`replaceAll` string old new](https://pkg.go.dev/strings#ReplaceAll)
-    * [`split` string sep](https://pkg.go.dev/strings#Split)
-    * [`splitAfter` string sep](https://pkg.go.dev/strings#SplitAfter)
-    * [`splitAfterN` string sep n](https://pkg.go.dev/strings#SplitAfterN)
-    * [`trim` string cutset](https://pkg.go.dev/strings#Trim)
-    * [`trimLeft` string cutset](https://pkg.go.dev/strings#TrimLeft)
-    * [`trimPrefix` string prefix](https://pkg.go.dev/strings#TrimPrefix)
-    * [`trimRight` string cutset](https://pkg.go.dev/strings#TrimRight)
-    * [`trimSpace` string](https://pkg.go.dev/strings#TrimSpace)
-    * [`trimSuffix` string suffix](https://pkg.go.dev/strings#TrimSuffix)
-    * [`matchString` pattern](https://pkg.go.dev/regexp#MatchString)
-    * [`quoteMeta` string](https://pkg.go.dev/regexp#QuoteMeta)
-    * [`base` string](https://pkg.go.dev/path/filepath#Base)
-    * [`clean` string](https://pkg.go.dev/path/filepath#Clean)
-    * [`dir` string](https://pkg.go.dev/path/filepath#Dir)
-    * [`expandEnv` string](https://pkg.go.dev/os#ExpandEnv)
-    * [`getenv` string](https://pkg.go.dev/os#Getenv)
