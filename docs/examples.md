@@ -54,11 +54,6 @@ Note that in combination with using the mock's constructor and the [`.EXPECT()`]
 
 	We recommend always interacting with the assertions through `.EXPECT()` as mockery auto-generates methods that call out to `Mock.On()` themselves, providing you with some amount of compile-time safety. Consider if all your expectations for `String()` use the `Mock.On()` methods, and you decide to add an argument to `String()` to become `String(foo string)`. Now, your existing tests will only fail when you run them. If you had used `.EXPECT()` and regenerated your mocks after changing the function signature, your IDE, and the go compiler itself, would both tell you immediately that your expectations don't match the function signature. 
 
-```
-foobar
-```
-
-
 ### Function type case
 
 !!! bug
