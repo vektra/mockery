@@ -235,12 +235,6 @@ func (r *RootApp) Run() error {
 		if err != nil {
 			return fmt.Errorf("failed to get package from config: %w", err)
 		}
-		warnBeta(
-			ctx,
-			"use of the 'packages' config variable is currently in a beta state. Use at your own risk.",
-			map[string]any{
-				"discussion": "https://github.com/vektra/mockery/discussions/549",
-			})
 		parser := pkg.NewParser(buildTags)
 
 		if err := parser.ParsePackages(ctx, configuredPackages); err != nil {
@@ -311,13 +305,12 @@ func (r *RootApp) Run() error {
 		log.Fatal().Msgf("Use --name to specify the name of the interface or --all for all interfaces found")
 	}
 
-	infoDiscussion(
+	warnDeprecated(
 		ctx,
-		"dynamic walking of project is being considered for removal "+
-			"in v3. Please provide your feedback at the linked discussion.",
+		"use of the packages config will be the only way to generate mocks in v3. Please migrate your config to use the packages feature.",
 		map[string]any{
-			"pr":         "https://github.com/vektra/mockery/pull/548",
-			"discussion": "https://github.com/vektra/mockery/discussions/549",
+			"url":       logging.DocsURL("/features/#packages-configuration"),
+			"migration": logging.DocsURL("/migrating_to_packages/"),
 		})
 
 	if r.Config.Profile != "" {
@@ -422,10 +415,6 @@ func info(ctx context.Context, prefix string, message string, fields map[string]
 	event.Msgf("%s: %s", prefix, message)
 }
 
-func infoDiscussion(ctx context.Context, message string, fields map[string]any) {
-	info(ctx, "DISCUSSION", message, fields)
-}
-
-func warnBeta(ctx context.Context, message string, fields map[string]any) {
-	warn(ctx, "BETA FEATURE", message, fields)
+func warnDeprecated(ctx context.Context, message string, fields map[string]any) {
+	warn(ctx, "DEPRECATION", message, fields)
 }
