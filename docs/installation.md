@@ -14,9 +14,7 @@ Visit the [releases page](https://github.com/vektra/mockery/releases) to downloa
 
 Supported, but not recommended: [see wiki page](https://github.com/vektra/mockery/wiki/Installation-Methods#go-install) and [related discussions](https://github.com/vektra/mockery/pull/456).
 
-```
 <div id="mockery-install-go-command"></div>
-```
 
 !!! warning
 
@@ -43,7 +41,11 @@ Install through [brew](https://brew.sh/)
 <script type="text/javascript">
 
 function insert_installation_command(element_to_override,version){
-    element_to_override.innerHTML=`go install github.com/vektra/mockery/v2@${version}`;
+    element_to_override.innerHTML=`
+```
+go install github.com/vektra/mockery/v2@${version}
+```
+`;
 }
 
 const version_key="/mockery/version";
