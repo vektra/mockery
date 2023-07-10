@@ -34,7 +34,13 @@ Copy the recommended basic configuration to a file called `.mockery.yaml` at the
 with-expecter: true
 packages:
     github.com/your-org/your-go-project:
-        # populate your packages configuration here
+        # place your package-specific config here
+        config:
+        interfaces:
+            # select the interfaces you want mocked
+            Foo:
+                # Modify package-level config for this specific interface (if applicable)
+                config:
 ```
 
 mockery will search upwards from your current-working-directory up to the root path, so the same configuration should be able to follow you within your project.
