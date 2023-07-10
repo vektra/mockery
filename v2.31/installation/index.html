@@ -695,8 +695,8 @@
 <p>Visit the <a href="https://github.com/vektra/mockery/releases">releases page</a> to download one of the pre-built binaries for your platform.</p>
 <h3 id="go-install">go install<a class="headerlink" href="#go-install" title="Permanent link">&para;</a></h3>
 <p>Supported, but not recommended: <a href="https://github.com/vektra/mockery/wiki/Installation-Methods#go-install">see wiki page</a> and <a href="https://github.com/vektra/mockery/pull/456">related discussions</a>.</p>
-<div class="highlight"><span class="filename">Text Only</span><pre><span></span><code>go install github.com/vektra/mockery/v2@v2.30.1
-</code></pre></div>
+<div id="mockery-install-go-command"></div>
+
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Do <em>not</em> use <code>@latest</code> as this will pull from the latest, potentially untagged, commit on master.</p>
@@ -713,6 +713,37 @@
 <div class="highlight"><span class="filename">Text Only</span><pre><span></span><code>brew install mockery
 brew upgrade mockery
 </code></pre></div>
+<script type="text/javascript">
+
+function insert_installation_command(element_to_override,version){
+    element_to_override.innerHTML=`go install github.com/vektra/mockery/v2@${version}`;
+}
+
+const version_key="/mockery/version";
+const element = document.getElementById('mockery-install-go-command');
+const url = `https://api.github.com/repos/vektra/mockery/releases/latest`;
+
+let version = sessionStorage.getItem(version_key);
+if (version !== null) {
+    insert_installation_command(element,version);
+} else {
+  const request = new Request(url, {
+    method: "GET",
+  });
+
+  fetch(request)
+    .then((response) => response.json())
+    .then((data) => {
+      sessionStorage.setItem(version_key, data.name);
+      insert_installation_command(element,data.name);
+    })
+    .catch((error) =>{
+          console.error(error);
+          element.innerHTML=`failed to fetch latest release info from: https://api.github.com/repos/vektra/mockery/releases/latest`;
+    }
+  );
+}
+</script>
 
 
 
