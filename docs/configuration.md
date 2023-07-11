@@ -193,6 +193,7 @@ Variables that are marked as being templated are capable of using mockery-provid
 | InterfaceNameCamel | Converts a string `interface_name` to `InterfaceName` |
 | InterfaceNameLowerCamel | Converts `InterfaceName` to `interfaceName` |
 | InterfaceNameSnake | Converts `InterfaceName` to `interface_name` |
+| InterfaceNameLower | Converts `InterfaceName` to `interfacename` |
 | Mock | A string that is `Mock` if the interface is exported, or `mock` if it is not exported. Useful when setting the name of your mock to something like: <br>`#!yaml mockname: "{{.Mock}}{{.InterfaceName}}"`<br> This way, the mock name will retain the exported-ness of the original interface.
 | MockName | The name of the mock that will be generated. Note that this is simply the `mockname` configuration variable |
 | PackageName | The name of the package from the original interface |
