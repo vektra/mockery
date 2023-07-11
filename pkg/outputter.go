@@ -22,7 +22,7 @@ import (
 	"github.com/vektra/mockery/v2/pkg/stackerr"
 )
 
-var ErrInfiniteLoop = fmt.Errorf("infintie loop in template variables detected")
+var ErrInfiniteLoop = fmt.Errorf("infinite loop in template variables detected")
 
 // Functions available in the template for manipulating
 //
@@ -206,6 +206,7 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 		InterfaceNameCamel      string
 		InterfaceNameLowerCamel string
 		InterfaceNameSnake      string
+		InterfaceNameLower      string
 		Mock                    string
 		MockName                string
 		PackageName             string
@@ -217,6 +218,7 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 		InterfaceNameCamel:      strcase.ToCamel(iface.Name),
 		InterfaceNameLowerCamel: strcase.ToLowerCamel(iface.Name),
 		InterfaceNameSnake:      strcase.ToSnake(iface.Name),
+		InterfaceNameLower:      strings.ToLower(iface.Name),
 		Mock:                    mock,
 		MockName:                c.MockName,
 		PackageName:             iface.Pkg.Name(),
@@ -236,7 +238,7 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 	changesMade := true
 	for changesMade {
 		if numIterations >= 20 {
-			msg := "infintie loop in template variables detected"
+			msg := "infinite loop in template variables detected"
 			log.Error().Msg(msg)
 			for key, val := range templateMap {
 				l := log.With().Str("variable-name", key).Str("variable-value", *val).Logger()
