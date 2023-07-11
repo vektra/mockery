@@ -206,6 +206,7 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 		InterfaceNameCamel      string
 		InterfaceNameLowerCamel string
 		InterfaceNameSnake      string
+		InterfaceNameLower      string
 		Mock                    string
 		MockName                string
 		PackageName             string
@@ -217,6 +218,7 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 		InterfaceNameCamel:      strcase.ToCamel(iface.Name),
 		InterfaceNameLowerCamel: strcase.ToLowerCamel(iface.Name),
 		InterfaceNameSnake:      strcase.ToSnake(iface.Name),
+		InterfaceNameLower:      strings.ToLower(iface.Name),
 		Mock:                    mock,
 		MockName:                c.MockName,
 		PackageName:             iface.Pkg.Name(),
