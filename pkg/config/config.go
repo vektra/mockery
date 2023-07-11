@@ -512,7 +512,7 @@ func (c *Config) subPackages(
 		return nil
 	})
 	if walkErr != nil {
-		return nil, fmt.Errorf("error occured during filesystem walk: %w", walkErr)
+		return nil, fmt.Errorf("error occurred during filesystem walk: %w", walkErr)
 	}
 
 	// Parse the subdirectories we found into their respective fully qualified

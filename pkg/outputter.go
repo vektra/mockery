@@ -22,7 +22,7 @@ import (
 	"github.com/vektra/mockery/v2/pkg/stackerr"
 )
 
-var ErrInfiniteLoop = fmt.Errorf("infintie loop in template variables detected")
+var ErrInfiniteLoop = fmt.Errorf("infinite loop in template variables detected")
 
 // Functions available in the template for manipulating
 //
@@ -238,7 +238,7 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 	changesMade := true
 	for changesMade {
 		if numIterations >= 20 {
-			msg := "infintie loop in template variables detected"
+			msg := "infinite loop in template variables detected"
 			log.Error().Msg(msg)
 			for key, val := range templateMap {
 				l := log.With().Str("variable-name", key).Str("variable-value", *val).Logger()
