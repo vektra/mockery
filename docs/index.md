@@ -81,7 +81,47 @@ Why use mockery over gomock?
 Who uses mockery?
 ------------------
 
-:simple-grafana: [grafana](https://github.com/grafana/grafana) · :simple-google: [Google Skia](https://github.com/google/skia) · [Hashicorp](https://github.com/search?q=org%3Ahashicorp%20mockery&type=code) · :simple-google: [Google Skyzkaller](https://github.com/google/syzkaller) · :fontawesome-brands-uber: [Uber Cadence](https://github.com/uber/cadence) · [Jaeger](https://github.com/jaegertracing/jaeger) · [Splunk](https://github.com/splunk/kafka-mq-go) · [Ignite CLI](https://github.com/ignite/cli) · [Tendermint](https://github.com/tendermint/tendermint) · [Datadog](https://github.com/DataDog/datadog-agent)
+<div class="grid cards" markdown>
+- <figure markdown>
+	[![Grafana logo](assets/images/logos/grafana.svg){ class="center" width="100" }](https://github.com/grafana/grafana)
+	<figcaption>[grafana](https://github.com/grafana/grafana)</figcaption>
+  </figure>
+- <figure markdown>
+	[![Google logo](assets/images/logos/google.svg){ class="center" width="100" }](https://github.com/google/skia)
+	<figcaption>[Google Skia](https://github.com/google/skia)</figcaption>
+  </figure>
+- <figure markdown>
+	[![Google logo](assets/images/logos/google.svg){ class="center" width="100" }](https://github.com/google/syzkaller)
+	<figcaption>[Google Skyzkaller](https://github.com/google/syzkaller)</figcaption>
+  </figure>
+- <figure markdown>
+	[![Hashicorp logo](assets/images/logos/hashicorp.svg){ class="center" width="100" }](https://github.com/search?q=org%3Ahashicorp%20mockery&type=code)
+	<figcaption>[Hashicorp](https://github.com/search?q=org%3Ahashicorp%20mockery&type=code)</figcaption>
+  </figure>
+- <figure markdown>
+	[![Uber logo](assets/images/logos/uber.svg){ class="center" width="100" }](https://github.com/uber/cadence)
+	<figcaption>[Uber Cadence](https://github.com/uber/cadence)</figcaption>
+  </figure>
+- <figure markdown>
+	[![Jaeger logo](assets/images/logos/jaeger.png){ class="center" width="300" }](https://github.com/jaegertracing/jaeger)
+	<figcaption>[Jaegertracing](https://github.com/jaegertracing/jaeger)</figcaption>
+  </figure>
+- <figure markdown>
+	[![Splunk logo](assets/images/logos/splunk.svg){ class="center" width="300" }](https://github.com/splunk/kafka-mq-go)
+	<figcaption>[Splunk kafka-mq-go](https://github.com/splunk/kafka-mq-go)</figcaption>
+  </figure>
+- <figure markdown>
+	[![Ignite Logo](assets/images/logos/ignite-cli.png){ class="center" width="300" }](https://github.com/ignite/cli)
+  </figure>
+- <figure markdown>
+	[![Tendermint Logo](assets/images/logos/tendermint.svg){ class="center" width="300" }](https://github.com/tendermint/tendermint)
+  </figure>
+- <figure markdown>
+	[![Datadog logo](assets/images/logos/datadog.svg){ class="center" width="300" }](https://github.com/DataDog/datadog-agent)
+  </figure>
+- [![Seatgeek Logo](assets/images/logos/seatgeek.svg)](https://seatgeek.com)
+</div>
+
 
 
 [Get Started](installation.md){ .md-button .md-button--primary .md-button--stretch }
