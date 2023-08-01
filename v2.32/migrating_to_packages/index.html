@@ -16,8 +16,12 @@
         <link rel="prev" href="../changelog/">
       
       
+      
+        
+      
+      
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.18">
+      <meta name="generator" content="mkdocs-1.5.1, mkdocs-material-9.1.21+insiders-4.38.0">
     
     
       
@@ -25,10 +29,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.26e3688c.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.3a36e643.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ecc896b0.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ecc776e4.min.css">
       
       
 
@@ -52,34 +56,20 @@
 
     
     
-      
-        <meta  property="og:type"  content="website" >
-      
-        <meta  property="og:title"  content="Migrating To Packages - mockery" >
-      
-        <meta  property="og:description"  content="Create mock implementations of your Golang interfaces using mockery and testify." >
-      
-        <meta  property="og:image"  content="https://vektra.github.io/mockery/latest/assets/images/social/migrating_to_packages.png" >
-      
-        <meta  property="og:image:type"  content="image/png" >
-      
-        <meta  property="og:image:width"  content="1200" >
-      
-        <meta  property="og:image:height"  content="630" >
-      
-        <meta  property="og:url"  content="https://vektra.github.io/mockery/latest/migrating_to_packages/" >
-      
-        <meta  name="twitter:card"  content="summary_large_image" >
-      
-        <meta  name="twitter:title"  content="Migrating To Packages - mockery" >
-      
-        <meta  name="twitter:description"  content="Create mock implementations of your Golang interfaces using mockery and testify." >
-      
-        <meta  name="twitter:image"  content="https://vektra.github.io/mockery/latest/assets/images/social/migrating_to_packages.png" >
-      
-    
-    
-   <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Migrating To Packages - mockery" />
+<meta property="og:description" content="Create mock implementations of your Golang interfaces using mockery and testify." />
+<meta property="og:image" content="https://vektra.github.io/mockery/latest/assets/images/social/migrating_to_packages.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://vektra.github.io/mockery/latest/migrating_to_packages/" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter.title" content="Migrating To Packages - mockery" />
+<meta property="twitter:description" content="Create mock implementations of your Golang interfaces using mockery and testify." />
+<meta property="twitter:image" content="https://vektra.github.io/mockery/latest/assets/images/social/migrating_to_packages.png" />
+ <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
         html.glightbox-open { overflow: initial; height: 100%; }
         .gslide-title { margin-top: 0px; user-select: text; }
         .gslide-desc { color: #666; user-select: text; }
@@ -102,9 +92,6 @@
     
     <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="light-blue" data-md-color-accent="indigo">
   
-    
-    
-      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -176,9 +163,9 @@
             
             
             
-            <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="light-blue" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+            <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="light-blue" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
             
-              <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
               </label>
             
@@ -186,15 +173,18 @@
             
             
             
-            <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="light-blue" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+            <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="light-blue" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
             
-              <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
               </label>
             
           
         </form>
       
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
     
     
@@ -266,6 +256,7 @@
                     
 
 
+
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="mockery" class="md-nav__button md-logo" aria-label="mockery" data-md-component="logo">
@@ -293,14 +284,24 @@
     
       
       
-      
-
   
   
   
     <li class="md-nav__item">
       <a href=".." class="md-nav__link">
-        Home
+        
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
       </a>
     </li>
   
@@ -308,117 +309,191 @@
     
       
       
+  
+  
+  
+    
+    
       
-
-  
-  
-  
+        
+      
+        
+      
+        
+      
+        
+      
+    
     
       
     
     <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
-      
-      
         
-          
         
-          
         
-          
         
-          
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
-      
-      
-        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-          Getting Started
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-        <label class="md-nav__title" for="__nav_2">
-          <span class="md-nav__icon md-icon"></span>
-          Getting Started
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
+                
   
   
   
     <li class="md-nav__item">
       <a href="../installation/" class="md-nav__link">
-        Installation
+        
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
       </a>
     </li>
   
 
-            
-          
+              
             
               
+                
   
   
   
     <li class="md-nav__item">
       <a href="../configuration/" class="md-nav__link">
-        Configuration
+        
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
       </a>
     </li>
   
 
-            
-          
+              
             
               
+                
   
   
   
     <li class="md-nav__item">
       <a href="../running/" class="md-nav__link">
-        Running
+        
+  
+  <span class="md-ellipsis">
+    
+  
+    Running
+  
+
+    
+  </span>
+  
+  
+
       </a>
     </li>
   
 
-            
-          
+              
             
               
+                
   
   
   
     <li class="md-nav__item">
       <a href="../examples/" class="md-nav__link">
-        Examples
+        
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
       </a>
     </li>
   
 
+              
             
-          
-        </ul>
-      </nav>
+          </ul>
+        </nav>
+      
     </li>
   
 
     
       
       
-      
-
   
   
   
     <li class="md-nav__item">
       <a href="../features/" class="md-nav__link">
-        Features
+        
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
       </a>
     </li>
   
@@ -426,75 +501,114 @@
     
       
       
-      
-
   
   
     
   
   
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
     
       
     
     <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
-      
-      
         
-          
         
-          
         
-          
         
-      
-      
-        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-          Notes
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-        <label class="md-nav__title" for="__nav_4">
-          <span class="md-nav__icon md-icon"></span>
-          Notes
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    
+  
+    Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
+                
   
   
   
     <li class="md-nav__item">
       <a href="../notes/" class="md-nav__link">
-        FAQ
+        
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
       </a>
     </li>
   
 
-            
-          
+              
             
               
+                
   
   
   
     <li class="md-nav__item">
       <a href="../changelog/" class="md-nav__link">
-        Changelog
+        
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
       </a>
     </li>
   
 
-            
-          
+              
             
               
+                
   
   
     
@@ -507,12 +621,36 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Migrating to Packages
+          
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating to Packages
+  
+
+    
+  </span>
+  
+  
+
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Migrating to Packages
+        
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating to Packages
+  
+
+    
+  </span>
+  
+  
+
       </a>
       
         
@@ -530,35 +668,55 @@
       
         <li class="md-nav__item">
   <a href="#background" class="md-nav__link">
-    Background
+    <span class="md-ellipsis">
+      
+        Background
+      
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#configuration-changes" class="md-nav__link">
-    Configuration Changes
+    <span class="md-ellipsis">
+      
+        Configuration Changes
+      
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#gogenerate-directives" class="md-nav__link">
-    //go:generate directives
+    <span class="md-ellipsis">
+      
+        //go:generate directives
+      
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#behavior-changes" class="md-nav__link">
-    Behavior Changes
+    <span class="md-ellipsis">
+      
+        Behavior Changes
+      
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#filesystem-tree-layouts" class="md-nav__link">
-    Filesystem Tree Layouts
+    <span class="md-ellipsis">
+      
+        Filesystem Tree Layouts
+      
+    </span>
   </a>
   
 </li>
@@ -570,10 +728,11 @@
     </li>
   
 
+              
             
-          
-        </ul>
-      </nav>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -604,35 +763,55 @@
       
         <li class="md-nav__item">
   <a href="#background" class="md-nav__link">
-    Background
+    <span class="md-ellipsis">
+      
+        Background
+      
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#configuration-changes" class="md-nav__link">
-    Configuration Changes
+    <span class="md-ellipsis">
+      
+        Configuration Changes
+      
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#gogenerate-directives" class="md-nav__link">
-    //go:generate directives
+    <span class="md-ellipsis">
+      
+        //go:generate directives
+      
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#behavior-changes" class="md-nav__link">
-    Behavior Changes
+    <span class="md-ellipsis">
+      
+        Behavior Changes
+      
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#filesystem-tree-layouts" class="md-nav__link">
-    Filesystem Tree Layouts
+    <span class="md-ellipsis">
+      
+        Filesystem Tree Layouts
+      
+    </span>
   </a>
   
 </li>
@@ -647,6 +826,7 @@
           
           
             <div class="md-content" data-md-component="content">
+              
               <article class="md-content__inner md-typeset">
                 
                   
@@ -692,6 +872,10 @@
 <p>The legacy config provided the <code>keeptree</code> parameter which, if <code class="highlight"><span class="nt">keeptree</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span></code>, would place the mocks in the same package as your interfaces. Otherwise, it would place it in a separate directory.</p>
 <p>These two layouts are supported in the <code>packages</code> scheme. See the relevant docs <a href="../features/#layouts">here</a>.</p>
 
+  
+  
+
+
 
 
 
@@ -701,6 +885,7 @@
             </div>
           
           
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
       </main>
@@ -714,7 +899,7 @@
   
     Made with
     <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
+      Material for MkDocs Insiders
     </a>
   
 </div>
@@ -728,10 +913,10 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.annotate", "content.code.copy", "content.action.edit", "content.action.view", "navigation.indexes", "navigation.sections", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.annotate", "content.code.copy", "content.action.edit", "content.action.view", "navigation.indexes", "navigation.sections", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.6c7302c4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.220ee61c.min.js"></script>
+      <script src="../assets/javascripts/bundle.7c5c0157.min.js"></script>
       
         
           <script src="../js/open_in_new_tab.js"></script>
