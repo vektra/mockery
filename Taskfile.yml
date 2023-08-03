@@ -1,15 +1,6 @@
 version: "3"
 
 tasks:
-  test:
-    cmds:
-      - go test -v -coverprofile=coverage.txt ./...
-    desc: run unit tests
-    sources:
-      - "**/*.go"
-    generates:
-      - coverage.txt
-
   coverage:
     deps: [test]
     desc: run unit tests and create HTML coverage file
@@ -23,14 +14,14 @@ tasks:
     cmds:
       - go fmt ./...
   
-  rm_mocks:
+  mocks.remove:
+    desc: remove all mock files
     cmds:
     - find . -name '*_mock.go' | xargs rm
     - rm -rf mocks/
 
-  mocks:
+  mocks.generate:
     desc: generate mockery mocks
-    deps: [rm_mocks]
     cmds:
       - go run .
 
@@ -41,6 +32,8 @@ tasks:
 
   mkdocs.install:
     desc: install mkdocs and plugins
+    sources:
+      - "docs/requirements.txt"
     cmds:
       - pip install -r docs/requirements.txt
 
@@ -57,6 +50,15 @@ tasks:
     cmds:
       - go run github.com/golangci/golangci-lint/cmd/golangci-lint run
 
+  test:
+    cmds:
+      - go test -v -coverprofile=coverage.txt ./...
+    desc: run unit tests
+    sources:
+      - "**/*.go"
+    generates:
+      - coverage.txt
+
   test.e2e:
     desc: run end-to-end tests
     sources:
@@ -68,7 +70,8 @@ tasks:
   test.ci:
     deps: [fmt, lint]
     cmds:
-      - task: mocks
+      - task: mocks.remove
+      - task: mocks.generate
       - task: test
       - task: test.e2e
 
