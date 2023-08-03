@@ -67,6 +67,7 @@ Parameter Descriptions
 | `disable-version-string` | :fontawesome-solid-x: | `#!yaml false` | Disable the version string in the generated mock files. |
 | `dry-run` | :fontawesome-solid-x: | `#!yaml false` | Print the actions that would be taken, but don't perform the actions. |
 | `filename` | :fontawesome-solid-check: | `#!yaml "mock_{{.InterfaceName}}.go"` | The name of the file the mock will reside in. |
+| `include-auto-generated` | :fontawesome-solid-x: | `#!yaml true` | Set to `#!yaml false` if you need mockery to skip auto-generated files during its recursive package discovery. When set to `#!yaml true`, mockery includes auto-generated files when determining if a particular directory is an importable package. |
 | `inpackage` | :fontawesome-solid-x: | `#!yaml false` | When generating mocks alongside the original interfaces, you must specify `inpackage: True` to inform mockery that the mock is being placed in the same package as the original interface. |
 | `mockname` | :fontawesome-solid-check: | `#!yaml "Mock{{.InterfaceName}}"` | The name of the generated mock. |
 | `outpkg` | :fontawesome-solid-check: | `#!yaml "{{.PackageName}}"` | Use `outpkg` to specify the package name of the generated mocks. |
