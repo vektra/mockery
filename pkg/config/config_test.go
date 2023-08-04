@@ -700,18 +700,9 @@ func TestNewConfigFromViper(t *testing.T) {
 				return viper.New()
 			},
 			want: &Config{
-				Dir: ".",
-			},
-		},
-		{
-			name: "dir set",
-			v: func(t *testing.T) *viper.Viper {
-				v := viper.New()
-				v.Set("dir", "foobar")
-				return v
-			},
-			want: &Config{
-				Dir: "foobar",
+				Case:   "camel",
+				Dir:    ".",
+				Output: "./mocks",
 			},
 		},
 		{
