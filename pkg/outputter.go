@@ -320,6 +320,8 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 	}
 
 	for _, interfaceConfig := range interfaceConfigs {
+		interfaceConfig.LogUnsupportedPackagesConfig(ctx)
+
 		log.Debug().Msg("getting mock generator")
 
 		if err := parseConfigTemplates(ctx, interfaceConfig, iface); err != nil {

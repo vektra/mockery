@@ -90,7 +90,9 @@ func NewConfigFromViper(v *viper.Viper) (*Config, error) {
 
 	// Set defaults
 	if len(packages) == 0 {
+		v.SetDefault("case", "camel")
 		v.SetDefault("dir", ".")
+		v.SetDefault("output", "./mocks")
 	} else {
 		v.SetDefault("dir", "mocks/{{.PackagePath}}")
 		v.SetDefault("filename", "mock_{{.InterfaceName}}.go")
@@ -701,4 +703,44 @@ func (c *Config) getInterfacesForPackage(ctx context.Context, pkgPath string) ([
 		interfaces = append(interfaces, key)
 	}
 	return interfaces, nil
+}
+
+func (c *Config) TagName(name string) string {
+	field, ok := reflect.TypeOf(c).Elem().FieldByName(name)
+	if !ok {
+		panic(fmt.Sprintf("unknown config field: %s", name))
+	}
+	return string(field.Tag.Get("mapstructure"))
+}
+
+// LogUnsupportedPackagesConfig is a method that will help aid migrations to the
+// packages config feature. This is intended to be a temporary measure until v3
+// when we can remove all legacy config options.
+func (c *Config) LogUnsupportedPackagesConfig(ctx context.Context) {
+	log := zerolog.Ctx(ctx)
+	unsupportedOptions := make(map[string]any)
+	for _, name := range []string{"Name", "KeepTree", "Case", "Output", "TestOnly"} {
+		value := reflect.ValueOf(c).Elem().FieldByName(name)
+		var valueAsString string
+		if value.Kind().String() == "bool" {
+			valueAsString = fmt.Sprintf("%v", value.Bool())
+		}
+		if value.Kind().String() == "string" {
+			valueAsString = value.String()
+		}
+
+		if !value.IsZero() {
+			unsupportedOptions[c.TagName(name)] = valueAsString
+		}
+	}
+	if len(unsupportedOptions) == 0 {
+		return
+	}
+
+	l := log.With().
+		Dict("unsupported-fields", zerolog.Dict().Fields(unsupportedOptions)).
+		Str("url", logging.DocsURL("/configuration/#parameter-descriptions")).
+		Logger()
+	l.Error().Msg("use of unsupported options detected. mockery behavior is undefined.")
+
 }

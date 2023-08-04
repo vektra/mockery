@@ -54,7 +54,7 @@ func NewRootCmd() *cobra.Command {
 	pFlags.StringVar(&cfgFile, "config", "", "config file to use")
 	pFlags.String("name", "", "name or matching regular expression of interface to generate mock for")
 	pFlags.Bool("print", false, "print the generated mock to stdout")
-	pFlags.String("output", "./mocks", "directory to write mocks to")
+	pFlags.String("output", "", "directory to write mocks to")
 	pFlags.String("outpkg", "mocks", "name of generated package")
 	pFlags.String("packageprefix", "", "prefix for the generated package name, it is ignored if outpkg is also specified.")
 	pFlags.String("dir", "", "directory to search for interfaces")
@@ -64,7 +64,7 @@ func NewRootCmd() *cobra.Command {
 	pFlags.Bool("inpackage", false, "generate a mock that goes inside the original package")
 	pFlags.Bool("inpackage-suffix", false, "use filename '_mock' suffix instead of 'mock_' prefix for InPackage mocks")
 	pFlags.Bool("testonly", false, "generate a mock in a _test.go file")
-	pFlags.String("case", "camel", "name the mocked file using casing convention [camel, snake, underscore]")
+	pFlags.String("case", "", "name the mocked file using casing convention [camel, snake, underscore]")
 	pFlags.String("note", "", "comment to insert into prologue of each generated file")
 	pFlags.String("cpuprofile", "", "write cpu profile to file")
 	pFlags.Bool("version", false, "prints the installed version of mockery")
@@ -230,7 +230,9 @@ func (r *RootApp) Run() error {
 	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return fmt.Errorf("failed to determine configured packages: %w", err)
 	}
-	if len(configuredPackages) != 0 && r.Config.Name == "" {
+	if len(configuredPackages) != 0 {
+		r.Config.LogUnsupportedPackagesConfig(ctx)
+
 		configuredPackages, err := r.Config.GetPackages(ctx)
 		if err != nil {
 			return fmt.Errorf("failed to get package from config: %w", err)
