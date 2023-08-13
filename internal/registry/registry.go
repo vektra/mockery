@@ -3,6 +3,7 @@ package registry
 import (
 	"errors"
 	"fmt"
+	"go/ast"
 	"go/types"
 	"path/filepath"
 	"sort"
@@ -16,38 +17,40 @@ import (
 // imports and ensures there are no conflicts in the imported package
 // qualifiers.
 type Registry struct {
-	srcPkg     *packages.Package
-	moqPkgPath string
-	aliases    map[string]string
-	imports    map[string]*Package
+	srcPkgName  string
+	srcPkgTypes *types.Package
+	moqPkgPath  string
+	aliases     map[string]string
+	imports     map[string]*Package
 }
 
 // New loads the source package info and returns a new instance of
 // Registry.
 func New(srcDir, moqPkg string) (*Registry, error) {
 	srcPkg, err := pkgInfoFromPath(
-		srcDir, packages.NeedName|packages.NeedSyntax|packages.NeedTypes|packages.NeedTypesInfo|packages.NeedDeps,
+		srcDir, packages.NeedName|packages.NeedSyntax|packages.NeedTypes,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("couldn't load source package: %s", err)
 	}
 
 	return &Registry{
-		srcPkg:     srcPkg,
-		moqPkgPath: findPkgPath(moqPkg, srcPkg),
-		aliases:    parseImportsAliases(srcPkg),
-		imports:    make(map[string]*Package),
+		srcPkgName:  srcPkg.Name,
+		srcPkgTypes: srcPkg.Types,
+		moqPkgPath:  findPkgPath(moqPkg, srcPkg.PkgPath),
+		aliases:     parseImportsAliases(srcPkg.Syntax),
+		imports:     make(map[string]*Package),
 	}, nil
 }
 
 // SrcPkg returns the types info for the source package.
 func (r Registry) SrcPkg() *types.Package {
-	return r.srcPkg.Types
+	return r.srcPkgTypes
 }
 
 // SrcPkgName returns the name of the source package.
 func (r Registry) SrcPkgName() string {
-	return r.srcPkg.Name
+	return r.srcPkgName
 }
 
 // LookupInterface returns the underlying interface definition of the
@@ -173,14 +176,14 @@ func pkgInfoFromPath(srcDir string, mode packages.LoadMode) (*packages.Package, 
 	return pkgs[0], nil
 }
 
-func findPkgPath(pkgInputVal string, srcPkg *packages.Package) string {
+func findPkgPath(pkgInputVal string, srcPkgPath string) string {
 	if pkgInputVal == "" {
-		return srcPkg.PkgPath
+		return srcPkgPath
 	}
-	if pkgInDir(srcPkg.PkgPath, pkgInputVal) {
-		return srcPkg.PkgPath
+	if pkgInDir(srcPkgPath, pkgInputVal) {
+		return srcPkgPath
 	}
-	subdirectoryPath := filepath.Join(srcPkg.PkgPath, pkgInputVal)
+	subdirectoryPath := filepath.Join(srcPkgPath, pkgInputVal)
 	if pkgInDir(subdirectoryPath, pkgInputVal) {
 		return subdirectoryPath
 	}
@@ -195,9 +198,9 @@ func pkgInDir(pkgName, dir string) bool {
 	return currentPkg.Name == pkgName || currentPkg.Name+"_test" == pkgName
 }
 
-func parseImportsAliases(pkg *packages.Package) map[string]string {
+func parseImportsAliases(syntaxTree []*ast.File) map[string]string {
 	aliases := make(map[string]string)
-	for _, syntax := range pkg.Syntax {
+	for _, syntax := range syntaxTree {
 		for _, imprt := range syntax.Imports {
 			if imprt.Name != nil && imprt.Name.Name != "." && imprt.Name.Name != "_" {
 				aliases[strings.Trim(imprt.Path.Value, `"`)] = imprt.Name.Name
