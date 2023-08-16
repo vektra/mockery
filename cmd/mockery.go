@@ -70,7 +70,8 @@ func NewRootCmd() *cobra.Command {
 	pFlags.Bool("version", false, "prints the installed version of mockery")
 	pFlags.Bool("quiet", false, `suppresses logger output (equivalent to --log-level="")`)
 	pFlags.Bool("keeptree", false, "keep the tree structure of the original interface files into a different repository. Must be used with XX")
-	pFlags.String("tags", "", "space-separated list of additional build tags to use")
+	pFlags.String("tags", "", "space-separated list of additional build tags to load packages")
+	pFlags.String("mock-build-tags", "", "set the build tags of the generated mocks. Read more about the format: https://pkg.go.dev/cmd/go#hdr-Build_constraints")
 	pFlags.String("filename", "", "name of generated file (only works with -name and no regex)")
 	pFlags.String("structname", "", "name of generated struct (only works with -name and no regex)")
 	pFlags.String("log-level", "info", "Level of logging")
@@ -376,6 +377,7 @@ func (r *RootApp) Run() error {
 		InPackage:            r.Config.InPackage,
 		KeepTree:             r.Config.KeepTree,
 		Note:                 r.Config.Note,
+		MockBuildTags:        r.Config.MockBuildTags,
 		PackageName:          r.Config.Outpkg,
 		PackageNamePrefix:    r.Config.Packageprefix,
 		StructName:           r.Config.StructName,

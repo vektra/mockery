@@ -33,6 +33,7 @@ type Interface struct {
 
 type Config struct {
 	All                  bool                   `mapstructure:"all"`
+	MockBuildTags        string                 `mapstructure:"mock-build-tags"`
 	BuildTags            string                 `mapstructure:"tags"`
 	Case                 string                 `mapstructure:"case"`
 	Config               string                 `mapstructure:"config"`

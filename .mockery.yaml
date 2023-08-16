@@ -4,7 +4,14 @@ with-expecter: True
 mockname: "{{.InterfaceName}}"
 filename: "{{.MockName}}.go"
 outpkg: mocks
+tags: "custom2"
 packages:
+  github.com/vektra/mockery/v2/pkg/fixtures/buildtag/comment:
+    config:
+      mock-build-tags: "custom3 && (!windows || !darwin || !freebsd)"
+      disable-version-string: true
+    interfaces:
+      IfaceWithCustomBuildTagInComment:
   github.com/vektra/mockery/v2/pkg:
     interfaces:
       TypesPackage:
