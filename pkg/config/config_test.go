@@ -608,6 +608,46 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 			},
 			want: true,
 		},
+		{
+			name: "should generate using included-regex",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"include-regex": ".*Interface",
+						},
+					},
+				},
+			},
+			want: true,
+		},
+		{
+			name: "should generate when using all and included-regex doesn't match",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"all":           true,
+							"include-regex": ".*XInterface",
+						},
+					},
+				},
+			},
+			want: true,
+		},
+		{
+			name: "should not generate when included-regex doesn't match",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"include-regex": ".*XInterface",
+						},
+					},
+				},
+			},
+			want: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
