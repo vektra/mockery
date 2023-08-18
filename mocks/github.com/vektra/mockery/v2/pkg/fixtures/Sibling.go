@@ -54,9 +54,10 @@ func (_c *Sibling_DoSomething_Call) RunAndReturn(run func()) *Sibling_DoSomethin
 func NewSibling(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *Sibling {
+}, expectedCalls ...*mock.Call) *Sibling {
 	mock := &Sibling{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

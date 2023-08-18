@@ -140,9 +140,10 @@ func (_c *RequesterReturnElided_Put_Call) RunAndReturn(run func(string) (int, er
 func NewRequesterReturnElided(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *RequesterReturnElided {
+}, expectedCalls ...*mock.Call) *RequesterReturnElided {
 	mock := &RequesterReturnElided{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

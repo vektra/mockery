@@ -76,9 +76,10 @@ func (_c *RequesterArray_Get_Call) RunAndReturn(run func(string) ([2]string, err
 func NewRequesterArray(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *RequesterArray {
+}, expectedCalls ...*mock.Call) *RequesterArray {
 	mock := &RequesterArray{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

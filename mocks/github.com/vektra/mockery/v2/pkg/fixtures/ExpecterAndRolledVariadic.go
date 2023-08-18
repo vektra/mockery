@@ -265,9 +265,10 @@ func (_c *ExpecterAndRolledVariadic_VariadicMany_Call) RunAndReturn(run func(int
 func NewExpecterAndRolledVariadic(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *ExpecterAndRolledVariadic {
+}, expectedCalls ...*mock.Call) *ExpecterAndRolledVariadic {
 	mock := &ExpecterAndRolledVariadic{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

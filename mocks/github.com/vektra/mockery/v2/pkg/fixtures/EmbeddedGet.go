@@ -66,9 +66,10 @@ func (_c *EmbeddedGet_Get_Call[T]) RunAndReturn(run func() T) *EmbeddedGet_Get_C
 func NewEmbeddedGet[T constraints.Signed](t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *EmbeddedGet[T] {
+}, expectedCalls ...*mock.Call) *EmbeddedGet[T] {
 	mock := &EmbeddedGet[T]{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

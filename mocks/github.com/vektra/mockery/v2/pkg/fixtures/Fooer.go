@@ -141,9 +141,10 @@ func (_c *Fooer_Foo_Call) RunAndReturn(run func(func(string) string) error) *Foo
 func NewFooer(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *Fooer {
+}, expectedCalls ...*mock.Call) *Fooer {
 	mock := &Fooer{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

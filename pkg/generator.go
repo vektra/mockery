@@ -893,9 +893,10 @@ func (g *Generator) generateConstructor(ctx context.Context) {
 func {{ .ConstructorName }}{{ .TypeConstraint }}(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *{{ .MockName }}{{ .InstantiatedTypeString }} {
+}, expectedCalls ...*mock.Call) *{{ .MockName }}{{ .InstantiatedTypeString }} {
 	mock := &{{ .MockName }}{{ .InstantiatedTypeString }}{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

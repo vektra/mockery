@@ -76,9 +76,10 @@ func (_c *A_Call_Call) RunAndReturn(run func() (test.B, error)) *A_Call_Call {
 func NewA(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *A {
+}, expectedCalls ...*mock.Call) *A {
 	mock := &A{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

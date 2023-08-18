@@ -78,9 +78,10 @@ func (_c *RequesterNS_Get_Call) RunAndReturn(run func(string) (http.Response, er
 func NewRequesterNS(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *RequesterNS {
+}, expectedCalls ...*mock.Call) *RequesterNS {
 	mock := &RequesterNS{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

@@ -64,9 +64,10 @@ func (_c *FuncArgsCollision_Foo_Call) RunAndReturn(run func(interface{}) error) 
 func NewFuncArgsCollision(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *FuncArgsCollision {
+}, expectedCalls ...*mock.Call) *FuncArgsCollision {
 	mock := &FuncArgsCollision{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

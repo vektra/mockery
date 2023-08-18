@@ -154,9 +154,10 @@ func (_c *interfaceAMock_DoB0v2_Call) RunAndReturn(run func(interfaceB0) interfa
 func newInterfaceAMock(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *interfaceAMock {
+}, expectedCalls ...*mock.Call) *interfaceAMock {
 	mock := &interfaceAMock{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

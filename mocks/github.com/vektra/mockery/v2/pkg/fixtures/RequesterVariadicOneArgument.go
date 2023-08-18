@@ -74,9 +74,10 @@ func (_m *RequesterVariadicOneArgument) Sprintf(format string, a ...interface{})
 func NewRequesterVariadicOneArgument(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *RequesterVariadicOneArgument {
+}, expectedCalls ...*mock.Call) *RequesterVariadicOneArgument {
 	mock := &RequesterVariadicOneArgument{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

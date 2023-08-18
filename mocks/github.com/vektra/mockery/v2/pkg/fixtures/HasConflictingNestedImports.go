@@ -121,9 +121,10 @@ func (_c *HasConflictingNestedImports_Z_Call) RunAndReturn(run func() fixturesht
 func NewHasConflictingNestedImports(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *HasConflictingNestedImports {
+}, expectedCalls ...*mock.Call) *HasConflictingNestedImports {
 	mock := &HasConflictingNestedImports{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

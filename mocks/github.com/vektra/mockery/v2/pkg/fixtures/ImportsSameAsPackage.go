@@ -144,9 +144,10 @@ func (_c *ImportsSameAsPackage_C_Call) RunAndReturn(run func(fixtures.C)) *Impor
 func NewImportsSameAsPackage(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *ImportsSameAsPackage {
+}, expectedCalls ...*mock.Call) *ImportsSameAsPackage {
 	mock := &ImportsSameAsPackage{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

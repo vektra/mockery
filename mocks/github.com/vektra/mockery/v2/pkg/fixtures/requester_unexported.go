@@ -54,9 +54,10 @@ func (_c *requester_unexported_Get_Call) RunAndReturn(run func()) *requester_une
 func newRequester_unexported(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *requester_unexported {
+}, expectedCalls ...*mock.Call) *requester_unexported {
 	mock := &requester_unexported{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

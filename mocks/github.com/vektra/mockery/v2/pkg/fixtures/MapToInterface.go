@@ -68,9 +68,10 @@ func (_c *MapToInterface_Foo_Call) RunAndReturn(run func(...map[string]interface
 func NewMapToInterface(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MapToInterface {
+}, expectedCalls ...*mock.Call) *MapToInterface {
 	mock := &MapToInterface{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

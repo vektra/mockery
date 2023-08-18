@@ -65,9 +65,10 @@ func (_c *RequesterElided_Get_Call) RunAndReturn(run func(string, string) error)
 func NewRequesterElided(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *RequesterElided {
+}, expectedCalls ...*mock.Call) *RequesterElided {
 	mock := &RequesterElided{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

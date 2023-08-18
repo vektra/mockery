@@ -58,9 +58,10 @@ func (_c *UsesOtherPkgIface_DoSomethingElse_Call) RunAndReturn(run func(test.Sib
 func NewUsesOtherPkgIface(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *UsesOtherPkgIface {
+}, expectedCalls ...*mock.Call) *UsesOtherPkgIface {
 	mock := &UsesOtherPkgIface{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

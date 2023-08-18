@@ -76,9 +76,10 @@ func (_c *RequesterSlice_Get_Call) RunAndReturn(run func(string) ([]string, erro
 func NewRequesterSlice(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *RequesterSlice {
+}, expectedCalls ...*mock.Call) *RequesterSlice {
 	mock := &RequesterSlice{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

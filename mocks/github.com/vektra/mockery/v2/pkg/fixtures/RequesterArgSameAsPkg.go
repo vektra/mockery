@@ -55,9 +55,10 @@ func (_c *RequesterArgSameAsPkg_Get_Call) RunAndReturn(run func(string)) *Reques
 func NewRequesterArgSameAsPkg(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *RequesterArgSameAsPkg {
+}, expectedCalls ...*mock.Call) *RequesterArgSameAsPkg {
 	mock := &RequesterArgSameAsPkg{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

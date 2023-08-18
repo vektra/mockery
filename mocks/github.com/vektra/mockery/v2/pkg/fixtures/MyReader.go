@@ -74,9 +74,10 @@ func (_c *MyReader_Read_Call) RunAndReturn(run func([]byte) (int, error)) *MyRea
 func NewMyReader(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MyReader {
+}, expectedCalls ...*mock.Call) *MyReader {
 	mock := &MyReader{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

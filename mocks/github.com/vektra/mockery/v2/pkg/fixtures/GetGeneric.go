@@ -66,9 +66,10 @@ func (_c *GetGeneric_Get_Call[T]) RunAndReturn(run func() T) *GetGeneric_Get_Cal
 func NewGetGeneric[T constraints.Integer](t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *GetGeneric[T] {
+}, expectedCalls ...*mock.Call) *GetGeneric[T] {
 	mock := &GetGeneric[T]{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

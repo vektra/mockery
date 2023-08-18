@@ -64,9 +64,10 @@ func (_c *MapFunc_Get_Call) RunAndReturn(run func(map[string]func(string) string
 func NewMapFunc(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MapFunc {
+}, expectedCalls ...*mock.Call) *MapFunc {
 	mock := &MapFunc{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

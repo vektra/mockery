@@ -117,9 +117,10 @@ func (_c *ConsulLock_Unlock_Call) RunAndReturn(run func() error) *ConsulLock_Unl
 func NewConsulLock(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *ConsulLock {
+}, expectedCalls ...*mock.Call) *ConsulLock {
 	mock := &ConsulLock{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

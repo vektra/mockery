@@ -59,9 +59,10 @@ func (_c *UnsafeInterface_Do_Call) RunAndReturn(run func(*unsafe.Pointer)) *Unsa
 func NewUnsafeInterface(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *UnsafeInterface {
+}, expectedCalls ...*mock.Call) *UnsafeInterface {
 	mock := &UnsafeInterface{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

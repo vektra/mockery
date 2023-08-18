@@ -63,9 +63,10 @@ func (_c *MockFoo_Get_Call) RunAndReturn(run func() string) *MockFoo_Get_Call {
 func NewMockFoo(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockFoo {
+}, expectedCalls ...*mock.Call) *MockFoo {
 	mock := &MockFoo{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

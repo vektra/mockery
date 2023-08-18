@@ -151,9 +151,10 @@ func (_c *AsyncProducer_Whatever_Call) RunAndReturn(run func() chan bool) *Async
 func NewAsyncProducer(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *AsyncProducer {
+}, expectedCalls ...*mock.Call) *AsyncProducer {
 	mock := &AsyncProducer{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

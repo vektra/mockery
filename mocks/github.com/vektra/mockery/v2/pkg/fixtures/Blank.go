@@ -64,9 +64,10 @@ func (_c *Blank_Create_Call) RunAndReturn(run func(interface{}) error) *Blank_Cr
 func NewBlank(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *Blank {
+}, expectedCalls ...*mock.Call) *Blank {
 	mock := &Blank{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

@@ -113,9 +113,10 @@ func (_c *Example_B_Call) RunAndReturn(run func(string) fixtureshttp.MyStruct) *
 func NewExample(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *Example {
+}, expectedCalls ...*mock.Call) *Example {
 	mock := &Example{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

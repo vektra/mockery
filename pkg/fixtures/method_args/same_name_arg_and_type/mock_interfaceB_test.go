@@ -63,9 +63,10 @@ func (_c *interfaceBMock_GetData_Call) RunAndReturn(run func() int) *interfaceBM
 func newInterfaceBMock(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *interfaceBMock {
+}, expectedCalls ...*mock.Call) *interfaceBMock {
 	mock := &interfaceBMock{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

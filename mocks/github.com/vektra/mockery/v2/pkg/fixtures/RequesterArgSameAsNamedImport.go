@@ -70,9 +70,10 @@ func (_c *RequesterArgSameAsNamedImport_Get_Call) RunAndReturn(run func(string) 
 func NewRequesterArgSameAsNamedImport(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *RequesterArgSameAsNamedImport {
+}, expectedCalls ...*mock.Call) *RequesterArgSameAsNamedImport {
 	mock := &RequesterArgSameAsNamedImport{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

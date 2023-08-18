@@ -63,9 +63,10 @@ func (_c *GetInt_Get_Call) RunAndReturn(run func() int) *GetInt_Get_Call {
 func NewGetInt(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *GetInt {
+}, expectedCalls ...*mock.Call) *GetInt {
 	mock := &GetInt{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

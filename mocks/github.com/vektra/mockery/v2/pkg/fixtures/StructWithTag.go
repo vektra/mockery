@@ -99,9 +99,10 @@ func (_c *StructWithTag_MethodA_Call) RunAndReturn(run func(*struct {
 func NewStructWithTag(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *StructWithTag {
+}, expectedCalls ...*mock.Call) *StructWithTag {
 	mock := &StructWithTag{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

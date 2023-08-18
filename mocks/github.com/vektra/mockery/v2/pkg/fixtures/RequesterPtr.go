@@ -76,9 +76,10 @@ func (_c *RequesterPtr_Get_Call) RunAndReturn(run func(string) (*string, error))
 func NewRequesterPtr(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *RequesterPtr {
+}, expectedCalls ...*mock.Call) *RequesterPtr {
 	mock := &RequesterPtr{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

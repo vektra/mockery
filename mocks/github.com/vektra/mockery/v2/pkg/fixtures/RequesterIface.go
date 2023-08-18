@@ -69,9 +69,10 @@ func (_c *RequesterIface_Get_Call) RunAndReturn(run func() io.Reader) *Requester
 func NewRequesterIface(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *RequesterIface {
+}, expectedCalls ...*mock.Call) *RequesterIface {
 	mock := &RequesterIface{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

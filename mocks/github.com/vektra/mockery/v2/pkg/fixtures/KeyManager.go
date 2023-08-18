@@ -82,9 +82,10 @@ func (_c *KeyManager_GetKey_Call) RunAndReturn(run func(string, uint16) ([]byte,
 func NewKeyManager(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *KeyManager {
+}, expectedCalls ...*mock.Call) *KeyManager {
 	mock := &KeyManager{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

@@ -54,9 +54,10 @@ func (_c *Requester4_Get_Call) RunAndReturn(run func()) *Requester4_Get_Call {
 func NewRequester4(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *Requester4 {
+}, expectedCalls ...*mock.Call) *Requester4 {
 	mock := &Requester4{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

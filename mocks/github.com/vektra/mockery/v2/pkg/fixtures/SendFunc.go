@@ -79,9 +79,10 @@ func (_c *SendFunc_Execute_Call) RunAndReturn(run func(context.Context, string) 
 func NewSendFunc(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *SendFunc {
+}, expectedCalls ...*mock.Call) *SendFunc {
 	mock := &SendFunc{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 

@@ -104,9 +104,10 @@ func (_c *TypesPackage_Path_Call) RunAndReturn(run func() string) *TypesPackage_
 func NewTypesPackage(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *TypesPackage {
+}, expectedCalls ...*mock.Call) *TypesPackage {
 	mock := &TypesPackage{}
 	mock.Mock.Test(t)
+	mock.Mock.ExpectedCalls = expectedCalls
 
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 
