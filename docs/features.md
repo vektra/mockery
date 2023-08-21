@@ -181,6 +181,20 @@ You can use the `showconfig` command to see the config mockery injects. The outp
 ??? note "performance characteristics"
     The performance when using `#!yaml recursive: true` may be worse than manually specifying all packages statically in the yaml file. This is because of the fact that mockery has to recursively walk the filesystem path that contains the package in question. It may unnecessarily walk down unrelated paths (for example, a Python virtual environment that is in the same path as your package). For this reason, it is recommended _not_ to use `#!yaml recursive: true` if it can be avoided.
 
+### Regex matching
+
+You can filter matched interfaces using the `include-regex` option. To generate mocks only for interfaces ending in `Client` we can use the following configuration:
+
+```yaml
+packages:
+  github.com/user/project:
+    config:
+      recursive: true
+      include-regex: ".*Client"
+```
+
+??? note "all: true"
+    Using `all: true` will override `include-regex` and issue a warning.
 
 Mock Constructors
 -----------------
