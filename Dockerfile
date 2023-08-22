@@ -1,5 +1,7 @@
 FROM golang:1.20-alpine as builder
 
+RUN apk --update add --no-cache gcc musl-dev
+
 COPY mockery /usr/local/bin
 
 # Explicitly set a writable cache path when running --user=$(id -u):$(id -g)
