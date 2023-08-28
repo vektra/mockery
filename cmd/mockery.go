@@ -256,21 +256,6 @@ func (r *RootApp) Run() error {
 				Str(logging.LogKeyQualifiedName, iface.QualifiedName).
 				Logger()
 
-			// output stream provider determines where the mock file
-			// will actually live
-			if osp == nil {
-				osp = &pkg.FileOutputStreamProvider{
-					Config:                    r.Config,
-					BaseDir:                   r.Config.Output,
-					InPackage:                 r.Config.InPackage,
-					InPackageSuffix:           r.Config.InPackageSuffix,
-					TestOnly:                  r.Config.TestOnly,
-					Case:                      r.Config.Case,
-					KeepTree:                  r.Config.KeepTree,
-					KeepTreeOriginalDirectory: r.Config.Dir,
-					FileName:                  r.Config.FileName,
-				}
-			}
 			ifaceCtx := ifaceLog.WithContext(ctx)
 
 			outputter := pkg.NewOutputter(&r.Config, boilerplate, true)
