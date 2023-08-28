@@ -258,6 +258,16 @@ func (r *RootApp) Run() error {
 
 			ifaceCtx := ifaceLog.WithContext(ctx)
 
+			shouldGenerate, err := r.Config.ShouldGenerateInterface(ifaceCtx, iface.QualifiedName, iface.Name)
+			if err != nil {
+				return err
+			}
+			if !shouldGenerate {
+				ifaceLog.Debug().Msg("config doesn't specify to generate this interface, skipping.")
+				continue
+			}
+			ifaceLog.Debug().Msg("config specifies to generate this interface")
+
 			outputter := pkg.NewOutputter(&r.Config, boilerplate, true)
 			if err := outputter.Generate(ifaceCtx, iface); err != nil {
 				return err
