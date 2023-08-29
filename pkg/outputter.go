@@ -302,15 +302,6 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 		Logger()
 	ctx = log.WithContext(ctx)
 
-	shouldGenerate, err := m.config.ShouldGenerateInterface(ctx, iface.QualifiedName, iface.Name)
-	if err != nil {
-		return err
-	}
-	if !shouldGenerate {
-		log.Debug().Msg("config doesn't specify to generate this interface, skipping.")
-		return nil
-	}
-	log.Debug().Msg("config specifies to generate this interface")
 	log.Info().Msg("generating mocks for interface")
 
 	log.Debug().Msg("getting config for interface")
