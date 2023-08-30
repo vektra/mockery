@@ -18,8 +18,9 @@ import (
 	"unicode/utf8"
 
 	"github.com/rs/zerolog"
-	"github.com/vektra/mockery/v2/pkg/logging"
 	"golang.org/x/tools/imports"
+
+	"github.com/vektra/mockery/v2/pkg/logging"
 )
 
 const mockConstructorParamTypeNamePrefix = "mockConstructorTestingT"
@@ -930,10 +931,20 @@ func (g *Generator) generateCalled(list *paramList) (preamble string, called str
 	if namesLen == 0 || !list.Variadic || !g.config.UnrollVariadic {
 		if list.Variadic && !g.config.UnrollVariadic && g.config.WithExpecter {
 			variadicName := list.Names[namesLen-1]
-			tmpRet := resolveCollision(list.Names, "tmpRet")
 
-			preamble = fmt.Sprintf("\n\tvar " + tmpRet + " mock.Arguments\n\tif len(" + variadicName + ") > 0 {\n\t\t" + tmpRet + " = _m.Called(" + strings.Join(list.Names, ", ") + ")\n\t} else {\n\t\t" + tmpRet + " = _m.Called(" + strings.Join(list.Names[:len(list.Names)-1], ", ") + ")\n\t}\n\n\t")
-			called = tmpRet
+			called = fmt.Sprintf(
+				`func() mock.Arguments {
+	if len(%s) > 0 {
+		return _m.Called(%s)
+	} else {
+		return _m.Called(%s)
+	}
+}()`,
+				variadicName,
+				strings.Join(list.Names, ", "),
+				strings.Join(list.Names[:len(list.Names)-1], ", "),
+			)
+
 			return
 		}
 
