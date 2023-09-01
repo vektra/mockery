@@ -6,5 +6,8 @@ type Expecter interface {
 	ManyArgsReturns(str string, i int) (strs []string, err error)
 	Variadic(ints ...int) error
 	VariadicMany(i int, a string, intfs ...interface{}) error
+}
+
+type VariadicNoReturnInterface interface {
 	VariadicNoReturn(j int, is ...interface{})
 }

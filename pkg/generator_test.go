@@ -196,6 +196,22 @@ func (s *GeneratorSuite) TestGeneratorExpecterWithRolledVariadic() {
 	)
 }
 
+func (s *GeneratorSuite) TestGeneratorVariadicNoReturn() {
+	expectedBytes, err := os.ReadFile(getMocksPath("VariadicNoReturnInterface.go"))
+	s.Require().NoError(err)
+
+	expected := string(expectedBytes)
+	expected = expected[strings.Index(expected, "// VariadicNoReturnInterface is"):]
+
+	cfg := GeneratorConfig{
+		StructName:     "VariadicNoReturnInterface",
+		WithExpecter:   true,
+		UnrollVariadic: false,
+	}
+
+	s.checkGenerationWithConfig("expecter.go", "VariadicNoReturnInterface", cfg, expected)
+}
+
 func (s *GeneratorSuite) TestGeneratorFunction() {
 	s.checkGeneration("function.go", "SendFunc", false, "", "")
 }

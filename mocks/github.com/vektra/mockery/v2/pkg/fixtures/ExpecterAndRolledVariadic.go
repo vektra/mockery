@@ -258,52 +258,6 @@ func (_c *ExpecterAndRolledVariadic_VariadicMany_Call) RunAndReturn(run func(int
 	return _c
 }
 
-// VariadicNoReturn provides a mock function with given fields: j, is
-func (_m *ExpecterAndRolledVariadic) VariadicNoReturn(j int, is ...interface{}) {
-	if len(is) > 0 {
-		_m.Called(j, is)
-	} else {
-		_m.Called(j)
-	}
-
-}
-
-// ExpecterAndRolledVariadic_VariadicNoReturn_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'VariadicNoReturn'
-type ExpecterAndRolledVariadic_VariadicNoReturn_Call struct {
-	*mock.Call
-}
-
-// VariadicNoReturn is a helper method to define mock.On call
-//   - j int
-//   - is ...interface{}
-func (_e *ExpecterAndRolledVariadic_Expecter) VariadicNoReturn(j interface{}, is ...interface{}) *ExpecterAndRolledVariadic_VariadicNoReturn_Call {
-	return &ExpecterAndRolledVariadic_VariadicNoReturn_Call{Call: _e.mock.On("VariadicNoReturn",
-		append([]interface{}{j}, is...)...)}
-}
-
-func (_c *ExpecterAndRolledVariadic_VariadicNoReturn_Call) Run(run func(j int, is ...interface{})) *ExpecterAndRolledVariadic_VariadicNoReturn_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		variadicArgs := make([]interface{}, len(args)-1)
-		for i, a := range args[1:] {
-			if a != nil {
-				variadicArgs[i] = a.(interface{})
-			}
-		}
-		run(args[0].(int), variadicArgs...)
-	})
-	return _c
-}
-
-func (_c *ExpecterAndRolledVariadic_VariadicNoReturn_Call) Return() *ExpecterAndRolledVariadic_VariadicNoReturn_Call {
-	_c.Call.Return()
-	return _c
-}
-
-func (_c *ExpecterAndRolledVariadic_VariadicNoReturn_Call) RunAndReturn(run func(int, ...interface{})) *ExpecterAndRolledVariadic_VariadicNoReturn_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // NewExpecterAndRolledVariadic creates a new instance of ExpecterAndRolledVariadic. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewExpecterAndRolledVariadic(t interface {
