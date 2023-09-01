@@ -148,13 +148,13 @@ func (_c *ExpecterAndRolledVariadic_NoReturn_Call) RunAndReturn(run func(string)
 
 // Variadic provides a mock function with given fields: ints
 func (_m *ExpecterAndRolledVariadic) Variadic(ints ...int) error {
-	ret := func() mock.Arguments {
-		if len(ints) > 0 {
-			return _m.Called(ints)
-		} else {
-			return _m.Called()
-		}
-	}()
+	var tmpRet mock.Arguments
+	if len(ints) > 0 {
+		tmpRet = _m.Called(ints)
+	} else {
+		tmpRet = _m.Called()
+	}
+	ret := tmpRet
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(...int) error); ok {
@@ -203,13 +203,13 @@ func (_c *ExpecterAndRolledVariadic_Variadic_Call) RunAndReturn(run func(...int)
 
 // VariadicMany provides a mock function with given fields: i, a, intfs
 func (_m *ExpecterAndRolledVariadic) VariadicMany(i int, a string, intfs ...interface{}) error {
-	ret := func() mock.Arguments {
-		if len(intfs) > 0 {
-			return _m.Called(i, a, intfs)
-		} else {
-			return _m.Called(i, a)
-		}
-	}()
+	var tmpRet mock.Arguments
+	if len(intfs) > 0 {
+		tmpRet = _m.Called(i, a, intfs)
+	} else {
+		tmpRet = _m.Called(i, a)
+	}
+	ret := tmpRet
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(int, string, ...interface{}) error); ok {
@@ -260,13 +260,12 @@ func (_c *ExpecterAndRolledVariadic_VariadicMany_Call) RunAndReturn(run func(int
 
 // VariadicNoReturn provides a mock function with given fields: j, is
 func (_m *ExpecterAndRolledVariadic) VariadicNoReturn(j int, is ...interface{}) {
-	func() mock.Arguments {
-		if len(is) > 0 {
-			return _m.Called(j, is)
-		} else {
-			return _m.Called(j)
-		}
-	}()
+	if len(is) > 0 {
+		_m.Called(j, is)
+	} else {
+		_m.Called(j)
+	}
+
 }
 
 // ExpecterAndRolledVariadic_VariadicNoReturn_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'VariadicNoReturn'
