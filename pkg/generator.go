@@ -18,8 +18,9 @@ import (
 	"unicode/utf8"
 
 	"github.com/rs/zerolog"
-	"github.com/vektra/mockery/v2/pkg/logging"
 	"golang.org/x/tools/imports"
+
+	"github.com/vektra/mockery/v2/pkg/logging"
 )
 
 const mockConstructorParamTypeNamePrefix = "mockConstructorTestingT"
@@ -422,16 +423,24 @@ func (g *Generator) printf(s string, vals ...interface{}) {
 
 var templates = template.New("base template")
 
-func (g *Generator) printTemplate(data interface{}, templateString string) {
+func (g *Generator) printTemplateBytes(data interface{}, templateString string) *bytes.Buffer {
 	tmpl, err := templates.New(templateString).Funcs(templateFuncMap).Parse(templateString)
 	if err != nil {
-		// couldn't compile template
 		panic(err)
 	}
 
-	if err := tmpl.Execute(&g.buf, data); err != nil {
+	var buf bytes.Buffer
+
+	err = tmpl.Execute(&buf, data)
+	if err != nil {
 		panic(err)
 	}
+
+	return &buf
+}
+
+func (g *Generator) printTemplate(data interface{}, templateString string) {
+	g.buf.Write(g.printTemplateBytes(data, templateString).Bytes())
 }
 
 type namer interface {
@@ -707,7 +716,7 @@ func (g *Generator) generateMethod(ctx context.Context, method *Method) {
 
 	params := g.genList(ctx, ftype.Params(), ftype.Variadic())
 	returns := g.genList(ctx, ftype.Results(), false)
-	preamble, called := g.generateCalled(params)
+	preamble, called := g.generateCalled(params, returns)
 
 	data := struct {
 		FunctionName           string
@@ -925,16 +934,44 @@ func {{ .ConstructorName }}{{ .TypeConstraint }}(t interface {
 // steps to prepare its argument list.
 //
 // It is separate from Generate to avoid cyclomatic complexity through early return statements.
-func (g *Generator) generateCalled(list *paramList) (preamble string, called string) {
+func (g *Generator) generateCalled(list *paramList, returnList *paramList) (preamble string, called string) {
 	namesLen := len(list.Names)
 	if namesLen == 0 || !list.Variadic || !g.config.UnrollVariadic {
 		if list.Variadic && !g.config.UnrollVariadic && g.config.WithExpecter {
-			variadicName := list.Names[namesLen-1]
-			tmpRet := resolveCollision(list.Names, "tmpRet")
+			isFuncReturns := len(returnList.Names) > 0
 
-			preamble = fmt.Sprintf("\n\tvar " + tmpRet + " mock.Arguments\n\tif len(" + variadicName + ") > 0 {\n\t\t" + tmpRet + " = _m.Called(" + strings.Join(list.Names, ", ") + ")\n\t} else {\n\t\t" + tmpRet + " = _m.Called(" + strings.Join(list.Names[:len(list.Names)-1], ", ") + ")\n\t}\n\n\t")
-			called = tmpRet
-			return
+			var tmpRet, tmpRetWithAssignment string
+			if isFuncReturns {
+				tmpRet = resolveCollision(list.Names, "tmpRet")
+				tmpRetWithAssignment = fmt.Sprintf("%s = ", tmpRet)
+			}
+
+			calledBytes := g.printTemplateBytes(
+				struct {
+					ParamList                 *paramList
+					ParamNamesWithoutVariadic []string
+					VariadicName              string
+					IsFuncReturns             bool
+					TmpRet                    string
+					TmpRetWithAssignment      string
+				}{
+					ParamList:                 list,
+					ParamNamesWithoutVariadic: list.Names[:len(list.Names)-1],
+					VariadicName:              list.Names[namesLen-1],
+					IsFuncReturns:             isFuncReturns,
+					TmpRet:                    tmpRet,
+					TmpRetWithAssignment:      tmpRetWithAssignment,
+				},
+				`{{ if .IsFuncReturns }}var {{ .TmpRet }} mock.Arguments {{ end }}
+	if len({{ .VariadicName }}) > 0 {
+		{{ .TmpRetWithAssignment }}_m.Called({{ join .ParamList.Names ", " }})
+	} else {
+		{{ .TmpRetWithAssignment }}_m.Called({{ join .ParamNamesWithoutVariadic ", " }})
+	}
+`,
+			)
+
+			return calledBytes.String(), tmpRet
 		}
 
 		called = "_m.Called(" + strings.Join(list.Names, ", ") + ")"

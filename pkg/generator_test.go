@@ -14,6 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
+
 	mocks "github.com/vektra/mockery/v2/mocks/github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
@@ -193,6 +194,22 @@ func (s *GeneratorSuite) TestGeneratorExpecterWithRolledVariadic() {
 		expectedLines, actualLines,
 		"The generator produced unexpected output.",
 	)
+}
+
+func (s *GeneratorSuite) TestGeneratorVariadicNoReturn() {
+	expectedBytes, err := os.ReadFile(getMocksPath("VariadicNoReturnInterface.go"))
+	s.Require().NoError(err)
+
+	expected := string(expectedBytes)
+	expected = expected[strings.Index(expected, "// VariadicNoReturnInterface is"):]
+
+	cfg := GeneratorConfig{
+		StructName:     "VariadicNoReturnInterface",
+		WithExpecter:   true,
+		UnrollVariadic: false,
+	}
+
+	s.checkGenerationWithConfig("expecter.go", "VariadicNoReturnInterface", cfg, expected)
 }
 
 func (s *GeneratorSuite) TestGeneratorFunction() {

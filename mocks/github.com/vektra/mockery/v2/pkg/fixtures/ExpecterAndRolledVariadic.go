@@ -154,7 +154,6 @@ func (_m *ExpecterAndRolledVariadic) Variadic(ints ...int) error {
 	} else {
 		tmpRet = _m.Called()
 	}
-
 	ret := tmpRet
 
 	var r0 error
@@ -210,7 +209,6 @@ func (_m *ExpecterAndRolledVariadic) VariadicMany(i int, a string, intfs ...inte
 	} else {
 		tmpRet = _m.Called(i, a)
 	}
-
 	ret := tmpRet
 
 	var r0 error

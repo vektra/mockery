@@ -7,3 +7,7 @@ type Expecter interface {
 	Variadic(ints ...int) error
 	VariadicMany(i int, a string, intfs ...interface{}) error
 }
+
+type VariadicNoReturnInterface interface {
+	VariadicNoReturn(j int, is ...interface{})
+}
