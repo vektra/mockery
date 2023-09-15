@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.2.8+insiders-4.40.4">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.3.1+insiders-4.41.0">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.c4d31a9e.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.176649b9.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.da3f46a0.min.css">
@@ -694,6 +694,51 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Configuration Changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#separate-mocks-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Separate mocks/ directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adjacent-to-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adjacent to interface
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -789,6 +834,51 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Configuration Changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#separate-mocks-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Separate mocks/ directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adjacent-to-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adjacent to interface
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -870,14 +960,62 @@
 <h2 id="configuration-changes">Configuration Changes<a class="headerlink" href="#configuration-changes" title="Permanent link">&para;</a></h2>
 <p>The existence of the <code class="highlight"><span class="nt">packages</span><span class="p">:</span></code> map in your configuration acts as a feature flag that enables the feature.</p>
 <p>The configuration parameters used in <code>packages</code> should be considered to have no relation to their meanings in the legacy scheme. It is recommended to wipe out all previous configuration and command-line parameters previously used.</p>
-<p>The <a href="../configuration/#packages-config">configuration docs</a> show the parameters that are available for use in the <code>packages</code> scheme. You should only use the parameters shown in this section. Mockery will not prevent you from using the legacy parameter set, but doing so will result in undefined behavior.</p>
+<p>The <a href="../configuration/#parameter-descriptions">configuration docs</a> show the parameters that are available for use in the <code>packages</code> scheme. You should only use the parameters shown in this section. Mockery will not prevent you from using the legacy parameter set, but doing so will result in undefined behavior.</p>
 <p>All of the parameters in the config section can be specified at the top level of the config file, which serves as the default values. The <code>packages</code> config section defines package-specific config. See some examples <a href="../features/#examples">here</a>.</p>
+<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
+<h4 id="separate-mocks-directory">Separate <code>mocks/</code> directory<a class="headerlink" href="#separate-mocks-directory" title="Permanent link">&para;</a></h4>
+<p>Take for example a configuration where you are specifying <code>all: true</code> at the top of your repo and you're placing your mocks in a separate <code>mocks/</code> directory, mirroring the directory structure of your original repo.</p>
+<div class="highlight"><span class="filename">YAML</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">testonly</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">with-expecter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">keeptree</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">all</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+</code></pre></div>
+<p>The equivalent config for <code>packages</code> looks like this:</p>
+<div class="highlight"><span class="filename">YAML</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">with-expecter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">inpackage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mocks/{{ replaceAll .InterfaceDirRelative &quot;internal&quot; &quot;internal_&quot; }}</span><span class="w"> </span><span class="c1">#(1)!</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nt">mockname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{.InterfaceName}}&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nt">outpkg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{.PackageName}}&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{.InterfaceName}}.go&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nt">all</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nt">packages</span><span class="p">:</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="nt">github.com/org/repo</span><span class="p">:</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">      </span><span class="nt">recursive</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+</code></pre></div>
+<ol>
+<li>The use of <code>replaceAll</code> is a trick that is done to ensure mocks created for <code>internal</code> packages can be imported outside of the mock directory. This retains the behavior of the legacy config.</li>
+</ol>
+<p>While the example config provided here is more verbose, that is because we're specifying many non-default values in order to retain strict equivalence for this example. It's recommended to refer to the <a href="../configuration/#parameter-descriptions">configuration parameters</a> to see the defaults provided.</p>
+<h4 id="adjacent-to-interface">Adjacent to interface<a class="headerlink" href="#adjacent-to-interface" title="Permanent link">&para;</a></h4>
+<p>Another common pattern in the legacy config is to place mocks next to the file that defined the interface.</p>
+<div class="highlight"><span class="filename">YAML</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">with-expecter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">inpackage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">all</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+</code></pre></div>
+<p>For example, the mock file would be laid out like:</p>
+<div class="highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>./getter.go
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>./mock_Getter.go
+</code></pre></div>
+<p>The equivalent config would look like:</p>
+<div class="highlight"><span class="filename">YAML</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">with-expecter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">inpackage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nt">dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{.InterfaceDir}}&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nt">mockname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Mock{{.InterfaceName}}&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nt">outpkg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{.PackageName}}&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;mock_{{.InterfaceName}}.go&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nt">all</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nt">packages</span><span class="p">:</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="nt">github.com/org/repo</span><span class="p">:</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="nt">recursive</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+</code></pre></div>
 <h2 id="gogenerate-directives"><code>//go:generate</code> directives<a class="headerlink" href="#gogenerate-directives" title="Permanent link">&para;</a></h2>
 <p>Previously, the recommended way of generating mocks was to call <code>mockery</code> once per interface using <code>//go:generate</code>. Generating interface-specific mocks this way is no longer supported. You may still use <code>//go:generate</code> to call mockery, however it will generate all interfaces defined in your config file. There currently exists no semantics to specify the generation of specific interfaces from the command line (not because we reject the idea, but because it was not seen as a requirement for the initial iteration of <code>packages</code>).</p>
 <h2 id="behavior-changes">Behavior Changes<a class="headerlink" href="#behavior-changes" title="Permanent link">&para;</a></h2>
 <p>The legacy behavior iterated over every <code>.go</code> file in your project, called <a href="https://pkg.go.dev/golang.org/x/tools/go/packages#Load"><code>packages.Load</code></a> to parse the syntax tree, and generated mocks for every interface found in the file. The new behavior instead simply grabs the list of packages to load from the config file, or in the case of <code class="highlight"><span class="nt">recursive</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span></code>, walks the filesystem tree to discover the packages that exist (without actually parsing the files). Using this list, it calls <code>packages.Load</code> once with the list of packages that were discovered.</p>
 <h2 id="filesystem-tree-layouts">Filesystem Tree Layouts<a class="headerlink" href="#filesystem-tree-layouts" title="Permanent link">&para;</a></h2>
-<p>The legacy config provided the <code>keeptree</code> parameter which, if <code class="highlight"><span class="nt">keeptree</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span></code>, would place the mocks in the same package as your interfaces. Otherwise, it would place it in a separate directory.</p>
+<p>The legacy config provided the <code>inpackage</code> parameter which, if <code class="highlight"><span class="nt">inpackage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span></code>, would place the mocks in the same package as your interfaces. Otherwise, it would place it in a separate directory.</p>
 <p>These two layouts are supported in the <code>packages</code> scheme. See the relevant docs <a href="../features/#layouts">here</a>.</p>
 
   
