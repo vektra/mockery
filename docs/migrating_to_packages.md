@@ -21,9 +21,75 @@ The existence of the `#!yaml packages:` map in your configuration acts as a feat
 
 The configuration parameters used in `packages` should be considered to have no relation to their meanings in the legacy scheme. It is recommended to wipe out all previous configuration and command-line parameters previously used.
 
-The [configuration docs](configuration.md#packages-config) show the parameters that are available for use in the `packages` scheme. You should only use the parameters shown in this section. Mockery will not prevent you from using the legacy parameter set, but doing so will result in undefined behavior.
+The [configuration docs](configuration.md#parameter-descriptions) show the parameters that are available for use in the `packages` scheme. You should only use the parameters shown in this section. Mockery will not prevent you from using the legacy parameter set, but doing so will result in undefined behavior.
 
 All of the parameters in the config section can be specified at the top level of the config file, which serves as the default values. The `packages` config section defines package-specific config. See some examples [here](features.md#examples).
+
+### Examples
+
+#### Separate `mocks/` directory
+
+Take for example a configuration where you are specifying `all: true` at the top of your repo and you're placing your mocks in a separate `mocks/` directory, mirroring the directory structure of your original repo.
+
+```yaml
+testonly: False
+with-expecter: True
+keeptree: True
+all: True
+```
+
+The equivalent config for `packages` looks like this:
+
+```yaml
+with-expecter: True
+inpackage: True
+dir: mocks/{{ replaceAll .InterfaceDirRelative "internal" "internal_" }} #(1)!
+mockname: "{{.InterfaceName}}"
+outpkg: "{{.PackageName}}"
+filename: "{{.InterfaceName}}.go"
+all: True
+packages:
+  github.com/org/repo:
+    config:
+      recursive: True
+```
+
+1. The use of `replaceAll` is a trick that is done to ensure mocks created for `internal` packages can be imported outside of the mock directory. This retains the behavior of the legacy config.
+
+While the example config provided here is more verbose, that is because we're specifying many non-default values in order to retain strict equivalence for this example. It's recommended to refer to the [configuration parameters](configuration.md#parameter-descriptions) to see the defaults provided.
+
+#### Adjacent to interface
+
+Another common pattern in the legacy config is to place mocks next to the file that defined the interface.
+
+```yaml
+with-expecter: True
+inpackage: True
+all: True
+```
+
+For example, the mock file would be laid out like:
+
+```
+./getter.go
+./mock_Getter.go
+```
+
+The equivalent config would look like:
+
+```yaml
+with-expecter: True
+inpackage: True
+dir: "{{.InterfaceDir}}"
+mockname: "Mock{{.InterfaceName}}"
+outpkg: "{{.PackageName}}"
+filename: "mock_{{.InterfaceName}}.go"
+all: True
+packages:
+  github.com/org/repo:
+    config:
+      recursive: True
+```
 
 `//go:generate` directives
 ----------------------------
@@ -38,6 +104,6 @@ The legacy behavior iterated over every `.go` file in your project, called [`pac
 Filesystem Tree Layouts
 ------------------------
 
-The legacy config provided the `keeptree` parameter which, if `#!yaml keeptree: True`, would place the mocks in the same package as your interfaces. Otherwise, it would place it in a separate directory.
+The legacy config provided the `inpackage` parameter which, if `#!yaml inpackage: True`, would place the mocks in the same package as your interfaces. Otherwise, it would place it in a separate directory.
 
 These two layouts are supported in the `packages` scheme. See the relevant docs [here](features.md#layouts).

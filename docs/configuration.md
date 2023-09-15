@@ -179,8 +179,12 @@ Using different configuration parameters, we can deploy our mocks on-disk in var
         }
         ```
 
-Template Variables
------------------
+Templated Strings
+------------------
+
+mockery configuration makes use of the Go templating system. 
+
+### Variables
 
 !!! note
     Templated variables are only available when using the `packages` config feature.
@@ -201,8 +205,7 @@ Variables that are marked as being templated are capable of using mockery-provid
 | PackageName             | The name of the package from the original interface                                                                                                                                                                                                                                           |
 | PackagePath             | The fully qualified package path of the original interface                                                                                                                                                                                                                                    |
 
-Template functions
-------------------
+### Functions
 
 !!! note
     Templated functions are only available when using the `packages` config feature.
