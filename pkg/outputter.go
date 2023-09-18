@@ -14,7 +14,7 @@ import (
 	"text/template"
 
 	"github.com/chigopher/pathlib"
-	"github.com/iancoleman/strcase"
+	"github.com/huandu/xstrings"
 	"github.com/rs/zerolog"
 
 	"github.com/vektra/mockery/v2/pkg/config"
@@ -46,6 +46,14 @@ var templateFuncMap = template.FuncMap{
 	"trimRight":   strings.TrimRight,
 	"trimSpace":   strings.TrimSpace,
 	"trimSuffix":  strings.TrimSuffix,
+	"lower":       strings.ToLower,
+	"upper":       strings.ToUpper,
+	"title":       strings.ToTitle,
+	"camelcase":   xstrings.ToCamelCase,
+	"snakecase":   xstrings.ToSnakeCase,
+	"kebabcase":   xstrings.ToKebabCase,
+	"firstLower":  xstrings.FirstRuneToLower,
+	"firstUpper":  xstrings.FirstRuneToUpper,
 
 	// Regular expression matching
 	"matchString": regexp.MatchString,
@@ -215,9 +223,9 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 		InterfaceDir:            filepath.Dir(iface.FileName),
 		InterfaceDirRelative:    interfaceDirRelative,
 		InterfaceName:           iface.Name,
-		InterfaceNameCamel:      strcase.ToCamel(iface.Name),
-		InterfaceNameLowerCamel: strcase.ToLowerCamel(iface.Name),
-		InterfaceNameSnake:      strcase.ToSnake(iface.Name),
+		InterfaceNameCamel:      xstrings.ToCamelCase(iface.Name),
+		InterfaceNameLowerCamel: xstrings.FirstRuneToLower(xstrings.ToCamelCase(iface.Name)),
+		InterfaceNameSnake:      xstrings.ToSnakeCase(iface.Name),
 		InterfaceNameLower:      strings.ToLower(iface.Name),
 		Mock:                    mock,
 		MockName:                c.MockName,

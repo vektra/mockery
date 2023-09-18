@@ -116,6 +116,29 @@ func Test_parseConfigTemplates(t *testing.T) {
 			},
 		},
 		{
+			name: "template funcs cases",
+			args: args{
+				c: &config.Config{
+					Dir:      "{{.InterfaceDir}}/{{.PackagePath}}",
+					FileName: "{{.InterfaceName | kebabcase }}.go",
+					MockName: "{{.InterfaceName | camelcase }}",
+					Outpkg:   "{{.PackageName | snakecase }}",
+				},
+
+				iface: &Interface{
+					Name:     "FooBar",
+					FileName: "path/to/foobar.go",
+				},
+			},
+			pkg: mockPkg,
+			want: &config.Config{
+				Dir:      "path/to/github.com/user/project/package",
+				FileName: "foo-bar.go",
+				MockName: "FooBar",
+				Outpkg:   "package_name",
+			},
+		},
+		{
 			name: "InterfaceDirRelative in current working directory",
 			args: args{
 				c: &config.Config{
