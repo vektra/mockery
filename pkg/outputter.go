@@ -48,7 +48,6 @@ var templateFuncMap = template.FuncMap{
 	"trimSuffix":  strings.TrimSuffix,
 	"lower":       strings.ToLower,
 	"upper":       strings.ToUpper,
-	"title":       strings.ToTitle,
 	"camelcase":   xstrings.ToCamelCase,
 	"snakecase":   xstrings.ToSnakeCase,
 	"kebabcase":   xstrings.ToKebabCase,

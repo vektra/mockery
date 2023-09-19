@@ -233,7 +233,6 @@ To learn more about the templating syntax, please [see the Go `text/template` do
 * [`trimSuffix` string suffix](https://pkg.go.dev/strings#TrimSuffix)
 * [`lower` string suffix](https://pkg.go.dev/strings#ToLower)
 * [`upper` string suffix](https://pkg.go.dev/strings#ToUpper)
-* [`title` string suffix](https://pkg.go.dev/strings#ToTitle)
 * [`camelcase` string suffix](https://pkg.go.dev/github.com/huandu/xstrings#ToCamelCase)
 * [`snakecase` string suffix](https://godoc.org/github.com/huandu/xstrings#ToSnakeCase)
 * [`kebabcase` string suffix](https://godoc.org/github.com/huandu/xstrings#ToKebabCase)
