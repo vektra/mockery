@@ -599,7 +599,7 @@ func (c *Config) discoverRecursivePackages(ctx context.Context) error {
 				p := pathlib.NewPath(subPkg)
 				relativePath, err := p.RelativeToStr(pkgPath)
 				if err != nil {
-					return fmt.Errorf("failed to get path for %s relative to %s: %w", subPkg, pkgPath, err)
+					return stackerr.NewStackErrf(err, "failed to get path for %s relative to %s", subPkg, pkgPath)
 				}
 				if conf.ExcludePath(relativePath.String()) {
 					subPkgLog.Info().Msg("subpackage is excluded")
