@@ -982,6 +982,33 @@ packages:
 with-expecter: false
 `,
 		},
+		{
+			name: "test with excluded subpackage",
+			cfgYaml: `
+with-expecter: False
+dir: foobar
+packages:
+  github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+    config:
+      recursive: True
+      with-expecter: True
+      all: True
+      exclude:
+        - subpkg3
+`,
+			wantCfgMap: `dir: foobar
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+        config:
+            all: true
+            dir: foobar
+            exclude:
+                - subpkg3
+            recursive: true
+            with-expecter: true
+with-expecter: false
+`,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
