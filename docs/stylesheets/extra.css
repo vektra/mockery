@@ -9,3 +9,7 @@
     margin-right: auto;
     margin-bottom: auto;
 }
+
+.md-grid {
+    max-width: none;
+}
