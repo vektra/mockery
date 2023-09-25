@@ -120,6 +120,10 @@ Who uses mockery?
 	[![Datadog logo](assets/images/logos/datadog.svg){ class="center" width="300" }](https://github.com/DataDog/datadog-agent)
   </figure>
 - [![Seatgeek Logo](assets/images/logos/seatgeek.svg)](https://seatgeek.com)
+- <figure markdown>
+    [![Amazon logo](assets/images/logos/amazon.svg){ class="center" width="300" }](https://github.com/eksctl-io/eksctl)
+	<figcaption>[eksctl](https://github.com/eksctl-io/eksctl)</figcaption>
+  </figure>
 </div>
 
 
