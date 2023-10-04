@@ -197,10 +197,10 @@ Variables that are marked as being templated are capable of using mockery-provid
 | InterfaceDir            | The directory path of the original interface being mocked. This can be used as <br>`#!yaml dir: "{{.InterfaceDir}}"` to place your mocks adjacent to the original interface. This should not be used for external interfaces.                                                                 |
 | InterfaceDirRelative    | The directory path of the original interface being mocked, relative to the current working directory. If the path cannot be made relative to the current working directory, this variable will be set equal to `PackagePath`                                                                  |
 | InterfaceName           | The name of the original interface being mocked                                                                                                                                                                                                                                               |
-| InterfaceNameCamel      | Converts a string `interface_name` to `InterfaceName`                                                                                                                                                                                                                                         |
-| InterfaceNameLowerCamel | Converts `InterfaceName` to `interfaceName`                                                                                                                                                                                                                                                   |
-| InterfaceNameSnake      | Converts `InterfaceName` to `interface_name`                                                                                                                                                                                                                                                  |
-| InterfaceNameLower      | Converts `InterfaceName` to `interfacename`                                                                                                                                                                                                                                                   |
+| InterfaceNameCamel      | Converts a string `interface_name` to `InterfaceName`. <b>Deprecated</b>: use `{{ .InterfaceName \| camelcase }}` instead                                                                                                                                                                     | 
+| InterfaceNameLowerCamel | Converts `InterfaceName` to `interfaceName` . <b>Deprecated</b>: use `{{ .InterfaceName \| camelcase \| firstLower }}` instead                                                                                                                                                                |
+| InterfaceNameSnake      | Converts `InterfaceName` to `interface_name` . <b>Deprecated</b>: use `{{ .InterfaceName \| snakecase }}` instead                                                                                                                                                                             |
+| InterfaceNameLower      | Converts `InterfaceName` to `interfacename` . <b>Deprecated</b>: use `{{ .InterfaceName \| lower }}` instead                                                                                                                                                                                  |
 | Mock                    | A string that is `Mock` if the interface is exported, or `mock` if it is not exported. Useful when setting the name of your mock to something like: <br>`#!yaml mockname: "{{.Mock}}{{.InterfaceName}}"`<br> This way, the mock name will retain the exported-ness of the original interface. |
 | MockName                | The name of the mock that will be generated. Note that this is simply the `mockname` configuration variable                                                                                                                                                                                   |
 | PackageName             | The name of the package from the original interface                                                                                                                                                                                                                                           |
@@ -232,6 +232,13 @@ To learn more about the templating syntax, please [see the Go `text/template` do
 * [`trimRight` string cutset](https://pkg.go.dev/strings#TrimRight)
 * [`trimSpace` string](https://pkg.go.dev/strings#TrimSpace)
 * [`trimSuffix` string suffix](https://pkg.go.dev/strings#TrimSuffix)
+* [`lower` string](https://pkg.go.dev/strings#ToLower)
+* [`upper` string](https://pkg.go.dev/strings#ToUpper)
+* [`camelcase` string](https://pkg.go.dev/github.com/huandu/xstrings#ToCamelCase)
+* [`snakecase` string](https://godoc.org/github.com/huandu/xstrings#ToSnakeCase)
+* [`kebabcase` string](https://godoc.org/github.com/huandu/xstrings#ToKebabCase)
+* [`firstLower` string](https://godoc.org/github.com/huandu/xstrings#FirstRuneToLower)
+* [`firstUpper` string](https://godoc.org/github.com/huandu/xstrings#FirstRuneToUpper)
 * [`matchString` pattern](https://pkg.go.dev/regexp#MatchString)
 * [`quoteMeta` string](https://pkg.go.dev/regexp#QuoteMeta)
 * [`base` string](https://pkg.go.dev/path/filepath#Base)

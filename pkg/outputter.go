@@ -14,6 +14,7 @@ import (
 	"text/template"
 
 	"github.com/chigopher/pathlib"
+	"github.com/huandu/xstrings"
 	"github.com/iancoleman/strcase"
 	"github.com/rs/zerolog"
 
@@ -46,6 +47,13 @@ var templateFuncMap = template.FuncMap{
 	"trimRight":   strings.TrimRight,
 	"trimSpace":   strings.TrimSpace,
 	"trimSuffix":  strings.TrimSuffix,
+	"lower":       strings.ToLower,
+	"upper":       strings.ToUpper,
+	"camelcase":   xstrings.ToCamelCase,
+	"snakecase":   xstrings.ToSnakeCase,
+	"kebabcase":   xstrings.ToKebabCase,
+	"firstLower":  xstrings.FirstRuneToLower,
+	"firstUpper":  xstrings.FirstRuneToUpper,
 
 	// Regular expression matching
 	"matchString": regexp.MatchString,
@@ -212,9 +220,11 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 		PackageName             string
 		PackagePath             string
 	}{
-		InterfaceDir:            filepath.Dir(iface.FileName),
-		InterfaceDirRelative:    interfaceDirRelative,
-		InterfaceName:           iface.Name,
+		InterfaceDir:         filepath.Dir(iface.FileName),
+		InterfaceDirRelative: interfaceDirRelative,
+		InterfaceName:        iface.Name,
+		// Deprecated: All custom case variables of InterfaceName will be removed in the next major version
+		// Use the template functions instead
 		InterfaceNameCamel:      strcase.ToCamel(iface.Name),
 		InterfaceNameLowerCamel: strcase.ToLowerCamel(iface.Name),
 		InterfaceNameSnake:      strcase.ToSnake(iface.Name),
