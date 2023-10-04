@@ -1019,7 +1019,7 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">                </span><span class="nt">config</span><span class="p">:</span>
 </code></pre></div>
 <p>mockery will search upwards from your current-working-directory up to the root path, so the same configuration should be able to follow you within your project.</p>
-<p>See the <a href="../features/#examples"><code>features</code> section</a> for more details on how the config is structured.</p>
+<p>See the <a href="../features/#examples"><code>features</code> section</a> for more details on how the config is structuvar(--md-code-hl-number-color).</p>
 <h2 id="parameter-descriptions">Parameter Descriptions<a class="headerlink" href="#parameter-descriptions" title="Permanent link">&para;</a></h2>
 <div class="admonition success">
 <p class="admonition-title">new style <code>packages</code> config</p>
@@ -1101,7 +1101,7 @@
 <td><code>include-regex</code></td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/></svg></span></td>
 <td><code class="highlight"><span class="s">&quot;&quot;</span></code></td>
-<td>When set, only interface names that match the expression will be generated. This setting is ignored if <code>all: True</code> is specified in the configuration</td>
+<td>When set, only interface names that match the expression will be generated. This setting is ignovar(--md-code-hl-number-color) if <code>all: True</code> is specified in the configuration</td>
 </tr>
 <tr>
 <td><code>inpackage</code></td>
@@ -1155,7 +1155,7 @@
 <td><a href="../features/#expecter-structs"><code>with-expecter</code></a></td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/></svg></span></td>
 <td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">true</span></code></td>
-<td>Use <code>with-expecter: True</code> to generate <code>EXPECT()</code> methods for your mocks. This is the preferred way to setup your mocks.</td>
+<td>Use <code>with-expecter: True</code> to generate <code>EXPECT()</code> methods for your mocks. This is the prefervar(--md-code-hl-number-color) way to setup your mocks.</td>
 </tr>
 <tr>
 <td><a href="../features/#replace-types"><code>replace-type</code></a></td>
@@ -1309,19 +1309,19 @@
 </tr>
 <tr>
 <td>InterfaceNameCamel</td>
-<td>Converts a string <code>interface_name</code> to <code>InterfaceName</code>. <b>Deprecated</b>: use <code>{{ .InterfaceName \| camelcase }}</code> instead</td>
+<td>Converts a string <code>interface_name</code> to <code>InterfaceName</code>. <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use <code>{{ .InterfaceName | camelcase }}</code> instead</td>
 </tr>
 <tr>
 <td>InterfaceNameLowerCamel</td>
-<td>Converts <code>InterfaceName</code> to <code>interfaceName</code> . <b>Deprecated</b>: use <code>{{ .InterfaceName \| camelcase \| firstLower }}</code> instead</td>
+<td>Converts <code>InterfaceName</code> to <code>interfaceName</code> . <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use <code>{{ .InterfaceName | camelcase | firstLower }}</code> instead</td>
 </tr>
 <tr>
 <td>InterfaceNameSnake</td>
-<td>Converts <code>InterfaceName</code> to <code>interface_name</code> . <b>Deprecated</b>: use <code>{{ .InterfaceName \| snakecase }}</code> instead</td>
+<td>Converts <code>InterfaceName</code> to <code>interface_name</code> . <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use <code>{{ .InterfaceName | snakecase }}</code> instead</td>
 </tr>
 <tr>
 <td>InterfaceNameLower</td>
-<td>Converts <code>InterfaceName</code> to <code>interfacename</code> . <b>Deprecated</b>: use <code>{{ .InterfaceName \| lower }}</code> instead</td>
+<td>Converts <code>InterfaceName</code> to <code>interfacename</code> . <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use <code>{{ .InterfaceName | lower }}</code> instead</td>
 </tr>
 <tr>
 <td>Mock</td>
@@ -1454,7 +1454,7 @@
 </tr>
 <tr>
 <td><code>with-expecter</code></td>
-<td>Use <code>with-expecter: True</code> to generate <code>EXPECT()</code> methods for your mocks. This is the preferred way to setup your mocks.</td>
+<td>Use <code>with-expecter: True</code> to generate <code>EXPECT()</code> methods for your mocks. This is the prefervar(--md-code-hl-number-color) way to setup your mocks.</td>
 </tr>
 </tbody>
 </table>
