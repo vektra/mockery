@@ -193,8 +193,21 @@ packages:
       include-regex: ".*Client"
 ```
 
+To further refine matched interfaces, you can also use `exclude-regex`. If an interface matches both `include-regex` and `exclude-regex` then it will not be generated. For example, to generate all interfaces except those ending in `Func`:
+
+```yaml
+packages:
+  github.com/user/project:
+    config:
+      recursive: true
+      include-regex: ".*"
+      exclude-regex: ".*Func"
+```
+
+You can only use `exclude-regex` with `include-regex`. If set by itself, `exclude-regex` has no effect.
+
 ??? note "all: true"
-    Using `all: true` will override `include-regex` and issue a warning.
+    Using `all: true` will override `include-regex` (and `exclude-regex`) and issue a warning.
 
 Mock Constructors
 -----------------

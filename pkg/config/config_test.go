@@ -609,7 +609,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "should generate using included-regex",
+			name: "should generate using include-regex",
 			c: &Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
@@ -622,7 +622,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "should generate when using all and included-regex doesn't match",
+			name: "should generate when using all and include-regex doesn't match",
 			c: &Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
@@ -636,7 +636,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "should not generate when included-regex doesn't match",
+			name: "should not generate when include-regex doesn't match",
 			c: &Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
@@ -647,6 +647,91 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 				},
 			},
 			want: false,
+		},
+		{
+			name: "should not generate when include-regex and exclude-regex both match",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"include-regex": ".*Interface",
+							"exclude-regex": "Some.*",
+						},
+					},
+				},
+			},
+			want: false,
+		},
+		{
+			name: "should generate when include-regex matches but not exclude-regex",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"include-regex": ".*Interface",
+							"exclude-regex": "Foo.*",
+						},
+					},
+				},
+			},
+			want: true,
+		},
+		{
+			name: "should not generate when neither include-regex nor exclude-regex match",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"include-regex": ".*XInterface",
+							"exclude-regex": "Foo.*",
+						},
+					},
+				},
+			},
+			want: false,
+		},
+		{
+			name: "should not generate when exclude-regex doesn't match but include-regex isn't set",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"exclude-regex": "Foo.*",
+						},
+					},
+				},
+			},
+			want: false,
+		},
+		{
+			name: "should generate when using all and exclude-regex matches",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"all":           true,
+							"exclude-regex": ".*Interface",
+						},
+					},
+				},
+			},
+			want: true,
+		},
+		{
+			name: "should generate when interface is selected and exclude-regex matches",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"interfaces": map[string]interface{}{
+							"SomeInterface": struct{}{},
+						},
+						"config": map[string]interface{}{
+							"exclude-regex": ".*Interface",
+						},
+					},
+				},
+			},
+			want: true,
 		},
 	}
 	for _, tt := range tests {
