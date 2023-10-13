@@ -263,46 +263,52 @@ func (c *Config) ExcludePath(path string) bool {
 func (c *Config) ShouldGenerateInterface(ctx context.Context, packageName, interfaceName string) (bool, error) {
 	pkgConfig, err := c.GetPackageConfig(ctx, packageName)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("getting package config: %w", err)
+	}
+
+	log := zerolog.Ctx(ctx)
+	if pkgConfig.All {
+		if pkgConfig.IncludeRegex != "" {
+			log.Warn().Msg("interface config has both `all` and `include-regex` set: `include-regex` will be ignored")
+		}
+		if pkgConfig.ExcludeRegex != "" {
+			log.Warn().Msg("interface config has both `all` and `exclude-regex` set: `exclude-regex` will be ignored")
+		}
+		return true, nil
 	}
 
 	interfacesSection, err := c.getInterfacesSection(ctx, packageName)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("getting interfaces section: %w", err)
 	}
 	_, interfaceExists := interfacesSection[interfaceName]
+	if interfaceExists {
+		return true, nil
+	}
 
-	matchedByRegex := false
-	if pkgConfig.IncludeRegex != "" {
-		if pkgConfig.All {
-			log := zerolog.Ctx(ctx)
-			log.Warn().Msg("interface config has both `all` and `include-regex` set: `include-regex` will be ignored")
-		} else {
-			matchedByRegex, err = regexp.MatchString(pkgConfig.IncludeRegex, interfaceName)
-			if err != nil {
-				return false, fmt.Errorf("evaluating `include-regex`: %w", err)
-			}
-		}
-	}
-	excludedByRegex := false
-	if pkgConfig.ExcludeRegex != "" {
-		if pkgConfig.All {
-			log := zerolog.Ctx(ctx)
-			log.Warn().Msg("interface config has both `all` and `exclude-regex` set: `exclude-regex` will be ignored")
-		} else if pkgConfig.IncludeRegex == "" {
-			log := zerolog.Ctx(ctx)
+	includeRegex := pkgConfig.IncludeRegex
+	excludeRegex := pkgConfig.ExcludeRegex
+	if includeRegex == "" {
+		if excludeRegex != "" {
 			log.Warn().Msg("interface config has `exclude-regex` set but not `include-regex`: `exclude-regex` will be ignored")
-		} else {
-			excludedByRegex, err = regexp.MatchString(pkgConfig.ExcludeRegex, interfaceName)
-			if err != nil {
-				return false, fmt.Errorf("evaluating `exclude-regex`: %w", err)
-			}
-			if excludedByRegex {
-				matchedByRegex = false
-			}
 		}
+		return false, nil
 	}
-	return pkgConfig.All || interfaceExists || (matchedByRegex && !excludedByRegex), nil
+	includedByRegex, err := regexp.MatchString(includeRegex, interfaceName)
+	if err != nil {
+		return false, fmt.Errorf("evaluating `include-regex`: %w", err)
+	}
+	if !includedByRegex {
+		return false, nil
+	}
+	if excludeRegex == "" {
+		return true, nil
+	}
+	excludedByRegex, err := regexp.MatchString(excludeRegex, interfaceName)
+	if err != nil {
+		return false, fmt.Errorf("evaluating `exclude-regex`: %w", err)
+	}
+	return !excludedByRegex, nil
 }
 
 func (c *Config) getInterfacesSection(ctx context.Context, packageName string) (map[string]any, error) {
