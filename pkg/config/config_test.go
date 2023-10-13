@@ -573,6 +573,17 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			name: "invalid interfaces section returns error",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"interfaces": true,
+					},
+				},
+			},
+			wantErr: true,
+		},
+		{
 			name: "should generate all interfaces",
 			c: &Config{
 				Packages: map[string]interface{}{
@@ -732,6 +743,75 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 				},
 			},
 			want: true,
+		},
+		{
+			name: "invalid include-regex is ignored if all is set",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"all":           true,
+							"include-regex": "[",
+						},
+					},
+				},
+			},
+			want: true,
+		},
+		{
+			name: "invalid include-regex results in error",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"include-regex": "[",
+						},
+					},
+				},
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid exclude-regex is ignored if all is set",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"all":           true,
+							"include-regex": ".*",
+							"exclude-regex": "[",
+						},
+					},
+				},
+			},
+			want: true,
+		},
+		{
+			name: "invalid exclude-regex is ignored if include-regex is not set",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"exclude-regex": "[",
+						},
+					},
+				},
+			},
+			want: false,
+		},
+		{
+			name: "invalid exclude-regex results in error",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"include-regex": ".*",
+							"exclude-regex": "[",
+						},
+					},
+				},
+			},
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {

@@ -320,7 +320,11 @@ func (c *Config) getInterfacesSection(ctx context.Context, packageName string) (
 	if !exists {
 		return make(map[string]any), nil
 	}
-	return interfaceSection.(map[string]any), nil
+	mapConfig, ok := interfaceSection.(map[string]any)
+	if !ok {
+		return nil, fmt.Errorf("interfaces section has type %T, expected map[string]any", interfaceSection)
+	}
+	return mapConfig, nil
 }
 
 func (c *Config) GetInterfaceConfig(ctx context.Context, packageName string, interfaceName string) ([]*Config, error) {
