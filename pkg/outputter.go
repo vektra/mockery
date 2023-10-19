@@ -17,6 +17,7 @@ import (
 	"github.com/huandu/xstrings"
 	"github.com/iancoleman/strcase"
 	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 
 	"github.com/vektra/mockery/v2/pkg/config"
 	"github.com/vektra/mockery/v2/pkg/logging"
@@ -305,7 +306,7 @@ func NewOutputter(
 	}
 }
 
-func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
+func (o *Outputter) Generate(ctx context.Context, iface *Interface) error {
 	log := zerolog.Ctx(ctx).With().
 		Str(logging.LogKeyInterface, iface.Name).
 		Str(logging.LogKeyQualifiedName, iface.QualifiedName).
@@ -315,7 +316,7 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 	log.Info().Msg("generating mocks for interface")
 
 	log.Debug().Msg("getting config for interface")
-	interfaceConfigs, err := m.config.GetInterfaceConfig(ctx, iface.QualifiedName, iface.Name)
+	interfaceConfigs, err := o.config.GetInterfaceConfig(ctx, iface.QualifiedName, iface.Name)
 	if err != nil {
 		return err
 	}
@@ -323,48 +324,60 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 	for _, interfaceConfig := range interfaceConfigs {
 		interfaceConfig.LogUnsupportedPackagesConfig(ctx)
 
-		log.Debug().Msg("getting mock generator")
-
 		if err := parseConfigTemplates(ctx, interfaceConfig, iface); err != nil {
 			return fmt.Errorf("failed to parse config template: %w", err)
 		}
-
-		g := GeneratorConfig{
-			Boilerplate:          m.boilerplate,
-			DisableVersionString: interfaceConfig.DisableVersionString,
-			Exported:             interfaceConfig.Exported,
-			InPackage:            interfaceConfig.InPackage,
-			KeepTree:             interfaceConfig.KeepTree,
-			Note:                 interfaceConfig.Note,
-			PackageName:          interfaceConfig.Outpkg,
-			PackageNamePrefix:    interfaceConfig.Packageprefix,
-			StructName:           interfaceConfig.MockName,
-			UnrollVariadic:       interfaceConfig.UnrollVariadic,
-			WithExpecter:         interfaceConfig.WithExpecter,
-			ReplaceType:          interfaceConfig.ReplaceType,
-		}
-		generator := NewGenerator(ctx, g, iface, "")
-
-		log.Debug().Msg("generating mock in-memory")
-		if err := generator.GenerateAll(ctx); err != nil {
-			return err
+		if interfaceConfig.Style == "mockery" {
+			o.generateMockery(ctx, iface, interfaceConfig)
+			continue
 		}
 
-		outputPath := pathlib.NewPath(interfaceConfig.Dir).Join(interfaceConfig.FileName)
-		if err := outputPath.Parent().MkdirAll(); err != nil {
-			return stackerr.NewStackErrf(err, "failed to mkdir parents of: %v", outputPath)
+		config := TemplateGeneratorConfig{
+			Style: interfaceConfig.Style,
 		}
+		generator := NewTemplateGenerator(config)
+		fmt.Printf("generator: %v\n", generator)
 
-		fileLog := log.With().Stringer(logging.LogKeyFile, outputPath).Logger()
-		fileLog.Info().Msg("writing to file")
-		file, err := outputPath.OpenFile(os.O_RDWR | os.O_CREATE | os.O_TRUNC)
-		if err != nil {
-			return stackerr.NewStackErrf(err, "failed to open output file for mock: %v", outputPath)
-		}
-		defer file.Close()
-		if err := generator.Write(file); err != nil {
-			return stackerr.NewStackErrf(err, "failed to write to file")
-		}
+	}
+	return nil
+}
+
+func (o *Outputter) generateMockery(ctx context.Context, iface *Interface, interfaceConfig *config.Config) error {
+	g := GeneratorConfig{
+		Boilerplate:          o.boilerplate,
+		DisableVersionString: interfaceConfig.DisableVersionString,
+		Exported:             interfaceConfig.Exported,
+		InPackage:            interfaceConfig.InPackage,
+		KeepTree:             interfaceConfig.KeepTree,
+		Note:                 interfaceConfig.Note,
+		PackageName:          interfaceConfig.Outpkg,
+		PackageNamePrefix:    interfaceConfig.Packageprefix,
+		StructName:           interfaceConfig.MockName,
+		UnrollVariadic:       interfaceConfig.UnrollVariadic,
+		WithExpecter:         interfaceConfig.WithExpecter,
+		ReplaceType:          interfaceConfig.ReplaceType,
+	}
+	generator := NewGenerator(ctx, g, iface, "")
+
+	log.Debug().Msg("generating mock in-memory")
+	if err := generator.GenerateAll(ctx); err != nil {
+		return err
+	}
+
+	outputPath := pathlib.NewPath(interfaceConfig.Dir).Join(interfaceConfig.FileName)
+	if err := outputPath.Parent().MkdirAll(); err != nil {
+		return stackerr.NewStackErrf(err, "failed to mkdir parents of: %v", outputPath)
+	}
+
+	fileLog := log.With().Stringer(logging.LogKeyFile, outputPath).Logger()
+	fileLog.Info().Msg("writing to file")
+	file, err := outputPath.OpenFile(os.O_RDWR | os.O_CREATE | os.O_TRUNC)
+	if err != nil {
+		return stackerr.NewStackErrf(err, "failed to open output file for mock: %v", outputPath)
+	}
+	defer file.Close()
+	if err := generator.Write(file); err != nil {
+		return stackerr.NewStackErrf(err, "failed to write to file")
 	}
 	return nil
 }

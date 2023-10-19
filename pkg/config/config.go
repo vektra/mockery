@@ -63,6 +63,7 @@ type Config struct {
 	Recursive            bool                   `mapstructure:"recursive"`
 	Exclude              []string               `mapstructure:"exclude"`
 	SrcPkg               string                 `mapstructure:"srcpkg"`
+	Style                string                 `mapstructure:"style"`
 	BoilerplateFile      string                 `mapstructure:"boilerplate-file"`
 	// StructName overrides the name given to the mock struct and should only be nonempty
 	// when generating for an exact match (non regex expression in -name).
@@ -96,6 +97,7 @@ func NewConfigFromViper(v *viper.Viper) (*Config, error) {
 		v.SetDefault("case", "camel")
 		v.SetDefault("dir", ".")
 		v.SetDefault("output", "./mocks")
+		v.SetDefault("style", "mockery")
 	} else {
 		v.SetDefault("dir", "mocks/{{.PackagePath}}")
 		v.SetDefault("filename", "mock_{{.InterfaceName}}.go")

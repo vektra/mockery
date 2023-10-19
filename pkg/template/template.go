@@ -2,7 +2,12 @@ package template
 
 import (
 	"io"
+	"strings"
 	"text/template"
+
+	_ "embed"
+
+	"github.com/vektra/mockery/v2/pkg/registry"
 )
 
 // Template is the Moq template. It is capable of generating the Moq
@@ -12,15 +17,15 @@ type Template struct {
 }
 
 //go:embed moq.templ
-var moqTemplate string
+var templateMoq string
 
-var styleMap = map[string]string{
-	"moq": moqTemplate,
+var styleTemplates = map[string]string{
+	"moq": templateMoq,
 }
 
 // New returns a new instance of Template.
 func New(style string) (Template, error) {
-	tmpl, err := template.New("moq").Funcs(templateFuncs).Parse(styleMap[style])
+	tmpl, err := template.New("moq").Funcs(templateFuncs).Parse(styleTemplates[style])
 	if err != nil {
 		return Template{}, err
 	}
@@ -42,4 +47,31 @@ var golintInitialisms = []string{
 	"URL", "UTF8", "VM", "XML", "XMPP", "XSRF", "XSS",
 }
 
-var templateFuncs = template.FuncMap{}
+var templateFuncs = template.FuncMap{
+	"ImportStatement": func(imprt *registry.Package) string {
+		if imprt.Alias == "" {
+			return `"` + imprt.Path() + `"`
+		}
+		return imprt.Alias + ` "` + imprt.Path() + `"`
+	},
+	"SyncPkgQualifier": func(imports []*registry.Package) string {
+		for _, imprt := range imports {
+			if imprt.Path() == "sync" {
+				return imprt.Qualifier()
+			}
+		}
+
+		return "sync"
+	},
+	"Exported": func(s string) string {
+		if s == "" {
+			return ""
+		}
+		for _, initialism := range golintInitialisms {
+			if strings.ToUpper(s) == initialism {
+				return initialism
+			}
+		}
+		return strings.ToUpper(s[0:1]) + s[1:]
+	},
+}
