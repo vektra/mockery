@@ -4,7 +4,7 @@ import (
 	"go/types"
 	"testing"
 
-	"github.com/matryer/moq/internal/registry"
+	"github.com/vektra/mockery/v2/pkg/registry"
 )
 
 func TestTemplateFuncs(t *testing.T) {
