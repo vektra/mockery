@@ -8,6 +8,7 @@ import (
 	_ "embed"
 
 	"github.com/vektra/mockery/v2/pkg/registry"
+	"github.com/vektra/mockery/v2/pkg/stackerr"
 )
 
 // Template is the Moq template. It is capable of generating the Moq
@@ -25,7 +26,12 @@ var styleTemplates = map[string]string{
 
 // New returns a new instance of Template.
 func New(style string) (Template, error) {
-	tmpl, err := template.New("moq").Funcs(templateFuncs).Parse(styleTemplates[style])
+	templateString, styleExists := styleTemplates[style]
+	if !styleExists {
+		return Template{}, stackerr.NewStackErrf(nil, "style %s does not exist", style)
+	}
+
+	tmpl, err := template.New("moq").Funcs(templateFuncs).Parse(templateString)
 	if err != nil {
 		return Template{}, err
 	}
