@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"go/ast"
 	"go/types"
-	"path/filepath"
 	"sort"
 	"strings"
 
+	"github.com/chigopher/pathlib"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -19,25 +19,18 @@ import (
 type Registry struct {
 	srcPkgName  string
 	srcPkgTypes *types.Package
-	moqPkgPath  string
+	outputPath  *pathlib.Path
 	aliases     map[string]string
 	imports     map[string]*Package
 }
 
 // New loads the source package info and returns a new instance of
 // Registry.
-func New(srcDir, moqPkg string) (*Registry, error) {
-	srcPkg, err := pkgInfoFromPath(
-		srcDir, packages.NeedName|packages.NeedSyntax|packages.NeedTypes,
-	)
-	if err != nil {
-		return nil, fmt.Errorf("couldn't load source package: %s", err)
-	}
-
+func New(srcPkg *packages.Package, outputPath *pathlib.Path) (*Registry, error) {
 	return &Registry{
 		srcPkgName:  srcPkg.Name,
 		srcPkgTypes: srcPkg.Types,
-		moqPkgPath:  findPkgPath(moqPkg, srcPkg.PkgPath),
+		outputPath:  outputPath,
 		aliases:     parseImportsAliases(srcPkg.Syntax),
 		imports:     make(map[string]*Package),
 	}, nil
@@ -78,7 +71,6 @@ func (r Registry) LookupInterface(name string) (*types.Interface, *types.TypePar
 func (r *Registry) MethodScope() *MethodScope {
 	return &MethodScope{
 		registry:   r,
-		moqPkgPath: r.moqPkgPath,
 		conflicted: map[string]bool{},
 	}
 }
@@ -88,7 +80,7 @@ func (r *Registry) MethodScope() *MethodScope {
 // packages.
 func (r *Registry) AddImport(pkg *types.Package) *Package {
 	path := stripVendorPath(pkg.Path())
-	if path == r.moqPkgPath {
+	if pathlib.NewPath(path).Equals(r.outputPath) {
 		return nil
 	}
 
@@ -174,20 +166,6 @@ func pkgInfoFromPath(srcDir string, mode packages.LoadMode) (*packages.Package, 
 		return nil, fmt.Errorf("%s (and %d more errors)", errs[0], len(errs)-1)
 	}
 	return pkgs[0], nil
-}
-
-func findPkgPath(pkgInputVal string, srcPkgPath string) string {
-	if pkgInputVal == "" {
-		return srcPkgPath
-	}
-	if pkgInDir(srcPkgPath, pkgInputVal) {
-		return srcPkgPath
-	}
-	subdirectoryPath := filepath.Join(srcPkgPath, pkgInputVal)
-	if pkgInDir(subdirectoryPath, pkgInputVal) {
-		return subdirectoryPath
-	}
-	return ""
 }
 
 func pkgInDir(pkgName, dir string) bool {

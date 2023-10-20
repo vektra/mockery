@@ -297,12 +297,10 @@ type Outputter struct {
 func NewOutputter(
 	config *config.Config,
 	boilerplate string,
-	dryRun bool,
 ) *Outputter {
 	return &Outputter{
 		boilerplate: boilerplate,
 		config:      config,
-		dryRun:      dryRun,
 	}
 }
 

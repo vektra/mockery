@@ -1,20 +1,26 @@
 package registry
 
 import (
-	"go/types"
 	"path"
 	"strings"
 )
 
+type TypesPackage interface {
+	Name() string
+	Path() string
+}
+
 // Package represents an imported package.
 type Package struct {
-	pkg *types.Package
+	pkg TypesPackage
 
 	Alias string
 }
 
 // NewPackage creates a new instance of Package.
-func NewPackage(pkg *types.Package) *Package { return &Package{pkg: pkg} }
+func NewPackage(pkg TypesPackage) *Package {
+	return &Package{pkg: pkg}
+}
 
 // Qualifier returns the qualifier which must be used to refer to types
 // declared in the package.
@@ -66,17 +72,7 @@ func (p Package) uniqueName(lvl int) string {
 	return name
 }
 
-// stripVendorPath strips the vendor dir prefix from a package path.
-// For example we might encounter an absolute path like
-// github.com/foo/bar/vendor/github.com/pkg/errors which is resolved
-// to github.com/pkg/errors.
-func stripVendorPath(p string) string {
-	parts := strings.Split(p, "/vendor/")
-	if len(parts) == 1 {
-		return p
-	}
-	return strings.TrimLeft(path.Join(parts[1:]...), "/")
-}
+
 
 func min(a, b int) int {
 	if a < b {

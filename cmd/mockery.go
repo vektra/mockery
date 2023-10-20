@@ -211,10 +211,6 @@ func (r *RootApp) Run() error {
 		return nil
 	}
 
-	var osp pkg.OutputStreamProvider
-	if r.Config.Print {
-		osp = &pkg.StdoutStreamProvider{}
-	}
 	buildTags := strings.Split(r.Config.BuildTags, " ")
 
 	var boilerplate string
@@ -268,13 +264,18 @@ func (r *RootApp) Run() error {
 			}
 			ifaceLog.Debug().Msg("config specifies to generate this interface")
 
-			outputter := pkg.NewOutputter(&r.Config, boilerplate, true)
+			outputter := pkg.NewOutputter(&r.Config, boilerplate)
 			if err := outputter.Generate(ifaceCtx, iface); err != nil {
 				return err
 			}
 		}
 
 		return nil
+	}
+
+	var osp pkg.OutputStreamProvider
+	if r.Config.Print {
+		osp = &pkg.StdoutStreamProvider{}
 	}
 
 	if r.Config.Name != "" && r.Config.All {
