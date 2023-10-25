@@ -27,4 +27,4 @@ mockery
 ```
 
 !!! question "Command line arguments"
-        It is valid to specify arguments from the command line. The configuration precedence is specified in the [Configuration](configuration.md#merging-precedence) docs.
+    It is valid to specify arguments from the command line. The configuration precedence is specified in the [Configuration](configuration.md#merging-precedence) docs.
