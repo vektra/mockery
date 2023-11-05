@@ -209,6 +209,7 @@ func (c *Config) getPackageConfigMap(ctx context.Context, packageName string) (m
 	if isMap {
 		return configAsMap, nil
 	}
+
 	return map[string]any{}, nil
 
 }
@@ -430,7 +431,7 @@ func (c *Config) addSubPkgConfig(ctx context.Context, subPkgPath string, parentP
 		Str("parent-package", parentPkgPath).
 		Str("sub-package", subPkgPath).Logger()
 
-	log.Trace().Msg("adding sub-package to config map")
+	log.Debug().Msg("adding sub-package to config map")
 	parentPkgConfig, err := c.getPackageConfigMap(ctx, parentPkgPath)
 	if err != nil {
 		log.Err(err).
@@ -438,13 +439,13 @@ func (c *Config) addSubPkgConfig(ctx context.Context, subPkgPath string, parentP
 		return fmt.Errorf("failed to get package config: %w", err)
 	}
 
-	log.Trace().Msg("getting config")
+	log.Debug().Msg("getting config")
 	cfg, err := c.CfgAsMap(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to get configuration map: %w", err)
 	}
 
-	log.Trace().Msg("getting packages section")
+	log.Debug().Msg("getting packages section")
 	packagesSection := cfg["packages"].(map[string]any)
 
 	// Don't overwrite any config that already exists
@@ -688,15 +689,21 @@ func (c *Config) mergeInConfig(ctx context.Context) error {
 			packageConfig["config"] = defaultCfg
 			continue
 		}
-		packageConfigSection := configSectionUntyped.(map[string]any)
+		// Sometimes the config section may be provided, but it's nil.
+		// We need to account for this fact.
+		if configSectionUntyped == nil {
+			configSectionUntyped = map[string]any{}
+		}
+
+		configSectionTyped := configSectionUntyped.(map[string]any)
 
 		for key, value := range defaultCfg {
 			if contains([]string{"packages", "config"}, key) {
 				continue
 			}
-			_, keyExists := packageConfigSection[key]
+			_, keyExists := configSectionTyped[key]
 			if !keyExists {
-				packageConfigSection[key] = value
+				configSectionTyped[key] = value
 			}
 		}
 		interfaces, err := c.getInterfacesForPackage(ctx, pkgPath)
@@ -728,7 +735,7 @@ func (c *Config) mergeInConfig(ctx context.Context) error {
 				// Assume this interface's value in the map is nil. Just skip it.
 				continue
 			}
-			for key, value := range packageConfigSection {
+			for key, value := range configSectionTyped {
 				if key == "packages" {
 					continue
 				}
