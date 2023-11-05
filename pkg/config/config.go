@@ -210,7 +210,11 @@ func (c *Config) getPackageConfigMap(ctx context.Context, packageName string) (m
 		return configAsMap, nil
 	}
 
-	return map[string]any{}, nil
+	// Package is something other than map, so set its value to an
+	// empty map.
+	emptyMap := map[string]any{}
+	packageSection[packageName] = emptyMap
+	return emptyMap, nil
 
 }
 func (c *Config) GetPackageConfig(ctx context.Context, packageName string) (*Config, error) {
@@ -659,6 +663,17 @@ func contains[T comparable](slice []T, elem T) bool {
 	return false
 }
 
+func deepCopyConfigMap(src map[string]any) map[string]any {
+	new := map[string]any{}
+	for key, val := range src {
+		if contains([]string{"packages", "config", "interfaces"}, key) {
+			continue
+		}
+		new[key] = val
+	}
+	return new
+}
+
 // mergeInConfig takes care of merging inheritable configuration
 // in the config map. For example, it merges default config, then
 // package-level config, then interface-level config.
@@ -684,15 +699,28 @@ func (c *Config) mergeInConfig(ctx context.Context) error {
 			pkgLog.Err(err).Msg("failed to get package config")
 			return fmt.Errorf("failed to get package config: %w", err)
 		}
+		pkgLog.Trace().Msg("got package config map")
+
 		configSectionUntyped, configExists := packageConfig["config"]
 		if !configExists {
-			packageConfig["config"] = defaultCfg
-			continue
+			pkgLog.Trace().Msg("config section doesn't exist, setting it to a deepcopy of the top-level config")
+			packageConfig["config"] = deepCopyConfigMap(defaultCfg)
 		}
+
+		pkgLog.Trace().Msg("got config section for package")
 		// Sometimes the config section may be provided, but it's nil.
 		// We need to account for this fact.
 		if configSectionUntyped == nil {
-			configSectionUntyped = map[string]any{}
+			pkgLog.Trace().Msg("config section is nil, converting to empty map")
+			emptyMap := map[string]any{}
+
+			// We need to add this to the "global" config mapping so the change
+			// gets persisted, and also into configSectionUntyped for the logic
+			// further down.
+			packageConfig["config"] = emptyMap
+			configSectionUntyped = emptyMap
+		} else {
+			pkgLog.Trace().Msg("config section is not nil")
 		}
 
 		configSectionTyped := configSectionUntyped.(map[string]any)
@@ -701,8 +729,11 @@ func (c *Config) mergeInConfig(ctx context.Context) error {
 			if contains([]string{"packages", "config"}, key) {
 				continue
 			}
+			keyValLog := pkgLog.With().Str("key", key).Str("value", fmt.Sprintf("%v", value)).Logger()
+
 			_, keyExists := configSectionTyped[key]
 			if !keyExists {
+				keyValLog.Trace().Msg("setting key to value")
 				configSectionTyped[key] = value
 			}
 		}

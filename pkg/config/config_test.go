@@ -1204,6 +1204,7 @@ with-expecter: false
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			ctx := context.Background()
 			tmpdir := pathlib.NewPath(t.TempDir())
 			cfg := tmpdir.Join("config.yaml")
 			require.NoError(t, cfg.WriteFile([]byte(tt.cfgYaml)))
@@ -1218,7 +1219,10 @@ with-expecter: false
 				t.Errorf("Config.Initialize() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
-			cfgAsStr, err := yaml.Marshal(c._cfgAsMap)
+			cfgAsMap, err := c.CfgAsMap(ctx)
+			require.NoError(t, err)
+			
+			cfgAsStr, err := yaml.Marshal(cfgAsMap)
 			require.NoError(t, err)
 
 			if tt.wantCfgMap != "" && !reflect.DeepEqual(string(cfgAsStr), tt.wantCfgMap) {
