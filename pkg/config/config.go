@@ -217,6 +217,13 @@ func (c *Config) getPackageConfigMap(ctx context.Context, packageName string) (m
 	return emptyMap, nil
 
 }
+
+// GetPackageConfig returns a struct representation of the package's config
+// as provided in yaml. If the package did not specify a config section,
+// this method will inject the top-level config into the package's config.
+// This is especially useful as it allows us to lazily evaluate a package's
+// config. If the package does specify config, this method takes care to merge
+// the top-level config with the values specified for this package.
 func (c *Config) GetPackageConfig(ctx context.Context, packageName string) (*Config, error) {
 	log := zerolog.Ctx(ctx).With().Str("package-path", packageName).Logger()
 
@@ -228,13 +235,10 @@ func (c *Config) GetPackageConfig(ctx context.Context, packageName string) (*Con
 		return pkgConf, nil
 	}
 
-	//pkgConfig := reflect.New(reflect.ValueOf(c).Elem().Type()).Interface()
 	pkgConfig := &Config{}
 	if err := copier.Copy(pkgConfig, c); err != nil {
 		return nil, fmt.Errorf("failed to copy config: %w", err)
 	}
-	//pkgConfigTyped := pkgConfig.(*Config)
-	pkgConfigTyped := pkgConfig
 
 	configMap, err := c.getPackageConfigMap(ctx, packageName)
 	if err != nil {
@@ -245,18 +249,23 @@ func (c *Config) GetPackageConfig(ctx context.Context, packageName string) (*Con
 	if !ok {
 		log.Debug().Msg("config section not provided for package")
 		configMap["config"] = deepCopyConfigMap(c._cfgAsMap)
-		return pkgConfigTyped, nil
+		c.pkgConfigCache[packageName] = pkgConfig
+		return pkgConfig, nil
 	}
 
-	decoder, err := c.getDecoder(pkgConfigTyped)
+	// We know that the package specified config that is overriding the top-level
+	// config. We use a mapstructure decoder to decode the values in the yaml
+	// into the pkgConfig struct. This has the effect of merging top-level
+	// config with package-level config.
+	decoder, err := c.getDecoder(pkgConfig)
 	if err != nil {
 		return nil, stackerr.NewStackErrf(err, "failed to get decoder")
 	}
 	if err := decoder.Decode(configSection); err != nil {
 		return nil, err
 	}
-	c.pkgConfigCache[packageName] = pkgConfigTyped
-	return pkgConfigTyped, nil
+	c.pkgConfigCache[packageName] = pkgConfig
+	return pkgConfig, nil
 }
 
 func (c *Config) ExcludePath(path string) bool {
@@ -355,16 +364,15 @@ func (c *Config) GetInterfaceConfig(ctx context.Context, packageName string, int
 	}
 
 	// Copy the package-level config to our interface-level config
-	pkgConfigCopy := reflect.New(reflect.ValueOf(pkgConfig).Elem().Type()).Interface()
+	pkgConfigCopy := &Config{}
 	if err := copier.Copy(pkgConfigCopy, pkgConfig); err != nil {
 		return nil, stackerr.NewStackErrf(err, "failed to create a copy of package config")
 	}
-	baseConfigTyped := pkgConfigCopy.(*Config)
 
 	interfaceSection, ok := interfacesSection[interfaceName]
 	if !ok {
 		log.Debug().Msg("interface not defined in package configuration")
-		return []*Config{baseConfigTyped}, nil
+		return []*Config{pkgConfigCopy}, nil
 	}
 
 	interfaceSectionTyped, ok := interfaceSection.(map[string]any)
@@ -373,7 +381,7 @@ func (c *Config) GetInterfaceConfig(ctx context.Context, packageName string, int
 		// the interface but not provide any additional config beyond what
 		// is provided at the package level
 		if reflect.ValueOf(&interfaceSection).Elem().IsZero() {
-			return []*Config{baseConfigTyped}, nil
+			return []*Config{pkgConfigCopy}, nil
 		}
 		msgString := "bad type provided for interface config"
 		log.Error().Msgf(msgString)
@@ -384,11 +392,11 @@ func (c *Config) GetInterfaceConfig(ctx context.Context, packageName string, int
 	if ok {
 		log.Debug().Msg("config section exists for interface")
 		// if `config` is provided, we'll overwrite the values in our
-		// baseConfigTyped struct to act as the "new" base config.
+		// pkgConfigCopy struct to act as the "new" base config.
 		// This will allow us to set the default values for the interface
 		// but override them further for each mock defined in the
 		// `configs` section.
-		decoder, err := c.getDecoder(baseConfigTyped)
+		decoder, err := c.getDecoder(pkgConfigCopy)
 		if err != nil {
 			return nil, stackerr.NewStackErrf(err, "unable to create mapstructure decoder")
 		}
@@ -405,8 +413,8 @@ func (c *Config) GetInterfaceConfig(ctx context.Context, packageName string, int
 		configsSectionTyped := configsSection.([]any)
 		for _, configMap := range configsSectionTyped {
 			// Create a copy of the package-level config
-			currentInterfaceConfig := reflect.New(reflect.ValueOf(baseConfigTyped).Elem().Type()).Interface()
-			if err := copier.Copy(currentInterfaceConfig, baseConfigTyped); err != nil {
+			currentInterfaceConfig := reflect.New(reflect.ValueOf(pkgConfigCopy).Elem().Type()).Interface()
+			if err := copier.Copy(currentInterfaceConfig, pkgConfigCopy); err != nil {
 				return nil, stackerr.NewStackErrf(err, "failed to copy package config")
 			}
 
@@ -426,7 +434,7 @@ func (c *Config) GetInterfaceConfig(ctx context.Context, packageName string, int
 	log.Debug().Msg("configs section doesn't exist for interface")
 
 	if len(configs) == 0 {
-		configs = append(configs, baseConfigTyped)
+		configs = append(configs, pkgConfigCopy)
 	}
 	return configs, nil
 }
@@ -674,14 +682,14 @@ func contains[T comparable](slice []T, elem T) bool {
 }
 
 func deepCopyConfigMap(src map[string]any) map[string]any {
-	new := map[string]any{}
+	newMap := map[string]any{}
 	for key, val := range src {
 		if contains([]string{"packages", "config", "interfaces"}, key) {
 			continue
 		}
-		new[key] = val
+		newMap[key] = val
 	}
-	return new
+	return newMap
 }
 
 // mergeInConfig takes care of merging inheritable configuration
