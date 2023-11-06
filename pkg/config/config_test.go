@@ -1182,22 +1182,24 @@ dir: foobar
 recursive: True
 all: True
 packages:
-  github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
 `,
-			wantCfgMap: `dir: foobar
+			wantCfgMap: `all: true
+dir: foobar
 packages:
     github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
         config:
             all: true
             dir: foobar
             recursive: true
-            with-expecter: true
+            with-expecter: false
     github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
         config:
             all: true
             dir: foobar
             recursive: true
-            with-expecter: true
+            with-expecter: false
+recursive: true
 with-expecter: false
 `,
 		},
@@ -1209,19 +1211,22 @@ with-expecter: false
 			cfg := tmpdir.Join("config.yaml")
 			require.NoError(t, cfg.WriteFile([]byte(tt.cfgYaml)))
 
-			c := &Config{
-				Config: cfg.String(),
-			}
+			viperObj := viper.New()
+			viperObj.SetConfigFile(cfg.String())
+			require.NoError(t, viperObj.ReadInConfig())
+			c, err := NewConfigFromViper(viperObj)
+			require.NoError(t, err)
+
 			log, err := logging.GetLogger("TRACE")
 			require.NoError(t, err)
 
-			if err := c.Initialize(log.WithContext(context.Background())); !errors.Is(err, tt.wantErr) {
+			if err := c.Initialize(log.WithContext(ctx)); !errors.Is(err, tt.wantErr) {
 				t.Errorf("Config.Initialize() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
 			cfgAsMap, err := c.CfgAsMap(ctx)
 			require.NoError(t, err)
-			
+
 			cfgAsStr, err := yaml.Marshal(cfgAsMap)
 			require.NoError(t, err)
 

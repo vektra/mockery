@@ -218,7 +218,7 @@ func (c *Config) getPackageConfigMap(ctx context.Context, packageName string) (m
 
 }
 func (c *Config) GetPackageConfig(ctx context.Context, packageName string) (*Config, error) {
-	log := zerolog.Ctx(ctx)
+	log := zerolog.Ctx(ctx).With().Str("package-path", packageName).Logger()
 
 	if c.pkgConfigCache == nil {
 		log.Debug().Msg("package cache is nil")
@@ -228,11 +228,13 @@ func (c *Config) GetPackageConfig(ctx context.Context, packageName string) (*Con
 		return pkgConf, nil
 	}
 
-	pkgConfig := reflect.New(reflect.ValueOf(c).Elem().Type()).Interface()
+	//pkgConfig := reflect.New(reflect.ValueOf(c).Elem().Type()).Interface()
+	pkgConfig := &Config{}
 	if err := copier.Copy(pkgConfig, c); err != nil {
 		return nil, fmt.Errorf("failed to copy config: %w", err)
 	}
-	pkgConfigTyped := pkgConfig.(*Config)
+	//pkgConfigTyped := pkgConfig.(*Config)
+	pkgConfigTyped := pkgConfig
 
 	configMap, err := c.getPackageConfigMap(ctx, packageName)
 	if err != nil {
@@ -242,6 +244,7 @@ func (c *Config) GetPackageConfig(ctx context.Context, packageName string) (*Con
 	configSection, ok := configMap["config"]
 	if !ok {
 		log.Debug().Msg("config section not provided for package")
+		configMap["config"] = deepCopyConfigMap(c._cfgAsMap)
 		return pkgConfigTyped, nil
 	}
 
@@ -444,13 +447,13 @@ func (c *Config) addSubPkgConfig(ctx context.Context, subPkgPath string, parentP
 	}
 
 	log.Debug().Msg("getting config")
-	cfg, err := c.CfgAsMap(ctx)
+	topLevelConfig, err := c.CfgAsMap(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to get configuration map: %w", err)
 	}
 
 	log.Debug().Msg("getting packages section")
-	packagesSection := cfg["packages"].(map[string]any)
+	packagesSection := topLevelConfig["packages"].(map[string]any)
 
 	// Don't overwrite any config that already exists
 	_, pkgExists := packagesSection[subPkgPath]
@@ -600,6 +603,7 @@ func (c *Config) subPackages(
 // recursive and recurses the file tree to find all sub-packages.
 func (c *Config) discoverRecursivePackages(ctx context.Context) error {
 	log := zerolog.Ctx(ctx)
+	log.Trace().Msg("discovering recursive packages")
 	recursivePackages := map[string]*Config{}
 	packageList, err := c.GetPackages(ctx)
 	if err != nil {
@@ -607,11 +611,17 @@ func (c *Config) discoverRecursivePackages(ctx context.Context) error {
 	}
 	for _, pkg := range packageList {
 		pkgConfig, err := c.GetPackageConfig(ctx, pkg)
+		pkgLog := log.With().Str("package", pkg).Logger()
+		pkgLog.Trace().Msg("iterating over package")
 		if err != nil {
 			return fmt.Errorf("failed to get package config: %w", err)
 		}
 		if pkgConfig.Recursive {
+			pkgLog.Trace().Msg("package marked as recursive")
 			recursivePackages[pkg] = pkgConfig
+		} else {
+			pkgLog.Trace().Msg("package not marked as recursive")
+			pkgLog.Trace().Msg(fmt.Sprintf("%+v", pkgConfig))
 		}
 	}
 	if len(recursivePackages) == 0 {
@@ -703,8 +713,12 @@ func (c *Config) mergeInConfig(ctx context.Context) error {
 
 		configSectionUntyped, configExists := packageConfig["config"]
 		if !configExists {
-			pkgLog.Trace().Msg("config section doesn't exist, setting it to a deepcopy of the top-level config")
-			packageConfig["config"] = deepCopyConfigMap(defaultCfg)
+			// The reason why this should never happen is because getPackageConfigMap
+			// should be populating the config section with the top-level config if it
+			// wasn't defined in the yaml.
+			msg := "config section does not exist for package, this should never happen"
+			pkgLog.Error().Msg(msg)
+			return fmt.Errorf(msg)
 		}
 
 		pkgLog.Trace().Msg("got config section for package")
