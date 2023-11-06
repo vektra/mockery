@@ -37,6 +37,11 @@ func showConfig(
 	if err != nil {
 		return stackerr.NewStackErrf(err, "failed to unmarshal config")
 	}
+	log, err := logging.GetLogger(config.LogLevel)
+	if err != nil {
+		return fmt.Errorf("getting logger: %w", err)
+	}
+	ctx = log.WithContext(ctx)
 	if err := config.Initialize(ctx); err != nil {
 		return err
 	}
@@ -48,10 +53,7 @@ func showConfig(
 	if err != nil {
 		return stackerr.NewStackErrf(err, "failed to marshal yaml")
 	}
-	log, err := logging.GetLogger(config.LogLevel)
-	if err != nil {
-		panic(err)
-	}
+
 	log.Info().Msgf("Using config: %s", config.Config)
 
 	fmt.Fprintf(outputter, "%s", string(out))

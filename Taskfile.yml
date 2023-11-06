@@ -52,7 +52,7 @@ tasks:
 
   test:
     cmds:
-      - go test -v -coverprofile=coverage.txt ./...
+      - go run gotest.tools/gotestsum --format testname -- -v -coverprofile=coverage.txt ./...
     desc: run unit tests
     sources:
       - "**/*.go"

@@ -1174,24 +1174,91 @@ packages:
 with-expecter: false
 `,
 		},
+		{
+			name: "empty map for recursive package",
+			cfgYaml: `
+with-expecter: False
+dir: foobar
+recursive: True
+all: True
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+`,
+			wantCfgMap: `all: true
+dir: foobar
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+        config:
+            all: true
+            dir: foobar
+            recursive: true
+            with-expecter: false
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+        config:
+            all: true
+            dir: foobar
+            recursive: true
+            with-expecter: false
+recursive: true
+with-expecter: false
+`,
+		},
+		{
+			name: "empty map for subpackage of recursive package",
+			cfgYaml: `
+with-expecter: False
+dir: foobar
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+        config:
+            recursive: True
+            with-expecter: True
+            all: True
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3: {}
+`,
+			wantCfgMap: `dir: foobar
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+        config:
+            all: true
+            dir: foobar
+            recursive: true
+            with-expecter: true
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+        config:
+            all: true
+            dir: foobar
+            recursive: true
+            with-expecter: true
+with-expecter: false
+`,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+
+			ctx := context.Background()
 			tmpdir := pathlib.NewPath(t.TempDir())
 			cfg := tmpdir.Join("config.yaml")
 			require.NoError(t, cfg.WriteFile([]byte(tt.cfgYaml)))
 
-			c := &Config{
-				Config: cfg.String(),
-			}
+			viperObj := viper.New()
+			viperObj.SetConfigFile(cfg.String())
+			require.NoError(t, viperObj.ReadInConfig())
+			c, err := NewConfigFromViper(viperObj)
+			require.NoError(t, err)
+
 			log, err := logging.GetLogger("TRACE")
 			require.NoError(t, err)
 
-			if err := c.Initialize(log.WithContext(context.Background())); !errors.Is(err, tt.wantErr) {
+			if err := c.Initialize(log.WithContext(ctx)); !errors.Is(err, tt.wantErr) {
 				t.Errorf("Config.Initialize() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
-			cfgAsStr, err := yaml.Marshal(c._cfgAsMap)
+			cfgAsMap, err := c.CfgAsMap(ctx)
+			require.NoError(t, err)
+
+			cfgAsStr, err := yaml.Marshal(cfgAsMap)
 			require.NoError(t, err)
 
 			if tt.wantCfgMap != "" && !reflect.DeepEqual(string(cfgAsStr), tt.wantCfgMap) {
