@@ -195,7 +195,14 @@ func (c *Config) GetPackages(ctx context.Context) ([]string, error) {
 	return packageList, nil
 }
 
+// getPackageConfigMap returns the map for the particular package, which includes
+// (but is not limited to) both the `configs` section and the `interfaces` section.
+// Note this does NOT return the `configs` section for the package. It returns the
+// entire mapping for the package.
 func (c *Config) getPackageConfigMap(ctx context.Context, packageName string) (map[string]any, error) {
+	log := zerolog.Ctx(ctx)
+	log.Trace().Msg("getting package config map")
+
 	cfgMap, err := c.CfgAsMap(ctx)
 	if err != nil {
 		return nil, err
@@ -207,8 +214,10 @@ func (c *Config) getPackageConfigMap(ctx context.Context, packageName string) (m
 	}
 	configAsMap, isMap := configUnmerged.(map[string]any)
 	if isMap {
+		log.Trace().Msg("package's value is a map, returning")
 		return configAsMap, nil
 	}
+	log.Trace().Msg("package's value is not a map")
 
 	// Package is something other than map, so set its value to an
 	// empty map.
@@ -248,7 +257,7 @@ func (c *Config) GetPackageConfig(ctx context.Context, packageName string) (*Con
 	configSection, ok := configMap["config"]
 	if !ok {
 		log.Debug().Msg("config section not provided for package")
-		configMap["config"] = deepCopyConfigMap(c._cfgAsMap)
+		configMap["config"] = map[string]any{}
 		c.pkgConfigCache[packageName] = pkgConfig
 		return pkgConfig, nil
 	}
@@ -445,6 +454,7 @@ func (c *Config) addSubPkgConfig(ctx context.Context, subPkgPath string, parentP
 	log := zerolog.Ctx(ctx).With().
 		Str("parent-package", parentPkgPath).
 		Str("sub-package", subPkgPath).Logger()
+	ctx = log.WithContext(ctx)
 
 	log.Debug().Msg("adding sub-package to config map")
 	parentPkgConfig, err := c.getPackageConfigMap(ctx, parentPkgPath)
@@ -463,13 +473,14 @@ func (c *Config) addSubPkgConfig(ctx context.Context, subPkgPath string, parentP
 	log.Debug().Msg("getting packages section")
 	packagesSection := topLevelConfig["packages"].(map[string]any)
 
-	// Don't overwrite any config that already exists
 	_, pkgExists := packagesSection[subPkgPath]
 	if !pkgExists {
 		log.Trace().Msg("sub-package doesn't exist in config")
+
+		// Copy the parent package directly into the subpackage config section
 		packagesSection[subPkgPath] = map[string]any{}
 		newPkgSection := packagesSection[subPkgPath].(map[string]any)
-		newPkgSection["config"] = parentPkgConfig["config"]
+		newPkgSection["config"] = deepCopyConfigMap(parentPkgConfig["config"].(map[string]any))
 	} else {
 		log.Trace().Msg("sub-package exists in config")
 		// The sub-package exists in config. Check if it has its
@@ -481,10 +492,15 @@ func (c *Config) addSubPkgConfig(ctx context.Context, subPkgPath string, parentP
 			log.Err(err).Msg("could not get child package config")
 			return fmt.Errorf("failed to get sub-package config: %w", err)
 		}
+		log.Trace().Msgf("sub-package config: %v", subPkgConfig)
+		log.Trace().Msgf("parent-package config: %v", parentPkgConfig)
 
-		for key, val := range parentPkgConfig {
-			if _, keyInSubPkg := subPkgConfig[key]; !keyInSubPkg {
-				subPkgConfig[key] = val
+		// Merge the parent config with the sub-package config.
+		parentConfigSection := parentPkgConfig["config"].(map[string]any)
+		subPkgConfigSection := subPkgConfig["config"].(map[string]any)
+		for key, val := range parentConfigSection {
+			if _, keyInSubPkg := subPkgConfigSection[key]; !keyInSubPkg {
+				subPkgConfigSection[key] = val
 			}
 
 		}
@@ -629,7 +645,6 @@ func (c *Config) discoverRecursivePackages(ctx context.Context) error {
 			recursivePackages[pkg] = pkgConfig
 		} else {
 			pkgLog.Trace().Msg("package not marked as recursive")
-			pkgLog.Trace().Msg(fmt.Sprintf("%+v", pkgConfig))
 		}
 	}
 	if len(recursivePackages) == 0 {
@@ -711,13 +726,15 @@ func (c *Config) mergeInConfig(ctx context.Context) error {
 	}
 	for _, pkgPath := range pkgs {
 		pkgLog := log.With().Str("package-path", pkgPath).Logger()
+		pkgCtx := pkgLog.WithContext(ctx)
+
 		pkgLog.Trace().Msg("merging for package")
-		packageConfig, err := c.getPackageConfigMap(ctx, pkgPath)
+		packageConfig, err := c.getPackageConfigMap(pkgCtx, pkgPath)
 		if err != nil {
 			pkgLog.Err(err).Msg("failed to get package config")
 			return fmt.Errorf("failed to get package config: %w", err)
 		}
-		pkgLog.Trace().Msg("got package config map")
+		pkgLog.Trace().Msgf("got package config map: %v", packageConfig)
 
 		configSectionUntyped, configExists := packageConfig["config"]
 		if !configExists {
@@ -759,12 +776,12 @@ func (c *Config) mergeInConfig(ctx context.Context) error {
 				configSectionTyped[key] = value
 			}
 		}
-		interfaces, err := c.getInterfacesForPackage(ctx, pkgPath)
+		interfaces, err := c.getInterfacesForPackage(pkgCtx, pkgPath)
 		if err != nil {
 			return fmt.Errorf("failed to get interfaces for package: %w", err)
 		}
 		for _, interfaceName := range interfaces {
-			interfacesSection, err := c.getInterfacesSection(ctx, pkgPath)
+			interfacesSection, err := c.getInterfacesSection(pkgCtx, pkgPath)
 			if err != nil {
 				return err
 			}
