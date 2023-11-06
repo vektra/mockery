@@ -1203,6 +1203,36 @@ recursive: true
 with-expecter: false
 `,
 		},
+		{
+			name: "empty map for subpackage of recursive package",
+			cfgYaml: `
+with-expecter: False
+dir: foobar
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+        config:
+            recursive: True
+            with-expecter: True
+            all: True
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3: {}
+`,
+			wantCfgMap: `dir: foobar
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+        config:
+            all: true
+            dir: foobar
+            recursive: true
+            with-expecter: true
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+        config:
+            all: true
+            dir: foobar
+            recursive: true
+            with-expecter: true
+with-expecter: false
+`,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
