@@ -1233,10 +1233,29 @@ packages:
 with-expecter: false
 `,
 		},
+		{
+			name: "test recursive with submodule",
+			cfgYaml: `
+with-expecter: False
+packages: 
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_submod:
+        config:
+            recursive: True
+            with-expecter: True
+            all: True
+`,
+			wantCfgMap: `packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_submod:
+        config:
+            all: true
+            recursive: true
+            with-expecter: true
+with-expecter: false
+`,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
 			ctx := context.Background()
 			tmpdir := pathlib.NewPath(t.TempDir())
 			cfg := tmpdir.Join("config.yaml")
@@ -1271,7 +1290,6 @@ want
 ------
 %v`, string(cfgAsStr), tt.wantCfgMap)
 			}
-
 		})
 	}
 }
