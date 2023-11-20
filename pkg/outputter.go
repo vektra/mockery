@@ -333,7 +333,11 @@ func (o *Outputter) Generate(ctx context.Context, iface *Interface) error {
 		config := TemplateGeneratorConfig{
 			Style: interfaceConfig.Style,
 		}
-		generator := NewTemplateGenerator(config)
+		generator, err := NewTemplateGenerator(iface.PackagesPackage, config)
+		if err != nil {
+			return fmt.Errorf("creating template generator: %w", err)
+		}
+
 		fmt.Printf("generator: %v\n", generator)
 
 	}

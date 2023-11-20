@@ -1,7 +1,6 @@
 package registry
 
 import (
-	"path"
 	"strings"
 )
 
@@ -42,7 +41,7 @@ func (p *Package) Path() string {
 		return ""
 	}
 
-	return stripVendorPath(p.pkg.Path())
+	return p.pkg.Path()
 }
 
 var replacer = strings.NewReplacer(
@@ -71,8 +70,6 @@ func (p Package) uniqueName(lvl int) string {
 
 	return name
 }
-
-
 
 func min(a, b int) int {
 	if a < b {

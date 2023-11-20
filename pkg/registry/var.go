@@ -30,7 +30,7 @@ func (v Var) TypeString() string {
 
 // packageQualifier is a types.Qualifier.
 func (v Var) packageQualifier(pkg *types.Package) string {
-	path := stripVendorPath(pkg.Path())
+	path := pkg.Path()
 	if v.moqPkgPath != "" && v.moqPkgPath == path {
 		return ""
 	}

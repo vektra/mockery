@@ -8,7 +8,6 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/chigopher/pathlib"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -18,19 +17,19 @@ import (
 // qualifiers.
 type Registry struct {
 	srcPkgName  string
+	srcPkgPath  string
 	srcPkgTypes *types.Package
-	outputPath  *pathlib.Path
 	aliases     map[string]string
 	imports     map[string]*Package
 }
 
 // New loads the source package info and returns a new instance of
 // Registry.
-func New(srcPkg *packages.Package, outputPath *pathlib.Path) (*Registry, error) {
+func New(srcPkg *packages.Package) (*Registry, error) {
 	return &Registry{
 		srcPkgName:  srcPkg.Name,
+		srcPkgPath:  srcPkg.PkgPath,
 		srcPkgTypes: srcPkg.Types,
-		outputPath:  outputPath,
 		aliases:     parseImportsAliases(srcPkg.Syntax),
 		imports:     make(map[string]*Package),
 	}, nil
@@ -79,8 +78,8 @@ func (r *Registry) MethodScope() *MethodScope {
 // suitable alias if there are any conflicts with previously imported
 // packages.
 func (r *Registry) AddImport(pkg *types.Package) *Package {
-	path := stripVendorPath(pkg.Path())
-	if pathlib.NewPath(path).Equals(r.outputPath) {
+	path := pkg.Path()
+	if pkg.Path() == r.srcPkgPath {
 		return nil
 	}
 

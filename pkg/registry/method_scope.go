@@ -80,7 +80,7 @@ func (m MethodScope) populateImports(t types.Type, imports map[string]*Package) 
 	switch t := t.(type) {
 	case *types.Named:
 		if pkg := t.Obj().Pkg(); pkg != nil {
-			imports[stripVendorPath(pkg.Path())] = m.registry.AddImport(pkg)
+			imports[pkg.Path()] = m.registry.AddImport(pkg)
 		}
 		// The imports of a Type with a TypeList must be added to the imports list
 		// For example: Foo[otherpackage.Bar] , must have otherpackage imported

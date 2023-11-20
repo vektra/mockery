@@ -190,7 +190,7 @@ func (p *Parser) Find(name string) (*Interface, error) {
 	for _, entry := range p.entries {
 		for _, iface := range entry.interfaces {
 			if iface == name {
-				list := p.packageInterfaces(entry.pkg.Types, entry.fileName, []string{name}, nil)
+				list := p.packageInterfaces(entry, []string{name}, nil)
 				if len(list) > 0 {
 					return list[0], nil
 				}
@@ -204,7 +204,7 @@ func (p *Parser) Interfaces() []*Interface {
 	ifaces := make(sortableIFaceList, 0)
 	for _, entry := range p.entries {
 		declaredIfaces := entry.interfaces
-		ifaces = p.packageInterfaces(entry.pkg.Types, entry.fileName, declaredIfaces, ifaces)
+		ifaces = p.packageInterfaces(entry, declaredIfaces, ifaces)
 	}
 
 	sort.Sort(ifaces)
@@ -212,11 +212,10 @@ func (p *Parser) Interfaces() []*Interface {
 }
 
 func (p *Parser) packageInterfaces(
-	pkg *types.Package,
-	fileName string,
+	entry *parserEntry,
 	declaredInterfaces []string,
 	ifaces []*Interface) []*Interface {
-	scope := pkg.Scope()
+	scope := entry.pkg.Types.Scope()
 	for _, name := range declaredInterfaces {
 		obj := scope.Lookup(name)
 		if obj == nil {
@@ -235,11 +234,12 @@ func (p *Parser) packageInterfaces(
 		}
 
 		elem := &Interface{
-			Name:          name,
-			Pkg:           pkg,
-			QualifiedName: pkg.Path(),
-			FileName:      fileName,
-			NamedType:     typ,
+			Name:            name,
+			PackagesPackage: entry.pkg,
+			Pkg:             entry.pkg.Types,
+			QualifiedName:   entry.pkg.Types.Path(),
+			FileName:        entry.fileName,
+			NamedType:       typ,
 		}
 
 		iface, ok := typ.Underlying().(*types.Interface)
@@ -265,8 +265,6 @@ type TypesPackage interface {
 	Name() string
 	Path() string
 }
-
-
 
 type sortableIFaceList []*Interface
 

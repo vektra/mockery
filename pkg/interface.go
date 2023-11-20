@@ -3,6 +3,8 @@ package pkg
 import (
 	"go/ast"
 	"go/types"
+
+	"golang.org/x/tools/go/packages"
 )
 
 // Interface type represents the target type that we will generate a mock for.
@@ -14,6 +16,7 @@ type Interface struct {
 	QualifiedName   string // Path to the package of the target type.
 	FileName        string
 	File            *ast.File
+	PackagesPackage *packages.Package
 	Pkg             TypesPackage
 	NamedType       *types.Named
 	IsFunction      bool             // If true, this instance represents a function, otherwise it's an interface.
