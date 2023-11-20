@@ -21,6 +21,10 @@ func (_m *RequesterArray) EXPECT() *RequesterArray_Expecter {
 func (_m *RequesterArray) Get(path string) ([2]string, error) {
 	ret := _m.Called(path)
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for Get")
+	}
+
 	var r0 [2]string
 	var r1 error
 	if rf, ok := ret.Get(0).(func(string) ([2]string, error)); ok {

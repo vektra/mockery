@@ -752,6 +752,10 @@ func (_m *{{.MockName}}{{.InstantiatedTypeString}}) {{.FunctionName}}({{join .Pa
 {{- else}}
 	{{- .RetVariableName}} := {{.Called}}
 
+	if len({{.RetVariableName}}) == 0 {
+		panic("Missing Return() function for {{.FunctionName}}")
+	}
+
 	{{range $idx, $name := .Returns.ReturnNames}}
 	var {{$name}} {{index $.Returns.Types $idx -}}
 	{{end}}

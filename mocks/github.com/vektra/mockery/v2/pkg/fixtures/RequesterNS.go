@@ -25,6 +25,10 @@ func (_m *RequesterNS) EXPECT() *RequesterNS_Expecter {
 func (_m *RequesterNS) Get(path string) (http.Response, error) {
 	ret := _m.Called(path)
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for Get")
+	}
+
 	var r0 http.Response
 	var r1 error
 	if rf, ok := ret.Get(0).(func(string) (http.Response, error)); ok {

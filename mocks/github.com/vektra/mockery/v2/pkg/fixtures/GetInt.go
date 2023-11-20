@@ -21,6 +21,10 @@ func (_m *GetInt) EXPECT() *GetInt_Expecter {
 func (_m *GetInt) Get() int {
 	ret := _m.Called()
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for Get")
+	}
+
 	var r0 int
 	if rf, ok := ret.Get(0).(func() int); ok {
 		r0 = rf()

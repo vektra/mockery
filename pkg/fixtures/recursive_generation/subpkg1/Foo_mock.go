@@ -21,6 +21,10 @@ func (_m *MockFoo) EXPECT() *MockFoo_Expecter {
 func (_m *MockFoo) Get() string {
 	ret := _m.Called()
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for Get")
+	}
+
 	var r0 string
 	if rf, ok := ret.Get(0).(func() string); ok {
 		r0 = rf()

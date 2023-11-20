@@ -21,6 +21,10 @@ func (_m *Requester3) EXPECT() *Requester3_Expecter {
 func (_m *Requester3) Get() error {
 	ret := _m.Called()
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for Get")
+	}
+
 	var r0 error
 	if rf, ok := ret.Get(0).(func() error); ok {
 		r0 = rf()

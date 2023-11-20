@@ -21,6 +21,10 @@ func (_m *FuncArgsCollision) EXPECT() *FuncArgsCollision_Expecter {
 func (_m *FuncArgsCollision) Foo(ret interface{}) error {
 	ret_1 := _m.Called(ret)
 
+	if len(ret_1) == 0 {
+		panic("Missing Return() function for Foo")
+	}
+
 	var r0 error
 	if rf, ok := ret_1.Get(0).(func(interface{}) error); ok {
 		r0 = rf(ret)

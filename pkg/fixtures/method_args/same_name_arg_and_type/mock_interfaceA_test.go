@@ -21,6 +21,10 @@ func (_m *interfaceAMock) EXPECT() *interfaceAMock_Expecter {
 func (_m *interfaceAMock) DoB(interfaceB0 interfaceB) interfaceB {
 	ret := _m.Called(interfaceB0)
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for DoB")
+	}
+
 	var r0 interfaceB
 	if rf, ok := ret.Get(0).(func(interfaceB) interfaceB); ok {
 		r0 = rf(interfaceB0)
@@ -65,6 +69,10 @@ func (_c *interfaceAMock_DoB_Call) RunAndReturn(run func(interfaceB) interfaceB)
 func (_m *interfaceAMock) DoB0(interfaceB interfaceB0) interfaceB0 {
 	ret := _m.Called(interfaceB)
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for DoB0")
+	}
+
 	var r0 interfaceB0
 	if rf, ok := ret.Get(0).(func(interfaceB0) interfaceB0); ok {
 		r0 = rf(interfaceB)
@@ -108,6 +116,10 @@ func (_c *interfaceAMock_DoB0_Call) RunAndReturn(run func(interfaceB0) interface
 // DoB0v2 provides a mock function with given fields: interfaceB00
 func (_m *interfaceAMock) DoB0v2(interfaceB00 interfaceB0) interfaceB0 {
 	ret := _m.Called(interfaceB00)
+
+	if len(ret) == 0 {
+		panic("Missing Return() function for DoB0v2")
+	}
 
 	var r0 interfaceB0
 	if rf, ok := ret.Get(0).(func(interfaceB0) interfaceB0); ok {

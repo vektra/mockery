@@ -26,6 +26,10 @@ func (_m *ImportsSameAsPackage) EXPECT() *ImportsSameAsPackage_Expecter {
 func (_m *ImportsSameAsPackage) A() test.B {
 	ret := _m.Called()
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for A")
+	}
+
 	var r0 test.B
 	if rf, ok := ret.Get(0).(func() test.B); ok {
 		r0 = rf()
@@ -66,6 +70,10 @@ func (_c *ImportsSameAsPackage_A_Call) RunAndReturn(run func() test.B) *ImportsS
 // B provides a mock function with given fields:
 func (_m *ImportsSameAsPackage) B() fixtures.KeyManager {
 	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("Missing Return() function for B")
+	}
 
 	var r0 fixtures.KeyManager
 	if rf, ok := ret.Get(0).(func() fixtures.KeyManager); ok {

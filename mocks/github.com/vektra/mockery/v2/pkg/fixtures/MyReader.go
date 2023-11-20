@@ -21,6 +21,10 @@ func (_m *MyReader) EXPECT() *MyReader_Expecter {
 func (_m *MyReader) Read(p []byte) (int, error) {
 	ret := _m.Called(p)
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for Read")
+	}
+
 	var r0 int
 	var r1 error
 	if rf, ok := ret.Get(0).(func([]byte) (int, error)); ok {

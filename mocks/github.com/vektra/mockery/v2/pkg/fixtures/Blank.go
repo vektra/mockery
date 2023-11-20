@@ -21,6 +21,10 @@ func (_m *Blank) EXPECT() *Blank_Expecter {
 func (_m *Blank) Create(x interface{}) error {
 	ret := _m.Called(x)
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for Create")
+	}
+
 	var r0 error
 	if rf, ok := ret.Get(0).(func(interface{}) error); ok {
 		r0 = rf(x)

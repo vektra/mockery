@@ -21,6 +21,10 @@ func (_m *interfaceBMock) EXPECT() *interfaceBMock_Expecter {
 func (_m *interfaceBMock) GetData() int {
 	ret := _m.Called()
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for GetData")
+	}
+
 	var r0 int
 	if rf, ok := ret.Get(0).(func() int); ok {
 		r0 = rf()

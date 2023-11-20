@@ -517,6 +517,10 @@ func (s *GeneratorSuite) TestGeneratorForEmptyInterface() {
 	s.checkGeneration("empty_interface.go", "Blank", false, "", "")
 }
 
+func (s *GeneratorSuite) TestGeneratorForPanicOnNoReturnValueInterface() {
+	s.checkGeneration("panic_err.go", "PanicOnNoReturnValue", false, "", "")
+}
+
 func (s *GeneratorSuite) TestGeneratorArgumentIsMapFunc() {
 	s.checkGeneration("map_func.go", "MapFunc", false, "", "")
 }

@@ -21,6 +21,10 @@ func (_m *Requester2) EXPECT() *Requester2_Expecter {
 func (_m *Requester2) Get(path string) error {
 	ret := _m.Called(path)
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for Get")
+	}
+
 	var r0 error
 	if rf, ok := ret.Get(0).(func(string) error); ok {
 		r0 = rf(path)

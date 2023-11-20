@@ -21,6 +21,10 @@ func (_m *AsyncProducer) EXPECT() *AsyncProducer_Expecter {
 func (_m *AsyncProducer) Input() chan<- bool {
 	ret := _m.Called()
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for Input")
+	}
+
 	var r0 chan<- bool
 	if rf, ok := ret.Get(0).(func() chan<- bool); ok {
 		r0 = rf()
@@ -64,6 +68,10 @@ func (_c *AsyncProducer_Input_Call) RunAndReturn(run func() chan<- bool) *AsyncP
 func (_m *AsyncProducer) Output() <-chan bool {
 	ret := _m.Called()
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for Output")
+	}
+
 	var r0 <-chan bool
 	if rf, ok := ret.Get(0).(func() <-chan bool); ok {
 		r0 = rf()
@@ -106,6 +114,10 @@ func (_c *AsyncProducer_Output_Call) RunAndReturn(run func() <-chan bool) *Async
 // Whatever provides a mock function with given fields:
 func (_m *AsyncProducer) Whatever() chan bool {
 	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("Missing Return() function for Whatever")
+	}
 
 	var r0 chan bool
 	if rf, ok := ret.Get(0).(func() chan bool); ok {

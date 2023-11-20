@@ -17,6 +17,10 @@ type RequesterVariadicOneArgument struct {
 func (_m *RequesterVariadicOneArgument) Get(values ...string) bool {
 	ret := _m.Called(values)
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for Get")
+	}
+
 	var r0 bool
 	if rf, ok := ret.Get(0).(func(...string) bool); ok {
 		r0 = rf(values...)
@@ -30,6 +34,10 @@ func (_m *RequesterVariadicOneArgument) Get(values ...string) bool {
 // MultiWriteToFile provides a mock function with given fields: filename, w
 func (_m *RequesterVariadicOneArgument) MultiWriteToFile(filename string, w ...io.Writer) string {
 	ret := _m.Called(filename, w)
+
+	if len(ret) == 0 {
+		panic("Missing Return() function for MultiWriteToFile")
+	}
 
 	var r0 string
 	if rf, ok := ret.Get(0).(func(string, ...io.Writer) string); ok {
@@ -45,6 +53,10 @@ func (_m *RequesterVariadicOneArgument) MultiWriteToFile(filename string, w ...i
 func (_m *RequesterVariadicOneArgument) OneInterface(a ...interface{}) bool {
 	ret := _m.Called(a)
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for OneInterface")
+	}
+
 	var r0 bool
 	if rf, ok := ret.Get(0).(func(...interface{}) bool); ok {
 		r0 = rf(a...)
@@ -58,6 +70,10 @@ func (_m *RequesterVariadicOneArgument) OneInterface(a ...interface{}) bool {
 // Sprintf provides a mock function with given fields: format, a
 func (_m *RequesterVariadicOneArgument) Sprintf(format string, a ...interface{}) string {
 	ret := _m.Called(format, a)
+
+	if len(ret) == 0 {
+		panic("Missing Return() function for Sprintf")
+	}
 
 	var r0 string
 	if rf, ok := ret.Get(0).(func(string, ...interface{}) string); ok {

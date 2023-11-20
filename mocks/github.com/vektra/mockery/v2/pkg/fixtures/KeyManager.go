@@ -24,6 +24,10 @@ func (_m *KeyManager) EXPECT() *KeyManager_Expecter {
 func (_m *KeyManager) GetKey(_a0 string, _a1 uint16) ([]byte, *test.Err) {
 	ret := _m.Called(_a0, _a1)
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for GetKey")
+	}
+
 	var r0 []byte
 	var r1 *test.Err
 	if rf, ok := ret.Get(0).(func(string, uint16) ([]byte, *test.Err)); ok {

@@ -24,6 +24,10 @@ func (_m *A) EXPECT() *A_Expecter {
 func (_m *A) Call() (test.B, error) {
 	ret := _m.Called()
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for Call")
+	}
+
 	var r0 test.B
 	var r1 error
 	if rf, ok := ret.Get(0).(func() (test.B, error)); ok {

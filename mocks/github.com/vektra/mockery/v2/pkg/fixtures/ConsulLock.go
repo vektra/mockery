@@ -21,6 +21,10 @@ func (_m *ConsulLock) EXPECT() *ConsulLock_Expecter {
 func (_m *ConsulLock) Lock(_a0 <-chan struct{}) (<-chan struct{}, error) {
 	ret := _m.Called(_a0)
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for Lock")
+	}
+
 	var r0 <-chan struct{}
 	var r1 error
 	if rf, ok := ret.Get(0).(func(<-chan struct{}) (<-chan struct{}, error)); ok {
@@ -74,6 +78,10 @@ func (_c *ConsulLock_Lock_Call) RunAndReturn(run func(<-chan struct{}) (<-chan s
 // Unlock provides a mock function with given fields:
 func (_m *ConsulLock) Unlock() error {
 	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("Missing Return() function for Unlock")
+	}
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func() error); ok {

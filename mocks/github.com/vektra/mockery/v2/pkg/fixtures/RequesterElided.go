@@ -21,6 +21,10 @@ func (_m *RequesterElided) EXPECT() *RequesterElided_Expecter {
 func (_m *RequesterElided) Get(path string, url string) error {
 	ret := _m.Called(path, url)
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for Get")
+	}
+
 	var r0 error
 	if rf, ok := ret.Get(0).(func(string, string) error); ok {
 		r0 = rf(path, url)

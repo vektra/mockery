@@ -27,6 +27,10 @@ func (_m *HasConflictingNestedImports) EXPECT() *HasConflictingNestedImports_Exp
 func (_m *HasConflictingNestedImports) Get(path string) (http.Response, error) {
 	ret := _m.Called(path)
 
+	if len(ret) == 0 {
+		panic("Missing Return() function for Get")
+	}
+
 	var r0 http.Response
 	var r1 error
 	if rf, ok := ret.Get(0).(func(string) (http.Response, error)); ok {
@@ -78,6 +82,10 @@ func (_c *HasConflictingNestedImports_Get_Call) RunAndReturn(run func(string) (h
 // Z provides a mock function with given fields:
 func (_m *HasConflictingNestedImports) Z() fixtureshttp.MyStruct {
 	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("Missing Return() function for Z")
+	}
 
 	var r0 fixtureshttp.MyStruct
 	if rf, ok := ret.Get(0).(func() fixtureshttp.MyStruct); ok {
