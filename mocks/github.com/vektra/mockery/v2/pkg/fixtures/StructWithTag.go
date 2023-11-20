@@ -28,7 +28,7 @@ func (_m *StructWithTag) MethodA(v *struct {
 	ret := _m.Called(v)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for MethodA")
+		panic("Missing Return() function for MethodA()")
 	}
 
 	var r0 *struct {

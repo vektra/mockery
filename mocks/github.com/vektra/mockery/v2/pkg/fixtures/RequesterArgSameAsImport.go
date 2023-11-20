@@ -26,7 +26,7 @@ func (_m *RequesterArgSameAsImport) Get(_a0 string) *json.RawMessage {
 	ret := _m.Called(_a0)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Get")
+		panic("Missing Return() function for Get()")
 	}
 
 	var r0 *json.RawMessage

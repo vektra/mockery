@@ -22,7 +22,7 @@ func (_m *PanicOnNoReturnValue) DoSomething() string {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for DoSomething")
+		panic("Missing Return() function for DoSomething()")
 	}
 
 	var r0 string

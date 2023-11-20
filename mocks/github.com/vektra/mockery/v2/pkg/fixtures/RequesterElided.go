@@ -22,7 +22,7 @@ func (_m *RequesterElided) Get(path string, url string) error {
 	ret := _m.Called(path, url)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Get")
+		panic("Missing Return() function for Get()")
 	}
 
 	var r0 error

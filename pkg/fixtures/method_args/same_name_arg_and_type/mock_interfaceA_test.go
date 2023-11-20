@@ -22,7 +22,7 @@ func (_m *interfaceAMock) DoB(interfaceB0 interfaceB) interfaceB {
 	ret := _m.Called(interfaceB0)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for DoB")
+		panic("Missing Return() function for DoB()")
 	}
 
 	var r0 interfaceB
@@ -70,7 +70,7 @@ func (_m *interfaceAMock) DoB0(interfaceB interfaceB0) interfaceB0 {
 	ret := _m.Called(interfaceB)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for DoB0")
+		panic("Missing Return() function for DoB0()")
 	}
 
 	var r0 interfaceB0
@@ -118,7 +118,7 @@ func (_m *interfaceAMock) DoB0v2(interfaceB00 interfaceB0) interfaceB0 {
 	ret := _m.Called(interfaceB00)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for DoB0v2")
+		panic("Missing Return() function for DoB0v2()")
 	}
 
 	var r0 interfaceB0

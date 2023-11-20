@@ -25,7 +25,7 @@ func (_m *A) Call() (test.B, error) {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Call")
+		panic("Missing Return() function for Call()")
 	}
 
 	var r0 test.B

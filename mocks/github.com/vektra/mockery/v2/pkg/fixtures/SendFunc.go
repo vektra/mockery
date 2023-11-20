@@ -26,7 +26,7 @@ func (_m *SendFunc) Execute(ctx context.Context, data string) (int, error) {
 	ret := _m.Called(ctx, data)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Execute")
+		panic("Missing Return() function for Execute()")
 	}
 
 	var r0 int

@@ -28,7 +28,7 @@ func (_m *Example) A() http.Flusher {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for A")
+		panic("Missing Return() function for A()")
 	}
 
 	var r0 http.Flusher
@@ -75,7 +75,7 @@ func (_m *Example) B(_a0 string) fixtureshttp.MyStruct {
 	ret := _m.Called(_a0)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for B")
+		panic("Missing Return() function for B()")
 	}
 
 	var r0 fixtureshttp.MyStruct

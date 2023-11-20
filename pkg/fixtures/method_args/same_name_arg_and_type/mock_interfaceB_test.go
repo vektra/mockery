@@ -22,7 +22,7 @@ func (_m *interfaceBMock) GetData() int {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for GetData")
+		panic("Missing Return() function for GetData()")
 	}
 
 	var r0 int

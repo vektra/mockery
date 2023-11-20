@@ -28,7 +28,7 @@ func (_m *HasConflictingNestedImports) Get(path string) (http.Response, error) {
 	ret := _m.Called(path)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Get")
+		panic("Missing Return() function for Get()")
 	}
 
 	var r0 http.Response
@@ -84,7 +84,7 @@ func (_m *HasConflictingNestedImports) Z() fixtureshttp.MyStruct {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Z")
+		panic("Missing Return() function for Z()")
 	}
 
 	var r0 fixtureshttp.MyStruct

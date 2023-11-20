@@ -24,7 +24,7 @@ func (_m *RequesterVariadic) Get(values ...string) bool {
 	ret := _m.Called(_ca...)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Get")
+		panic("Missing Return() function for Get()")
 	}
 
 	var r0 bool
@@ -49,7 +49,7 @@ func (_m *RequesterVariadic) MultiWriteToFile(filename string, w ...io.Writer) s
 	ret := _m.Called(_ca...)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for MultiWriteToFile")
+		panic("Missing Return() function for MultiWriteToFile()")
 	}
 
 	var r0 string
@@ -69,7 +69,7 @@ func (_m *RequesterVariadic) OneInterface(a ...interface{}) bool {
 	ret := _m.Called(_ca...)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for OneInterface")
+		panic("Missing Return() function for OneInterface()")
 	}
 
 	var r0 bool
@@ -90,7 +90,7 @@ func (_m *RequesterVariadic) Sprintf(format string, a ...interface{}) string {
 	ret := _m.Called(_ca...)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Sprintf")
+		panic("Missing Return() function for Sprintf()")
 	}
 
 	var r0 string
