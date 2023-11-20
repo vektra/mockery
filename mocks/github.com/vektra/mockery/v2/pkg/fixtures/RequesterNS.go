@@ -26,7 +26,7 @@ func (_m *RequesterNS) Get(path string) (http.Response, error) {
 	ret := _m.Called(path)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Get()")
+		panic("no return value specified for Get")
 	}
 
 	var r0 http.Response

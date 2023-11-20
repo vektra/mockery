@@ -22,7 +22,7 @@ func (_m *GetInt) Get() int {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Get()")
+		panic("no return value specified for Get")
 	}
 
 	var r0 int

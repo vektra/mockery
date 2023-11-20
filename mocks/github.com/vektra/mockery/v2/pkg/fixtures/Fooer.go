@@ -55,7 +55,7 @@ func (_m *Fooer) Baz(path string) func(string) string {
 	ret := _m.Called(path)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Baz()")
+		panic("no return value specified for Baz")
 	}
 
 	var r0 func(string) string
@@ -103,7 +103,7 @@ func (_m *Fooer) Foo(f func(string) string) error {
 	ret := _m.Called(f)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Foo()")
+		panic("no return value specified for Foo")
 	}
 
 	var r0 error

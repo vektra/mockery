@@ -22,7 +22,7 @@ func (_m *AsyncProducer) Input() chan<- bool {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Input()")
+		panic("no return value specified for Input")
 	}
 
 	var r0 chan<- bool
@@ -69,7 +69,7 @@ func (_m *AsyncProducer) Output() <-chan bool {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Output()")
+		panic("no return value specified for Output")
 	}
 
 	var r0 <-chan bool
@@ -116,7 +116,7 @@ func (_m *AsyncProducer) Whatever() chan bool {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Whatever()")
+		panic("no return value specified for Whatever")
 	}
 
 	var r0 chan bool

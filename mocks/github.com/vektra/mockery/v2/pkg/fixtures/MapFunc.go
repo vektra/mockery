@@ -22,7 +22,7 @@ func (_m *MapFunc) Get(m map[string]func(string) string) error {
 	ret := _m.Called(m)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Get()")
+		panic("no return value specified for Get")
 	}
 
 	var r0 error

@@ -22,7 +22,7 @@ func (_m *ExpecterAndRolledVariadic) ManyArgsReturns(str string, i int) ([]strin
 	ret := _m.Called(str, i)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for ManyArgsReturns()")
+		panic("no return value specified for ManyArgsReturns")
 	}
 
 	var r0 []string
@@ -81,7 +81,7 @@ func (_m *ExpecterAndRolledVariadic) NoArg() string {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for NoArg()")
+		panic("no return value specified for NoArg")
 	}
 
 	var r0 string
@@ -165,7 +165,7 @@ func (_m *ExpecterAndRolledVariadic) Variadic(ints ...int) error {
 	ret := tmpRet
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Variadic()")
+		panic("no return value specified for Variadic")
 	}
 
 	var r0 error
@@ -224,7 +224,7 @@ func (_m *ExpecterAndRolledVariadic) VariadicMany(i int, a string, intfs ...inte
 	ret := tmpRet
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for VariadicMany()")
+		panic("no return value specified for VariadicMany")
 	}
 
 	var r0 error

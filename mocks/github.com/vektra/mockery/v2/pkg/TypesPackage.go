@@ -22,7 +22,7 @@ func (_m *TypesPackage) Name() string {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Name()")
+		panic("no return value specified for Name")
 	}
 
 	var r0 string
@@ -67,7 +67,7 @@ func (_m *TypesPackage) Path() string {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Path()")
+		panic("no return value specified for Path")
 	}
 
 	var r0 string

@@ -27,7 +27,7 @@ func (_m *ImportsSameAsPackage) A() test.B {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for A()")
+		panic("no return value specified for A")
 	}
 
 	var r0 test.B
@@ -72,7 +72,7 @@ func (_m *ImportsSameAsPackage) B() fixtures.KeyManager {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for B()")
+		panic("no return value specified for B")
 	}
 
 	var r0 fixtures.KeyManager

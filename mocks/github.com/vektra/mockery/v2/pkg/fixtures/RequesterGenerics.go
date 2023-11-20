@@ -38,7 +38,7 @@ func (_m *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TG
 	ret := _m.Called(_a0)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for GenericAnonymousStructs()")
+		panic("no return value specified for GenericAnonymousStructs")
 	}
 
 	var r0 struct {
@@ -97,7 +97,7 @@ func (_m *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TG
 	ret := _m.Called(_a0, _a1)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for GenericArguments()")
+		panic("no return value specified for GenericArguments")
 	}
 
 	var r0 TSigned
@@ -157,7 +157,7 @@ func (_m *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TG
 	ret := _m.Called(_a0)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for GenericStructs()")
+		panic("no return value specified for GenericStructs")
 	}
 
 	var r0 test.GenericType[TSigned, TIntf]

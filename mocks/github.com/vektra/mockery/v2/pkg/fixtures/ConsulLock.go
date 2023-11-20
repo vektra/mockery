@@ -22,7 +22,7 @@ func (_m *ConsulLock) Lock(_a0 <-chan struct{}) (<-chan struct{}, error) {
 	ret := _m.Called(_a0)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Lock()")
+		panic("no return value specified for Lock")
 	}
 
 	var r0 <-chan struct{}
@@ -80,7 +80,7 @@ func (_m *ConsulLock) Unlock() error {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Unlock()")
+		panic("no return value specified for Unlock")
 	}
 
 	var r0 error

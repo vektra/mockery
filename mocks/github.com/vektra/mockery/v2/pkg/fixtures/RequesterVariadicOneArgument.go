@@ -18,7 +18,7 @@ func (_m *RequesterVariadicOneArgument) Get(values ...string) bool {
 	ret := _m.Called(values)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Get()")
+		panic("no return value specified for Get")
 	}
 
 	var r0 bool
@@ -36,7 +36,7 @@ func (_m *RequesterVariadicOneArgument) MultiWriteToFile(filename string, w ...i
 	ret := _m.Called(filename, w)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for MultiWriteToFile()")
+		panic("no return value specified for MultiWriteToFile")
 	}
 
 	var r0 string
@@ -54,7 +54,7 @@ func (_m *RequesterVariadicOneArgument) OneInterface(a ...interface{}) bool {
 	ret := _m.Called(a)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for OneInterface()")
+		panic("no return value specified for OneInterface")
 	}
 
 	var r0 bool
@@ -72,7 +72,7 @@ func (_m *RequesterVariadicOneArgument) Sprintf(format string, a ...interface{})
 	ret := _m.Called(format, a)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for Sprintf()")
+		panic("no return value specified for Sprintf")
 	}
 
 	var r0 string

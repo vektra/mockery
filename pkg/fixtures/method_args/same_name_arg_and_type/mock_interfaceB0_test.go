@@ -22,7 +22,7 @@ func (_m *interfaceB0Mock) DoB0(interfaceB00 interfaceB0) interfaceB0 {
 	ret := _m.Called(interfaceB00)
 
 	if len(ret) == 0 {
-		panic("Missing Return() function for DoB0()")
+		panic("no return value specified for DoB0")
 	}
 
 	var r0 interfaceB0
