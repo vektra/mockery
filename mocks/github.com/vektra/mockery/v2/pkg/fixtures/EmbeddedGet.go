@@ -24,6 +24,10 @@ func (_m *EmbeddedGet[T]) EXPECT() *EmbeddedGet_Expecter[T] {
 func (_m *EmbeddedGet[T]) Get() T {
 	ret := _m.Called()
 
+	if len(ret) == 0 {
+		panic("no return value specified for Get")
+	}
+
 	var r0 T
 	if rf, ok := ret.Get(0).(func() T); ok {
 		r0 = rf()

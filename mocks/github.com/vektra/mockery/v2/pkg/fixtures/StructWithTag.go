@@ -27,6 +27,10 @@ func (_m *StructWithTag) MethodA(v *struct {
 } {
 	ret := _m.Called(v)
 
+	if len(ret) == 0 {
+		panic("no return value specified for MethodA")
+	}
+
 	var r0 *struct {
 		FieldC int `json:"field_c"`
 		FieldD int `json:"field_d" xml:"field_d"`

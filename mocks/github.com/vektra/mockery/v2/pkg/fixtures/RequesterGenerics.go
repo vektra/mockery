@@ -37,6 +37,10 @@ func (_m *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TG
 } {
 	ret := _m.Called(_a0)
 
+	if len(ret) == 0 {
+		panic("no return value specified for GenericAnonymousStructs")
+	}
+
 	var r0 struct {
 		Type2 test.GenericType[string, test.EmbeddedGet[int]]
 	}
@@ -91,6 +95,10 @@ func (_c *RequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, TSig
 // GenericArguments provides a mock function with given fields: _a0, _a1
 func (_m *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericArguments(_a0 TAny, _a1 TComparable) (TSigned, TIntf) {
 	ret := _m.Called(_a0, _a1)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GenericArguments")
+	}
 
 	var r0 TSigned
 	var r1 TIntf
@@ -147,6 +155,10 @@ func (_c *RequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned, TI
 // GenericStructs provides a mock function with given fields: _a0
 func (_m *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericStructs(_a0 test.GenericType[TAny, TIntf]) test.GenericType[TSigned, TIntf] {
 	ret := _m.Called(_a0)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GenericStructs")
+	}
 
 	var r0 test.GenericType[TSigned, TIntf]
 	if rf, ok := ret.Get(0).(func(test.GenericType[TAny, TIntf]) test.GenericType[TSigned, TIntf]); ok {

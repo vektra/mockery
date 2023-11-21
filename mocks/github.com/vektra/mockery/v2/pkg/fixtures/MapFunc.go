@@ -21,6 +21,10 @@ func (_m *MapFunc) EXPECT() *MapFunc_Expecter {
 func (_m *MapFunc) Get(m map[string]func(string) string) error {
 	ret := _m.Called(m)
 
+	if len(ret) == 0 {
+		panic("no return value specified for Get")
+	}
+
 	var r0 error
 	if rf, ok := ret.Get(0).(func(map[string]func(string) string) error); ok {
 		r0 = rf(m)

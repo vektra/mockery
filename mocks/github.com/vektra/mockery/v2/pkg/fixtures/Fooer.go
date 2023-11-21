@@ -54,6 +54,10 @@ func (_c *Fooer_Bar_Call) RunAndReturn(run func(func([]int))) *Fooer_Bar_Call {
 func (_m *Fooer) Baz(path string) func(string) string {
 	ret := _m.Called(path)
 
+	if len(ret) == 0 {
+		panic("no return value specified for Baz")
+	}
+
 	var r0 func(string) string
 	if rf, ok := ret.Get(0).(func(string) func(string) string); ok {
 		r0 = rf(path)
@@ -97,6 +101,10 @@ func (_c *Fooer_Baz_Call) RunAndReturn(run func(string) func(string) string) *Fo
 // Foo provides a mock function with given fields: f
 func (_m *Fooer) Foo(f func(string) string) error {
 	ret := _m.Called(f)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Foo")
+	}
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(func(string) string) error); ok {

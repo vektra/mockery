@@ -21,6 +21,10 @@ func (_m *TypesPackage) EXPECT() *TypesPackage_Expecter {
 func (_m *TypesPackage) Name() string {
 	ret := _m.Called()
 
+	if len(ret) == 0 {
+		panic("no return value specified for Name")
+	}
+
 	var r0 string
 	if rf, ok := ret.Get(0).(func() string); ok {
 		r0 = rf()
@@ -61,6 +65,10 @@ func (_c *TypesPackage_Name_Call) RunAndReturn(run func() string) *TypesPackage_
 // Path provides a mock function with given fields:
 func (_m *TypesPackage) Path() string {
 	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for Path")
+	}
 
 	var r0 string
 	if rf, ok := ret.Get(0).(func() string); ok {

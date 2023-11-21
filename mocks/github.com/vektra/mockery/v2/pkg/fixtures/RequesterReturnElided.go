@@ -21,6 +21,10 @@ func (_m *RequesterReturnElided) EXPECT() *RequesterReturnElided_Expecter {
 func (_m *RequesterReturnElided) Get(path string) (int, int, int, error) {
 	ret := _m.Called(path)
 
+	if len(ret) == 0 {
+		panic("no return value specified for Get")
+	}
+
 	var r0 int
 	var r1 int
 	var r2 int
@@ -86,6 +90,10 @@ func (_c *RequesterReturnElided_Get_Call) RunAndReturn(run func(string) (int, in
 // Put provides a mock function with given fields: path
 func (_m *RequesterReturnElided) Put(path string) (int, error) {
 	ret := _m.Called(path)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Put")
+	}
 
 	var r0 int
 	var r1 error

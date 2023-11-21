@@ -21,6 +21,10 @@ func (_m *RequesterSlice) EXPECT() *RequesterSlice_Expecter {
 func (_m *RequesterSlice) Get(path string) ([]string, error) {
 	ret := _m.Called(path)
 
+	if len(ret) == 0 {
+		panic("no return value specified for Get")
+	}
+
 	var r0 []string
 	var r1 error
 	if rf, ok := ret.Get(0).(func(string) ([]string, error)); ok {

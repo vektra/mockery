@@ -27,6 +27,10 @@ func (_m *Example) EXPECT() *Example_Expecter {
 func (_m *Example) A() http.Flusher {
 	ret := _m.Called()
 
+	if len(ret) == 0 {
+		panic("no return value specified for A")
+	}
+
 	var r0 http.Flusher
 	if rf, ok := ret.Get(0).(func() http.Flusher); ok {
 		r0 = rf()
@@ -69,6 +73,10 @@ func (_c *Example_A_Call) RunAndReturn(run func() http.Flusher) *Example_A_Call 
 // B provides a mock function with given fields: _a0
 func (_m *Example) B(_a0 string) fixtureshttp.MyStruct {
 	ret := _m.Called(_a0)
+
+	if len(ret) == 0 {
+		panic("no return value specified for B")
+	}
 
 	var r0 fixtureshttp.MyStruct
 	if rf, ok := ret.Get(0).(func(string) fixtureshttp.MyStruct); ok {

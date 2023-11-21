@@ -21,6 +21,10 @@ func (_m *Expecter) EXPECT() *Expecter_Expecter {
 func (_m *Expecter) ManyArgsReturns(str string, i int) ([]string, error) {
 	ret := _m.Called(str, i)
 
+	if len(ret) == 0 {
+		panic("no return value specified for ManyArgsReturns")
+	}
+
 	var r0 []string
 	var r1 error
 	if rf, ok := ret.Get(0).(func(string, int) ([]string, error)); ok {
@@ -75,6 +79,10 @@ func (_c *Expecter_ManyArgsReturns_Call) RunAndReturn(run func(string, int) ([]s
 // NoArg provides a mock function with given fields:
 func (_m *Expecter) NoArg() string {
 	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for NoArg")
+	}
 
 	var r0 string
 	if rf, ok := ret.Get(0).(func() string); ok {
@@ -156,6 +164,10 @@ func (_m *Expecter) Variadic(ints ...int) error {
 	_ca = append(_ca, _va...)
 	ret := _m.Called(_ca...)
 
+	if len(ret) == 0 {
+		panic("no return value specified for Variadic")
+	}
+
 	var r0 error
 	if rf, ok := ret.Get(0).(func(...int) error); ok {
 		r0 = rf(ints...)
@@ -207,6 +219,10 @@ func (_m *Expecter) VariadicMany(i int, a string, intfs ...interface{}) error {
 	_ca = append(_ca, i, a)
 	_ca = append(_ca, intfs...)
 	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for VariadicMany")
+	}
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(int, string, ...interface{}) error); ok {
