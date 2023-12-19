@@ -1233,6 +1233,27 @@ packages:
 with-expecter: false
 `,
 		},
+		{
+			name: "package with submodule that should be excluded",
+			cfgYaml: `
+all: true
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_submodules:
+        config:
+            recursive: True
+`,
+			wantCfgMap: `all: true
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_submodules:
+        config:
+            all: true
+            recursive: true
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_submodules/subpkg:
+        config:
+            all: true
+            recursive: true
+`,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

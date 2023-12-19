@@ -1,9 +1,11 @@
 module github.com/vektra/mockery/v2
 
-go 1.19
+go 1.21
+
+toolchain go1.21.0
 
 require (
-	github.com/chigopher/pathlib v0.15.0
+	github.com/chigopher/pathlib v0.19.1
 	github.com/davecgh/go-spew v1.1.1
 	github.com/huandu/xstrings v1.4.0
 	github.com/iancoleman/strcase v0.2.0
