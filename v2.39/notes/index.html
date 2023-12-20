@@ -932,8 +932,13 @@
 <p><a href="https://github.com/vektra/mockery/discussions/636">Discussion</a></p>
 <h2 id="internal-error-package-without-types-was-imported">internal error: package without types was imported<a class="headerlink" href="#internal-error-package-without-types-was-imported" title="Permanent link">&para;</a></h2>
 <p><a href="https://github.com/vektra/mockery/issues/475">https://github.com/vektra/mockery/issues/475</a></p>
-<p>This issue indicates an incompatibility that exists with one of your cached Golang packages. The solution is to run <code>go clean -modcache</code>.</p>
-<p>This issue also happens when compiling from source, such as with <code>go install</code>. You would not encounter this issue if using one of the installation methods that install pre-built binaries, like downloading the <code>.tar.gz</code> binaries, or through <code>brew install</code>.</p>
+<p>This issue indicates that you have attempted to use package in your dependency tree (whether direct or indirect) that uses Go language semantics that your currently-running Go version does not support. The solution:</p>
+<ol>
+<li>Update to the latest go version</li>
+<li>Delete all cached packages with <code>go clean -modcache</code></li>
+<li>Reinstall mockery</li>
+</ol>
+<p>Additionally, this issue only happens when compiling mockery from source, such as with <code>go install</code>. Our docs <a href="installation/#go-install">recommend not to use <code>go install</code></a> as the success of your build depends on the compatibility of your Go version with the semantics in use. You would not encounter this issue if using one of the installation methods that install pre-built binaries, like downloading the <code>.tar.gz</code> binaries, or through <code>brew install</code>.</p>
 <h2 id="multiple-expectations-with-identical-arguments">Multiple Expectations With Identical Arguments<a class="headerlink" href="#multiple-expectations-with-identical-arguments" title="Permanent link">&para;</a></h2>
 <p>There might be instances where you want a mock to return different values on successive calls that provide the same arguments. For example we might want to test this behavior:</p>
 <div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// Return &quot;foo&quot; on the first call</span>
