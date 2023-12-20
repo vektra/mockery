@@ -15,9 +15,13 @@ internal error: package without types was imported
 
 [https://github.com/vektra/mockery/issues/475](https://github.com/vektra/mockery/issues/475)
 
-This issue indicates an incompatibility that exists with one of your cached Golang packages. The solution is to run `go clean -modcache`.
+This issue indicates that you have attempted to use package in your dependency tree (whether direct or indirect) that uses Go language semantics that your currently-running Go version does not support. The solution:
 
-This issue also happens when compiling from source, such as with `go install`. You would not encounter this issue if using one of the installation methods that install pre-built binaries, like downloading the `.tar.gz` binaries, or through `brew install`.
+1. Update to the latest go version
+2. Delete all cached packages with `go clean -modcache`
+3. Reinstall mockery
+
+Additionally, this issue only happens when compiling mockery from source, such as with `go install`. Our docs [recommend not to use `go install`](installation/#go-install) as the success of your build depends on the compatibility of your Go version with the semantics in use. You would not encounter this issue if using one of the installation methods that install pre-built binaries, like downloading the `.tar.gz` binaries, or through `brew install`.
 
 Multiple Expectations With Identical Arguments
 -----------------------------------------------
