@@ -16,8 +16,8 @@ import (
 // imports and ensures there are no conflicts in the imported package
 // qualifiers.
 type Registry struct {
+	dstPkg      string
 	srcPkgName  string
-	srcPkgPath  string
 	srcPkgTypes *types.Package
 	aliases     map[string]string
 	imports     map[string]*Package
@@ -25,10 +25,10 @@ type Registry struct {
 
 // New loads the source package info and returns a new instance of
 // Registry.
-func New(srcPkg *packages.Package) (*Registry, error) {
+func New(srcPkg *packages.Package, dstPkg string) (*Registry, error) {
 	return &Registry{
+		dstPkg:      dstPkg,
 		srcPkgName:  srcPkg.Name,
-		srcPkgPath:  srcPkg.PkgPath,
 		srcPkgTypes: srcPkg.Types,
 		aliases:     parseImportsAliases(srcPkg.Syntax),
 		imports:     make(map[string]*Package),
@@ -79,7 +79,7 @@ func (r *Registry) MethodScope() *MethodScope {
 // packages.
 func (r *Registry) AddImport(pkg *types.Package) *Package {
 	path := pkg.Path()
-	if pkg.Path() == r.srcPkgPath {
+	if path == r.dstPkg {
 		return nil
 	}
 

@@ -321,24 +321,30 @@ func (o *Outputter) Generate(ctx context.Context, iface *Interface) error {
 
 	for _, interfaceConfig := range interfaceConfigs {
 		interfaceConfig.LogUnsupportedPackagesConfig(ctx)
+		ifaceLog := log.With().Str("style", interfaceConfig.Style).Logger()
 
 		if err := parseConfigTemplates(ctx, interfaceConfig, iface); err != nil {
 			return fmt.Errorf("failed to parse config template: %w", err)
 		}
 		if interfaceConfig.Style == "mockery" {
+			ifaceLog.Debug().Msg("generating mockery mocks")
 			o.generateMockery(ctx, iface, interfaceConfig)
 			continue
 		}
+		ifaceLog.Debug().Msg("generating templated mock")
 
 		config := TemplateGeneratorConfig{
 			Style: interfaceConfig.Style,
 		}
-		generator, err := NewTemplateGenerator(iface.PackagesPackage, config)
+		generator, err := NewTemplateGenerator(iface.PackagesPackage, config, interfaceConfig.Outpkg)
 		if err != nil {
 			return fmt.Errorf("creating template generator: %w", err)
 		}
 
 		fmt.Printf("generator: %v\n", generator)
+		if err := generator.Generate(ctx, iface, interfaceConfig); err != nil {
+			return fmt.Errorf("generating template: %w", err)
+		}
 
 	}
 	return nil

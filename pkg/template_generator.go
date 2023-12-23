@@ -22,8 +22,8 @@ type TemplateGenerator struct {
 	registry *registry.Registry
 }
 
-func NewTemplateGenerator(srcPkg *packages.Package, config TemplateGeneratorConfig) (*TemplateGenerator, error) {
-	reg, err := registry.New(srcPkg)
+func NewTemplateGenerator(srcPkg *packages.Package, config TemplateGeneratorConfig, outPkg string) (*TemplateGenerator, error) {
+	reg, err := registry.New(srcPkg, outPkg)
 	if err != nil {
 		return nil, fmt.Errorf("creating new registry: %w", err)
 	}
@@ -34,9 +34,21 @@ func NewTemplateGenerator(srcPkg *packages.Package, config TemplateGeneratorConf
 	}, nil
 }
 
+func (g *TemplateGenerator) format(src []byte, ifaceConfig *config.Config) ([]byte, error) {
+	switch ifaceConfig.Formatter {
+	case "goimports":
+		return goimports(src)
+
+	case "noop":
+		return src, nil
+	}
+
+	return gofmt(src)
+}
+
 func (g *TemplateGenerator) Generate(ctx context.Context, iface *Interface, ifaceConfig *config.Config) error {
 	log := zerolog.Ctx(ctx)
-	log.Info().Msg("generating mock for interface")
+	log.Info().Msg("generating templated mock for interface")
 
 	imports := Imports{}
 	for _, method := range iface.Methods() {
@@ -87,9 +99,25 @@ func (g *TemplateGenerator) Generate(ctx context.Context, iface *Interface, ifac
 	data := template.Data{
 		PkgName:         ifaceConfig.Outpkg,
 		SrcPkgQualifier: iface.Pkg.Name() + ".",
-		Imports:         g.registry.Imports(),
 		Mocks:           mockData,
+		StubImpl:        false,
+		SkipEnsure:      false,
+		WithResets:      false,
 	}
+	if data.MocksSomeMethod() {
+		log.Debug().Msg("interface mocks some method, importing sync package")
+		g.registry.AddImport(types.NewPackage("sync", "sync"))
+	}
+	if g.registry.SrcPkgName() != ifaceConfig.Outpkg {
+		data.SrcPkgQualifier = g.registry.SrcPkgName() + "."
+		if !ifaceConfig.SkipEnsure {
+			log.Debug().Str("src-pkg", g.registry.SrcPkg().Path()).Msg("skip-ensure is false. Adding import for source package.")
+			imprt := g.registry.AddImport(g.registry.SrcPkg())
+			log.Debug().Msgf("imprt: %v", imprt)
+			data.SrcPkgQualifier = imprt.Qualifier() + "."
+		}
+	}
+	data.Imports = g.registry.Imports()
 
 	templ, err := template.New(g.config.Style)
 	if err != nil {
@@ -97,12 +125,21 @@ func (g *TemplateGenerator) Generate(ctx context.Context, iface *Interface, ifac
 	}
 
 	var buf bytes.Buffer
+	log.Debug().Msg("executing template")
 	if err := templ.Execute(&buf, data); err != nil {
 		return fmt.Errorf("executing template: %w", err)
 	}
 
+	//log.Debug().Msg("formatting file")
+	//formatted, err := g.format(buf.Bytes(), ifaceConfig)
+	//if err != nil {
+	//	return fmt.Errorf("formatting mock file: %w", err)
+	//}
+	formatted := buf.Bytes()
+
 	outPath := pathlib.NewPath(ifaceConfig.Dir).Join(ifaceConfig.FileName)
-	if err := outPath.WriteFile(buf.Bytes()); err != nil {
+	log.Debug().Stringer("path", outPath).Msg("writing to path")
+	if err := outPath.WriteFile(formatted); err != nil {
 		log.Error().Err(err).Msg("couldn't write to output file")
 		return fmt.Errorf("writing to output file: %w", err)
 	}
