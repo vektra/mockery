@@ -130,12 +130,11 @@ func (g *TemplateGenerator) Generate(ctx context.Context, iface *Interface, ifac
 		return fmt.Errorf("executing template: %w", err)
 	}
 
-	//log.Debug().Msg("formatting file")
-	//formatted, err := g.format(buf.Bytes(), ifaceConfig)
-	//if err != nil {
-	//	return fmt.Errorf("formatting mock file: %w", err)
-	//}
-	formatted := buf.Bytes()
+	log.Debug().Msg("formatting file")
+	formatted, err := g.format(buf.Bytes(), ifaceConfig)
+	if err != nil {
+		return fmt.Errorf("formatting mock file: %w", err)
+	}
 
 	outPath := pathlib.NewPath(ifaceConfig.Dir).Join(ifaceConfig.FileName)
 	log.Debug().Stringer("path", outPath).Msg("writing to path")
