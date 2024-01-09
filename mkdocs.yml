@@ -80,7 +80,7 @@ extra:
     provider: mike
   analytics:
     provider: google
-    property: !ENV GOOGLE_ANALYTICS_KEY
+    property: G-RH6WD53JET
 
 plugins:
 - mike:
