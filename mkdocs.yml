@@ -80,7 +80,7 @@ extra:
     provider: mike
   analytics:
     provider: google
-    property: G-RH6WD53JET
+    property: G-0ZGMQGZGRN
 
 plugins:
 - mike:
