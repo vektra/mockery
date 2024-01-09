@@ -21,6 +21,7 @@ jobs:
       - run: pip install -r docs/requirements.txt
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GOOGLE_ANALYTICS_KEY: ${{ secrets.GOOGLE_ANALYTICS_KEY }}
       - name: Setup doc deploy
         run: |
           git config --global user.name vektra-bot
