@@ -28,3 +28,5 @@ jobs:
           git fetch origin gh-pages --depth=1
       - name: Deploy docs
         run: "mike deploy --push --update-aliases $(echo ${{ github.ref_name }} | cut -d'.' -f1-2 ) latest"
+        env:
+          GOOGLE_ANALYTICS_KEY: ${{ secrets.GOOGLE_ANALYTICS_KEY }}

@@ -78,6 +78,9 @@ extra_javascript:
 extra:
   version:
     provider: mike
+  analytics:
+    provider: google
+    property: !ENV GOOGLE_ANALYTICS_KEY
 
 plugins:
 - mike:
