@@ -23,6 +23,10 @@ func (_m *RequesterVariadic) Get(values ...string) bool {
 	_ca = append(_ca, _va...)
 	ret := _m.Called(_ca...)
 
+	if len(ret) == 0 {
+		panic("no return value specified for Get")
+	}
+
 	var r0 bool
 	if rf, ok := ret.Get(0).(func(...string) bool); ok {
 		r0 = rf(values...)
@@ -44,6 +48,10 @@ func (_m *RequesterVariadic) MultiWriteToFile(filename string, w ...io.Writer) s
 	_ca = append(_ca, _va...)
 	ret := _m.Called(_ca...)
 
+	if len(ret) == 0 {
+		panic("no return value specified for MultiWriteToFile")
+	}
+
 	var r0 string
 	if rf, ok := ret.Get(0).(func(string, ...io.Writer) string); ok {
 		r0 = rf(filename, w...)
@@ -59,6 +67,10 @@ func (_m *RequesterVariadic) OneInterface(a ...interface{}) bool {
 	var _ca []interface{}
 	_ca = append(_ca, a...)
 	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for OneInterface")
+	}
 
 	var r0 bool
 	if rf, ok := ret.Get(0).(func(...interface{}) bool); ok {
@@ -76,6 +88,10 @@ func (_m *RequesterVariadic) Sprintf(format string, a ...interface{}) string {
 	_ca = append(_ca, format)
 	_ca = append(_ca, a...)
 	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Sprintf")
+	}
 
 	var r0 string
 	if rf, ok := ret.Get(0).(func(string, ...interface{}) string); ok {

@@ -120,6 +120,7 @@ type GeneratorVisitorConfig struct {
 	InPackage            bool
 	KeepTree             bool
 	Note                 string
+	MockBuildTags        string
 	// The name of the output package, if InPackage is false (defaults to "mocks")
 	PackageName       string
 	PackageNamePrefix string
@@ -181,6 +182,7 @@ func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) erro
 		InPackage:            v.config.InPackage,
 		KeepTree:             v.config.KeepTree,
 		Note:                 v.config.Note,
+		MockBuildTags:        v.config.MockBuildTags,
 		PackageName:          v.config.PackageName,
 		PackageNamePrefix:    v.config.PackageNamePrefix,
 		StructName:           v.config.StructName,

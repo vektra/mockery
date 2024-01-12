@@ -573,6 +573,17 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			name: "invalid interfaces section returns error",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"interfaces": true,
+					},
+				},
+			},
+			wantErr: true,
+		},
+		{
 			name: "should generate all interfaces",
 			c: &Config{
 				Packages: map[string]interface{}{
@@ -609,7 +620,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "should generate using included-regex",
+			name: "should generate using include-regex",
 			c: &Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
@@ -622,7 +633,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "should generate when using all and included-regex doesn't match",
+			name: "should generate when using all and include-regex doesn't match",
 			c: &Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
@@ -636,7 +647,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "should not generate when included-regex doesn't match",
+			name: "should not generate when include-regex doesn't match",
 			c: &Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
@@ -647,6 +658,160 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 				},
 			},
 			want: false,
+		},
+		{
+			name: "should not generate when include-regex and exclude-regex both match",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"include-regex": ".*Interface",
+							"exclude-regex": "Some.*",
+						},
+					},
+				},
+			},
+			want: false,
+		},
+		{
+			name: "should generate when include-regex matches but not exclude-regex",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"include-regex": ".*Interface",
+							"exclude-regex": "Foo.*",
+						},
+					},
+				},
+			},
+			want: true,
+		},
+		{
+			name: "should not generate when neither include-regex nor exclude-regex match",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"include-regex": ".*XInterface",
+							"exclude-regex": "Foo.*",
+						},
+					},
+				},
+			},
+			want: false,
+		},
+		{
+			name: "should not generate when exclude-regex doesn't match but include-regex isn't set",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"exclude-regex": "Foo.*",
+						},
+					},
+				},
+			},
+			want: false,
+		},
+		{
+			name: "should generate when using all and exclude-regex matches",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"all":           true,
+							"exclude-regex": ".*Interface",
+						},
+					},
+				},
+			},
+			want: true,
+		},
+		{
+			name: "should generate when interface is selected and exclude-regex matches",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"interfaces": map[string]interface{}{
+							"SomeInterface": struct{}{},
+						},
+						"config": map[string]interface{}{
+							"exclude-regex": ".*Interface",
+						},
+					},
+				},
+			},
+			want: true,
+		},
+		{
+			name: "invalid include-regex is ignored if all is set",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"all":           true,
+							"include-regex": "[",
+						},
+					},
+				},
+			},
+			want: true,
+		},
+		{
+			name: "invalid include-regex results in error",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"include-regex": "[",
+						},
+					},
+				},
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid exclude-regex is ignored if all is set",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"all":           true,
+							"include-regex": ".*",
+							"exclude-regex": "[",
+						},
+					},
+				},
+			},
+			want: true,
+		},
+		{
+			name: "invalid exclude-regex is ignored if include-regex is not set",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"exclude-regex": "[",
+						},
+					},
+				},
+			},
+			want: false,
+		},
+		{
+			name: "invalid exclude-regex results in error",
+			c: &Config{
+				Packages: map[string]interface{}{
+					"some_package": map[string]interface{}{
+						"config": map[string]interface{}{
+							"include-regex": ".*",
+							"exclude-regex": "[",
+						},
+					},
+				},
+			},
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
@@ -1009,24 +1174,112 @@ packages:
 with-expecter: false
 `,
 		},
+		{
+			name: "empty map for recursive package",
+			cfgYaml: `
+with-expecter: False
+dir: foobar
+recursive: True
+all: True
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+`,
+			wantCfgMap: `all: true
+dir: foobar
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+        config:
+            all: true
+            dir: foobar
+            recursive: true
+            with-expecter: false
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+        config:
+            all: true
+            dir: foobar
+            recursive: true
+            with-expecter: false
+recursive: true
+with-expecter: false
+`,
+		},
+		{
+			name: "empty map for subpackage of recursive package",
+			cfgYaml: `
+with-expecter: False
+dir: foobar
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+        config:
+            recursive: True
+            with-expecter: True
+            all: True
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3: {}
+`,
+			wantCfgMap: `dir: foobar
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+        config:
+            all: true
+            dir: foobar
+            recursive: true
+            with-expecter: true
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+        config:
+            all: true
+            dir: foobar
+            recursive: true
+            with-expecter: true
+with-expecter: false
+`,
+		},
+		{
+			name: "package with submodule that should be excluded",
+			cfgYaml: `
+all: true
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_submodules:
+        config:
+            recursive: True
+`,
+			wantCfgMap: `all: true
+packages:
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_submodules:
+        config:
+            all: true
+            recursive: true
+    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_submodules/subpkg:
+        config:
+            all: true
+            recursive: true
+`,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+
+			ctx := context.Background()
 			tmpdir := pathlib.NewPath(t.TempDir())
 			cfg := tmpdir.Join("config.yaml")
 			require.NoError(t, cfg.WriteFile([]byte(tt.cfgYaml)))
 
-			c := &Config{
-				Config: cfg.String(),
-			}
+			viperObj := viper.New()
+			viperObj.SetConfigFile(cfg.String())
+			require.NoError(t, viperObj.ReadInConfig())
+			c, err := NewConfigFromViper(viperObj)
+			require.NoError(t, err)
+
 			log, err := logging.GetLogger("TRACE")
 			require.NoError(t, err)
 
-			if err := c.Initialize(log.WithContext(context.Background())); !errors.Is(err, tt.wantErr) {
+			if err := c.Initialize(log.WithContext(ctx)); !errors.Is(err, tt.wantErr) {
 				t.Errorf("Config.Initialize() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
-			cfgAsStr, err := yaml.Marshal(c._cfgAsMap)
+			cfgAsMap, err := c.CfgAsMap(ctx)
+			require.NoError(t, err)
+
+			cfgAsStr, err := yaml.Marshal(cfgAsMap)
 			require.NoError(t, err)
 
 			if tt.wantCfgMap != "" && !reflect.DeepEqual(string(cfgAsStr), tt.wantCfgMap) {

@@ -124,6 +124,9 @@ Who uses mockery?
     [![Amazon logo](assets/images/logos/amazon.svg){ class="center" width="300" }](https://github.com/eksctl-io/eksctl)
 	<figcaption>[eksctl](https://github.com/eksctl-io/eksctl)</figcaption>
   </figure>
+- <figure markdown>
+    [![MongoDB Logo](assets/images/logos/mongodb.svg){ class="center" width="300" }](https://github.com/search?q=org%3Amongodb%20mockery&type=code)
+  </figure>
 </div>
 
 

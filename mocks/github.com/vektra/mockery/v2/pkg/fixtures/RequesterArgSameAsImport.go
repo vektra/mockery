@@ -25,6 +25,10 @@ func (_m *RequesterArgSameAsImport) EXPECT() *RequesterArgSameAsImport_Expecter 
 func (_m *RequesterArgSameAsImport) Get(_a0 string) *json.RawMessage {
 	ret := _m.Called(_a0)
 
+	if len(ret) == 0 {
+		panic("no return value specified for Get")
+	}
+
 	var r0 *json.RawMessage
 	if rf, ok := ret.Get(0).(func(string) *json.RawMessage); ok {
 		r0 = rf(_a0)

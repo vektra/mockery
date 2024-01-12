@@ -178,6 +178,8 @@ packages:
 
 You can use the `showconfig` command to see the config mockery injects. The output of `showconfig` theoretically could be copy-pasted into your yaml file as it is semantically equivalent.
 
+mockery will _not_ recurse into submodules, i.e. any subdirectory that contains a go.mod file. You must specify the submodule as a separate line item in the config if you would like mocks generated for it as well.
+
 ??? note "performance characteristics"
     The performance when using `#!yaml recursive: true` may be worse than manually specifying all packages statically in the yaml file. This is because of the fact that mockery has to recursively walk the filesystem path that contains the package in question. It may unnecessarily walk down unrelated paths (for example, a Python virtual environment that is in the same path as your package). For this reason, it is recommended _not_ to use `#!yaml recursive: true` if it can be avoided.
 
@@ -193,8 +195,21 @@ packages:
       include-regex: ".*Client"
 ```
 
+To further refine matched interfaces, you can also use `exclude-regex`. If an interface matches both `include-regex` and `exclude-regex` then it will not be generated. For example, to generate all interfaces except those ending in `Func`:
+
+```yaml
+packages:
+  github.com/user/project:
+    config:
+      recursive: true
+      include-regex: ".*"
+      exclude-regex: ".*Func"
+```
+
+You can only use `exclude-regex` with `include-regex`. If set by itself, `exclude-regex` has no effect.
+
 ??? note "all: true"
-    Using `all: true` will override `include-regex` and issue a warning.
+    Using `all: true` will override `include-regex` (and `exclude-regex`) and issue a warning.
 
 Mock Constructors
 -----------------

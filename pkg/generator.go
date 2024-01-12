@@ -57,6 +57,7 @@ type GeneratorConfig struct {
 	InPackage            bool
 	KeepTree             bool
 	Note                 string
+	MockBuildTags        string
 	PackageName          string
 	PackageNamePrefix    string
 	StructName           string
@@ -103,7 +104,7 @@ func NewGenerator(ctx context.Context, c GeneratorConfig, iface *Interface, pkg 
 	}
 
 	g.parseReplaceTypes(ctx)
-	g.addPackageImportWithName(ctx, "github.com/stretchr/testify/mock", "mock")
+	g.addPackageImportWithName(ctx, "github.com/stretchr/testify/mock", "mock", nil)
 
 	return g
 }
@@ -111,6 +112,7 @@ func NewGenerator(ctx context.Context, c GeneratorConfig, iface *Interface, pkg 
 func (g *Generator) GenerateAll(ctx context.Context) error {
 	g.GenerateBoilerplate(g.config.Boilerplate)
 	g.GeneratePrologueNote(g.config.Note)
+	g.GenerateBuildTags(g.config.MockBuildTags)
 	g.GeneratePrologue(ctx, g.pkg)
 	return g.Generate(ctx)
 }
@@ -161,7 +163,7 @@ func (g *Generator) getPackageScopedType(ctx context.Context, o *types.TypeName)
 		(!g.config.KeepTree && g.config.InPackage && o.Pkg() == g.iface.Pkg) {
 		return o.Name()
 	}
-	pkg := g.addPackageImport(ctx, o.Pkg())
+	pkg := g.addPackageImport(ctx, o.Pkg(), o)
 	name := o.Name()
 	g.checkReplaceType(ctx, func(from *replaceType, to *replaceType) bool {
 		if o.Pkg().Path() == from.pkg && name == from.typ {
@@ -173,23 +175,28 @@ func (g *Generator) getPackageScopedType(ctx context.Context, o *types.TypeName)
 	return pkg + "." + name
 }
 
-func (g *Generator) addPackageImport(ctx context.Context, pkg *types.Package) string {
-	return g.addPackageImportWithName(ctx, pkg.Path(), pkg.Name())
+func (g *Generator) addPackageImport(ctx context.Context, pkg *types.Package, o *types.TypeName) string {
+	return g.addPackageImportWithName(ctx, pkg.Path(), pkg.Name(), o)
 }
 
 func (g *Generator) checkReplaceType(ctx context.Context, f func(from *replaceType, to *replaceType) bool) {
-	for _, item := range g.replaceTypeCache {
-		if !f(item.from, item.to) {
-			break
+	// check most specific first
+	for _, hasType := range []bool{true, false} {
+		for _, item := range g.replaceTypeCache {
+			if (item.from.typ != "") == hasType {
+				if !f(item.from, item.to) {
+					break
+				}
+			}
 		}
 	}
 }
 
-func (g *Generator) addPackageImportWithName(ctx context.Context, path, name string) string {
+func (g *Generator) addPackageImportWithName(ctx context.Context, path, name string, o *types.TypeName) string {
 	log := zerolog.Ctx(ctx)
 	replaced := false
 	g.checkReplaceType(ctx, func(from *replaceType, to *replaceType) bool {
-		if path == from.pkg {
+		if o != nil && path == from.pkg && (from.typ == "" || o.Name() == from.typ) {
 			log.Debug().Str("from", path).Str("to", to.pkg).Msg("changing package path")
 			replaced = true
 			path = to.pkg
@@ -410,6 +417,12 @@ func (g *Generator) GeneratePrologueNote(note string) {
 func (g *Generator) GenerateBoilerplate(boilerplate string) {
 	if boilerplate != "" {
 		g.printf("%s\n", boilerplate)
+	}
+}
+
+func (g *Generator) GenerateBuildTags(buildTags string) {
+	if buildTags != "" {
+		g.printf("//go:build %s\n\n", buildTags)
 	}
 }
 
@@ -753,6 +766,10 @@ func (_m *{{.MockName}}{{.InstantiatedTypeString}}) {{.FunctionName}}({{join .Pa
 	{{- .Called}}
 {{- else}}
 	{{- .RetVariableName}} := {{.Called}}
+
+	if len({{.RetVariableName}}) == 0 {
+		panic("no return value specified for {{.FunctionName}}")
+	}
 
 	{{range $idx, $name := .Returns.ReturnNames}}
 	var {{$name}} {{index $.Returns.Types $idx -}}

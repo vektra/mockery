@@ -25,6 +25,10 @@ func (_m *SendFunc) EXPECT() *SendFunc_Expecter {
 func (_m *SendFunc) Execute(ctx context.Context, data string) (int, error) {
 	ret := _m.Called(ctx, data)
 
+	if len(ret) == 0 {
+		panic("no return value specified for Execute")
+	}
+
 	var r0 int
 	var r1 error
 	if rf, ok := ret.Get(0).(func(context.Context, string) (int, error)); ok {

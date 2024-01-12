@@ -25,6 +25,10 @@ func (_m *RequesterIface) EXPECT() *RequesterIface_Expecter {
 func (_m *RequesterIface) Get() io.Reader {
 	ret := _m.Called()
 
+	if len(ret) == 0 {
+		panic("no return value specified for Get")
+	}
+
 	var r0 io.Reader
 	if rf, ok := ret.Get(0).(func() io.Reader); ok {
 		r0 = rf()
