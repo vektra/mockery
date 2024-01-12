@@ -57,6 +57,7 @@ type GeneratorConfig struct {
 	InPackage            bool
 	KeepTree             bool
 	Note                 string
+	MockBuildTags        string
 	PackageName          string
 	PackageNamePrefix    string
 	StructName           string
@@ -111,6 +112,7 @@ func NewGenerator(ctx context.Context, c GeneratorConfig, iface *Interface, pkg 
 func (g *Generator) GenerateAll(ctx context.Context) error {
 	g.GenerateBoilerplate(g.config.Boilerplate)
 	g.GeneratePrologueNote(g.config.Note)
+	g.GenerateBuildTags(g.config.MockBuildTags)
 	g.GeneratePrologue(ctx, g.pkg)
 	return g.Generate(ctx)
 }
@@ -415,6 +417,12 @@ func (g *Generator) GeneratePrologueNote(note string) {
 func (g *Generator) GenerateBoilerplate(boilerplate string) {
 	if boilerplate != "" {
 		g.printf("%s\n", boilerplate)
+	}
+}
+
+func (g *Generator) GenerateBuildTags(buildTags string) {
+	if buildTags != "" {
+		g.printf("//go:build %s\n\n", buildTags)
 	}
 }
 

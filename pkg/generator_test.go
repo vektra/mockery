@@ -296,6 +296,17 @@ func (s *GeneratorSuite) TestGeneratorBoilerplate() {
 	s.Equal(expected, generator.buf.String())
 }
 
+func (s *GeneratorSuite) TestGeneratorBuildTags() {
+	generator := s.getGenerator(testFile, "Requester", false, "")
+	generator.GenerateBuildTags("custom && (!windows || !linux)")
+
+	expected := `//go:build custom && (!windows || !linux)
+
+`
+
+	s.Equal(expected, generator.buf.String())
+}
+
 func (s *GeneratorSuite) TestGeneratorPrologueNoteNoVersionString() {
 	generator := s.getGenerator(testFile, "Requester", false, "")
 	generator.config.DisableVersionString = true
