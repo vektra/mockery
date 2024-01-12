@@ -13,12 +13,16 @@ tasks:
       - "**/*.go"
     cmds:
       - go fmt ./...
-  
+    
+  mocks:
+    desc: generate new mocks from scratch
+    deps: [mocks.remove, mocks.generate]
+
   mocks.remove:
     desc: remove all mock files
     cmds:
-    - find . -name '*_mock.go' | xargs rm
-    - rm -rf mocks/
+      - find . -name '*_mock.go' | xargs rm
+      - rm -rf mocks/
 
   mocks.generate:
     desc: generate mockery mocks
@@ -74,7 +78,6 @@ tasks:
       - task: mocks.generate
       - task: test
       - task: test.e2e
-
 
   default:
     deps: [test.ci]

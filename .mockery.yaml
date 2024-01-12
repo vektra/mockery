@@ -36,11 +36,11 @@ packages:
             unroll-variadic: False
           - mockname: Expecter
             unroll-variadic: True
+      RequesterReturnElided:
       VariadicNoReturnInterface:
         config:
           with-expecter: True
           unroll-variadic: False
-      RequesterReturnElided:
   github.com/vektra/mockery/v2/pkg/fixtures/recursive_generation:
     config:
       recursive: True
