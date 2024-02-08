@@ -21,6 +21,10 @@ func (_m *VariadicReturnFunc) EXPECT() *VariadicReturnFunc_Expecter {
 func (_m *VariadicReturnFunc) SampleMethod(str string) func(string, []int, ...interface{}) {
 	ret := _m.Called(str)
 
+	if len(ret) == 0 {
+		panic("no return value specified for SampleMethod")
+	}
+
 	var r0 func(string, []int, ...interface{})
 	if rf, ok := ret.Get(0).(func(string) func(string, []int, ...interface{})); ok {
 		r0 = rf(str)

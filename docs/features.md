@@ -90,6 +90,18 @@ func (_m *Handler) HandleMessage(m pubsub.Message) error {
 }
 ```
 
+Generic type constraints can also be replaced by targeting the changed parameter with the square bracket notation on the left hand side.
+
+```shell
+mockery --replace-type github.com/vektra/mockery/v2/baz/internal/foo.InternalBaz[T]=baz:github.com/vektra/mockery/v2/baz.Baz
+```
+
+If a type constraint needs to be removed and replaced with a type, target the constraint with square brackets and include a '-' in front to have it removed.
+
+```shell
+mockery --replace-type github.com/vektra/mockery/v2/baz/internal/foo.InternalBaz[-T]=baz:github.com/vektra/mockery/v2/baz.Baz
+```
+
 `packages` configuration
 ------------------------
 :octicons-tag-24: v2.21.0

@@ -760,6 +760,32 @@ func (s *GeneratorSuite) TestReplaceTypePackageMultiple() {
 	})
 }
 
+func (s *GeneratorSuite) TestReplaceTypeGeneric() {
+	cfg := GeneratorConfig{InPackage: false, ReplaceType: []string{
+		"github.com/vektra/mockery/v2/pkg/fixtures.ReplaceGeneric[-TImport]=github.com/vektra/mockery/v2/pkg/fixtures/redefined_type_b.B",
+		"github.com/vektra/mockery/v2/pkg/fixtures.ReplaceGeneric[TConstraint]=github.com/vektra/mockery/v2/pkg/fixtures/constraints.Integer",
+		"github.com/vektra/mockery/v2/pkg/fixtures.ReplaceGenericSelf[-T]=github.com/vektra/mockery/v2/pkg/fixtures.ReplaceGenericSelf",
+	}}
+
+	s.checkGenerationRegexWithConfig("generic.go", "ReplaceGeneric", cfg, []regexpExpected{
+		// type ReplaceGeneric[TConstraint constraints.Integer, TKeep interface{}] struct
+		{true, regexp.MustCompile(`type ReplaceGeneric\[TConstraint constraints.Integer\, TKeep interface\{\}] struct`)},
+		// func (_m *ReplaceGeneric[TConstraint, TKeep]) A(t1 test.B) TKeep
+		{true, regexp.MustCompile(`func \(_m \*ReplaceGeneric\[TConstraint, TKeep\]\) A\(t1 test\.B\) TKeep`)},
+		// func (_m *ReplaceGeneric[TConstraint, TKeep]) B() test.B
+		{true, regexp.MustCompile(`func \(_m \*ReplaceGeneric\[TConstraint, TKeep\]\) B\(\) test\.B`)},
+		// func (_m *ReplaceGeneric[TConstraint, TKeep]) C() TConstraint
+		{true, regexp.MustCompile(`func \(_m \*ReplaceGeneric\[TConstraint, TKeep\]\) C\(\) TConstraint`)},
+	})
+
+	s.checkGenerationRegexWithConfig("generic.go", "ReplaceGenericSelf", cfg, []regexpExpected{
+		// type ReplaceGenericSelf struct
+		{true, regexp.MustCompile(`type ReplaceGenericSelf struct`)},
+		// func (_m *ReplaceGenericSelf) A() ReplaceGenericSelf
+		{true, regexp.MustCompile(`func \(_m \*ReplaceGenericSelf\) A\(\) ReplaceGenericSelf`)},
+	})
+}
+
 func (s *GeneratorSuite) TestGenericGenerator() {
 	s.checkGeneration("generic.go", "RequesterGenerics", false, "", "")
 }
@@ -798,6 +824,14 @@ func TestParseReplaceType(t *testing.T) {
 		{
 			value:    "github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz",
 			expected: replaceType{alias: "", pkg: "github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz", typ: ""},
+		},
+		{
+			value:    "github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz/internal/foo.InternalBaz[T]",
+			expected: replaceType{alias: "", pkg: "github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz/internal/foo", typ: "InternalBaz", param: "T"},
+		},
+		{
+			value:    "github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz/internal/foo.InternalBaz[-T]",
+			expected: replaceType{alias: "", pkg: "github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz/internal/foo", typ: "InternalBaz", param: "T", rmvParam: true},
 		},
 	}
 
