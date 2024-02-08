@@ -51,7 +51,7 @@ packages:
       ReplaceGenericSelf:
         config:
           replace-type:
-            - github.com/vektra/mockery/v2/pkg/fixtures.ReplaceGenericSelf[-T]=github.com/vektra/mockery/v2/pkg/fixtures.ReplaceGenericSelf
+            - github.com/vektra/mockery/v2/pkg/fixtures.ReplaceGenericSelf[-T]=github.com/vektra/mockery/v2/pkg/fixtures.*ReplaceGenericSelf
   github.com/vektra/mockery/v2/pkg/fixtures/recursive_generation:
     config:
       recursive: True

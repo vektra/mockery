@@ -102,6 +102,12 @@ If a type constraint needs to be removed and replaced with a type, target the co
 mockery --replace-type github.com/vektra/mockery/v2/baz/internal/foo.InternalBaz[-T]=baz:github.com/vektra/mockery/v2/baz.Baz
 ```
 
+When replacing a generic constraint, you can replace the type with a pointer by adding a '*' before the output type name.
+
+```shell
+mockery --replace-type github.com/vektra/mockery/v2/baz/internal/foo.InternalBaz[-T]=baz:github.com/vektra/mockery/v2/baz.*Baz
+```
+
 `packages` configuration
 ------------------------
 :octicons-tag-24: v2.21.0

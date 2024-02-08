@@ -18,18 +18,18 @@ func (_m *ReplaceGenericSelf) EXPECT() *ReplaceGenericSelf_Expecter {
 }
 
 // A provides a mock function with given fields:
-func (_m *ReplaceGenericSelf) A() ReplaceGenericSelf {
+func (_m *ReplaceGenericSelf) A() *ReplaceGenericSelf {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
 		panic("no return value specified for A")
 	}
 
-	var r0 ReplaceGenericSelf
-	if rf, ok := ret.Get(0).(func() ReplaceGenericSelf); ok {
+	var r0 *ReplaceGenericSelf
+	if rf, ok := ret.Get(0).(func() *ReplaceGenericSelf); ok {
 		r0 = rf()
 	} else {
-		r0 = ret.Get(0).(ReplaceGenericSelf)
+		r0 = ret.Get(0).(*ReplaceGenericSelf)
 	}
 
 	return r0
@@ -52,12 +52,12 @@ func (_c *ReplaceGenericSelf_A_Call) Run(run func()) *ReplaceGenericSelf_A_Call 
 	return _c
 }
 
-func (_c *ReplaceGenericSelf_A_Call) Return(_a0 ReplaceGenericSelf) *ReplaceGenericSelf_A_Call {
+func (_c *ReplaceGenericSelf_A_Call) Return(_a0 *ReplaceGenericSelf) *ReplaceGenericSelf_A_Call {
 	_c.Call.Return(_a0)
 	return _c
 }
 
-func (_c *ReplaceGenericSelf_A_Call) RunAndReturn(run func() ReplaceGenericSelf) *ReplaceGenericSelf_A_Call {
+func (_c *ReplaceGenericSelf_A_Call) RunAndReturn(run func() *ReplaceGenericSelf) *ReplaceGenericSelf_A_Call {
 	_c.Call.Return(run)
 	return _c
 }
