@@ -351,20 +351,20 @@ func (o *Outputter) Generate(ctx context.Context, iface *Interface) error {
 }
 
 func (o *Outputter) generateMockery(ctx context.Context, iface *Interface, interfaceConfig *config.Config) error {
-		g := GeneratorConfig{
-			Boilerplate:          m.boilerplate,
-			DisableVersionString: interfaceConfig.DisableVersionString,
-			Exported:             interfaceConfig.Exported,
-			InPackage:            interfaceConfig.InPackage,
-			KeepTree:             interfaceConfig.KeepTree,
-			Note:                 interfaceConfig.Note,
-			MockBuildTags:        interfaceConfig.MockBuildTags,
-			PackageName:          interfaceConfig.Outpkg,
-			PackageNamePrefix:    interfaceConfig.Packageprefix,
-			StructName:           interfaceConfig.MockName,
-			UnrollVariadic:       interfaceConfig.UnrollVariadic,
-			WithExpecter:         interfaceConfig.WithExpecter,
-			ReplaceType:          interfaceConfig.ReplaceType,
+	g := GeneratorConfig{
+		Boilerplate:          o.boilerplate,
+		DisableVersionString: interfaceConfig.DisableVersionString,
+		Exported:             interfaceConfig.Exported,
+		InPackage:            interfaceConfig.InPackage,
+		KeepTree:             interfaceConfig.KeepTree,
+		Note:                 interfaceConfig.Note,
+		MockBuildTags:        interfaceConfig.MockBuildTags,
+		PackageName:          interfaceConfig.Outpkg,
+		PackageNamePrefix:    interfaceConfig.Packageprefix,
+		StructName:           interfaceConfig.MockName,
+		UnrollVariadic:       interfaceConfig.UnrollVariadic,
+		WithExpecter:         interfaceConfig.WithExpecter,
+		ReplaceType:          interfaceConfig.ReplaceType,
 	}
 	generator := NewGenerator(ctx, g, iface, "")
 
