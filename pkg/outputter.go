@@ -17,7 +17,6 @@ import (
 	"github.com/huandu/xstrings"
 	"github.com/iancoleman/strcase"
 	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 
 	"github.com/vektra/mockery/v2/pkg/config"
 	"github.com/vektra/mockery/v2/pkg/logging"
@@ -342,7 +341,7 @@ func (o *Outputter) Generate(ctx context.Context, iface *Interface) error {
 		}
 
 		fmt.Printf("generator: %v\n", generator)
-		if err := generator.Generate(ctx, iface, interfaceConfig); err != nil {
+		if err := generator.Generate(ctx, iface.Name, interfaceConfig); err != nil {
 			return fmt.Errorf("generating template: %w", err)
 		}
 
@@ -351,6 +350,8 @@ func (o *Outputter) Generate(ctx context.Context, iface *Interface) error {
 }
 
 func (o *Outputter) generateMockery(ctx context.Context, iface *Interface, interfaceConfig *config.Config) error {
+	log := zerolog.Ctx(ctx)
+
 	g := GeneratorConfig{
 		Boilerplate:          o.boilerplate,
 		DisableVersionString: interfaceConfig.DisableVersionString,

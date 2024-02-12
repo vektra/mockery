@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"go/token"
 	"go/types"
 
 	"github.com/chigopher/pathlib"
@@ -46,63 +47,101 @@ func (g *TemplateGenerator) format(src []byte, ifaceConfig *config.Config) ([]by
 	return gofmt(src)
 }
 
-func (g *TemplateGenerator) Generate(ctx context.Context, iface *Interface, ifaceConfig *config.Config) error {
+func (g *TemplateGenerator) methodData(method *types.Func) template.MethodData {
+	methodScope := g.registry.MethodScope()
+
+	signature := method.Type().(*types.Signature)
+	params := make([]template.ParamData, signature.Params().Len())
+	for j := 0; j < signature.Params().Len(); j++ {
+		param := signature.Params().At(j)
+		params[j] = template.ParamData{
+			Var:      methodScope.AddVar(param, ""),
+			Variadic: signature.Variadic() && j == signature.Params().Len()-1,
+		}
+	}
+
+	returns := make([]template.ParamData, signature.Results().Len())
+	for j := 0; j < signature.Results().Len(); j++ {
+		param := signature.Results().At(j)
+		returns[j] = template.ParamData{
+			Var:      methodScope.AddVar(param, "Out"),
+			Variadic: false,
+		}
+	}
+	return template.MethodData{
+		Name:    method.Name(),
+		Params:  params,
+		Returns: returns,
+	}
+}
+
+func explicitConstraintType(typeParam *types.Var) (t types.Type) {
+	underlying := typeParam.Type().Underlying().(*types.Interface)
+	// check if any of the embedded types is either a basic type or a union,
+	// because the generic type has to be an alias for one of those types then
+	for j := 0; j < underlying.NumEmbeddeds(); j++ {
+		t := underlying.EmbeddedType(j)
+		switch t := t.(type) {
+		case *types.Basic:
+			return t
+		case *types.Union: // only unions of basic types are allowed, so just take the first one as a valid type constraint
+			return t.Term(0).Type()
+		}
+	}
+	return nil
+}
+
+func (g *TemplateGenerator) typeParams(tparams *types.TypeParamList) []template.TypeParamData {
+	var tpd []template.TypeParamData
+	if tparams == nil {
+		return tpd
+	}
+
+	tpd = make([]template.TypeParamData, tparams.Len())
+
+	scope := g.registry.MethodScope()
+	for i := 0; i < len(tpd); i++ {
+		tp := tparams.At(i)
+		typeParam := types.NewParam(token.Pos(i), tp.Obj().Pkg(), tp.Obj().Name(), tp.Constraint())
+		tpd[i] = template.TypeParamData{
+			ParamData:  template.ParamData{Var: scope.AddVar(typeParam, "")},
+			Constraint: explicitConstraintType(typeParam),
+		}
+	}
+
+	return tpd
+}
+
+func (g *TemplateGenerator) Generate(ctx context.Context, ifaceName string, ifaceConfig *config.Config) error {
 	log := zerolog.Ctx(ctx)
 	log.Info().Msg("generating templated mock for interface")
 
-	imports := Imports{}
-	for _, method := range iface.Methods() {
-		method.populateImports(imports)
+	iface, tparams, err := g.registry.LookupInterface(ifaceName)
+	if err != nil {
+		return err
 	}
-	methods := make([]template.MethodData, iface.ActualInterface.NumMethods())
 
-	for i := 0; i < iface.ActualInterface.NumMethods(); i++ {
-		method := iface.ActualInterface.Method(i)
-		methodScope := g.registry.MethodScope()
-
-		signature := method.Type().(*types.Signature)
-		params := make([]template.ParamData, signature.Params().Len())
-		for j := 0; j < signature.Params().Len(); j++ {
-			param := signature.Params().At(j)
-			params[j] = template.ParamData{
-				Var:      methodScope.AddVar(param, ""),
-				Variadic: signature.Variadic() && j == signature.Params().Len()-1,
-			}
-		}
-
-		returns := make([]template.ParamData, signature.Results().Len())
-		for j := 0; j < signature.Results().Len(); j++ {
-			param := signature.Results().At(j)
-			returns[j] = template.ParamData{
-				Var:      methodScope.AddVar(param, "Out"),
-				Variadic: false,
-			}
-		}
-
-		methods[i] = template.MethodData{
-			Name:    method.Name(),
-			Params:  params,
-			Returns: returns,
-		}
-
+	methods := make([]template.MethodData, iface.NumMethods())
+	for i := 0; i < iface.NumMethods(); i++ {
+		methods[i] = g.methodData(iface.Method(i))
 	}
 
 	// For now, mockery only supports one mock per file, which is why we're creating
 	// a single-element list. moq seems to have supported multiple mocks per file.
 	mockData := []template.MockData{
 		{
-			InterfaceName: iface.Name,
+			InterfaceName: ifaceName,
 			MockName:      ifaceConfig.MockName,
+			TypeParams:    g.typeParams(tparams),
 			Methods:       methods,
 		},
 	}
 	data := template.Data{
-		PkgName:         ifaceConfig.Outpkg,
-		SrcPkgQualifier: iface.Pkg.Name() + ".",
-		Mocks:           mockData,
-		StubImpl:        false,
-		SkipEnsure:      false,
-		WithResets:      false,
+		PkgName:    ifaceConfig.Outpkg,
+		Mocks:      mockData,
+		StubImpl:   false,
+		SkipEnsure: false,
+		WithResets: false,
 	}
 	if data.MocksSomeMethod() {
 		log.Debug().Msg("interface mocks some method, importing sync package")
