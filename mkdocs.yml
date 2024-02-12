@@ -78,6 +78,9 @@ extra_javascript:
 extra:
   version:
     provider: mike
+  analytics:
+    provider: google
+    property: G-0ZGMQGZGRN
 
 plugins:
 - mike:
