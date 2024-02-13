@@ -1,8 +1,8 @@
 quiet: False
 disable-version-string: True
 with-expecter: True
-mockname: "{{.InterfaceName}}"
-filename: "{{.MockName}}.go"
+mockname: "{{.InterfaceName}}Mock"
+filename: "{{.InterfaceName}}.go"
 dir: "mocks/moq/{{.PackagePath}}"
 packages:
   github.com/vektra/mockery/v2/pkg/fixtures:

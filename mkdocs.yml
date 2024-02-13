@@ -31,6 +31,7 @@ theme:
     - content.code.copy
     - content.action.edit
     - content.action.view
+    - content.footnote.tooltips
     - navigation.indexes
     - navigation.sections
     - navigation.tracking
@@ -38,6 +39,7 @@ theme:
 markdown_extensions:
   - admonition
   - attr_list
+  - footnotes
   - md_in_html
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
@@ -53,7 +55,6 @@ markdown_extensions:
       alternate_style: true 
   - toc:
       permalink: true
-  
 
 nav:
   - Home: index.md
