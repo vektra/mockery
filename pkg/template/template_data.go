@@ -14,6 +14,7 @@ type Data struct {
 	SrcPkgQualifier string
 	Imports         []*registry.Package
 	Mocks           []MockData
+	TemplateMap     map[string]any
 	StubImpl        bool
 	SkipEnsure      bool
 	WithResets      bool

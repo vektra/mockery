@@ -140,11 +140,10 @@ func (g *TemplateGenerator) Generate(ctx context.Context, ifaceName string, ifac
 		},
 	}
 	data := template.Data{
-		PkgName:    ifaceConfig.Outpkg,
-		Mocks:      mockData,
-		StubImpl:   false,
-		SkipEnsure: false,
-		WithResets: false,
+		PkgName:     ifaceConfig.Outpkg,
+		Mocks:       mockData,
+		TemplateMap: ifaceConfig.TemplateMap,
+		StubImpl:    false,
 	}
 	if data.MocksSomeMethod() {
 		log.Debug().Msg("interface mocks some method, importing sync package")

@@ -53,6 +53,18 @@ var golintInitialisms = []string{
 	"URL", "UTF8", "VM", "XML", "XMPP", "XSRF", "XSS",
 }
 
+func exported(s string) string {
+	if s == "" {
+		return ""
+	}
+	for _, initialism := range golintInitialisms {
+		if strings.ToUpper(s) == initialism {
+			return initialism
+		}
+	}
+	return strings.ToUpper(s[0:1]) + s[1:]
+}
+
 var templateFuncs = template.FuncMap{
 	"ImportStatement": func(imprt *registry.Package) string {
 		if imprt.Alias == "" {
@@ -69,15 +81,19 @@ var templateFuncs = template.FuncMap{
 
 		return "sync"
 	},
-	"Exported": func(s string) string {
-		if s == "" {
+	"Exported": exported,
+	"TypeInstantiation": func(m MockData) string {
+		if len(m.TypeParams) == 0 {
 			return ""
 		}
-		for _, initialism := range golintInitialisms {
-			if strings.ToUpper(s) == initialism {
-				return initialism
+		s := "["
+		for idx, param := range m.TypeParams {
+			if idx != 0 {
+				s += ", "
 			}
+			s += exported(param.Name())
 		}
-		return strings.ToUpper(s[0:1]) + s[1:]
+		s += "]"
+		return s
 	},
 }

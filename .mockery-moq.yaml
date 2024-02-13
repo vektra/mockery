@@ -10,4 +10,8 @@ packages:
       include-regex: '.*'
       exclude-regex: 'RequesterGenerics|UnsafeInterface|requester_unexported'
       style: moq
-      outpkg: testfoo
+      outpkg: test
+      template-map:
+        with-resets: true
+        skip-ensure: true
+        stub-impl: false

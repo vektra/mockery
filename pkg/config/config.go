@@ -33,7 +33,7 @@ type Interface struct {
 
 type Config struct {
 	All                  bool                   `mapstructure:"all"`
-	MockBuildTags        string                 `mapstructure:"mock-build-tags"`
+	BoilerplateFile      string                 `mapstructure:"boilerplate-file"`
 	BuildTags            string                 `mapstructure:"tags"`
 	Case                 string                 `mapstructure:"case"`
 	Config               string                 `mapstructure:"config"`
@@ -42,6 +42,7 @@ type Config struct {
 	DisableConfigSearch  bool                   `mapstructure:"disable-config-search"`
 	DisableVersionString bool                   `mapstructure:"disable-version-string"`
 	DryRun               bool                   `mapstructure:"dry-run"`
+	Exclude              []string               `mapstructure:"exclude"`
 	ExcludeRegex         string                 `mapstructure:"exclude-regex"`
 	Exported             bool                   `mapstructure:"exported"`
 	FileName             string                 `mapstructure:"filename"`
@@ -52,6 +53,7 @@ type Config struct {
 	InPackageSuffix      bool                   `mapstructure:"inpackage-suffix"`
 	KeepTree             bool                   `mapstructure:"keeptree"`
 	LogLevel             string                 `mapstructure:"log-level"`
+	MockBuildTags        string                 `mapstructure:"mock-build-tags"`
 	MockName             string                 `mapstructure:"mockname"`
 	Name                 string                 `mapstructure:"name"`
 	Note                 string                 `mapstructure:"note"`
@@ -63,19 +65,18 @@ type Config struct {
 	Profile              string                 `mapstructure:"profile"`
 	Quiet                bool                   `mapstructure:"quiet"`
 	Recursive            bool                   `mapstructure:"recursive"`
-	Exclude              []string               `mapstructure:"exclude"`
+	ReplaceType          []string               `mapstructure:"replace-type"`
 	SkipEnsure           bool                   `mapstructure:"skip-ensure"`
 	SrcPkg               string                 `mapstructure:"srcpkg"`
 	Style                string                 `mapstructure:"style"`
-	BoilerplateFile      string                 `mapstructure:"boilerplate-file"`
 	// StructName overrides the name given to the mock struct and should only be nonempty
 	// when generating for an exact match (non regex expression in -name).
-	StructName     string   `mapstructure:"structname"`
-	TestOnly       bool     `mapstructure:"testonly"`
-	UnrollVariadic bool     `mapstructure:"unroll-variadic"`
-	Version        bool     `mapstructure:"version"`
-	WithExpecter   bool     `mapstructure:"with-expecter"`
-	ReplaceType    []string `mapstructure:"replace-type"`
+	StructName     string         `mapstructure:"structname"`
+	TemplateMap    map[string]any `mapstructure:"template-map"`
+	TestOnly       bool           `mapstructure:"testonly"`
+	UnrollVariadic bool           `mapstructure:"unroll-variadic"`
+	Version        bool           `mapstructure:"version"`
+	WithExpecter   bool           `mapstructure:"with-expecter"`
 
 	// Viper throws away case-sensitivity when it marshals into this struct. This
 	// destroys necessary information we need, specifically around interface names.
