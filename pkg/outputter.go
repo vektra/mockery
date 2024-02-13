@@ -329,7 +329,9 @@ func (o *Outputter) Generate(ctx context.Context, iface *Interface) error {
 		}
 		if interfaceConfig.Style == "mockery" {
 			ifaceLog.Debug().Msg("generating mockery mocks")
-			o.generateMockery(ctx, iface, interfaceConfig)
+			if err := o.generateMockery(ctx, iface, interfaceConfig); err != nil {
+				return err
+			}
 			continue
 		}
 		logging.WarnAlpha(ifaceCtx, "usage mock styles other than mockery is currently in an alpha state.", nil)
