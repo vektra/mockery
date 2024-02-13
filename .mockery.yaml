@@ -40,12 +40,6 @@ packages:
         config:
           with-expecter: True
           unroll-variadic: False
-      RequesterReturnElided:
-        configs:
-          - mockname: RequesterReturnElided
-            style: mockery
-          - mockname: RequesterReturnElidedMoq
-            style: moq
   github.com/vektra/mockery/v2/pkg/fixtures/recursive_generation:
     config:
       recursive: True
