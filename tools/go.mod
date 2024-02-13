@@ -1,6 +1,6 @@
 module github.com/vektra/mockery/tools
 
-go 1.19
+go 1.22
 
 require (
 	github.com/go-task/task/v3 v3.24.0
@@ -13,7 +13,7 @@ require (
 	4d63.com/gochecknoglobals v0.2.1 // indirect
 	github.com/Abirdcfly/dupword v0.0.11 // indirect
 	github.com/Antonboom/errname v0.1.9 // indirect
-	github.com/Antonboom/nilnil v0.1.3 // indirect
+	github.com/Antonboom/nilnil v0.1.3 // indirect; indirectccd
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/Djarvur/go-err113 v0.0.0-20210108212216-aea10b59be24 // indirect
 	github.com/GaijinEntertainment/go-exhaustruct/v2 v2.3.0 // indirect
