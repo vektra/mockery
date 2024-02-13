@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// RequesterElided is a mock implementation of RequesterElided.
+// RequesterElidedMock is a mock implementation of RequesterElided.
 //
 //	func TestSomethingThatUsesRequesterElided(t *testing.T) {
 //
 //		// make and configure a mocked RequesterElided
-//		mockedRequesterElided := &RequesterElided{
+//		mockedRequesterElided := &RequesterElidedMock{
 //			GetFunc: func(path string, url string) error {
 //				panic("mock out the Get method")
 //			},
@@ -22,7 +22,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type RequesterElided struct {
+type RequesterElidedMock struct {
 	// GetFunc mocks the Get method.
 	GetFunc func(path string, url string) error
 
@@ -40,9 +40,9 @@ type RequesterElided struct {
 }
 
 // Get calls GetFunc.
-func (mock *RequesterElided) Get(path string, url string) error {
+func (mock *RequesterElidedMock) Get(path string, url string) error {
 	if mock.GetFunc == nil {
-		panic("RequesterElided.GetFunc: method is nil but RequesterElided.Get was just called")
+		panic("RequesterElidedMock.GetFunc: method is nil but RequesterElided.Get was just called")
 	}
 	callInfo := struct {
 		Path string
@@ -61,7 +61,7 @@ func (mock *RequesterElided) Get(path string, url string) error {
 // Check the length with:
 //
 //	len(mockedRequesterElided.GetCalls())
-func (mock *RequesterElided) GetCalls() []struct {
+func (mock *RequesterElidedMock) GetCalls() []struct {
 	Path string
 	URL  string
 } {
@@ -76,14 +76,14 @@ func (mock *RequesterElided) GetCalls() []struct {
 }
 
 // ResetGetCalls reset all the calls that were made to Get.
-func (mock *RequesterElided) ResetGetCalls() {
+func (mock *RequesterElidedMock) ResetGetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *RequesterElided) ResetCalls() {
+func (mock *RequesterElidedMock) ResetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()

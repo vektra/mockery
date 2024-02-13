@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// Expecter is a mock implementation of Expecter.
+// ExpecterMock is a mock implementation of Expecter.
 //
 //	func TestSomethingThatUsesExpecter(t *testing.T) {
 //
 //		// make and configure a mocked Expecter
-//		mockedExpecter := &Expecter{
+//		mockedExpecter := &ExpecterMock{
 //			ManyArgsReturnsFunc: func(str string, i int) ([]string, error) {
 //				panic("mock out the ManyArgsReturns method")
 //			},
@@ -34,7 +34,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type Expecter struct {
+type ExpecterMock struct {
 	// ManyArgsReturnsFunc mocks the ManyArgsReturns method.
 	ManyArgsReturnsFunc func(str string, i int) ([]string, error)
 
@@ -90,9 +90,9 @@ type Expecter struct {
 }
 
 // ManyArgsReturns calls ManyArgsReturnsFunc.
-func (mock *Expecter) ManyArgsReturns(str string, i int) ([]string, error) {
+func (mock *ExpecterMock) ManyArgsReturns(str string, i int) ([]string, error) {
 	if mock.ManyArgsReturnsFunc == nil {
-		panic("Expecter.ManyArgsReturnsFunc: method is nil but Expecter.ManyArgsReturns was just called")
+		panic("ExpecterMock.ManyArgsReturnsFunc: method is nil but Expecter.ManyArgsReturns was just called")
 	}
 	callInfo := struct {
 		Str string
@@ -111,7 +111,7 @@ func (mock *Expecter) ManyArgsReturns(str string, i int) ([]string, error) {
 // Check the length with:
 //
 //	len(mockedExpecter.ManyArgsReturnsCalls())
-func (mock *Expecter) ManyArgsReturnsCalls() []struct {
+func (mock *ExpecterMock) ManyArgsReturnsCalls() []struct {
 	Str string
 	I   int
 } {
@@ -126,16 +126,16 @@ func (mock *Expecter) ManyArgsReturnsCalls() []struct {
 }
 
 // ResetManyArgsReturnsCalls reset all the calls that were made to ManyArgsReturns.
-func (mock *Expecter) ResetManyArgsReturnsCalls() {
+func (mock *ExpecterMock) ResetManyArgsReturnsCalls() {
 	mock.lockManyArgsReturns.Lock()
 	mock.calls.ManyArgsReturns = nil
 	mock.lockManyArgsReturns.Unlock()
 }
 
 // NoArg calls NoArgFunc.
-func (mock *Expecter) NoArg() string {
+func (mock *ExpecterMock) NoArg() string {
 	if mock.NoArgFunc == nil {
-		panic("Expecter.NoArgFunc: method is nil but Expecter.NoArg was just called")
+		panic("ExpecterMock.NoArgFunc: method is nil but Expecter.NoArg was just called")
 	}
 	callInfo := struct {
 	}{}
@@ -149,7 +149,7 @@ func (mock *Expecter) NoArg() string {
 // Check the length with:
 //
 //	len(mockedExpecter.NoArgCalls())
-func (mock *Expecter) NoArgCalls() []struct {
+func (mock *ExpecterMock) NoArgCalls() []struct {
 } {
 	var calls []struct {
 	}
@@ -160,16 +160,16 @@ func (mock *Expecter) NoArgCalls() []struct {
 }
 
 // ResetNoArgCalls reset all the calls that were made to NoArg.
-func (mock *Expecter) ResetNoArgCalls() {
+func (mock *ExpecterMock) ResetNoArgCalls() {
 	mock.lockNoArg.Lock()
 	mock.calls.NoArg = nil
 	mock.lockNoArg.Unlock()
 }
 
 // NoReturn calls NoReturnFunc.
-func (mock *Expecter) NoReturn(str string) {
+func (mock *ExpecterMock) NoReturn(str string) {
 	if mock.NoReturnFunc == nil {
-		panic("Expecter.NoReturnFunc: method is nil but Expecter.NoReturn was just called")
+		panic("ExpecterMock.NoReturnFunc: method is nil but Expecter.NoReturn was just called")
 	}
 	callInfo := struct {
 		Str string
@@ -186,7 +186,7 @@ func (mock *Expecter) NoReturn(str string) {
 // Check the length with:
 //
 //	len(mockedExpecter.NoReturnCalls())
-func (mock *Expecter) NoReturnCalls() []struct {
+func (mock *ExpecterMock) NoReturnCalls() []struct {
 	Str string
 } {
 	var calls []struct {
@@ -199,16 +199,16 @@ func (mock *Expecter) NoReturnCalls() []struct {
 }
 
 // ResetNoReturnCalls reset all the calls that were made to NoReturn.
-func (mock *Expecter) ResetNoReturnCalls() {
+func (mock *ExpecterMock) ResetNoReturnCalls() {
 	mock.lockNoReturn.Lock()
 	mock.calls.NoReturn = nil
 	mock.lockNoReturn.Unlock()
 }
 
 // Variadic calls VariadicFunc.
-func (mock *Expecter) Variadic(ints ...int) error {
+func (mock *ExpecterMock) Variadic(ints ...int) error {
 	if mock.VariadicFunc == nil {
-		panic("Expecter.VariadicFunc: method is nil but Expecter.Variadic was just called")
+		panic("ExpecterMock.VariadicFunc: method is nil but Expecter.Variadic was just called")
 	}
 	callInfo := struct {
 		Ints []int
@@ -225,7 +225,7 @@ func (mock *Expecter) Variadic(ints ...int) error {
 // Check the length with:
 //
 //	len(mockedExpecter.VariadicCalls())
-func (mock *Expecter) VariadicCalls() []struct {
+func (mock *ExpecterMock) VariadicCalls() []struct {
 	Ints []int
 } {
 	var calls []struct {
@@ -238,16 +238,16 @@ func (mock *Expecter) VariadicCalls() []struct {
 }
 
 // ResetVariadicCalls reset all the calls that were made to Variadic.
-func (mock *Expecter) ResetVariadicCalls() {
+func (mock *ExpecterMock) ResetVariadicCalls() {
 	mock.lockVariadic.Lock()
 	mock.calls.Variadic = nil
 	mock.lockVariadic.Unlock()
 }
 
 // VariadicMany calls VariadicManyFunc.
-func (mock *Expecter) VariadicMany(i int, a string, intfs ...interface{}) error {
+func (mock *ExpecterMock) VariadicMany(i int, a string, intfs ...interface{}) error {
 	if mock.VariadicManyFunc == nil {
-		panic("Expecter.VariadicManyFunc: method is nil but Expecter.VariadicMany was just called")
+		panic("ExpecterMock.VariadicManyFunc: method is nil but Expecter.VariadicMany was just called")
 	}
 	callInfo := struct {
 		I     int
@@ -268,7 +268,7 @@ func (mock *Expecter) VariadicMany(i int, a string, intfs ...interface{}) error 
 // Check the length with:
 //
 //	len(mockedExpecter.VariadicManyCalls())
-func (mock *Expecter) VariadicManyCalls() []struct {
+func (mock *ExpecterMock) VariadicManyCalls() []struct {
 	I     int
 	A     string
 	Intfs []interface{}
@@ -285,14 +285,14 @@ func (mock *Expecter) VariadicManyCalls() []struct {
 }
 
 // ResetVariadicManyCalls reset all the calls that were made to VariadicMany.
-func (mock *Expecter) ResetVariadicManyCalls() {
+func (mock *ExpecterMock) ResetVariadicManyCalls() {
 	mock.lockVariadicMany.Lock()
 	mock.calls.VariadicMany = nil
 	mock.lockVariadicMany.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *Expecter) ResetCalls() {
+func (mock *ExpecterMock) ResetCalls() {
 	mock.lockManyArgsReturns.Lock()
 	mock.calls.ManyArgsReturns = nil
 	mock.lockManyArgsReturns.Unlock()

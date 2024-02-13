@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// Requester2 is a mock implementation of Requester2.
+// Requester2Mock is a mock implementation of Requester2.
 //
 //	func TestSomethingThatUsesRequester2(t *testing.T) {
 //
 //		// make and configure a mocked Requester2
-//		mockedRequester2 := &Requester2{
+//		mockedRequester2 := &Requester2Mock{
 //			GetFunc: func(path string) error {
 //				panic("mock out the Get method")
 //			},
@@ -22,7 +22,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type Requester2 struct {
+type Requester2Mock struct {
 	// GetFunc mocks the Get method.
 	GetFunc func(path string) error
 
@@ -38,9 +38,9 @@ type Requester2 struct {
 }
 
 // Get calls GetFunc.
-func (mock *Requester2) Get(path string) error {
+func (mock *Requester2Mock) Get(path string) error {
 	if mock.GetFunc == nil {
-		panic("Requester2.GetFunc: method is nil but Requester2.Get was just called")
+		panic("Requester2Mock.GetFunc: method is nil but Requester2.Get was just called")
 	}
 	callInfo := struct {
 		Path string
@@ -57,7 +57,7 @@ func (mock *Requester2) Get(path string) error {
 // Check the length with:
 //
 //	len(mockedRequester2.GetCalls())
-func (mock *Requester2) GetCalls() []struct {
+func (mock *Requester2Mock) GetCalls() []struct {
 	Path string
 } {
 	var calls []struct {
@@ -70,14 +70,14 @@ func (mock *Requester2) GetCalls() []struct {
 }
 
 // ResetGetCalls reset all the calls that were made to Get.
-func (mock *Requester2) ResetGetCalls() {
+func (mock *Requester2Mock) ResetGetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *Requester2) ResetCalls() {
+func (mock *Requester2Mock) ResetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()

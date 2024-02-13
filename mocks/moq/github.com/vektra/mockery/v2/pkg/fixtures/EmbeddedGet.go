@@ -9,12 +9,12 @@ import (
 	"github.com/vektra/mockery/v2/pkg/fixtures/constraints"
 )
 
-// EmbeddedGet is a mock implementation of EmbeddedGet.
+// EmbeddedGetMock is a mock implementation of EmbeddedGet.
 //
 //	func TestSomethingThatUsesEmbeddedGet(t *testing.T) {
 //
 //		// make and configure a mocked EmbeddedGet
-//		mockedEmbeddedGet := &EmbeddedGet{
+//		mockedEmbeddedGet := &EmbeddedGetMock{
 //			GetFunc: func() T {
 //				panic("mock out the Get method")
 //			},
@@ -24,7 +24,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type EmbeddedGet[T constraints.Signed] struct {
+type EmbeddedGetMock[T constraints.Signed] struct {
 	// GetFunc mocks the Get method.
 	GetFunc func() T
 
@@ -38,9 +38,9 @@ type EmbeddedGet[T constraints.Signed] struct {
 }
 
 // Get calls GetFunc.
-func (mock *EmbeddedGet[T]) Get() T {
+func (mock *EmbeddedGetMock[T]) Get() T {
 	if mock.GetFunc == nil {
-		panic("EmbeddedGet.GetFunc: method is nil but EmbeddedGet.Get was just called")
+		panic("EmbeddedGetMock.GetFunc: method is nil but EmbeddedGet.Get was just called")
 	}
 	callInfo := struct {
 	}{}
@@ -54,7 +54,7 @@ func (mock *EmbeddedGet[T]) Get() T {
 // Check the length with:
 //
 //	len(mockedEmbeddedGet.GetCalls())
-func (mock *EmbeddedGet[T]) GetCalls() []struct {
+func (mock *EmbeddedGetMock[T]) GetCalls() []struct {
 } {
 	var calls []struct {
 	}
@@ -65,14 +65,14 @@ func (mock *EmbeddedGet[T]) GetCalls() []struct {
 }
 
 // ResetGetCalls reset all the calls that were made to Get.
-func (mock *EmbeddedGet[T]) ResetGetCalls() {
+func (mock *EmbeddedGetMock[T]) ResetGetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *EmbeddedGet[T]) ResetCalls() {
+func (mock *EmbeddedGetMock[T]) ResetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()

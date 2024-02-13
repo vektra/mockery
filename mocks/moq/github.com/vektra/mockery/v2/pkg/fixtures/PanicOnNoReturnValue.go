@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// PanicOnNoReturnValue is a mock implementation of PanicOnNoReturnValue.
+// PanicOnNoReturnValueMock is a mock implementation of PanicOnNoReturnValue.
 //
 //	func TestSomethingThatUsesPanicOnNoReturnValue(t *testing.T) {
 //
 //		// make and configure a mocked PanicOnNoReturnValue
-//		mockedPanicOnNoReturnValue := &PanicOnNoReturnValue{
+//		mockedPanicOnNoReturnValue := &PanicOnNoReturnValueMock{
 //			DoSomethingFunc: func() string {
 //				panic("mock out the DoSomething method")
 //			},
@@ -22,7 +22,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type PanicOnNoReturnValue struct {
+type PanicOnNoReturnValueMock struct {
 	// DoSomethingFunc mocks the DoSomething method.
 	DoSomethingFunc func() string
 
@@ -36,9 +36,9 @@ type PanicOnNoReturnValue struct {
 }
 
 // DoSomething calls DoSomethingFunc.
-func (mock *PanicOnNoReturnValue) DoSomething() string {
+func (mock *PanicOnNoReturnValueMock) DoSomething() string {
 	if mock.DoSomethingFunc == nil {
-		panic("PanicOnNoReturnValue.DoSomethingFunc: method is nil but PanicOnNoReturnValue.DoSomething was just called")
+		panic("PanicOnNoReturnValueMock.DoSomethingFunc: method is nil but PanicOnNoReturnValue.DoSomething was just called")
 	}
 	callInfo := struct {
 	}{}
@@ -52,7 +52,7 @@ func (mock *PanicOnNoReturnValue) DoSomething() string {
 // Check the length with:
 //
 //	len(mockedPanicOnNoReturnValue.DoSomethingCalls())
-func (mock *PanicOnNoReturnValue) DoSomethingCalls() []struct {
+func (mock *PanicOnNoReturnValueMock) DoSomethingCalls() []struct {
 } {
 	var calls []struct {
 	}
@@ -63,14 +63,14 @@ func (mock *PanicOnNoReturnValue) DoSomethingCalls() []struct {
 }
 
 // ResetDoSomethingCalls reset all the calls that were made to DoSomething.
-func (mock *PanicOnNoReturnValue) ResetDoSomethingCalls() {
+func (mock *PanicOnNoReturnValueMock) ResetDoSomethingCalls() {
 	mock.lockDoSomething.Lock()
 	mock.calls.DoSomething = nil
 	mock.lockDoSomething.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *PanicOnNoReturnValue) ResetCalls() {
+func (mock *PanicOnNoReturnValueMock) ResetCalls() {
 	mock.lockDoSomething.Lock()
 	mock.calls.DoSomething = nil
 	mock.lockDoSomething.Unlock()

@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// MapFunc is a mock implementation of MapFunc.
+// MapFuncMock is a mock implementation of MapFunc.
 //
 //	func TestSomethingThatUsesMapFunc(t *testing.T) {
 //
 //		// make and configure a mocked MapFunc
-//		mockedMapFunc := &MapFunc{
+//		mockedMapFunc := &MapFuncMock{
 //			GetFunc: func(m map[string]func(string) string) error {
 //				panic("mock out the Get method")
 //			},
@@ -22,7 +22,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type MapFunc struct {
+type MapFuncMock struct {
 	// GetFunc mocks the Get method.
 	GetFunc func(m map[string]func(string) string) error
 
@@ -38,9 +38,9 @@ type MapFunc struct {
 }
 
 // Get calls GetFunc.
-func (mock *MapFunc) Get(m map[string]func(string) string) error {
+func (mock *MapFuncMock) Get(m map[string]func(string) string) error {
 	if mock.GetFunc == nil {
-		panic("MapFunc.GetFunc: method is nil but MapFunc.Get was just called")
+		panic("MapFuncMock.GetFunc: method is nil but MapFunc.Get was just called")
 	}
 	callInfo := struct {
 		M map[string]func(string) string
@@ -57,7 +57,7 @@ func (mock *MapFunc) Get(m map[string]func(string) string) error {
 // Check the length with:
 //
 //	len(mockedMapFunc.GetCalls())
-func (mock *MapFunc) GetCalls() []struct {
+func (mock *MapFuncMock) GetCalls() []struct {
 	M map[string]func(string) string
 } {
 	var calls []struct {
@@ -70,14 +70,14 @@ func (mock *MapFunc) GetCalls() []struct {
 }
 
 // ResetGetCalls reset all the calls that were made to Get.
-func (mock *MapFunc) ResetGetCalls() {
+func (mock *MapFuncMock) ResetGetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *MapFunc) ResetCalls() {
+func (mock *MapFuncMock) ResetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()

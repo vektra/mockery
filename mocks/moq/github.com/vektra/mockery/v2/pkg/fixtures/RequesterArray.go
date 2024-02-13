@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// RequesterArray is a mock implementation of RequesterArray.
+// RequesterArrayMock is a mock implementation of RequesterArray.
 //
 //	func TestSomethingThatUsesRequesterArray(t *testing.T) {
 //
 //		// make and configure a mocked RequesterArray
-//		mockedRequesterArray := &RequesterArray{
+//		mockedRequesterArray := &RequesterArrayMock{
 //			GetFunc: func(path string) ([2]string, error) {
 //				panic("mock out the Get method")
 //			},
@@ -22,7 +22,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type RequesterArray struct {
+type RequesterArrayMock struct {
 	// GetFunc mocks the Get method.
 	GetFunc func(path string) ([2]string, error)
 
@@ -38,9 +38,9 @@ type RequesterArray struct {
 }
 
 // Get calls GetFunc.
-func (mock *RequesterArray) Get(path string) ([2]string, error) {
+func (mock *RequesterArrayMock) Get(path string) ([2]string, error) {
 	if mock.GetFunc == nil {
-		panic("RequesterArray.GetFunc: method is nil but RequesterArray.Get was just called")
+		panic("RequesterArrayMock.GetFunc: method is nil but RequesterArray.Get was just called")
 	}
 	callInfo := struct {
 		Path string
@@ -57,7 +57,7 @@ func (mock *RequesterArray) Get(path string) ([2]string, error) {
 // Check the length with:
 //
 //	len(mockedRequesterArray.GetCalls())
-func (mock *RequesterArray) GetCalls() []struct {
+func (mock *RequesterArrayMock) GetCalls() []struct {
 	Path string
 } {
 	var calls []struct {
@@ -70,14 +70,14 @@ func (mock *RequesterArray) GetCalls() []struct {
 }
 
 // ResetGetCalls reset all the calls that were made to Get.
-func (mock *RequesterArray) ResetGetCalls() {
+func (mock *RequesterArrayMock) ResetGetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *RequesterArray) ResetCalls() {
+func (mock *RequesterArrayMock) ResetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()

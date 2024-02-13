@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// Fooer is a mock implementation of Fooer.
+// FooerMock is a mock implementation of Fooer.
 //
 //	func TestSomethingThatUsesFooer(t *testing.T) {
 //
 //		// make and configure a mocked Fooer
-//		mockedFooer := &Fooer{
+//		mockedFooer := &FooerMock{
 //			BarFunc: func(f func([]int))  {
 //				panic("mock out the Bar method")
 //			},
@@ -28,7 +28,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type Fooer struct {
+type FooerMock struct {
 	// BarFunc mocks the Bar method.
 	BarFunc func(f func([]int))
 
@@ -62,9 +62,9 @@ type Fooer struct {
 }
 
 // Bar calls BarFunc.
-func (mock *Fooer) Bar(f func([]int)) {
+func (mock *FooerMock) Bar(f func([]int)) {
 	if mock.BarFunc == nil {
-		panic("Fooer.BarFunc: method is nil but Fooer.Bar was just called")
+		panic("FooerMock.BarFunc: method is nil but Fooer.Bar was just called")
 	}
 	callInfo := struct {
 		F func([]int)
@@ -81,7 +81,7 @@ func (mock *Fooer) Bar(f func([]int)) {
 // Check the length with:
 //
 //	len(mockedFooer.BarCalls())
-func (mock *Fooer) BarCalls() []struct {
+func (mock *FooerMock) BarCalls() []struct {
 	F func([]int)
 } {
 	var calls []struct {
@@ -94,16 +94,16 @@ func (mock *Fooer) BarCalls() []struct {
 }
 
 // ResetBarCalls reset all the calls that were made to Bar.
-func (mock *Fooer) ResetBarCalls() {
+func (mock *FooerMock) ResetBarCalls() {
 	mock.lockBar.Lock()
 	mock.calls.Bar = nil
 	mock.lockBar.Unlock()
 }
 
 // Baz calls BazFunc.
-func (mock *Fooer) Baz(path string) func(x string) string {
+func (mock *FooerMock) Baz(path string) func(x string) string {
 	if mock.BazFunc == nil {
-		panic("Fooer.BazFunc: method is nil but Fooer.Baz was just called")
+		panic("FooerMock.BazFunc: method is nil but Fooer.Baz was just called")
 	}
 	callInfo := struct {
 		Path string
@@ -120,7 +120,7 @@ func (mock *Fooer) Baz(path string) func(x string) string {
 // Check the length with:
 //
 //	len(mockedFooer.BazCalls())
-func (mock *Fooer) BazCalls() []struct {
+func (mock *FooerMock) BazCalls() []struct {
 	Path string
 } {
 	var calls []struct {
@@ -133,16 +133,16 @@ func (mock *Fooer) BazCalls() []struct {
 }
 
 // ResetBazCalls reset all the calls that were made to Baz.
-func (mock *Fooer) ResetBazCalls() {
+func (mock *FooerMock) ResetBazCalls() {
 	mock.lockBaz.Lock()
 	mock.calls.Baz = nil
 	mock.lockBaz.Unlock()
 }
 
 // Foo calls FooFunc.
-func (mock *Fooer) Foo(f func(x string) string) error {
+func (mock *FooerMock) Foo(f func(x string) string) error {
 	if mock.FooFunc == nil {
-		panic("Fooer.FooFunc: method is nil but Fooer.Foo was just called")
+		panic("FooerMock.FooFunc: method is nil but Fooer.Foo was just called")
 	}
 	callInfo := struct {
 		F func(x string) string
@@ -159,7 +159,7 @@ func (mock *Fooer) Foo(f func(x string) string) error {
 // Check the length with:
 //
 //	len(mockedFooer.FooCalls())
-func (mock *Fooer) FooCalls() []struct {
+func (mock *FooerMock) FooCalls() []struct {
 	F func(x string) string
 } {
 	var calls []struct {
@@ -172,14 +172,14 @@ func (mock *Fooer) FooCalls() []struct {
 }
 
 // ResetFooCalls reset all the calls that were made to Foo.
-func (mock *Fooer) ResetFooCalls() {
+func (mock *FooerMock) ResetFooCalls() {
 	mock.lockFoo.Lock()
 	mock.calls.Foo = nil
 	mock.lockFoo.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *Fooer) ResetCalls() {
+func (mock *FooerMock) ResetCalls() {
 	mock.lockBar.Lock()
 	mock.calls.Bar = nil
 	mock.lockBar.Unlock()

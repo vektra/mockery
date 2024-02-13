@@ -9,12 +9,12 @@ import (
 	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// KeyManager is a mock implementation of KeyManager.
+// KeyManagerMock is a mock implementation of KeyManager.
 //
 //	func TestSomethingThatUsesKeyManager(t *testing.T) {
 //
 //		// make and configure a mocked KeyManager
-//		mockedKeyManager := &KeyManager{
+//		mockedKeyManager := &KeyManagerMock{
 //			GetKeyFunc: func(s string, v uint16) ([]byte, *test.Err) {
 //				panic("mock out the GetKey method")
 //			},
@@ -24,7 +24,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type KeyManager struct {
+type KeyManagerMock struct {
 	// GetKeyFunc mocks the GetKey method.
 	GetKeyFunc func(s string, v uint16) ([]byte, *test.Err)
 
@@ -42,9 +42,9 @@ type KeyManager struct {
 }
 
 // GetKey calls GetKeyFunc.
-func (mock *KeyManager) GetKey(s string, v uint16) ([]byte, *test.Err) {
+func (mock *KeyManagerMock) GetKey(s string, v uint16) ([]byte, *test.Err) {
 	if mock.GetKeyFunc == nil {
-		panic("KeyManager.GetKeyFunc: method is nil but KeyManager.GetKey was just called")
+		panic("KeyManagerMock.GetKeyFunc: method is nil but KeyManager.GetKey was just called")
 	}
 	callInfo := struct {
 		S string
@@ -63,7 +63,7 @@ func (mock *KeyManager) GetKey(s string, v uint16) ([]byte, *test.Err) {
 // Check the length with:
 //
 //	len(mockedKeyManager.GetKeyCalls())
-func (mock *KeyManager) GetKeyCalls() []struct {
+func (mock *KeyManagerMock) GetKeyCalls() []struct {
 	S string
 	V uint16
 } {
@@ -78,14 +78,14 @@ func (mock *KeyManager) GetKeyCalls() []struct {
 }
 
 // ResetGetKeyCalls reset all the calls that were made to GetKey.
-func (mock *KeyManager) ResetGetKeyCalls() {
+func (mock *KeyManagerMock) ResetGetKeyCalls() {
 	mock.lockGetKey.Lock()
 	mock.calls.GetKey = nil
 	mock.lockGetKey.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *KeyManager) ResetCalls() {
+func (mock *KeyManagerMock) ResetCalls() {
 	mock.lockGetKey.Lock()
 	mock.calls.GetKey = nil
 	mock.lockGetKey.Unlock()

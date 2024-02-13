@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// VariadicReturnFunc is a mock implementation of VariadicReturnFunc.
+// VariadicReturnFuncMock is a mock implementation of VariadicReturnFunc.
 //
 //	func TestSomethingThatUsesVariadicReturnFunc(t *testing.T) {
 //
 //		// make and configure a mocked VariadicReturnFunc
-//		mockedVariadicReturnFunc := &VariadicReturnFunc{
+//		mockedVariadicReturnFunc := &VariadicReturnFuncMock{
 //			SampleMethodFunc: func(str string) func(str string, arr []int, a ...interface{}) {
 //				panic("mock out the SampleMethod method")
 //			},
@@ -22,7 +22,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type VariadicReturnFunc struct {
+type VariadicReturnFuncMock struct {
 	// SampleMethodFunc mocks the SampleMethod method.
 	SampleMethodFunc func(str string) func(str string, arr []int, a ...interface{})
 
@@ -38,9 +38,9 @@ type VariadicReturnFunc struct {
 }
 
 // SampleMethod calls SampleMethodFunc.
-func (mock *VariadicReturnFunc) SampleMethod(str string) func(str string, arr []int, a ...interface{}) {
+func (mock *VariadicReturnFuncMock) SampleMethod(str string) func(str string, arr []int, a ...interface{}) {
 	if mock.SampleMethodFunc == nil {
-		panic("VariadicReturnFunc.SampleMethodFunc: method is nil but VariadicReturnFunc.SampleMethod was just called")
+		panic("VariadicReturnFuncMock.SampleMethodFunc: method is nil but VariadicReturnFunc.SampleMethod was just called")
 	}
 	callInfo := struct {
 		Str string
@@ -57,7 +57,7 @@ func (mock *VariadicReturnFunc) SampleMethod(str string) func(str string, arr []
 // Check the length with:
 //
 //	len(mockedVariadicReturnFunc.SampleMethodCalls())
-func (mock *VariadicReturnFunc) SampleMethodCalls() []struct {
+func (mock *VariadicReturnFuncMock) SampleMethodCalls() []struct {
 	Str string
 } {
 	var calls []struct {
@@ -70,14 +70,14 @@ func (mock *VariadicReturnFunc) SampleMethodCalls() []struct {
 }
 
 // ResetSampleMethodCalls reset all the calls that were made to SampleMethod.
-func (mock *VariadicReturnFunc) ResetSampleMethodCalls() {
+func (mock *VariadicReturnFuncMock) ResetSampleMethodCalls() {
 	mock.lockSampleMethod.Lock()
 	mock.calls.SampleMethod = nil
 	mock.lockSampleMethod.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *VariadicReturnFunc) ResetCalls() {
+func (mock *VariadicReturnFuncMock) ResetCalls() {
 	mock.lockSampleMethod.Lock()
 	mock.calls.SampleMethod = nil
 	mock.lockSampleMethod.Unlock()

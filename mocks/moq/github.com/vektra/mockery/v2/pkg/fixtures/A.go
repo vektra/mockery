@@ -9,12 +9,12 @@ import (
 	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// A is a mock implementation of A.
+// AMock is a mock implementation of A.
 //
 //	func TestSomethingThatUsesA(t *testing.T) {
 //
 //		// make and configure a mocked A
-//		mockedA := &A{
+//		mockedA := &AMock{
 //			CallFunc: func() (test.B, error) {
 //				panic("mock out the Call method")
 //			},
@@ -24,7 +24,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type A struct {
+type AMock struct {
 	// CallFunc mocks the Call method.
 	CallFunc func() (test.B, error)
 
@@ -38,9 +38,9 @@ type A struct {
 }
 
 // Call calls CallFunc.
-func (mock *A) Call() (test.B, error) {
+func (mock *AMock) Call() (test.B, error) {
 	if mock.CallFunc == nil {
-		panic("A.CallFunc: method is nil but A.Call was just called")
+		panic("AMock.CallFunc: method is nil but A.Call was just called")
 	}
 	callInfo := struct {
 	}{}
@@ -54,7 +54,7 @@ func (mock *A) Call() (test.B, error) {
 // Check the length with:
 //
 //	len(mockedA.CallCalls())
-func (mock *A) CallCalls() []struct {
+func (mock *AMock) CallCalls() []struct {
 } {
 	var calls []struct {
 	}
@@ -65,14 +65,14 @@ func (mock *A) CallCalls() []struct {
 }
 
 // ResetCallCalls reset all the calls that were made to Call.
-func (mock *A) ResetCallCalls() {
+func (mock *AMock) ResetCallCalls() {
 	mock.lockCall.Lock()
 	mock.calls.Call = nil
 	mock.lockCall.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *A) ResetCalls() {
+func (mock *AMock) ResetCalls() {
 	mock.lockCall.Lock()
 	mock.calls.Call = nil
 	mock.lockCall.Unlock()

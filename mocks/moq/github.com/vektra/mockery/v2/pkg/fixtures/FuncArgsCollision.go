@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// FuncArgsCollision is a mock implementation of FuncArgsCollision.
+// FuncArgsCollisionMock is a mock implementation of FuncArgsCollision.
 //
 //	func TestSomethingThatUsesFuncArgsCollision(t *testing.T) {
 //
 //		// make and configure a mocked FuncArgsCollision
-//		mockedFuncArgsCollision := &FuncArgsCollision{
+//		mockedFuncArgsCollision := &FuncArgsCollisionMock{
 //			FooFunc: func(ret interface{}) error {
 //				panic("mock out the Foo method")
 //			},
@@ -22,7 +22,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type FuncArgsCollision struct {
+type FuncArgsCollisionMock struct {
 	// FooFunc mocks the Foo method.
 	FooFunc func(ret interface{}) error
 
@@ -38,9 +38,9 @@ type FuncArgsCollision struct {
 }
 
 // Foo calls FooFunc.
-func (mock *FuncArgsCollision) Foo(ret interface{}) error {
+func (mock *FuncArgsCollisionMock) Foo(ret interface{}) error {
 	if mock.FooFunc == nil {
-		panic("FuncArgsCollision.FooFunc: method is nil but FuncArgsCollision.Foo was just called")
+		panic("FuncArgsCollisionMock.FooFunc: method is nil but FuncArgsCollision.Foo was just called")
 	}
 	callInfo := struct {
 		Ret interface{}
@@ -57,7 +57,7 @@ func (mock *FuncArgsCollision) Foo(ret interface{}) error {
 // Check the length with:
 //
 //	len(mockedFuncArgsCollision.FooCalls())
-func (mock *FuncArgsCollision) FooCalls() []struct {
+func (mock *FuncArgsCollisionMock) FooCalls() []struct {
 	Ret interface{}
 } {
 	var calls []struct {
@@ -70,14 +70,14 @@ func (mock *FuncArgsCollision) FooCalls() []struct {
 }
 
 // ResetFooCalls reset all the calls that were made to Foo.
-func (mock *FuncArgsCollision) ResetFooCalls() {
+func (mock *FuncArgsCollisionMock) ResetFooCalls() {
 	mock.lockFoo.Lock()
 	mock.calls.Foo = nil
 	mock.lockFoo.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *FuncArgsCollision) ResetCalls() {
+func (mock *FuncArgsCollisionMock) ResetCalls() {
 	mock.lockFoo.Lock()
 	mock.calls.Foo = nil
 	mock.lockFoo.Unlock()

@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// Blank is a mock implementation of Blank.
+// BlankMock is a mock implementation of Blank.
 //
 //	func TestSomethingThatUsesBlank(t *testing.T) {
 //
 //		// make and configure a mocked Blank
-//		mockedBlank := &Blank{
+//		mockedBlank := &BlankMock{
 //			CreateFunc: func(x interface{}) error {
 //				panic("mock out the Create method")
 //			},
@@ -22,7 +22,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type Blank struct {
+type BlankMock struct {
 	// CreateFunc mocks the Create method.
 	CreateFunc func(x interface{}) error
 
@@ -38,9 +38,9 @@ type Blank struct {
 }
 
 // Create calls CreateFunc.
-func (mock *Blank) Create(x interface{}) error {
+func (mock *BlankMock) Create(x interface{}) error {
 	if mock.CreateFunc == nil {
-		panic("Blank.CreateFunc: method is nil but Blank.Create was just called")
+		panic("BlankMock.CreateFunc: method is nil but Blank.Create was just called")
 	}
 	callInfo := struct {
 		X interface{}
@@ -57,7 +57,7 @@ func (mock *Blank) Create(x interface{}) error {
 // Check the length with:
 //
 //	len(mockedBlank.CreateCalls())
-func (mock *Blank) CreateCalls() []struct {
+func (mock *BlankMock) CreateCalls() []struct {
 	X interface{}
 } {
 	var calls []struct {
@@ -70,14 +70,14 @@ func (mock *Blank) CreateCalls() []struct {
 }
 
 // ResetCreateCalls reset all the calls that were made to Create.
-func (mock *Blank) ResetCreateCalls() {
+func (mock *BlankMock) ResetCreateCalls() {
 	mock.lockCreate.Lock()
 	mock.calls.Create = nil
 	mock.lockCreate.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *Blank) ResetCalls() {
+func (mock *BlankMock) ResetCalls() {
 	mock.lockCreate.Lock()
 	mock.calls.Create = nil
 	mock.lockCreate.Unlock()

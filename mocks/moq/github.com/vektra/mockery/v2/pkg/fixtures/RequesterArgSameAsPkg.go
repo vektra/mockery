@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// RequesterArgSameAsPkg is a mock implementation of RequesterArgSameAsPkg.
+// RequesterArgSameAsPkgMock is a mock implementation of RequesterArgSameAsPkg.
 //
 //	func TestSomethingThatUsesRequesterArgSameAsPkg(t *testing.T) {
 //
 //		// make and configure a mocked RequesterArgSameAsPkg
-//		mockedRequesterArgSameAsPkg := &RequesterArgSameAsPkg{
+//		mockedRequesterArgSameAsPkg := &RequesterArgSameAsPkgMock{
 //			GetFunc: func(test string)  {
 //				panic("mock out the Get method")
 //			},
@@ -22,7 +22,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type RequesterArgSameAsPkg struct {
+type RequesterArgSameAsPkgMock struct {
 	// GetFunc mocks the Get method.
 	GetFunc func(test string)
 
@@ -38,9 +38,9 @@ type RequesterArgSameAsPkg struct {
 }
 
 // Get calls GetFunc.
-func (mock *RequesterArgSameAsPkg) Get(test string) {
+func (mock *RequesterArgSameAsPkgMock) Get(test string) {
 	if mock.GetFunc == nil {
-		panic("RequesterArgSameAsPkg.GetFunc: method is nil but RequesterArgSameAsPkg.Get was just called")
+		panic("RequesterArgSameAsPkgMock.GetFunc: method is nil but RequesterArgSameAsPkg.Get was just called")
 	}
 	callInfo := struct {
 		Test string
@@ -57,7 +57,7 @@ func (mock *RequesterArgSameAsPkg) Get(test string) {
 // Check the length with:
 //
 //	len(mockedRequesterArgSameAsPkg.GetCalls())
-func (mock *RequesterArgSameAsPkg) GetCalls() []struct {
+func (mock *RequesterArgSameAsPkgMock) GetCalls() []struct {
 	Test string
 } {
 	var calls []struct {
@@ -70,14 +70,14 @@ func (mock *RequesterArgSameAsPkg) GetCalls() []struct {
 }
 
 // ResetGetCalls reset all the calls that were made to Get.
-func (mock *RequesterArgSameAsPkg) ResetGetCalls() {
+func (mock *RequesterArgSameAsPkgMock) ResetGetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *RequesterArgSameAsPkg) ResetCalls() {
+func (mock *RequesterArgSameAsPkgMock) ResetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()

@@ -9,12 +9,12 @@ import (
 	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// UsesOtherPkgIface is a mock implementation of UsesOtherPkgIface.
+// UsesOtherPkgIfaceMock is a mock implementation of UsesOtherPkgIface.
 //
 //	func TestSomethingThatUsesUsesOtherPkgIface(t *testing.T) {
 //
 //		// make and configure a mocked UsesOtherPkgIface
-//		mockedUsesOtherPkgIface := &UsesOtherPkgIface{
+//		mockedUsesOtherPkgIface := &UsesOtherPkgIfaceMock{
 //			DoSomethingElseFunc: func(obj test.Sibling)  {
 //				panic("mock out the DoSomethingElse method")
 //			},
@@ -24,7 +24,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type UsesOtherPkgIface struct {
+type UsesOtherPkgIfaceMock struct {
 	// DoSomethingElseFunc mocks the DoSomethingElse method.
 	DoSomethingElseFunc func(obj test.Sibling)
 
@@ -40,9 +40,9 @@ type UsesOtherPkgIface struct {
 }
 
 // DoSomethingElse calls DoSomethingElseFunc.
-func (mock *UsesOtherPkgIface) DoSomethingElse(obj test.Sibling) {
+func (mock *UsesOtherPkgIfaceMock) DoSomethingElse(obj test.Sibling) {
 	if mock.DoSomethingElseFunc == nil {
-		panic("UsesOtherPkgIface.DoSomethingElseFunc: method is nil but UsesOtherPkgIface.DoSomethingElse was just called")
+		panic("UsesOtherPkgIfaceMock.DoSomethingElseFunc: method is nil but UsesOtherPkgIface.DoSomethingElse was just called")
 	}
 	callInfo := struct {
 		Obj test.Sibling
@@ -59,7 +59,7 @@ func (mock *UsesOtherPkgIface) DoSomethingElse(obj test.Sibling) {
 // Check the length with:
 //
 //	len(mockedUsesOtherPkgIface.DoSomethingElseCalls())
-func (mock *UsesOtherPkgIface) DoSomethingElseCalls() []struct {
+func (mock *UsesOtherPkgIfaceMock) DoSomethingElseCalls() []struct {
 	Obj test.Sibling
 } {
 	var calls []struct {
@@ -72,14 +72,14 @@ func (mock *UsesOtherPkgIface) DoSomethingElseCalls() []struct {
 }
 
 // ResetDoSomethingElseCalls reset all the calls that were made to DoSomethingElse.
-func (mock *UsesOtherPkgIface) ResetDoSomethingElseCalls() {
+func (mock *UsesOtherPkgIfaceMock) ResetDoSomethingElseCalls() {
 	mock.lockDoSomethingElse.Lock()
 	mock.calls.DoSomethingElse = nil
 	mock.lockDoSomethingElse.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *UsesOtherPkgIface) ResetCalls() {
+func (mock *UsesOtherPkgIfaceMock) ResetCalls() {
 	mock.lockDoSomethingElse.Lock()
 	mock.calls.DoSomethingElse = nil
 	mock.lockDoSomethingElse.Unlock()

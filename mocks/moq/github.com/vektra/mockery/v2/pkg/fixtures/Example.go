@@ -10,12 +10,12 @@ import (
 	my_http "github.com/vektra/mockery/v2/pkg/fixtures/http"
 )
 
-// Example is a mock implementation of Example.
+// ExampleMock is a mock implementation of Example.
 //
 //	func TestSomethingThatUsesExample(t *testing.T) {
 //
 //		// make and configure a mocked Example
-//		mockedExample := &Example{
+//		mockedExample := &ExampleMock{
 //			AFunc: func() http.Flusher {
 //				panic("mock out the A method")
 //			},
@@ -28,7 +28,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type Example struct {
+type ExampleMock struct {
 	// AFunc mocks the A method.
 	AFunc func() http.Flusher
 
@@ -51,9 +51,9 @@ type Example struct {
 }
 
 // A calls AFunc.
-func (mock *Example) A() http.Flusher {
+func (mock *ExampleMock) A() http.Flusher {
 	if mock.AFunc == nil {
-		panic("Example.AFunc: method is nil but Example.A was just called")
+		panic("ExampleMock.AFunc: method is nil but Example.A was just called")
 	}
 	callInfo := struct {
 	}{}
@@ -67,7 +67,7 @@ func (mock *Example) A() http.Flusher {
 // Check the length with:
 //
 //	len(mockedExample.ACalls())
-func (mock *Example) ACalls() []struct {
+func (mock *ExampleMock) ACalls() []struct {
 } {
 	var calls []struct {
 	}
@@ -78,16 +78,16 @@ func (mock *Example) ACalls() []struct {
 }
 
 // ResetACalls reset all the calls that were made to A.
-func (mock *Example) ResetACalls() {
+func (mock *ExampleMock) ResetACalls() {
 	mock.lockA.Lock()
 	mock.calls.A = nil
 	mock.lockA.Unlock()
 }
 
 // B calls BFunc.
-func (mock *Example) B(fixtureshttp string) my_http.MyStruct {
+func (mock *ExampleMock) B(fixtureshttp string) my_http.MyStruct {
 	if mock.BFunc == nil {
-		panic("Example.BFunc: method is nil but Example.B was just called")
+		panic("ExampleMock.BFunc: method is nil but Example.B was just called")
 	}
 	callInfo := struct {
 		Fixtureshttp string
@@ -104,7 +104,7 @@ func (mock *Example) B(fixtureshttp string) my_http.MyStruct {
 // Check the length with:
 //
 //	len(mockedExample.BCalls())
-func (mock *Example) BCalls() []struct {
+func (mock *ExampleMock) BCalls() []struct {
 	Fixtureshttp string
 } {
 	var calls []struct {
@@ -117,14 +117,14 @@ func (mock *Example) BCalls() []struct {
 }
 
 // ResetBCalls reset all the calls that were made to B.
-func (mock *Example) ResetBCalls() {
+func (mock *ExampleMock) ResetBCalls() {
 	mock.lockB.Lock()
 	mock.calls.B = nil
 	mock.lockB.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *Example) ResetCalls() {
+func (mock *ExampleMock) ResetCalls() {
 	mock.lockA.Lock()
 	mock.calls.A = nil
 	mock.lockA.Unlock()

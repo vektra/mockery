@@ -10,12 +10,12 @@ import (
 	my_http "github.com/vektra/mockery/v2/pkg/fixtures/http"
 )
 
-// HasConflictingNestedImports is a mock implementation of HasConflictingNestedImports.
+// HasConflictingNestedImportsMock is a mock implementation of HasConflictingNestedImports.
 //
 //	func TestSomethingThatUsesHasConflictingNestedImports(t *testing.T) {
 //
 //		// make and configure a mocked HasConflictingNestedImports
-//		mockedHasConflictingNestedImports := &HasConflictingNestedImports{
+//		mockedHasConflictingNestedImports := &HasConflictingNestedImportsMock{
 //			GetFunc: func(path string) (http.Response, error) {
 //				panic("mock out the Get method")
 //			},
@@ -28,7 +28,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type HasConflictingNestedImports struct {
+type HasConflictingNestedImportsMock struct {
 	// GetFunc mocks the Get method.
 	GetFunc func(path string) (http.Response, error)
 
@@ -51,9 +51,9 @@ type HasConflictingNestedImports struct {
 }
 
 // Get calls GetFunc.
-func (mock *HasConflictingNestedImports) Get(path string) (http.Response, error) {
+func (mock *HasConflictingNestedImportsMock) Get(path string) (http.Response, error) {
 	if mock.GetFunc == nil {
-		panic("HasConflictingNestedImports.GetFunc: method is nil but HasConflictingNestedImports.Get was just called")
+		panic("HasConflictingNestedImportsMock.GetFunc: method is nil but HasConflictingNestedImports.Get was just called")
 	}
 	callInfo := struct {
 		Path string
@@ -70,7 +70,7 @@ func (mock *HasConflictingNestedImports) Get(path string) (http.Response, error)
 // Check the length with:
 //
 //	len(mockedHasConflictingNestedImports.GetCalls())
-func (mock *HasConflictingNestedImports) GetCalls() []struct {
+func (mock *HasConflictingNestedImportsMock) GetCalls() []struct {
 	Path string
 } {
 	var calls []struct {
@@ -83,16 +83,16 @@ func (mock *HasConflictingNestedImports) GetCalls() []struct {
 }
 
 // ResetGetCalls reset all the calls that were made to Get.
-func (mock *HasConflictingNestedImports) ResetGetCalls() {
+func (mock *HasConflictingNestedImportsMock) ResetGetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()
 }
 
 // Z calls ZFunc.
-func (mock *HasConflictingNestedImports) Z() my_http.MyStruct {
+func (mock *HasConflictingNestedImportsMock) Z() my_http.MyStruct {
 	if mock.ZFunc == nil {
-		panic("HasConflictingNestedImports.ZFunc: method is nil but HasConflictingNestedImports.Z was just called")
+		panic("HasConflictingNestedImportsMock.ZFunc: method is nil but HasConflictingNestedImports.Z was just called")
 	}
 	callInfo := struct {
 	}{}
@@ -106,7 +106,7 @@ func (mock *HasConflictingNestedImports) Z() my_http.MyStruct {
 // Check the length with:
 //
 //	len(mockedHasConflictingNestedImports.ZCalls())
-func (mock *HasConflictingNestedImports) ZCalls() []struct {
+func (mock *HasConflictingNestedImportsMock) ZCalls() []struct {
 } {
 	var calls []struct {
 	}
@@ -117,14 +117,14 @@ func (mock *HasConflictingNestedImports) ZCalls() []struct {
 }
 
 // ResetZCalls reset all the calls that were made to Z.
-func (mock *HasConflictingNestedImports) ResetZCalls() {
+func (mock *HasConflictingNestedImportsMock) ResetZCalls() {
 	mock.lockZ.Lock()
 	mock.calls.Z = nil
 	mock.lockZ.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *HasConflictingNestedImports) ResetCalls() {
+func (mock *HasConflictingNestedImportsMock) ResetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()

@@ -10,12 +10,12 @@ import (
 	redefinedtypeb "github.com/vektra/mockery/v2/pkg/fixtures/redefined_type_b"
 )
 
-// ImportsSameAsPackage is a mock implementation of ImportsSameAsPackage.
+// ImportsSameAsPackageMock is a mock implementation of ImportsSameAsPackage.
 //
 //	func TestSomethingThatUsesImportsSameAsPackage(t *testing.T) {
 //
 //		// make and configure a mocked ImportsSameAsPackage
-//		mockedImportsSameAsPackage := &ImportsSameAsPackage{
+//		mockedImportsSameAsPackage := &ImportsSameAsPackageMock{
 //			AFunc: func() redefinedtypeb.B {
 //				panic("mock out the A method")
 //			},
@@ -31,7 +31,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type ImportsSameAsPackage struct {
+type ImportsSameAsPackageMock struct {
 	// AFunc mocks the A method.
 	AFunc func() redefinedtypeb.B
 
@@ -61,9 +61,9 @@ type ImportsSameAsPackage struct {
 }
 
 // A calls AFunc.
-func (mock *ImportsSameAsPackage) A() redefinedtypeb.B {
+func (mock *ImportsSameAsPackageMock) A() redefinedtypeb.B {
 	if mock.AFunc == nil {
-		panic("ImportsSameAsPackage.AFunc: method is nil but ImportsSameAsPackage.A was just called")
+		panic("ImportsSameAsPackageMock.AFunc: method is nil but ImportsSameAsPackage.A was just called")
 	}
 	callInfo := struct {
 	}{}
@@ -77,7 +77,7 @@ func (mock *ImportsSameAsPackage) A() redefinedtypeb.B {
 // Check the length with:
 //
 //	len(mockedImportsSameAsPackage.ACalls())
-func (mock *ImportsSameAsPackage) ACalls() []struct {
+func (mock *ImportsSameAsPackageMock) ACalls() []struct {
 } {
 	var calls []struct {
 	}
@@ -88,16 +88,16 @@ func (mock *ImportsSameAsPackage) ACalls() []struct {
 }
 
 // ResetACalls reset all the calls that were made to A.
-func (mock *ImportsSameAsPackage) ResetACalls() {
+func (mock *ImportsSameAsPackageMock) ResetACalls() {
 	mock.lockA.Lock()
 	mock.calls.A = nil
 	mock.lockA.Unlock()
 }
 
 // B calls BFunc.
-func (mock *ImportsSameAsPackage) B() fixtures.KeyManager {
+func (mock *ImportsSameAsPackageMock) B() fixtures.KeyManager {
 	if mock.BFunc == nil {
-		panic("ImportsSameAsPackage.BFunc: method is nil but ImportsSameAsPackage.B was just called")
+		panic("ImportsSameAsPackageMock.BFunc: method is nil but ImportsSameAsPackage.B was just called")
 	}
 	callInfo := struct {
 	}{}
@@ -111,7 +111,7 @@ func (mock *ImportsSameAsPackage) B() fixtures.KeyManager {
 // Check the length with:
 //
 //	len(mockedImportsSameAsPackage.BCalls())
-func (mock *ImportsSameAsPackage) BCalls() []struct {
+func (mock *ImportsSameAsPackageMock) BCalls() []struct {
 } {
 	var calls []struct {
 	}
@@ -122,16 +122,16 @@ func (mock *ImportsSameAsPackage) BCalls() []struct {
 }
 
 // ResetBCalls reset all the calls that were made to B.
-func (mock *ImportsSameAsPackage) ResetBCalls() {
+func (mock *ImportsSameAsPackageMock) ResetBCalls() {
 	mock.lockB.Lock()
 	mock.calls.B = nil
 	mock.lockB.Unlock()
 }
 
 // C calls CFunc.
-func (mock *ImportsSameAsPackage) C(c fixtures.C) {
+func (mock *ImportsSameAsPackageMock) C(c fixtures.C) {
 	if mock.CFunc == nil {
-		panic("ImportsSameAsPackage.CFunc: method is nil but ImportsSameAsPackage.C was just called")
+		panic("ImportsSameAsPackageMock.CFunc: method is nil but ImportsSameAsPackage.C was just called")
 	}
 	callInfo := struct {
 		C fixtures.C
@@ -148,7 +148,7 @@ func (mock *ImportsSameAsPackage) C(c fixtures.C) {
 // Check the length with:
 //
 //	len(mockedImportsSameAsPackage.CCalls())
-func (mock *ImportsSameAsPackage) CCalls() []struct {
+func (mock *ImportsSameAsPackageMock) CCalls() []struct {
 	C fixtures.C
 } {
 	var calls []struct {
@@ -161,14 +161,14 @@ func (mock *ImportsSameAsPackage) CCalls() []struct {
 }
 
 // ResetCCalls reset all the calls that were made to C.
-func (mock *ImportsSameAsPackage) ResetCCalls() {
+func (mock *ImportsSameAsPackageMock) ResetCCalls() {
 	mock.lockC.Lock()
 	mock.calls.C = nil
 	mock.lockC.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *ImportsSameAsPackage) ResetCalls() {
+func (mock *ImportsSameAsPackageMock) ResetCalls() {
 	mock.lockA.Lock()
 	mock.calls.A = nil
 	mock.lockA.Unlock()

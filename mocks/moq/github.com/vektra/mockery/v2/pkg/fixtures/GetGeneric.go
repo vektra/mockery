@@ -9,12 +9,12 @@ import (
 	"github.com/vektra/mockery/v2/pkg/fixtures/constraints"
 )
 
-// GetGeneric is a mock implementation of GetGeneric.
+// GetGenericMock is a mock implementation of GetGeneric.
 //
 //	func TestSomethingThatUsesGetGeneric(t *testing.T) {
 //
 //		// make and configure a mocked GetGeneric
-//		mockedGetGeneric := &GetGeneric{
+//		mockedGetGeneric := &GetGenericMock{
 //			GetFunc: func() T {
 //				panic("mock out the Get method")
 //			},
@@ -24,7 +24,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type GetGeneric[T constraints.Integer] struct {
+type GetGenericMock[T constraints.Integer] struct {
 	// GetFunc mocks the Get method.
 	GetFunc func() T
 
@@ -38,9 +38,9 @@ type GetGeneric[T constraints.Integer] struct {
 }
 
 // Get calls GetFunc.
-func (mock *GetGeneric[T]) Get() T {
+func (mock *GetGenericMock[T]) Get() T {
 	if mock.GetFunc == nil {
-		panic("GetGeneric.GetFunc: method is nil but GetGeneric.Get was just called")
+		panic("GetGenericMock.GetFunc: method is nil but GetGeneric.Get was just called")
 	}
 	callInfo := struct {
 	}{}
@@ -54,7 +54,7 @@ func (mock *GetGeneric[T]) Get() T {
 // Check the length with:
 //
 //	len(mockedGetGeneric.GetCalls())
-func (mock *GetGeneric[T]) GetCalls() []struct {
+func (mock *GetGenericMock[T]) GetCalls() []struct {
 } {
 	var calls []struct {
 	}
@@ -65,14 +65,14 @@ func (mock *GetGeneric[T]) GetCalls() []struct {
 }
 
 // ResetGetCalls reset all the calls that were made to Get.
-func (mock *GetGeneric[T]) ResetGetCalls() {
+func (mock *GetGenericMock[T]) ResetGetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *GetGeneric[T]) ResetCalls() {
+func (mock *GetGenericMock[T]) ResetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()

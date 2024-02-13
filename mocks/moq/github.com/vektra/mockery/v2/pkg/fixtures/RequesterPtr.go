@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// RequesterPtr is a mock implementation of RequesterPtr.
+// RequesterPtrMock is a mock implementation of RequesterPtr.
 //
 //	func TestSomethingThatUsesRequesterPtr(t *testing.T) {
 //
 //		// make and configure a mocked RequesterPtr
-//		mockedRequesterPtr := &RequesterPtr{
+//		mockedRequesterPtr := &RequesterPtrMock{
 //			GetFunc: func(path string) (*string, error) {
 //				panic("mock out the Get method")
 //			},
@@ -22,7 +22,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type RequesterPtr struct {
+type RequesterPtrMock struct {
 	// GetFunc mocks the Get method.
 	GetFunc func(path string) (*string, error)
 
@@ -38,9 +38,9 @@ type RequesterPtr struct {
 }
 
 // Get calls GetFunc.
-func (mock *RequesterPtr) Get(path string) (*string, error) {
+func (mock *RequesterPtrMock) Get(path string) (*string, error) {
 	if mock.GetFunc == nil {
-		panic("RequesterPtr.GetFunc: method is nil but RequesterPtr.Get was just called")
+		panic("RequesterPtrMock.GetFunc: method is nil but RequesterPtr.Get was just called")
 	}
 	callInfo := struct {
 		Path string
@@ -57,7 +57,7 @@ func (mock *RequesterPtr) Get(path string) (*string, error) {
 // Check the length with:
 //
 //	len(mockedRequesterPtr.GetCalls())
-func (mock *RequesterPtr) GetCalls() []struct {
+func (mock *RequesterPtrMock) GetCalls() []struct {
 	Path string
 } {
 	var calls []struct {
@@ -70,14 +70,14 @@ func (mock *RequesterPtr) GetCalls() []struct {
 }
 
 // ResetGetCalls reset all the calls that were made to Get.
-func (mock *RequesterPtr) ResetGetCalls() {
+func (mock *RequesterPtrMock) ResetGetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *RequesterPtr) ResetCalls() {
+func (mock *RequesterPtrMock) ResetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()

@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// MyReader is a mock implementation of MyReader.
+// MyReaderMock is a mock implementation of MyReader.
 //
 //	func TestSomethingThatUsesMyReader(t *testing.T) {
 //
 //		// make and configure a mocked MyReader
-//		mockedMyReader := &MyReader{
+//		mockedMyReader := &MyReaderMock{
 //			ReadFunc: func(p []byte) (int, error) {
 //				panic("mock out the Read method")
 //			},
@@ -22,7 +22,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type MyReader struct {
+type MyReaderMock struct {
 	// ReadFunc mocks the Read method.
 	ReadFunc func(p []byte) (int, error)
 
@@ -38,9 +38,9 @@ type MyReader struct {
 }
 
 // Read calls ReadFunc.
-func (mock *MyReader) Read(p []byte) (int, error) {
+func (mock *MyReaderMock) Read(p []byte) (int, error) {
 	if mock.ReadFunc == nil {
-		panic("MyReader.ReadFunc: method is nil but MyReader.Read was just called")
+		panic("MyReaderMock.ReadFunc: method is nil but MyReader.Read was just called")
 	}
 	callInfo := struct {
 		P []byte
@@ -57,7 +57,7 @@ func (mock *MyReader) Read(p []byte) (int, error) {
 // Check the length with:
 //
 //	len(mockedMyReader.ReadCalls())
-func (mock *MyReader) ReadCalls() []struct {
+func (mock *MyReaderMock) ReadCalls() []struct {
 	P []byte
 } {
 	var calls []struct {
@@ -70,14 +70,14 @@ func (mock *MyReader) ReadCalls() []struct {
 }
 
 // ResetReadCalls reset all the calls that were made to Read.
-func (mock *MyReader) ResetReadCalls() {
+func (mock *MyReaderMock) ResetReadCalls() {
 	mock.lockRead.Lock()
 	mock.calls.Read = nil
 	mock.lockRead.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *MyReader) ResetCalls() {
+func (mock *MyReaderMock) ResetCalls() {
 	mock.lockRead.Lock()
 	mock.calls.Read = nil
 	mock.lockRead.Unlock()

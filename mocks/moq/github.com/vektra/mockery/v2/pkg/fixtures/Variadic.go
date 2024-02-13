@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// Variadic is a mock implementation of Variadic.
+// VariadicMock is a mock implementation of Variadic.
 //
 //	func TestSomethingThatUsesVariadic(t *testing.T) {
 //
 //		// make and configure a mocked Variadic
-//		mockedVariadic := &Variadic{
+//		mockedVariadic := &VariadicMock{
 //			VariadicFunctionFunc: func(str string, vFunc func(args1 string, args2 ...interface{}) interface{}) error {
 //				panic("mock out the VariadicFunction method")
 //			},
@@ -22,7 +22,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type Variadic struct {
+type VariadicMock struct {
 	// VariadicFunctionFunc mocks the VariadicFunction method.
 	VariadicFunctionFunc func(str string, vFunc func(args1 string, args2 ...interface{}) interface{}) error
 
@@ -40,9 +40,9 @@ type Variadic struct {
 }
 
 // VariadicFunction calls VariadicFunctionFunc.
-func (mock *Variadic) VariadicFunction(str string, vFunc func(args1 string, args2 ...interface{}) interface{}) error {
+func (mock *VariadicMock) VariadicFunction(str string, vFunc func(args1 string, args2 ...interface{}) interface{}) error {
 	if mock.VariadicFunctionFunc == nil {
-		panic("Variadic.VariadicFunctionFunc: method is nil but Variadic.VariadicFunction was just called")
+		panic("VariadicMock.VariadicFunctionFunc: method is nil but Variadic.VariadicFunction was just called")
 	}
 	callInfo := struct {
 		Str   string
@@ -61,7 +61,7 @@ func (mock *Variadic) VariadicFunction(str string, vFunc func(args1 string, args
 // Check the length with:
 //
 //	len(mockedVariadic.VariadicFunctionCalls())
-func (mock *Variadic) VariadicFunctionCalls() []struct {
+func (mock *VariadicMock) VariadicFunctionCalls() []struct {
 	Str   string
 	VFunc func(args1 string, args2 ...interface{}) interface{}
 } {
@@ -76,14 +76,14 @@ func (mock *Variadic) VariadicFunctionCalls() []struct {
 }
 
 // ResetVariadicFunctionCalls reset all the calls that were made to VariadicFunction.
-func (mock *Variadic) ResetVariadicFunctionCalls() {
+func (mock *VariadicMock) ResetVariadicFunctionCalls() {
 	mock.lockVariadicFunction.Lock()
 	mock.calls.VariadicFunction = nil
 	mock.lockVariadicFunction.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *Variadic) ResetCalls() {
+func (mock *VariadicMock) ResetCalls() {
 	mock.lockVariadicFunction.Lock()
 	mock.calls.VariadicFunction = nil
 	mock.lockVariadicFunction.Unlock()

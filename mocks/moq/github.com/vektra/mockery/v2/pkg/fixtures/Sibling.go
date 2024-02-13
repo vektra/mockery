@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// Sibling is a mock implementation of Sibling.
+// SiblingMock is a mock implementation of Sibling.
 //
 //	func TestSomethingThatUsesSibling(t *testing.T) {
 //
 //		// make and configure a mocked Sibling
-//		mockedSibling := &Sibling{
+//		mockedSibling := &SiblingMock{
 //			DoSomethingFunc: func()  {
 //				panic("mock out the DoSomething method")
 //			},
@@ -22,7 +22,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type Sibling struct {
+type SiblingMock struct {
 	// DoSomethingFunc mocks the DoSomething method.
 	DoSomethingFunc func()
 
@@ -36,9 +36,9 @@ type Sibling struct {
 }
 
 // DoSomething calls DoSomethingFunc.
-func (mock *Sibling) DoSomething() {
+func (mock *SiblingMock) DoSomething() {
 	if mock.DoSomethingFunc == nil {
-		panic("Sibling.DoSomethingFunc: method is nil but Sibling.DoSomething was just called")
+		panic("SiblingMock.DoSomethingFunc: method is nil but Sibling.DoSomething was just called")
 	}
 	callInfo := struct {
 	}{}
@@ -52,7 +52,7 @@ func (mock *Sibling) DoSomething() {
 // Check the length with:
 //
 //	len(mockedSibling.DoSomethingCalls())
-func (mock *Sibling) DoSomethingCalls() []struct {
+func (mock *SiblingMock) DoSomethingCalls() []struct {
 } {
 	var calls []struct {
 	}
@@ -63,14 +63,14 @@ func (mock *Sibling) DoSomethingCalls() []struct {
 }
 
 // ResetDoSomethingCalls reset all the calls that were made to DoSomething.
-func (mock *Sibling) ResetDoSomethingCalls() {
+func (mock *SiblingMock) ResetDoSomethingCalls() {
 	mock.lockDoSomething.Lock()
 	mock.calls.DoSomething = nil
 	mock.lockDoSomething.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *Sibling) ResetCalls() {
+func (mock *SiblingMock) ResetCalls() {
 	mock.lockDoSomething.Lock()
 	mock.calls.DoSomething = nil
 	mock.lockDoSomething.Unlock()

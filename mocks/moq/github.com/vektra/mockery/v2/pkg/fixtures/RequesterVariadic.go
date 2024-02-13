@@ -8,12 +8,12 @@ import (
 	"sync"
 )
 
-// RequesterVariadic is a mock implementation of RequesterVariadic.
+// RequesterVariadicMock is a mock implementation of RequesterVariadic.
 //
 //	func TestSomethingThatUsesRequesterVariadic(t *testing.T) {
 //
 //		// make and configure a mocked RequesterVariadic
-//		mockedRequesterVariadic := &RequesterVariadic{
+//		mockedRequesterVariadic := &RequesterVariadicMock{
 //			GetFunc: func(values ...string) bool {
 //				panic("mock out the Get method")
 //			},
@@ -32,7 +32,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type RequesterVariadic struct {
+type RequesterVariadicMock struct {
 	// GetFunc mocks the Get method.
 	GetFunc func(values ...string) bool
 
@@ -79,9 +79,9 @@ type RequesterVariadic struct {
 }
 
 // Get calls GetFunc.
-func (mock *RequesterVariadic) Get(values ...string) bool {
+func (mock *RequesterVariadicMock) Get(values ...string) bool {
 	if mock.GetFunc == nil {
-		panic("RequesterVariadic.GetFunc: method is nil but RequesterVariadic.Get was just called")
+		panic("RequesterVariadicMock.GetFunc: method is nil but RequesterVariadic.Get was just called")
 	}
 	callInfo := struct {
 		Values []string
@@ -98,7 +98,7 @@ func (mock *RequesterVariadic) Get(values ...string) bool {
 // Check the length with:
 //
 //	len(mockedRequesterVariadic.GetCalls())
-func (mock *RequesterVariadic) GetCalls() []struct {
+func (mock *RequesterVariadicMock) GetCalls() []struct {
 	Values []string
 } {
 	var calls []struct {
@@ -111,16 +111,16 @@ func (mock *RequesterVariadic) GetCalls() []struct {
 }
 
 // ResetGetCalls reset all the calls that were made to Get.
-func (mock *RequesterVariadic) ResetGetCalls() {
+func (mock *RequesterVariadicMock) ResetGetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()
 }
 
 // MultiWriteToFile calls MultiWriteToFileFunc.
-func (mock *RequesterVariadic) MultiWriteToFile(filename string, w ...io.Writer) string {
+func (mock *RequesterVariadicMock) MultiWriteToFile(filename string, w ...io.Writer) string {
 	if mock.MultiWriteToFileFunc == nil {
-		panic("RequesterVariadic.MultiWriteToFileFunc: method is nil but RequesterVariadic.MultiWriteToFile was just called")
+		panic("RequesterVariadicMock.MultiWriteToFileFunc: method is nil but RequesterVariadic.MultiWriteToFile was just called")
 	}
 	callInfo := struct {
 		Filename string
@@ -139,7 +139,7 @@ func (mock *RequesterVariadic) MultiWriteToFile(filename string, w ...io.Writer)
 // Check the length with:
 //
 //	len(mockedRequesterVariadic.MultiWriteToFileCalls())
-func (mock *RequesterVariadic) MultiWriteToFileCalls() []struct {
+func (mock *RequesterVariadicMock) MultiWriteToFileCalls() []struct {
 	Filename string
 	W        []io.Writer
 } {
@@ -154,16 +154,16 @@ func (mock *RequesterVariadic) MultiWriteToFileCalls() []struct {
 }
 
 // ResetMultiWriteToFileCalls reset all the calls that were made to MultiWriteToFile.
-func (mock *RequesterVariadic) ResetMultiWriteToFileCalls() {
+func (mock *RequesterVariadicMock) ResetMultiWriteToFileCalls() {
 	mock.lockMultiWriteToFile.Lock()
 	mock.calls.MultiWriteToFile = nil
 	mock.lockMultiWriteToFile.Unlock()
 }
 
 // OneInterface calls OneInterfaceFunc.
-func (mock *RequesterVariadic) OneInterface(a ...interface{}) bool {
+func (mock *RequesterVariadicMock) OneInterface(a ...interface{}) bool {
 	if mock.OneInterfaceFunc == nil {
-		panic("RequesterVariadic.OneInterfaceFunc: method is nil but RequesterVariadic.OneInterface was just called")
+		panic("RequesterVariadicMock.OneInterfaceFunc: method is nil but RequesterVariadic.OneInterface was just called")
 	}
 	callInfo := struct {
 		A []interface{}
@@ -180,7 +180,7 @@ func (mock *RequesterVariadic) OneInterface(a ...interface{}) bool {
 // Check the length with:
 //
 //	len(mockedRequesterVariadic.OneInterfaceCalls())
-func (mock *RequesterVariadic) OneInterfaceCalls() []struct {
+func (mock *RequesterVariadicMock) OneInterfaceCalls() []struct {
 	A []interface{}
 } {
 	var calls []struct {
@@ -193,16 +193,16 @@ func (mock *RequesterVariadic) OneInterfaceCalls() []struct {
 }
 
 // ResetOneInterfaceCalls reset all the calls that were made to OneInterface.
-func (mock *RequesterVariadic) ResetOneInterfaceCalls() {
+func (mock *RequesterVariadicMock) ResetOneInterfaceCalls() {
 	mock.lockOneInterface.Lock()
 	mock.calls.OneInterface = nil
 	mock.lockOneInterface.Unlock()
 }
 
 // Sprintf calls SprintfFunc.
-func (mock *RequesterVariadic) Sprintf(format string, a ...interface{}) string {
+func (mock *RequesterVariadicMock) Sprintf(format string, a ...interface{}) string {
 	if mock.SprintfFunc == nil {
-		panic("RequesterVariadic.SprintfFunc: method is nil but RequesterVariadic.Sprintf was just called")
+		panic("RequesterVariadicMock.SprintfFunc: method is nil but RequesterVariadic.Sprintf was just called")
 	}
 	callInfo := struct {
 		Format string
@@ -221,7 +221,7 @@ func (mock *RequesterVariadic) Sprintf(format string, a ...interface{}) string {
 // Check the length with:
 //
 //	len(mockedRequesterVariadic.SprintfCalls())
-func (mock *RequesterVariadic) SprintfCalls() []struct {
+func (mock *RequesterVariadicMock) SprintfCalls() []struct {
 	Format string
 	A      []interface{}
 } {
@@ -236,14 +236,14 @@ func (mock *RequesterVariadic) SprintfCalls() []struct {
 }
 
 // ResetSprintfCalls reset all the calls that were made to Sprintf.
-func (mock *RequesterVariadic) ResetSprintfCalls() {
+func (mock *RequesterVariadicMock) ResetSprintfCalls() {
 	mock.lockSprintf.Lock()
 	mock.calls.Sprintf = nil
 	mock.lockSprintf.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *RequesterVariadic) ResetCalls() {
+func (mock *RequesterVariadicMock) ResetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()

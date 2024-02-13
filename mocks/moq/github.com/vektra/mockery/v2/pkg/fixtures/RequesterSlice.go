@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// RequesterSlice is a mock implementation of RequesterSlice.
+// RequesterSliceMock is a mock implementation of RequesterSlice.
 //
 //	func TestSomethingThatUsesRequesterSlice(t *testing.T) {
 //
 //		// make and configure a mocked RequesterSlice
-//		mockedRequesterSlice := &RequesterSlice{
+//		mockedRequesterSlice := &RequesterSliceMock{
 //			GetFunc: func(path string) ([]string, error) {
 //				panic("mock out the Get method")
 //			},
@@ -22,7 +22,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type RequesterSlice struct {
+type RequesterSliceMock struct {
 	// GetFunc mocks the Get method.
 	GetFunc func(path string) ([]string, error)
 
@@ -38,9 +38,9 @@ type RequesterSlice struct {
 }
 
 // Get calls GetFunc.
-func (mock *RequesterSlice) Get(path string) ([]string, error) {
+func (mock *RequesterSliceMock) Get(path string) ([]string, error) {
 	if mock.GetFunc == nil {
-		panic("RequesterSlice.GetFunc: method is nil but RequesterSlice.Get was just called")
+		panic("RequesterSliceMock.GetFunc: method is nil but RequesterSlice.Get was just called")
 	}
 	callInfo := struct {
 		Path string
@@ -57,7 +57,7 @@ func (mock *RequesterSlice) Get(path string) ([]string, error) {
 // Check the length with:
 //
 //	len(mockedRequesterSlice.GetCalls())
-func (mock *RequesterSlice) GetCalls() []struct {
+func (mock *RequesterSliceMock) GetCalls() []struct {
 	Path string
 } {
 	var calls []struct {
@@ -70,14 +70,14 @@ func (mock *RequesterSlice) GetCalls() []struct {
 }
 
 // ResetGetCalls reset all the calls that were made to Get.
-func (mock *RequesterSlice) ResetGetCalls() {
+func (mock *RequesterSliceMock) ResetGetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *RequesterSlice) ResetCalls() {
+func (mock *RequesterSliceMock) ResetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()

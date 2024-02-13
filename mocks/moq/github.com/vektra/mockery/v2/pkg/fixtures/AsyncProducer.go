@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// AsyncProducer is a mock implementation of AsyncProducer.
+// AsyncProducerMock is a mock implementation of AsyncProducer.
 //
 //	func TestSomethingThatUsesAsyncProducer(t *testing.T) {
 //
 //		// make and configure a mocked AsyncProducer
-//		mockedAsyncProducer := &AsyncProducer{
+//		mockedAsyncProducer := &AsyncProducerMock{
 //			InputFunc: func() chan<- bool {
 //				panic("mock out the Input method")
 //			},
@@ -28,7 +28,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type AsyncProducer struct {
+type AsyncProducerMock struct {
 	// InputFunc mocks the Input method.
 	InputFunc func() chan<- bool
 
@@ -56,9 +56,9 @@ type AsyncProducer struct {
 }
 
 // Input calls InputFunc.
-func (mock *AsyncProducer) Input() chan<- bool {
+func (mock *AsyncProducerMock) Input() chan<- bool {
 	if mock.InputFunc == nil {
-		panic("AsyncProducer.InputFunc: method is nil but AsyncProducer.Input was just called")
+		panic("AsyncProducerMock.InputFunc: method is nil but AsyncProducer.Input was just called")
 	}
 	callInfo := struct {
 	}{}
@@ -72,7 +72,7 @@ func (mock *AsyncProducer) Input() chan<- bool {
 // Check the length with:
 //
 //	len(mockedAsyncProducer.InputCalls())
-func (mock *AsyncProducer) InputCalls() []struct {
+func (mock *AsyncProducerMock) InputCalls() []struct {
 } {
 	var calls []struct {
 	}
@@ -83,16 +83,16 @@ func (mock *AsyncProducer) InputCalls() []struct {
 }
 
 // ResetInputCalls reset all the calls that were made to Input.
-func (mock *AsyncProducer) ResetInputCalls() {
+func (mock *AsyncProducerMock) ResetInputCalls() {
 	mock.lockInput.Lock()
 	mock.calls.Input = nil
 	mock.lockInput.Unlock()
 }
 
 // Output calls OutputFunc.
-func (mock *AsyncProducer) Output() <-chan bool {
+func (mock *AsyncProducerMock) Output() <-chan bool {
 	if mock.OutputFunc == nil {
-		panic("AsyncProducer.OutputFunc: method is nil but AsyncProducer.Output was just called")
+		panic("AsyncProducerMock.OutputFunc: method is nil but AsyncProducer.Output was just called")
 	}
 	callInfo := struct {
 	}{}
@@ -106,7 +106,7 @@ func (mock *AsyncProducer) Output() <-chan bool {
 // Check the length with:
 //
 //	len(mockedAsyncProducer.OutputCalls())
-func (mock *AsyncProducer) OutputCalls() []struct {
+func (mock *AsyncProducerMock) OutputCalls() []struct {
 } {
 	var calls []struct {
 	}
@@ -117,16 +117,16 @@ func (mock *AsyncProducer) OutputCalls() []struct {
 }
 
 // ResetOutputCalls reset all the calls that were made to Output.
-func (mock *AsyncProducer) ResetOutputCalls() {
+func (mock *AsyncProducerMock) ResetOutputCalls() {
 	mock.lockOutput.Lock()
 	mock.calls.Output = nil
 	mock.lockOutput.Unlock()
 }
 
 // Whatever calls WhateverFunc.
-func (mock *AsyncProducer) Whatever() chan bool {
+func (mock *AsyncProducerMock) Whatever() chan bool {
 	if mock.WhateverFunc == nil {
-		panic("AsyncProducer.WhateverFunc: method is nil but AsyncProducer.Whatever was just called")
+		panic("AsyncProducerMock.WhateverFunc: method is nil but AsyncProducer.Whatever was just called")
 	}
 	callInfo := struct {
 	}{}
@@ -140,7 +140,7 @@ func (mock *AsyncProducer) Whatever() chan bool {
 // Check the length with:
 //
 //	len(mockedAsyncProducer.WhateverCalls())
-func (mock *AsyncProducer) WhateverCalls() []struct {
+func (mock *AsyncProducerMock) WhateverCalls() []struct {
 } {
 	var calls []struct {
 	}
@@ -151,14 +151,14 @@ func (mock *AsyncProducer) WhateverCalls() []struct {
 }
 
 // ResetWhateverCalls reset all the calls that were made to Whatever.
-func (mock *AsyncProducer) ResetWhateverCalls() {
+func (mock *AsyncProducerMock) ResetWhateverCalls() {
 	mock.lockWhatever.Lock()
 	mock.calls.Whatever = nil
 	mock.lockWhatever.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *AsyncProducer) ResetCalls() {
+func (mock *AsyncProducerMock) ResetCalls() {
 	mock.lockInput.Lock()
 	mock.calls.Input = nil
 	mock.lockInput.Unlock()

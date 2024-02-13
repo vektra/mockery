@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// VariadicNoReturnInterface is a mock implementation of VariadicNoReturnInterface.
+// VariadicNoReturnInterfaceMock is a mock implementation of VariadicNoReturnInterface.
 //
 //	func TestSomethingThatUsesVariadicNoReturnInterface(t *testing.T) {
 //
 //		// make and configure a mocked VariadicNoReturnInterface
-//		mockedVariadicNoReturnInterface := &VariadicNoReturnInterface{
+//		mockedVariadicNoReturnInterface := &VariadicNoReturnInterfaceMock{
 //			VariadicNoReturnFunc: func(j int, is ...interface{})  {
 //				panic("mock out the VariadicNoReturn method")
 //			},
@@ -22,7 +22,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type VariadicNoReturnInterface struct {
+type VariadicNoReturnInterfaceMock struct {
 	// VariadicNoReturnFunc mocks the VariadicNoReturn method.
 	VariadicNoReturnFunc func(j int, is ...interface{})
 
@@ -40,9 +40,9 @@ type VariadicNoReturnInterface struct {
 }
 
 // VariadicNoReturn calls VariadicNoReturnFunc.
-func (mock *VariadicNoReturnInterface) VariadicNoReturn(j int, is ...interface{}) {
+func (mock *VariadicNoReturnInterfaceMock) VariadicNoReturn(j int, is ...interface{}) {
 	if mock.VariadicNoReturnFunc == nil {
-		panic("VariadicNoReturnInterface.VariadicNoReturnFunc: method is nil but VariadicNoReturnInterface.VariadicNoReturn was just called")
+		panic("VariadicNoReturnInterfaceMock.VariadicNoReturnFunc: method is nil but VariadicNoReturnInterface.VariadicNoReturn was just called")
 	}
 	callInfo := struct {
 		J  int
@@ -61,7 +61,7 @@ func (mock *VariadicNoReturnInterface) VariadicNoReturn(j int, is ...interface{}
 // Check the length with:
 //
 //	len(mockedVariadicNoReturnInterface.VariadicNoReturnCalls())
-func (mock *VariadicNoReturnInterface) VariadicNoReturnCalls() []struct {
+func (mock *VariadicNoReturnInterfaceMock) VariadicNoReturnCalls() []struct {
 	J  int
 	Is []interface{}
 } {
@@ -76,14 +76,14 @@ func (mock *VariadicNoReturnInterface) VariadicNoReturnCalls() []struct {
 }
 
 // ResetVariadicNoReturnCalls reset all the calls that were made to VariadicNoReturn.
-func (mock *VariadicNoReturnInterface) ResetVariadicNoReturnCalls() {
+func (mock *VariadicNoReturnInterfaceMock) ResetVariadicNoReturnCalls() {
 	mock.lockVariadicNoReturn.Lock()
 	mock.calls.VariadicNoReturn = nil
 	mock.lockVariadicNoReturn.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *VariadicNoReturnInterface) ResetCalls() {
+func (mock *VariadicNoReturnInterfaceMock) ResetCalls() {
 	mock.lockVariadicNoReturn.Lock()
 	mock.calls.VariadicNoReturn = nil
 	mock.lockVariadicNoReturn.Unlock()

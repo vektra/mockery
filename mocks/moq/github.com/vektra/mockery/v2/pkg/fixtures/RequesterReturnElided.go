@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// RequesterReturnElided is a mock implementation of RequesterReturnElided.
+// RequesterReturnElidedMock is a mock implementation of RequesterReturnElided.
 //
 //	func TestSomethingThatUsesRequesterReturnElided(t *testing.T) {
 //
 //		// make and configure a mocked RequesterReturnElided
-//		mockedRequesterReturnElided := &RequesterReturnElided{
+//		mockedRequesterReturnElided := &RequesterReturnElidedMock{
 //			GetFunc: func(path string) (int, int, int, error) {
 //				panic("mock out the Get method")
 //			},
@@ -25,7 +25,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type RequesterReturnElided struct {
+type RequesterReturnElidedMock struct {
 	// GetFunc mocks the Get method.
 	GetFunc func(path string) (int, int, int, error)
 
@@ -50,9 +50,9 @@ type RequesterReturnElided struct {
 }
 
 // Get calls GetFunc.
-func (mock *RequesterReturnElided) Get(path string) (int, int, int, error) {
+func (mock *RequesterReturnElidedMock) Get(path string) (int, int, int, error) {
 	if mock.GetFunc == nil {
-		panic("RequesterReturnElided.GetFunc: method is nil but RequesterReturnElided.Get was just called")
+		panic("RequesterReturnElidedMock.GetFunc: method is nil but RequesterReturnElided.Get was just called")
 	}
 	callInfo := struct {
 		Path string
@@ -69,7 +69,7 @@ func (mock *RequesterReturnElided) Get(path string) (int, int, int, error) {
 // Check the length with:
 //
 //	len(mockedRequesterReturnElided.GetCalls())
-func (mock *RequesterReturnElided) GetCalls() []struct {
+func (mock *RequesterReturnElidedMock) GetCalls() []struct {
 	Path string
 } {
 	var calls []struct {
@@ -82,16 +82,16 @@ func (mock *RequesterReturnElided) GetCalls() []struct {
 }
 
 // ResetGetCalls reset all the calls that were made to Get.
-func (mock *RequesterReturnElided) ResetGetCalls() {
+func (mock *RequesterReturnElidedMock) ResetGetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()
 }
 
 // Put calls PutFunc.
-func (mock *RequesterReturnElided) Put(path string) (int, error) {
+func (mock *RequesterReturnElidedMock) Put(path string) (int, error) {
 	if mock.PutFunc == nil {
-		panic("RequesterReturnElided.PutFunc: method is nil but RequesterReturnElided.Put was just called")
+		panic("RequesterReturnElidedMock.PutFunc: method is nil but RequesterReturnElided.Put was just called")
 	}
 	callInfo := struct {
 		Path string
@@ -108,7 +108,7 @@ func (mock *RequesterReturnElided) Put(path string) (int, error) {
 // Check the length with:
 //
 //	len(mockedRequesterReturnElided.PutCalls())
-func (mock *RequesterReturnElided) PutCalls() []struct {
+func (mock *RequesterReturnElidedMock) PutCalls() []struct {
 	Path string
 } {
 	var calls []struct {
@@ -121,14 +121,14 @@ func (mock *RequesterReturnElided) PutCalls() []struct {
 }
 
 // ResetPutCalls reset all the calls that were made to Put.
-func (mock *RequesterReturnElided) ResetPutCalls() {
+func (mock *RequesterReturnElidedMock) ResetPutCalls() {
 	mock.lockPut.Lock()
 	mock.calls.Put = nil
 	mock.lockPut.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *RequesterReturnElided) ResetCalls() {
+func (mock *RequesterReturnElidedMock) ResetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()

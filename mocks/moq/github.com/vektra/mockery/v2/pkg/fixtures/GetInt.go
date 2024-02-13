@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// GetInt is a mock implementation of GetInt.
+// GetIntMock is a mock implementation of GetInt.
 //
 //	func TestSomethingThatUsesGetInt(t *testing.T) {
 //
 //		// make and configure a mocked GetInt
-//		mockedGetInt := &GetInt{
+//		mockedGetInt := &GetIntMock{
 //			GetFunc: func() int {
 //				panic("mock out the Get method")
 //			},
@@ -22,7 +22,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type GetInt struct {
+type GetIntMock struct {
 	// GetFunc mocks the Get method.
 	GetFunc func() int
 
@@ -36,9 +36,9 @@ type GetInt struct {
 }
 
 // Get calls GetFunc.
-func (mock *GetInt) Get() int {
+func (mock *GetIntMock) Get() int {
 	if mock.GetFunc == nil {
-		panic("GetInt.GetFunc: method is nil but GetInt.Get was just called")
+		panic("GetIntMock.GetFunc: method is nil but GetInt.Get was just called")
 	}
 	callInfo := struct {
 	}{}
@@ -52,7 +52,7 @@ func (mock *GetInt) Get() int {
 // Check the length with:
 //
 //	len(mockedGetInt.GetCalls())
-func (mock *GetInt) GetCalls() []struct {
+func (mock *GetIntMock) GetCalls() []struct {
 } {
 	var calls []struct {
 	}
@@ -63,14 +63,14 @@ func (mock *GetInt) GetCalls() []struct {
 }
 
 // ResetGetCalls reset all the calls that were made to Get.
-func (mock *GetInt) ResetGetCalls() {
+func (mock *GetIntMock) ResetGetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *GetInt) ResetCalls() {
+func (mock *GetIntMock) ResetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()

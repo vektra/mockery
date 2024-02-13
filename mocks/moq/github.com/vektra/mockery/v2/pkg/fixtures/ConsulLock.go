@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// ConsulLock is a mock implementation of ConsulLock.
+// ConsulLockMock is a mock implementation of ConsulLock.
 //
 //	func TestSomethingThatUsesConsulLock(t *testing.T) {
 //
 //		// make and configure a mocked ConsulLock
-//		mockedConsulLock := &ConsulLock{
+//		mockedConsulLock := &ConsulLockMock{
 //			LockFunc: func(valCh <-chan struct{}) (<-chan struct{}, error) {
 //				panic("mock out the Lock method")
 //			},
@@ -25,7 +25,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type ConsulLock struct {
+type ConsulLockMock struct {
 	// LockFunc mocks the Lock method.
 	LockFunc func(valCh <-chan struct{}) (<-chan struct{}, error)
 
@@ -48,9 +48,9 @@ type ConsulLock struct {
 }
 
 // Lock calls LockFunc.
-func (mock *ConsulLock) Lock(valCh <-chan struct{}) (<-chan struct{}, error) {
+func (mock *ConsulLockMock) Lock(valCh <-chan struct{}) (<-chan struct{}, error) {
 	if mock.LockFunc == nil {
-		panic("ConsulLock.LockFunc: method is nil but ConsulLock.Lock was just called")
+		panic("ConsulLockMock.LockFunc: method is nil but ConsulLock.Lock was just called")
 	}
 	callInfo := struct {
 		ValCh <-chan struct{}
@@ -67,7 +67,7 @@ func (mock *ConsulLock) Lock(valCh <-chan struct{}) (<-chan struct{}, error) {
 // Check the length with:
 //
 //	len(mockedConsulLock.LockCalls())
-func (mock *ConsulLock) LockCalls() []struct {
+func (mock *ConsulLockMock) LockCalls() []struct {
 	ValCh <-chan struct{}
 } {
 	var calls []struct {
@@ -80,16 +80,16 @@ func (mock *ConsulLock) LockCalls() []struct {
 }
 
 // ResetLockCalls reset all the calls that were made to Lock.
-func (mock *ConsulLock) ResetLockCalls() {
+func (mock *ConsulLockMock) ResetLockCalls() {
 	mock.lockLock.Lock()
 	mock.calls.Lock = nil
 	mock.lockLock.Unlock()
 }
 
 // Unlock calls UnlockFunc.
-func (mock *ConsulLock) Unlock() error {
+func (mock *ConsulLockMock) Unlock() error {
 	if mock.UnlockFunc == nil {
-		panic("ConsulLock.UnlockFunc: method is nil but ConsulLock.Unlock was just called")
+		panic("ConsulLockMock.UnlockFunc: method is nil but ConsulLock.Unlock was just called")
 	}
 	callInfo := struct {
 	}{}
@@ -103,7 +103,7 @@ func (mock *ConsulLock) Unlock() error {
 // Check the length with:
 //
 //	len(mockedConsulLock.UnlockCalls())
-func (mock *ConsulLock) UnlockCalls() []struct {
+func (mock *ConsulLockMock) UnlockCalls() []struct {
 } {
 	var calls []struct {
 	}
@@ -114,14 +114,14 @@ func (mock *ConsulLock) UnlockCalls() []struct {
 }
 
 // ResetUnlockCalls reset all the calls that were made to Unlock.
-func (mock *ConsulLock) ResetUnlockCalls() {
+func (mock *ConsulLockMock) ResetUnlockCalls() {
 	mock.lockUnlock.Lock()
 	mock.calls.Unlock = nil
 	mock.lockUnlock.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *ConsulLock) ResetCalls() {
+func (mock *ConsulLockMock) ResetCalls() {
 	mock.lockLock.Lock()
 	mock.calls.Lock = nil
 	mock.lockLock.Unlock()

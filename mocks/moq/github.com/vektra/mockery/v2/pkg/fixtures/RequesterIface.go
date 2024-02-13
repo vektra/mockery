@@ -8,12 +8,12 @@ import (
 	"sync"
 )
 
-// RequesterIface is a mock implementation of RequesterIface.
+// RequesterIfaceMock is a mock implementation of RequesterIface.
 //
 //	func TestSomethingThatUsesRequesterIface(t *testing.T) {
 //
 //		// make and configure a mocked RequesterIface
-//		mockedRequesterIface := &RequesterIface{
+//		mockedRequesterIface := &RequesterIfaceMock{
 //			GetFunc: func() io.Reader {
 //				panic("mock out the Get method")
 //			},
@@ -23,7 +23,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type RequesterIface struct {
+type RequesterIfaceMock struct {
 	// GetFunc mocks the Get method.
 	GetFunc func() io.Reader
 
@@ -37,9 +37,9 @@ type RequesterIface struct {
 }
 
 // Get calls GetFunc.
-func (mock *RequesterIface) Get() io.Reader {
+func (mock *RequesterIfaceMock) Get() io.Reader {
 	if mock.GetFunc == nil {
-		panic("RequesterIface.GetFunc: method is nil but RequesterIface.Get was just called")
+		panic("RequesterIfaceMock.GetFunc: method is nil but RequesterIface.Get was just called")
 	}
 	callInfo := struct {
 	}{}
@@ -53,7 +53,7 @@ func (mock *RequesterIface) Get() io.Reader {
 // Check the length with:
 //
 //	len(mockedRequesterIface.GetCalls())
-func (mock *RequesterIface) GetCalls() []struct {
+func (mock *RequesterIfaceMock) GetCalls() []struct {
 } {
 	var calls []struct {
 	}
@@ -64,14 +64,14 @@ func (mock *RequesterIface) GetCalls() []struct {
 }
 
 // ResetGetCalls reset all the calls that were made to Get.
-func (mock *RequesterIface) ResetGetCalls() {
+func (mock *RequesterIfaceMock) ResetGetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *RequesterIface) ResetCalls() {
+func (mock *RequesterIfaceMock) ResetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()

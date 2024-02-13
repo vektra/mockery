@@ -8,12 +8,12 @@ import (
 	"sync"
 )
 
-// RequesterArgSameAsImport is a mock implementation of RequesterArgSameAsImport.
+// RequesterArgSameAsImportMock is a mock implementation of RequesterArgSameAsImport.
 //
 //	func TestSomethingThatUsesRequesterArgSameAsImport(t *testing.T) {
 //
 //		// make and configure a mocked RequesterArgSameAsImport
-//		mockedRequesterArgSameAsImport := &RequesterArgSameAsImport{
+//		mockedRequesterArgSameAsImport := &RequesterArgSameAsImportMock{
 //			GetFunc: func(jsonMoqParam string) *json.RawMessage {
 //				panic("mock out the Get method")
 //			},
@@ -23,7 +23,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type RequesterArgSameAsImport struct {
+type RequesterArgSameAsImportMock struct {
 	// GetFunc mocks the Get method.
 	GetFunc func(jsonMoqParam string) *json.RawMessage
 
@@ -39,9 +39,9 @@ type RequesterArgSameAsImport struct {
 }
 
 // Get calls GetFunc.
-func (mock *RequesterArgSameAsImport) Get(jsonMoqParam string) *json.RawMessage {
+func (mock *RequesterArgSameAsImportMock) Get(jsonMoqParam string) *json.RawMessage {
 	if mock.GetFunc == nil {
-		panic("RequesterArgSameAsImport.GetFunc: method is nil but RequesterArgSameAsImport.Get was just called")
+		panic("RequesterArgSameAsImportMock.GetFunc: method is nil but RequesterArgSameAsImport.Get was just called")
 	}
 	callInfo := struct {
 		JsonMoqParam string
@@ -58,7 +58,7 @@ func (mock *RequesterArgSameAsImport) Get(jsonMoqParam string) *json.RawMessage 
 // Check the length with:
 //
 //	len(mockedRequesterArgSameAsImport.GetCalls())
-func (mock *RequesterArgSameAsImport) GetCalls() []struct {
+func (mock *RequesterArgSameAsImportMock) GetCalls() []struct {
 	JsonMoqParam string
 } {
 	var calls []struct {
@@ -71,14 +71,14 @@ func (mock *RequesterArgSameAsImport) GetCalls() []struct {
 }
 
 // ResetGetCalls reset all the calls that were made to Get.
-func (mock *RequesterArgSameAsImport) ResetGetCalls() {
+func (mock *RequesterArgSameAsImportMock) ResetGetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *RequesterArgSameAsImport) ResetCalls() {
+func (mock *RequesterArgSameAsImportMock) ResetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()

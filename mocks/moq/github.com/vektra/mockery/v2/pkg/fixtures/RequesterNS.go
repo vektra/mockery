@@ -8,12 +8,12 @@ import (
 	"sync"
 )
 
-// RequesterNS is a mock implementation of RequesterNS.
+// RequesterNSMock is a mock implementation of RequesterNS.
 //
 //	func TestSomethingThatUsesRequesterNS(t *testing.T) {
 //
 //		// make and configure a mocked RequesterNS
-//		mockedRequesterNS := &RequesterNS{
+//		mockedRequesterNS := &RequesterNSMock{
 //			GetFunc: func(path string) (http.Response, error) {
 //				panic("mock out the Get method")
 //			},
@@ -23,7 +23,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type RequesterNS struct {
+type RequesterNSMock struct {
 	// GetFunc mocks the Get method.
 	GetFunc func(path string) (http.Response, error)
 
@@ -39,9 +39,9 @@ type RequesterNS struct {
 }
 
 // Get calls GetFunc.
-func (mock *RequesterNS) Get(path string) (http.Response, error) {
+func (mock *RequesterNSMock) Get(path string) (http.Response, error) {
 	if mock.GetFunc == nil {
-		panic("RequesterNS.GetFunc: method is nil but RequesterNS.Get was just called")
+		panic("RequesterNSMock.GetFunc: method is nil but RequesterNS.Get was just called")
 	}
 	callInfo := struct {
 		Path string
@@ -58,7 +58,7 @@ func (mock *RequesterNS) Get(path string) (http.Response, error) {
 // Check the length with:
 //
 //	len(mockedRequesterNS.GetCalls())
-func (mock *RequesterNS) GetCalls() []struct {
+func (mock *RequesterNSMock) GetCalls() []struct {
 	Path string
 } {
 	var calls []struct {
@@ -71,14 +71,14 @@ func (mock *RequesterNS) GetCalls() []struct {
 }
 
 // ResetGetCalls reset all the calls that were made to Get.
-func (mock *RequesterNS) ResetGetCalls() {
+func (mock *RequesterNSMock) ResetGetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *RequesterNS) ResetCalls() {
+func (mock *RequesterNSMock) ResetCalls() {
 	mock.lockGet.Lock()
 	mock.calls.Get = nil
 	mock.lockGet.Unlock()

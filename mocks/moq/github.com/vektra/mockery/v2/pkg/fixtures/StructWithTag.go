@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// StructWithTag is a mock implementation of StructWithTag.
+// StructWithTagMock is a mock implementation of StructWithTag.
 //
 //	func TestSomethingThatUsesStructWithTag(t *testing.T) {
 //
 //		// make and configure a mocked StructWithTag
-//		mockedStructWithTag := &StructWithTag{
+//		mockedStructWithTag := &StructWithTagMock{
 //			MethodAFunc: func(v *struct{FieldA int "json:\"field_a\""; FieldB int "json:\"field_b\" xml:\"field_b\""}) *struct{FieldC int "json:\"field_c\""; FieldD int "json:\"field_d\" xml:\"field_d\""} {
 //				panic("mock out the MethodA method")
 //			},
@@ -22,7 +22,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type StructWithTag struct {
+type StructWithTagMock struct {
 	// MethodAFunc mocks the MethodA method.
 	MethodAFunc func(v *struct {
 		FieldA int "json:\"field_a\""
@@ -47,7 +47,7 @@ type StructWithTag struct {
 }
 
 // MethodA calls MethodAFunc.
-func (mock *StructWithTag) MethodA(v *struct {
+func (mock *StructWithTagMock) MethodA(v *struct {
 	FieldA int "json:\"field_a\""
 	FieldB int "json:\"field_b\" xml:\"field_b\""
 }) *struct {
@@ -55,7 +55,7 @@ func (mock *StructWithTag) MethodA(v *struct {
 	FieldD int "json:\"field_d\" xml:\"field_d\""
 } {
 	if mock.MethodAFunc == nil {
-		panic("StructWithTag.MethodAFunc: method is nil but StructWithTag.MethodA was just called")
+		panic("StructWithTagMock.MethodAFunc: method is nil but StructWithTag.MethodA was just called")
 	}
 	callInfo := struct {
 		V *struct {
@@ -75,7 +75,7 @@ func (mock *StructWithTag) MethodA(v *struct {
 // Check the length with:
 //
 //	len(mockedStructWithTag.MethodACalls())
-func (mock *StructWithTag) MethodACalls() []struct {
+func (mock *StructWithTagMock) MethodACalls() []struct {
 	V *struct {
 		FieldA int "json:\"field_a\""
 		FieldB int "json:\"field_b\" xml:\"field_b\""
@@ -94,14 +94,14 @@ func (mock *StructWithTag) MethodACalls() []struct {
 }
 
 // ResetMethodACalls reset all the calls that were made to MethodA.
-func (mock *StructWithTag) ResetMethodACalls() {
+func (mock *StructWithTagMock) ResetMethodACalls() {
 	mock.lockMethodA.Lock()
 	mock.calls.MethodA = nil
 	mock.lockMethodA.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *StructWithTag) ResetCalls() {
+func (mock *StructWithTagMock) ResetCalls() {
 	mock.lockMethodA.Lock()
 	mock.calls.MethodA = nil
 	mock.lockMethodA.Unlock()

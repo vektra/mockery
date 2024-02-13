@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-// MapToInterface is a mock implementation of MapToInterface.
+// MapToInterfaceMock is a mock implementation of MapToInterface.
 //
 //	func TestSomethingThatUsesMapToInterface(t *testing.T) {
 //
 //		// make and configure a mocked MapToInterface
-//		mockedMapToInterface := &MapToInterface{
+//		mockedMapToInterface := &MapToInterfaceMock{
 //			FooFunc: func(arg1 ...map[string]interface{})  {
 //				panic("mock out the Foo method")
 //			},
@@ -22,7 +22,7 @@ import (
 //		// and then make assertions.
 //
 //	}
-type MapToInterface struct {
+type MapToInterfaceMock struct {
 	// FooFunc mocks the Foo method.
 	FooFunc func(arg1 ...map[string]interface{})
 
@@ -38,9 +38,9 @@ type MapToInterface struct {
 }
 
 // Foo calls FooFunc.
-func (mock *MapToInterface) Foo(arg1 ...map[string]interface{}) {
+func (mock *MapToInterfaceMock) Foo(arg1 ...map[string]interface{}) {
 	if mock.FooFunc == nil {
-		panic("MapToInterface.FooFunc: method is nil but MapToInterface.Foo was just called")
+		panic("MapToInterfaceMock.FooFunc: method is nil but MapToInterface.Foo was just called")
 	}
 	callInfo := struct {
 		Arg1 []map[string]interface{}
@@ -57,7 +57,7 @@ func (mock *MapToInterface) Foo(arg1 ...map[string]interface{}) {
 // Check the length with:
 //
 //	len(mockedMapToInterface.FooCalls())
-func (mock *MapToInterface) FooCalls() []struct {
+func (mock *MapToInterfaceMock) FooCalls() []struct {
 	Arg1 []map[string]interface{}
 } {
 	var calls []struct {
@@ -70,14 +70,14 @@ func (mock *MapToInterface) FooCalls() []struct {
 }
 
 // ResetFooCalls reset all the calls that were made to Foo.
-func (mock *MapToInterface) ResetFooCalls() {
+func (mock *MapToInterfaceMock) ResetFooCalls() {
 	mock.lockFoo.Lock()
 	mock.calls.Foo = nil
 	mock.lockFoo.Unlock()
 }
 
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *MapToInterface) ResetCalls() {
+func (mock *MapToInterfaceMock) ResetCalls() {
 	mock.lockFoo.Lock()
 	mock.calls.Foo = nil
 	mock.lockFoo.Unlock()
