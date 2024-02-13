@@ -83,6 +83,7 @@ func NewRootCmd() *cobra.Command {
 	pFlags.Bool("exported", false, "Generates public mocks for private interfaces.")
 	pFlags.Bool("with-expecter", false, "Generate expecter utility around mock's On, Run and Return methods with explicit types. This option is NOT compatible with -unroll-variadic=false")
 	pFlags.StringArray("replace-type", nil, "Replace types")
+	pFlags.String("style", "", "select which mock style to use")
 
 	if err := viperCfg.BindPFlags(pFlags); err != nil {
 		panic(fmt.Sprintf("failed to bind PFlags: %v", err))

@@ -23,11 +23,13 @@ tasks:
     cmds:
       - find . -name '*_mock.go' | xargs rm
       - rm -rf mocks/
+      - rm -rf moqs/
 
   mocks.generate:
     desc: generate mockery mocks
     cmds:
       - go run .
+      - go run . --config .mockery-moq.yaml
 
   docker:
     desc: build the mockery docker image

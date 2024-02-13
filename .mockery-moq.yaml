@@ -1,0 +1,13 @@
+quiet: False
+disable-version-string: True
+with-expecter: True
+mockname: "{{.InterfaceName}}"
+filename: "{{.MockName}}.go"
+dir: "mocks/moq/{{.PackagePath}}"
+packages:
+  github.com/vektra/mockery/v2/pkg:
+    config:
+      all: True
+      recursive: True
+      style: moq
+   
