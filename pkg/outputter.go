@@ -322,6 +322,7 @@ func (o *Outputter) Generate(ctx context.Context, iface *Interface) error {
 	for _, interfaceConfig := range interfaceConfigs {
 		interfaceConfig.LogUnsupportedPackagesConfig(ctx)
 		ifaceLog := log.With().Str("style", interfaceConfig.Style).Logger()
+		ifaceCtx := ifaceLog.WithContext(ctx)
 
 		if err := parseConfigTemplates(ctx, interfaceConfig, iface); err != nil {
 			return fmt.Errorf("failed to parse config template: %w", err)
@@ -331,6 +332,7 @@ func (o *Outputter) Generate(ctx context.Context, iface *Interface) error {
 			o.generateMockery(ctx, iface, interfaceConfig)
 			continue
 		}
+		logging.WarnAlpha(ifaceCtx, "usage mock styles other than mockery is currently in an alpha state.", nil)
 		ifaceLog.Debug().Msg("generating templated mock")
 
 		config := generator.TemplateGeneratorConfig{

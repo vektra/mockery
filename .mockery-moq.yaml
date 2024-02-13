@@ -7,6 +7,7 @@ dir: "mocks/moq/{{.PackagePath}}"
 packages:
   github.com/vektra/mockery/v2/pkg/fixtures:
     config:
-      all: True
+      include-regex: '.*'
+      exclude-regex: 'RequesterGenerics|UnsafeInterface|requester_unexported'
       style: moq
       outpkg: testfoo
