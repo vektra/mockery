@@ -23,7 +23,6 @@ tasks:
     cmds:
       - find . -name '*_mock.go' | xargs rm
       - rm -rf mocks/
-      - rm -rf moqs/
 
   mocks.generate:
     desc: generate mockery mocks
