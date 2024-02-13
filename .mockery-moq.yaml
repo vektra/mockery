@@ -5,9 +5,9 @@ mockname: "{{.InterfaceName}}"
 filename: "{{.MockName}}.go"
 dir: "mocks/moq/{{.PackagePath}}"
 packages:
-  github.com/vektra/mockery/v2/pkg:
+  github.com/vektra/mockery/v2/pkg/fixtures:
     config:
       all: True
-      recursive: True
       style: moq
+      outpkg: testfoo
    
