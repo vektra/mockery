@@ -234,7 +234,7 @@ func (r *RootApp) Run() error {
 		if err != nil {
 			return fmt.Errorf("failed to get package from config: %w", err)
 		}
-		parser := pkg.NewParser(buildTags)
+		parser := pkg.NewParser(buildTags, pkg.ParserSkipFunctions(true))
 
 		if err := parser.ParsePackages(ctx, configuredPackages); err != nil {
 			log.Error().Err(err).Msg("unable to parse packages")

@@ -1,9 +1,10 @@
-package pkg
+package generator
 
 import (
 	"bytes"
 	"context"
 	"fmt"
+	"go/format"
 	"go/token"
 	"go/types"
 
@@ -11,8 +12,10 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/vektra/mockery/v2/pkg/config"
 	"github.com/vektra/mockery/v2/pkg/registry"
+	"github.com/vektra/mockery/v2/pkg/stackerr"
 	"github.com/vektra/mockery/v2/pkg/template"
 	"golang.org/x/tools/go/packages"
+	"golang.org/x/tools/imports"
 )
 
 type TemplateGeneratorConfig struct {
@@ -177,9 +180,35 @@ func (g *TemplateGenerator) Generate(ctx context.Context, ifaceName string, ifac
 
 	outPath := pathlib.NewPath(ifaceConfig.Dir).Join(ifaceConfig.FileName)
 	log.Debug().Stringer("path", outPath).Msg("writing to path")
+	if err := outPath.Parent().MkdirAll(); err != nil {
+		return stackerr.NewStackErr(err)
+	}
 	if err := outPath.WriteFile(formatted); err != nil {
 		log.Error().Err(err).Msg("couldn't write to output file")
 		return fmt.Errorf("writing to output file: %w", err)
 	}
 	return nil
+}
+
+func goimports(src []byte) ([]byte, error) {
+	formatted, err := imports.Process("filename", src, &imports.Options{
+		TabWidth:  8,
+		TabIndent: true,
+		Comments:  true,
+		Fragment:  true,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("goimports: %s", err)
+	}
+
+	return formatted, nil
+}
+
+func gofmt(src []byte) ([]byte, error) {
+	formatted, err := format.Source(src)
+	if err != nil {
+		return nil, fmt.Errorf("go/format: %s", err)
+	}
+
+	return formatted, nil
 }

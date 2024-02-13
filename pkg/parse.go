@@ -34,9 +34,18 @@ type Parser struct {
 	parserPackages    []*types.Package
 	conf              packages.Config
 	packageLoadCache  map[string]packageLoadEntry
+	skipFunctions     bool
 }
 
-func NewParser(buildTags []string) *Parser {
+type ParserOpts func(p *Parser)
+
+func ParserSkipFunctions(s bool) ParserOpts {
+	return func(p *Parser) {
+		p.skipFunctions = s
+	}
+}
+
+func NewParser(buildTags []string, opts ...ParserOpts) *Parser {
 	var conf packages.Config
 	conf.Mode = packages.NeedTypes |
 		packages.NeedTypesSizes |
@@ -50,12 +59,17 @@ func NewParser(buildTags []string) *Parser {
 	if len(buildTags) > 0 {
 		conf.BuildFlags = []string{"-tags", strings.Join(buildTags, ",")}
 	}
-	return &Parser{
+	p := &Parser{
 		parserPackages:    make([]*types.Package, 0),
 		entriesByFileName: map[string]*parserEntry{},
 		conf:              conf,
 		packageLoadCache:  map[string]packageLoadEntry{},
+		skipFunctions:     false,
 	}
+	for _, opt := range opts {
+		opt(p)
+	}
+	return p
 }
 
 func (p *Parser) loadPackages(fpath string) ([]*packages.Package, error) {
@@ -246,6 +260,8 @@ func (p *Parser) packageInterfaces(
 		if ok {
 			elem.IsFunction = false
 			elem.ActualInterface = iface
+		} else if p.skipFunctions {
+			continue
 		} else {
 			sig, ok := typ.Underlying().(*types.Signature)
 			if !ok {

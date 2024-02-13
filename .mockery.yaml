@@ -36,12 +36,6 @@ packages:
             unroll-variadic: False
           - mockname: Expecter
             unroll-variadic: True
-      RequesterGenerics:
-        configs:
-        - mockname: RequesterGenerics
-          style: mockery
-        - mockname: RequesterGenericsMoq
-          style: moq
       VariadicNoReturnInterface:
         config:
           with-expecter: True

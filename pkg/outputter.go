@@ -19,6 +19,7 @@ import (
 	"github.com/rs/zerolog"
 
 	"github.com/vektra/mockery/v2/pkg/config"
+	"github.com/vektra/mockery/v2/pkg/generator"
 	"github.com/vektra/mockery/v2/pkg/logging"
 	"github.com/vektra/mockery/v2/pkg/stackerr"
 )
@@ -332,15 +333,14 @@ func (o *Outputter) Generate(ctx context.Context, iface *Interface) error {
 		}
 		ifaceLog.Debug().Msg("generating templated mock")
 
-		config := TemplateGeneratorConfig{
+		config := generator.TemplateGeneratorConfig{
 			Style: interfaceConfig.Style,
 		}
-		generator, err := NewTemplateGenerator(iface.PackagesPackage, config, interfaceConfig.Outpkg)
+		generator, err := generator.NewTemplateGenerator(iface.PackagesPackage, config, interfaceConfig.Outpkg)
 		if err != nil {
 			return fmt.Errorf("creating template generator: %w", err)
 		}
 
-		fmt.Printf("generator: %v\n", generator)
 		if err := generator.Generate(ctx, iface.Name, interfaceConfig); err != nil {
 			return fmt.Errorf("generating template: %w", err)
 		}
