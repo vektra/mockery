@@ -93,19 +93,58 @@ func (_m *Handler) HandleMessage(m pubsub.Message) error {
 Generic type constraints can also be replaced by targeting the changed parameter with the square bracket notation on the left hand side.
 
 ```shell
-mockery --replace-type github.com/vektra/mockery/v2/baz/internal/foo.InternalBaz[T]=baz:github.com/vektra/mockery/v2/baz.Baz
+mockery --replace-type github.com/vektra/mockery/v2/baz/internal/foo.InternalBaz[T]=github.com/vektra/mockery/v2/baz.Baz
+```
+
+For example:
+
+```go
+type InternalBaz[T any] struct{}
+
+func (*InternalBaz[T]) Foo() T {}
+
+// Becomes
+type InternalBaz[T baz.Baz] struct{}
+
+func (*InternalBaz[T]) Foo() T {}
 ```
 
 If a type constraint needs to be removed and replaced with a type, target the constraint with square brackets and include a '-' in front to have it removed.
 
 ```shell
-mockery --replace-type github.com/vektra/mockery/v2/baz/internal/foo.InternalBaz[-T]=baz:github.com/vektra/mockery/v2/baz.Baz
+mockery --replace-type github.com/vektra/mockery/v2/baz/internal/foo.InternalBaz[-T]=github.com/vektra/mockery/v2/baz.Baz
+```
+
+For example:
+
+```go
+type InternalBaz[T any] struct{}
+
+func (*InternalBaz[T]) Foo() T {}
+
+// Becomes
+type InternalBaz struct{}
+
+func (*InternalBaz) Foo() baz.Baz {}
 ```
 
 When replacing a generic constraint, you can replace the type with a pointer by adding a '*' before the output type name.
 
 ```shell
-mockery --replace-type github.com/vektra/mockery/v2/baz/internal/foo.InternalBaz[-T]=baz:github.com/vektra/mockery/v2/baz.*Baz
+mockery --replace-type github.com/vektra/mockery/v2/baz/internal/foo.InternalBaz[-T]=github.com/vektra/mockery/v2/baz.*Baz
+```
+
+For example:
+
+```go
+type InternalBaz[T any] struct{}
+
+func (*InternalBaz[T]) Foo() T {}
+
+// Becomes
+type InternalBaz struct{}
+
+func (*InternalBaz) Foo() *baz.Baz {}
 ```
 
 `packages` configuration

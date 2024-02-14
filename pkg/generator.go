@@ -1164,12 +1164,7 @@ func parseReplaceType(t string) *replaceType {
 	// Match type parameter substitution
 	match := regexp.MustCompile(`\[(.*?)\]$`).FindStringSubmatch(t)
 	if len(match) >= 2 {
-		if match[1][:1] == "-" {
-			ret.param = match[1][1:]
-			ret.rmvParam = true
-		} else {
-			ret.param = match[1]
-		}
+		ret.param, ret.rmvParam = strings.CutPrefix(match[1], "-")
 		t = strings.ReplaceAll(t, match[0], "")
 	}
 

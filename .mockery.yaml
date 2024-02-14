@@ -46,7 +46,7 @@ packages:
         config:
           replace-type:
             - github.com/vektra/mockery/v2/pkg/fixtures.ReplaceGeneric[-TImport]=github.com/vektra/mockery/v2/pkg/fixtures/redefined_type_b.B
-            - github.com/vektra/mockery/v2/pkg/fixtures.ReplaceGeneric[TConstraint]=github.com/vektra/mockery/v2/pkg/fixtures/constraints.Integer
+            - github.com/vektra/mockery/v2/pkg/fixtures.ReplaceGeneric[TConstraint]=github.com/vektra/mockery/v2/pkg/fixtures/constraints.String
       # Replace a generic param with the parent type
       ReplaceGenericSelf:
         config:
