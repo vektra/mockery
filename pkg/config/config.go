@@ -614,7 +614,16 @@ func (c *Config) subPackages(
 				}
 			}
 
-			pathLog.Debug().Msg("subdirectory has a .go file, adding this path to packages config")
+			pathLog.Debug().Msg("subdirectory has a .go file")
+			goModExists, err := path.Parent().Join("go.mod").Exists()
+			if err != nil {
+				pathLog.Err(err).Msg("failed to determine if go.mod exists")
+				return err
+			}
+			if goModExists {
+				pathLog.Debug().Msg("found .go file, but go.mod exists. Skipping.")
+				return pathlib.ErrWalkSkipSubtree
+			}
 			subdirectoriesWithGoFiles = append(subdirectoriesWithGoFiles, path.Parent())
 			visitedDirs[path.Parent().String()] = nil
 		}
