@@ -127,6 +127,13 @@ Who uses mockery?
 - <figure markdown>
     [![MongoDB Logo](assets/images/logos/mongodb.svg){ class="center" width="300" }](https://github.com/search?q=org%3Amongodb%20mockery&type=code)
   </figure>
+- <figure markdown>
+	[![go-task logo](assets/images/logos/go-task.svg){ class="center" width="300" }](https://taskfile.dev/)
+	<figcaption>[Task]((https://taskfile.dev/))
+  </markdown>
+  - <figure markdown>
+	[![cerbos logo](assets/images/logos/cerbos.png){ class="center" width="300" }](https://github.com/cerbos/cerbos)
+  </markdown>
 </div>
 
 
