@@ -124,6 +124,7 @@ type GeneratorVisitorConfig struct {
 	// The name of the output package, if InPackage is false (defaults to "mocks")
 	PackageName       string
 	PackageNamePrefix string
+	PackageNameSuffix string
 	StructName        string
 	UnrollVariadic    bool
 	WithExpecter      bool
@@ -185,6 +186,7 @@ func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) erro
 		MockBuildTags:        v.config.MockBuildTags,
 		PackageName:          v.config.PackageName,
 		PackageNamePrefix:    v.config.PackageNamePrefix,
+		PackageNameSuffix:    v.config.PackageNameSuffix,
 		StructName:           v.config.StructName,
 		UnrollVariadic:       v.config.UnrollVariadic,
 		WithExpecter:         v.config.WithExpecter,

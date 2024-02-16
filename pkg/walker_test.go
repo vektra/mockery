@@ -121,6 +121,58 @@ func TestPackagePrefix(t *testing.T) {
 	assert.Regexp(t, regexp.MustCompile("package prefix_test_test"), bufferedProvider.String())
 }
 
+func TestPackageSuffix(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping recursive walker test")
+	}
+
+	wd, err := os.Getwd()
+	assert.NoError(t, err)
+
+	w := Walker{
+		BaseDir:   wd,
+		Recursive: true,
+		LimitOne:  false,
+		Filter:    regexp.MustCompile(".*AsyncProducer*."),
+	}
+
+	bufferedProvider := NewBufferedProvider()
+	visitor := NewGeneratorVisitor(GeneratorVisitorConfig{
+		InPackage:         false,
+		PackageName:       "mocks",
+		PackageNameSuffix: "_suffix_test",
+	}, bufferedProvider, false)
+
+	w.Walk(context.Background(), visitor)
+	assert.Regexp(t, regexp.MustCompile("package test_suffix_test"), bufferedProvider.String())
+}
+
+func TestPackagePrefixAndSuffix(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping recursive walker test")
+	}
+
+	wd, err := os.Getwd()
+	assert.NoError(t, err)
+
+	w := Walker{
+		BaseDir:   wd,
+		Recursive: true,
+		LimitOne:  false,
+		Filter:    regexp.MustCompile(".*AsyncProducer*."),
+	}
+
+	bufferedProvider := NewBufferedProvider()
+	visitor := NewGeneratorVisitor(GeneratorVisitorConfig{
+		InPackage:         false,
+		PackageName:       "mocks",
+		PackageNamePrefix: "prefix_test_",
+		PackageNameSuffix: "_suffix_test",
+	}, bufferedProvider, false)
+
+	w.Walk(context.Background(), visitor)
+	assert.Regexp(t, regexp.MustCompile("package prefix_test_test_suffix_test"), bufferedProvider.String())
+}
 func TestWalkerExclude(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping recursive walker test")

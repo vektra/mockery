@@ -339,6 +339,7 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 			MockBuildTags:        interfaceConfig.MockBuildTags,
 			PackageName:          interfaceConfig.Outpkg,
 			PackageNamePrefix:    interfaceConfig.Packageprefix,
+			PackageNameSuffix:    interfaceConfig.Packagesuffix,
 			StructName:           interfaceConfig.MockName,
 			UnrollVariadic:       interfaceConfig.UnrollVariadic,
 			WithExpecter:         interfaceConfig.WithExpecter,

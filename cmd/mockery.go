@@ -57,6 +57,7 @@ func NewRootCmd() *cobra.Command {
 	pFlags.String("output", "", "directory to write mocks to")
 	pFlags.String("outpkg", "mocks", "name of generated package")
 	pFlags.String("packageprefix", "", "prefix for the generated package name, it is ignored if outpkg is also specified.")
+	pFlags.String("packagesuffix", "", "suffix for the generated package name, it is ignored if outpkg is also specified.")
 	pFlags.String("dir", "", "directory to search for interfaces")
 	pFlags.BoolP("recursive", "r", false, "recurse search into sub-directories")
 	pFlags.StringArray("exclude", nil, "prefixes of subdirectories and files to exclude from search")
@@ -380,6 +381,7 @@ func (r *RootApp) Run() error {
 		MockBuildTags:        r.Config.MockBuildTags,
 		PackageName:          r.Config.Outpkg,
 		PackageNamePrefix:    r.Config.Packageprefix,
+		PackageNameSuffix:    r.Config.Packagesuffix,
 		StructName:           r.Config.StructName,
 		UnrollVariadic:       r.Config.UnrollVariadic,
 		WithExpecter:         r.Config.WithExpecter,

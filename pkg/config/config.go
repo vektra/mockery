@@ -58,6 +58,7 @@ type Config struct {
 	Output               string                 `mapstructure:"output"`
 	Packages             map[string]interface{} `mapstructure:"packages"`
 	Packageprefix        string                 `mapstructure:"packageprefix"`
+	Packagesuffix        string                 `mapstructure:"packagesuffix"`
 	Print                bool                   `mapstructure:"print"`
 	Profile              string                 `mapstructure:"profile"`
 	Quiet                bool                   `mapstructure:"quiet"`

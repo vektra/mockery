@@ -32,6 +32,7 @@ func DetermineOutputPackageName(
 	interfacePackageName string,
 	packageNamePrefix string,
 	packageName string,
+	packageNameSuffix string,
 	keepTree bool,
 	inPackage bool,
 ) string {
@@ -41,9 +42,9 @@ func DetermineOutputPackageName(
 		pkg = filepath.Dir(interfaceFileName)
 	} else if inPackage {
 		pkg = filepath.Dir(interfaceFileName)
-	} else if (packageName == "" || packageName == "mocks") && packageNamePrefix != "" {
+	} else if (packageName == "" || packageName == "mocks") && (packageNamePrefix != "" || packageNameSuffix != "") {
 		// go with package name prefix only when package name is empty or default and package name prefix is specified
-		pkg = fmt.Sprintf("%s%s", packageNamePrefix, interfacePackageName)
+		pkg = fmt.Sprintf("%s%s%s", packageNamePrefix, interfacePackageName, packageNameSuffix)
 	} else {
 		pkg = packageName
 	}
@@ -60,6 +61,7 @@ type GeneratorConfig struct {
 	MockBuildTags        string
 	PackageName          string
 	PackageNamePrefix    string
+	PackageNameSuffix    string
 	StructName           string
 	UnrollVariadic       bool
 	WithExpecter         bool
@@ -90,6 +92,7 @@ func NewGenerator(ctx context.Context, c GeneratorConfig, iface *Interface, pkg 
 			iface.Pkg.Name(),
 			c.PackageNamePrefix,
 			c.PackageName,
+			c.PackageNameSuffix,
 			c.KeepTree,
 			c.InPackage,
 		)
