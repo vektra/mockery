@@ -7,3 +7,7 @@ type Signed interface {
 type Integer interface {
 	~int
 }
+
+type String interface {
+	~string
+}

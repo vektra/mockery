@@ -21,6 +21,10 @@ func (_m *Variadic) EXPECT() *Variadic_Expecter {
 func (_m *Variadic) VariadicFunction(str string, vFunc func(string, ...interface{}) interface{}) error {
 	ret := _m.Called(str, vFunc)
 
+	if len(ret) == 0 {
+		panic("no return value specified for VariadicFunction")
+	}
+
 	var r0 error
 	if rf, ok := ret.Get(0).(func(string, func(string, ...interface{}) interface{}) error); ok {
 		r0 = rf(str, vFunc)
