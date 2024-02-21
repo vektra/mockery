@@ -1,17 +1,22 @@
 quiet: False
 disable-version-string: True
-with-expecter: True
-mockname: "{{.InterfaceName}}Mock"
-filename: "{{.InterfaceName}}.go"
+mockname: "{{.InterfaceName}}Moq"
+filename: "{{.InterfaceName | snakecase }}_moq.go"
 dir: "mocks/moq/{{.PackagePath}}"
+style: moq
 packages:
   github.com/vektra/mockery/v2/pkg/fixtures:
     config:
       include-regex: '.*'
       exclude-regex: 'RequesterGenerics|UnsafeInterface|requester_unexported'
-      style: moq
       outpkg: test
       template-map:
         with-resets: true
-        skip-ensure: true
+        skip-ensure: false
         stub-impl: false
+  github.com/vektra/mockery/v2/pkg/fixtures/inpackage:
+    config:
+      dir: "{{.InterfaceDir}}"
+      all: True
+      outpkg: "{{.PackageName}}"
+      
