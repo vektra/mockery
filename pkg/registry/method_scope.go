@@ -1,6 +1,7 @@
 package registry
 
 import (
+	"context"
 	"go/types"
 	"strconv"
 )
@@ -22,9 +23,9 @@ type MethodScope struct {
 // Variables names are generated if required and are ensured to be
 // without conflict with other variables and imported packages. It also
 // adds the relevant imports to the registry for each added variable.
-func (m *MethodScope) AddVar(vr *types.Var, suffix string) *Var {
+func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, suffix string) *Var {
 	imports := make(map[string]*Package)
-	m.populateImports(vr.Type(), imports)
+	m.populateImports(ctx, vr.Type(), imports)
 	m.resolveImportVarConflicts(imports)
 
 	name := varName(vr, suffix)
@@ -76,55 +77,55 @@ func (m MethodScope) searchVar(name string) (*Var, bool) {
 // populateImports extracts all the package imports for a given type
 // recursively. The imported packages by a single type can be more than
 // one (ex: map[a.Type]b.Type).
-func (m MethodScope) populateImports(t types.Type, imports map[string]*Package) {
+func (m MethodScope) populateImports(ctx context.Context, t types.Type, imports map[string]*Package) {
 	switch t := t.(type) {
 	case *types.Named:
 		if pkg := t.Obj().Pkg(); pkg != nil {
-			imports[pkg.Path()] = m.registry.AddImport(pkg)
+			imports[pkg.Path()] = m.registry.AddImport(ctx, pkg)
 		}
 		// The imports of a Type with a TypeList must be added to the imports list
 		// For example: Foo[otherpackage.Bar] , must have otherpackage imported
 		if targs := t.TypeArgs(); targs != nil {
 			for i := 0; i < targs.Len(); i++ {
-				m.populateImports(targs.At(i), imports)
+				m.populateImports(ctx, targs.At(i), imports)
 			}
 		}
 
 	case *types.Array:
-		m.populateImports(t.Elem(), imports)
+		m.populateImports(ctx, t.Elem(), imports)
 
 	case *types.Slice:
-		m.populateImports(t.Elem(), imports)
+		m.populateImports(ctx, t.Elem(), imports)
 
 	case *types.Signature:
 		for i := 0; i < t.Params().Len(); i++ {
-			m.populateImports(t.Params().At(i).Type(), imports)
+			m.populateImports(ctx, t.Params().At(i).Type(), imports)
 		}
 		for i := 0; i < t.Results().Len(); i++ {
-			m.populateImports(t.Results().At(i).Type(), imports)
+			m.populateImports(ctx, t.Results().At(i).Type(), imports)
 		}
 
 	case *types.Map:
-		m.populateImports(t.Key(), imports)
-		m.populateImports(t.Elem(), imports)
+		m.populateImports(ctx, t.Key(), imports)
+		m.populateImports(ctx, t.Elem(), imports)
 
 	case *types.Chan:
-		m.populateImports(t.Elem(), imports)
+		m.populateImports(ctx, t.Elem(), imports)
 
 	case *types.Pointer:
-		m.populateImports(t.Elem(), imports)
+		m.populateImports(ctx, t.Elem(), imports)
 
 	case *types.Struct: // anonymous struct
 		for i := 0; i < t.NumFields(); i++ {
-			m.populateImports(t.Field(i).Type(), imports)
+			m.populateImports(ctx, t.Field(i).Type(), imports)
 		}
 
 	case *types.Interface: // anonymous interface
 		for i := 0; i < t.NumExplicitMethods(); i++ {
-			m.populateImports(t.ExplicitMethod(i).Type(), imports)
+			m.populateImports(ctx, t.ExplicitMethod(i).Type(), imports)
 		}
 		for i := 0; i < t.NumEmbeddeds(); i++ {
-			m.populateImports(t.EmbeddedType(i), imports)
+			m.populateImports(ctx, t.EmbeddedType(i), imports)
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package registry
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"go/ast"
@@ -8,6 +9,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/rs/zerolog"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -77,8 +79,10 @@ func (r *Registry) MethodScope() *MethodScope {
 // AddImport adds the given package to the set of imports. It generates a
 // suitable alias if there are any conflicts with previously imported
 // packages.
-func (r *Registry) AddImport(pkg *types.Package) *Package {
+func (r *Registry) AddImport(ctx context.Context, pkg *types.Package) *Package {
+	log := zerolog.Ctx(ctx)
 	path := pkg.Path()
+	log.Debug().Str("method", "AddImport").Str("src-pkg-path", path).Str("dst-pkg", r.dstPkg).Msg("adding import")
 	if path == r.dstPkg {
 		return nil
 	}

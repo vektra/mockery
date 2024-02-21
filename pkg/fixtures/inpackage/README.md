@@ -1,0 +1,1 @@
+This package is to test mocks that are generated next to the original interface.

@@ -50,7 +50,7 @@ func (g *TemplateGenerator) format(src []byte, ifaceConfig *config.Config) ([]by
 	return gofmt(src)
 }
 
-func (g *TemplateGenerator) methodData(method *types.Func) template.MethodData {
+func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func) template.MethodData {
 	methodScope := g.registry.MethodScope()
 
 	signature := method.Type().(*types.Signature)
@@ -58,7 +58,7 @@ func (g *TemplateGenerator) methodData(method *types.Func) template.MethodData {
 	for j := 0; j < signature.Params().Len(); j++ {
 		param := signature.Params().At(j)
 		params[j] = template.ParamData{
-			Var:      methodScope.AddVar(param, ""),
+			Var:      methodScope.AddVar(ctx, param, ""),
 			Variadic: signature.Variadic() && j == signature.Params().Len()-1,
 		}
 	}
@@ -67,7 +67,7 @@ func (g *TemplateGenerator) methodData(method *types.Func) template.MethodData {
 	for j := 0; j < signature.Results().Len(); j++ {
 		param := signature.Results().At(j)
 		returns[j] = template.ParamData{
-			Var:      methodScope.AddVar(param, "Out"),
+			Var:      methodScope.AddVar(ctx, param, "Out"),
 			Variadic: false,
 		}
 	}
@@ -94,7 +94,7 @@ func explicitConstraintType(typeParam *types.Var) (t types.Type) {
 	return nil
 }
 
-func (g *TemplateGenerator) typeParams(tparams *types.TypeParamList) []template.TypeParamData {
+func (g *TemplateGenerator) typeParams(ctx context.Context, tparams *types.TypeParamList) []template.TypeParamData {
 	var tpd []template.TypeParamData
 	if tparams == nil {
 		return tpd
@@ -107,7 +107,7 @@ func (g *TemplateGenerator) typeParams(tparams *types.TypeParamList) []template.
 		tp := tparams.At(i)
 		typeParam := types.NewParam(token.Pos(i), tp.Obj().Pkg(), tp.Obj().Name(), tp.Constraint())
 		tpd[i] = template.TypeParamData{
-			ParamData:  template.ParamData{Var: scope.AddVar(typeParam, "")},
+			ParamData:  template.ParamData{Var: scope.AddVar(ctx, typeParam, "")},
 			Constraint: explicitConstraintType(typeParam),
 		}
 	}
@@ -126,7 +126,7 @@ func (g *TemplateGenerator) Generate(ctx context.Context, ifaceName string, ifac
 
 	methods := make([]template.MethodData, iface.NumMethods())
 	for i := 0; i < iface.NumMethods(); i++ {
-		methods[i] = g.methodData(iface.Method(i))
+		methods[i] = g.methodData(ctx, iface.Method(i))
 	}
 
 	// For now, mockery only supports one mock per file, which is why we're creating
@@ -135,7 +135,7 @@ func (g *TemplateGenerator) Generate(ctx context.Context, ifaceName string, ifac
 		{
 			InterfaceName: ifaceName,
 			MockName:      ifaceConfig.MockName,
-			TypeParams:    g.typeParams(tparams),
+			TypeParams:    g.typeParams(ctx, tparams),
 			Methods:       methods,
 		},
 	}
@@ -147,13 +147,15 @@ func (g *TemplateGenerator) Generate(ctx context.Context, ifaceName string, ifac
 	}
 	if data.MocksSomeMethod() {
 		log.Debug().Msg("interface mocks some method, importing sync package")
-		g.registry.AddImport(types.NewPackage("sync", "sync"))
+		g.registry.AddImport(ctx, types.NewPackage("sync", "sync"))
 	}
+
 	if g.registry.SrcPkgName() != ifaceConfig.Outpkg {
 		data.SrcPkgQualifier = g.registry.SrcPkgName() + "."
-		if !ifaceConfig.SkipEnsure {
+		skipEnsure, ok := ifaceConfig.TemplateMap["skip-ensure"]
+		if !ok || !skipEnsure.(bool) {
 			log.Debug().Str("src-pkg", g.registry.SrcPkg().Path()).Msg("skip-ensure is false. Adding import for source package.")
-			imprt := g.registry.AddImport(g.registry.SrcPkg())
+			imprt := g.registry.AddImport(ctx, g.registry.SrcPkg())
 			log.Debug().Msgf("imprt: %v", imprt)
 			data.SrcPkgQualifier = imprt.Qualifier() + "."
 		}

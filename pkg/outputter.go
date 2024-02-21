@@ -334,7 +334,7 @@ func (o *Outputter) Generate(ctx context.Context, iface *Interface) error {
 			}
 			continue
 		}
-		logging.WarnAlpha(ifaceCtx, "usage mock styles other than mockery is currently in an alpha state.", nil)
+		logging.WarnAlpha(ifaceCtx, "usage of mock styles other than mockery is currently in an alpha state.", nil)
 		ifaceLog.Debug().Msg("generating templated mock")
 
 		config := generator.TemplateGeneratorConfig{

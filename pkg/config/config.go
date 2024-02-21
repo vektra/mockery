@@ -66,7 +66,6 @@ type Config struct {
 	Quiet                bool                   `mapstructure:"quiet"`
 	Recursive            bool                   `mapstructure:"recursive"`
 	ReplaceType          []string               `mapstructure:"replace-type"`
-	SkipEnsure           bool                   `mapstructure:"skip-ensure"`
 	SrcPkg               string                 `mapstructure:"srcpkg"`
 	Style                string                 `mapstructure:"style"`
 	// StructName overrides the name given to the mock struct and should only be nonempty
