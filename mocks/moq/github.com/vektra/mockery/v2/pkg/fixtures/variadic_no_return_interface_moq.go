@@ -5,24 +5,26 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that VariadicNoReturnInterfaceMoq does implement VariadicNoReturnInterface.
+// Ensure, that VariadicNoReturnInterfaceMoq does implement test.VariadicNoReturnInterface.
 // If this is not the case, regenerate this file with moq.
-var _ VariadicNoReturnInterface = &VariadicNoReturnInterfaceMoq{}
+var _ test.VariadicNoReturnInterface = &VariadicNoReturnInterfaceMoq{}
 
-// VariadicNoReturnInterfaceMoq is a mock implementation of VariadicNoReturnInterface.
+// VariadicNoReturnInterfaceMoq is a mock implementation of test.VariadicNoReturnInterface.
 //
 //	func TestSomethingThatUsesVariadicNoReturnInterface(t *testing.T) {
 //
-//		// make and configure a mocked VariadicNoReturnInterface
+//		// make and configure a mocked test.VariadicNoReturnInterface
 //		mockedVariadicNoReturnInterface := &VariadicNoReturnInterfaceMoq{
 //			VariadicNoReturnFunc: func(j int, is ...interface{})  {
 //				panic("mock out the VariadicNoReturn method")
 //			},
 //		}
 //
-//		// use mockedVariadicNoReturnInterface in code that requires VariadicNoReturnInterface
+//		// use mockedVariadicNoReturnInterface in code that requires test.VariadicNoReturnInterface
 //		// and then make assertions.
 //
 //	}

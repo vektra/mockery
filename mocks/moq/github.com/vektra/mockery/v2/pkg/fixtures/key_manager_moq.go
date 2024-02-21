@@ -9,22 +9,22 @@ import (
 	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that KeyManagerMoq does implement KeyManager.
+// Ensure, that KeyManagerMoq does implement test.KeyManager.
 // If this is not the case, regenerate this file with moq.
-var _ KeyManager = &KeyManagerMoq{}
+var _ test.KeyManager = &KeyManagerMoq{}
 
-// KeyManagerMoq is a mock implementation of KeyManager.
+// KeyManagerMoq is a mock implementation of test.KeyManager.
 //
 //	func TestSomethingThatUsesKeyManager(t *testing.T) {
 //
-//		// make and configure a mocked KeyManager
+//		// make and configure a mocked test.KeyManager
 //		mockedKeyManager := &KeyManagerMoq{
 //			GetKeyFunc: func(s string, v uint16) ([]byte, *test.Err) {
 //				panic("mock out the GetKey method")
 //			},
 //		}
 //
-//		// use mockedKeyManager in code that requires KeyManager
+//		// use mockedKeyManager in code that requires test.KeyManager
 //		// and then make assertions.
 //
 //	}

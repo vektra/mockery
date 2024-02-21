@@ -5,17 +5,19 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that ExpecterMoq does implement Expecter.
+// Ensure, that ExpecterMoq does implement test.Expecter.
 // If this is not the case, regenerate this file with moq.
-var _ Expecter = &ExpecterMoq{}
+var _ test.Expecter = &ExpecterMoq{}
 
-// ExpecterMoq is a mock implementation of Expecter.
+// ExpecterMoq is a mock implementation of test.Expecter.
 //
 //	func TestSomethingThatUsesExpecter(t *testing.T) {
 //
-//		// make and configure a mocked Expecter
+//		// make and configure a mocked test.Expecter
 //		mockedExpecter := &ExpecterMoq{
 //			ManyArgsReturnsFunc: func(str string, i int) ([]string, error) {
 //				panic("mock out the ManyArgsReturns method")
@@ -34,7 +36,7 @@ var _ Expecter = &ExpecterMoq{}
 //			},
 //		}
 //
-//		// use mockedExpecter in code that requires Expecter
+//		// use mockedExpecter in code that requires test.Expecter
 //		// and then make assertions.
 //
 //	}

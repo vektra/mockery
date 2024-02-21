@@ -5,17 +5,19 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that AsyncProducerMoq does implement AsyncProducer.
+// Ensure, that AsyncProducerMoq does implement test.AsyncProducer.
 // If this is not the case, regenerate this file with moq.
-var _ AsyncProducer = &AsyncProducerMoq{}
+var _ test.AsyncProducer = &AsyncProducerMoq{}
 
-// AsyncProducerMoq is a mock implementation of AsyncProducer.
+// AsyncProducerMoq is a mock implementation of test.AsyncProducer.
 //
 //	func TestSomethingThatUsesAsyncProducer(t *testing.T) {
 //
-//		// make and configure a mocked AsyncProducer
+//		// make and configure a mocked test.AsyncProducer
 //		mockedAsyncProducer := &AsyncProducerMoq{
 //			InputFunc: func() chan<- bool {
 //				panic("mock out the Input method")
@@ -28,7 +30,7 @@ var _ AsyncProducer = &AsyncProducerMoq{}
 //			},
 //		}
 //
-//		// use mockedAsyncProducer in code that requires AsyncProducer
+//		// use mockedAsyncProducer in code that requires test.AsyncProducer
 //		// and then make assertions.
 //
 //	}

@@ -5,24 +5,26 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that Requester2Moq does implement Requester2.
+// Ensure, that Requester2Moq does implement test.Requester2.
 // If this is not the case, regenerate this file with moq.
-var _ Requester2 = &Requester2Moq{}
+var _ test.Requester2 = &Requester2Moq{}
 
-// Requester2Moq is a mock implementation of Requester2.
+// Requester2Moq is a mock implementation of test.Requester2.
 //
 //	func TestSomethingThatUsesRequester2(t *testing.T) {
 //
-//		// make and configure a mocked Requester2
+//		// make and configure a mocked test.Requester2
 //		mockedRequester2 := &Requester2Moq{
 //			GetFunc: func(path string) error {
 //				panic("mock out the Get method")
 //			},
 //		}
 //
-//		// use mockedRequester2 in code that requires Requester2
+//		// use mockedRequester2 in code that requires test.Requester2
 //		// and then make assertions.
 //
 //	}

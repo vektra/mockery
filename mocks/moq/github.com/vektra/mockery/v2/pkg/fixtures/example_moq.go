@@ -7,18 +7,19 @@ import (
 	"net/http"
 	"sync"
 
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 	my_http "github.com/vektra/mockery/v2/pkg/fixtures/http"
 )
 
-// Ensure, that ExampleMoq does implement Example.
+// Ensure, that ExampleMoq does implement test.Example.
 // If this is not the case, regenerate this file with moq.
-var _ Example = &ExampleMoq{}
+var _ test.Example = &ExampleMoq{}
 
-// ExampleMoq is a mock implementation of Example.
+// ExampleMoq is a mock implementation of test.Example.
 //
 //	func TestSomethingThatUsesExample(t *testing.T) {
 //
-//		// make and configure a mocked Example
+//		// make and configure a mocked test.Example
 //		mockedExample := &ExampleMoq{
 //			AFunc: func() http.Flusher {
 //				panic("mock out the A method")
@@ -28,7 +29,7 @@ var _ Example = &ExampleMoq{}
 //			},
 //		}
 //
-//		// use mockedExample in code that requires Example
+//		// use mockedExample in code that requires test.Example
 //		// and then make assertions.
 //
 //	}

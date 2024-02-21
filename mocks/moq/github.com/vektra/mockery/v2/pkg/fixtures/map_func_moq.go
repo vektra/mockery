@@ -5,24 +5,26 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that MapFuncMoq does implement MapFunc.
+// Ensure, that MapFuncMoq does implement test.MapFunc.
 // If this is not the case, regenerate this file with moq.
-var _ MapFunc = &MapFuncMoq{}
+var _ test.MapFunc = &MapFuncMoq{}
 
-// MapFuncMoq is a mock implementation of MapFunc.
+// MapFuncMoq is a mock implementation of test.MapFunc.
 //
 //	func TestSomethingThatUsesMapFunc(t *testing.T) {
 //
-//		// make and configure a mocked MapFunc
+//		// make and configure a mocked test.MapFunc
 //		mockedMapFunc := &MapFuncMoq{
 //			GetFunc: func(m map[string]func(string) string) error {
 //				panic("mock out the Get method")
 //			},
 //		}
 //
-//		// use mockedMapFunc in code that requires MapFunc
+//		// use mockedMapFunc in code that requires test.MapFunc
 //		// and then make assertions.
 //
 //	}

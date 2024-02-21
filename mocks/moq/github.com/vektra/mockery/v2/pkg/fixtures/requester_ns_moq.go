@@ -6,24 +6,26 @@ package test
 import (
 	"net/http"
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that RequesterNSMoq does implement RequesterNS.
+// Ensure, that RequesterNSMoq does implement test.RequesterNS.
 // If this is not the case, regenerate this file with moq.
-var _ RequesterNS = &RequesterNSMoq{}
+var _ test.RequesterNS = &RequesterNSMoq{}
 
-// RequesterNSMoq is a mock implementation of RequesterNS.
+// RequesterNSMoq is a mock implementation of test.RequesterNS.
 //
 //	func TestSomethingThatUsesRequesterNS(t *testing.T) {
 //
-//		// make and configure a mocked RequesterNS
+//		// make and configure a mocked test.RequesterNS
 //		mockedRequesterNS := &RequesterNSMoq{
 //			GetFunc: func(path string) (http.Response, error) {
 //				panic("mock out the Get method")
 //			},
 //		}
 //
-//		// use mockedRequesterNS in code that requires RequesterNS
+//		// use mockedRequesterNS in code that requires test.RequesterNS
 //		// and then make assertions.
 //
 //	}

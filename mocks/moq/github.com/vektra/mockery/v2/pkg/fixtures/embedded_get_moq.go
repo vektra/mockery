@@ -6,25 +6,26 @@ package test
 import (
 	"sync"
 
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 	"github.com/vektra/mockery/v2/pkg/fixtures/constraints"
 )
 
-// Ensure, that EmbeddedGetMoq does implement EmbeddedGet.
+// Ensure, that EmbeddedGetMoq does implement test.EmbeddedGet.
 // If this is not the case, regenerate this file with moq.
-var _ EmbeddedGet[int] = &EmbeddedGetMoq[int]{}
+var _ test.EmbeddedGet[int] = &EmbeddedGetMoq[int]{}
 
-// EmbeddedGetMoq is a mock implementation of EmbeddedGet.
+// EmbeddedGetMoq is a mock implementation of test.EmbeddedGet.
 //
 //	func TestSomethingThatUsesEmbeddedGet(t *testing.T) {
 //
-//		// make and configure a mocked EmbeddedGet
+//		// make and configure a mocked test.EmbeddedGet
 //		mockedEmbeddedGet := &EmbeddedGetMoq{
 //			GetFunc: func() T {
 //				panic("mock out the Get method")
 //			},
 //		}
 //
-//		// use mockedEmbeddedGet in code that requires EmbeddedGet
+//		// use mockedEmbeddedGet in code that requires test.EmbeddedGet
 //		// and then make assertions.
 //
 //	}

@@ -5,24 +5,26 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that MapToInterfaceMoq does implement MapToInterface.
+// Ensure, that MapToInterfaceMoq does implement test.MapToInterface.
 // If this is not the case, regenerate this file with moq.
-var _ MapToInterface = &MapToInterfaceMoq{}
+var _ test.MapToInterface = &MapToInterfaceMoq{}
 
-// MapToInterfaceMoq is a mock implementation of MapToInterface.
+// MapToInterfaceMoq is a mock implementation of test.MapToInterface.
 //
 //	func TestSomethingThatUsesMapToInterface(t *testing.T) {
 //
-//		// make and configure a mocked MapToInterface
+//		// make and configure a mocked test.MapToInterface
 //		mockedMapToInterface := &MapToInterfaceMoq{
 //			FooFunc: func(arg1 ...map[string]interface{})  {
 //				panic("mock out the Foo method")
 //			},
 //		}
 //
-//		// use mockedMapToInterface in code that requires MapToInterface
+//		// use mockedMapToInterface in code that requires test.MapToInterface
 //		// and then make assertions.
 //
 //	}

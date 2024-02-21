@@ -5,24 +5,26 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that RequesterArrayMoq does implement RequesterArray.
+// Ensure, that RequesterArrayMoq does implement test.RequesterArray.
 // If this is not the case, regenerate this file with moq.
-var _ RequesterArray = &RequesterArrayMoq{}
+var _ test.RequesterArray = &RequesterArrayMoq{}
 
-// RequesterArrayMoq is a mock implementation of RequesterArray.
+// RequesterArrayMoq is a mock implementation of test.RequesterArray.
 //
 //	func TestSomethingThatUsesRequesterArray(t *testing.T) {
 //
-//		// make and configure a mocked RequesterArray
+//		// make and configure a mocked test.RequesterArray
 //		mockedRequesterArray := &RequesterArrayMoq{
 //			GetFunc: func(path string) ([2]string, error) {
 //				panic("mock out the Get method")
 //			},
 //		}
 //
-//		// use mockedRequesterArray in code that requires RequesterArray
+//		// use mockedRequesterArray in code that requires test.RequesterArray
 //		// and then make assertions.
 //
 //	}

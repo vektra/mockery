@@ -9,22 +9,22 @@ import (
 	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that UsesOtherPkgIfaceMoq does implement UsesOtherPkgIface.
+// Ensure, that UsesOtherPkgIfaceMoq does implement test.UsesOtherPkgIface.
 // If this is not the case, regenerate this file with moq.
-var _ UsesOtherPkgIface = &UsesOtherPkgIfaceMoq{}
+var _ test.UsesOtherPkgIface = &UsesOtherPkgIfaceMoq{}
 
-// UsesOtherPkgIfaceMoq is a mock implementation of UsesOtherPkgIface.
+// UsesOtherPkgIfaceMoq is a mock implementation of test.UsesOtherPkgIface.
 //
 //	func TestSomethingThatUsesUsesOtherPkgIface(t *testing.T) {
 //
-//		// make and configure a mocked UsesOtherPkgIface
+//		// make and configure a mocked test.UsesOtherPkgIface
 //		mockedUsesOtherPkgIface := &UsesOtherPkgIfaceMoq{
 //			DoSomethingElseFunc: func(obj test.Sibling)  {
 //				panic("mock out the DoSomethingElse method")
 //			},
 //		}
 //
-//		// use mockedUsesOtherPkgIface in code that requires UsesOtherPkgIface
+//		// use mockedUsesOtherPkgIface in code that requires test.UsesOtherPkgIface
 //		// and then make assertions.
 //
 //	}

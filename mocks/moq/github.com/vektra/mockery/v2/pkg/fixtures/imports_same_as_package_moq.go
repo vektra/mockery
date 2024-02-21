@@ -10,15 +10,15 @@ import (
 	redefinedtypeb "github.com/vektra/mockery/v2/pkg/fixtures/redefined_type_b"
 )
 
-// Ensure, that ImportsSameAsPackageMoq does implement ImportsSameAsPackage.
+// Ensure, that ImportsSameAsPackageMoq does implement fixtures.ImportsSameAsPackage.
 // If this is not the case, regenerate this file with moq.
-var _ ImportsSameAsPackage = &ImportsSameAsPackageMoq{}
+var _ fixtures.ImportsSameAsPackage = &ImportsSameAsPackageMoq{}
 
-// ImportsSameAsPackageMoq is a mock implementation of ImportsSameAsPackage.
+// ImportsSameAsPackageMoq is a mock implementation of fixtures.ImportsSameAsPackage.
 //
 //	func TestSomethingThatUsesImportsSameAsPackage(t *testing.T) {
 //
-//		// make and configure a mocked ImportsSameAsPackage
+//		// make and configure a mocked fixtures.ImportsSameAsPackage
 //		mockedImportsSameAsPackage := &ImportsSameAsPackageMoq{
 //			AFunc: func() redefinedtypeb.B {
 //				panic("mock out the A method")
@@ -31,7 +31,7 @@ var _ ImportsSameAsPackage = &ImportsSameAsPackageMoq{}
 //			},
 //		}
 //
-//		// use mockedImportsSameAsPackage in code that requires ImportsSameAsPackage
+//		// use mockedImportsSameAsPackage in code that requires fixtures.ImportsSameAsPackage
 //		// and then make assertions.
 //
 //	}

@@ -5,17 +5,19 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that RequesterReturnElidedMoq does implement RequesterReturnElided.
+// Ensure, that RequesterReturnElidedMoq does implement test.RequesterReturnElided.
 // If this is not the case, regenerate this file with moq.
-var _ RequesterReturnElided = &RequesterReturnElidedMoq{}
+var _ test.RequesterReturnElided = &RequesterReturnElidedMoq{}
 
-// RequesterReturnElidedMoq is a mock implementation of RequesterReturnElided.
+// RequesterReturnElidedMoq is a mock implementation of test.RequesterReturnElided.
 //
 //	func TestSomethingThatUsesRequesterReturnElided(t *testing.T) {
 //
-//		// make and configure a mocked RequesterReturnElided
+//		// make and configure a mocked test.RequesterReturnElided
 //		mockedRequesterReturnElided := &RequesterReturnElidedMoq{
 //			GetFunc: func(path string) (int, int, int, error) {
 //				panic("mock out the Get method")
@@ -25,7 +27,7 @@ var _ RequesterReturnElided = &RequesterReturnElidedMoq{}
 //			},
 //		}
 //
-//		// use mockedRequesterReturnElided in code that requires RequesterReturnElided
+//		// use mockedRequesterReturnElided in code that requires test.RequesterReturnElided
 //		// and then make assertions.
 //
 //	}

@@ -5,24 +5,26 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that FuncArgsCollisionMoq does implement FuncArgsCollision.
+// Ensure, that FuncArgsCollisionMoq does implement test.FuncArgsCollision.
 // If this is not the case, regenerate this file with moq.
-var _ FuncArgsCollision = &FuncArgsCollisionMoq{}
+var _ test.FuncArgsCollision = &FuncArgsCollisionMoq{}
 
-// FuncArgsCollisionMoq is a mock implementation of FuncArgsCollision.
+// FuncArgsCollisionMoq is a mock implementation of test.FuncArgsCollision.
 //
 //	func TestSomethingThatUsesFuncArgsCollision(t *testing.T) {
 //
-//		// make and configure a mocked FuncArgsCollision
+//		// make and configure a mocked test.FuncArgsCollision
 //		mockedFuncArgsCollision := &FuncArgsCollisionMoq{
 //			FooFunc: func(ret interface{}) error {
 //				panic("mock out the Foo method")
 //			},
 //		}
 //
-//		// use mockedFuncArgsCollision in code that requires FuncArgsCollision
+//		// use mockedFuncArgsCollision in code that requires test.FuncArgsCollision
 //		// and then make assertions.
 //
 //	}

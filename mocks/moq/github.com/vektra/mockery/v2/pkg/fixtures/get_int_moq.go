@@ -5,24 +5,26 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that GetIntMoq does implement GetInt.
+// Ensure, that GetIntMoq does implement test.GetInt.
 // If this is not the case, regenerate this file with moq.
-var _ GetInt = &GetIntMoq{}
+var _ test.GetInt = &GetIntMoq{}
 
-// GetIntMoq is a mock implementation of GetInt.
+// GetIntMoq is a mock implementation of test.GetInt.
 //
 //	func TestSomethingThatUsesGetInt(t *testing.T) {
 //
-//		// make and configure a mocked GetInt
+//		// make and configure a mocked test.GetInt
 //		mockedGetInt := &GetIntMoq{
 //			GetFunc: func() int {
 //				panic("mock out the Get method")
 //			},
 //		}
 //
-//		// use mockedGetInt in code that requires GetInt
+//		// use mockedGetInt in code that requires test.GetInt
 //		// and then make assertions.
 //
 //	}

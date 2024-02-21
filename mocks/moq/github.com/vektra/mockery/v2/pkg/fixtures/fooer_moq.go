@@ -5,17 +5,19 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that FooerMoq does implement Fooer.
+// Ensure, that FooerMoq does implement test.Fooer.
 // If this is not the case, regenerate this file with moq.
-var _ Fooer = &FooerMoq{}
+var _ test.Fooer = &FooerMoq{}
 
-// FooerMoq is a mock implementation of Fooer.
+// FooerMoq is a mock implementation of test.Fooer.
 //
 //	func TestSomethingThatUsesFooer(t *testing.T) {
 //
-//		// make and configure a mocked Fooer
+//		// make and configure a mocked test.Fooer
 //		mockedFooer := &FooerMoq{
 //			BarFunc: func(f func([]int))  {
 //				panic("mock out the Bar method")
@@ -28,7 +30,7 @@ var _ Fooer = &FooerMoq{}
 //			},
 //		}
 //
-//		// use mockedFooer in code that requires Fooer
+//		// use mockedFooer in code that requires test.Fooer
 //		// and then make assertions.
 //
 //	}

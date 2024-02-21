@@ -5,24 +5,26 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that RequesterArgSameAsPkgMoq does implement RequesterArgSameAsPkg.
+// Ensure, that RequesterArgSameAsPkgMoq does implement test.RequesterArgSameAsPkg.
 // If this is not the case, regenerate this file with moq.
-var _ RequesterArgSameAsPkg = &RequesterArgSameAsPkgMoq{}
+var _ test.RequesterArgSameAsPkg = &RequesterArgSameAsPkgMoq{}
 
-// RequesterArgSameAsPkgMoq is a mock implementation of RequesterArgSameAsPkg.
+// RequesterArgSameAsPkgMoq is a mock implementation of test.RequesterArgSameAsPkg.
 //
 //	func TestSomethingThatUsesRequesterArgSameAsPkg(t *testing.T) {
 //
-//		// make and configure a mocked RequesterArgSameAsPkg
+//		// make and configure a mocked test.RequesterArgSameAsPkg
 //		mockedRequesterArgSameAsPkg := &RequesterArgSameAsPkgMoq{
 //			GetFunc: func(test string)  {
 //				panic("mock out the Get method")
 //			},
 //		}
 //
-//		// use mockedRequesterArgSameAsPkg in code that requires RequesterArgSameAsPkg
+//		// use mockedRequesterArgSameAsPkg in code that requires test.RequesterArgSameAsPkg
 //		// and then make assertions.
 //
 //	}

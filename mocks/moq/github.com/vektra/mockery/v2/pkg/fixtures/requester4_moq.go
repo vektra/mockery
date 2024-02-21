@@ -5,24 +5,26 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that Requester4Moq does implement Requester4.
+// Ensure, that Requester4Moq does implement test.Requester4.
 // If this is not the case, regenerate this file with moq.
-var _ Requester4 = &Requester4Moq{}
+var _ test.Requester4 = &Requester4Moq{}
 
-// Requester4Moq is a mock implementation of Requester4.
+// Requester4Moq is a mock implementation of test.Requester4.
 //
 //	func TestSomethingThatUsesRequester4(t *testing.T) {
 //
-//		// make and configure a mocked Requester4
+//		// make and configure a mocked test.Requester4
 //		mockedRequester4 := &Requester4Moq{
 //			GetFunc: func()  {
 //				panic("mock out the Get method")
 //			},
 //		}
 //
-//		// use mockedRequester4 in code that requires Requester4
+//		// use mockedRequester4 in code that requires test.Requester4
 //		// and then make assertions.
 //
 //	}

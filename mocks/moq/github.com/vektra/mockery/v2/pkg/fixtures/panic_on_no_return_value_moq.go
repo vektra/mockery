@@ -5,24 +5,26 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that PanicOnNoReturnValueMoq does implement PanicOnNoReturnValue.
+// Ensure, that PanicOnNoReturnValueMoq does implement test.PanicOnNoReturnValue.
 // If this is not the case, regenerate this file with moq.
-var _ PanicOnNoReturnValue = &PanicOnNoReturnValueMoq{}
+var _ test.PanicOnNoReturnValue = &PanicOnNoReturnValueMoq{}
 
-// PanicOnNoReturnValueMoq is a mock implementation of PanicOnNoReturnValue.
+// PanicOnNoReturnValueMoq is a mock implementation of test.PanicOnNoReturnValue.
 //
 //	func TestSomethingThatUsesPanicOnNoReturnValue(t *testing.T) {
 //
-//		// make and configure a mocked PanicOnNoReturnValue
+//		// make and configure a mocked test.PanicOnNoReturnValue
 //		mockedPanicOnNoReturnValue := &PanicOnNoReturnValueMoq{
 //			DoSomethingFunc: func() string {
 //				panic("mock out the DoSomething method")
 //			},
 //		}
 //
-//		// use mockedPanicOnNoReturnValue in code that requires PanicOnNoReturnValue
+//		// use mockedPanicOnNoReturnValue in code that requires test.PanicOnNoReturnValue
 //		// and then make assertions.
 //
 //	}

@@ -6,24 +6,26 @@ package test
 import (
 	"encoding/json"
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that RequesterArgSameAsNamedImportMoq does implement RequesterArgSameAsNamedImport.
+// Ensure, that RequesterArgSameAsNamedImportMoq does implement test.RequesterArgSameAsNamedImport.
 // If this is not the case, regenerate this file with moq.
-var _ RequesterArgSameAsNamedImport = &RequesterArgSameAsNamedImportMoq{}
+var _ test.RequesterArgSameAsNamedImport = &RequesterArgSameAsNamedImportMoq{}
 
-// RequesterArgSameAsNamedImportMoq is a mock implementation of RequesterArgSameAsNamedImport.
+// RequesterArgSameAsNamedImportMoq is a mock implementation of test.RequesterArgSameAsNamedImport.
 //
 //	func TestSomethingThatUsesRequesterArgSameAsNamedImport(t *testing.T) {
 //
-//		// make and configure a mocked RequesterArgSameAsNamedImport
+//		// make and configure a mocked test.RequesterArgSameAsNamedImport
 //		mockedRequesterArgSameAsNamedImport := &RequesterArgSameAsNamedImportMoq{
 //			GetFunc: func(jsonMoqParam string) *json.RawMessage {
 //				panic("mock out the Get method")
 //			},
 //		}
 //
-//		// use mockedRequesterArgSameAsNamedImport in code that requires RequesterArgSameAsNamedImport
+//		// use mockedRequesterArgSameAsNamedImport in code that requires test.RequesterArgSameAsNamedImport
 //		// and then make assertions.
 //
 //	}

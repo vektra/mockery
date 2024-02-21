@@ -5,24 +5,26 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that MyReaderMoq does implement MyReader.
+// Ensure, that MyReaderMoq does implement test.MyReader.
 // If this is not the case, regenerate this file with moq.
-var _ MyReader = &MyReaderMoq{}
+var _ test.MyReader = &MyReaderMoq{}
 
-// MyReaderMoq is a mock implementation of MyReader.
+// MyReaderMoq is a mock implementation of test.MyReader.
 //
 //	func TestSomethingThatUsesMyReader(t *testing.T) {
 //
-//		// make and configure a mocked MyReader
+//		// make and configure a mocked test.MyReader
 //		mockedMyReader := &MyReaderMoq{
 //			ReadFunc: func(p []byte) (int, error) {
 //				panic("mock out the Read method")
 //			},
 //		}
 //
-//		// use mockedMyReader in code that requires MyReader
+//		// use mockedMyReader in code that requires test.MyReader
 //		// and then make assertions.
 //
 //	}

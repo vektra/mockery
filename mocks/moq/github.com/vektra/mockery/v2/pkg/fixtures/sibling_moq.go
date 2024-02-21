@@ -5,24 +5,26 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that SiblingMoq does implement Sibling.
+// Ensure, that SiblingMoq does implement test.Sibling.
 // If this is not the case, regenerate this file with moq.
-var _ Sibling = &SiblingMoq{}
+var _ test.Sibling = &SiblingMoq{}
 
-// SiblingMoq is a mock implementation of Sibling.
+// SiblingMoq is a mock implementation of test.Sibling.
 //
 //	func TestSomethingThatUsesSibling(t *testing.T) {
 //
-//		// make and configure a mocked Sibling
+//		// make and configure a mocked test.Sibling
 //		mockedSibling := &SiblingMoq{
 //			DoSomethingFunc: func()  {
 //				panic("mock out the DoSomething method")
 //			},
 //		}
 //
-//		// use mockedSibling in code that requires Sibling
+//		// use mockedSibling in code that requires test.Sibling
 //		// and then make assertions.
 //
 //	}

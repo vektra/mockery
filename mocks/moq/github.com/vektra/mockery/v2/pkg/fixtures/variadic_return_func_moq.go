@@ -5,24 +5,26 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that VariadicReturnFuncMoq does implement VariadicReturnFunc.
+// Ensure, that VariadicReturnFuncMoq does implement test.VariadicReturnFunc.
 // If this is not the case, regenerate this file with moq.
-var _ VariadicReturnFunc = &VariadicReturnFuncMoq{}
+var _ test.VariadicReturnFunc = &VariadicReturnFuncMoq{}
 
-// VariadicReturnFuncMoq is a mock implementation of VariadicReturnFunc.
+// VariadicReturnFuncMoq is a mock implementation of test.VariadicReturnFunc.
 //
 //	func TestSomethingThatUsesVariadicReturnFunc(t *testing.T) {
 //
-//		// make and configure a mocked VariadicReturnFunc
+//		// make and configure a mocked test.VariadicReturnFunc
 //		mockedVariadicReturnFunc := &VariadicReturnFuncMoq{
 //			SampleMethodFunc: func(str string) func(str string, arr []int, a ...interface{}) {
 //				panic("mock out the SampleMethod method")
 //			},
 //		}
 //
-//		// use mockedVariadicReturnFunc in code that requires VariadicReturnFunc
+//		// use mockedVariadicReturnFunc in code that requires test.VariadicReturnFunc
 //		// and then make assertions.
 //
 //	}

@@ -5,24 +5,26 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that StructWithTagMoq does implement StructWithTag.
+// Ensure, that StructWithTagMoq does implement test.StructWithTag.
 // If this is not the case, regenerate this file with moq.
-var _ StructWithTag = &StructWithTagMoq{}
+var _ test.StructWithTag = &StructWithTagMoq{}
 
-// StructWithTagMoq is a mock implementation of StructWithTag.
+// StructWithTagMoq is a mock implementation of test.StructWithTag.
 //
 //	func TestSomethingThatUsesStructWithTag(t *testing.T) {
 //
-//		// make and configure a mocked StructWithTag
+//		// make and configure a mocked test.StructWithTag
 //		mockedStructWithTag := &StructWithTagMoq{
 //			MethodAFunc: func(v *struct{FieldA int "json:\"field_a\""; FieldB int "json:\"field_b\" xml:\"field_b\""}) *struct{FieldC int "json:\"field_c\""; FieldD int "json:\"field_d\" xml:\"field_d\""} {
 //				panic("mock out the MethodA method")
 //			},
 //		}
 //
-//		// use mockedStructWithTag in code that requires StructWithTag
+//		// use mockedStructWithTag in code that requires test.StructWithTag
 //		// and then make assertions.
 //
 //	}

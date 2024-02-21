@@ -7,18 +7,19 @@ import (
 	"net/http"
 	"sync"
 
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 	my_http "github.com/vektra/mockery/v2/pkg/fixtures/http"
 )
 
-// Ensure, that HasConflictingNestedImportsMoq does implement HasConflictingNestedImports.
+// Ensure, that HasConflictingNestedImportsMoq does implement test.HasConflictingNestedImports.
 // If this is not the case, regenerate this file with moq.
-var _ HasConflictingNestedImports = &HasConflictingNestedImportsMoq{}
+var _ test.HasConflictingNestedImports = &HasConflictingNestedImportsMoq{}
 
-// HasConflictingNestedImportsMoq is a mock implementation of HasConflictingNestedImports.
+// HasConflictingNestedImportsMoq is a mock implementation of test.HasConflictingNestedImports.
 //
 //	func TestSomethingThatUsesHasConflictingNestedImports(t *testing.T) {
 //
-//		// make and configure a mocked HasConflictingNestedImports
+//		// make and configure a mocked test.HasConflictingNestedImports
 //		mockedHasConflictingNestedImports := &HasConflictingNestedImportsMoq{
 //			GetFunc: func(path string) (http.Response, error) {
 //				panic("mock out the Get method")
@@ -28,7 +29,7 @@ var _ HasConflictingNestedImports = &HasConflictingNestedImportsMoq{}
 //			},
 //		}
 //
-//		// use mockedHasConflictingNestedImports in code that requires HasConflictingNestedImports
+//		// use mockedHasConflictingNestedImports in code that requires test.HasConflictingNestedImports
 //		// and then make assertions.
 //
 //	}

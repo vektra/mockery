@@ -5,24 +5,26 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that RequesterSliceMoq does implement RequesterSlice.
+// Ensure, that RequesterSliceMoq does implement test.RequesterSlice.
 // If this is not the case, regenerate this file with moq.
-var _ RequesterSlice = &RequesterSliceMoq{}
+var _ test.RequesterSlice = &RequesterSliceMoq{}
 
-// RequesterSliceMoq is a mock implementation of RequesterSlice.
+// RequesterSliceMoq is a mock implementation of test.RequesterSlice.
 //
 //	func TestSomethingThatUsesRequesterSlice(t *testing.T) {
 //
-//		// make and configure a mocked RequesterSlice
+//		// make and configure a mocked test.RequesterSlice
 //		mockedRequesterSlice := &RequesterSliceMoq{
 //			GetFunc: func(path string) ([]string, error) {
 //				panic("mock out the Get method")
 //			},
 //		}
 //
-//		// use mockedRequesterSlice in code that requires RequesterSlice
+//		// use mockedRequesterSlice in code that requires test.RequesterSlice
 //		// and then make assertions.
 //
 //	}

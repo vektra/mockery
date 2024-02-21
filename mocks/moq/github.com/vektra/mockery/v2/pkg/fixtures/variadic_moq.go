@@ -5,24 +5,26 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that VariadicMoq does implement Variadic.
+// Ensure, that VariadicMoq does implement test.Variadic.
 // If this is not the case, regenerate this file with moq.
-var _ Variadic = &VariadicMoq{}
+var _ test.Variadic = &VariadicMoq{}
 
-// VariadicMoq is a mock implementation of Variadic.
+// VariadicMoq is a mock implementation of test.Variadic.
 //
 //	func TestSomethingThatUsesVariadic(t *testing.T) {
 //
-//		// make and configure a mocked Variadic
+//		// make and configure a mocked test.Variadic
 //		mockedVariadic := &VariadicMoq{
 //			VariadicFunctionFunc: func(str string, vFunc func(args1 string, args2 ...interface{}) interface{}) error {
 //				panic("mock out the VariadicFunction method")
 //			},
 //		}
 //
-//		// use mockedVariadic in code that requires Variadic
+//		// use mockedVariadic in code that requires test.Variadic
 //		// and then make assertions.
 //
 //	}

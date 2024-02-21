@@ -5,24 +5,26 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that BlankMoq does implement Blank.
+// Ensure, that BlankMoq does implement test.Blank.
 // If this is not the case, regenerate this file with moq.
-var _ Blank = &BlankMoq{}
+var _ test.Blank = &BlankMoq{}
 
-// BlankMoq is a mock implementation of Blank.
+// BlankMoq is a mock implementation of test.Blank.
 //
 //	func TestSomethingThatUsesBlank(t *testing.T) {
 //
-//		// make and configure a mocked Blank
+//		// make and configure a mocked test.Blank
 //		mockedBlank := &BlankMoq{
 //			CreateFunc: func(x interface{}) error {
 //				panic("mock out the Create method")
 //			},
 //		}
 //
-//		// use mockedBlank in code that requires Blank
+//		// use mockedBlank in code that requires test.Blank
 //		// and then make assertions.
 //
 //	}

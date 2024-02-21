@@ -9,22 +9,22 @@ import (
 	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that AMoq does implement A.
+// Ensure, that AMoq does implement test.A.
 // If this is not the case, regenerate this file with moq.
-var _ A = &AMoq{}
+var _ test.A = &AMoq{}
 
-// AMoq is a mock implementation of A.
+// AMoq is a mock implementation of test.A.
 //
 //	func TestSomethingThatUsesA(t *testing.T) {
 //
-//		// make and configure a mocked A
+//		// make and configure a mocked test.A
 //		mockedA := &AMoq{
 //			CallFunc: func() (test.B, error) {
 //				panic("mock out the Call method")
 //			},
 //		}
 //
-//		// use mockedA in code that requires A
+//		// use mockedA in code that requires test.A
 //		// and then make assertions.
 //
 //	}

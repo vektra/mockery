@@ -5,24 +5,26 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that RequesterPtrMoq does implement RequesterPtr.
+// Ensure, that RequesterPtrMoq does implement test.RequesterPtr.
 // If this is not the case, regenerate this file with moq.
-var _ RequesterPtr = &RequesterPtrMoq{}
+var _ test.RequesterPtr = &RequesterPtrMoq{}
 
-// RequesterPtrMoq is a mock implementation of RequesterPtr.
+// RequesterPtrMoq is a mock implementation of test.RequesterPtr.
 //
 //	func TestSomethingThatUsesRequesterPtr(t *testing.T) {
 //
-//		// make and configure a mocked RequesterPtr
+//		// make and configure a mocked test.RequesterPtr
 //		mockedRequesterPtr := &RequesterPtrMoq{
 //			GetFunc: func(path string) (*string, error) {
 //				panic("mock out the Get method")
 //			},
 //		}
 //
-//		// use mockedRequesterPtr in code that requires RequesterPtr
+//		// use mockedRequesterPtr in code that requires test.RequesterPtr
 //		// and then make assertions.
 //
 //	}

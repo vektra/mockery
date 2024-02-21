@@ -6,24 +6,26 @@ package test
 import (
 	"io"
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that RequesterIfaceMoq does implement RequesterIface.
+// Ensure, that RequesterIfaceMoq does implement test.RequesterIface.
 // If this is not the case, regenerate this file with moq.
-var _ RequesterIface = &RequesterIfaceMoq{}
+var _ test.RequesterIface = &RequesterIfaceMoq{}
 
-// RequesterIfaceMoq is a mock implementation of RequesterIface.
+// RequesterIfaceMoq is a mock implementation of test.RequesterIface.
 //
 //	func TestSomethingThatUsesRequesterIface(t *testing.T) {
 //
-//		// make and configure a mocked RequesterIface
+//		// make and configure a mocked test.RequesterIface
 //		mockedRequesterIface := &RequesterIfaceMoq{
 //			GetFunc: func() io.Reader {
 //				panic("mock out the Get method")
 //			},
 //		}
 //
-//		// use mockedRequesterIface in code that requires RequesterIface
+//		// use mockedRequesterIface in code that requires test.RequesterIface
 //		// and then make assertions.
 //
 //	}

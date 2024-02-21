@@ -5,17 +5,19 @@ package test
 
 import (
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that ConsulLockMoq does implement ConsulLock.
+// Ensure, that ConsulLockMoq does implement test.ConsulLock.
 // If this is not the case, regenerate this file with moq.
-var _ ConsulLock = &ConsulLockMoq{}
+var _ test.ConsulLock = &ConsulLockMoq{}
 
-// ConsulLockMoq is a mock implementation of ConsulLock.
+// ConsulLockMoq is a mock implementation of test.ConsulLock.
 //
 //	func TestSomethingThatUsesConsulLock(t *testing.T) {
 //
-//		// make and configure a mocked ConsulLock
+//		// make and configure a mocked test.ConsulLock
 //		mockedConsulLock := &ConsulLockMoq{
 //			LockFunc: func(valCh <-chan struct{}) (<-chan struct{}, error) {
 //				panic("mock out the Lock method")
@@ -25,7 +27,7 @@ var _ ConsulLock = &ConsulLockMoq{}
 //			},
 //		}
 //
-//		// use mockedConsulLock in code that requires ConsulLock
+//		// use mockedConsulLock in code that requires test.ConsulLock
 //		// and then make assertions.
 //
 //	}

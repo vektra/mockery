@@ -6,17 +6,19 @@ package test
 import (
 	"io"
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
-// Ensure, that RequesterVariadicMoq does implement RequesterVariadic.
+// Ensure, that RequesterVariadicMoq does implement test.RequesterVariadic.
 // If this is not the case, regenerate this file with moq.
-var _ RequesterVariadic = &RequesterVariadicMoq{}
+var _ test.RequesterVariadic = &RequesterVariadicMoq{}
 
-// RequesterVariadicMoq is a mock implementation of RequesterVariadic.
+// RequesterVariadicMoq is a mock implementation of test.RequesterVariadic.
 //
 //	func TestSomethingThatUsesRequesterVariadic(t *testing.T) {
 //
-//		// make and configure a mocked RequesterVariadic
+//		// make and configure a mocked test.RequesterVariadic
 //		mockedRequesterVariadic := &RequesterVariadicMoq{
 //			GetFunc: func(values ...string) bool {
 //				panic("mock out the Get method")
@@ -32,7 +34,7 @@ var _ RequesterVariadic = &RequesterVariadicMoq{}
 //			},
 //		}
 //
-//		// use mockedRequesterVariadic in code that requires RequesterVariadic
+//		// use mockedRequesterVariadic in code that requires test.RequesterVariadic
 //		// and then make assertions.
 //
 //	}

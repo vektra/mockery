@@ -6,25 +6,26 @@ package test
 import (
 	"sync"
 
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 	"github.com/vektra/mockery/v2/pkg/fixtures/constraints"
 )
 
-// Ensure, that GetGenericMoq does implement GetGeneric.
+// Ensure, that GetGenericMoq does implement test.GetGeneric.
 // If this is not the case, regenerate this file with moq.
-var _ GetGeneric[int] = &GetGenericMoq[int]{}
+var _ test.GetGeneric[int] = &GetGenericMoq[int]{}
 
-// GetGenericMoq is a mock implementation of GetGeneric.
+// GetGenericMoq is a mock implementation of test.GetGeneric.
 //
 //	func TestSomethingThatUsesGetGeneric(t *testing.T) {
 //
-//		// make and configure a mocked GetGeneric
+//		// make and configure a mocked test.GetGeneric
 //		mockedGetGeneric := &GetGenericMoq{
 //			GetFunc: func() T {
 //				panic("mock out the Get method")
 //			},
 //		}
 //
-//		// use mockedGetGeneric in code that requires GetGeneric
+//		// use mockedGetGeneric in code that requires test.GetGeneric
 //		// and then make assertions.
 //
 //	}
