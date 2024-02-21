@@ -7,4 +7,9 @@ coverage:
       default:
         target: 0%
         threshold: 35%
+        base: auto
+    project:
+      default:
+        target: 0%
+        threshold: 35%
         base: auto 
