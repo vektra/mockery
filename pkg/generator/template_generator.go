@@ -26,8 +26,8 @@ type TemplateGenerator struct {
 	registry *registry.Registry
 }
 
-func NewTemplateGenerator(srcPkg *packages.Package, config TemplateGeneratorConfig, outPkg string) (*TemplateGenerator, error) {
-	reg, err := registry.New(srcPkg, outPkg)
+func NewTemplateGenerator(srcPkg *packages.Package, config TemplateGeneratorConfig, outPkgPath string) (*TemplateGenerator, error) {
+	reg, err := registry.New(srcPkg, outPkgPath)
 	if err != nil {
 		return nil, fmt.Errorf("creating new registry: %w", err)
 	}

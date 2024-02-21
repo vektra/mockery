@@ -334,13 +334,27 @@ func (o *Outputter) Generate(ctx context.Context, iface *Interface) error {
 			}
 			continue
 		}
-		logging.WarnAlpha(ifaceCtx, "usage of mock styles other than mockery is currently in an alpha state.", nil)
+		logging.WarnAlpha(ifaceCtx, "usage of mock  styles other than mockery is currently in an alpha state.", nil)
 		ifaceLog.Debug().Msg("generating templated mock")
 
 		config := generator.TemplateGeneratorConfig{
 			Style: interfaceConfig.Style,
 		}
-		generator, err := generator.NewTemplateGenerator(iface.PackagesPackage, config, interfaceConfig.Outpkg)
+
+		// The registry needs to know what the mock's package path is, to determine
+		// whether or not to import the originating package. There's not a super good
+		// way to do this automatically. The automatic solution would be to search for
+		// a go.mod file up to root, then append the mock's relative path with the declared
+		// module name. Maybe we will do that in the future, but for now we will rely on
+		// the user having to configure this. Another solution: check if interfaceConfig.Dir
+		// equals the original interface path?
+		var outPkgPath string
+		if interfaceConfig.InPackage {
+			outPkgPath = iface.Pkg.Path()
+		} else {
+			outPkgPath = interfaceConfig.Dir
+		}
+		generator, err := generator.NewTemplateGenerator(iface.PackagesPackage, config, outPkgPath)
 		if err != nil {
 			return fmt.Errorf("creating template generator: %w", err)
 		}
