@@ -617,10 +617,10 @@ func (c *Config) subPackages(
 			if err != nil {
 				return err
 			}
+
 			if shouldExclude {
 				return pathlib.ErrWalkSkipSubtree
 			}
-			return nil
 		}
 
 		_, haveVisitedDir := visitedDirs[path.Parent().String()]

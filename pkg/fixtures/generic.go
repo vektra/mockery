@@ -36,3 +36,17 @@ type GetInt interface{ Get() int }
 type GetGeneric[T constraints.Integer] interface{ Get() T }
 
 type EmbeddedGet[T constraints.Signed] interface{ GetGeneric[T] }
+
+type ReplaceGeneric[
+	TImport any,
+	TConstraint constraints.Signed,
+	TKeep any,
+] interface {
+	A(t1 TImport) TKeep
+	B() TImport
+	C() TConstraint
+}
+
+type ReplaceGenericSelf[T any] interface {
+	A() T
+}

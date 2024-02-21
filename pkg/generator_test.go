@@ -799,6 +799,14 @@ func TestParseReplaceType(t *testing.T) {
 			value:    "github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz",
 			expected: replaceType{alias: "", pkg: "github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz", typ: ""},
 		},
+		{
+			value:    "github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz/internal/foo.InternalBaz[T]",
+			expected: replaceType{alias: "", pkg: "github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz/internal/foo", typ: "InternalBaz", param: "T"},
+		},
+		{
+			value:    "github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz/internal/foo.InternalBaz[-T]",
+			expected: replaceType{alias: "", pkg: "github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz/internal/foo", typ: "InternalBaz", param: "T", rmvParam: true},
+		},
 	}
 
 	for _, test := range tests {

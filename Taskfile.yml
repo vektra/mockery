@@ -13,7 +13,7 @@ tasks:
       - "**/*.go"
     cmds:
       - go fmt ./...
-    
+
   mocks:
     desc: generate new mocks from scratch
     deps: [mocks.remove, mocks.generate]

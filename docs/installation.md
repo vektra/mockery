@@ -4,9 +4,7 @@ Getting Started
 Installation
 -------------
 
-### GitHub Release
-
-<small>recommended</small>
+### GitHub Release <small>recommended</small>
 
 Visit the [releases page](https://github.com/vektra/mockery/releases) to download one of the pre-built binaries for your platform.
 
