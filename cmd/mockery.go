@@ -234,7 +234,7 @@ func (r *RootApp) Run() error {
 		if err != nil {
 			return fmt.Errorf("failed to get package from config: %w", err)
 		}
-		parser := pkg.NewParser(buildTags, pkg.ParserSkipFunctions(true))
+		parser := pkg.NewParser(buildTags, pkg.ParserSkipFunctions(false))
 
 		if err := parser.ParsePackages(ctx, configuredPackages); err != nil {
 			log.Error().Err(err).Msg("unable to parse packages")
@@ -255,7 +255,7 @@ func (r *RootApp) Run() error {
 
 			ifaceCtx := ifaceLog.WithContext(ctx)
 
-			shouldGenerate, err := r.Config.ShouldGenerateInterface(ifaceCtx, iface.QualifiedName, iface.Name)
+			shouldGenerate, err := r.Config.ShouldGenerateInterface(ifaceCtx, iface.QualifiedName, iface.Name, iface.IsFunction)
 			if err != nil {
 				return err
 			}

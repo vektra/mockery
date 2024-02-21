@@ -150,7 +150,7 @@ func (g *TemplateGenerator) Generate(ctx context.Context, ifaceName string, ifac
 		g.registry.AddImport(ctx, types.NewPackage("sync", "sync"))
 	}
 
-	if g.registry.SrcPkgName() != ifaceConfig.Outpkg {
+	if !ifaceConfig.InPackage {
 		data.SrcPkgQualifier = g.registry.SrcPkgName() + "."
 		skipEnsure, ok := ifaceConfig.TemplateMap["skip-ensure"]
 		if !ok || !skipEnsure.(bool) {

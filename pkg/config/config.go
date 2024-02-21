@@ -293,12 +293,19 @@ func (c *Config) ExcludePath(path string) bool {
 	return false
 }
 
-func (c *Config) ShouldGenerateInterface(ctx context.Context, packageName, interfaceName string) (bool, error) {
+func (c *Config) ShouldGenerateInterface(ctx context.Context, packageName, interfaceName string, isFunction bool) (bool, error) {
 	pkgConfig, err := c.GetPackageConfig(ctx, packageName)
 	if err != nil {
 		return false, fmt.Errorf("getting package config: %w", err)
 	}
 
+	ifaceCfg, err := c.GetInterfaceConfig(ctx, packageName, interfaceName)
+	if err != nil {
+		return false, err
+	}
+	if ifaceCfg[0].Style != "mockery" && isFunction {
+		return false, nil
+	}
 	log := zerolog.Ctx(ctx)
 	if pkgConfig.All {
 		if pkgConfig.IncludeRegex != "" {

@@ -14,10 +14,10 @@ packages:
         with-resets: true
         skip-ensure: false
         stub-impl: false
+      inpackage: false
   github.com/vektra/mockery/v2/pkg/fixtures/inpackage:
     config:
       dir: "{{.InterfaceDir}}"
       all: True
       outpkg: "{{.PackageName}}"
       inpackage: true
-      
