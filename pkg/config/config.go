@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"reflect"
 	"regexp"
 	"strings"
@@ -661,7 +662,7 @@ func (c *Config) subPackages(
 			return nil, fmt.Errorf("failed to make subroot relative to root: %w", err)
 		}
 		absolutePackageName := packageRootName.Join(relativeFilesystemPath.Parts()...)
-		subPackages = append(subPackages, absolutePackageName.String())
+		subPackages = append(subPackages, filepath.ToSlash(absolutePackageName.String()))
 	}
 
 	return subPackages, nil
