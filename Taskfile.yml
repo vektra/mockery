@@ -21,13 +21,14 @@ tasks:
   mocks.remove:
     desc: remove all mock files
     cmds:
-      - find . -name '*_mock.go' | xargs rm
+      - find . -name '*_mock.go' -o -name '*_moq.go' | xargs rm
       - rm -rf mocks/
 
   mocks.generate:
     desc: generate mockery mocks
     cmds:
       - go run .
+      - go run . --config .mockery-moq.yaml
 
   docker:
     desc: build the mockery docker image

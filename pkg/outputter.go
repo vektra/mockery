@@ -19,6 +19,7 @@ import (
 	"github.com/rs/zerolog"
 
 	"github.com/vektra/mockery/v2/pkg/config"
+	"github.com/vektra/mockery/v2/pkg/generator"
 	"github.com/vektra/mockery/v2/pkg/logging"
 	"github.com/vektra/mockery/v2/pkg/stackerr"
 )
@@ -296,16 +297,14 @@ type Outputter struct {
 func NewOutputter(
 	config *config.Config,
 	boilerplate string,
-	dryRun bool,
 ) *Outputter {
 	return &Outputter{
 		boilerplate: boilerplate,
 		config:      config,
-		dryRun:      dryRun,
 	}
 }
 
-func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
+func (o *Outputter) Generate(ctx context.Context, iface *Interface) error {
 	log := zerolog.Ctx(ctx).With().
 		Str(logging.LogKeyInterface, iface.Name).
 		Str(logging.LogKeyQualifiedName, iface.QualifiedName).
@@ -315,57 +314,98 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 	log.Info().Msg("generating mocks for interface")
 
 	log.Debug().Msg("getting config for interface")
-	interfaceConfigs, err := m.config.GetInterfaceConfig(ctx, iface.QualifiedName, iface.Name)
+	interfaceConfigs, err := o.config.GetInterfaceConfig(ctx, iface.QualifiedName, iface.Name)
 	if err != nil {
 		return err
 	}
 
 	for _, interfaceConfig := range interfaceConfigs {
 		interfaceConfig.LogUnsupportedPackagesConfig(ctx)
-
-		log.Debug().Msg("getting mock generator")
+		ifaceLog := log.With().Str("style", interfaceConfig.Style).Logger()
+		ifaceCtx := ifaceLog.WithContext(ctx)
 
 		if err := parseConfigTemplates(ctx, interfaceConfig, iface); err != nil {
 			return fmt.Errorf("failed to parse config template: %w", err)
 		}
-
-		g := GeneratorConfig{
-			Boilerplate:          m.boilerplate,
-			DisableVersionString: interfaceConfig.DisableVersionString,
-			Exported:             interfaceConfig.Exported,
-			InPackage:            interfaceConfig.InPackage,
-			KeepTree:             interfaceConfig.KeepTree,
-			Note:                 interfaceConfig.Note,
-			MockBuildTags:        interfaceConfig.MockBuildTags,
-			PackageName:          interfaceConfig.Outpkg,
-			PackageNamePrefix:    interfaceConfig.Packageprefix,
-			StructName:           interfaceConfig.MockName,
-			UnrollVariadic:       interfaceConfig.UnrollVariadic,
-			WithExpecter:         interfaceConfig.WithExpecter,
-			ReplaceType:          interfaceConfig.ReplaceType,
+		if interfaceConfig.Style == "mockery" {
+			ifaceLog.Debug().Msg("generating mockery mocks")
+			if err := o.generateMockery(ctx, iface, interfaceConfig); err != nil {
+				return err
+			}
+			continue
 		}
-		generator := NewGenerator(ctx, g, iface, "")
+		logging.WarnAlpha(ifaceCtx, "usage of mock  styles other than mockery is currently in an alpha state.", nil)
+		ifaceLog.Debug().Msg("generating templated mock")
 
-		log.Debug().Msg("generating mock in-memory")
-		if err := generator.GenerateAll(ctx); err != nil {
-			return err
+		config := generator.TemplateGeneratorConfig{
+			Style: interfaceConfig.Style,
 		}
 
-		outputPath := pathlib.NewPath(interfaceConfig.Dir).Join(interfaceConfig.FileName)
-		if err := outputPath.Parent().MkdirAll(); err != nil {
-			return stackerr.NewStackErrf(err, "failed to mkdir parents of: %v", outputPath)
+		// The registry needs to know what the mock's package path is, to determine
+		// whether or not to import the originating package. There's not a super good
+		// way to do this automatically. The automatic solution would be to search for
+		// a go.mod file up to root, then append the mock's relative path with the declared
+		// module name. Maybe we will do that in the future, but for now we will rely on
+		// the user having to configure this. Another solution: check if interfaceConfig.Dir
+		// equals the original interface path?
+		var outPkgPath string
+		if interfaceConfig.InPackage {
+			outPkgPath = iface.Pkg.Path()
+		} else {
+			outPkgPath = interfaceConfig.Dir
 		}
-
-		fileLog := log.With().Stringer(logging.LogKeyFile, outputPath).Logger()
-		fileLog.Info().Msg("writing to file")
-		file, err := outputPath.OpenFile(os.O_RDWR | os.O_CREATE | os.O_TRUNC)
+		generator, err := generator.NewTemplateGenerator(iface.PackagesPackage, config, outPkgPath)
 		if err != nil {
-			return stackerr.NewStackErrf(err, "failed to open output file for mock: %v", outputPath)
+			return fmt.Errorf("creating template generator: %w", err)
 		}
-		defer file.Close()
-		if err := generator.Write(file); err != nil {
-			return stackerr.NewStackErrf(err, "failed to write to file")
+
+		if err := generator.Generate(ctx, iface.Name, interfaceConfig); err != nil {
+			return fmt.Errorf("generating template: %w", err)
 		}
+
+	}
+	return nil
+}
+
+func (o *Outputter) generateMockery(ctx context.Context, iface *Interface, interfaceConfig *config.Config) error {
+	log := zerolog.Ctx(ctx)
+
+	g := GeneratorConfig{
+		Boilerplate:          o.boilerplate,
+		DisableVersionString: interfaceConfig.DisableVersionString,
+		Exported:             interfaceConfig.Exported,
+		InPackage:            interfaceConfig.InPackage,
+		KeepTree:             interfaceConfig.KeepTree,
+		Note:                 interfaceConfig.Note,
+		MockBuildTags:        interfaceConfig.MockBuildTags,
+		PackageName:          interfaceConfig.Outpkg,
+		PackageNamePrefix:    interfaceConfig.Packageprefix,
+		StructName:           interfaceConfig.MockName,
+		UnrollVariadic:       interfaceConfig.UnrollVariadic,
+		WithExpecter:         interfaceConfig.WithExpecter,
+		ReplaceType:          interfaceConfig.ReplaceType,
+	}
+	generator := NewGenerator(ctx, g, iface, "")
+
+	log.Debug().Msg("generating mock in-memory")
+	if err := generator.GenerateAll(ctx); err != nil {
+		return err
+	}
+
+	outputPath := pathlib.NewPath(interfaceConfig.Dir).Join(interfaceConfig.FileName)
+	if err := outputPath.Parent().MkdirAll(); err != nil {
+		return stackerr.NewStackErrf(err, "failed to mkdir parents of: %v", outputPath)
+	}
+
+	fileLog := log.With().Stringer(logging.LogKeyFile, outputPath).Logger()
+	fileLog.Info().Msg("writing to file")
+	file, err := outputPath.OpenFile(os.O_RDWR | os.O_CREATE | os.O_TRUNC)
+	if err != nil {
+		return stackerr.NewStackErrf(err, "failed to open output file for mock: %v", outputPath)
+	}
+	defer file.Close()
+	if err := generator.Write(file); err != nil {
+		return stackerr.NewStackErrf(err, "failed to write to file")
 	}
 	return nil
 }

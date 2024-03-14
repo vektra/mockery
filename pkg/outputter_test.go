@@ -226,7 +226,9 @@ func TestOutputter_Generate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		if tt.fields.config == nil {
-			tt.fields.config = &config.Config{}
+			tt.fields.config = &config.Config{
+				Style: "mockery",
+			}
 		}
 		tt.fields.config.Dir = t.TempDir()
 		tt.fields.config.MockName = "Mock{{.InterfaceName}}"
