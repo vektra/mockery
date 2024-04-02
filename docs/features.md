@@ -318,9 +318,9 @@ A `RunAndReturn` method is also available on the expecter struct that allows you
 ```go
 requesterMock.EXPECT().
 	Get(mock.Anything).
-	RunAndReturn(func(path string) string { 
+	RunAndReturn(func(path string) (string, error) { 
 		fmt.Println(path, "was called")
-		return "result for " + path
+		return ("result for " + path), nil
 	})
 ```
 
