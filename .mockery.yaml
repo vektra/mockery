@@ -36,7 +36,6 @@ packages:
             unroll-variadic: False
           - mockname: Expecter
             unroll-variadic: True
-      RequesterReturnElided:
       VariadicNoReturnInterface:
         config:
           with-expecter: True

@@ -12,7 +12,6 @@ import (
 
 	"github.com/chigopher/pathlib"
 	"github.com/mitchellh/go-homedir"
-	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -83,6 +82,7 @@ func NewRootCmd() *cobra.Command {
 	pFlags.Bool("exported", false, "Generates public mocks for private interfaces.")
 	pFlags.Bool("with-expecter", false, "Generate expecter utility around mock's On, Run and Return methods with explicit types. This option is NOT compatible with -unroll-variadic=false")
 	pFlags.StringArray("replace-type", nil, "Replace types")
+	pFlags.String("style", "", "select which mock style to use")
 
 	if err := viperCfg.BindPFlags(pFlags); err != nil {
 		panic(fmt.Sprintf("failed to bind PFlags: %v", err))
@@ -212,10 +212,6 @@ func (r *RootApp) Run() error {
 		return nil
 	}
 
-	var osp pkg.OutputStreamProvider
-	if r.Config.Print {
-		osp = &pkg.StdoutStreamProvider{}
-	}
 	buildTags := strings.Split(r.Config.BuildTags, " ")
 
 	var boilerplate string
@@ -238,7 +234,7 @@ func (r *RootApp) Run() error {
 		if err != nil {
 			return fmt.Errorf("failed to get package from config: %w", err)
 		}
-		parser := pkg.NewParser(buildTags)
+		parser := pkg.NewParser(buildTags, pkg.ParserSkipFunctions(false))
 
 		if err := parser.ParsePackages(ctx, configuredPackages); err != nil {
 			log.Error().Err(err).Msg("unable to parse packages")
@@ -259,7 +255,7 @@ func (r *RootApp) Run() error {
 
 			ifaceCtx := ifaceLog.WithContext(ctx)
 
-			shouldGenerate, err := r.Config.ShouldGenerateInterface(ifaceCtx, iface.QualifiedName, iface.Name)
+			shouldGenerate, err := r.Config.ShouldGenerateInterface(ifaceCtx, iface.QualifiedName, iface.Name, iface.IsFunction)
 			if err != nil {
 				return err
 			}
@@ -269,13 +265,18 @@ func (r *RootApp) Run() error {
 			}
 			ifaceLog.Debug().Msg("config specifies to generate this interface")
 
-			outputter := pkg.NewOutputter(&r.Config, boilerplate, true)
+			outputter := pkg.NewOutputter(&r.Config, boilerplate)
 			if err := outputter.Generate(ifaceCtx, iface); err != nil {
 				return err
 			}
 		}
 
 		return nil
+	}
+
+	var osp pkg.OutputStreamProvider
+	if r.Config.Print {
+		osp = &pkg.StdoutStreamProvider{}
 	}
 
 	if r.Config.Name != "" && r.Config.All {
@@ -303,7 +304,7 @@ func (r *RootApp) Run() error {
 		log.Fatal().Msgf("Use --name to specify the name of the interface or --all for all interfaces found")
 	}
 
-	warnDeprecated(
+	logging.WarnDeprecated(
 		ctx,
 		"use of the packages config will be the only way to generate mocks in v3. Please migrate your config to use the packages feature.",
 		map[string]any{
@@ -394,26 +395,4 @@ func (r *RootApp) Run() error {
 	}
 
 	return nil
-}
-
-func warn(ctx context.Context, prefix string, message string, fields map[string]any) {
-	log := zerolog.Ctx(ctx)
-	event := log.Warn()
-	if fields != nil {
-		event = event.Fields(fields)
-	}
-	event.Msgf("%s: %s", prefix, message)
-}
-
-func info(ctx context.Context, prefix string, message string, fields map[string]any) {
-	log := zerolog.Ctx(ctx)
-	event := log.Info()
-	if fields != nil {
-		event = event.Fields(fields)
-	}
-	event.Msgf("%s: %s", prefix, message)
-}
-
-func warnDeprecated(ctx context.Context, message string, fields map[string]any) {
-	warn(ctx, "DEPRECATION", message, fields)
 }

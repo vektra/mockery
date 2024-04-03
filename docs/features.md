@@ -1,6 +1,123 @@
 Features
 ========
 
+Mock Styles
+------------
+
+:octicons-tag-24: v2.42.0 :material-test-tube:{ .tooltip foo }
+
+!!! warning "ALPHA"
+    This feature is currently in alpha. Usage is not recommended for production applications as the configuration semantics and/or mock behavior might change in future releases.
+
+mockery provides a parameter called `#!yaml style:` that allows you to specify different styles of mock implementations. This parameter defaults to `#!yaml style: mockery`, but you may also provide other values described below:
+
+| style | description |
+|-------|-------------|
+| `mockery` | The default style. Generates the mocks that you typically expect from this project. |
+| `moq` | Generates mocks in the style of [Mat Ryer's project](https://github.com/matryer/moq). |
+
+This table describes the characteristics of each mock style.
+
+| feature | `mockery` | `moq` |
+|---------|-----------|-------|
+| Uses testify | :white_check_mark: | :x: |
+| Strictly typed arguments | :warning:[^1] | :white_check_mark: |
+| Stricly typed return values | :white_check_mark: | :white_check_mark: |
+| Multiple mocks per file | :x: | :x: |
+| Return values mapped from argument values | :white_check_mark: | :x: |
+| Supports generics | :white_check_mark: | :white_check_mark: |
+| 
+
+[^1]: 
+	If you use the `.RunAndReturn` method in the [`.EXPECT()`](/mockery/features/#expecter-structs) structs, you can get strict type safety. Otherwise, `.EXPECT()` methods are type-safe-ish, meaning you'll get compiler errors if you have the incorrect number of arguments, but the types of the arguments themselves are `interface{}` due to the need to specify `mock.Anything` in some cases.
+
+### `mockery`
+
+`mockery` is the default style of mocks you are used to with this project.
+
+### `moq`
+
+The `moq` implementations are generated using similar logic as the project at https://github.com/matryer/moq. The mocks rely on you defining stub functions that will be called directly from each method. For example, assume you have an interface like this:
+
+```go
+type Requester interface {
+	Get(path string) (string, error)
+}
+```
+
+`moq` will create an implementation that looks roughly like this:
+
+```go
+type RequesterMock struct {
+	// GetFunc mocks the Get method.
+	GetFunc func(path string) (string, error)
+
+	// calls tracks calls to the methods.
+	calls struct {
+		// Get holds details about calls to the Get method.
+		Get []struct {
+			// Path is the path argument value.
+			Path string
+		}
+	}
+	lockGet sync.RWMutex
+}
+
+// Get calls GetFunc.
+func (mock *RequesterMock) Get(path string) (string, error) {
+	if mock.GetFunc == nil {
+		panic("RequesterMock.GetFunc: method is nil but Requester.Get was just called")
+	}
+	callInfo := struct {
+		Path string
+	}{
+		Path: path,
+	}
+	mock.lockGet.Lock()
+	mock.calls.Get = append(mock.calls.Get, callInfo)
+	mock.lockGet.Unlock()
+	return mock.GetFunc(path)
+}
+```
+
+The way you interact with this mock in a test would look like this:
+
+```go
+func TestRequester(t *testing.T){
+	requesterMock := &RequesterMock{
+		GetFunc: func(path string) (string, error) {
+			return "value", fmt.Errorf("failed")
+		}
+	}
+}
+```
+
+#### Configuration
+
+A simple basic configuration might look like this:
+
+```yaml
+style: moq
+packages:
+  github.com/vektra/mockery/v2/pkg/fixtures:
+    config:
+      template-map:
+        with-resets: true
+        skip-ensure: true
+        stub-impl: false
+```
+
+The `moq` style is driven entirely off of Go templates. Various features of the moq may be toggled by using the `#! template-map:` mapping. These are the moq-specific parameters:
+
+| name | default | description |
+|------|---------|-------------|
+| `#!yaml with-resets` | `<no value>` | Generates functions that aid in resetting the list of calls made to a mock. |
+| `#!yaml skip-ensure` | `<no value>` | Skips adding a compile-time check that asserts the generated mock properly implements the interface. |
+| `#!yaml stub-impl` | `<no value>` | Sets methods to return the zero value when no mock implementation is provided. |
+
+!!! note
+	Many of the parameters listed in the [parameter descriptions page](/mockery/configuration/#parameter-descriptions) also apply to `moq`.  However, some parameters of `mockery`-styled mocks will not apply to `moq`. Efforts will be made to ensure the documentation is clear on which parameters apply to which style.
+
 Replace Types
 -------------
 

@@ -1,7 +1,9 @@
 mike @ git+https://github.com/jimporter/mike.git
 mkdocs
 mkdocs-glightbox
-git+https://${GH_TOKEN}@github.com/squidfunk/mkdocs-material-insiders.git
+# replace the below mkdocs-material line below with "mkdocs-material"
+# if you don't have access to the insiders edition.
+git+https://${GH_TOKEN}@github.com/squidfunk/mkdocs-material-insiders.git@9.5.5-insiders-4.51.0
 mkdocs-open-in-new-tab
 cairosvg
 pillow

@@ -34,9 +34,18 @@ type Parser struct {
 	parserPackages    []*types.Package
 	conf              packages.Config
 	packageLoadCache  map[string]packageLoadEntry
+	skipFunctions     bool
 }
 
-func NewParser(buildTags []string) *Parser {
+type ParserOpts func(p *Parser)
+
+func ParserSkipFunctions(s bool) ParserOpts {
+	return func(p *Parser) {
+		p.skipFunctions = s
+	}
+}
+
+func NewParser(buildTags []string, opts ...ParserOpts) *Parser {
 	var conf packages.Config
 	conf.Mode = packages.NeedTypes |
 		packages.NeedTypesSizes |
@@ -50,12 +59,17 @@ func NewParser(buildTags []string) *Parser {
 	if len(buildTags) > 0 {
 		conf.BuildFlags = []string{"-tags", strings.Join(buildTags, ",")}
 	}
-	return &Parser{
+	p := &Parser{
 		parserPackages:    make([]*types.Package, 0),
 		entriesByFileName: map[string]*parserEntry{},
 		conf:              conf,
 		packageLoadCache:  map[string]packageLoadEntry{},
+		skipFunctions:     false,
 	}
+	for _, opt := range opts {
+		opt(p)
+	}
+	return p
 }
 
 func (p *Parser) loadPackages(fpath string) ([]*packages.Package, error) {
@@ -190,7 +204,7 @@ func (p *Parser) Find(name string) (*Interface, error) {
 	for _, entry := range p.entries {
 		for _, iface := range entry.interfaces {
 			if iface == name {
-				list := p.packageInterfaces(entry.pkg.Types, entry.fileName, []string{name}, nil)
+				list := p.packageInterfaces(entry, []string{name}, nil)
 				if len(list) > 0 {
 					return list[0], nil
 				}
@@ -204,7 +218,7 @@ func (p *Parser) Interfaces() []*Interface {
 	ifaces := make(sortableIFaceList, 0)
 	for _, entry := range p.entries {
 		declaredIfaces := entry.interfaces
-		ifaces = p.packageInterfaces(entry.pkg.Types, entry.fileName, declaredIfaces, ifaces)
+		ifaces = p.packageInterfaces(entry, declaredIfaces, ifaces)
 	}
 
 	sort.Sort(ifaces)
@@ -212,11 +226,10 @@ func (p *Parser) Interfaces() []*Interface {
 }
 
 func (p *Parser) packageInterfaces(
-	pkg *types.Package,
-	fileName string,
+	entry *parserEntry,
 	declaredInterfaces []string,
 	ifaces []*Interface) []*Interface {
-	scope := pkg.Scope()
+	scope := entry.pkg.Types.Scope()
 	for _, name := range declaredInterfaces {
 		obj := scope.Lookup(name)
 		if obj == nil {
@@ -235,17 +248,20 @@ func (p *Parser) packageInterfaces(
 		}
 
 		elem := &Interface{
-			Name:          name,
-			Pkg:           pkg,
-			QualifiedName: pkg.Path(),
-			FileName:      fileName,
-			NamedType:     typ,
+			Name:            name,
+			PackagesPackage: entry.pkg,
+			Pkg:             entry.pkg.Types,
+			QualifiedName:   entry.pkg.Types.Path(),
+			FileName:        entry.fileName,
+			NamedType:       typ,
 		}
 
 		iface, ok := typ.Underlying().(*types.Interface)
 		if ok {
 			elem.IsFunction = false
 			elem.ActualInterface = iface
+		} else if p.skipFunctions {
+			continue
 		} else {
 			sig, ok := typ.Underlying().(*types.Signature)
 			if !ok {
@@ -261,42 +277,9 @@ func (p *Parser) packageInterfaces(
 	return ifaces
 }
 
-type Method struct {
-	Name      string
-	Signature *types.Signature
-}
-
 type TypesPackage interface {
 	Name() string
 	Path() string
-}
-
-// Interface type represents the target type that we will generate a mock for.
-// It could be an interface, or a function type.
-// Function type emulates: an interface it has 1 method with the function signature
-// and a general name, e.g. "Execute".
-type Interface struct {
-	Name            string // Name of the type to be mocked.
-	QualifiedName   string // Path to the package of the target type.
-	FileName        string
-	File            *ast.File
-	Pkg             TypesPackage
-	NamedType       *types.Named
-	IsFunction      bool             // If true, this instance represents a function, otherwise it's an interface.
-	ActualInterface *types.Interface // Holds the actual interface type, in case it's an interface.
-	SingleFunction  *Method          // Holds the function type information, in case it's a function type.
-}
-
-func (iface *Interface) Methods() []*Method {
-	if iface.IsFunction {
-		return []*Method{iface.SingleFunction}
-	}
-	methods := make([]*Method, iface.ActualInterface.NumMethods())
-	for i := 0; i < iface.ActualInterface.NumMethods(); i++ {
-		fn := iface.ActualInterface.Method(i)
-		methods[i] = &Method{Name: fn.Name(), Signature: fn.Type().(*types.Signature)}
-	}
-	return methods
 }
 
 type sortableIFaceList []*Interface
