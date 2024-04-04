@@ -316,7 +316,7 @@ func (r *RootApp) Run() error {
 		if err != nil {
 			return stackerr.NewStackErrf(err, "Failed to create profile file")
 		}
-
+		defer f.Close()
 		if err := pprof.StartCPUProfile(f); err != nil {
 			return fmt.Errorf("failed to start CPU profile: %w", err)
 		}
