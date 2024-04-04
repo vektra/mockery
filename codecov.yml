@@ -1,7 +1,7 @@
 coverage:
   precision: 5
   round: down
-  range: "40...100"
+  range: "00...100"
   status:
     patch:
       default:
