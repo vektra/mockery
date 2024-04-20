@@ -559,7 +559,7 @@ func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 			return fmt.Sprintf(
 				"func(%s)(%s)",
 				g.renderTypeTuple(ctx, t.Params(), t.Variadic()),
-				g.renderTypeTuple(ctx, t.Results(), t.Variadic()),
+				g.renderTypeTuple(ctx, t.Results(), false),
 			)
 		}
 	case *types.Map:
@@ -730,7 +730,7 @@ func (g *Generator) genList(ctx context.Context, list *types.Tuple, variadic boo
 		params.Params = append(params.Params, fmt.Sprintf("%s %s", pname, ts))
 		params.Nilable = append(params.Nilable, isNillable(v.Type()))
 
-		if strings.Contains(ts, "...") {
+		if variadic && i == list.Len()-1 {
 			params.ParamsIntf = append(params.ParamsIntf, fmt.Sprintf("%s ...interface{}", pname))
 		} else {
 			params.ParamsIntf = append(params.ParamsIntf, fmt.Sprintf("%s interface{}", pname))

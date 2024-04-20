@@ -43,7 +43,7 @@ type Variadic_VariadicFunction_Call struct {
 // VariadicFunction is a helper method to define mock.On call
 //   - str string
 //   - vFunc func(string , ...interface{}) interface{}
-func (_e *Variadic_Expecter) VariadicFunction(str interface{}, vFunc ...interface{}) *Variadic_VariadicFunction_Call {
+func (_e *Variadic_Expecter) VariadicFunction(str interface{}, vFunc interface{}) *Variadic_VariadicFunction_Call {
 	return &Variadic_VariadicFunction_Call{Call: _e.mock.On("VariadicFunction", str, vFunc)}
 }
 
