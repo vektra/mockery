@@ -19,8 +19,6 @@ packages:
     config:
       all: True
     interfaces:
-      Issue766:
-        unroll-variadic: False
       RequesterArgSameAsNamedImport:
       RequesterVariadic:
         config:
