@@ -97,7 +97,7 @@ func Test_parseConfigTemplates(t *testing.T) {
 			args: args{
 				c: &config.Config{
 					Dir:      "{{.InterfaceDir}}/{{.PackagePath}}",
-					FileName: "{{.InterfaceName}}_{{.InterfaceNameCamel}}_{{.InterfaceNameSnake}}_{{.InterfaceNameLower}}_{{.InterfaceFile}}",
+					FileName: "{{.InterfaceName}}_{{.InterfaceNameCamel}}_{{.InterfaceNameSnake}}_{{.InterfaceNameLower}}_{{base .InterfaceFile}}",
 					MockName: "{{.InterfaceNameLowerCamel}}",
 					Outpkg:   "{{.PackageName}}",
 				},
