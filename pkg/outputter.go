@@ -351,6 +351,11 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 			return err
 		}
 
+		// If we're in dry-run mode, don't write the mock to disk
+		if m.dryRun {
+			continue
+		}
+
 		outputPath := pathlib.NewPath(interfaceConfig.Dir).Join(interfaceConfig.FileName)
 		if err := outputPath.Parent().MkdirAll(); err != nil {
 			return stackerr.NewStackErrf(err, "failed to mkdir parents of: %v", outputPath)
