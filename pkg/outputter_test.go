@@ -97,7 +97,7 @@ func Test_parseConfigTemplates(t *testing.T) {
 			args: args{
 				c: &config.Config{
 					Dir:      "{{.InterfaceDir}}/{{.PackagePath}}",
-					FileName: "{{.InterfaceName}}_{{.InterfaceNameCamel}}_{{.InterfaceNameSnake}}_{{.InterfaceNameLower}}.go",
+					FileName: "{{.InterfaceName}}_{{.InterfaceNameCamel}}_{{.InterfaceNameSnake}}_{{.InterfaceNameLower}}_{{base .InterfaceFile}}",
 					MockName: "{{.InterfaceNameLowerCamel}}",
 					Outpkg:   "{{.PackageName}}",
 				},
@@ -110,7 +110,7 @@ func Test_parseConfigTemplates(t *testing.T) {
 			pkg: mockPkg,
 			want: &config.Config{
 				Dir:      "path/to/github.com/user/project/package",
-				FileName: "FooBar_FooBar_foo_bar_foobar.go",
+				FileName: "FooBar_FooBar_foo_bar_foobar_foobar.go",
 				MockName: "fooBar",
 				Outpkg:   "packageName",
 			},
