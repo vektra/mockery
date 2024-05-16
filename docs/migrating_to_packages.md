@@ -42,7 +42,6 @@ The equivalent config for `packages` looks like this:
 
 ```yaml
 with-expecter: True
-inpackage: True
 dir: mocks/{{ replaceAll .InterfaceDirRelative "internal" "internal_" }} #(1)!
 mockname: "{{.InterfaceName}}"
 outpkg: "{{.PackageName}}"
