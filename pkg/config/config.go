@@ -708,8 +708,15 @@ func (c *Config) discoverRecursivePackages(ctx context.Context) error {
 			subPkgCtx := subPkgLog.WithContext(pkgCtx)
 
 			if len(conf.Exclude) > 0 {
-				p := pathlib.NewPath(subPkg)
-				relativePath, err := p.RelativeToStr(pkgPath)
+				// pass in the forward-slash as this is a package and the os.PathSeparator
+				// cannot be used here as it fails on windows.
+				p := pathlib.NewPath(subPkg, pathlib.PathWithSeperator("/"))
+				relativePath, err := p.RelativeTo(
+					pathlib.NewPath(
+						pkgPath, pathlib.PathWithAfero(p.Fs()),
+						pathlib.PathWithSeperator("/"),
+					),
+				)
 				if err != nil {
 					return stackerr.NewStackErrf(err, "failed to get path for %s relative to %s", subPkg, pkgPath)
 				}
