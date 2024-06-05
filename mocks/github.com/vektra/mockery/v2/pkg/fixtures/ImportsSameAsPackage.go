@@ -142,11 +142,6 @@ func (_c *ImportsSameAsPackage_C_Call) Return() *ImportsSameAsPackage_C_Call {
 	return _c
 }
 
-func (_c *ImportsSameAsPackage_C_Call) RunAndReturn(run func(fixtures.C)) *ImportsSameAsPackage_C_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // NewImportsSameAsPackage creates a new instance of ImportsSameAsPackage. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewImportsSameAsPackage(t interface {

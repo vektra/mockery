@@ -149,11 +149,6 @@ func (_c *Expecter_NoReturn_Call) Return() *Expecter_NoReturn_Call {
 	return _c
 }
 
-func (_c *Expecter_NoReturn_Call) RunAndReturn(run func(string)) *Expecter_NoReturn_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // Variadic provides a mock function with given fields: ints
 func (_m *Expecter) Variadic(ints ...int) error {
 	_va := make([]interface{}, len(ints))

@@ -46,11 +46,6 @@ func (_c *IfaceWithCustomBuildTagInComment_Custom2_Call) Return() *IfaceWithCust
 	return _c
 }
 
-func (_c *IfaceWithCustomBuildTagInComment_Custom2_Call) RunAndReturn(run func()) *IfaceWithCustomBuildTagInComment_Custom2_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // Sprintf provides a mock function with given fields: format, a
 func (_m *IfaceWithCustomBuildTagInComment) Sprintf(format string, a ...interface{}) string {
 	var _ca []interface{}

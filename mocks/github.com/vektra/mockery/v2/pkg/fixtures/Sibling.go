@@ -44,11 +44,6 @@ func (_c *Sibling_DoSomething_Call) Return() *Sibling_DoSomething_Call {
 	return _c
 }
 
-func (_c *Sibling_DoSomething_Call) RunAndReturn(run func()) *Sibling_DoSomething_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // NewSibling creates a new instance of Sibling. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewSibling(t interface {

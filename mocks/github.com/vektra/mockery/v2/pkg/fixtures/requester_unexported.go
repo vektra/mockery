@@ -44,11 +44,6 @@ func (_c *requester_unexported_Get_Call) Return() *requester_unexported_Get_Call
 	return _c
 }
 
-func (_c *requester_unexported_Get_Call) RunAndReturn(run func()) *requester_unexported_Get_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // newRequester_unexported creates a new instance of requester_unexported. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func newRequester_unexported(t interface {

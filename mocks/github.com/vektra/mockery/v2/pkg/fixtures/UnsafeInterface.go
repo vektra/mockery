@@ -49,11 +49,6 @@ func (_c *UnsafeInterface_Do_Call) Return() *UnsafeInterface_Do_Call {
 	return _c
 }
 
-func (_c *UnsafeInterface_Do_Call) RunAndReturn(run func(*unsafe.Pointer)) *UnsafeInterface_Do_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // NewUnsafeInterface creates a new instance of UnsafeInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewUnsafeInterface(t interface {

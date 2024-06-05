@@ -48,11 +48,6 @@ func (_c *UsesOtherPkgIface_DoSomethingElse_Call) Return() *UsesOtherPkgIface_Do
 	return _c
 }
 
-func (_c *UsesOtherPkgIface_DoSomethingElse_Call) RunAndReturn(run func(test.Sibling)) *UsesOtherPkgIface_DoSomethingElse_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // NewUsesOtherPkgIface creates a new instance of UsesOtherPkgIface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewUsesOtherPkgIface(t interface {
