@@ -269,7 +269,7 @@ func (r *RootApp) Run() error {
 			}
 			ifaceLog.Debug().Msg("config specifies to generate this interface")
 
-			outputter := pkg.NewOutputter(&r.Config, boilerplate, true)
+			outputter := pkg.NewOutputter(&r.Config, boilerplate, r.Config.DryRun)
 			if err := outputter.Generate(ifaceCtx, iface); err != nil {
 				return err
 			}

@@ -354,12 +354,18 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 		}
 
 		outputPath := pathlib.NewPath(interfaceConfig.Dir).Join(interfaceConfig.FileName)
+		fileLog := log.With().Stringer(logging.LogKeyFile, outputPath).Logger()
+		fileLog.Info().Msg("writing to file")
+
+		// If we're in dry-run mode, don't complete make directory and write file operations
+		if m.dryRun {
+			continue
+		}
+
 		if err := outputPath.Parent().MkdirAll(); err != nil {
 			return stackerr.NewStackErrf(err, "failed to mkdir parents of: %v", outputPath)
 		}
 
-		fileLog := log.With().Stringer(logging.LogKeyFile, outputPath).Logger()
-		fileLog.Info().Msg("writing to file")
 		file, err := outputPath.OpenFile(os.O_RDWR | os.O_CREATE | os.O_TRUNC)
 		if err != nil {
 			return stackerr.NewStackErrf(err, "failed to open output file for mock: %v", outputPath)
