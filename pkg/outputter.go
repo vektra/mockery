@@ -353,11 +353,11 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 			return err
 		}
 
+		// Log where the file would be written to before checking whether to create the directories and files
 		outputPath := pathlib.NewPath(interfaceConfig.Dir).Join(interfaceConfig.FileName)
 		fileLog := log.With().Stringer(logging.LogKeyFile, outputPath).Logger()
 		fileLog.Info().Msg("writing to file")
 
-		// If we're in dry-run mode, don't complete make directory and write file operations
 		if m.dryRun {
 			continue
 		}
