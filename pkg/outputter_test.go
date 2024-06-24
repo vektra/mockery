@@ -256,7 +256,7 @@ packages:
 			m.config.Config = confPath.String()
 
 			require.NoError(t, parser.ParsePackages(ctx, []string{tt.packagePath}))
-			require.NoError(t, parser.Load())
+			require.NoError(t, parser.Load(context.Background()))
 			for _, intf := range parser.Interfaces() {
 				t.Logf("generating interface: %s %s", intf.QualifiedName, intf.Name)
 				require.NoError(t, m.Generate(ctx, intf))

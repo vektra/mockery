@@ -40,7 +40,7 @@ func (s *GeneratorSuite) getInterfaceFromFile(interfacePath, interfaceName strin
 	)
 
 	s.Require().NoError(
-		s.parser.Load(),
+		s.parser.Load(context.Background()),
 	)
 
 	iface, err := s.parser.Find(interfaceName)

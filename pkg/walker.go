@@ -38,7 +38,7 @@ func (w *Walker) Walk(ctx context.Context, visitor WalkerVisitor) (generated boo
 	parser := NewParser(w.BuildTags)
 	w.doWalk(ctx, parser, w.BaseDir)
 
-	err := parser.Load()
+	err := parser.Load(ctx)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error walking: %v\n", err)
 		os.Exit(1)
