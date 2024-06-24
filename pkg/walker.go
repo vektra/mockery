@@ -198,12 +198,15 @@ func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) erro
 		return err
 	}
 
-	if !v.dryRun {
-		log.Info().Msgf("writing mock to file")
-		err = gen.Write(out)
-		if err != nil {
-			return err
-		}
+	// If we're in dry-run mode, avoid writing the mock to disk
+	if v.dryRun {
+		return nil
+	}
+
+	log.Info().Msgf("writing mock to file")
+	err = gen.Write(out)
+	if err != nil {
+		return err
 	}
 
 	return nil
