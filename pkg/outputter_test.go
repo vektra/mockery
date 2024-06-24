@@ -217,11 +217,17 @@ func TestOutputter_Generate(t *testing.T) {
 		name        string
 		packagePath string
 		fields      fields
-		wantErr     bool
+		dryRun      bool
 	}{
 		{
 			name:        "generate normal",
 			packagePath: "github.com/vektra/mockery/v2/pkg/fixtures/example_project",
+			dryRun:      false,
+		},
+		{
+			name:        "generate normal",
+			packagePath: "github.com/vektra/mockery/v2/pkg/fixtures/example_project",
+			dryRun:      true,
 		},
 	}
 	for _, tt := range tests {
@@ -237,7 +243,7 @@ func TestOutputter_Generate(t *testing.T) {
 			m := &Outputter{
 				boilerplate: tt.fields.boilerplate,
 				config:      tt.fields.config,
-				dryRun:      true,
+				dryRun:      tt.dryRun,
 			}
 			parser := NewParser([]string{})
 
@@ -265,7 +271,7 @@ packages:
 				t.Logf("checking if path exists: %v", mockPath)
 				exists, err := mockPath.Exists()
 				require.NoError(t, err)
-				assert.True(t, exists)
+				assert.Equal(t, !tt.dryRun, exists)
 			}
 		})
 	}
