@@ -964,11 +964,13 @@ func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) Return({{range .Returns.
 	_c.Call.Return({{range .Returns.Names}}{{.}},{{end}})
 	return _c
 }
+{{- if (gt (len .Returns.Params) 0)}}
 
 func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) RunAndReturn(run func({{range .Params.Types}}{{.}},{{end}})({{range .Returns.Types}}{{.}},{{end}})) *{{.CallStruct}}{{ .InstantiatedTypeString }} {
 	_c.Call.Return(run)
 	return _c
 }
+{{- end}}
 `)
 }
 

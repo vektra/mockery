@@ -149,11 +149,6 @@ func (_c *ExpecterAndRolledVariadic_NoReturn_Call) Return() *ExpecterAndRolledVa
 	return _c
 }
 
-func (_c *ExpecterAndRolledVariadic_NoReturn_Call) RunAndReturn(run func(string)) *ExpecterAndRolledVariadic_NoReturn_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // Variadic provides a mock function with given fields: ints
 func (_m *ExpecterAndRolledVariadic) Variadic(ints ...int) error {
 	var tmpRet mock.Arguments

@@ -44,11 +44,6 @@ func (_c *Requester4_Get_Call) Return() *Requester4_Get_Call {
 	return _c
 }
 
-func (_c *Requester4_Get_Call) RunAndReturn(run func()) *Requester4_Get_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // NewRequester4 creates a new instance of Requester4. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewRequester4(t interface {

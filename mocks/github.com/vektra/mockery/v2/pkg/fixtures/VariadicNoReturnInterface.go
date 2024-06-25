@@ -58,11 +58,6 @@ func (_c *VariadicNoReturnInterface_VariadicNoReturn_Call) Return() *VariadicNoR
 	return _c
 }
 
-func (_c *VariadicNoReturnInterface_VariadicNoReturn_Call) RunAndReturn(run func(int, ...interface{})) *VariadicNoReturnInterface_VariadicNoReturn_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // NewVariadicNoReturnInterface creates a new instance of VariadicNoReturnInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewVariadicNoReturnInterface(t interface {

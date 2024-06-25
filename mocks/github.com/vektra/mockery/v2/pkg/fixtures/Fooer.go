@@ -45,11 +45,6 @@ func (_c *Fooer_Bar_Call) Return() *Fooer_Bar_Call {
 	return _c
 }
 
-func (_c *Fooer_Bar_Call) RunAndReturn(run func(func([]int))) *Fooer_Bar_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // Baz provides a mock function with given fields: path
 func (_m *Fooer) Baz(path string) func(string) string {
 	ret := _m.Called(path)

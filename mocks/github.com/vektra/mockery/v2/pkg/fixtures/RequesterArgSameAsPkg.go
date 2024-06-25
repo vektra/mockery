@@ -45,11 +45,6 @@ func (_c *RequesterArgSameAsPkg_Get_Call) Return() *RequesterArgSameAsPkg_Get_Ca
 	return _c
 }
 
-func (_c *RequesterArgSameAsPkg_Get_Call) RunAndReturn(run func(string)) *RequesterArgSameAsPkg_Get_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // NewRequesterArgSameAsPkg creates a new instance of RequesterArgSameAsPkg. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewRequesterArgSameAsPkg(t interface {
