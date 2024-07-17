@@ -32,8 +32,45 @@ Generate all the mocks for your project:
 
 Install through [brew](https://brew.sh/)
 
-    brew install mockery
-    brew upgrade mockery
+```shell
+brew install mockery
+```
+
+Upgrade to the latest version
+
+```shell
+brew upgrade mockery
+```
+
+### pre-commit
+
+Add the following lines to your `.pre-commit-config.yaml` file
+
+```yaml
+repos:
+  - repo: https://github.com/vektra/mockery
+    rev: v2 # This is a mutable reference to the latest version
+    hooks:
+      - id: generate-mocks
+```
+
+!!! note
+
+    If the file is missing, you can simply create it with this content
+
+Then install the hook with the following command:
+
+```console
+# This one will report a warning about mutable reference
+$ pre-commit install
+
+# This one will fix the warning
+$ pre-commit autoupdate
+```
+
+It will install everything. And from now, your commit will trigger mock generation.
+
+More information about pre-commit can be found on [pre-commit.com/](https://pre-commit.com/)
 
 
 <script type="text/javascript">

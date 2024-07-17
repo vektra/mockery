@@ -1,0 +1,16 @@
+---
+- id: generate-mocks
+  name: generate mocks
+  description: Generate mocks with mockery
+  language: golang
+  entry: go run .
+  types: [go]
+  pass_filenames: false
+
+- id: generate-mocks-local
+  name: generate mocks with local mockery
+  description: Generate mocks with local mockery
+  language: system
+  entry: mockery
+  types: [go]
+  pass_filenames: false
