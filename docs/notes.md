@@ -26,7 +26,7 @@ Additionally, this issue only happens when compiling mockery from source, such a
 Multiple Expectations With Identical Arguments
 -----------------------------------------------
 
-There might be instances where you want a mock to return different values on successive calls that provide the same arguments. For example we might want to test this behavior:
+There might be instances where you want a mock to return different values on successive calls that provide the same arguments. For example, we might want to test this behavior:
 
 ```go
 // Return "foo" on the first call
@@ -37,7 +37,7 @@ assert(t, "foo", getter.Get("key"))
 assert(t, "bar", getter.Get("key"))
 ```
 
-This can be done by using the `.Once()`  method on the mock call expectation:
+This can be done by using the `.Once()` method on the mock call expectation:
 
 ```go
 mockGetter := NewMockGetter(t)
@@ -53,7 +53,7 @@ mockGetter.EXPECT().Get(mock.anything).Return("foo").Times(4)
 mockGetter.EXPECT().Get(mock.anything).Return("bar").Times(2)
 ```
 
-Note that with proper Golang support in your IDE, all of the available methods are self-documented in auto-completion help contexts.
+Note that with proper Go support in your IDE, all the available methods are self-documented in autocompletion help contexts.
 
 Variadic Arguments
 ------------------
@@ -113,14 +113,14 @@ Semantic Versioning
 The versioning in this project applies only to the behavior of the mockery binary itself. This project explicitly does not promise a stable internal API, but rather a stable executable. The versioning applies to the following:
 
 1. CLI arguments.
-2. Parsing of Golang code. New features in the Golang language will be supported in a backwards-compatible manner, except during major version bumps.
+2. Parsing of Go code. New features in the Go language will be supported in a backwards-compatible manner, except during major version bumps.
 3. Behavior of mock objects. Mock objects can be considered to be part of the public API.
 4. Behavior of mockery given a set of arguments.
 
 What the version does _not_ track:
 
 1. The interfaces, objects, methods etc. in the vektra/mockery package.
-2. Compatibility of `go get`-ing mockery with new or old versions of Golang.
+2. Compatibility of `go get`-ing mockery with new or old versions of Go.
 
 Mocking interfaces in `main`
 ----------------------------
@@ -135,4 +135,4 @@ This issue was first highlighted [in this GitHub issue](https://github.com/vektr
 
 mockery uses the viper package for configuration mapping and parsing. Viper is set to automatically search for all config variables specified in its config struct. One of the config variables is named `version`, which gets mapped to an environment variable called `MOCKERY_VERSION`. If you set this environment variable, mockery attempts to parse it into the `version` bool config.
 
-This is an unintended side-effect of how our config parsing is set up. The solution is to rename your environment variable to something other than `MOCKERY_VERSION`.
+This is an adverse effect of how our config parsing is set up. The solution is to rename your environment variable to something other than `MOCKERY_VERSION`.

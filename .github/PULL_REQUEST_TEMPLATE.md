@@ -12,7 +12,7 @@ Please include a summary of the changes and the related issue. Please also inclu
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
 - [ ] This change requires a documentation update
 
-Version of Golang used when building/testing:
+Version of Go used when building/testing:
 ---------------------------------------------
 
 - [ ] 1.11
