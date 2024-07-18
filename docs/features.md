@@ -90,7 +90,7 @@ func (_m *Handler) HandleMessage(m pubsub.Message) error {
 }
 ```
 
-Generic type constraints can also be replaced by targeting the changed parameter with the square bracket notation on the left hand side.
+Generic type constraints can also be replaced by targeting the changed parameter with the square bracket notation on the left-hand side.
 
 ```shell
 mockery --replace-type github.com/vektra/mockery/v2/baz/internal/foo.InternalBaz[T]=github.com/vektra/mockery/v2/baz.Baz
@@ -233,12 +233,12 @@ packages:
       with-expecter: true
 ```
 
-You can use the `showconfig` command to see the config mockery injects. The output of `showconfig` theoretically could be copy-pasted into your yaml file as it is semantically equivalent.
+You can use the `showconfig` command to see the config mockery injects. The output of `showconfig` theoretically could be copy-pasted into your YAML file as it is semantically equivalent.
 
 mockery will _not_ recurse into submodules, i.e. any subdirectory that contains a go.mod file. You must specify the submodule as a separate line item in the config if you would like mocks generated for it as well.
 
 ??? note "performance characteristics"
-    The performance when using `#!yaml recursive: true` may be worse than manually specifying all packages statically in the yaml file. This is because of the fact that mockery has to recursively walk the filesystem path that contains the package in question. It may unnecessarily walk down unrelated paths (for example, a Python virtual environment that is in the same path as your package). For this reason, it is recommended _not_ to use `#!yaml recursive: true` if it can be avoided.
+    The performance when using `#!yaml recursive: true` may be worse than manually specifying all packages statically in the YAML file. This is because of the fact that mockery has to recursively walk the filesystem path that contains the package in question. It may unnecessarily walk down unrelated paths (for example, a Python virtual environment that is in the same path as your package). For this reason, it is recommended _not_ to use `#!yaml recursive: true` if it can be avoided.
 
 ### Regex matching
 
@@ -334,7 +334,7 @@ Return Value Providers
 
 :octicons-tag-24: v2.20.0
 
-Return Value Providers can be used one of two ways.  You may either define a single function with the exact same signature (number and type of input and return parameters) and pass that as a single value to `Return`, or you may pass multiple values to `Return` (one for each return parameter of the mocked function.)  If you are using the second form, for each of the return values of the mocked function, `Return` needs a function which takes the same arguments as the mocked function, and returns one of the return values. For example, if the return argument signature of `passthrough` in the above example was instead `(string, error)` in the interface, `Return` would also need a second function argument to define the error value:
+Return Value Providers can be used one of two ways. You may either define a single function with the exact same signature (number and type of input and return parameters) and pass that as a single value to `Return`, or you may pass multiple values to `Return` (one for each return parameter of the mocked function.)  If you are using the second form, for each of the return values of the mocked function, `Return` needs a function which takes the same arguments as the mocked function, and returns one of the return values. For example, if the return argument signature of `passthrough` in the above example was instead `(string, error)` in the interface, `Return` would also need a second function argument to define the error value:
 
 ```go
 type Proxy interface {

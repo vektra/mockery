@@ -25,7 +25,7 @@ func getFromDB(db DB) string {
 }
 ```
 
-You can test `getFromDB` by either instantiating a testing database, or you can simply create a mock implementation of `DB` using mockery. Mockery can autogenerate a mock implementation that allows us to define assertions on how the mock was used, what to return, and other useful tidbits. We can add a `//go:generate` directive above our interface:
+You can test `getFromDB` by either instantiating a testing database, or you can simply create a mock implementation of `DB` using mockery. Mockery can automatically generate a mock implementation that allows us to define assertions on how the mock was used, what to return, and other useful tidbits. We can add a `//go:generate` directive above our interface:
 
 ```golang title="db.go"
 //go:generate mockery --name DB
