@@ -244,11 +244,6 @@ func (r *RootApp) Run() error {
 			log.Error().Err(err).Msg("unable to parse packages")
 			return err
 		}
-		log.Info().Msg("done parsing, loading")
-		if err := parser.Load(); err != nil {
-			log.Err(err).Msgf("failed to load parser")
-			return nil
-		}
 		log.Info().Msg("done loading, visiting interface nodes")
 		for _, iface := range parser.Interfaces() {
 			ifaceLog := log.

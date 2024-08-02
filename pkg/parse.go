@@ -16,11 +16,17 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
-type parserEntry struct {
+type fileEntry struct {
 	fileName   string
 	pkg        *packages.Package
 	syntax     *ast.File
 	interfaces []string
+}
+
+func (f *fileEntry) ParseInterfaces(ctx context.Context) {
+	nv := NewNodeVisitor(ctx)
+	ast.Walk(nv, f.syntax)
+	f.interfaces = nv.DeclaredInterfaces()
 }
 
 type packageLoadEntry struct {
@@ -29,8 +35,8 @@ type packageLoadEntry struct {
 }
 
 type Parser struct {
-	entries           []*parserEntry
-	entriesByFileName map[string]*parserEntry
+	files             []*fileEntry
+	entriesByFileName map[string]*fileEntry
 	parserPackages    []*types.Package
 	conf              packages.Config
 	packageLoadCache  map[string]packageLoadEntry
@@ -52,7 +58,7 @@ func NewParser(buildTags []string) *Parser {
 	}
 	return &Parser{
 		parserPackages:    make([]*types.Package, 0),
-		entriesByFileName: map[string]*parserEntry{},
+		entriesByFileName: map[string]*fileEntry{},
 		conf:              conf,
 		packageLoadCache:  map[string]packageLoadEntry{},
 	}
@@ -86,18 +92,21 @@ func (p *Parser) ParsePackages(ctx context.Context, packageNames []string) error
 				Str("package", pkg.PkgPath).
 				Str("file", file).
 				Msgf("found file")
-			entry := parserEntry{
+			entry := fileEntry{
 				fileName: file,
 				pkg:      pkg,
 				syntax:   pkg.Syntax[fileIdx],
 			}
-			p.entries = append(p.entries, &entry)
+			entry.ParseInterfaces(ctx)
+			p.files = append(p.files, &entry)
 			p.entriesByFileName[file] = &entry
 		}
 	}
 	return nil
 }
 
+// DEPRECATED: Parse is part of the deprecated, legacy mockery behavior. This is not
+// used when the packages feature is enabled.
 func (p *Parser) Parse(ctx context.Context, path string) error {
 	// To support relative paths to mock targets w/ vendor deps, we need to provide eventual
 	// calls to build.Context.Import with an absolute path. It needs to be absolute because
@@ -164,12 +173,12 @@ func (p *Parser) Parse(ctx context.Context, path string) error {
 			if _, ok := p.entriesByFileName[f]; ok {
 				continue
 			}
-			entry := parserEntry{
+			entry := fileEntry{
 				fileName: f,
 				pkg:      pkg,
 				syntax:   pkg.Syntax[idx],
 			}
-			p.entries = append(p.entries, &entry)
+			p.files = append(p.files, &entry)
 			p.entriesByFileName[f] = &entry
 		}
 	}
@@ -177,17 +186,15 @@ func (p *Parser) Parse(ctx context.Context, path string) error {
 	return nil
 }
 
-func (p *Parser) Load() error {
-	for _, entry := range p.entries {
-		nv := NewNodeVisitor()
-		ast.Walk(nv, entry.syntax)
-		entry.interfaces = nv.DeclaredInterfaces()
+func (p *Parser) Load(ctx context.Context) error {
+	for _, entry := range p.files {
+		entry.ParseInterfaces(ctx)
 	}
 	return nil
 }
 
 func (p *Parser) Find(name string) (*Interface, error) {
-	for _, entry := range p.entries {
+	for _, entry := range p.files {
 		for _, iface := range entry.interfaces {
 			if iface == name {
 				list := p.packageInterfaces(entry.pkg.Types, entry.fileName, []string{name}, nil)
@@ -202,7 +209,7 @@ func (p *Parser) Find(name string) (*Interface, error) {
 
 func (p *Parser) Interfaces() []*Interface {
 	ifaces := make(sortableIFaceList, 0)
-	for _, entry := range p.entries {
+	for _, entry := range p.files {
 		declaredIfaces := entry.interfaces
 		ifaces = p.packageInterfaces(entry.pkg.Types, entry.fileName, declaredIfaces, ifaces)
 	}
@@ -314,12 +321,15 @@ func (s sortableIFaceList) Less(i, j int) bool {
 }
 
 type NodeVisitor struct {
-	declaredInterfaces []string
+	declaredInterfaces            []string
+	genericInstantiationInterface map[string]any
+	ctx                           context.Context
 }
 
-func NewNodeVisitor() *NodeVisitor {
+func NewNodeVisitor(ctx context.Context) *NodeVisitor {
 	return &NodeVisitor{
 		declaredInterfaces: make([]string, 0),
+		ctx:                ctx,
 	}
 }
 
@@ -328,11 +338,23 @@ func (nv *NodeVisitor) DeclaredInterfaces() []string {
 }
 
 func (nv *NodeVisitor) Visit(node ast.Node) ast.Visitor {
+	log := zerolog.Ctx(nv.ctx)
+
 	switch n := node.(type) {
 	case *ast.TypeSpec:
+		log := log.With().
+			Str("node-name", n.Name.Name).
+			Str("node-type", fmt.Sprintf("%T", n.Type)).
+			Logger()
+
 		switch n.Type.(type) {
-		case *ast.InterfaceType, *ast.FuncType:
+		case *ast.InterfaceType, *ast.FuncType, *ast.IndexExpr:
+			log.Debug().
+				Str("node-type", fmt.Sprintf("%T", n.Type)).
+				Msg("found node with acceptable type for mocking")
 			nv.declaredInterfaces = append(nv.declaredInterfaces, n.Name.Name)
+		default:
+			log.Debug().Msg("Found node with unacceptable type for mocking. Rejecting.")
 		}
 	}
 	return nv
