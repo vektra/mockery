@@ -25,7 +25,7 @@ import (
 
 const mockConstructorParamTypeNamePrefix = "mockConstructorTestingT"
 
-var invalidIdentifierChar = regexp.MustCompile("[^[:digit:][:alpha:]_]")
+var invalidIdentifierChar = regexp.MustCompile("^[[:digit:]]|[^[:digit:][:alpha:]_]")
 
 func DetermineOutputPackageName(
 	interfaceFileName string,

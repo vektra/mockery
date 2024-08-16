@@ -260,6 +260,7 @@ func (s *GeneratorSuite) TestGeneratorPrologueWithMultipleImportsSameName() {
 
 	expected := `package mocks
 
+import _2345678http "github.com/vektra/mockery/v2/pkg/fixtures/12345678/http"
 import fixtureshttp "github.com/vektra/mockery/v2/pkg/fixtures/http"
 import http "net/http"
 import mock "github.com/stretchr/testify/mock"
