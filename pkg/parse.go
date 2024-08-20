@@ -17,14 +17,15 @@ import (
 )
 
 type fileEntry struct {
-	fileName   string
-	pkg        *packages.Package
-	syntax     *ast.File
-	interfaces []string
+	fileName         string
+	pkg              *packages.Package
+	syntax           *ast.File
+	interfaces       []string
+	disableFuncMocks bool
 }
 
 func (f *fileEntry) ParseInterfaces(ctx context.Context) {
-	nv := NewNodeVisitor(ctx)
+	nv := NewNodeVisitor(ctx, f.disableFuncMocks)
 	ast.Walk(nv, f.syntax)
 	f.interfaces = nv.DeclaredInterfaces()
 }
@@ -40,9 +41,15 @@ type Parser struct {
 	parserPackages    []*types.Package
 	conf              packages.Config
 	packageLoadCache  map[string]packageLoadEntry
+	disableFuncMocks  bool
 }
 
-func NewParser(buildTags []string) *Parser {
+func ParserDisableFuncMocks(disable bool) func(*Parser) {
+	return func(p *Parser) {
+		p.disableFuncMocks = disable
+	}
+}
+func NewParser(buildTags []string, opts ...func(*Parser)) *Parser {
 	var conf packages.Config
 	conf.Mode = packages.NeedTypes |
 		packages.NeedTypesSizes |
@@ -56,12 +63,16 @@ func NewParser(buildTags []string) *Parser {
 	if len(buildTags) > 0 {
 		conf.BuildFlags = []string{"-tags", strings.Join(buildTags, ",")}
 	}
-	return &Parser{
+	p := &Parser{
 		parserPackages:    make([]*types.Package, 0),
 		entriesByFileName: map[string]*fileEntry{},
 		conf:              conf,
 		packageLoadCache:  map[string]packageLoadEntry{},
 	}
+	for _, opt := range opts {
+		opt(p)
+	}
+	return p
 }
 
 func (p *Parser) loadPackages(fpath string) ([]*packages.Package, error) {
@@ -93,9 +104,10 @@ func (p *Parser) ParsePackages(ctx context.Context, packageNames []string) error
 				Str("file", file).
 				Msgf("found file")
 			entry := fileEntry{
-				fileName: file,
-				pkg:      pkg,
-				syntax:   pkg.Syntax[fileIdx],
+				fileName:         file,
+				pkg:              pkg,
+				syntax:           pkg.Syntax[fileIdx],
+				disableFuncMocks: p.disableFuncMocks,
 			}
 			entry.ParseInterfaces(ctx)
 			p.files = append(p.files, &entry)
@@ -321,20 +333,29 @@ func (s sortableIFaceList) Less(i, j int) bool {
 }
 
 type NodeVisitor struct {
-	declaredInterfaces            []string
-	genericInstantiationInterface map[string]any
-	ctx                           context.Context
+	declaredInterfaces []string
+	disableFuncMocks   bool
+	ctx                context.Context
 }
 
-func NewNodeVisitor(ctx context.Context) *NodeVisitor {
+func NewNodeVisitor(ctx context.Context, disableFuncMocks bool) *NodeVisitor {
 	return &NodeVisitor{
 		declaredInterfaces: make([]string, 0),
+		disableFuncMocks:   disableFuncMocks,
 		ctx:                ctx,
 	}
 }
 
 func (nv *NodeVisitor) DeclaredInterfaces() []string {
 	return nv.declaredInterfaces
+}
+
+func (nv *NodeVisitor) add(ctx context.Context, n *ast.TypeSpec) {
+	log := zerolog.Ctx(ctx)
+	log.Debug().
+		Str("node-type", fmt.Sprintf("%T", n.Type)).
+		Msg("found node with acceptable type for mocking")
+	nv.declaredInterfaces = append(nv.declaredInterfaces, n.Name.Name)
 }
 
 func (nv *NodeVisitor) Visit(node ast.Node) ast.Visitor {
@@ -348,11 +369,13 @@ func (nv *NodeVisitor) Visit(node ast.Node) ast.Visitor {
 			Logger()
 
 		switch n.Type.(type) {
-		case *ast.InterfaceType, *ast.FuncType, *ast.IndexExpr:
-			log.Debug().
-				Str("node-type", fmt.Sprintf("%T", n.Type)).
-				Msg("found node with acceptable type for mocking")
-			nv.declaredInterfaces = append(nv.declaredInterfaces, n.Name.Name)
+		case *ast.FuncType:
+			if nv.disableFuncMocks {
+				break
+			}
+			nv.add(nv.ctx, n)
+		case *ast.InterfaceType, *ast.IndexExpr:
+			nv.add(nv.ctx, n)
 		default:
 			log.Debug().Msg("Found node with unacceptable type for mocking. Rejecting.")
 		}
