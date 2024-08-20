@@ -41,6 +41,7 @@ type Config struct {
 	Cpuprofile           string                 `mapstructure:"cpuprofile"`
 	Dir                  string                 `mapstructure:"dir"`
 	DisableConfigSearch  bool                   `mapstructure:"disable-config-search"`
+	DisableFuncMocks     bool                   `mapstructure:"disable-func-mocks"`
 	DisableVersionString bool                   `mapstructure:"disable-version-string"`
 	DryRun               bool                   `mapstructure:"dry-run"`
 	ExcludeRegex         string                 `mapstructure:"exclude-regex"`
