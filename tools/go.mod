@@ -5,9 +5,20 @@ go 1.22.1
 toolchain go1.23.0
 
 require (
-	github.com/go-task/task/v3 v3.24.0
+	github.com/go-task/task/v3 v3.38.0
 	github.com/golangci/golangci-lint v1.60.3
 	gotest.tools/gotestsum v1.11.0
+)
+
+require (
+	github.com/Ladicle/tabwriter v1.0.0 // indirect
+	github.com/alecthomas/chroma/v2 v2.14.0 // indirect
+	github.com/dlclark/regexp2 v1.11.0 // indirect
+	github.com/dominikbraun/graph v0.23.0 // indirect
+	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
+	github.com/go-task/template v0.0.0-20240602015157-960e6f576656 // indirect
+	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
+	github.com/zeebo/xxh3 v1.0.2 // indirect
 )
 
 require (
@@ -180,7 +191,7 @@ require (
 	golang.org/x/mod v0.20.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/sys v0.23.0 // indirect
-	golang.org/x/term v0.10.0 // indirect
+	golang.org/x/term v0.21.0 // indirect
 	golang.org/x/text v0.17.0 // indirect
 	golang.org/x/tools v0.24.0 // indirect
 	google.golang.org/protobuf v1.34.2 // indirect
@@ -191,6 +202,6 @@ require (
 	mvdan.cc/gofumpt v0.7.0 // indirect
 	mvdan.cc/interfacer v0.0.0-20180901003855-c20040233aed // indirect
 	mvdan.cc/lint v0.0.0-20170908181259-adc824a0674b // indirect
-	mvdan.cc/sh/v3 v3.6.0 // indirect
+	mvdan.cc/sh/v3 v3.8.0 // indirect
 	mvdan.cc/unparam v0.0.0-20240528143540-8a5130ca722f // indirect
 )
