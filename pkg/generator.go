@@ -437,7 +437,7 @@ func (g *Generator) GeneratePrologueNote(note string) {
 	}
 	prologue += ". DO NOT EDIT.\n"
 
-	g.printf(prologue)
+	g.print(prologue)
 	if note != "" {
 		g.printf("\n")
 		for _, n := range strings.Split(note, "\\n") {
@@ -464,6 +464,10 @@ func (g *Generator) GenerateBuildTags(buildTags string) {
 // ErrNotInterface is returned when the given type is not an interface
 // type.
 var ErrNotInterface = errors.New("expression not an interface")
+
+func (g *Generator) print(s string) {
+	fmt.Fprint(&g.buf, s)
+}
 
 func (g *Generator) printf(s string, vals ...interface{}) {
 	fmt.Fprintf(&g.buf, s, vals...)
