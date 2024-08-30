@@ -84,7 +84,7 @@ Who uses mockery?
 <div class="grid cards" markdown>
 - <figure markdown>
 	[![Grafana logo](assets/images/logos/grafana.svg){ class="center" width="100" }](https://github.com/grafana/grafana)
-	<figcaption>[grafana](https://github.com/grafana/grafana)</figcaption>
+	<figcaption>[Grafana](https://github.com/grafana/grafana)</figcaption>
   </figure>
 - <figure markdown>
 	[![Google logo](assets/images/logos/google.svg){ class="center" width="100" }](https://github.com/google/skia)
