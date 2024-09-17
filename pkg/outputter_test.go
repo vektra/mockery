@@ -12,6 +12,7 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	pkgMocks "github.com/vektra/mockery/v2/mocks/github.com/vektra/mockery/v2/pkg"
 	"github.com/vektra/mockery/v2/pkg/config"
 	"github.com/vektra/mockery/v2/pkg/logging"
@@ -170,6 +171,24 @@ func Test_parseConfigTemplates(t *testing.T) {
 			pkg: mockPkg,
 			want: &config.Config{
 				Dir: "mocks/github.com/user/project/package",
+			},
+		},
+		{
+			name: "ConfigDir template",
+			args: args{
+				c: &config.Config{
+					Config: "path_to/config/.mockery.yaml",
+					Dir:    "{{.ConfigDir}}/mocks",
+				},
+				iface: &Interface{
+					Name:     "FooBar",
+					FileName: "/path/to/foobar.go",
+				},
+			},
+			pkg: mockPkg,
+			want: &config.Config{
+				Config: "path_to/config/.mockery.yaml",
+				Dir:    "path_to/config/mocks",
 			},
 		},
 		{

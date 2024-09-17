@@ -208,6 +208,7 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 
 	// data is the struct sent to the template parser
 	data := struct {
+		ConfigDir               string
 		InterfaceDir            string
 		InterfaceDirRelative    string
 		InterfaceFile           string
@@ -221,6 +222,7 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 		PackageName             string
 		PackagePath             string
 	}{
+		ConfigDir:            filepath.Dir(c.Config),
 		InterfaceDir:         filepath.Dir(iface.FileName),
 		InterfaceDirRelative: interfaceDirRelative,
 		InterfaceFile:        iface.FileName,

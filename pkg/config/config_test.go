@@ -11,16 +11,18 @@ import (
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/vektra/mockery/v2/pkg/logging"
 	"gopkg.in/yaml.v3"
+
+	"github.com/vektra/mockery/v2/pkg/logging"
 )
 
 func TestConfig_GetPackageConfig(t *testing.T) {
 	type fields struct {
-		All       bool
-		BuildTags string
-		Case      string
-		Packages  map[string]interface{}
+		ConfigFile string
+		All        bool
+		BuildTags  string
+		Case       string
+		Packages   map[string]interface{}
 	}
 	type args struct {
 		packageName string
@@ -72,9 +74,10 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 		{
 			name: "config section provided but no values defined",
 			fields: fields{
-				All:       true,
-				BuildTags: "default_tags",
-				Case:      "upper",
+				ConfigFile: "path/to/config/.mockery.yaml",
+				All:        true,
+				BuildTags:  "default_tags",
+				Case:       "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{
 						"config": map[string]any{},
@@ -85,6 +88,7 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				packageName: "github.com/vektra/mockery/v2/pkg",
 			},
 			want: &Config{
+				Config:    "path/to/config/.mockery.yaml",
 				All:       true,
 				BuildTags: "default_tags",
 				Case:      "upper",
@@ -96,9 +100,10 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 		{
 			name: "two values overridden in pkg config",
 			fields: fields{
-				All:       true,
-				BuildTags: "default_tags",
-				Case:      "upper",
+				ConfigFile: "path/to/config/.mockery.yaml",
+				All:        true,
+				BuildTags:  "default_tags",
+				Case:       "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{
 						"config": map[string]any{
@@ -112,6 +117,7 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				packageName: "github.com/vektra/mockery/v2/pkg",
 			},
 			want: &Config{
+				Config:    "path/to/config/.mockery.yaml",
 				All:       false,
 				BuildTags: "foobar",
 				Case:      "upper",
@@ -123,9 +129,10 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 		{
 			name: "repeated calls gives same cached result",
 			fields: fields{
-				All:       true,
-				BuildTags: "default_tags",
-				Case:      "upper",
+				ConfigFile: "path/to/config/.mockery.yaml",
+				All:        true,
+				BuildTags:  "default_tags",
+				Case:       "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{
 						"config": map[string]any{
@@ -139,6 +146,7 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				packageName: "github.com/vektra/mockery/v2/pkg",
 			},
 			want: &Config{
+				Config:    "path/to/config/.mockery.yaml",
 				All:       false,
 				BuildTags: "foobar",
 				Case:      "upper",
@@ -172,6 +180,7 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &Config{
+				Config:    tt.fields.ConfigFile,
 				All:       tt.fields.All,
 				BuildTags: tt.fields.BuildTags,
 				Case:      tt.fields.Case,
@@ -205,10 +214,11 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 
 func TestConfig_GetInterfaceConfig(t *testing.T) {
 	type fields struct {
-		All       bool
-		BuildTags string
-		Case      string
-		Packages  map[string]interface{}
+		ConfigFile string
+		All        bool
+		BuildTags  string
+		Case       string
+		Packages   map[string]interface{}
 	}
 	type args struct {
 		packageName   string
@@ -246,9 +256,10 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 		{
 			name: "config defined for package",
 			fields: fields{
-				All:       true,
-				BuildTags: "default_tags",
-				Case:      "upper",
+				ConfigFile: "path/to/config/.mockery.yaml",
+				All:        true,
+				BuildTags:  "default_tags",
+				Case:       "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{
 						"config": map[string]any{
@@ -263,6 +274,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 			},
 			want: []*Config{
 				{
+					Config:    "path/to/config/.mockery.yaml",
 					All:       false,
 					BuildTags: "default_tags",
 					Case:      "upper",
@@ -299,9 +311,10 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 		{
 			name: "interface defined, but not config section",
 			fields: fields{
-				All:       true,
-				BuildTags: "default_tags",
-				Case:      "upper",
+				ConfigFile: "path/to/config/.mockery.yaml",
+				All:        true,
+				BuildTags:  "default_tags",
+				Case:       "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{
 						"config": map[string]any{
@@ -319,6 +332,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 			},
 			want: []*Config{
 				{
+					Config:    "path/to/config/.mockery.yaml",
 					All:       false,
 					BuildTags: "default_tags",
 					Case:      "upper",
@@ -359,9 +373,10 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 		{
 			name: "interface defined with non-empty config",
 			fields: fields{
-				All:       true,
-				BuildTags: "default_tags",
-				Case:      "upper",
+				ConfigFile: "path/to/config/.mockery.yaml",
+				All:        true,
+				BuildTags:  "default_tags",
+				Case:       "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{
 						"config": map[string]any{
@@ -383,6 +398,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 			},
 			want: []*Config{
 				{
+					Config:    "path/to/config/.mockery.yaml",
 					All:       false,
 					BuildTags: "foobar",
 					Case:      "upper",
