@@ -1,6 +1,6 @@
 module github.com/vektra/mockery/tools
 
-go 1.22
+go 1.23
 
 require (
 	github.com/go-task/task/v3 v3.24.0
