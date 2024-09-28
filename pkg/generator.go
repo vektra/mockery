@@ -499,21 +499,28 @@ type namer interface {
 	Name() string
 }
 
+func (g *Generator) renderNamedType(ctx context.Context, t interface {
+	Obj() *types.TypeName
+	TypeArgs() *types.TypeList
+}) string {
+	name := g.getPackageScopedType(ctx, t.Obj())
+	if t.TypeArgs() == nil || t.TypeArgs().Len() == 0 {
+		return name
+	}
+	args := make([]string, 0, t.TypeArgs().Len())
+	for i := 0; i < t.TypeArgs().Len(); i++ {
+		arg := t.TypeArgs().At(i)
+		args = append(args, g.renderType(ctx, arg))
+	}
+	return fmt.Sprintf("%s[%s]", name, strings.Join(args, ","))
+}
+
 func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 	switch t := typ.(type) {
 	case *types.Named:
-		name := g.getPackageScopedType(ctx, t.Obj())
-		if t.TypeArgs() == nil || t.TypeArgs().Len() == 0 {
-			return name
-		}
-		args := make([]string, 0, t.TypeArgs().Len())
-		for i := 0; i < t.TypeArgs().Len(); i++ {
-			arg := t.TypeArgs().At(i)
-			args = append(args, g.renderType(ctx, arg))
-		}
-		return fmt.Sprintf("%s[%s]", name, strings.Join(args, ","))
+		return g.renderNamedType(ctx, t)
 	case *types.Alias:
-		return g.renderTypeAlias(ctx, t)
+		return g.renderNamedType(ctx, t)
 	case *types.TypeParam:
 		if t.Constraint() != nil {
 			name := t.Obj().Name()
