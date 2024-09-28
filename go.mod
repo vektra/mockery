@@ -1,8 +1,8 @@
 module github.com/vektra/mockery/v2
 
-go 1.22
+go 1.23
 
-toolchain go1.22.0
+toolchain go1.23.1
 
 require (
 	github.com/chigopher/pathlib v0.19.1

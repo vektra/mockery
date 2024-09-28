@@ -189,7 +189,7 @@ func (c *Config) GetPackages(ctx context.Context) ([]string, error) {
 	if !ok {
 		msg := "packages section is of the wrong type"
 		log.Error().Msg(msg)
-		return []string{}, fmt.Errorf(msg)
+		return []string{}, errors.New(msg)
 	}
 	packageList := []string{}
 	for key := range packageSection {
@@ -396,7 +396,7 @@ func (c *Config) GetInterfaceConfig(ctx context.Context, packageName string, int
 			return []*Config{pkgConfigCopy}, nil
 		}
 		msgString := "bad type provided for interface config"
-		log.Error().Msgf(msgString)
+		log.Error().Msg(msgString)
 		return nil, stackerr.NewStackErr(errors.New(msgString))
 	}
 
@@ -796,7 +796,7 @@ func (c *Config) mergeInConfig(ctx context.Context) error {
 			// wasn't defined in the yaml.
 			msg := "config section does not exist for package, this should never happen"
 			pkgLog.Error().Msg(msg)
-			return fmt.Errorf(msg)
+			return errors.New(msg)
 		}
 
 		pkgLog.Trace().Msg("got config section for package")
