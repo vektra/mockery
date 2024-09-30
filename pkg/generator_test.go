@@ -340,6 +340,18 @@ func (s *GeneratorSuite) TestGeneratorChecksInterfacesForNilable() {
 	s.checkGeneration("requester_iface.go", "RequesterIface", false, "", "")
 }
 
+func (s *GeneratorSuite) TestGeneratorTreatsAnyAsNilable() {
+	cfg := GeneratorConfig{
+		WithExpecter: true,
+	}
+	expectedBytes, err := os.ReadFile(getMocksPath("UsesAny.go"))
+	s.Require().NoError(err)
+	expected := string(expectedBytes)
+	expected = expected[strings.Index(expected, "// UsesAny is"):]
+
+	s.checkGenerationWithConfig("any_keyword.go", "UsesAny", cfg, expected)
+}
+
 func (s *GeneratorSuite) TestGeneratorPointers() {
 	s.checkGeneration("requester_ptr.go", "RequesterPtr", false, "", "")
 }
@@ -815,7 +827,6 @@ func TestParseReplaceType(t *testing.T) {
 		assert.Equal(t, test.expected, *actual)
 	}
 }
-
 
 func (s *GeneratorSuite) TestReplaceTypePackagePrologueGo123() {
 	expected := `package mocks
