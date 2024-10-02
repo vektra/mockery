@@ -664,7 +664,7 @@ func isNillable(typ types.Type) bool {
 	switch t := typ.(type) {
 	case *types.Pointer, *types.Array, *types.Map, *types.Interface, *types.Signature, *types.Chan, *types.Slice:
 		return true
-	case *types.Named:
+	case *types.Named, *types.Alias:
 		return isNillable(t.Underlying())
 	}
 	return false
