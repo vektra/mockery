@@ -8,7 +8,7 @@ mockery provides the ability to easily generate mocks for Golang interfaces usin
 Documentation
 --------------
 
-Documentation is found at out [GitHub Pages site](https://vektra.github.io/mockery/).
+Documentation is found at our [GitHub Pages site](https://vektra.github.io/mockery/).
 
 Development
 ------------
