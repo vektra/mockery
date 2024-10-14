@@ -1,31 +1,35 @@
 // Description: Open external links in a new tab and PDF links in a new tab
-// Source: https://jekyllcodex.org/without-plugin/new-window-fix/
+// Based on: https://jekyllcodex.org/without-plugin/new-window-fix/
 
-//open external links in a new window
+// Open external links in a new window
 function external_new_window() {
-    for(let c = document.getElementsByTagName("a"), a = 0;a < c.length;a++) {
+    for(let c = document.getElementsByTagName("a"), a = 0; a < c.length; a++) {
         let b = c[a];
-        if(b.getAttribute("href") && b.hostname !== location.hostname) {
+        if(b.getAttribute("href") && b.host !== location.host) {
             b.target = "_blank";
             b.rel = "noopener";
         }
     }
 }
-//open PDF links in a new window
-function pdf_new_window ()
-{
+
+// Open PDF links in a new window
+function pdf_new_window() {
     if (!document.getElementsByTagName) {
-      return false;
+        return false;
     }
+
+    const extensions = ['.pdf', '.doc', '.docx', '.json', '.xls', '.xlsx', '.ppt', '.pptx', '.zip', '.rar', '.tar', '.gz', '.7z', '.bz2', '.xz', '.tgz', '.tar.gz'];
     let links = document.getElementsByTagName("a");
-    for (let eleLink=0; eleLink < links.length; eleLink ++) {
-    if ((links[eleLink].href.indexOf('.pdf') !== -1)||(links[eleLink].href.indexOf('.doc') !== -1)||(links[eleLink].href.indexOf('.json') !== -1)||(links[eleLink].href.indexOf('.docx') !== -1)) {
-        links[eleLink].onclick =
-        function() {
-            window.open(this.href);
-            return false;
+
+    for (let eleLink = 0; eleLink < links.length; eleLink++) {
+        let href = links[eleLink].href.toLowerCase(); // Convert href to lowercase for case-insensitive matching
+
+        if (extensions.some(ext => href.endsWith(ext))) {
+            links[eleLink].onclick = function() {
+                window.open(this.href);
+                return false;
+            }
         }
-    }
     }
 }
 
@@ -35,11 +39,13 @@ function apply_rules() {
 }
 
 if (typeof document$ !== "undefined") {
-    // compatibility with mkdocs-material's instant loading feature
-    // based on code from https://github.com/timvink/mkdocs-charts-plugin
-    // Copyright (c) 2021 Tim Vink - MIT License
-    // fixes [Issue #2](https://github.com/JakubAndrysek/mkdocs-open-in-new-tab/issues/2)
+    // Compatibility with mkdocs-material's instant loading feature
     document$.subscribe(function() {
         apply_rules();
-    })
+    });
+} else {
+    // For browsers without mkdocs-material's instant loading feature
+    document.addEventListener("DOMContentLoaded", function() {
+        apply_rules();
+    });
 }
