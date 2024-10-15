@@ -15,16 +15,8 @@ Please include a summary of the changes and the related issue. Please also inclu
 Version of Go used when building/testing:
 ---------------------------------------------
 
-- [ ] 1.11
-- [ ] 1.12
-- [ ] 1.13
-- [ ] 1.14
-- [ ] 1.15
-- [ ] 1.16
-- [ ] 1.17
-- [ ] 1.18
-- [ ] 1.19
-- [ ] 1.20
+- [ ] 1.22
+- [ ] 1.23
 
 How Has This Been Tested?
 ---------------------------
@@ -41,4 +33,3 @@ Checklist
 - [ ] My changes generate no new warnings
 - [ ] I have added tests that prove my fix is effective or that my feature works
 - [ ] New and existing unit tests pass locally with my changes
-
