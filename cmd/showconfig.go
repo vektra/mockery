@@ -11,7 +11,7 @@ import (
 	"github.com/vektra/mockery/v2/pkg/config"
 	"github.com/vektra/mockery/v2/pkg/logging"
 	"github.com/vektra/mockery/v2/pkg/stackerr"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 func NewShowConfigCmd() *cobra.Command {
@@ -49,13 +49,14 @@ func showConfig(
 	if err != nil {
 		panic(err)
 	}
-	out, err := yaml.Marshal(cfgMap)
-	if err != nil {
+
+	encoder := yaml.NewEncoder(outputter)
+	encoder.SetIndent(2)
+	if err := encoder.Encode(cfgMap); err != nil {
 		return stackerr.NewStackErrf(err, "failed to marshal yaml")
 	}
 
 	log.Info().Msgf("Using config: %s", config.Config)
 
-	fmt.Fprintf(outputter, "%s", string(out))
 	return nil
 }
