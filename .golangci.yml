@@ -6,6 +6,7 @@ linters:
   # https://golangci-lint.run/usage/linters/#enabled-by-default
   enable:
     - errcheck
+    - gofumpt
     - gosimple
     - govet
     - ineffassign

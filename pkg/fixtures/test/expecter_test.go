@@ -178,7 +178,6 @@ func TestExpecter(t *testing.T) {
 		require.Equal(t, runCalled, 5)
 		expMock.AssertExpectations(t)
 	})
-
 }
 
 func intfSlice(slice interface{}) []interface{} {

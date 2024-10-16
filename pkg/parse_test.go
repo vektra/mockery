@@ -95,5 +95,4 @@ func TestParsePackages(t *testing.T) {
 	parser := NewParser([]string{})
 	require.NoError(t, parser.ParsePackages(context.Background(), []string{"github.com/vektra/mockery/v2/pkg/fixtures"}))
 	assert.NotEqual(t, 0, len(parser.files))
-
 }
