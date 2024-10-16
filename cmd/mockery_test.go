@@ -157,14 +157,13 @@ packages:
     interfaces:
       FooInterface:
 `
-	//config := fmt.Sprintf(configFmt, tmpDir)
 	configPath := pathlib.NewPath(tmpDir).Join("config.yaml")
 	require.NoError(t, configPath.WriteFile([]byte(config)))
 
 	goModPath := pathlib.NewPath(tmpDir).Join("go.mod")
 	err := goModPath.WriteFile([]byte(`
 module github.com/testuser/testpackage
-                                                                                                                                                                                 
+
 go 1.20`))
 	require.NoError(t, err)
 
@@ -172,7 +171,7 @@ go 1.20`))
 	require.NoError(t, interfacePath.Parent().MkdirAll())
 	require.NoError(t, interfacePath.WriteFile([]byte(`
 package foopkg
-																																												
+
 type FooInterface interface {
 		Foo()
 		Bar()

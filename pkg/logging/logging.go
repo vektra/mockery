@@ -28,6 +28,7 @@ const (
 
 // SemVer is the version of mockery at build time.
 var SemVer = ""
+
 var ErrPkgNotExist = errors.New("package does not exist")
 
 func GetSemverInfo() string {

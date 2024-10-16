@@ -136,7 +136,8 @@ func TestWalkerExclude(t *testing.T) {
 		Config: config.Config{
 			Exclude: []string{
 				getFixturePath("requester"),
-				getFixturePath("generic.go")},
+				getFixturePath("generic.go"),
+			},
 		},
 		Filter: regexp.MustCompile(".*"),
 	}
