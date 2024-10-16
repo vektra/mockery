@@ -49,6 +49,7 @@ func ParserDisableFuncMocks(disable bool) func(*Parser) {
 		p.disableFuncMocks = disable
 	}
 }
+
 func NewParser(buildTags []string, opts ...func(*Parser)) *Parser {
 	var conf packages.Config
 	conf.Mode = packages.NeedTypes |
@@ -234,7 +235,8 @@ func (p *Parser) packageInterfaces(
 	pkg *types.Package,
 	fileName string,
 	declaredInterfaces []string,
-	ifaces []*Interface) []*Interface {
+	ifaces []*Interface,
+) []*Interface {
 	scope := pkg.Scope()
 	for _, name := range declaredInterfaces {
 		obj := scope.Lookup(name)

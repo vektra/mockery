@@ -227,7 +227,6 @@ func (c *Config) getPackageConfigMap(ctx context.Context, packageName string) (m
 	emptyMap := map[string]any{}
 	packageSection[packageName] = emptyMap
 	return emptyMap, nil
-
 }
 
 // GetPackageConfig returns a struct representation of the package's config
@@ -490,7 +489,6 @@ func (c *Config) addSubPkgConfig(ctx context.Context, subPkgPath string, parentP
 		// own `config` section and merge with the parent package
 		// if so.
 		subPkgConfig, err := c.getPackageConfigMap(ctx, subPkgPath)
-
 		if err != nil {
 			log.Err(err).Msg("could not get child package config")
 			return fmt.Errorf("failed to get sub-package config: %w", err)
@@ -505,7 +503,6 @@ func (c *Config) addSubPkgConfig(ctx context.Context, subPkgPath string, parentP
 			if _, keyInSubPkg := subPkgConfigSection[key]; !keyInSubPkg {
 				subPkgConfigSection[key] = val
 			}
-
 		}
 	}
 
@@ -737,7 +734,6 @@ func (c *Config) discoverRecursivePackages(ctx context.Context) error {
 	log.Trace().Msg("done discovering recursive packages")
 
 	return nil
-
 }
 
 func contains[T comparable](slice []T, elem T) bool {
@@ -870,7 +866,6 @@ func (c *Config) mergeInConfig(ctx context.Context) error {
 	}
 
 	return nil
-
 }
 
 func (c *Config) getInterfacesForPackage(ctx context.Context, pkgPath string) ([]string, error) {
@@ -928,5 +923,4 @@ func (c *Config) LogUnsupportedPackagesConfig(ctx context.Context) {
 		Str("url", logging.DocsURL("/configuration/#parameter-descriptions")).
 		Logger()
 	l.Error().Msg("use of unsupported options detected. mockery behavior is undefined.")
-
 }
