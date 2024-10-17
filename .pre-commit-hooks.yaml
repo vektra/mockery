@@ -1,0 +1,9 @@
+---
+- id: generate-mocks
+  name: generate mocks
+  description: Generate mocks with mockery
+  language: golang
+  additional_dependencies:
+    - github.com/vektra/mockery/v2@latest
+  entry: mockery
+  pass_filenames: false

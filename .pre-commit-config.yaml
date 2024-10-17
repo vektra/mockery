@@ -1,0 +1,6 @@
+---
+repos:
+  - repo: https://github.com/ccoVeille/mockery
+    rev: v2
+    hooks:
+      - id: generate-mocks
