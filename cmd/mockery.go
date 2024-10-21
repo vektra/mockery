@@ -186,7 +186,6 @@ func GetRootAppFromViper(v *viper.Viper) (*RootApp, error) {
 func (r *RootApp) Run() error {
 	var recursive bool
 	var filter *regexp.Regexp
-	var err error
 	var limitOne bool
 
 	if r.Quiet {
