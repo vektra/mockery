@@ -129,7 +129,7 @@ Who uses mockery?
   </figure>
 - <figure markdown>
 	[![go-task logo](assets/images/logos/go-task.svg){ class="center" width="300" }](https://taskfile.dev/)
-	<figcaption>[Task]((https://taskfile.dev/))
+	<figcaption>[Task](https://taskfile.dev/)
   </markdown>
   - <figure markdown>
 	[![cerbos logo](assets/images/logos/cerbos.png){ class="center" width="300" }](https://github.com/cerbos/cerbos)
