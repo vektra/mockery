@@ -23,7 +23,8 @@ const (
 	LogKeyPath          = "path"
 	LogKeyQualifiedName = "qualified-name"
 	LogKeyPackageName   = "package-name"
-	_defaultSemVer      = "v0.0.0-dev"
+
+	defaultSemVer = "v0.0.0-dev"
 )
 
 // SemVer is the version of mockery at build time.
@@ -38,7 +39,7 @@ func GetSemverInfo() string {
 	if ok && version.Main.Version != "(devel)" && version.Main.Version != "" {
 		return version.Main.Version
 	}
-	return _defaultSemVer
+	return defaultSemVer
 }
 
 func getMinorSemver(semver string) string {

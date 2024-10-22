@@ -20,28 +20,28 @@ func TestNewRootCmd(t *testing.T) {
 func Test_initConfig(t *testing.T) {
 	tests := []struct {
 		name       string
-		base_path  string
+		basePath   string
 		configPath string
 	}{
 		{
 			name:       "test config at base directory",
-			base_path:  "1/2/3/4",
+			basePath:   "1/2/3/4",
 			configPath: "1/2/3/4/.mockery.yaml",
 		},
 		{
 			name:       "test config at upper directory",
-			base_path:  "1/2/3/4",
+			basePath:   "1/2/3/4",
 			configPath: "1/.mockery.yaml",
 		},
 		{
-			name:      "no config file found",
-			base_path: "1/2/3/4",
+			name:     "no config file found",
+			basePath: "1/2/3/4",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tmpDir := pathlib.NewPath(t.TempDir())
-			baseDir := tmpDir.Join(strings.Split(tt.base_path, "/")...)
+			baseDir := tmpDir.Join(strings.Split(tt.basePath, "/")...)
 			require.NoError(t, baseDir.MkdirAll())
 
 			configPath := pathlib.NewPath("")
@@ -164,7 +164,7 @@ packages:
 	goModPath := pathlib.NewPath(tmpDir).Join("go.mod")
 	err := goModPath.WriteFile([]byte(`
 module github.com/testuser/testpackage
-                                                                                                                                                                                 
+
 go 1.20`))
 	require.NoError(t, err)
 
@@ -172,7 +172,7 @@ go 1.20`))
 	require.NoError(t, interfacePath.Parent().MkdirAll())
 	require.NoError(t, interfacePath.WriteFile([]byte(`
 package foopkg
-																																												
+
 type FooInterface interface {
 		Foo()
 		Bar()
