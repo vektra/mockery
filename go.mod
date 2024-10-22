@@ -8,7 +8,6 @@ require (
 	github.com/chigopher/pathlib v0.19.1
 	github.com/davecgh/go-spew v1.1.1
 	github.com/huandu/xstrings v1.4.0
-	github.com/iancoleman/strcase v0.2.0
 	github.com/jinzhu/copier v0.3.5
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mitchellh/mapstructure v1.5.0

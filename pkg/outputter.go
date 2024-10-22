@@ -15,7 +15,6 @@ import (
 
 	"github.com/chigopher/pathlib"
 	"github.com/huandu/xstrings"
-	"github.com/iancoleman/strcase"
 	"github.com/rs/zerolog"
 
 	"github.com/vektra/mockery/v2/pkg/config"
@@ -229,9 +228,9 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 		InterfaceName:        iface.Name,
 		// Deprecated: All custom case variables of InterfaceName will be removed in the next major version
 		// Use the template functions instead
-		InterfaceNameCamel:      strcase.ToCamel(iface.Name),
-		InterfaceNameLowerCamel: strcase.ToLowerCamel(iface.Name),
-		InterfaceNameSnake:      strcase.ToSnake(iface.Name),
+		InterfaceNameCamel:      xstrings.ToCamelCase(iface.Name),
+		InterfaceNameLowerCamel: xstrings.FirstRuneToLower(xstrings.ToCamelCase(iface.Name)),
+		InterfaceNameSnake:      xstrings.ToSnakeCase(iface.Name),
 		InterfaceNameLower:      strings.ToLower(iface.Name),
 		Mock:                    mock,
 		MockName:                c.MockName,
