@@ -117,7 +117,7 @@ func TestExpecter(t *testing.T) {
 		require.NoError(t, expMock.Variadic(1, 2, 3, 4))
 		require.NoError(t, expMock.Variadic(2, 3, 4))
 		require.NoError(t, expMock.Variadic(args...))
-		require.Equal(t, runCalled, 5)
+		require.Equal(t, 5, runCalled)
 		expMock.AssertExpectations(t)
 	})
 
@@ -175,7 +175,7 @@ func TestExpecter(t *testing.T) {
 		}).Return(nil).Once()
 		require.NoError(t, expMock.VariadicMany(defaultInt, defaultString, args...))
 
-		require.Equal(t, runCalled, 5)
+		require.Equal(t, 5, runCalled)
 		expMock.AssertExpectations(t)
 	})
 
