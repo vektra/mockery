@@ -21,8 +21,16 @@ linters:
     - prealloc
     - predeclared
     - reassign
+    - testifylint
 linters-settings:
   staticcheck:
     checks:
     - all
     - '-SA1024'
+  testifylint:
+    disable-all: true
+    enable:
+      - compares
+      - empty
+      - expected-actual
+      - len
