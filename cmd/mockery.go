@@ -113,7 +113,6 @@ func initConfig(
 	viperObj *viper.Viper,
 	configPath *pathlib.Path,
 ) *viper.Viper {
-
 	if baseSearchPath == nil {
 		currentWorkingDir, err := os.Getwd()
 		if err != nil {
