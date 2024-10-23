@@ -180,12 +180,9 @@ func (*FileOutputStreamProvider) underscoreCaseName(caseName string) string {
 func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interface) error {
 	log := zerolog.Ctx(ctx)
 
-	isExported := ast.IsExported(iface.Name)
-	var mock string
-	if isExported {
+	mock := "mock"
+	if ast.IsExported(iface.Name) {
 		mock = "Mock"
-	} else {
-		mock = "mock"
 	}
 
 	workingDir, err := os.Getwd()
@@ -248,12 +245,10 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 		"outpkg":   &c.Outpkg,
 	}
 
-	numIterations := 0
 	changesMade := true
-	for changesMade {
-		if numIterations >= 20 {
-			msg := "infinite loop in template variables detected"
-			log.Error().Msg(msg)
+	for i := 0; changesMade; i++ {
+		if i >= 20 {
+			log.Error().Msg("infinite loop in template variables detected")
 			for key, val := range templateMap {
 				l := log.With().Str("variable-name", key).Str("variable-value", *val).Logger()
 				l.Error().Msg("config variable value")
@@ -282,7 +277,6 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 				changesMade = true
 			}
 		}
-		numIterations += 1
 	}
 
 	return nil
