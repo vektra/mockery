@@ -22,8 +22,13 @@ linters:
     - prealloc
     - predeclared
     - reassign
+    - revive
     - testifylint
 linters-settings:
+  revive:
+    enable-all-rules: false
+    rules:
+      - name: 'var-naming'
   staticcheck:
     checks:
     - all
@@ -35,3 +40,8 @@ linters-settings:
       - empty
       - expected-actual
       - len
+issues:
+  exclude-rules:
+    - linters:
+        - revive
+      text: "var-naming: don't use an underscore in package name"

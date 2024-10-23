@@ -226,7 +226,7 @@ func (s *GeneratorSuite) TestGeneratorNoNothing() {
 }
 
 func (s *GeneratorSuite) TestGeneratorUnexported() {
-	s.checkGeneration("requester_unexported.go", "requester_unexported", true, "", "")
+	s.checkGeneration("requester_unexported.go", "requesterUnexported", true, "", "")
 }
 
 func (s *GeneratorSuite) TestGeneratorPrologue() {
