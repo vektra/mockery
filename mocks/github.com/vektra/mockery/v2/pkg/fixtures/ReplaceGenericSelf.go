@@ -29,7 +29,9 @@ func (_m *ReplaceGenericSelf) A() *ReplaceGenericSelf {
 	if rf, ok := ret.Get(0).(func() *ReplaceGenericSelf); ok {
 		r0 = rf()
 	} else {
-		r0 = ret.Get(0).(*ReplaceGenericSelf)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*ReplaceGenericSelf)
+		}
 	}
 
 	return r0

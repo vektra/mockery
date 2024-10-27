@@ -70,3 +70,11 @@ packages:
       filename: "mock_{{.InterfaceName}}_test.go"
       inpackage: True
       keeptree: False
+  github.com/vektra/mockery/v2/pkg/fixtures/iface_typed_param:
+    config:
+      all: True
+      dir: "{{.InterfaceDir}}"
+      mockname: "{{.InterfaceName}}"
+      outpkg: "{{.PackageName}}_test"
+      filename: "{{.InterfaceNameSnake}}_mock_test.go"
+      keeptree: True    

@@ -3,9 +3,10 @@
 package mocks
 
 import (
-	http "net/http"
-
+	_2345678http "github.com/vektra/mockery/v2/pkg/fixtures/12345678/http"
 	fixtureshttp "github.com/vektra/mockery/v2/pkg/fixtures/http"
+
+	http "net/http"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -112,6 +113,52 @@ func (_c *Example_B_Call) Return(_a0 fixtureshttp.MyStruct) *Example_B_Call {
 }
 
 func (_c *Example_B_Call) RunAndReturn(run func(string) fixtureshttp.MyStruct) *Example_B_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// C provides a mock function with given fields: _a0
+func (_m *Example) C(_a0 string) _2345678http.MyStruct {
+	ret := _m.Called(_a0)
+
+	if len(ret) == 0 {
+		panic("no return value specified for C")
+	}
+
+	var r0 _2345678http.MyStruct
+	if rf, ok := ret.Get(0).(func(string) _2345678http.MyStruct); ok {
+		r0 = rf(_a0)
+	} else {
+		r0 = ret.Get(0).(_2345678http.MyStruct)
+	}
+
+	return r0
+}
+
+// Example_C_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'C'
+type Example_C_Call struct {
+	*mock.Call
+}
+
+// C is a helper method to define mock.On call
+//   - _a0 string
+func (_e *Example_Expecter) C(_a0 interface{}) *Example_C_Call {
+	return &Example_C_Call{Call: _e.mock.On("C", _a0)}
+}
+
+func (_c *Example_C_Call) Run(run func(_a0 string)) *Example_C_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(string))
+	})
+	return _c
+}
+
+func (_c *Example_C_Call) Return(_a0 _2345678http.MyStruct) *Example_C_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *Example_C_Call) RunAndReturn(run func(string) _2345678http.MyStruct) *Example_C_Call {
 	_c.Call.Return(run)
 	return _c
 }
