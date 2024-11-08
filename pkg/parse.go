@@ -93,6 +93,9 @@ func (p *Parser) ParsePackages(ctx context.Context, packageNames []string) error
 		return err
 	}
 	for _, pkg := range packages {
+		if len(pkg.GoFiles) == 0 {
+			continue
+		}
 		for _, err := range pkg.Errors {
 			log.Err(err).Msg("encountered error when loading package")
 		}

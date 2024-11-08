@@ -1012,7 +1012,7 @@ packages:
     config:
       recursive: True
       all: True`,
-			wantErr: ErrNoGoFilesFoundInRoot,
+			wantErr: nil,
 		},
 		{
 			name: "test with no subpackages present",
