@@ -32,7 +32,9 @@ func (_m *GetGeneric[T]) Get() T {
 	if rf, ok := ret.Get(0).(func() T); ok {
 		r0 = rf()
 	} else {
-		r0 = ret.Get(0).(T)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(T)
+		}
 	}
 
 	return r0
