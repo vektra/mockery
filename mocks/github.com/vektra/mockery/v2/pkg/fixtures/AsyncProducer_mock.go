@@ -17,7 +17,7 @@ func (_m *AsyncProducer) EXPECT() *AsyncProducer_Expecter {
 	return &AsyncProducer_Expecter{mock: &_m.Mock}
 }
 
-// Input provides a mock function with given fields:
+// Input provides a mock function with no fields
 func (_m *AsyncProducer) Input() chan<- bool {
 	ret := _m.Called()
 
@@ -64,7 +64,7 @@ func (_c *AsyncProducer_Input_Call) RunAndReturn(run func() chan<- bool) *AsyncP
 	return _c
 }
 
-// Output provides a mock function with given fields:
+// Output provides a mock function with no fields
 func (_m *AsyncProducer) Output() <-chan bool {
 	ret := _m.Called()
 
@@ -111,7 +111,7 @@ func (_c *AsyncProducer_Output_Call) RunAndReturn(run func() <-chan bool) *Async
 	return _c
 }
 
-// Whatever provides a mock function with given fields:
+// Whatever provides a mock function with no fields
 func (_m *AsyncProducer) Whatever() chan bool {
 	ret := _m.Called()
 

@@ -17,7 +17,7 @@ func (_m *PanicOnNoReturnValue) EXPECT() *PanicOnNoReturnValue_Expecter {
 	return &PanicOnNoReturnValue_Expecter{mock: &_m.Mock}
 }
 
-// DoSomething provides a mock function with given fields:
+// DoSomething provides a mock function with no fields
 func (_m *PanicOnNoReturnValue) DoSomething() string {
 	ret := _m.Called()
 

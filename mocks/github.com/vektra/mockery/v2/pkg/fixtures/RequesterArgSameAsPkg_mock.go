@@ -46,7 +46,7 @@ func (_c *RequesterArgSameAsPkg_Get_Call) Return() *RequesterArgSameAsPkg_Get_Ca
 }
 
 func (_c *RequesterArgSameAsPkg_Get_Call) RunAndReturn(run func(string)) *RequesterArgSameAsPkg_Get_Call {
-	_c.Call.Return(run)
+	_c.Run(run)
 	return _c
 }
 

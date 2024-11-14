@@ -17,7 +17,7 @@ func (_m *ReplaceGenericSelf) EXPECT() *ReplaceGenericSelf_Expecter {
 	return &ReplaceGenericSelf_Expecter{mock: &_m.Mock}
 }
 
-// A provides a mock function with given fields:
+// A provides a mock function with no fields
 func (_m *ReplaceGenericSelf) A() *ReplaceGenericSelf {
 	ret := _m.Called()
 

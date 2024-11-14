@@ -20,7 +20,7 @@ func (_m *EmbeddedGet[T]) EXPECT() *EmbeddedGet_Expecter[T] {
 	return &EmbeddedGet_Expecter[T]{mock: &_m.Mock}
 }
 
-// Get provides a mock function with given fields:
+// Get provides a mock function with no fields
 func (_m *EmbeddedGet[T]) Get() T {
 	ret := _m.Called()
 

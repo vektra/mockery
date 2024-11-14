@@ -17,7 +17,7 @@ func (_m *requesterUnexported) EXPECT() *requesterUnexported_Expecter {
 	return &requesterUnexported_Expecter{mock: &_m.Mock}
 }
 
-// Get provides a mock function with given fields:
+// Get provides a mock function with no fields
 func (_m *requesterUnexported) Get() {
 	_m.Called()
 }
@@ -45,7 +45,7 @@ func (_c *requesterUnexported_Get_Call) Return() *requesterUnexported_Get_Call {
 }
 
 func (_c *requesterUnexported_Get_Call) RunAndReturn(run func()) *requesterUnexported_Get_Call {
-	_c.Call.Return(run)
+	_c.Run(run)
 	return _c
 }
 

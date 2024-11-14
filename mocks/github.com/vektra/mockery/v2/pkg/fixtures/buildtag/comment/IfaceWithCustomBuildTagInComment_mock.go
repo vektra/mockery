@@ -19,7 +19,7 @@ func (_m *IfaceWithCustomBuildTagInComment) EXPECT() *IfaceWithCustomBuildTagInC
 	return &IfaceWithCustomBuildTagInComment_Expecter{mock: &_m.Mock}
 }
 
-// Custom2 provides a mock function with given fields:
+// Custom2 provides a mock function with no fields
 func (_m *IfaceWithCustomBuildTagInComment) Custom2() {
 	_m.Called()
 }
@@ -47,7 +47,7 @@ func (_c *IfaceWithCustomBuildTagInComment_Custom2_Call) Return() *IfaceWithCust
 }
 
 func (_c *IfaceWithCustomBuildTagInComment_Custom2_Call) RunAndReturn(run func()) *IfaceWithCustomBuildTagInComment_Custom2_Call {
-	_c.Call.Return(run)
+	_c.Run(run)
 	return _c
 }
 

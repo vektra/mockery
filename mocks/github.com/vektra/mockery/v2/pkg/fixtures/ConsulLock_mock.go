@@ -75,7 +75,7 @@ func (_c *ConsulLock_Lock_Call) RunAndReturn(run func(<-chan struct{}) (<-chan s
 	return _c
 }
 
-// Unlock provides a mock function with given fields:
+// Unlock provides a mock function with no fields
 func (_m *ConsulLock) Unlock() error {
 	ret := _m.Called()
 

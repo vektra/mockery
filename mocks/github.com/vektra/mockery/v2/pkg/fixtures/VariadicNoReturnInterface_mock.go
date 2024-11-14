@@ -59,7 +59,7 @@ func (_c *VariadicNoReturnInterface_VariadicNoReturn_Call) Return() *VariadicNoR
 }
 
 func (_c *VariadicNoReturnInterface_VariadicNoReturn_Call) RunAndReturn(run func(int, ...interface{})) *VariadicNoReturnInterface_VariadicNoReturn_Call {
-	_c.Call.Return(run)
+	_c.Run(run)
 	return _c
 }
 

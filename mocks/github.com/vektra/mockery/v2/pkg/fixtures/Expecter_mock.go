@@ -76,7 +76,7 @@ func (_c *Expecter_ManyArgsReturns_Call) RunAndReturn(run func(string, int) ([]s
 	return _c
 }
 
-// NoArg provides a mock function with given fields:
+// NoArg provides a mock function with no fields
 func (_m *Expecter) NoArg() string {
 	ret := _m.Called()
 
@@ -150,7 +150,7 @@ func (_c *Expecter_NoReturn_Call) Return() *Expecter_NoReturn_Call {
 }
 
 func (_c *Expecter_NoReturn_Call) RunAndReturn(run func(string)) *Expecter_NoReturn_Call {
-	_c.Call.Return(run)
+	_c.Run(run)
 	return _c
 }
 

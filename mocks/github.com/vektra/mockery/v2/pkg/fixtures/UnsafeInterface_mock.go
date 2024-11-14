@@ -50,7 +50,7 @@ func (_c *UnsafeInterface_Do_Call) Return() *UnsafeInterface_Do_Call {
 }
 
 func (_c *UnsafeInterface_Do_Call) RunAndReturn(run func(*unsafe.Pointer)) *UnsafeInterface_Do_Call {
-	_c.Call.Return(run)
+	_c.Run(run)
 	return _c
 }
 

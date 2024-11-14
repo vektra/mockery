@@ -17,7 +17,7 @@ func (_m *Requester4) EXPECT() *Requester4_Expecter {
 	return &Requester4_Expecter{mock: &_m.Mock}
 }
 
-// Get provides a mock function with given fields:
+// Get provides a mock function with no fields
 func (_m *Requester4) Get() {
 	_m.Called()
 }
@@ -45,7 +45,7 @@ func (_c *Requester4_Get_Call) Return() *Requester4_Get_Call {
 }
 
 func (_c *Requester4_Get_Call) RunAndReturn(run func()) *Requester4_Get_Call {
-	_c.Call.Return(run)
+	_c.Run(run)
 	return _c
 }
 

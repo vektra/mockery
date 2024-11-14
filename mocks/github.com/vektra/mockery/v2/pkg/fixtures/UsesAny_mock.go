@@ -17,7 +17,7 @@ func (_m *UsesAny) EXPECT() *UsesAny_Expecter {
 	return &UsesAny_Expecter{mock: &_m.Mock}
 }
 
-// GetReader provides a mock function with given fields:
+// GetReader provides a mock function with no fields
 func (_m *UsesAny) GetReader() any {
 	ret := _m.Called()
 
