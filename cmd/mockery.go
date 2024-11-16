@@ -377,6 +377,7 @@ func (r *RootApp) Run() error {
 		UnrollVariadic:       r.Config.UnrollVariadic,
 		WithExpecter:         r.Config.WithExpecter,
 		ReplaceType:          r.Config.ReplaceType,
+		ResolveTypeAlias:     r.Config.ResolveTypeAlias,
 	}, osp, r.Config.DryRun)
 
 	generated := walker.Walk(ctx, visitor)

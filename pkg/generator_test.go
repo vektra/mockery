@@ -168,7 +168,7 @@ func (s *GeneratorSuite) TestGeneratorExpecterComplete() {
 }
 
 func (s *GeneratorSuite) TestGeneratorExpecterWithRolledVariadic() {
-	expectedBytes, err := os.ReadFile(getMocksPath("ExpecterAndRolledVariadic.go"))
+	expectedBytes, err := os.ReadFile(getMocksPath("ExpecterAndRolledVariadic_mock.go"))
 	s.Require().NoError(err)
 	expected := string(expectedBytes)
 	expected = expected[strings.Index(expected, "// ExpecterAndRolledVariadic is"):]
@@ -194,7 +194,7 @@ func (s *GeneratorSuite) TestGeneratorExpecterWithRolledVariadic() {
 }
 
 func (s *GeneratorSuite) TestGeneratorVariadicNoReturn() {
-	expectedBytes, err := os.ReadFile(getMocksPath("VariadicNoReturnInterface.go"))
+	expectedBytes, err := os.ReadFile(getMocksPath("VariadicNoReturnInterface_mock.go"))
 	s.Require().NoError(err)
 
 	expected := string(expectedBytes)
@@ -341,7 +341,7 @@ func (s *GeneratorSuite) TestGeneratorTreatsAnyAsNilable() {
 	cfg := GeneratorConfig{
 		WithExpecter: true,
 	}
-	expectedBytes, err := os.ReadFile(getMocksPath("UsesAny.go"))
+	expectedBytes, err := os.ReadFile(getMocksPath("UsesAny_mock.go"))
 	s.Require().NoError(err)
 	expected := string(expectedBytes)
 	expected = expected[strings.Index(expected, "// UsesAny is"):]
@@ -394,7 +394,7 @@ func (s *GeneratorSuite) TestGeneratorReturnElidedType() {
 }
 
 func (s *GeneratorSuite) TestGeneratorVariadicArgs() {
-	expectedBytes, err := os.ReadFile(getMocksPath("RequesterVariadic.go"))
+	expectedBytes, err := os.ReadFile(getMocksPath("RequesterVariadic_mock.go"))
 	s.Require().NoError(err)
 	expected := string(expectedBytes)
 	expected = expected[strings.Index(expected, "// RequesterVariadic is"):]
@@ -402,7 +402,7 @@ func (s *GeneratorSuite) TestGeneratorVariadicArgs() {
 }
 
 func (s *GeneratorSuite) TestGeneratorVariadicArgsAsOneArg() {
-	expectedBytes, err := os.ReadFile(getMocksPath("RequesterVariadicOneArgument.go"))
+	expectedBytes, err := os.ReadFile(getMocksPath("RequesterVariadicOneArgument_mock.go"))
 	s.Require().NoError(err)
 	expected := string(expectedBytes)
 	expected = expected[strings.Index(expected, "// RequesterVariadicOneArgument is"):]

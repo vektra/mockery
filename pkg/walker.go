@@ -128,6 +128,7 @@ type GeneratorVisitorConfig struct {
 	UnrollVariadic    bool
 	WithExpecter      bool
 	ReplaceType       []string
+	ResolveTypeAlias  bool
 }
 
 type GeneratorVisitor struct {
@@ -189,6 +190,7 @@ func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) erro
 		UnrollVariadic:       v.config.UnrollVariadic,
 		WithExpecter:         v.config.WithExpecter,
 		ReplaceType:          v.config.ReplaceType,
+		ResolveTypeAlias:     v.config.ResolveTypeAlias,
 	}
 
 	gen := NewGenerator(ctx, generatorConfig, iface, "")

@@ -2,10 +2,18 @@ quiet: False
 disable-version-string: True
 with-expecter: True
 mockname: "{{.InterfaceName}}"
-filename: "{{.MockName}}.go"
+filename: "{{.MockName}}_mock.go"
 outpkg: mocks
 tags: "custom2"
 issue-845-fix: True
+resolve-type-alias: False
+_anchors: &inpackage_config
+  all: True
+  dir: "{{.InterfaceDir}}"
+  mockname: "Mock{{.InterfaceName}}"
+  outpkg: "{{.PackageName}}_test"
+  filename: "mock_{{.InterfaceNameSnake}}_test.go"
+  inpackage: False
 packages:
   github.com/vektra/mockery/v2/pkg/fixtures/buildtag/comment:
     config:
@@ -72,21 +80,13 @@ packages:
       inpackage: True
       keeptree: False
   github.com/vektra/mockery/v2/pkg/fixtures/iface_typed_param:
-    config:
-      all: True
-      dir: "{{.InterfaceDir}}"
-      mockname: "{{.InterfaceName}}"
-      outpkg: "{{.PackageName}}_test"
-      filename: "{{.InterfaceNameSnake}}_mock_test.go"
-      keeptree: True    
+    config: *inpackage_config
+  github.com/vektra/mockery/v2/pkg/fixtures/example_project:  
+    config: *inpackage_config
   github.com/vektra/mockery/v2/pkg/fixtures/issue845:
-    config:
-      all: True
-      dir: "{{.InterfaceDir}}"
-      mockname: "{{.InterfaceName}}"
-      outpkg: "{{.PackageName}}_test"
+    config: 
+      <<: *inpackage_config
       filename: "mock_{{.MockName}}_test.go"
-      inpackage: True
     interfaces:
       Interface:
         configs:
@@ -94,3 +94,18 @@ packages:
             mockname: WithoutFix
           - issue-845-fix: True
             mockname: WithFix
+  github.com/vektra/mockery/v2/pkg/fixtures/type_alias:
+    config:
+      all: True
+      dir: "{{.InterfaceDir}}"
+      filename: "mock_{{.MockName}}_test.go"
+      outpkg: "{{.PackageName}}_test"
+      inpackage: False
+    interfaces:
+      Interface1:
+        configs:
+          - resolve-type-alias: False
+            mockname: InterfaceWithUnresolvedAlias
+          - resolve-type-alias: True
+            mockname: InterfaceWithResolvedAlias
+

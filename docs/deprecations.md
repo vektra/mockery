@@ -36,3 +36,19 @@ issue-845-fix: True
 
 After this is done, mocks generated in the old scheme will properly respect the `#!yaml outpkg:` parameter previously set
 if being generated with `#!yaml inpackage: True`.
+
+`resolve-type-alias`
+--------------------
+
+This parameter directs Mockery on whether it should resolve a type alias to its underlying, real
+type or if it should generate mocks by referencing. Mockery was changed in [#808](https://github.com/vektra/mockery/pull/808)
+to support a new language feature that exposed type aliases in the parsed syntax tree. This meant
+that Mockery was now explicitly aware of aliases, which fixed a number of problems:
+
+- [#803](https://github.com/vektra/mockery/pull/803)
+- [#331](https://github.com/vektra/mockery/issues/331)
+
+However, it was discovered in [#839](https://github.com/vektra/mockery/issues/839) that this was in fact a backwards-incompatible change. Thus, to maintain backwards compatability guarantees, we created this parameter that will be set to `True` by default.
+
+For all new projects that use Mockery, there is no reason to resolve type aliases so this parameter should almost always
+be set to `False`. This will be the permanent behavior in Mockery v3.
