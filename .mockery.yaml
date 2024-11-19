@@ -5,6 +5,7 @@ mockname: "{{.InterfaceName}}"
 filename: "{{.MockName}}.go"
 outpkg: mocks
 tags: "custom2"
+issue-845-fix: True
 packages:
   github.com/vektra/mockery/v2/pkg/fixtures/buildtag/comment:
     config:
@@ -78,3 +79,18 @@ packages:
       outpkg: "{{.PackageName}}_test"
       filename: "{{.InterfaceNameSnake}}_mock_test.go"
       keeptree: True    
+  github.com/vektra/mockery/v2/pkg/fixtures/issue845:
+    config:
+      all: True
+      dir: "{{.InterfaceDir}}"
+      mockname: "{{.InterfaceName}}"
+      outpkg: "{{.PackageName}}_test"
+      filename: "mock_{{.MockName}}_test.go"
+      inpackage: True
+    interfaces:
+      Interface:
+        configs:
+          - issue-845-fix: False
+            mockname: WithoutFix
+          - issue-845-fix: True
+            mockname: WithFix

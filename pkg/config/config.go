@@ -50,6 +50,7 @@ type Config struct {
 	IncludeRegex         string                 `mapstructure:"include-regex"`
 	InPackage            bool                   `mapstructure:"inpackage"`
 	InPackageSuffix      bool                   `mapstructure:"inpackage-suffix"`
+	Issue845Fix          bool                   `mapstructure:"issue-845-fix"`
 	KeepTree             bool                   `mapstructure:"keeptree"`
 	LogLevel             string                 `mapstructure:"log-level"`
 	MockName             string                 `mapstructure:"mockname"`
