@@ -55,10 +55,11 @@ type GeneratorConfig struct {
 	DisableVersionString bool
 	Exported             bool
 	InPackage            bool
+	Issue845Fix          bool
 	KeepTree             bool
 	Note                 string
 	MockBuildTags        string
-	PackageName          string
+	Outpkg               string
 	PackageNamePrefix    string
 	StructName           string
 	UnrollVariadic       bool
@@ -84,12 +85,14 @@ type Generator struct {
 
 // NewGenerator builds a Generator.
 func NewGenerator(ctx context.Context, c GeneratorConfig, iface *Interface, pkg string) *Generator {
-	if pkg == "" {
+	if c.Issue845Fix {
+		pkg = c.Outpkg
+	} else if pkg == "" {
 		pkg = DetermineOutputPackageName(
 			iface.FileName,
 			iface.Pkg.Name(),
 			c.PackageNamePrefix,
-			c.PackageName,
+			c.Outpkg,
 			c.KeepTree,
 			c.InPackage,
 		)
@@ -418,8 +421,20 @@ func (g *Generator) generateImports(ctx context.Context) {
 // GeneratePrologue generates the prologue of the mock.
 func (g *Generator) GeneratePrologue(ctx context.Context, pkg string) {
 	g.populateImports(ctx)
-	if g.config.InPackage {
-		g.printf("package %s\n\n", g.iface.Pkg.Name())
+
+	if !g.config.Issue845Fix {
+		logging.WarnDeprecated(
+			ctx,
+			"issue-845-fix must be set to True to remove this warning. Visit the link for more details.",
+			map[string]any{
+				"url": logging.DocsURL("/deprecations/#issue-845-fix"),
+			},
+		)
+		if g.config.InPackage {
+			g.printf("package %s\n\n", g.iface.Pkg.Name())
+		} else {
+			g.printf("package %v\n\n", pkg)
+		}
 	} else {
 		g.printf("package %v\n\n", pkg)
 	}

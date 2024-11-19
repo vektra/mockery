@@ -183,7 +183,7 @@ func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) erro
 		KeepTree:             v.config.KeepTree,
 		Note:                 v.config.Note,
 		MockBuildTags:        v.config.MockBuildTags,
-		PackageName:          v.config.PackageName,
+		Outpkg:               v.config.PackageName,
 		PackageNamePrefix:    v.config.PackageNamePrefix,
 		StructName:           v.config.StructName,
 		UnrollVariadic:       v.config.UnrollVariadic,

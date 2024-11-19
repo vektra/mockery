@@ -1,6 +1,7 @@
 package logging
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -87,4 +88,26 @@ func GetLogger(levelStr string) (zerolog.Logger, error) {
 		Logger()
 
 	return log, nil
+}
+
+func Warn(ctx context.Context, prefix string, message string, fields map[string]any) {
+	log := zerolog.Ctx(ctx)
+	event := log.Warn()
+	if fields != nil {
+		event = event.Fields(fields)
+	}
+	event.Msgf("%s: %s", prefix, message)
+}
+
+func Info(ctx context.Context, prefix string, message string, fields map[string]any) {
+	log := zerolog.Ctx(ctx)
+	event := log.Info()
+	if fields != nil {
+		event = event.Fields(fields)
+	}
+	event.Msgf("%s: %s", prefix, message)
+}
+
+func WarnDeprecated(ctx context.Context, message string, fields map[string]any) {
+	Warn(ctx, "DEPRECATION", message, fields)
 }
