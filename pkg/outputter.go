@@ -342,8 +342,9 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 			UnrollVariadic:       interfaceConfig.UnrollVariadic,
 			WithExpecter:         interfaceConfig.WithExpecter,
 			ReplaceType:          interfaceConfig.ReplaceType,
+			ResolveTypeAlias:     interfaceConfig.ResolveTypeAlias,
 		}
-		generator := NewGenerator(ctx, g, iface, "")
+		generator := NewGenerator(ctx, g, iface, interfaceConfig.Outpkg)
 
 		log.Debug().Msg("generating mock in-memory")
 		if err := generator.GenerateAll(ctx); err != nil {

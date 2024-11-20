@@ -921,9 +921,10 @@ func TestNewConfigFromViper(t *testing.T) {
 				return viper.New()
 			},
 			want: &Config{
-				Case:   "camel",
-				Dir:    ".",
-				Output: "./mocks",
+				Case:             "camel",
+				Dir:              ".",
+				Output:           "./mocks",
+				ResolveTypeAlias: true,
 			},
 		},
 		{
@@ -940,6 +941,7 @@ packages:
 				Outpkg:               "{{.PackageName}}",
 				WithExpecter:         true,
 				LogLevel:             "info",
+				ResolveTypeAlias:     true,
 			},
 		},
 		{
@@ -958,6 +960,7 @@ packages:
 				Outpkg:               "{{.PackageName}}",
 				WithExpecter:         true,
 				LogLevel:             "info",
+				ResolveTypeAlias:     true,
 			},
 		},
 	}
@@ -991,7 +994,7 @@ packages:
 			tt.want._cfgAsMap = nil
 
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewConfigFromViper() = %v, want %v", got, tt.want)
+				t.Errorf("NewConfigFromViper() = %+v, want %+v", got, tt.want)
 			}
 		})
 	}

@@ -65,6 +65,7 @@ type GeneratorConfig struct {
 	UnrollVariadic       bool
 	WithExpecter         bool
 	ReplaceType          []string
+	ResolveTypeAlias     bool
 }
 
 // Generator is responsible for generating the string containing
@@ -532,10 +533,24 @@ func (g *Generator) renderNamedType(ctx context.Context, t interface {
 }
 
 func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
+	log := zerolog.Ctx(ctx)
 	switch t := typ.(type) {
 	case *types.Named:
 		return g.renderNamedType(ctx, t)
 	case *types.Alias:
+		log.Debug().Msg("found type alias")
+		if g.config.ResolveTypeAlias {
+			logging.WarnDeprecated(
+				ctx,
+				"resolve-type-alias will be permanently set to False in v3. Please modify your config to set the parameter to False.",
+				map[string]any{
+					"url": logging.DocsURL("/deprecations/#resolve-type-alias"),
+				},
+			)
+			log.Debug().Msg("resolving type alias to underlying type")
+			return g.renderType(ctx, t.Underlying())
+		}
+		log.Debug().Msg("not resolving type alias to underlying type")
 		return g.renderNamedType(ctx, t)
 	case *types.TypeParam:
 		if t.Constraint() != nil {

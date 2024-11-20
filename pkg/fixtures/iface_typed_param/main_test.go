@@ -20,7 +20,7 @@ func TestIfaceWithIfaceTypedParamReturnValues(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(st *testing.T) {
-			m := NewGetterIfaceTypedParam[*bufio.Reader](st)
+			m := NewMockGetterIfaceTypedParam[*bufio.Reader](st)
 			m.EXPECT().Get().Return(test.returnVal)
 
 			assert.Equal(st, test.returnVal, m.Get())
