@@ -4,10 +4,27 @@ Deprecations
 `packages`
 ----------
 
+!!! tip ""
+
+    To resolve this warning, use the [`packages`](features.md#packages-configuration) feature:
+
+    ```yaml title=".mockery.yaml"
+    packages:
+        [...]
+    ```
+
 The [`packages`](features.md#packages-configuration) feature will be the only way to configure mockery in the future.
 
 `issue-845-fix`
 ---------------
+
+!!! tip ""
+
+    To resolve this warning:
+    
+    ```yaml title=".mockery.yaml"
+    issue-845-fix: True
+    ```
 
 This parameter fixes a somewhat uninteresting, but important issue found in [#845](https://github.com/vektra/mockery/issues/845).
 In short, mockery ignored the `#!yaml outpkg:` parameter if `#!yaml inpackage:` was set to `#!yaml True`. This prevents users
@@ -39,6 +56,14 @@ if being generated with `#!yaml inpackage: True`.
 
 `resolve-type-alias`
 --------------------
+
+!!! tip ""
+
+    To resolve this warning:
+    
+    ```yaml title=".mockery.yaml"
+    resolve-type-alias: False
+    ```
 
 This parameter directs Mockery on whether it should resolve a type alias to its underlying, real
 type or if it should generate mocks by referencing. Mockery was changed in [#808](https://github.com/vektra/mockery/pull/808)
