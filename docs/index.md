@@ -25,32 +25,25 @@ func getFromDB(db DB) string {
 }
 ```
 
-You can test `getFromDB` by either instantiating a testing database, or you can simply create a mock implementation of `DB` using mockery. Mockery can automatically generate a mock implementation that allows us to define assertions on how the mock was used, what to return, and other useful tidbits. We can add a `//go:generate` directive above our interface:
-
-```golang title="db.go"
-//go:generate mockery --name DB
-type DB interface {
-	Get(val string) string
-}
-```
+We can use simple configuration to generate a mock implementation for the interface:
 
 ```yaml title=".mockery.yaml"
-inpackage: True # (1)!
-with-expecter: True # (2)!
-testonly: True # (3)!
+with-expecter: True
+packages:
+	github.com/org/repo:
+		interfaces:
+			DB:
 ```
 
-1. Generate our mocks next to the original interface
-2. Create [expecter methods](features.md#expecter-structs)
-3. Append `_test.go` to the filename so the mock object is not packaged 
-
+<div class="result">
 ```bash
-$ go generate  
+$ mockery
 05 Mar 23 21:49 CST INF Starting mockery dry-run=false version=v2.20.0
 05 Mar 23 21:49 CST INF Using config: .mockery.yaml dry-run=false version=v2.20.0
 05 Mar 23 21:49 CST INF Walking dry-run=false version=v2.20.0
-05 Mar 23 21:49 CST INF Generating mock dry-run=false interface=DB qualified-name=github.com/vektra/mockery/v2/pkg/fixtures/example_project version=v2.20.0
+05 Mar 23 21:49 CST INF Generating mock dry-run=false interface=DB qualified-name=github.com/org/repo version=v2.20.0
 ```
+</div>
 
 We can then use the mock object in a test:
 
