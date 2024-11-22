@@ -771,6 +771,19 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#with-expecter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          <code>with-expecter</code>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -845,6 +858,19 @@
       
         <span class="md-typeset">
           <code>resolve-type-alias</code>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#with-expecter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          <code>with-expecter</code>
         </span>
       
     </span>
@@ -927,7 +953,7 @@ if being generated with <code class="highlight"><span class="nt">inpackage</span
 </code></pre></div>
 </div>
 <p>This parameter directs Mockery on whether it should resolve a type alias to its underlying, real
-type or if it should generate mocks by referencing. Mockery was changed in <a href="https://github.com/vektra/mockery/pull/808">#808</a>
+type or if it should generate mocks by referencing the alias. Mockery was changed in <a href="https://github.com/vektra/mockery/pull/808">#808</a>
 to support a new language feature that exposed type aliases in the parsed syntax tree. This meant
 that Mockery was now explicitly aware of aliases, which fixed a number of problems:</p>
 <ul>
@@ -937,6 +963,14 @@ that Mockery was now explicitly aware of aliases, which fixed a number of proble
 <p>However, it was discovered in <a href="https://github.com/vektra/mockery/issues/839">#839</a> that this was in fact a backwards-incompatible change. Thus, to maintain backwards compatability guarantees, we created this parameter that will be set to <code>True</code> by default.</p>
 <p>For all new projects that use Mockery, there is no reason to resolve type aliases so this parameter should almost always
 be set to <code>False</code>. This will be the permanent behavior in Mockery v3.</p>
+<h2 id="with-expecter"><code>with-expecter</code><a class="headerlink" href="#with-expecter" title="Permanent link">&para;</a></h2>
+<div class="admonition tip">
+<p>To resolve this warning:</p>
+<div class="highlight"><span class="filename">.mockery.yaml</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">with-expecter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+</code></pre></div>
+</div>
+<p>This parameter enables the <a href="../features/#expecter-structs">expecter structs</a>. In Mockery v3, this parameter will be permanently
+enabled. In order to remove the deprecation warning, you must set this parameter to <code class="highlight"><span class="nt">with-expecter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span></code>.</p>
 
 
 
