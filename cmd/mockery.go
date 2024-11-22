@@ -225,6 +225,16 @@ func (r *RootApp) Run() error {
 		boilerplate = string(data)
 	}
 
+	if !r.Config.WithExpecter {
+		logging.WarnDeprecated(
+			ctx,
+			"with-expecter will be permanently set to True in v3",
+			map[string]any{
+				"url": logging.DocsURL("/deprecations/#with-expecter"),
+			},
+		)
+	}
+
 	configuredPackages, err := r.Config.GetPackages(ctx)
 	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return fmt.Errorf("failed to determine configured packages: %w", err)

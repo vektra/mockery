@@ -66,7 +66,7 @@ if being generated with `#!yaml inpackage: True`.
     ```
 
 This parameter directs Mockery on whether it should resolve a type alias to its underlying, real
-type or if it should generate mocks by referencing. Mockery was changed in [#808](https://github.com/vektra/mockery/pull/808)
+type or if it should generate mocks by referencing the alias. Mockery was changed in [#808](https://github.com/vektra/mockery/pull/808)
 to support a new language feature that exposed type aliases in the parsed syntax tree. This meant
 that Mockery was now explicitly aware of aliases, which fixed a number of problems:
 
@@ -77,3 +77,17 @@ However, it was discovered in [#839](https://github.com/vektra/mockery/issues/83
 
 For all new projects that use Mockery, there is no reason to resolve type aliases so this parameter should almost always
 be set to `False`. This will be the permanent behavior in Mockery v3.
+
+`with-expecter`
+---------------
+
+!!! tip ""
+
+    To resolve this warning:
+    
+    ```yaml title=".mockery.yaml"
+    with-expecter: True
+    ```
+
+This parameter enables the [expecter structs](features.md#expecter-structs). In Mockery v3, this parameter will be permanently
+enabled. In order to remove the deprecation warning, you must set this parameter to `#!yaml with-expecter: True`.
