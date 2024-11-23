@@ -17,7 +17,7 @@ func (_m *WithoutFix) EXPECT() *WithoutFix_Expecter {
 	return &WithoutFix_Expecter{mock: &_m.Mock}
 }
 
-// Foo provides a mock function with given fields:
+// Foo provides a mock function with no fields
 func (_m *WithoutFix) Foo() string {
 	ret := _m.Called()
 

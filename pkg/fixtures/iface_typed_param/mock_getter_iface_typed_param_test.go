@@ -21,7 +21,7 @@ func (_m *MockGetterIfaceTypedParam[T]) EXPECT() *MockGetterIfaceTypedParam_Expe
 	return &MockGetterIfaceTypedParam_Expecter[T]{mock: &_m.Mock}
 }
 
-// Get provides a mock function with given fields:
+// Get provides a mock function with no fields
 func (_m *MockGetterIfaceTypedParam[T]) Get() T {
 	ret := _m.Called()
 

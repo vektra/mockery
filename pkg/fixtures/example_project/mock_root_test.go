@@ -20,7 +20,7 @@ func (_m *MockRoot) EXPECT() *MockRoot_Expecter {
 	return &MockRoot_Expecter{mock: &_m.Mock}
 }
 
-// ReturnsFoo provides a mock function with given fields:
+// ReturnsFoo provides a mock function with no fields
 func (_m *MockRoot) ReturnsFoo() (foo.Foo, error) {
 	ret := _m.Called()
 
@@ -106,7 +106,7 @@ func (_c *MockRoot_TakesBaz_Call) Return() *MockRoot_TakesBaz_Call {
 }
 
 func (_c *MockRoot_TakesBaz_Call) RunAndReturn(run func(*foo.Baz)) *MockRoot_TakesBaz_Call {
-	_c.Call.Return(run)
+	_c.Run(run)
 	return _c
 }
 

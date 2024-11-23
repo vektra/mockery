@@ -20,7 +20,7 @@ func (_m *InterfaceWithUnresolvedAlias) EXPECT() *InterfaceWithUnresolvedAlias_E
 	return &InterfaceWithUnresolvedAlias_Expecter{mock: &_m.Mock}
 }
 
-// Foo provides a mock function with given fields:
+// Foo provides a mock function with no fields
 func (_m *InterfaceWithUnresolvedAlias) Foo() type_alias.Type {
 	ret := _m.Called()
 
