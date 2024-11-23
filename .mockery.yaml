@@ -70,6 +70,15 @@ packages:
       mockname: "Mock{{.InterfaceName}}"
       outpkg: "{{.PackageName}}"
       inpackage: True
+  github.com/vektra/mockery/v2/pkg/fixtures/empty_return:
+    config:
+      all: True
+      dir: "{{.InterfaceDir}}"
+      mockname: "{{.InterfaceName}}Mock"
+      outpkg: "{{.PackageName}}"
+      filename: "mock_{{.InterfaceName}}_test.go"
+      inpackage: True
+      keeptree: False
   github.com/vektra/mockery/v2/pkg/fixtures/method_args/same_name_arg_and_type:
     config:
       all: True
@@ -81,10 +90,10 @@ packages:
       keeptree: False
   github.com/vektra/mockery/v2/pkg/fixtures/iface_typed_param:
     config: *inpackage_config
-  github.com/vektra/mockery/v2/pkg/fixtures/example_project:  
+  github.com/vektra/mockery/v2/pkg/fixtures/example_project:
     config: *inpackage_config
   github.com/vektra/mockery/v2/pkg/fixtures/issue845:
-    config: 
+    config:
       <<: *inpackage_config
       filename: "mock_{{.MockName}}_test.go"
     interfaces:
@@ -108,4 +117,3 @@ packages:
             mockname: InterfaceWithUnresolvedAlias
           - resolve-type-alias: True
             mockname: InterfaceWithResolvedAlias
-
