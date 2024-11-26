@@ -1,4 +1,4 @@
-name: Create new Git tag
+name: Test and maybe create a new release
 
 on:
   push:
@@ -7,8 +7,16 @@ on:
 permissions:
   contents: write
 jobs:
+  test:
+      uses: ./.github/workflows/reusable-testing.yml
+      with:
+        os: '["macos-latest", "ubuntu-latest"]'
+        go_versions: '["1.22", "1.23"]'
+      secrets:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   tag:
     runs-on: ubuntu-latest
+    needs: test
     outputs:
       tag_result: ${{ steps.tag.outputs.tag_result }}
     steps:

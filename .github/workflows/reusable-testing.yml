@@ -1,0 +1,45 @@
+name: Reusable Go Test
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        required: true
+        type: string
+      go_versions:
+        required: true
+        type: string
+    secrets:
+      CODECOV_TOKEN:
+        required: true
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ${{ fromJson(inputs.os) }}
+        go_vers: ${{ fromJson(inputs.go_versions) }}
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go_vers }}
+
+      - name: Download dependencies
+        run: go mod download -x
+
+      - name: Test
+        run: go run github.com/go-task/task/v3/cmd/task test.ci
+
+      - name: Upload coverage to codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.txt
+          verbose: true
