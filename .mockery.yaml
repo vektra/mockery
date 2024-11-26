@@ -108,4 +108,10 @@ packages:
             mockname: InterfaceWithUnresolvedAlias
           - resolve-type-alias: True
             mockname: InterfaceWithResolvedAlias
+      Interface2:
+        configs:
+          - resolve-type-alias: False
+            mockname: Interface2WithUnresolvedAlias
+          - resolve-type-alias: True
+            mockname: Interface2WithResolvedAlias
 
