@@ -15,13 +15,9 @@ import (
 	"github.com/spf13/viper"
 )
 
-var (
-	ErrNoNewVersion = errors.New("no new version specified")
-)
+var ErrNoNewVersion = errors.New("no new version specified")
 
-var (
-	EXIT_CODE_NO_NEW_VERSION = 8
-)
+var EXIT_CODE_NO_NEW_VERSION = 8
 
 func NewTagCmd(v *viper.Viper) (*cobra.Command, error) {
 	if err := v.ReadInConfig(); err != nil {
@@ -121,7 +117,6 @@ func (t *Tagger) largestTagSemver(repo *git.Repository) (*semver.Version, error)
 			largestTag = version
 		}
 		return nil
-
 	}); err != nil {
 		return nil, err
 	}
@@ -201,5 +196,4 @@ func (t *Tagger) Tag() error {
 	logger.Info().Msg("created new tag. Push to origin still required.")
 
 	return nil
-
 }
