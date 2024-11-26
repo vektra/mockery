@@ -2,25 +2,14 @@ name: Reusable Go Test
 
 on:
   workflow_call:
-    inputs:
-      os:
-        required: true
-        type: string
-      go_versions:
-        required: true
-        type: string
-    secrets:
-      CODECOV_TOKEN:
-        required: true
 
 jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ${{ fromJson(inputs.os) }}
-        go_vers: ${{ fromJson(inputs.go_versions) }}
-
+        os: ["macos-latest", "ubuntu-latest"]
+        go_vers: ["1.22", "1.23"]
     steps:
       - uses: actions/checkout@v2
         with:

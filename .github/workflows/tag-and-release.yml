@@ -9,11 +9,6 @@ permissions:
 jobs:
   test:
       uses: ./.github/workflows/reusable-testing.yml
-      with:
-        os: '["macos-latest", "ubuntu-latest"]'
-        go_versions: '["1.22", "1.23"]'
-      secrets:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   tag:
     runs-on: ubuntu-latest
     needs: test
