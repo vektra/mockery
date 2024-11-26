@@ -14,7 +14,7 @@ on:
         required: true
 
 jobs:
-  build:
+  test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
