@@ -547,8 +547,7 @@ func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 					"url": logging.DocsURL("/deprecations/#resolve-type-alias"),
 				},
 			)
-			log.Debug().Msg("resolving type alias to underlying type")
-			return g.renderType(ctx, t.Underlying())
+			return g.renderType(ctx, t.Rhs())
 		}
 		log.Debug().Msg("not resolving type alias to underlying type")
 		return g.renderNamedType(ctx, t)
