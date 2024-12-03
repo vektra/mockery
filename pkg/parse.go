@@ -358,6 +358,7 @@ func (nv *NodeVisitor) DeclaredInterfaces() []string {
 func (nv *NodeVisitor) add(ctx context.Context, n *ast.TypeSpec) {
 	log := zerolog.Ctx(ctx)
 	log.Debug().
+		Str("node-name", n.Name.Name).
 		Str("node-type", fmt.Sprintf("%T", n.Type)).
 		Msg("found node with acceptable type for mocking")
 	nv.declaredInterfaces = append(nv.declaredInterfaces, n.Name.Name)
