@@ -383,7 +383,7 @@ func (nv *NodeVisitor) Visit(node ast.Node) ast.Visitor {
 		case *ast.InterfaceType, *ast.IndexExpr:
 			nv.add(nv.ctx, n)
 		default:
-			log.Debug().Msg("Found node with unacceptable type for mocking. Rejecting.")
+			log.Debug().Msg("found node with unacceptable type for mocking. Rejecting.")
 		}
 	}
 	return nv
