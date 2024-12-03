@@ -17,7 +17,7 @@ func (_m *WithFix) EXPECT() *WithFix_Expecter {
 	return &WithFix_Expecter{mock: &_m.Mock}
 }
 
-// Foo provides a mock function with given fields:
+// Foo provides a mock function with no fields
 func (_m *WithFix) Foo() string {
 	ret := _m.Called()
 

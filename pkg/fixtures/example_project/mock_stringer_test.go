@@ -17,7 +17,7 @@ func (_m *MockStringer) EXPECT() *MockStringer_Expecter {
 	return &MockStringer_Expecter{mock: &_m.Mock}
 }
 
-// String provides a mock function with given fields:
+// String provides a mock function with no fields
 func (_m *MockStringer) String() string {
 	ret := _m.Called()
 

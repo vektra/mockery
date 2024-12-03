@@ -17,7 +17,7 @@ func (_m *Sibling) EXPECT() *Sibling_Expecter {
 	return &Sibling_Expecter{mock: &_m.Mock}
 }
 
-// DoSomething provides a mock function with given fields:
+// DoSomething provides a mock function with no fields
 func (_m *Sibling) DoSomething() {
 	_m.Called()
 }
@@ -45,7 +45,7 @@ func (_c *Sibling_DoSomething_Call) Return() *Sibling_DoSomething_Call {
 }
 
 func (_c *Sibling_DoSomething_Call) RunAndReturn(run func()) *Sibling_DoSomething_Call {
-	_c.Call.Return(run)
+	_c.Run(run)
 	return _c
 }
 

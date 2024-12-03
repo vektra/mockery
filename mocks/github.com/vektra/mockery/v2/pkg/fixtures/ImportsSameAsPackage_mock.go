@@ -22,7 +22,7 @@ func (_m *ImportsSameAsPackage) EXPECT() *ImportsSameAsPackage_Expecter {
 	return &ImportsSameAsPackage_Expecter{mock: &_m.Mock}
 }
 
-// A provides a mock function with given fields:
+// A provides a mock function with no fields
 func (_m *ImportsSameAsPackage) A() test.B {
 	ret := _m.Called()
 
@@ -67,7 +67,7 @@ func (_c *ImportsSameAsPackage_A_Call) RunAndReturn(run func() test.B) *ImportsS
 	return _c
 }
 
-// B provides a mock function with given fields:
+// B provides a mock function with no fields
 func (_m *ImportsSameAsPackage) B() fixtures.KeyManager {
 	ret := _m.Called()
 
@@ -143,7 +143,7 @@ func (_c *ImportsSameAsPackage_C_Call) Return() *ImportsSameAsPackage_C_Call {
 }
 
 func (_c *ImportsSameAsPackage_C_Call) RunAndReturn(run func(fixtures.C)) *ImportsSameAsPackage_C_Call {
-	_c.Call.Return(run)
+	_c.Run(run)
 	return _c
 }
 

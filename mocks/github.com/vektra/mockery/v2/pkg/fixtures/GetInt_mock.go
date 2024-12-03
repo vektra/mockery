@@ -17,7 +17,7 @@ func (_m *GetInt) EXPECT() *GetInt_Expecter {
 	return &GetInt_Expecter{mock: &_m.Mock}
 }
 
-// Get provides a mock function with given fields:
+// Get provides a mock function with no fields
 func (_m *GetInt) Get() int {
 	ret := _m.Called()
 

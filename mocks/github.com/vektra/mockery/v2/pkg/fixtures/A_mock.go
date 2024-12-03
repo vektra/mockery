@@ -20,7 +20,7 @@ func (_m *A) EXPECT() *A_Expecter {
 	return &A_Expecter{mock: &_m.Mock}
 }
 
-// Call provides a mock function with given fields:
+// Call provides a mock function with no fields
 func (_m *A) Call() (test.B, error) {
 	ret := _m.Called()
 

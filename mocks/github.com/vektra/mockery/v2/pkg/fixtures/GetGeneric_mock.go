@@ -20,7 +20,7 @@ func (_m *GetGeneric[T]) EXPECT() *GetGeneric_Expecter[T] {
 	return &GetGeneric_Expecter[T]{mock: &_m.Mock}
 }
 
-// Get provides a mock function with given fields:
+// Get provides a mock function with no fields
 func (_m *GetGeneric[T]) Get() T {
 	ret := _m.Called()
 

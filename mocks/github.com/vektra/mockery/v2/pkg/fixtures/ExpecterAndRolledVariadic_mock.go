@@ -76,7 +76,7 @@ func (_c *ExpecterAndRolledVariadic_ManyArgsReturns_Call) RunAndReturn(run func(
 	return _c
 }
 
-// NoArg provides a mock function with given fields:
+// NoArg provides a mock function with no fields
 func (_m *ExpecterAndRolledVariadic) NoArg() string {
 	ret := _m.Called()
 
@@ -150,7 +150,7 @@ func (_c *ExpecterAndRolledVariadic_NoReturn_Call) Return() *ExpecterAndRolledVa
 }
 
 func (_c *ExpecterAndRolledVariadic_NoReturn_Call) RunAndReturn(run func(string)) *ExpecterAndRolledVariadic_NoReturn_Call {
-	_c.Call.Return(run)
+	_c.Run(run)
 	return _c
 }
 

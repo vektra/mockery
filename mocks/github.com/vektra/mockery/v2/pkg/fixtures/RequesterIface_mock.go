@@ -21,7 +21,7 @@ func (_m *RequesterIface) EXPECT() *RequesterIface_Expecter {
 	return &RequesterIface_Expecter{mock: &_m.Mock}
 }
 
-// Get provides a mock function with given fields:
+// Get provides a mock function with no fields
 func (_m *RequesterIface) Get() io.Reader {
 	ret := _m.Called()
 

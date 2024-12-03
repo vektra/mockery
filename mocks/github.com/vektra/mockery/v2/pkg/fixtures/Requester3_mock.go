@@ -17,7 +17,7 @@ func (_m *Requester3) EXPECT() *Requester3_Expecter {
 	return &Requester3_Expecter{mock: &_m.Mock}
 }
 
-// Get provides a mock function with given fields:
+// Get provides a mock function with no fields
 func (_m *Requester3) Get() error {
 	ret := _m.Called()
 

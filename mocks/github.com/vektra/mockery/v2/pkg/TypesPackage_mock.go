@@ -17,7 +17,7 @@ func (_m *TypesPackage) EXPECT() *TypesPackage_Expecter {
 	return &TypesPackage_Expecter{mock: &_m.Mock}
 }
 
-// Name provides a mock function with given fields:
+// Name provides a mock function with no fields
 func (_m *TypesPackage) Name() string {
 	ret := _m.Called()
 
@@ -62,7 +62,7 @@ func (_c *TypesPackage_Name_Call) RunAndReturn(run func() string) *TypesPackage_
 	return _c
 }
 
-// Path provides a mock function with given fields:
+// Path provides a mock function with no fields
 func (_m *TypesPackage) Path() string {
 	ret := _m.Called()
 

@@ -59,7 +59,7 @@ func (_c *MapToInterface_Foo_Call) Return() *MapToInterface_Foo_Call {
 }
 
 func (_c *MapToInterface_Foo_Call) RunAndReturn(run func(...map[string]interface{})) *MapToInterface_Foo_Call {
-	_c.Call.Return(run)
+	_c.Run(run)
 	return _c
 }
 

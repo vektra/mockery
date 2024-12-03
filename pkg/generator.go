@@ -855,7 +855,11 @@ func (g *Generator) generateMethod(ctx context.Context, method *Method) {
 	}
 
 	g.printTemplate(data, `
+{{- if gt (len .Params.Names) 0}}
 // {{.FunctionName}} provides a mock function with given fields: {{join .Params.Names ", "}}
+{{- else}}
+// {{.FunctionName}} provides a mock function with no fields
+{{- end}}
 func (_m *{{.MockName}}{{.InstantiatedTypeString}}) {{.FunctionName}}({{join .Params.Params ", "}}) {{if (gt (len .Returns.Types) 1)}}({{end}}{{join .Returns.Types ", "}}{{if (gt (len .Returns.Types) 1)}}){{end}} {
 {{- .Preamble -}}
 {{- if not .Returns.Types}}
@@ -1009,7 +1013,11 @@ func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) Return({{range .Returns.
 }
 
 func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) RunAndReturn(run func({{range .Params.Types}}{{.}},{{end}})({{range .Returns.Types}}{{.}},{{end}})) *{{.CallStruct}}{{ .InstantiatedTypeString }} {
+{{- if not .Returns.Types}}
+	_c.Run(run)
+{{- else}}
 	_c.Call.Return(run)
+{{- end}}
 	return _c
 }
 `)

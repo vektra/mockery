@@ -24,7 +24,7 @@ func (_m *Example) EXPECT() *Example_Expecter {
 	return &Example_Expecter{mock: &_m.Mock}
 }
 
-// A provides a mock function with given fields:
+// A provides a mock function with no fields
 func (_m *Example) A() http.Flusher {
 	ret := _m.Called()
 

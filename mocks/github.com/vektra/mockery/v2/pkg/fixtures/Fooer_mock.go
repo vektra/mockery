@@ -46,7 +46,7 @@ func (_c *Fooer_Bar_Call) Return() *Fooer_Bar_Call {
 }
 
 func (_c *Fooer_Bar_Call) RunAndReturn(run func(func([]int))) *Fooer_Bar_Call {
-	_c.Call.Return(run)
+	_c.Run(run)
 	return _c
 }
 

@@ -70,7 +70,7 @@ func (_c *ReplaceGeneric_A_Call[TConstraint, TKeep]) RunAndReturn(run func(test.
 	return _c
 }
 
-// B provides a mock function with given fields:
+// B provides a mock function with no fields
 func (_m *ReplaceGeneric[TConstraint, TKeep]) B() test.B {
 	ret := _m.Called()
 
@@ -117,7 +117,7 @@ func (_c *ReplaceGeneric_B_Call[TConstraint, TKeep]) RunAndReturn(run func() tes
 	return _c
 }
 
-// C provides a mock function with given fields:
+// C provides a mock function with no fields
 func (_m *ReplaceGeneric[TConstraint, TKeep]) C() TConstraint {
 	ret := _m.Called()
 

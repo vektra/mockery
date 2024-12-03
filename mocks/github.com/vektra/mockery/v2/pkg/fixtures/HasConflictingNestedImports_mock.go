@@ -79,7 +79,7 @@ func (_c *HasConflictingNestedImports_Get_Call) RunAndReturn(run func(string) (h
 	return _c
 }
 
-// Z provides a mock function with given fields:
+// Z provides a mock function with no fields
 func (_m *HasConflictingNestedImports) Z() fixtureshttp.MyStruct {
 	ret := _m.Called()
 

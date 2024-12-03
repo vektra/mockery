@@ -49,7 +49,7 @@ func (_c *UsesOtherPkgIface_DoSomethingElse_Call) Return() *UsesOtherPkgIface_Do
 }
 
 func (_c *UsesOtherPkgIface_DoSomethingElse_Call) RunAndReturn(run func(test.Sibling)) *UsesOtherPkgIface_DoSomethingElse_Call {
-	_c.Call.Return(run)
+	_c.Run(run)
 	return _c
 }
 
