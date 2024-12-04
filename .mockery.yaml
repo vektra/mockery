@@ -92,6 +92,8 @@ packages:
     config: *inpackage_config
   github.com/vektra/mockery/v2/pkg/fixtures/example_project:
     config: *inpackage_config
+  github.com/vektra/mockery/v2/pkg/fixtures/index_list_expr:
+    config: *inpackage_config
   github.com/vektra/mockery/v2/pkg/fixtures/issue845:
     config:
       <<: *inpackage_config
