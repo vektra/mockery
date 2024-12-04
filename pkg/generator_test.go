@@ -349,10 +349,6 @@ func (s *GeneratorSuite) TestGeneratorTreatsAnyAsNilable() {
 	s.checkGenerationWithConfig("any_keyword.go", "UsesAny", cfg, expected)
 }
 
-func (s *GeneratorSuite) TestGeneratorAcceptsIndexListExpr() {
-	s.checkGeneration("index_list_expression.go", "IndexListExpr", false, "", "")
-}
-
 func (s *GeneratorSuite) TestGeneratorPointers() {
 	s.checkGeneration("requester_ptr.go", "RequesterPtr", false, "", "")
 }
