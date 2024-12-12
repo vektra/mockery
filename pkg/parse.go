@@ -3,30 +3,13 @@ package pkg
 import (
 	"context"
 	"errors"
-	"fmt"
 	"go/ast"
 	"go/types"
-	"path/filepath"
-	"sort"
 	"strings"
 
 	"github.com/rs/zerolog"
 	"golang.org/x/tools/go/packages"
 )
-
-type fileEntry struct {
-	fileName         string
-	pkg              *packages.Package
-	syntax           *ast.File
-	interfaces       []string
-	disableFuncMocks bool
-}
-
-func (f *fileEntry) ParseInterfaces(ctx context.Context) {
-	nv := NewNodeVisitor(ctx, f.disableFuncMocks)
-	ast.Walk(nv, f.syntax)
-	f.interfaces = nv.DeclaredInterfaces()
-}
 
 type packageLoadEntry struct {
 	pkgs []*packages.Package
@@ -34,20 +17,11 @@ type packageLoadEntry struct {
 }
 
 type Parser struct {
-	interfaces       []*Interface
-	parserPackages   []*types.Package
-	conf             packages.Config
-	packageLoadCache map[string]packageLoadEntry
-	disableFuncMocks bool
+	parserPackages []*types.Package
+	conf           packages.Config
 }
 
-func ParserDisableFuncMocks(disable bool) func(*Parser) {
-	return func(p *Parser) {
-		p.disableFuncMocks = disable
-	}
-}
-
-func NewParser(buildTags []string, opts ...func(*Parser)) *Parser {
+func NewParser(buildTags []string) *Parser {
 	var conf packages.Config
 	conf.Mode = packages.NeedTypes |
 		packages.NeedTypesSizes |
@@ -62,33 +36,24 @@ func NewParser(buildTags []string, opts ...func(*Parser)) *Parser {
 		conf.BuildFlags = []string{"-tags", strings.Join(buildTags, ",")}
 	}
 	p := &Parser{
-		parserPackages:   make([]*types.Package, 0),
-		conf:             conf,
-		packageLoadCache: map[string]packageLoadEntry{},
-	}
-	for _, opt := range opts {
-		opt(p)
+		parserPackages: make([]*types.Package, 0),
+		conf:           conf,
 	}
 	return p
 }
 
-func (p *Parser) loadPackages(fpath string) ([]*packages.Package, error) {
-	if result, ok := p.packageLoadCache[filepath.Dir(fpath)]; ok {
-		return result.pkgs, result.err
-	}
-	pkgs, err := packages.Load(&p.conf, "file="+fpath)
-	p.packageLoadCache[fpath] = packageLoadEntry{pkgs, err}
-	return pkgs, err
-}
-
-func (p *Parser) ParsePackages(ctx context.Context, packageNames []string) error {
+func (p *Parser) ParsePackages(ctx context.Context, packageNames []string) ([]*Interface, error) {
 	log := zerolog.Ctx(ctx)
+	interfaces := []*Interface{}
 
 	packages, err := packages.Load(&p.conf, packageNames...)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	for _, pkg := range packages {
+		pkgLog := log.With().Str("package", pkg.PkgPath).Logger()
+		pkgCtx := pkgLog.WithContext(ctx)
+
 		if len(pkg.GoFiles) == 0 {
 			continue
 		}
@@ -96,211 +61,42 @@ func (p *Parser) ParsePackages(ctx context.Context, packageNames []string) error
 			log.Err(err).Msg("encountered error when loading package")
 		}
 		if len(pkg.Errors) != 0 {
-			return errors.New("error occurred when loading packages")
+			return nil, errors.New("error occurred when loading packages")
 		}
-		pkg.
 		for fileIdx, file := range pkg.GoFiles {
-			log.Debug().
-				Str("package", pkg.PkgPath).
-				Str("file", file).
-				Msgf("found file")
+			fileLog := pkgLog.With().Str("file", file).Logger()
+			fileLog.Debug().Msg("found file")
+			fileCtx := fileLog.WithContext(pkgCtx)
 
 			fileSyntax := pkg.Syntax[fileIdx]
-			nv := NewNodeVisitor(ctx, f.disableFuncMocks)
-			ast.Walk(nv, f.syntax)
+			nv := NewNodeVisitor(fileCtx)
+			ast.Walk(nv, fileSyntax)
 
+			scope := pkg.Types.Scope()
+			for _, declaredInterface := range nv.declaredInterfaces {
+				ifaceLog := fileLog.With().Str("interface", declaredInterface).Logger()
 
-			entry := fileEntry{
-				fileName:         file,
-				pkg:              pkg,
-				syntax:           pkg.Syntax[fileIdx],
-				disableFuncMocks: p.disableFuncMocks,
-			}
-			entry.ParseInterfaces(ctx)
-			for _, iface := range entry.interfaces
-			p.interfaces = append(p.interfaces, entry.In)
-			p.files = append(p.files, &entry)
-		}
-	}
-	return nil
-}
+				obj := scope.Lookup(declaredInterface)
 
-func (p *Parser) Load(ctx context.Context) error {
-	for _, entry := range p.files {
-		entry.ParseInterfaces(ctx)
-	}
-	return nil
-}
-
-func (p *Parser) Find(name string) (*Interface, error) {
-	for _, entry := range p.files {
-		for _, iface := range entry.interfaces {
-			if iface == name {
-				list := p.packageInterfaces(entry.pkg.Types, entry.fileName, []string{name}, nil)
-				if len(list) > 0 {
-					return list[0], nil
+				typ, ok := obj.Type().(*types.Named)
+				if !ok {
+					ifaceLog.Debug().Msg("interface is not named, skipping")
+					continue
 				}
+
+				name := typ.Obj().Name()
+
+				if typ.Obj().Pkg() == nil {
+					continue
+				}
+
+				interfaces = append(interfaces, &Interface{
+					Name:     name,
+					Pkg:      pkg,
+					FileName: file,
+				})
 			}
 		}
 	}
-	return nil, ErrNotInterface
-}
-
-func (p *Parser) Interfaces() []*Interface {
-	ifaces := make(sortableIFaceList, 0)
-	for _, entry := range p.files {
-		declaredIfaces := entry.interfaces
-		ifaces = p.packageInterfaces(entry.pkg.Types, entry.fileName, declaredIfaces, ifaces)
-	}
-
-	sort.Sort(ifaces)
-	return ifaces
-}
-
-func (p *Parser) packageInterfaces(
-	pkg *types.Package,
-	fileName string,
-	declaredInterfaces []string,
-	ifaces []*Interface,
-) []*Interface {
-	scope := pkg.Scope()
-	for _, name := range declaredInterfaces {
-		obj := scope.Lookup(name)
-		if obj == nil {
-			continue
-		}
-
-		typ, ok := obj.Type().(*types.Named)
-		if !ok {
-			continue
-		}
-
-		name = typ.Obj().Name()
-
-		if typ.Obj().Pkg() == nil {
-			continue
-		}
-
-		elem := &Interface{
-			Name:          name,
-			Pkg:           pkg,
-			QualifiedName: pkg.Path(),
-			FileName:      fileName,
-			NamedType:     typ,
-		}
-
-		iface, ok := typ.Underlying().(*types.Interface)
-		if ok {
-			elem.IsFunction = false
-			elem.ActualInterface = iface
-		} else {
-			sig, ok := typ.Underlying().(*types.Signature)
-			if !ok {
-				continue
-			}
-			elem.IsFunction = true
-			elem.SingleFunction = &Method{Name: "Execute", Signature: sig}
-		}
-
-		ifaces = append(ifaces, elem)
-	}
-
-	return ifaces
-}
-
-type Method struct {
-	Name      string
-	Signature *types.Signature
-}
-
-type TypesPackage interface {
-	Name() string
-	Path() string
-}
-
-// Interface type represents the target type that we will generate a mock for.
-// It could be an interface, or a function type.
-// Function type emulates: an interface it has 1 method with the function signature
-// and a general name, e.g. "Execute".
-type Interface struct {
-	Name            string // Name of the type to be mocked.
-	QualifiedName   string // Path to the package of the target type.
-	FileName        string
-	File            *ast.File
-	Pkg             TypesPackage
-	NamedType       *types.Named
-	IsFunction      bool             // If true, this instance represents a function, otherwise it's an interface.
-	ActualInterface *types.Interface // Holds the actual interface type, in case it's an interface.
-	SingleFunction  *Method          // Holds the function type information, in case it's a function type.
-}
-
-func (iface *Interface) Methods() []*Method {
-	if iface.IsFunction {
-		return []*Method{iface.SingleFunction}
-	}
-	methods := make([]*Method, iface.ActualInterface.NumMethods())
-	for i := 0; i < iface.ActualInterface.NumMethods(); i++ {
-		fn := iface.ActualInterface.Method(i)
-		methods[i] = &Method{Name: fn.Name(), Signature: fn.Type().(*types.Signature)}
-	}
-	return methods
-}
-
-type sortableIFaceList []*Interface
-
-func (s sortableIFaceList) Len() int {
-	return len(s)
-}
-
-func (s sortableIFaceList) Swap(i, j int) {
-	s[i], s[j] = s[j], s[i]
-}
-
-func (s sortableIFaceList) Less(i, j int) bool {
-	return strings.Compare(s[i].Name, s[j].Name) == -1
-}
-
-type NodeVisitor struct {
-	declaredInterfaces []string
-	ctx                context.Context
-}
-
-func NewNodeVisitor(ctx context.Context) *NodeVisitor {
-	return &NodeVisitor{
-		declaredInterfaces: make([]string, 0),
-		ctx:                ctx,
-	}
-}
-
-func (nv *NodeVisitor) DeclaredInterfaces() []string {
-	return nv.declaredInterfaces
-}
-
-func (nv *NodeVisitor) add(ctx context.Context, n *ast.TypeSpec) {
-	log := zerolog.Ctx(ctx)
-	log.Debug().
-		Str("node-name", n.Name.Name).
-		Str("node-type", fmt.Sprintf("%T", n.Type)).
-		Msg("found node with acceptable type for mocking")
-	nv.declaredInterfaces = append(nv.declaredInterfaces, n.Name.Name)
-}
-
-func (nv *NodeVisitor) Visit(node ast.Node) ast.Visitor {
-	log := zerolog.Ctx(nv.ctx)
-
-	switch n := node.(type) {
-	case *ast.TypeSpec:
-		log := log.With().
-			Str("node-name", n.Name.Name).
-			Str("node-type", fmt.Sprintf("%T", n.Type)).
-			Logger()
-
-		switch n.Type.(type) {
-		case *ast.InterfaceType, *ast.IndexExpr, *ast.IndexListExpr, *ast.SelectorExpr, *ast.Ident:
-			nv.add(nv.ctx, n)
-		default:
-			log.Debug().Msg("found node with unacceptable type for mocking. Rejecting.")
-		}
-	}
-	return nv
+	return interfaces, nil
 }
