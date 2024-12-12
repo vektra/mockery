@@ -12,7 +12,6 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/vektra/mockery/v2/pkg"
-	"github.com/vektra/mockery/v2/pkg/config"
 	"github.com/vektra/mockery/v2/pkg/logging"
 	"github.com/vektra/mockery/v2/pkg/stackerr"
 )
@@ -150,12 +149,12 @@ func initConfig(
 const regexMetadataChars = "\\.+*?()|[]{}^$"
 
 type RootApp struct {
-	config.Config
+	pkg.Config
 }
 
 func GetRootAppFromViper(v *viper.Viper) (*RootApp, error) {
 	r := &RootApp{}
-	config, err := config.NewConfigFromViper(v)
+	config, err := pkg.NewConfigFromViper(v)
 	if err != nil {
 		return nil, stackerr.NewStackErrf(err, "failed to get config")
 	}
@@ -208,7 +207,8 @@ func (r *RootApp) Run() error {
 		log.Error().Err(err).Msg("unable to parse packages")
 		return err
 	}
-	log.Info().Msg("done loading, visiting interface nodes")
+	mockFileToInterfaces := map[string][]*pkg.Interface{}
+
 	for _, iface := range interfaces {
 		ifaceLog := log.
 			With().
@@ -227,10 +227,16 @@ func (r *RootApp) Run() error {
 			continue
 		}
 		ifaceLog.Debug().Msg("config specifies to generate this interface")
-
-		outputter := pkg.NewOutputter(&r.Config, boilerplate, r.Config.DryRun)
-		if err := outputter.Generate(ifaceCtx, iface); err != nil {
+		ifaceConfigs, err := r.Config.GetInterfaceConfig(ctx, iface.Pkg.PkgPath, iface.Name)
+		if err != nil {
 			return err
+		}
+		for _, ifaceConfig := range ifaceConfigs {
+			if interfaces, ok := mockFileToInterfaces[ifaceConfig.FilePath(ctx).String()]; !ok {
+				interfaces = []*pkg.Interface{}
+				mockFileToInterfaces[ifaceConfig.FilePath(ctx).String()] = interfaces
+			}
+			interfaces = append(interfaces, iface)
 		}
 	}
 

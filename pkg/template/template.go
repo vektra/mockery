@@ -96,4 +96,13 @@ var templateFuncs = template.FuncMap{
 		s += "]"
 		return s
 	},
+	"MocksSomeMethod": func(mocks []MockData) bool {
+		for _, m := range mocks {
+			if len(m.Methods) > 0 {
+				return true
+			}
+		}
+
+		return false
+	},
 }

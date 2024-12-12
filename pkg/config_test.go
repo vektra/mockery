@@ -1,4 +1,4 @@
-package config
+package pkg_test
 
 import (
 	"bytes"
@@ -13,6 +13,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
 
+	"github.com/vektra/mockery/v2/pkg"
 	"github.com/vektra/mockery/v2/pkg/logging"
 )
 
@@ -30,7 +31,7 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    *Config
+		want    *pkg.Config
 		wantErr bool
 		repeat  uint
 	}{
@@ -46,7 +47,7 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 			args: args{
 				packageName: "github.com/vektra/mockery/v2/pkg",
 			},
-			want: &Config{
+			want: &pkg.Config{
 				All:       true,
 				BuildTags: "default_tags",
 				Packages: map[string]any{
@@ -82,7 +83,7 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 			args: args{
 				packageName: "github.com/vektra/mockery/v2/pkg",
 			},
-			want: &Config{
+			want: &pkg.Config{
 				Config:    "path/to/config/.mockery.yaml",
 				All:       true,
 				BuildTags: "default_tags",
@@ -109,7 +110,7 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 			args: args{
 				packageName: "github.com/vektra/mockery/v2/pkg",
 			},
-			want: &Config{
+			want: &pkg.Config{
 				Config:    "path/to/config/.mockery.yaml",
 				All:       false,
 				BuildTags: "foobar",
@@ -136,7 +137,7 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 			args: args{
 				packageName: "github.com/vektra/mockery/v2/pkg",
 			},
-			want: &Config{
+			want: &pkg.Config{
 				Config:    "path/to/config/.mockery.yaml",
 				All:       false,
 				BuildTags: "foobar",
@@ -168,7 +169,7 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := &Config{
+			c := &pkg.Config{
 				Config:    tt.fields.ConfigFile,
 				All:       tt.fields.All,
 				BuildTags: tt.fields.BuildTags,
@@ -214,7 +215,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    []*Config
+		want    []*pkg.Config
 		wantErr bool
 	}{
 		{
@@ -230,7 +231,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				packageName:   "github.com/vektra/mockery/v2/pkg",
 				interfaceName: "intf",
 			},
-			want: []*Config{
+			want: []*pkg.Config{
 				{
 					All:       true,
 					BuildTags: "default_tags",
@@ -255,7 +256,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				packageName:   "github.com/vektra/mockery/v2/pkg",
 				interfaceName: "intf",
 			},
-			want: []*Config{
+			want: []*pkg.Config{
 				{
 					Config:    "path/to/config/.mockery.yaml",
 					All:       false,
@@ -281,7 +282,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				packageName:   "github.com/vektra/mockery/v2/pkg",
 				interfaceName: "intf",
 			},
-			want: []*Config{
+			want: []*pkg.Config{
 				{
 					All:       false,
 					BuildTags: "default_tags",
@@ -309,7 +310,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				packageName:   "github.com/vektra/mockery/v2/pkg",
 				interfaceName: "intf",
 			},
-			want: []*Config{
+			want: []*pkg.Config{
 				{
 					Config:    "path/to/config/.mockery.yaml",
 					All:       false,
@@ -339,7 +340,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				packageName:   "github.com/vektra/mockery/v2/pkg",
 				interfaceName: "intf",
 			},
-			want: []*Config{
+			want: []*pkg.Config{
 				{
 					All:       false,
 					BuildTags: "default_tags",
@@ -371,7 +372,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				packageName:   "github.com/vektra/mockery/v2/pkg",
 				interfaceName: "intf",
 			},
-			want: []*Config{
+			want: []*pkg.Config{
 				{
 					Config:    "path/to/config/.mockery.yaml",
 					All:       false,
@@ -412,7 +413,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				packageName:   "github.com/vektra/mockery/v2/pkg",
 				interfaceName: "intf",
 			},
-			want: []*Config{
+			want: []*pkg.Config{
 				{
 					All:       true,
 					BuildTags: "bat",
@@ -453,7 +454,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := &Config{
+			c := &pkg.Config{
 				All:       tt.fields.All,
 				BuildTags: tt.fields.BuildTags,
 				Packages:  tt.fields.Packages,
@@ -485,7 +486,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 	}
 }
 
-func writeConfigFile(t *testing.T, c *Config) string {
+func writeConfigFile(t *testing.T, c *pkg.Config) string {
 	configFile := pathlib.NewPath(t.TempDir()).Join("config.yaml")
 	var yamlBuffer bytes.Buffer
 	encoder := yaml.NewEncoder(&yamlBuffer)
@@ -526,7 +527,7 @@ func TestConfig_GetPackages(t *testing.T) {
 			configFile := tmpDir.Join(".mockery.yaml")
 			require.NoError(t, configFile.WriteFile([]byte(tt.yaml)))
 
-			c := &Config{
+			c := &pkg.Config{
 				Config: configFile.String(),
 			}
 			got, err := c.GetPackages(context.Background())
@@ -544,13 +545,13 @@ func TestConfig_GetPackages(t *testing.T) {
 func TestConfig_ShouldGenerateInterface(t *testing.T) {
 	tests := []struct {
 		name    string
-		c       *Config
+		c       *pkg.Config
 		want    bool
 		wantErr bool
 	}{
 		{
 			name: "no packages return error",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{},
 			},
 			want:    false,
@@ -558,7 +559,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		},
 		{
 			name: "invalid interfaces section returns error",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
 						"interfaces": true,
@@ -569,7 +570,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		},
 		{
 			name: "should generate all interfaces",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{},
 				},
@@ -579,7 +580,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		},
 		{
 			name: "should generate this package",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
 						"config": map[string]interface{}{
@@ -592,7 +593,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		},
 		{
 			name: "should generate this interface",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
 						"interfaces": map[string]interface{}{
@@ -605,7 +606,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		},
 		{
 			name: "should generate using include-regex",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
 						"config": map[string]interface{}{
@@ -618,7 +619,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		},
 		{
 			name: "should generate when using all and include-regex doesn't match",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
 						"config": map[string]interface{}{
@@ -632,7 +633,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		},
 		{
 			name: "should not generate when include-regex doesn't match",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
 						"config": map[string]interface{}{
@@ -645,7 +646,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		},
 		{
 			name: "should not generate when include-regex and exclude-regex both match",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
 						"config": map[string]interface{}{
@@ -659,7 +660,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		},
 		{
 			name: "should generate when include-regex matches but not exclude-regex",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
 						"config": map[string]interface{}{
@@ -673,7 +674,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		},
 		{
 			name: "should not generate when neither include-regex nor exclude-regex match",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
 						"config": map[string]interface{}{
@@ -687,7 +688,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		},
 		{
 			name: "should not generate when exclude-regex doesn't match but include-regex isn't set",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
 						"config": map[string]interface{}{
@@ -700,7 +701,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		},
 		{
 			name: "should generate when using all and exclude-regex matches",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
 						"config": map[string]interface{}{
@@ -714,7 +715,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		},
 		{
 			name: "should generate when interface is selected and exclude-regex matches",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
 						"interfaces": map[string]interface{}{
@@ -730,7 +731,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		},
 		{
 			name: "invalid include-regex is ignored if all is set",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
 						"config": map[string]interface{}{
@@ -744,7 +745,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		},
 		{
 			name: "invalid include-regex results in error",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
 						"config": map[string]interface{}{
@@ -757,7 +758,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		},
 		{
 			name: "invalid exclude-regex is ignored if all is set",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
 						"config": map[string]interface{}{
@@ -772,7 +773,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		},
 		{
 			name: "invalid exclude-regex is ignored if include-regex is not set",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
 						"config": map[string]interface{}{
@@ -785,7 +786,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		},
 		{
 			name: "invalid exclude-regex results in error",
-			c: &Config{
+			c: &pkg.Config{
 				Packages: map[string]interface{}{
 					"some_package": map[string]interface{}{
 						"config": map[string]interface{}{
@@ -819,13 +820,13 @@ func TestConfig_ExcludePath(t *testing.T) {
 	tests := []struct {
 		name string
 		file string
-		c    *Config
+		c    *pkg.Config
 		want bool
 	}{
 		{
 			name: "should not exclude",
 			file: "some_foo.go",
-			c: &Config{
+			c: &pkg.Config{
 				Exclude: []string{"foo"},
 			},
 			want: false,
@@ -833,7 +834,7 @@ func TestConfig_ExcludePath(t *testing.T) {
 		{
 			name: "should not exclude both",
 			file: "some_foo.go",
-			c: &Config{
+			c: &pkg.Config{
 				Exclude: []string{"foo", "bar"},
 			},
 			want: false,
@@ -841,7 +842,7 @@ func TestConfig_ExcludePath(t *testing.T) {
 		{
 			name: "should exclude",
 			file: "foo/some_foo.go",
-			c: &Config{
+			c: &pkg.Config{
 				Exclude: []string{"foo"},
 			},
 			want: true,
@@ -849,7 +850,7 @@ func TestConfig_ExcludePath(t *testing.T) {
 		{
 			name: "should exclude specific file",
 			file: "foo/some_foo.go",
-			c: &Config{
+			c: &pkg.Config{
 				Exclude: []string{"foo/some_foo.go"},
 			},
 			want: true,
@@ -857,7 +858,7 @@ func TestConfig_ExcludePath(t *testing.T) {
 		{
 			name: "should exclude both paths",
 			file: "foo/bar/some_foo.go",
-			c: &Config{
+			c: &pkg.Config{
 				Exclude: []string{"foo", "foo/bar"},
 			},
 			want: true,
@@ -880,7 +881,7 @@ func TestNewConfigFromViper(t *testing.T) {
 		name    string
 		v       func(t *testing.T) *viper.Viper
 		yaml    string
-		want    *Config
+		want    *pkg.Config
 		wantErr bool
 	}{
 		{
@@ -888,7 +889,7 @@ func TestNewConfigFromViper(t *testing.T) {
 			v: func(t *testing.T) *viper.Viper {
 				return viper.New()
 			},
-			want: &Config{
+			want: &pkg.Config{
 				Dir: ".",
 			},
 		},
@@ -898,7 +899,7 @@ func TestNewConfigFromViper(t *testing.T) {
 packages:
   github.com/vektra/mockery/v2/pkg:
 `,
-			want: &Config{
+			want: &pkg.Config{
 				Dir:      "mocks/{{.PackagePath}}",
 				FileName: "mock_{{.InterfaceName}}.go",
 				MockName: "Mock{{.InterfaceName}}",
@@ -914,7 +915,7 @@ filename: foobar.go
 packages:
   github.com/vektra/mockery/v2/pkg:
 `,
-			want: &Config{
+			want: &pkg.Config{
 				Dir:      "barfoo",
 				FileName: "foobar.go",
 				MockName: "Mock{{.InterfaceName}}",
@@ -941,19 +942,19 @@ packages:
 
 				tt.want.Config = confPath.String()
 			}
-			got, err := NewConfigFromViper(viperObj)
+			got, err := pkg.NewConfigFromViper(viperObj)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("NewConfigFromViper() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("pkg.NewConfigFromViper() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 
 			// zero these out as it's an implementation detail we don't
 			// are about testing
-			got._cfgAsMap = nil
-			tt.want._cfgAsMap = nil
+			got.ClearCfgAsMap()
+			tt.want.ClearCfgAsMap()
 
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewConfigFromViper() = %+v, want %+v", got, tt.want)
+				t.Errorf("pkg.NewConfigFromViper() = %+v, want %+v", got, tt.want)
 			}
 		})
 	}
@@ -1243,7 +1244,7 @@ packages:
 			viperObj := viper.New()
 			viperObj.SetConfigFile(cfg.String())
 			require.NoError(t, viperObj.ReadInConfig())
-			c, err := NewConfigFromViper(viperObj)
+			c, err := pkg.NewConfigFromViper(viperObj)
 			require.NoError(t, err)
 
 			log, err := logging.GetLogger("TRACE")
@@ -1309,13 +1310,13 @@ func Test_isAutoGenerated(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := isAutoGenerated(tt.args(t))
+			got, err := pkg.IsAutoGenerated(tt.args(t))
 			if (err != nil) != tt.wantErr {
-				t.Errorf("isAutoGenerated() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("IsAutoGenerated() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if got != tt.want {
-				t.Errorf("isAutoGenerated() = %v, want %v", got, tt.want)
+				t.Errorf("IsAutoGenerated() = %v, want %v", got, tt.want)
 			}
 		})
 	}
