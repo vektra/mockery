@@ -198,7 +198,7 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 			Str("working-dir", workingDir).
 			Msg("can't make interfaceDir relative to working dir. Setting InterfaceDirRelative to package path.")
 
-		interfaceDirRelative = iface.Pkg.Path()
+		interfaceDirRelative = iface.Pkg.Types.Path()
 	} else {
 		interfaceDirRelative = interfaceDirRelativePath.String()
 	}
@@ -232,8 +232,8 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 		InterfaceNameLower:      strings.ToLower(iface.Name),
 		Mock:                    mock,
 		MockName:                c.MockName,
-		PackageName:             iface.Pkg.Name(),
-		PackagePath:             iface.Pkg.Path(),
+		PackageName:             iface.Pkg.Types.Name(),
+		PackagePath:             iface.Pkg.Types.Path(),
 	}
 	// These are the config options that we allow
 	// to be parsed by the templater. The keys are
@@ -306,46 +306,32 @@ func NewOutputter(
 func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 	log := zerolog.Ctx(ctx).With().
 		Str(logging.LogKeyInterface, iface.Name).
-		Str(logging.LogKeyQualifiedName, iface.QualifiedName).
+		Str(logging.LogKeyQualifiedName, iface.Pkg.Types.Path()).
 		Logger()
 	ctx = log.WithContext(ctx)
 
 	log.Info().Msg("generating mocks for interface")
 
 	log.Debug().Msg("getting config for interface")
-	interfaceConfigs, err := m.config.GetInterfaceConfig(ctx, iface.QualifiedName, iface.Name)
+	interfaceConfigs, err := m.config.GetInterfaceConfig(ctx, iface.Pkg.Types.Path(), iface.Name)
 	if err != nil {
 		return err
 	}
 
 	for _, interfaceConfig := range interfaceConfigs {
-		interfaceConfig.LogUnsupportedPackagesConfig(ctx)
-
 		log.Debug().Msg("getting mock generator")
 
 		if err := parseConfigTemplates(ctx, interfaceConfig, iface); err != nil {
 			return fmt.Errorf("failed to parse config template: %w", err)
 		}
-
-		g := GeneratorConfig{
-			Boilerplate:          m.boilerplate,
-			DisableVersionString: interfaceConfig.DisableVersionString,
-			Exported:             interfaceConfig.Exported,
-			InPackage:            interfaceConfig.InPackage,
-			Issue845Fix:          interfaceConfig.Issue845Fix,
-			Note:                 interfaceConfig.Note,
-			MockBuildTags:        interfaceConfig.MockBuildTags,
-			Outpkg:               interfaceConfig.Outpkg,
-			PackageNamePrefix:    interfaceConfig.Packageprefix,
-			StructName:           interfaceConfig.MockName,
-			UnrollVariadic:       interfaceConfig.UnrollVariadic,
-			WithExpecter:         interfaceConfig.WithExpecter,
+		generator, err := NewTemplateGenerator(iface.Pkg, interfaceConfig.Dir, "moq")
+		if err != nil {
+			return fmt.Errorf("creating template generator: %w", err)
 		}
-		generator := NewGenerator(ctx, g, iface, interfaceConfig.Outpkg)
 
-		log.Debug().Msg("generating mock in-memory")
-		if err := generator.GenerateAll(ctx); err != nil {
-			return err
+		renderedTemplate, err := generator.Generate(ctx, iface.Name, interfaceConfig)
+		if err != nil {
+			return fmt.Errorf("generating template: %w", err)
 		}
 
 		// Log where the file would be written to before checking whether to create the directories and files
@@ -366,7 +352,7 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 			return stackerr.NewStackErrf(err, "failed to open output file for mock: %v", outputPath)
 		}
 		defer file.Close()
-		if err := generator.Write(file); err != nil {
+		if _, err := file.Write(renderedTemplate); err != nil {
 			return stackerr.NewStackErrf(err, "failed to write to file")
 		}
 	}

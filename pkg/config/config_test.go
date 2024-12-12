@@ -21,7 +21,6 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 		ConfigFile string
 		All        bool
 		BuildTags  string
-		Case       string
 		Packages   map[string]interface{}
 	}
 	type args struct {
@@ -40,7 +39,6 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 			fields: fields{
 				All:       true,
 				BuildTags: "default_tags",
-				Case:      "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{},
 				},
@@ -51,7 +49,6 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 			want: &Config{
 				All:       true,
 				BuildTags: "default_tags",
-				Case:      "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{},
 				},
@@ -62,7 +59,6 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 			fields: fields{
 				All:       true,
 				BuildTags: "default_tags",
-				Case:      "upper",
 				Packages:  map[string]any{},
 			},
 			args: args{
@@ -77,7 +73,6 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				ConfigFile: "path/to/config/.mockery.yaml",
 				All:        true,
 				BuildTags:  "default_tags",
-				Case:       "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{
 						"config": map[string]any{},
@@ -91,7 +86,6 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				Config:    "path/to/config/.mockery.yaml",
 				All:       true,
 				BuildTags: "default_tags",
-				Case:      "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{},
 				},
@@ -103,7 +97,6 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				ConfigFile: "path/to/config/.mockery.yaml",
 				All:        true,
 				BuildTags:  "default_tags",
-				Case:       "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{
 						"config": map[string]any{
@@ -120,7 +113,6 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				Config:    "path/to/config/.mockery.yaml",
 				All:       false,
 				BuildTags: "foobar",
-				Case:      "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{},
 				},
@@ -132,7 +124,6 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				ConfigFile: "path/to/config/.mockery.yaml",
 				All:        true,
 				BuildTags:  "default_tags",
-				Case:       "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{
 						"config": map[string]any{
@@ -149,7 +140,6 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				Config:    "path/to/config/.mockery.yaml",
 				All:       false,
 				BuildTags: "foobar",
-				Case:      "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{},
 				},
@@ -161,7 +151,6 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 			fields: fields{
 				All:       true,
 				BuildTags: "default_tags",
-				Case:      "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{
 						"config": map[string]any{
@@ -183,7 +172,6 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				Config:    tt.fields.ConfigFile,
 				All:       tt.fields.All,
 				BuildTags: tt.fields.BuildTags,
-				Case:      tt.fields.Case,
 				Packages:  tt.fields.Packages,
 			}
 			c.Config = writeConfigFile(t, c)
@@ -205,7 +193,6 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				} else {
 					assert.Equal(t, tt.want.All, got.All)
 					assert.Equal(t, tt.want.BuildTags, got.BuildTags)
-					assert.Equal(t, tt.want.Case, got.Case)
 				}
 			}
 		})
@@ -217,7 +204,6 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 		ConfigFile string
 		All        bool
 		BuildTags  string
-		Case       string
 		Packages   map[string]interface{}
 	}
 	type args struct {
@@ -236,7 +222,6 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 			fields: fields{
 				All:       true,
 				BuildTags: "default_tags",
-				Case:      "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{},
 				},
@@ -249,7 +234,6 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				{
 					All:       true,
 					BuildTags: "default_tags",
-					Case:      "upper",
 				},
 			},
 		},
@@ -259,7 +243,6 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				ConfigFile: "path/to/config/.mockery.yaml",
 				All:        true,
 				BuildTags:  "default_tags",
-				Case:       "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{
 						"config": map[string]any{
@@ -277,7 +260,6 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 					Config:    "path/to/config/.mockery.yaml",
 					All:       false,
 					BuildTags: "default_tags",
-					Case:      "upper",
 				},
 			},
 		},
@@ -286,7 +268,6 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 			fields: fields{
 				All:       true,
 				BuildTags: "default_tags",
-				Case:      "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{
 						"config": map[string]any{
@@ -304,7 +285,6 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				{
 					All:       false,
 					BuildTags: "default_tags",
-					Case:      "upper",
 				},
 			},
 		},
@@ -314,7 +294,6 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				ConfigFile: "path/to/config/.mockery.yaml",
 				All:        true,
 				BuildTags:  "default_tags",
-				Case:       "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{
 						"config": map[string]any{
@@ -335,7 +314,6 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 					Config:    "path/to/config/.mockery.yaml",
 					All:       false,
 					BuildTags: "default_tags",
-					Case:      "upper",
 				},
 			},
 		},
@@ -344,7 +322,6 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 			fields: fields{
 				All:       true,
 				BuildTags: "default_tags",
-				Case:      "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{
 						"config": map[string]any{
@@ -366,7 +343,6 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				{
 					All:       false,
 					BuildTags: "default_tags",
-					Case:      "upper",
 				},
 			},
 		},
@@ -376,7 +352,6 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				ConfigFile: "path/to/config/.mockery.yaml",
 				All:        true,
 				BuildTags:  "default_tags",
-				Case:       "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{
 						"config": map[string]any{
@@ -401,7 +376,6 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 					Config:    "path/to/config/.mockery.yaml",
 					All:       false,
 					BuildTags: "foobar",
-					Case:      "upper",
 				},
 			},
 		},
@@ -410,7 +384,6 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 			fields: fields{
 				All:       true,
 				BuildTags: "default_tags",
-				Case:      "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{
 						"config": map[string]any{
@@ -443,12 +416,10 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				{
 					All:       true,
 					BuildTags: "bat",
-					Case:      "upper",
 				},
 				{
 					All:       false,
 					BuildTags: "foobar",
-					Case:      "lower",
 				},
 			},
 		},
@@ -457,7 +428,6 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 			fields: fields{
 				All:       true,
 				BuildTags: "default_tags",
-				Case:      "upper",
 				Packages: map[string]any{
 					"github.com/vektra/mockery/v2/pkg": map[string]any{
 						"config": map[string]any{
@@ -486,7 +456,6 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 			c := &Config{
 				All:       tt.fields.All,
 				BuildTags: tt.fields.BuildTags,
-				Case:      tt.fields.Case,
 				Packages:  tt.fields.Packages,
 			}
 			configPath := writeConfigFile(t, c)
@@ -510,7 +479,6 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 					}
 					assert.Equal(t, tt.want[idx].All, entry.All)
 					assert.Equal(t, tt.want[idx].BuildTags, entry.BuildTags)
-					assert.Equal(t, tt.want[idx].Case, entry.Case)
 				}
 			}
 		})
@@ -921,10 +889,7 @@ func TestNewConfigFromViper(t *testing.T) {
 				return viper.New()
 			},
 			want: &Config{
-				Case:             "camel",
-				Dir:              ".",
-				Output:           "./mocks",
-				ResolveTypeAlias: true,
+				Dir: ".",
 			},
 		},
 		{
@@ -934,14 +899,11 @@ packages:
   github.com/vektra/mockery/v2/pkg:
 `,
 			want: &Config{
-				Dir:                  "mocks/{{.PackagePath}}",
-				FileName:             "mock_{{.InterfaceName}}.go",
-				IncludeAutoGenerated: true,
-				MockName:             "Mock{{.InterfaceName}}",
-				Outpkg:               "{{.PackageName}}",
-				WithExpecter:         true,
-				LogLevel:             "info",
-				ResolveTypeAlias:     true,
+				Dir:      "mocks/{{.PackagePath}}",
+				FileName: "mock_{{.InterfaceName}}.go",
+				MockName: "Mock{{.InterfaceName}}",
+				Outpkg:   "{{.PackageName}}",
+				LogLevel: "info",
 			},
 		},
 		{
@@ -953,14 +915,11 @@ packages:
   github.com/vektra/mockery/v2/pkg:
 `,
 			want: &Config{
-				Dir:                  "barfoo",
-				FileName:             "foobar.go",
-				IncludeAutoGenerated: true,
-				MockName:             "Mock{{.InterfaceName}}",
-				Outpkg:               "{{.PackageName}}",
-				WithExpecter:         true,
-				LogLevel:             "info",
-				ResolveTypeAlias:     true,
+				Dir:      "barfoo",
+				FileName: "foobar.go",
+				MockName: "Mock{{.InterfaceName}}",
+				Outpkg:   "{{.PackageName}}",
+				LogLevel: "info",
 			},
 		},
 	}
