@@ -2,12 +2,8 @@ package cmd
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"os"
-	"path/filepath"
-	"regexp"
-	"runtime/pprof"
 	"strings"
 
 	"github.com/chigopher/pathlib"
@@ -19,7 +15,6 @@ import (
 	"github.com/vektra/mockery/v2/pkg/config"
 	"github.com/vektra/mockery/v2/pkg/logging"
 	"github.com/vektra/mockery/v2/pkg/stackerr"
-	"golang.org/x/tools/go/packages"
 )
 
 var (
@@ -182,15 +177,6 @@ func GetRootAppFromViper(v *viper.Viper) (*RootApp, error) {
 }
 
 func (r *RootApp) Run() error {
-	var recursive bool
-	var filter *regexp.Regexp
-	var limitOne bool
-
-	if r.Quiet {
-		// if "quiet" flag is set, disable logging
-		r.Config.LogLevel = ""
-	}
-
 	log, err := logging.GetLogger(r.Config.LogLevel)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to initialize logger: %v\n", err)
@@ -209,11 +195,6 @@ func (r *RootApp) Run() error {
 		fmt.Println(logging.GetSemverInfo())
 		return nil
 	}
-
-	var osp pkg.OutputStreamProvider
-	if r.Config.Print {
-		osp = &pkg.StdoutStreamProvider{}
-	}
 	buildTags := strings.Split(r.Config.BuildTags, " ")
 
 	var boilerplate string
@@ -225,176 +206,44 @@ func (r *RootApp) Run() error {
 		boilerplate = string(data)
 	}
 
-	if !r.Config.WithExpecter {
-		logging.WarnDeprecated(
-			ctx,
-			"with-expecter will be permanently set to True in v3",
-			map[string]any{
-				"url": logging.DocsURL("/deprecations/#with-expecter"),
-			},
-		)
-	}
-
 	configuredPackages, err := r.Config.GetPackages(ctx)
-	if err != nil && !errors.Is(err, os.ErrNotExist) {
-		return fmt.Errorf("failed to determine configured packages: %w", err)
+	if err != nil {
+		return fmt.Errorf("failed to get package from config: %w", err)
 	}
-	if len(configuredPackages) != 0 {
-		r.Config.LogUnsupportedPackagesConfig(ctx)
-
-		configuredPackages, err := r.Config.GetPackages(ctx)
-		if err != nil {
-			return fmt.Errorf("failed to get package from config: %w", err)
-		}
-		parser := pkg.NewParser(buildTags, pkg.ParserDisableFuncMocks(r.Config.DisableFuncMocks))
-
-		if err := parser.ParsePackages(ctx, configuredPackages); err != nil {
-			log.Error().Err(err).Msg("unable to parse packages")
-			return err
-		}
-		log.Info().Msg("done loading, visiting interface nodes")
-		for _, iface := range parser.Interfaces() {
-			ifaceLog := log.
-				With().
-				Str(logging.LogKeyInterface, iface.Name).
-				Str(logging.LogKeyQualifiedName, iface.QualifiedName).
-				Logger()
-
-			ifaceCtx := ifaceLog.WithContext(ctx)
-
-			shouldGenerate, err := r.Config.ShouldGenerateInterface(ifaceCtx, iface.QualifiedName, iface.Name)
-			if err != nil {
-				return err
-			}
-			if !shouldGenerate {
-				ifaceLog.Debug().Msg("config doesn't specify to generate this interface, skipping.")
-				continue
-			}
-			ifaceLog.Debug().Msg("config specifies to generate this interface")
-
-			outputter := pkg.NewOutputter(&r.Config, boilerplate, r.Config.DryRun)
-			if err := outputter.Generate(ifaceCtx, iface); err != nil {
-				return err
-			}
-		}
-
+	if len(configuredPackages) == 0 {
+		log.Error().Msg("no packages specified in config")
 		return nil
 	}
+	parser := pkg.NewParser(buildTags, pkg.ParserDisableFuncMocks(r.Config.DisableFuncMocks))
 
-	if r.Config.Name != "" && r.Config.All {
-		log.Fatal().Msgf("Specify --name or --all, but not both")
-	} else if (r.Config.FileName != "" || r.Config.StructName != "") && r.Config.All {
-		log.Fatal().Msgf("Cannot specify --filename or --structname with --all")
-	} else if r.Config.Dir != "" && r.Config.Dir != "." && r.Config.SrcPkg != "" {
-		log.Fatal().Msgf("Specify --dir or --srcpkg, but not both")
-	} else if r.Config.Name != "" {
-		recursive = r.Config.Recursive
-		if strings.ContainsAny(r.Config.Name, regexMetadataChars) {
-			if filter, err = regexp.Compile(r.Config.Name); err != nil {
-				log.Fatal().Err(err).Msgf("Invalid regular expression provided to -name")
-			} else if r.Config.FileName != "" || r.Config.StructName != "" {
-				log.Fatal().Msgf("Cannot specify --filename or --structname with regex in --name")
-			}
-		} else {
-			filter = regexp.MustCompile(fmt.Sprintf("^%s$", r.Config.Name))
-			limitOne = true
-		}
-	} else if r.Config.All {
-		recursive = true
-		filter = regexp.MustCompile(".*")
-	} else {
-		log.Fatal().Msgf("Use --name to specify the name of the interface or --all for all interfaces found")
+	if err := parser.ParsePackages(ctx, configuredPackages); err != nil {
+		log.Error().Err(err).Msg("unable to parse packages")
+		return err
 	}
+	log.Info().Msg("done loading, visiting interface nodes")
+	for _, iface := range parser.Interfaces() {
+		ifaceLog := log.
+			With().
+			Str(logging.LogKeyInterface, iface.Name).
+			Str(logging.LogKeyQualifiedName, iface.QualifiedName).
+			Logger()
 
-	logging.WarnDeprecated(
-		ctx,
-		"use of the packages config will be the only way to generate mocks in v3. Please migrate your config to use the packages feature.",
-		map[string]any{
-			"url":       logging.DocsURL("/features/#packages-configuration"),
-			"migration": logging.DocsURL("/migrating_to_packages/"),
-		})
+		ifaceCtx := ifaceLog.WithContext(ctx)
 
-	if r.Config.Profile != "" {
-		f, err := os.Create(r.Config.Profile)
+		shouldGenerate, err := r.Config.ShouldGenerateInterface(ifaceCtx, iface.QualifiedName, iface.Name)
 		if err != nil {
-			return stackerr.NewStackErrf(err, "Failed to create profile file")
+			return err
 		}
-		defer f.Close()
-		if err := pprof.StartCPUProfile(f); err != nil {
-			return fmt.Errorf("failed to start CPU profile: %w", err)
+		if !shouldGenerate {
+			ifaceLog.Debug().Msg("config doesn't specify to generate this interface, skipping.")
+			continue
 		}
-		defer pprof.StopCPUProfile()
-	}
+		ifaceLog.Debug().Msg("config specifies to generate this interface")
 
-	baseDir := r.Config.Dir
-
-	if osp == nil {
-		osp = &pkg.FileOutputStreamProvider{
-			Config:                    r.Config,
-			BaseDir:                   r.Config.Output,
-			InPackage:                 r.Config.InPackage,
-			InPackageSuffix:           r.Config.InPackageSuffix,
-			TestOnly:                  r.Config.TestOnly,
-			Case:                      r.Config.Case,
-			KeepTree:                  r.Config.KeepTree,
-			KeepTreeOriginalDirectory: r.Config.Dir,
-			FileName:                  r.Config.FileName,
+		outputter := pkg.NewOutputter(&r.Config, boilerplate, r.Config.DryRun)
+		if err := outputter.Generate(ifaceCtx, iface); err != nil {
+			return err
 		}
-	}
-
-	if r.Config.SrcPkg != "" {
-		pkgs, err := packages.Load(&packages.Config{
-			Mode: packages.NeedFiles,
-		}, r.Config.SrcPkg)
-		if err != nil || len(pkgs) == 0 {
-			log.Fatal().Err(err).Msgf("Failed to load package %s", r.Config.SrcPkg)
-		}
-
-		// NOTE: we only pass one package name (config.SrcPkg) to packages.Load
-		// it should return one package at most
-		pkg := pkgs[0]
-
-		if pkg.Errors != nil {
-			log.Fatal().Err(pkg.Errors[0]).Msgf("Failed to load package %s", r.Config.SrcPkg)
-		}
-
-		if len(pkg.GoFiles) == 0 {
-			log.Fatal().Msgf("No go files in package %s", r.Config.SrcPkg)
-		}
-		baseDir = filepath.Dir(pkg.GoFiles[0])
-	}
-
-	walker := pkg.Walker{
-		Config:    r.Config,
-		BaseDir:   baseDir,
-		Recursive: recursive,
-		Filter:    filter,
-		LimitOne:  limitOne,
-		BuildTags: buildTags,
-	}
-
-	visitor := pkg.NewGeneratorVisitor(pkg.GeneratorVisitorConfig{
-		Boilerplate:          boilerplate,
-		DisableVersionString: r.Config.DisableVersionString,
-		Exported:             r.Config.Exported,
-		InPackage:            r.Config.InPackage,
-		KeepTree:             r.Config.KeepTree,
-		Note:                 r.Config.Note,
-		MockBuildTags:        r.Config.MockBuildTags,
-		PackageName:          r.Config.Outpkg,
-		PackageNamePrefix:    r.Config.Packageprefix,
-		StructName:           r.Config.StructName,
-		UnrollVariadic:       r.Config.UnrollVariadic,
-		WithExpecter:         r.Config.WithExpecter,
-		ReplaceType:          r.Config.ReplaceType,
-		ResolveTypeAlias:     r.Config.ResolveTypeAlias,
-	}, osp, r.Config.DryRun)
-
-	generated := walker.Walk(ctx, visitor)
-
-	if r.Config.Name != "" && !generated {
-		log.Error().Msgf("Unable to find '%s' in any go files under this path", r.Config.Name)
-		return fmt.Errorf("unable to find interface")
 	}
 
 	return nil
