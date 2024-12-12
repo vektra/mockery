@@ -54,18 +54,13 @@ type GeneratorConfig struct {
 	Boilerplate          string
 	DisableVersionString bool
 	Exported             bool
-	InPackage            bool
 	Issue845Fix          bool
-	KeepTree             bool
 	Note                 string
 	MockBuildTags        string
 	Outpkg               string
 	PackageNamePrefix    string
 	StructName           string
 	UnrollVariadic       bool
-	WithExpecter         bool
-	ReplaceType          []string
-	ResolveTypeAlias     bool
 }
 
 // Generator is responsible for generating the string containing
@@ -813,9 +808,7 @@ func (g *Generator) Generate(ctx context.Context) error {
 		"type %s%s struct {\n\tmock.Mock\n}\n\n", g.mockName(), g.getTypeConstraintString(ctx),
 	)
 
-	if g.config.WithExpecter {
-		g.generateExpecterStruct(ctx)
-	}
+	g.generateExpecterStruct(ctx)
 
 	for _, method := range g.iface.Methods() {
 		g.generateMethod(ctx, method)

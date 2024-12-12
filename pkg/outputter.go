@@ -333,7 +333,6 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 			Exported:             interfaceConfig.Exported,
 			InPackage:            interfaceConfig.InPackage,
 			Issue845Fix:          interfaceConfig.Issue845Fix,
-			KeepTree:             interfaceConfig.KeepTree,
 			Note:                 interfaceConfig.Note,
 			MockBuildTags:        interfaceConfig.MockBuildTags,
 			Outpkg:               interfaceConfig.Outpkg,
@@ -341,8 +340,6 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 			StructName:           interfaceConfig.MockName,
 			UnrollVariadic:       interfaceConfig.UnrollVariadic,
 			WithExpecter:         interfaceConfig.WithExpecter,
-			ReplaceType:          interfaceConfig.ReplaceType,
-			ResolveTypeAlias:     interfaceConfig.ResolveTypeAlias,
 		}
 		generator := NewGenerator(ctx, g, iface, interfaceConfig.Outpkg)
 

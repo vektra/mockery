@@ -6,13 +6,11 @@ import (
 	"fmt"
 	"go/ast"
 	"go/types"
-	"os"
 	"path/filepath"
 	"sort"
 	"strings"
 
 	"github.com/rs/zerolog"
-	"github.com/vektra/mockery/v2/pkg/logging"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -36,12 +34,11 @@ type packageLoadEntry struct {
 }
 
 type Parser struct {
-	files             []*fileEntry
-	entriesByFileName map[string]*fileEntry
-	parserPackages    []*types.Package
-	conf              packages.Config
-	packageLoadCache  map[string]packageLoadEntry
-	disableFuncMocks  bool
+	interfaces       []*Interface
+	parserPackages   []*types.Package
+	conf             packages.Config
+	packageLoadCache map[string]packageLoadEntry
+	disableFuncMocks bool
 }
 
 func ParserDisableFuncMocks(disable bool) func(*Parser) {
@@ -65,10 +62,9 @@ func NewParser(buildTags []string, opts ...func(*Parser)) *Parser {
 		conf.BuildFlags = []string{"-tags", strings.Join(buildTags, ",")}
 	}
 	p := &Parser{
-		parserPackages:    make([]*types.Package, 0),
-		entriesByFileName: map[string]*fileEntry{},
-		conf:              conf,
-		packageLoadCache:  map[string]packageLoadEntry{},
+		parserPackages:   make([]*types.Package, 0),
+		conf:             conf,
+		packageLoadCache: map[string]packageLoadEntry{},
 	}
 	for _, opt := range opts {
 		opt(p)
@@ -102,11 +98,18 @@ func (p *Parser) ParsePackages(ctx context.Context, packageNames []string) error
 		if len(pkg.Errors) != 0 {
 			return errors.New("error occurred when loading packages")
 		}
+		pkg.
 		for fileIdx, file := range pkg.GoFiles {
 			log.Debug().
 				Str("package", pkg.PkgPath).
 				Str("file", file).
 				Msgf("found file")
+
+			fileSyntax := pkg.Syntax[fileIdx]
+			nv := NewNodeVisitor(ctx, f.disableFuncMocks)
+			ast.Walk(nv, f.syntax)
+
+
 			entry := fileEntry{
 				fileName:         file,
 				pkg:              pkg,
@@ -114,91 +117,11 @@ func (p *Parser) ParsePackages(ctx context.Context, packageNames []string) error
 				disableFuncMocks: p.disableFuncMocks,
 			}
 			entry.ParseInterfaces(ctx)
+			for _, iface := range entry.interfaces
+			p.interfaces = append(p.interfaces, entry.In)
 			p.files = append(p.files, &entry)
-			p.entriesByFileName[file] = &entry
 		}
 	}
-	return nil
-}
-
-// DEPRECATED: Parse is part of the deprecated, legacy mockery behavior. This is not
-// used when the packages feature is enabled.
-func (p *Parser) Parse(ctx context.Context, path string) error {
-	// To support relative paths to mock targets w/ vendor deps, we need to provide eventual
-	// calls to build.Context.Import with an absolute path. It needs to be absolute because
-	// Import will only find the vendor directory if our target path for parsing is under
-	// a "root" (GOROOT or a GOPATH). Only absolute paths will pass the prefix-based validation.
-	//
-	// For example, if our parse target is "./ifaces", Import will check if any "roots" are a
-	// prefix of "ifaces" and decide to skip the vendor search.
-	path, err := filepath.Abs(path)
-	if err != nil {
-		return err
-	}
-
-	dir := filepath.Dir(path)
-
-	files, err := os.ReadDir(dir)
-	if err != nil {
-		return err
-	}
-
-	for _, fi := range files {
-		log := zerolog.Ctx(ctx).With().
-			Str(logging.LogKeyDir, dir).
-			Str(logging.LogKeyFile, fi.Name()).
-			Logger()
-		ctx = log.WithContext(ctx)
-
-		if filepath.Ext(fi.Name()) != ".go" || strings.HasSuffix(fi.Name(), "_test.go") || strings.HasPrefix(fi.Name(), "mock_") {
-			continue
-		}
-
-		log.Debug().Msgf("parsing")
-
-		fname := fi.Name()
-		fpath := filepath.Join(dir, fname)
-		if _, ok := p.entriesByFileName[fpath]; ok {
-			continue
-		}
-
-		pkgs, err := p.loadPackages(fpath)
-		if err != nil {
-			return err
-		}
-		if len(pkgs) == 0 {
-			continue
-		}
-		if len(pkgs) > 1 {
-			names := make([]string, len(pkgs))
-			for i, p := range pkgs {
-				names[i] = p.Name
-			}
-			panic(fmt.Sprintf("file %s resolves to multiple packages: %s", fpath, strings.Join(names, ", ")))
-		}
-
-		pkg := pkgs[0]
-		if len(pkg.Errors) > 0 {
-			return pkg.Errors[0]
-		}
-		if len(pkg.GoFiles) == 0 {
-			continue
-		}
-
-		for idx, f := range pkg.GoFiles {
-			if _, ok := p.entriesByFileName[f]; ok {
-				continue
-			}
-			entry := fileEntry{
-				fileName: f,
-				pkg:      pkg,
-				syntax:   pkg.Syntax[idx],
-			}
-			p.files = append(p.files, &entry)
-			p.entriesByFileName[f] = &entry
-		}
-	}
-
 	return nil
 }
 
@@ -339,14 +262,12 @@ func (s sortableIFaceList) Less(i, j int) bool {
 
 type NodeVisitor struct {
 	declaredInterfaces []string
-	disableFuncMocks   bool
 	ctx                context.Context
 }
 
-func NewNodeVisitor(ctx context.Context, disableFuncMocks bool) *NodeVisitor {
+func NewNodeVisitor(ctx context.Context) *NodeVisitor {
 	return &NodeVisitor{
 		declaredInterfaces: make([]string, 0),
-		disableFuncMocks:   disableFuncMocks,
 		ctx:                ctx,
 	}
 }
@@ -375,11 +296,6 @@ func (nv *NodeVisitor) Visit(node ast.Node) ast.Visitor {
 			Logger()
 
 		switch n.Type.(type) {
-		case *ast.FuncType:
-			if nv.disableFuncMocks {
-				break
-			}
-			nv.add(nv.ctx, n)
 		case *ast.InterfaceType, *ast.IndexExpr, *ast.IndexListExpr, *ast.SelectorExpr, *ast.Ident:
 			nv.add(nv.ctx, n)
 		default:
