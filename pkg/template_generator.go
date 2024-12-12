@@ -140,10 +140,6 @@ func (g *TemplateGenerator) Generate(ctx context.Context, ifaceName string, ifac
 		TemplateMap: ifaceConfig.TemplateMap,
 		StubImpl:    false,
 	}
-	if data.MocksSomeMethod() {
-		log.Debug().Msg("interface mocks some method, importing sync package")
-		g.registry.AddImport(ctx, types.NewPackage("sync", "sync"))
-	}
 
 	var inPackage bool
 	if ifaceConfig.Dir == g.registry.SrcPkg().Types.Path() {

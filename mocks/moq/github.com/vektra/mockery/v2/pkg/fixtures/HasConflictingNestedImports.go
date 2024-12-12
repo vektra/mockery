@@ -4,9 +4,10 @@
 package test
 
 import (
-	my_http "github.com/vektra/mockery/v2/pkg/fixtures/http"
 	"net/http"
 	"sync"
+
+	my_http "github.com/vektra/mockery/v2/pkg/fixtures/http"
 )
 
 // HasConflictingNestedImportsMock is a mock implementation of test.HasConflictingNestedImports.

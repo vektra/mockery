@@ -4,10 +4,11 @@
 package test
 
 import (
-	number_dir_http "github.com/vektra/mockery/v2/pkg/fixtures/12345678/http"
-	my_http "github.com/vektra/mockery/v2/pkg/fixtures/http"
 	"net/http"
 	"sync"
+
+	number_dir_http "github.com/vektra/mockery/v2/pkg/fixtures/12345678/http"
+	my_http "github.com/vektra/mockery/v2/pkg/fixtures/http"
 )
 
 // ExampleMock is a mock implementation of test.Example.

@@ -4,8 +4,9 @@
 package test
 
 import (
-	"github.com/vektra/mockery/v2/pkg/fixtures/constraints"
 	"sync"
+
+	"github.com/vektra/mockery/v2/pkg/fixtures/constraints"
 )
 
 // EmbeddedGetMock is a mock implementation of test.EmbeddedGet.

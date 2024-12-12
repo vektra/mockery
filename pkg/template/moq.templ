@@ -7,6 +7,8 @@ import (
 {{- range .Imports}}
 	{{. | ImportStatement}}
 {{- end}}
+    "sync"
+    "fmt"
 )
 
 {{range $i, $mock := .Mocks -}}

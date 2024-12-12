@@ -4,9 +4,10 @@
 package test
 
 import (
+	"sync"
+
 	fixtures "github.com/vektra/mockery/v2/pkg/fixtures"
 	redefinedtypeb "github.com/vektra/mockery/v2/pkg/fixtures/redefined_type_b"
-	"sync"
 )
 
 // ImportsSameAsPackageMock is a mock implementation of test.ImportsSameAsPackage.

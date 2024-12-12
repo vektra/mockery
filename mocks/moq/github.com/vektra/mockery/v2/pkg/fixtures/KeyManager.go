@@ -4,8 +4,9 @@
 package test
 
 import (
-	"github.com/vektra/mockery/v2/pkg/fixtures"
 	"sync"
+
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
 )
 
 // KeyManagerMock is a mock implementation of test.KeyManager.
