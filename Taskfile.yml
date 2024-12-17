@@ -21,7 +21,7 @@ tasks:
   mocks.remove:
     desc: remove all mock files
     cmds:
-      - find . -name '*_mock.go' | xargs rm
+      - find . -name '*_mock.go' -o -name 'mock_*_test.go' | xargs -r rm
       - rm -rf mocks/
 
   mocks.generate:
@@ -81,3 +81,19 @@ tasks:
 
   default:
     deps: [test.ci]
+
+  build-tools:
+    desc: Build tools directory
+    cmds:
+    - cd ./tools && go build -o tools .
+
+  tag:
+    desc: Tag the git repo with the version specified.
+    deps: [build-tools]
+    cmds:
+    - ./tools/tools tag --dry-run=false
+
+  tag.push:
+    desc: Push tags to origin
+    cmds:
+    - git push origin --tags

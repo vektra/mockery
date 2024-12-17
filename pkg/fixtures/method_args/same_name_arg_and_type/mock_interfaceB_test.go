@@ -17,7 +17,7 @@ func (_m *interfaceBMock) EXPECT() *interfaceBMock_Expecter {
 	return &interfaceBMock_Expecter{mock: &_m.Mock}
 }
 
-// GetData provides a mock function with given fields:
+// GetData provides a mock function with no fields
 func (_m *interfaceBMock) GetData() int {
 	ret := _m.Called()
 

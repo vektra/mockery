@@ -16,7 +16,7 @@ func TestFileParse(t *testing.T) {
 	err := parser.Parse(ctx, testFile)
 	assert.NoError(t, err)
 
-	err = parser.Load()
+	err = parser.Load(context.Background())
 	assert.NoError(t, err)
 
 	node, err := parser.Find("Requester")
@@ -38,11 +38,11 @@ func TestBuildTagInFilename(t *testing.T) {
 	err = parser.Parse(ctx, getFixturePath("buildtag", "filename", "iface_freebsd.go"))
 	assert.NoError(t, err)
 
-	err = parser.Load()
+	err = parser.Load(context.Background())
 	assert.NoError(t, err) // Expect "redeclared in this block" if tags aren't respected
 
 	nodes := parser.Interfaces()
-	assert.Equal(t, 1, len(nodes))
+	require.Len(t, nodes, 1)
 	assert.Equal(t, "IfaceWithBuildTagInFilename", nodes[0].Name)
 }
 
@@ -60,11 +60,11 @@ func TestBuildTagInComment(t *testing.T) {
 	err = parser.Parse(ctx, getFixturePath("buildtag", "comment", "freebsd_iface.go"))
 	assert.NoError(t, err)
 
-	err = parser.Load()
+	err = parser.Load(context.Background())
 	assert.NoError(t, err) // Expect "redeclared in this block" if tags aren't respected
 
 	nodes := parser.Interfaces()
-	assert.Equal(t, 1, len(nodes))
+	require.Len(t, nodes, 1)
 	assert.Equal(t, "IfaceWithBuildTagInComment", nodes[0].Name)
 }
 
@@ -78,7 +78,7 @@ func TestCustomBuildTag(t *testing.T) {
 	err = parser.Parse(ctx, getFixturePath("buildtag", "comment", "custom2_iface.go"))
 	assert.NoError(t, err)
 
-	err = parser.Load()
+	err = parser.Load(context.Background())
 	assert.NoError(t, err) // Expect "redeclared in this block" if tags aren't respected
 
 	found := false
@@ -94,6 +94,5 @@ func TestCustomBuildTag(t *testing.T) {
 func TestParsePackages(t *testing.T) {
 	parser := NewParser([]string{})
 	require.NoError(t, parser.ParsePackages(context.Background(), []string{"github.com/vektra/mockery/v2/pkg/fixtures"}))
-	assert.NotEqual(t, 0, len(parser.entries))
-
+	assert.NotEmpty(t, parser.files)
 }

@@ -2,7 +2,7 @@
 title: Migrating To Packages
 ---
 
-The [packages](features.md#packages-configuration) feature is a new configuration scheme that aims to simplify and improve a lot of legacy behavior. This will be the only way to generate mocks in v3. These docs outline general principals for migrating to the new scheme.
+The [packages](features.md#packages-configuration) feature is a new configuration scheme that aims to simplify and improve a lot of legacy behavior. This will be the only way to generate mocks in v3. These docs outline general principles for migrating to the new scheme.
 
 Background
 ----------
@@ -29,7 +29,7 @@ All of the parameters in the config section can be specified at the top level of
 
 #### Separate `mocks/` directory
 
-Take for example a configuration where you are specifying `all: true` at the top of your repo and you're placing your mocks in a separate `mocks/` directory, mirroring the directory structure of your original repo.
+Take for example a configuration where you are specifying `all: true` at the top of your repo, and you're placing your mocks in a separate `mocks/` directory, mirroring the directory structure of your original repo.
 
 ```yaml
 testonly: False
@@ -53,7 +53,7 @@ packages:
       recursive: True
 ```
 
-1. The use of `replaceAll` is a trick that is done to ensure mocks created for `internal` packages can be imported outside of the mock directory. This retains the behavior of the legacy config.
+1. The use of `replaceAll` is a trick that is done to ensure mocks created for `internal` packages can be imported outside the mock directory. This retains the behavior of the legacy config.
 
 While the example config provided here is more verbose, that is because we're specifying many non-default values in order to retain strict equivalence for this example. It's recommended to refer to the [configuration parameters](configuration.md#parameter-descriptions) to see the defaults provided.
 
@@ -98,7 +98,7 @@ Previously, the recommended way of generating mocks was to call `mockery` once p
 Behavior Changes
 -----------------
 
-The legacy behavior iterated over every `.go` file in your project, called [`packages.Load`](https://pkg.go.dev/golang.org/x/tools/go/packages#Load) to parse the syntax tree, and generated mocks for every interface found in the file. The new behavior instead simply grabs the list of packages to load from the config file, or in the case of `#!yaml recursive: True`, walks the filesystem tree to discover the packages that exist (without actually parsing the files). Using this list, it calls `packages.Load` once with the list of packages that were discovered.
+The legacy behavior iterated over every `.go` file in your project, called [`packages.Load`](https://pkg.go.dev/golang.org/x/tools/go/packages#Load) to parse the syntax tree, and generated mocks for every interface found in the file. The new behavior instead simply grabs the list of packages to load from the config file, or in the case of `#!yaml recursive: True`, walks the file-system tree to discover the packages that exist (without actually parsing the files). Using this list, it calls `packages.Load` once with the list of packages that were discovered.
 
 Filesystem Tree Layouts
 ------------------------

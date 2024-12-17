@@ -17,7 +17,7 @@ func (_m *MockFoo) EXPECT() *MockFoo_Expecter {
 	return &MockFoo_Expecter{mock: &_m.Mock}
 }
 
-// Get provides a mock function with given fields:
+// Get provides a mock function with no fields
 func (_m *MockFoo) Get() string {
 	ret := _m.Called()
 

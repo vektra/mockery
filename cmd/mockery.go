@@ -12,7 +12,6 @@ import (
 
 	"github.com/chigopher/pathlib"
 	"github.com/mitchellh/go-homedir"
-	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -83,6 +82,7 @@ func NewRootCmd() *cobra.Command {
 	pFlags.Bool("exported", false, "Generates public mocks for private interfaces.")
 	pFlags.Bool("with-expecter", false, "Generate expecter utility around mock's On, Run and Return methods with explicit types. This option is NOT compatible with -unroll-variadic=false")
 	pFlags.StringArray("replace-type", nil, "Replace types")
+	pFlags.Bool("disable-func-mocks", false, "Disable generation of function mocks.")
 
 	if err := viperCfg.BindPFlags(pFlags); err != nil {
 		panic(fmt.Sprintf("failed to bind PFlags: %v", err))
@@ -112,7 +112,6 @@ func initConfig(
 	viperObj *viper.Viper,
 	configPath *pathlib.Path,
 ) *viper.Viper {
-
 	if baseSearchPath == nil {
 		currentWorkingDir, err := os.Getwd()
 		if err != nil {
@@ -185,7 +184,6 @@ func GetRootAppFromViper(v *viper.Viper) (*RootApp, error) {
 func (r *RootApp) Run() error {
 	var recursive bool
 	var filter *regexp.Regexp
-	var err error
 	var limitOne bool
 
 	if r.Quiet {
@@ -227,6 +225,16 @@ func (r *RootApp) Run() error {
 		boilerplate = string(data)
 	}
 
+	if !r.Config.WithExpecter {
+		logging.WarnDeprecated(
+			ctx,
+			"with-expecter will be permanently set to True in v3",
+			map[string]any{
+				"url": logging.DocsURL("/deprecations/#with-expecter"),
+			},
+		)
+	}
+
 	configuredPackages, err := r.Config.GetPackages(ctx)
 	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return fmt.Errorf("failed to determine configured packages: %w", err)
@@ -238,16 +246,11 @@ func (r *RootApp) Run() error {
 		if err != nil {
 			return fmt.Errorf("failed to get package from config: %w", err)
 		}
-		parser := pkg.NewParser(buildTags)
+		parser := pkg.NewParser(buildTags, pkg.ParserDisableFuncMocks(r.Config.DisableFuncMocks))
 
 		if err := parser.ParsePackages(ctx, configuredPackages); err != nil {
 			log.Error().Err(err).Msg("unable to parse packages")
 			return err
-		}
-		log.Info().Msg("done parsing, loading")
-		if err := parser.Load(); err != nil {
-			log.Err(err).Msgf("failed to load parser")
-			return nil
 		}
 		log.Info().Msg("done loading, visiting interface nodes")
 		for _, iface := range parser.Interfaces() {
@@ -303,7 +306,7 @@ func (r *RootApp) Run() error {
 		log.Fatal().Msgf("Use --name to specify the name of the interface or --all for all interfaces found")
 	}
 
-	warnDeprecated(
+	logging.WarnDeprecated(
 		ctx,
 		"use of the packages config will be the only way to generate mocks in v3. Please migrate your config to use the packages feature.",
 		map[string]any{
@@ -384,6 +387,7 @@ func (r *RootApp) Run() error {
 		UnrollVariadic:       r.Config.UnrollVariadic,
 		WithExpecter:         r.Config.WithExpecter,
 		ReplaceType:          r.Config.ReplaceType,
+		ResolveTypeAlias:     r.Config.ResolveTypeAlias,
 	}, osp, r.Config.DryRun)
 
 	generated := walker.Walk(ctx, visitor)
@@ -394,26 +398,4 @@ func (r *RootApp) Run() error {
 	}
 
 	return nil
-}
-
-func warn(ctx context.Context, prefix string, message string, fields map[string]any) {
-	log := zerolog.Ctx(ctx)
-	event := log.Warn()
-	if fields != nil {
-		event = event.Fields(fields)
-	}
-	event.Msgf("%s: %s", prefix, message)
-}
-
-func info(ctx context.Context, prefix string, message string, fields map[string]any) {
-	log := zerolog.Ctx(ctx)
-	event := log.Info()
-	if fields != nil {
-		event = event.Fields(fields)
-	}
-	event.Msgf("%s: %s", prefix, message)
-}
-
-func warnDeprecated(ctx context.Context, message string, fields map[string]any) {
-	warn(ctx, "DEPRECATION", message, fields)
 }

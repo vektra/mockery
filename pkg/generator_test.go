@@ -40,7 +40,7 @@ func (s *GeneratorSuite) getInterfaceFromFile(interfacePath, interfaceName strin
 	)
 
 	s.Require().NoError(
-		s.parser.Load(),
+		s.parser.Load(context.Background()),
 	)
 
 	iface, err := s.parser.Find(interfaceName)
@@ -71,7 +71,6 @@ func (s *GeneratorSuite) checkGenerationWithConfig(
 	// it would require changing Write's signature to accept custom options, specifically to
 	// allow the fragments in preexisting cases. It's assumed that this approximation,
 	// just formatting the source, is sufficient for the needs of the current test styles.
-	var actual []byte
 	actual, fmtErr := format.Source(generator.buf.Bytes())
 	s.Require().NoError(fmtErr)
 
@@ -108,7 +107,6 @@ func (s *GeneratorSuite) checkGenerationRegexWithConfig(
 	// it would require changing Write's signature to accept custom options, specifically to
 	// allow the fragments in preexisting cases. It's assumed that this approximation,
 	// just formatting the source, is sufficient for the needs of the current test styles.
-	var actual []byte
 	actual, fmtErr := format.Source(generator.buf.Bytes())
 	s.Require().NoError(fmtErr)
 
@@ -170,7 +168,7 @@ func (s *GeneratorSuite) TestGeneratorExpecterComplete() {
 }
 
 func (s *GeneratorSuite) TestGeneratorExpecterWithRolledVariadic() {
-	expectedBytes, err := os.ReadFile(getMocksPath("ExpecterAndRolledVariadic.go"))
+	expectedBytes, err := os.ReadFile(getMocksPath("ExpecterAndRolledVariadic_mock.go"))
 	s.Require().NoError(err)
 	expected := string(expectedBytes)
 	expected = expected[strings.Index(expected, "// ExpecterAndRolledVariadic is"):]
@@ -183,7 +181,6 @@ func (s *GeneratorSuite) TestGeneratorExpecterWithRolledVariadic() {
 	)
 	s.Require().NoError(generator.Generate(s.ctx))
 
-	var actual []byte
 	actual, fmtErr := format.Source(generator.buf.Bytes())
 	s.Require().NoError(fmtErr)
 
@@ -197,7 +194,7 @@ func (s *GeneratorSuite) TestGeneratorExpecterWithRolledVariadic() {
 }
 
 func (s *GeneratorSuite) TestGeneratorVariadicNoReturn() {
-	expectedBytes, err := os.ReadFile(getMocksPath("VariadicNoReturnInterface.go"))
+	expectedBytes, err := os.ReadFile(getMocksPath("VariadicNoReturnInterface_mock.go"))
 	s.Require().NoError(err)
 
 	expected := string(expectedBytes)
@@ -229,7 +226,7 @@ func (s *GeneratorSuite) TestGeneratorNoNothing() {
 }
 
 func (s *GeneratorSuite) TestGeneratorUnexported() {
-	s.checkGeneration("requester_unexported.go", "requester_unexported", true, "", "")
+	s.checkGeneration("requester_unexported.go", "requesterUnexported", true, "", "")
 }
 
 func (s *GeneratorSuite) TestGeneratorPrologue() {
@@ -260,6 +257,7 @@ func (s *GeneratorSuite) TestGeneratorPrologueWithMultipleImportsSameName() {
 
 	expected := `package mocks
 
+import _2345678http "github.com/vektra/mockery/v2/pkg/fixtures/12345678/http"
 import fixtureshttp "github.com/vektra/mockery/v2/pkg/fixtures/http"
 import http "net/http"
 import mock "github.com/stretchr/testify/mock"
@@ -339,6 +337,18 @@ func (s *GeneratorSuite) TestGeneratorChecksInterfacesForNilable() {
 	s.checkGeneration("requester_iface.go", "RequesterIface", false, "", "")
 }
 
+func (s *GeneratorSuite) TestGeneratorTreatsAnyAsNilable() {
+	cfg := GeneratorConfig{
+		WithExpecter: true,
+	}
+	expectedBytes, err := os.ReadFile(getMocksPath("UsesAny_mock.go"))
+	s.Require().NoError(err)
+	expected := string(expectedBytes)
+	expected = expected[strings.Index(expected, "// UsesAny is"):]
+
+	s.checkGenerationWithConfig("any_keyword.go", "UsesAny", cfg, expected)
+}
+
 func (s *GeneratorSuite) TestGeneratorPointers() {
 	s.checkGeneration("requester_ptr.go", "RequesterPtr", false, "", "")
 }
@@ -384,7 +394,7 @@ func (s *GeneratorSuite) TestGeneratorReturnElidedType() {
 }
 
 func (s *GeneratorSuite) TestGeneratorVariadicArgs() {
-	expectedBytes, err := os.ReadFile(getMocksPath("RequesterVariadic.go"))
+	expectedBytes, err := os.ReadFile(getMocksPath("RequesterVariadic_mock.go"))
 	s.Require().NoError(err)
 	expected := string(expectedBytes)
 	expected = expected[strings.Index(expected, "// RequesterVariadic is"):]
@@ -392,7 +402,7 @@ func (s *GeneratorSuite) TestGeneratorVariadicArgs() {
 }
 
 func (s *GeneratorSuite) TestGeneratorVariadicArgsAsOneArg() {
-	expectedBytes, err := os.ReadFile(getMocksPath("RequesterVariadicOneArgument.go"))
+	expectedBytes, err := os.ReadFile(getMocksPath("RequesterVariadicOneArgument_mock.go"))
 	s.Require().NoError(err)
 	expected := string(expectedBytes)
 	expected = expected[strings.Index(expected, "// RequesterVariadicOneArgument is"):]
@@ -405,7 +415,6 @@ func (s *GeneratorSuite) TestGeneratorVariadicArgsAsOneArg() {
 	)
 	s.Require().NoError(generator.Generate(s.ctx))
 
-	var actual []byte
 	actual, fmtErr := format.Source(generator.buf.Bytes())
 	s.Require().NoError(fmtErr)
 
@@ -606,8 +615,7 @@ func (s *GeneratorSuite) TestGeneratorForStructValueReturn() {
 
 func (s *GeneratorSuite) TestGeneratorForStructWithTag() {
 	// StructTag has back-quote, So can't use raw string literals in this test case.
-	var expected string
-	expected += "*struct {"
+	expected := "*struct {"
 	expected += "FieldC int `json:\"field_c\"`"
 	expected += "FieldD int `json:\"field_d\" xml:\"field_d\"`"
 	expected += "}"
@@ -813,4 +821,62 @@ func TestParseReplaceType(t *testing.T) {
 		actual := parseReplaceType(test.value)
 		assert.Equal(t, test.expected, *actual)
 	}
+}
+
+func (s *GeneratorSuite) TestReplaceTypePackagePrologueGo123() {
+	expected := `package mocks
+
+import baz "github.com/vektra/mockery/v2/pkg/fixtures/example_project/baz"
+import mock "github.com/stretchr/testify/mock"
+
+`
+	generator := NewGenerator(
+		s.ctx,
+		GeneratorConfig{InPackage: false},
+		s.getInterfaceFromFile("example_project/baz/foo.go", "Foo"),
+		pkg,
+	)
+
+	s.checkPrologueGeneration(generator, expected)
+}
+
+func (s *GeneratorSuite) TestReplaceTypePackageGo123() {
+	cfg := GeneratorConfig{InPackage: false}
+
+	s.checkGenerationRegexWithConfig("example_project/baz/foo.go", "Foo", cfg, []regexpExpected{
+		// func (_m *Foo) GetBaz() (*baz.Baz, error)
+		{true, regexp.MustCompile(`func \([^\)]+\) GetBaz\(\) \(\*baz\.Baz`)},
+		// func (_m *Foo) GetBaz() (*foo.InternalBaz, error)
+		{false, regexp.MustCompile(`func \([^\)]+\) GetBaz\(\) \(\*foo\.InternalBaz`)},
+	})
+}
+
+func (s *GeneratorSuite) TestReplaceTypePackageMultiplePrologueGo123() {
+	expected := `package mocks
+
+import mock "github.com/stretchr/testify/mock"
+import replace_type "github.com/vektra/mockery/v2/pkg/fixtures/example_project/replace_type"
+import rt1 "github.com/vektra/mockery/v2/pkg/fixtures/example_project/replace_type/rti/rt1"
+import rt2 "github.com/vektra/mockery/v2/pkg/fixtures/example_project/replace_type/rti/rt2"
+
+`
+	generator := NewGenerator(
+		s.ctx,
+		GeneratorConfig{InPackage: false},
+		s.getInterfaceFromFile("example_project/replace_type/rt.go", "RType"),
+		pkg,
+	)
+
+	s.checkPrologueGeneration(generator, expected)
+}
+
+func (s *GeneratorSuite) TestReplaceTypePackageMultipleGo123() {
+	cfg := GeneratorConfig{InPackage: false}
+
+	s.checkGenerationRegexWithConfig("example_project/replace_type/rt.go", "RType", cfg, []regexpExpected{
+		// func (_m *RType) Replace1(f rt1.RType1)
+		{true, regexp.MustCompile(`func \([^\)]+\) Replace1\(f rt1\.RType1`)},
+		// func (_m *RType) Replace2(f rt2.RType2)
+		{true, regexp.MustCompile(`func \([^\)]+\) Replace2\(f rt2\.RType2`)},
+	})
 }

@@ -67,6 +67,7 @@ nav:
     - FAQ: notes.md
     - Changelog: changelog.md
     - Migrating to Packages: migrating_to_packages.md
+    - Deprecations: deprecations.md
 
 extra_css:
   - stylesheets/extra.css

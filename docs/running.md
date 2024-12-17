@@ -18,7 +18,7 @@ packages:
 # Lots more config...
 ```
 
-From anywhere within your repo, you can simply call `mockery` once and it will find your config either by respecting the `#!yaml config` path you gave it, or by searching upwards from the current working directory.
+From anywhere within your repo, you can simply call `mockery` once, and it will find your config either by respecting the `#!yaml config` path you gave it, or by searching upwards from the current working directory.
 
 ```bash
 mockery

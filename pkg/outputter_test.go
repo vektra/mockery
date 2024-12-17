@@ -12,6 +12,7 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	pkgMocks "github.com/vektra/mockery/v2/mocks/github.com/vektra/mockery/v2/pkg"
 	"github.com/vektra/mockery/v2/pkg/config"
 	"github.com/vektra/mockery/v2/pkg/logging"
@@ -173,6 +174,24 @@ func Test_parseConfigTemplates(t *testing.T) {
 			},
 		},
 		{
+			name: "ConfigDir template",
+			args: args{
+				c: &config.Config{
+					Config: "path_to/config/.mockery.yaml",
+					Dir:    "{{.ConfigDir}}/mocks",
+				},
+				iface: &Interface{
+					Name:     "FooBar",
+					FileName: "/path/to/foobar.go",
+				},
+			},
+			pkg: mockPkg,
+			want: &config.Config{
+				Config: "path_to/config/.mockery.yaml",
+				Dir:    "path_to/config/mocks",
+			},
+		},
+		{
 			name: "infinite loop in template variables",
 			args: args{
 				c: &config.Config{
@@ -262,7 +281,7 @@ packages:
 			m.config.Config = confPath.String()
 
 			require.NoError(t, parser.ParsePackages(ctx, []string{tt.packagePath}))
-			require.NoError(t, parser.Load())
+			require.NoError(t, parser.Load(context.Background()))
 			for _, intf := range parser.Interfaces() {
 				t.Logf("generating interface: %s %s", intf.QualifiedName, intf.Name)
 				require.NoError(t, m.Generate(ctx, intf))

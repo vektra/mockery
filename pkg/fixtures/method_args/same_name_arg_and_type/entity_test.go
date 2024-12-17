@@ -66,5 +66,4 @@ func Test(t *testing.T) {
 
 		mockInterfaceA.AssertExpectations(t)
 	})
-
 }

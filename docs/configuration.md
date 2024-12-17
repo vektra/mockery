@@ -64,6 +64,7 @@ Parameter Descriptions
 | `config`                                               | :fontawesome-solid-x:     | `#!yaml ""`                           | Set the location of the mockery config file.                                                                                                                                                                                                         |
 | `dir`                                                  | :fontawesome-solid-check: | `#!yaml "mocks/{{.PackagePath}}"`     | The directory where the mock file will be outputted to.                                                                                                                                                                                              |
 | `disable-config-search`                                | :fontawesome-solid-x:     | `#!yaml false`                        | Disable searching for configuration files                                                                                                                                                                                                            |
+| `disable-func-mocks`                                   | :fontawesome-solid-x:     | `#!yaml false`                        | Disable generation of function mocks.                                                                                                                                                                                                                |
 | `disable-version-string`                               | :fontawesome-solid-x:     | `#!yaml false`                        | Disable the version string in the generated mock files.                                                                                                                                                                                              |
 | `dry-run`                                              | :fontawesome-solid-x:     | `#!yaml false`                        | Print the actions that would be taken, but don't perform the actions.                                                                                                                                                                                |
 | `exclude`                                              | :fontawesome-solid-x:     | `#!yaml []`                           | Specify subpackages to exclude when using `#!yaml recursive: True`                                                                                                                                                                                   |
@@ -81,7 +82,7 @@ Parameter Descriptions
 | [`recursive`](features.md#recursive-package-discovery) | :fontawesome-solid-x:     | `#!yaml false`                        | When set to `true` on a particular package, mockery will recursively search for all sub-packages and inject those packages into the config map.                                                                                                      |
 | [`replace-type`](features.md#replace-types)            | :fontawesome-solid-x:     | `#!yaml null`                         | Replaces aliases, packages and/or types during generation.                                                                                                                                                                                           |
 | `tags`                                                 | :fontawesome-solid-x:     | `#!yaml ""`                           | A space-separated list of additional build tags to load packages.                                                                                                                                                                                                                |
-| [`with-expecter`](features.md#expecter-structs)        | :fontawesome-solid-x:     | `#!yaml true`                         | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the preferred way to setup your mocks.                                                                                                                              |
+| [`with-expecter`](features.md#expecter-structs)        | :fontawesome-solid-x:     | `#!yaml true`                         | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the preferred way to set up your mocks.                                                                                                                             |
 
 Layouts
 -------
@@ -196,6 +197,7 @@ Variables that are marked as being templated are capable of using mockery-provid
 
 | name                    | description                                                                                                                                                                                                                                                                                   |
 |-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ConfigDir               | The directory path of the config file used. This is used to allow generation of mocks in a directory relative to the `.mockery.yaml` file, e.g. external interfaces.                                                                                                                          |
 | InterfaceDir            | The directory path of the original interface being mocked. This can be used as <br>`#!yaml dir: "{{.InterfaceDir}}"` to place your mocks adjacent to the original interface. This should not be used for external interfaces.                                                                 |
 | InterfaceDirRelative    | The directory path of the original interface being mocked, relative to the current working directory. If the path cannot be made relative to the current working directory, this variable will be set equal to `PackagePath`                                                                  |
 | InterfaceFile           | The file path of the original interface being mocked. **NOTE:** This option will only write one mock implementation to the output file. If multiple mocks are defined in your original file, only one mock will be written to the output.                                                     |
@@ -238,10 +240,10 @@ To learn more about the templating syntax, please [see the Go `text/template` do
 * [`lower` string](https://pkg.go.dev/strings#ToLower)
 * [`upper` string](https://pkg.go.dev/strings#ToUpper)
 * [`camelcase` string](https://pkg.go.dev/github.com/huandu/xstrings#ToCamelCase)
-* [`snakecase` string](https://godoc.org/github.com/huandu/xstrings#ToSnakeCase)
-* [`kebabcase` string](https://godoc.org/github.com/huandu/xstrings#ToKebabCase)
-* [`firstLower` string](https://godoc.org/github.com/huandu/xstrings#FirstRuneToLower)
-* [`firstUpper` string](https://godoc.org/github.com/huandu/xstrings#FirstRuneToUpper)
+* [`snakecase` string](https://pkg.go.dev/github.com/huandu/xstrings#ToSnakeCase)
+* [`kebabcase` string](https://pkg.go.dev/github.com/huandu/xstrings#ToKebabCase)
+* [`firstLower` string](https://pkg.go.dev/github.com/huandu/xstrings#FirstRuneToLower)
+* [`firstUpper` string](https://pkg.go.dev/github.com/huandu/xstrings#FirstRuneToUpper)
 * [`matchString` pattern](https://pkg.go.dev/regexp#MatchString)
 * [`quoteMeta` string](https://pkg.go.dev/regexp#QuoteMeta)
 * [`base` string](https://pkg.go.dev/path/filepath#Base)

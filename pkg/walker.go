@@ -38,7 +38,7 @@ func (w *Walker) Walk(ctx context.Context, visitor WalkerVisitor) (generated boo
 	parser := NewParser(w.BuildTags)
 	w.doWalk(ctx, parser, w.BaseDir)
 
-	err := parser.Load()
+	err := parser.Load(ctx)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error walking: %v\n", err)
 		os.Exit(1)
@@ -128,6 +128,7 @@ type GeneratorVisitorConfig struct {
 	UnrollVariadic    bool
 	WithExpecter      bool
 	ReplaceType       []string
+	ResolveTypeAlias  bool
 }
 
 type GeneratorVisitor struct {
@@ -183,12 +184,13 @@ func (v *GeneratorVisitor) VisitWalk(ctx context.Context, iface *Interface) erro
 		KeepTree:             v.config.KeepTree,
 		Note:                 v.config.Note,
 		MockBuildTags:        v.config.MockBuildTags,
-		PackageName:          v.config.PackageName,
+		Outpkg:               v.config.PackageName,
 		PackageNamePrefix:    v.config.PackageNamePrefix,
 		StructName:           v.config.StructName,
 		UnrollVariadic:       v.config.UnrollVariadic,
 		WithExpecter:         v.config.WithExpecter,
 		ReplaceType:          v.config.ReplaceType,
+		ResolveTypeAlias:     v.config.ResolveTypeAlias,
 	}
 
 	gen := NewGenerator(ctx, generatorConfig, iface, "")

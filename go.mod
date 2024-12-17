@@ -1,8 +1,8 @@
 module github.com/vektra/mockery/v2
 
-go 1.22
+go 1.23
 
-toolchain go1.22.0
+toolchain go1.23.1
 
 require (
 	github.com/chigopher/pathlib v0.19.1
@@ -18,7 +18,6 @@ require (
 	github.com/stretchr/testify v1.8.2
 	golang.org/x/term v0.5.0
 	golang.org/x/tools v0.17.0
-	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 

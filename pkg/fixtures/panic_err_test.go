@@ -26,5 +26,4 @@ func TestPanicOnNoReturnValue(t *testing.T) {
 	}()
 
 	m.DoSomething()
-
 }

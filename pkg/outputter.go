@@ -180,12 +180,9 @@ func (*FileOutputStreamProvider) underscoreCaseName(caseName string) string {
 func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interface) error {
 	log := zerolog.Ctx(ctx)
 
-	isExported := ast.IsExported(iface.Name)
-	var mock string
-	if isExported {
+	mock := "mock"
+	if ast.IsExported(iface.Name) {
 		mock = "Mock"
-	} else {
-		mock = "mock"
 	}
 
 	workingDir, err := os.Getwd()
@@ -208,6 +205,7 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 
 	// data is the struct sent to the template parser
 	data := struct {
+		ConfigDir               string
 		InterfaceDir            string
 		InterfaceDirRelative    string
 		InterfaceFile           string
@@ -221,6 +219,7 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 		PackageName             string
 		PackagePath             string
 	}{
+		ConfigDir:            filepath.Dir(c.Config),
 		InterfaceDir:         filepath.Dir(iface.FileName),
 		InterfaceDirRelative: interfaceDirRelative,
 		InterfaceFile:        iface.FileName,
@@ -246,12 +245,10 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 		"outpkg":   &c.Outpkg,
 	}
 
-	numIterations := 0
 	changesMade := true
-	for changesMade {
-		if numIterations >= 20 {
-			msg := "infinite loop in template variables detected"
-			log.Error().Msg(msg)
+	for i := 0; changesMade; i++ {
+		if i >= 20 {
+			log.Error().Msg("infinite loop in template variables detected")
 			for key, val := range templateMap {
 				l := log.With().Str("variable-name", key).Str("variable-value", *val).Logger()
 				l.Error().Msg("config variable value")
@@ -280,7 +277,6 @@ func parseConfigTemplates(ctx context.Context, c *config.Config, iface *Interfac
 				changesMade = true
 			}
 		}
-		numIterations += 1
 	}
 
 	return nil
@@ -336,17 +332,19 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 			DisableVersionString: interfaceConfig.DisableVersionString,
 			Exported:             interfaceConfig.Exported,
 			InPackage:            interfaceConfig.InPackage,
+			Issue845Fix:          interfaceConfig.Issue845Fix,
 			KeepTree:             interfaceConfig.KeepTree,
 			Note:                 interfaceConfig.Note,
 			MockBuildTags:        interfaceConfig.MockBuildTags,
-			PackageName:          interfaceConfig.Outpkg,
+			Outpkg:               interfaceConfig.Outpkg,
 			PackageNamePrefix:    interfaceConfig.Packageprefix,
 			StructName:           interfaceConfig.MockName,
 			UnrollVariadic:       interfaceConfig.UnrollVariadic,
 			WithExpecter:         interfaceConfig.WithExpecter,
 			ReplaceType:          interfaceConfig.ReplaceType,
+			ResolveTypeAlias:     interfaceConfig.ResolveTypeAlias,
 		}
-		generator := NewGenerator(ctx, g, iface, "")
+		generator := NewGenerator(ctx, g, iface, interfaceConfig.Outpkg)
 
 		log.Debug().Msg("generating mock in-memory")
 		if err := generator.GenerateAll(ctx); err != nil {
