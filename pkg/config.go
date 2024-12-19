@@ -31,6 +31,8 @@ var (
 	ErrNoConfigFile         = fmt.Errorf("no config file exists")
 	ErrNoGoFilesFoundInRoot = fmt.Errorf("no go files found in root search path")
 	ErrPkgNotFound          = fmt.Errorf("package not found in config")
+	ErrGoModNotFound        = fmt.Errorf("no go.mod file found")
+	ErrGoModInvalid         = fmt.Errorf("go.mod file has no module line")
 )
 
 type Config struct {
@@ -42,7 +44,6 @@ type Config struct {
 	Cpuprofile           string                 `mapstructure:"cpuprofile"`
 	Dir                  string                 `mapstructure:"dir"`
 	DisableConfigSearch  bool                   `mapstructure:"disable-config-search"`
-	DisableFuncMocks     bool                   `mapstructure:"disable-func-mocks"`
 	DisableVersionString bool                   `mapstructure:"disable-version-string"`
 	DryRun               bool                   `mapstructure:"dry-run"`
 	Exclude              []string               `mapstructure:"exclude"`
@@ -65,7 +66,7 @@ type Config struct {
 	// when generating for an exact match (non regex expression in -name).
 	StructName     string         `mapstructure:"structname"`
 	Template       string         `mapstructure:"template"`
-	TemplateMap    map[string]any `mapstructure:"template-map"`
+	TemplateData   map[string]any `mapstructure:"template-data"`
 	UnrollVariadic bool           `mapstructure:"unroll-variadic"`
 	Version        bool           `mapstructure:"version"`
 	// Viper throws away case-sensitivity when it marshals into this struct. This
@@ -820,9 +821,11 @@ var templateFuncMap = template.FuncMap{
 	"getenv":    os.Getenv,
 }
 
-// parseConfigTemplates parses various templated strings
+// ParseTemplates parses various templated strings
 // in the config struct into their fully defined values. This mutates
-// the config object passed.
+// the config object passed. It requires an *Interface object in order
+// to satisfy template variables that need information about the original
+// interface being mocked.
 func (c *Config) ParseTemplates(ctx context.Context, iface *Interface) error {
 	log := zerolog.Ctx(ctx)
 
@@ -926,6 +929,60 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface) error {
 	}
 
 	return nil
+}
+
+// PkgPath returns the fully qualified package path of the output mock that this config
+// represents. For example, it might return "github.com/vektra/mockery/v3/internal".
+// This function will error if it cannot find a base go.mod file.
+func (c *Config) PkgPath() (string, error) {
+	dirPath := pathlib.NewPath(c.Dir)
+	if err := dirPath.MkdirAll(); err != nil {
+		return "", stackerr.NewStackErr(err)
+	}
+	dir, err := pathlib.NewPath(c.Dir).ResolveAll()
+	if err != nil {
+		return "", stackerr.NewStackErr(err)
+	}
+	var goModFile *pathlib.Path
+	for i := 0; ; i++ {
+		if i == 1000 {
+			return "", stackerr.NewStackErr(errors.New("failed to find go.mod after 1000 iterations"))
+		}
+		goMod := dir.Join("go.mod")
+		goModExists, err := goMod.Exists()
+		if err != nil {
+			return "", stackerr.NewStackErr(err)
+		}
+		if !goModExists {
+			parent := dir.Parent()
+			// Hit the root path
+			if dir.String() == parent.String() {
+				return "", stackerr.NewStackErrf(
+					ErrGoModNotFound, "parsing package path for %s", c.Dir)
+			}
+			dir = parent
+			continue
+		}
+		goModFile = goMod
+		break
+	}
+	fileBytes, err := goModFile.ReadFile()
+	if err != nil {
+		return "", stackerr.NewStackErr(err)
+	}
+	scanner := bufio.NewScanner(bytes.NewReader(fileBytes))
+	// Iterate over each line
+	for scanner.Scan() {
+		if !strings.HasPrefix(scanner.Text(), "module") {
+			continue
+		}
+		moduleName := strings.Split(scanner.Text(), "module ")[1]
+		return pathlib.NewPath(
+			moduleName,
+			pathlib.PathWithSeperator("/")).
+			Join(c.Dir).String(), nil
+	}
+	return "", stackerr.NewStackErr(ErrGoModInvalid)
 }
 
 func (c *Config) ClearCfgAsMap() {

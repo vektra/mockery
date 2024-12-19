@@ -14,10 +14,10 @@ type Data struct {
 	SrcPkgQualifier string
 	Imports         []*registry.Package
 	Mocks           []MockData
-	TemplateMap     map[string]any
 	StubImpl        bool
 	SkipEnsure      bool
 	WithResets      bool
+	TemplateData    map[string]any
 }
 
 // MocksSomeMethod returns true of any one of the Mocks has at least 1
@@ -38,6 +38,7 @@ type MockData struct {
 	MockName      string
 	TypeParams    []TypeParamData
 	Methods       []MethodData
+	TemplateData  map[string]any
 }
 
 // MethodData is the data which represents a method on some interface.

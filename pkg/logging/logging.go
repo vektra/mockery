@@ -24,6 +24,7 @@ const (
 	LogKeyPath          = "path"
 	LogKeyQualifiedName = "qualified-name"
 	LogKeyPackageName   = "package-name"
+	LogKeyPackagePath   = "package-path"
 
 	defaultSemVer = "v0.0.0-dev"
 )
