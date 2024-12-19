@@ -9,19 +9,36 @@ import (
 	"go/types"
 
 	"github.com/rs/zerolog"
-	"github.com/vektra/mockery/v2/pkg/config"
 	"github.com/vektra/mockery/v2/pkg/registry"
 	"github.com/vektra/mockery/v2/pkg/template"
 	"golang.org/x/tools/go/packages"
 	"golang.org/x/tools/imports"
 )
 
+type Formatter string
+
+const (
+	FORMAT_GOIMPORRTS Formatter = "goimports"
+	FORMAT_NOOP       Formatter = "noop"
+)
+
 type TemplateGenerator struct {
 	templateName string
 	registry     *registry.Registry
+	formatter    Formatter
+	pkgName      string
+	pkgConfig    *Config
+	inPackage    bool
 }
 
-func NewTemplateGenerator(srcPkg *packages.Package, outPkgPath string, templateName string) (*TemplateGenerator, error) {
+func NewTemplateGenerator(
+	srcPkg *packages.Package,
+	outPkgPath string,
+	templateName string,
+	formatter Formatter,
+	pkgName string,
+	pkgConfig *Config,
+) (*TemplateGenerator, error) {
 	reg, err := registry.New(srcPkg, outPkgPath)
 	if err != nil {
 		return nil, fmt.Errorf("creating new registry: %w", err)
@@ -30,15 +47,19 @@ func NewTemplateGenerator(srcPkg *packages.Package, outPkgPath string, templateN
 	return &TemplateGenerator{
 		templateName: templateName,
 		registry:     reg,
+		formatter:    formatter,
+		pkgName:      pkgName,
+		pkgConfig:    pkgConfig,
+		inPackage:    srcPkg.PkgPath == outPkgPath,
 	}, nil
 }
 
-func (g *TemplateGenerator) format(src []byte, ifaceConfig *config.Config) ([]byte, error) {
-	switch ifaceConfig.Formatter {
-	case "goimports":
+func (g *TemplateGenerator) format(src []byte) ([]byte, error) {
+	switch g.formatter {
+	case FORMAT_GOIMPORRTS:
 		return goimports(src)
 
-	case "noop":
+	case FORMAT_NOOP:
 		return src, nil
 	}
 
@@ -110,52 +131,42 @@ func (g *TemplateGenerator) typeParams(ctx context.Context, tparams *types.TypeP
 	return tpd
 }
 
-func (g *TemplateGenerator) Generate(ctx context.Context, ifaceName string, ifaceConfig *config.Config) ([]byte, error) {
+func (g *TemplateGenerator) Generate(
+	ctx context.Context,
+	interfaces []*Interface,
+) ([]byte, error) {
 	log := zerolog.Ctx(ctx)
 	log.Info().Msg("generating templated mock for interface")
 
-	iface, tparams, err := g.registry.LookupInterface(ifaceName)
-	if err != nil {
-		return []byte{}, err
-	}
+	mockData := []template.MockData{}
+	for _, ifaceMock := range interfaces {
+		iface, tparams, err := g.registry.LookupInterface(ifaceMock.Name)
+		if err != nil {
+			return []byte{}, err
+		}
 
-	methods := make([]template.MethodData, iface.NumMethods())
-	for i := 0; i < iface.NumMethods(); i++ {
-		methods[i] = g.methodData(ctx, iface.Method(i))
-	}
+		methods := make([]template.MethodData, iface.NumMethods())
+		for i := 0; i < iface.NumMethods(); i++ {
+			methods[i] = g.methodData(ctx, iface.Method(i))
+		}
 
-	// For now, mockery only supports one mock per file, which is why we're creating
-	// a single-element list. moq seems to have supported multiple mocks per file.
-	mockData := []template.MockData{
-		{
-			InterfaceName: ifaceName,
-			MockName:      ifaceConfig.MockName,
+		mockData = append(mockData, template.MockData{
+			InterfaceName: ifaceMock.Name,
+			MockName:      ifaceMock.Config.MockName,
 			TypeParams:    g.typeParams(ctx, tparams),
 			Methods:       methods,
-		},
+			TemplateData:  ifaceMock.Config.TemplateData,
+		})
 	}
+
 	data := template.Data{
-		PkgName:     ifaceConfig.Outpkg,
-		Mocks:       mockData,
-		TemplateMap: ifaceConfig.TemplateMap,
-		StubImpl:    false,
+		PkgName:         g.pkgName,
+		SrcPkgQualifier: "",
+		Mocks:           mockData,
+		TemplateData:    g.pkgConfig.TemplateData,
 	}
-
-	var inPackage bool
-	if ifaceConfig.Dir == g.registry.SrcPkg().Types.Path() {
-		log.Debug().Str("iface-dir", ifaceConfig.Dir).Str("pkg-path", g.registry.SrcPkg().Types.Path()).Msg("interface is inpackage")
-		inPackage = true
-	}
-
-	if !inPackage {
+	if !g.inPackage {
 		data.SrcPkgQualifier = g.registry.SrcPkgName() + "."
-		skipEnsure, ok := ifaceConfig.TemplateMap["skip-ensure"]
-		if !ok || !skipEnsure.(bool) {
-			log.Debug().Str("src-pkg", g.registry.SrcPkg().PkgPath).Msg("skip-ensure is false. Adding import for source package.")
-			imprt := g.registry.AddImport(ctx, g.registry.SrcPkg().Types)
-			log.Debug().Msgf("imprt: %v", imprt)
-			data.SrcPkgQualifier = imprt.Qualifier() + "."
-		}
 	}
 	data.Imports = g.registry.Imports()
 
@@ -171,8 +182,12 @@ func (g *TemplateGenerator) Generate(ctx context.Context, ifaceName string, ifac
 	}
 
 	log.Debug().Msg("formatting file")
-	formatted, err := g.format(buf.Bytes(), ifaceConfig)
+	// TODO: Grabbing ifaceConfigs[0].Formatter doesn't make sense. We should instead
+	// grab the formatter as specified in the topmost interface-level config.
+	formatted, err := g.format(buf.Bytes())
 	if err != nil {
+		log.Err(err).Msg("can't format mock file, printing buffer.")
+		fmt.Print(buf.String())
 		return []byte{}, fmt.Errorf("formatting mock file: %w", err)
 	}
 	return formatted, nil

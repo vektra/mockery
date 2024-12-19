@@ -13,7 +13,7 @@ import (
 
 {{range $i, $mock := .Mocks -}}
 
-{{- if not (index $.TemplateMap "skip-ensure") -}}
+{{- if not (index $.TemplateData "skip-ensure") -}}
 // Ensure, that {{.MockName}} does implement {{$.SrcPkgQualifier}}{{.InterfaceName}}.
 // If this is not the case, regenerate this file with moq.
 var _ {{$.SrcPkgQualifier}}{{.InterfaceName -}}
@@ -80,7 +80,7 @@ type {{.MockName}}
 {{range .Methods}}
 // {{.Name}} calls {{.Name}}Func.
 func (mock *{{$mock.MockName}}{{ $mock | TypeInstantiation }}) {{.Name}}({{.ArgList}}) {{.ReturnArgTypeList}} {
-{{- if not (index $.TemplateMap "stub-impl") }}
+{{- if not (index $mock.TemplateData "stub-impl") }}
 	if mock.{{.Name}}Func == nil {
 		panic("{{$mock.MockName}}.{{.Name}}Func: method is nil but {{$mock.InterfaceName}}.{{.Name}} was just called")
 	}
@@ -98,7 +98,7 @@ func (mock *{{$mock.MockName}}{{ $mock | TypeInstantiation }}) {{.Name}}({{.ArgL
 	mock.calls.{{.Name}} = append(mock.calls.{{.Name}}, callInfo)
 	mock.lock{{.Name}}.Unlock()
 {{- if .Returns}}
-	{{- if (index $.TemplateMap "stub-impl") }}
+	{{- if (index $.TemplateData "stub-impl") }}
 	if mock.{{.Name}}Func == nil {
 		var (
 		{{- range .Returns}}
@@ -110,7 +110,7 @@ func (mock *{{$mock.MockName}}{{ $mock | TypeInstantiation }}) {{.Name}}({{.ArgL
 	{{- end}}
 	return mock.{{.Name}}Func({{.ArgCallList}})
 {{- else}}
-	{{- if (index $.TemplateMap "stub-impl") }}
+	{{- if (index $.TemplateData "stub-impl") }}
 	if mock.{{.Name}}Func == nil {
 		return
 	}
@@ -138,7 +138,7 @@ func (mock *{{$mock.MockName}}{{ $mock | TypeInstantiation }}) {{.Name}}Calls() 
 	mock.lock{{.Name}}.RUnlock()
 	return calls
 }
-{{- if index $.TemplateMap "with-resets" }}
+{{- if index $.TemplateData "with-resets" }}
 // Reset{{.Name}}Calls reset all the calls that were made to {{.Name}}.
 func (mock *{{$mock.MockName}}{{ $mock | TypeInstantiation }}) Reset{{.Name}}Calls() {
 	mock.lock{{.Name}}.Lock()
@@ -147,7 +147,7 @@ func (mock *{{$mock.MockName}}{{ $mock | TypeInstantiation }}) Reset{{.Name}}Cal
 }
 {{end}}
 {{end -}}
-{{- if index $.TemplateMap "with-resets" }}
+{{- if index $.TemplateData "with-resets" }}
 // ResetCalls reset all the calls that were made to all mocked methods.
 func (mock *{{$mock.MockName}}{{ $mock | TypeInstantiation }}) ResetCalls() {
 	{{- range .Methods}}

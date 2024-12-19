@@ -2,12 +2,14 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
 
 	"github.com/chigopher/pathlib"
 	"github.com/mitchellh/go-homedir"
+	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -162,6 +164,55 @@ func GetRootAppFromViper(v *viper.Viper) (*RootApp, error) {
 	return r, nil
 }
 
+// InterfaceCollection maintains a list of *pkg.Interface and asserts that all
+// the interfaces in the collection belong to the same source package. It also
+// asserts that various properties of the interfaces added to the collection are
+// uniform.
+type InterfaceCollection struct {
+	srcPkgPath  string
+	outPkgPath  string
+	outFilePath *pathlib.Path
+	interfaces  []*pkg.Interface
+}
+
+func NewInterfaceCollection(srcPkgPath string, outPkgPath string, outFilePath *pathlib.Path) *InterfaceCollection {
+	return &InterfaceCollection{
+		srcPkgPath:  srcPkgPath,
+		outPkgPath:  outPkgPath,
+		outFilePath: outFilePath,
+		interfaces:  make([]*pkg.Interface, 0),
+	}
+}
+
+func (i *InterfaceCollection) Append(ctx context.Context, iface *pkg.Interface) error {
+	log := zerolog.Ctx(ctx).With().
+		Str(logging.LogKeyInterface, iface.Name).
+		Str(logging.LogKeyPackageName, iface.Pkg.Name).
+		Str(logging.LogKeyPackagePath, iface.Pkg.PkgPath).
+		Str("expected-package-path", i.srcPkgPath).Logger()
+	if iface.Pkg.PkgPath != i.srcPkgPath {
+		msg := "cannot mix interfaces from different packages in the same file."
+		log.Error().Msg(msg)
+		return errors.New(msg)
+	}
+	if i.outFilePath.String() != pathlib.NewPath(iface.Config.Dir).Join(iface.Config.FileName).String() {
+		msg := "all mocks within an InterfaceCollection must have the same output file path"
+		log.Error().Msg(msg)
+		return errors.New(msg)
+	}
+	ifacePkgPath, err := iface.Config.PkgPath()
+	if err != nil {
+		return err
+	}
+	if ifacePkgPath != i.outPkgPath {
+		msg := "all mocks within an InterfaceCollection must have the same output package path"
+		log.Error().Msg(msg)
+		return errors.New(msg)
+	}
+	i.interfaces = append(i.interfaces, iface)
+	return nil
+}
+
 func (r *RootApp) Run() error {
 	log, err := logging.GetLogger(r.Config.LogLevel)
 	if err != nil {
@@ -183,14 +234,15 @@ func (r *RootApp) Run() error {
 	}
 	buildTags := strings.Split(r.Config.BuildTags, " ")
 
-	var boilerplate string
-	if r.Config.BoilerplateFile != "" {
-		data, err := os.ReadFile(r.Config.BoilerplateFile)
-		if err != nil {
-			log.Fatal().Msgf("Failed to read boilerplate file %s: %v", r.Config.BoilerplateFile, err)
-		}
-		boilerplate = string(data)
-	}
+	// TODO: Fix boilerplate
+	//var boilerplate string
+	//if r.Config.BoilerplateFile != "" {
+	//	data, err := os.ReadFile(r.Config.BoilerplateFile)
+	//	if err != nil {
+	//		log.Fatal().Msgf("Failed to read boilerplate file %s: %v", r.Config.BoilerplateFile, err)
+	//	}
+	//	boilerplate = string(data)
+	//}
 
 	configuredPackages, err := r.Config.GetPackages(ctx)
 	if err != nil {
@@ -207,7 +259,13 @@ func (r *RootApp) Run() error {
 		log.Error().Err(err).Msg("unable to parse packages")
 		return err
 	}
-	mockFileToInterfaces := map[string][]*pkg.Interface{}
+	// maps the following:
+	// outputFilePath|fullyQualifiedInterfaceName|[]*pkg.Interface
+	// The reason why we need an interior map of fully qualified interface name
+	// to a slice of *pkg.Interface (which represents all information necessary
+	// to create the output mock) is because mockery allows multiple mocks to be
+	// created for each input interface.
+	mockFileToInterfaces := map[string]*InterfaceCollection{}
 
 	for _, iface := range interfaces {
 		ifaceLog := log.
@@ -232,11 +290,61 @@ func (r *RootApp) Run() error {
 			return err
 		}
 		for _, ifaceConfig := range ifaceConfigs {
-			if interfaces, ok := mockFileToInterfaces[ifaceConfig.FilePath(ctx).String()]; !ok {
-				interfaces = []*pkg.Interface{}
-				mockFileToInterfaces[ifaceConfig.FilePath(ctx).String()] = interfaces
+			if err := ifaceConfig.ParseTemplates(ctx, iface); err != nil {
+				log.Err(err).Msg("Can't parse config templates for interface")
+				return err
 			}
-			interfaces = append(interfaces, iface)
+			filePath := ifaceConfig.FilePath(ctx).String()
+			outPkgPath, err := ifaceConfig.PkgPath()
+			if err != nil {
+				return err
+			}
+
+			_, ok := mockFileToInterfaces[filePath]
+			if !ok {
+				mockFileToInterfaces[filePath] = NewInterfaceCollection(
+					iface.Pkg.PkgPath,
+					outPkgPath,
+					pathlib.NewPath(ifaceConfig.Dir).Join(ifaceConfig.FileName),
+				)
+			}
+			mockFileToInterfaces[filePath].Append(
+				ctx,
+				pkg.NewInterface(
+					iface.Name,
+					iface.FileName,
+					iface.File,
+					iface.Pkg,
+					ifaceConfig),
+			)
+		}
+	}
+
+	for outFilePath, interfacesInFile := range mockFileToInterfaces {
+		log.Debug().Int("interfaces-in-file-len", len(interfacesInFile.interfaces)).Msgf("%v", interfacesInFile)
+		outPkgPath := interfacesInFile.outPkgPath
+
+		packageConfig, err := r.Config.GetPackageConfig(ctx, interfacesInFile.srcPkgPath)
+		if err != nil {
+			return err
+		}
+		generator, err := pkg.NewTemplateGenerator(
+			interfacesInFile.interfaces[0].Pkg,
+			outPkgPath,
+			interfacesInFile.interfaces[0].Config.Template,
+			pkg.Formatter(r.Config.Formatter),
+			interfacesInFile.interfaces[0].Config.Outpkg,
+			packageConfig,
+		)
+		if err != nil {
+			return err
+		}
+		templateBytes, err := generator.Generate(ctx, interfacesInFile.interfaces)
+		if err != nil {
+			return err
+		}
+		if err := pathlib.NewPath(outFilePath).WriteFile(templateBytes); err != nil {
+			return err
 		}
 	}
 

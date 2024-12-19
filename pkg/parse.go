@@ -90,11 +90,16 @@ func (p *Parser) ParsePackages(ctx context.Context, packageNames []string) ([]*I
 					continue
 				}
 
-				interfaces = append(interfaces, &Interface{
-					Name:     name,
-					Pkg:      pkg,
-					FileName: file,
-				})
+				interfaces = append(interfaces, NewInterface(
+					name,
+					file,
+					fileSyntax,
+					pkg,
+					// Leave the config nil because we don't yet know if
+					// the interface should even be generated in the first
+					// place.
+					nil,
+				))
 			}
 		}
 	}
