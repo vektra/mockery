@@ -94,6 +94,8 @@ packages:
     config: *inpackage_config
   github.com/vektra/mockery/v2/pkg/fixtures/index_list_expr:
     config: *inpackage_config
+  github.com/vektra/mockery/v2/pkg/fixtures/iface_new_type:
+    config: *inpackage_config
   github.com/vektra/mockery/v2/pkg/fixtures/issue845:
     config:
       <<: *inpackage_config
