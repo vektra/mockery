@@ -28,6 +28,32 @@ Generate all the mocks for your project:
 
 	docker run -v "$PWD":/src -w /src vektra/mockery --all
 
+### pre-commit
+
+Add the following lines to your `.pre-commit-config.yaml` file
+
+```yaml
+repos:
+  - repo: https://github.com/ccoVeille/mockery
+    rev: v2
+    hooks:
+      - id: generate-mocks
+```
+
+!!! note
+
+    If the file is missing, you can simply create it with this content
+
+Then install the hook with the following command:
+
+```shell
+pre-commit autoupdate
+```
+
+It will install everything. And from now, your commit will trigger mock generation.
+
+More information about pre-commit can be found on [pre-commit.com/](https://pre-commit.com/)
+
 ### Homebrew
 
 Install through [brew](https://brew.sh/)
