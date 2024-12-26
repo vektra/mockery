@@ -136,8 +136,6 @@ func (g *TemplateGenerator) Generate(
 	interfaces []*Interface,
 ) ([]byte, error) {
 	log := zerolog.Ctx(ctx)
-	log.Info().Msg("generating templated mock for interface")
-
 	mockData := []template.MockData{}
 	for _, ifaceMock := range interfaces {
 		iface, tparams, err := g.registry.LookupInterface(ifaceMock.Name)

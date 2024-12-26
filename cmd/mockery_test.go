@@ -52,7 +52,7 @@ func Test_initConfig(t *testing.T) {
 
 			viperObj := viper.New()
 
-			initConfig(baseDir, viperObj, nil)
+			getConfig(baseDir, viperObj, nil)
 
 			assert.Equal(t, configPath.String(), viperObj.ConfigFileUsed())
 		})
@@ -72,7 +72,7 @@ name: Foo
 	require.NoError(t, configPath.WriteFile([]byte(config)))
 
 	v := viper.New()
-	initConfig(nil, v, configPath)
+	getConfig(nil, v, configPath)
 	app, err := GetRootAppFromViper(v)
 	require.NoError(t, err)
 	assert.Error(t, app.Run())
@@ -102,7 +102,7 @@ packages:
 	mockPath := pathlib.NewPath(tmpDir).Join("hello_Writer.go")
 
 	v := newViper(tmpDir)
-	initConfig(nil, v, configPath)
+	getConfig(nil, v, configPath)
 	app, err := GetRootAppFromViper(v)
 	require.NoError(t, err)
 	require.NoError(t, app.Run())
@@ -130,7 +130,7 @@ packages:
 	mockPath := pathlib.NewPath(tmpDir).Join("mock_Writer.go")
 
 	v := newViper(tmpDir)
-	initConfig(nil, v, configPath)
+	getConfig(nil, v, configPath)
 	app, err := GetRootAppFromViper(v)
 	require.NoError(t, err)
 	require.NoError(t, app.Run())
@@ -189,7 +189,7 @@ type FooInterface interface {
 	require.NoError(t, os.Chdir(tmpDir))
 
 	v := viper.New()
-	initConfig(nil, v, configPath)
+	getConfig(nil, v, configPath)
 	app, err := GetRootAppFromViper(v)
 	require.NoError(t, err)
 	require.NoError(t, app.Run())
@@ -219,7 +219,7 @@ type Foo interface {
 	v.Set("disable-config-search", true)
 	require.NoError(t, os.Chdir(tmpDir.String()))
 
-	initConfig(nil, v, nil)
+	getConfig(nil, v, nil)
 	app, err := GetRootAppFromViper(v)
 	require.NoError(t, err)
 	require.NoError(t, app.Run())
@@ -256,7 +256,7 @@ type Foo interface {
 	v.Set("recursive", true)
 	require.NoError(t, os.Chdir(tmpDir.String()))
 
-	initConfig(nil, v, nil)
+	getConfig(nil, v, nil)
 	app, err := GetRootAppFromViper(v)
 	require.NoError(t, err)
 	require.NoError(t, app.Run())

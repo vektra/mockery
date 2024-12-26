@@ -19,16 +19,14 @@ import (
 )
 
 var (
-	cfgFile  = ""
-	viperCfg *viper.Viper
+	cfgFile = ""
 )
 
-func init() {
-	cobra.OnInitialize(func() { initConfig(nil, viperCfg, nil) })
-}
-
-func NewRootCmd() *cobra.Command {
-	viperCfg = viper.NewWithOptions(viper.KeyDelimiter("::"))
+func NewRootCmd() (*cobra.Command, error) {
+	viperCfg, err := getConfig(nil, nil)
+	if err != nil {
+		return nil, err
+	}
 	cmd := &cobra.Command{
 		Use:   "mockery",
 		Short: "Generate mock objects for your Golang interfaces",
@@ -72,7 +70,7 @@ func NewRootCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(NewShowConfigCmd())
-	return cmd
+	return cmd, nil
 }
 
 func printStackTrace(e error) {
@@ -85,16 +83,20 @@ func printStackTrace(e error) {
 
 // Execute executes the cobra CLI workflow
 func Execute() {
-	if err := NewRootCmd().Execute(); err != nil {
+	cmd, err := NewRootCmd()
+	if err != nil {
+		os.Exit(1)
+	}
+	if cmd.Execute(); err != nil {
 		os.Exit(1)
 	}
 }
 
-func initConfig(
+func getConfig(
 	baseSearchPath *pathlib.Path,
-	viperObj *viper.Viper,
 	configPath *pathlib.Path,
-) *viper.Viper {
+) (*viper.Viper, error) {
+	viperObj := viper.NewWithOptions(viper.KeyDelimiter("::"))
 	if baseSearchPath == nil {
 		currentWorkingDir, err := os.Getwd()
 		if err != nil {
@@ -140,12 +142,13 @@ func initConfig(
 		}
 		if err := viperObj.ReadInConfig(); err != nil {
 			log, _ := logging.GetLogger("debug")
-			log.Info().Msg("couldn't read any config file")
+			log.Err(err).Msg("couldn't read any config file")
+			return nil, err
 		}
 	}
 
 	viperObj.Set("config", viperObj.ConfigFileUsed())
-	return viperObj
+	return viperObj, nil
 }
 
 const regexMetadataChars = "\\.+*?()|[]{}^$"

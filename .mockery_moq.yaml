@@ -1,0 +1,17 @@
+disable-version-string: True
+mockname: "{{.InterfaceName}}Mock"
+filename: "moq_test.go"
+template: moq
+dir: "mocks/moq/{{.PackagePath}}"
+formatter: "goimports"
+
+packages:
+  github.com/vektra/mockery/v2/pkg/fixtures:
+    config:
+      include-regex: '.*'
+      exclude-regex: 'RequesterGenerics|UnsafeInterface|requester_unexported'
+      outpkg: test
+      template-data:
+        with-resets: true
+        skip-ensure: true
+        stub-impl: false

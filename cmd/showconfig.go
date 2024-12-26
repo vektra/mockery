@@ -19,7 +19,13 @@ func NewShowConfigCmd() *cobra.Command {
 		Use:   "showconfig",
 		Short: "Show the yaml config",
 		Long:  `Print out a yaml representation of the yaml config file. This does not show config from exterior sources like CLI, environment etc.`,
-		RunE:  func(cmd *cobra.Command, args []string) error { return showConfig(cmd, args, viperCfg, os.Stdout) },
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cfg, err := getConfig(nil, nil)
+			if err != nil {
+				return err
+			}
+			return showConfig(cmd, args, cfg, os.Stdout)
+		},
 	}
 }
 
@@ -29,9 +35,6 @@ func showConfig(
 	v *viper.Viper,
 	outputter io.Writer,
 ) error {
-	if v == nil {
-		v = viperCfg
-	}
 	ctx := context.Background()
 	config, err := pkg.NewConfigFromViper(v)
 	if err != nil {
