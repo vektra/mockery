@@ -4377,7 +4377,7 @@ func (mock *StructWithTagMock) ResetCalls() {
 //
 //		// make and configure a mocked test.Variadic
 //		mockedVariadic := &VariadicMock{
-//			VariadicFunctionFunc: func(str string, vFunc VariadicFunction) error {
+//			VariadicFunctionFunc: func(str string, vFunc fixtures.VariadicFunction) error {
 //				panic("mock out the VariadicFunction method")
 //			},
 //		}
@@ -4388,7 +4388,7 @@ func (mock *StructWithTagMock) ResetCalls() {
 //	}
 type VariadicMock struct {
 	// VariadicFunctionFunc mocks the VariadicFunction method.
-	VariadicFunctionFunc func(str string, vFunc VariadicFunction) error
+	VariadicFunctionFunc func(str string, vFunc fixtures.VariadicFunction) error
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -4397,20 +4397,20 @@ type VariadicMock struct {
 			// Str is the str argument value.
 			Str string
 			// VFunc is the vFunc argument value.
-			VFunc VariadicFunction
+			VFunc fixtures.VariadicFunction
 		}
 	}
 	lockVariadicFunction sync.RWMutex
 }
 
 // VariadicFunction calls VariadicFunctionFunc.
-func (mock *VariadicMock) VariadicFunction(str string, vFunc VariadicFunction) error {
+func (mock *VariadicMock) VariadicFunction(str string, vFunc fixtures.VariadicFunction) error {
 	if mock.VariadicFunctionFunc == nil {
 		panic("VariadicMock.VariadicFunctionFunc: method is nil but Variadic.VariadicFunction was just called")
 	}
 	callInfo := struct {
 		Str   string
-		VFunc VariadicFunction
+		VFunc fixtures.VariadicFunction
 	}{
 		Str:   str,
 		VFunc: vFunc,
@@ -4427,11 +4427,11 @@ func (mock *VariadicMock) VariadicFunction(str string, vFunc VariadicFunction) e
 //	len(mockedVariadic.VariadicFunctionCalls())
 func (mock *VariadicMock) VariadicFunctionCalls() []struct {
 	Str   string
-	VFunc VariadicFunction
+	VFunc fixtures.VariadicFunction
 } {
 	var calls []struct {
 		Str   string
-		VFunc VariadicFunction
+		VFunc fixtures.VariadicFunction
 	}
 	mock.lockVariadicFunction.RLock()
 	calls = mock.calls.VariadicFunction

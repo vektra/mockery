@@ -4,6 +4,8 @@ import (
 	"context"
 	"go/types"
 	"strconv"
+
+	"github.com/rs/zerolog"
 )
 
 // MethodScope is the sub-registry for allocating variables present in
@@ -74,23 +76,37 @@ func (m MethodScope) searchVar(name string) (*Var, bool) {
 	return nil, false
 }
 
+func (m MethodScope) populateImportNamedType(
+	ctx context.Context,
+	t interface {
+		Obj() *types.TypeName
+		TypeArgs() *types.TypeList
+	},
+	imports map[string]*Package,
+) {
+	if pkg := t.Obj().Pkg(); pkg != nil {
+		imports[pkg.Path()] = m.registry.AddImport(ctx, pkg)
+	}
+	// The imports of a Type with a TypeList must be added to the imports list
+	// For example: Foo[otherpackage.Bar] , must have otherpackage imported
+	if targs := t.TypeArgs(); targs != nil {
+		for i := 0; i < targs.Len(); i++ {
+			m.populateImports(ctx, targs.At(i), imports)
+		}
+	}
+}
+
 // populateImports extracts all the package imports for a given type
 // recursively. The imported packages by a single type can be more than
 // one (ex: map[a.Type]b.Type).
 func (m MethodScope) populateImports(ctx context.Context, t types.Type, imports map[string]*Package) {
+	log := zerolog.Ctx(ctx).With().
+		Str("type-str", t.String()).Logger()
 	switch t := t.(type) {
 	case *types.Named:
-		if pkg := t.Obj().Pkg(); pkg != nil {
-			imports[pkg.Path()] = m.registry.AddImport(ctx, pkg)
-		}
-		// The imports of a Type with a TypeList must be added to the imports list
-		// For example: Foo[otherpackage.Bar] , must have otherpackage imported
-		if targs := t.TypeArgs(); targs != nil {
-			for i := 0; i < targs.Len(); i++ {
-				m.populateImports(ctx, targs.At(i), imports)
-			}
-		}
-
+		m.populateImportNamedType(ctx, t, imports)
+	case *types.Alias:
+		m.populateImportNamedType(ctx, t, imports)
 	case *types.Array:
 		m.populateImports(ctx, t.Elem(), imports)
 
@@ -127,6 +143,8 @@ func (m MethodScope) populateImports(ctx context.Context, t types.Type, imports 
 		for i := 0; i < t.NumEmbeddeds(); i++ {
 			m.populateImports(ctx, t.EmbeddedType(i), imports)
 		}
+	default:
+		log.Debug().Msg("unable to determine type of object")
 	}
 }
 
