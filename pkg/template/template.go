@@ -36,7 +36,7 @@ func New(style string) (Template, error) {
 		return Template{}, stackerr.NewStackErrf(nil, "style %s does not exist", style)
 	}
 
-	tmpl, err := template.New("moq").Funcs(templateFuncs).Parse(templateString)
+	tmpl, err := template.New(style).Funcs(templateFuncs).Parse(templateString)
 	if err != nil {
 		return Template{}, err
 	}
@@ -87,6 +87,48 @@ var templateFuncs = template.FuncMap{
 		return "sync"
 	},
 	"Exported": exported,
+
+	"MocksSomeMethod": func(mocks []MockData) bool {
+		for _, m := range mocks {
+			if len(m.Methods) > 0 {
+				return true
+			}
+		}
+
+		return false
+	},
+	"TypeConstraintTest": func(m MockData) string {
+		if len(m.TypeParams) == 0 {
+			return ""
+		}
+		s := "["
+		for idx, param := range m.TypeParams {
+			if idx != 0 {
+				s += ", "
+			}
+			s += exported(param.Name())
+			s += " "
+			s += param.TypeString()
+		}
+		s += "]"
+		return s
+	},
+	"TypeConstraint": func(m MockData) string {
+		if len(m.TypeParams) == 0 {
+			return ""
+		}
+		s := "["
+		for idx, param := range m.TypeParams {
+			if idx != 0 {
+				s += ", "
+			}
+			s += exported(param.Name())
+			s += " "
+			s += param.TypeString()
+		}
+		s += "]"
+		return s
+	},
 	"TypeInstantiation": func(m MockData) string {
 		if len(m.TypeParams) == 0 {
 			return ""
@@ -100,14 +142,5 @@ var templateFuncs = template.FuncMap{
 		}
 		s += "]"
 		return s
-	},
-	"MocksSomeMethod": func(mocks []MockData) bool {
-		for _, m := range mocks {
-			if len(m.Methods) > 0 {
-				return true
-			}
-		}
-
-		return false
 	},
 }

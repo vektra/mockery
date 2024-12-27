@@ -57,7 +57,6 @@ type Config struct {
 	MockName             string                 `mapstructure:"mockname"`
 	Note                 string                 `mapstructure:"note"`
 	PkgName              string                 `mapstructure:"pkgname"`
-	Packageprefix        string                 `mapstructure:"packageprefix"`
 	Packages             map[string]interface{} `mapstructure:"packages"`
 	Profile              string                 `mapstructure:"profile"`
 	Recursive            bool                   `mapstructure:"recursive"`
@@ -84,8 +83,9 @@ func NewConfigFromViper(v *viper.Viper) (*Config, error) {
 
 	v.SetDefault("dir", "mocks/{{.PackagePath}}")
 	v.SetDefault("filename", "mock_{{.InterfaceName}}.go")
+	v.SetDefault("formatter", "goimports")
 	v.SetDefault("mockname", "Mock{{.InterfaceName}}")
-	v.SetDefault("outpkg", "{{.PackageName}}")
+	v.SetDefault("pkgname", "{{.PackageName}}")
 	v.SetDefault("dry-run", false)
 	v.SetDefault("log-level", "info")
 

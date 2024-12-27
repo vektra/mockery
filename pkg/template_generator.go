@@ -8,8 +8,10 @@ import (
 	"go/token"
 	"go/types"
 
+	"github.com/chigopher/pathlib"
 	"github.com/rs/zerolog"
 	"github.com/vektra/mockery/v2/pkg/registry"
+	"github.com/vektra/mockery/v2/pkg/stackerr"
 	"github.com/vektra/mockery/v2/pkg/template"
 	"golang.org/x/tools/go/packages"
 	"golang.org/x/tools/imports"
@@ -18,8 +20,9 @@ import (
 type Formatter string
 
 const (
+	FORMAT_GOFMT      Formatter = "gofmt"
 	FORMAT_GOIMPORRTS Formatter = "goimports"
-	FORMAT_NOOP       Formatter = "noop"
+	FORMAT_NOOP       Formatter = ""
 )
 
 type TemplateGenerator struct {
@@ -55,12 +58,13 @@ func (g *TemplateGenerator) format(src []byte) ([]byte, error) {
 	switch g.formatter {
 	case FORMAT_GOIMPORRTS:
 		return goimports(src)
-
-	case FORMAT_NOOP:
+	case FORMAT_GOFMT:
+		return gofmt(src)
+	case "":
 		return src, nil
 	}
 
-	return gofmt(src)
+	return nil, fmt.Errorf("unknown formatter type: %s", g.formatter)
 }
 
 func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func) template.MethodData {
@@ -153,8 +157,21 @@ func (g *TemplateGenerator) Generate(
 			TemplateData:  ifaceMock.Config.TemplateData,
 		})
 	}
+	var boilerplate string
+	if g.pkgConfig.BoilerplateFile != "" {
+		var err error
+		boilerplatePath := pathlib.NewPath(g.pkgConfig.BoilerplateFile)
+		boilerplateBytes, err := boilerplatePath.ReadFile()
+		if err != nil {
+			log.Err(err).Msg("unable to find boilerplate file")
+			return nil, stackerr.NewStackErr(err)
+		}
+		boilerplate = string(boilerplateBytes)
+	}
 
 	data := template.Data{
+		Boilerplate:     boilerplate,
+		BuildTags:       g.pkgConfig.MockBuildTags,
 		PkgName:         g.pkgConfig.PkgName,
 		SrcPkgQualifier: "",
 		Mocks:           mockData,
@@ -181,8 +198,8 @@ func (g *TemplateGenerator) Generate(
 	// grab the formatter as specified in the topmost interface-level config.
 	formatted, err := g.format(buf.Bytes())
 	if err != nil {
-		log.Err(err).Msg("can't format mock file, printing buffer.")
 		fmt.Print(buf.String())
+		log.Err(err).Msg("can't format mock file")
 		return []byte{}, fmt.Errorf("formatting mock file: %w", err)
 	}
 	return formatted, nil

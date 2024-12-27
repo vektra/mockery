@@ -45,8 +45,6 @@ func NewRootCmd() (*cobra.Command, error) {
 
 	pFlags := cmd.PersistentFlags()
 	pFlags.StringVar(&cfgFile, "config", "", "config file to use")
-	pFlags.String("outpkg", "mocks", "name of generated package")
-	pFlags.String("packageprefix", "", "prefix for the generated package name, it is ignored if outpkg is also specified.")
 	pFlags.String("dir", "", "directory to search for interfaces")
 	pFlags.BoolP("recursive", "r", false, "recurse search into sub-directories")
 	pFlags.StringArray("exclude", nil, "prefixes of subdirectories and files to exclude from search")
@@ -334,9 +332,8 @@ func (r *RootApp) Run() error {
 		generator, err := pkg.NewTemplateGenerator(
 			interfacesInFile.interfaces[0].Pkg,
 			outPkgPath,
-			interfacesInFile.interfaces[0].Config.Template,
+			packageConfig.Template,
 			pkg.Formatter(r.Config.Formatter),
-			interfacesInFile.interfaces[0].Config.Outpkg,
 			packageConfig,
 		)
 		if err != nil {

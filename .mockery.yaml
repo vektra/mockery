@@ -1,15 +1,17 @@
 disable-version-string: True
 mockname: "Mock{{.InterfaceName}}"
 filename: "mockery_mock.go"
-outpkg: mocks
+pkgname: mocks
 tags: "custom2"
 issue-845-fix: True
 template: "mockery"
+boilerplate-file: "./.boilerplate.txt"
+mock-build-tags: test
 _anchors: &inpackage_config
   all: True
   dir: "{{.InterfaceDir}}"
   mockname: "Mock{{.InterfaceName}}"
-  outpkg: "{{.PackageName}}_test"
+  pkgname: "{{.PackageName}}_test"
   filename: "mock_{{.InterfaceNameSnake}}_test.go"
 packages:
   #github.com/vektra/mockery/v2/pkg/fixtures/buildtag/comment:
@@ -26,6 +28,7 @@ packages:
       all: False
     interfaces:
       A:
+      RequesterGenerics:
       #RequesterArgSameAsNamedImport:
       #RequesterVariadic:
       #  configs:
@@ -52,20 +55,20 @@ packages:
   #    dir: "{{.InterfaceDir}}"
   #    filename: "{{.InterfaceName}}_mock.go"
   #    mockname: "Mock{{.InterfaceName}}"
-  #    outpkg: "{{.PackageName}}"
+  #    pkgname: "{{.PackageName}}"
   #github.com/vektra/mockery/v2/pkg/fixtures/empty_return:
   #  config:
   #    all: True
   #    dir: "{{.InterfaceDir}}"
   #    mockname: "{{.InterfaceName}}Mock"
-  #    outpkg: "{{.PackageName}}"
+  #    pkgname: "{{.PackageName}}"
   #    filename: "mock_{{.InterfaceName}}_test.go"
   #github.com/vektra/mockery/v2/pkg/fixtures/method_args/same_name_arg_and_type:
   #  config:
   #    all: True
   #    dir: "{{.InterfaceDir}}"
   #    mockname: "{{.InterfaceName}}Mock"
-  #    outpkg: "{{.PackageName}}"
+  #    pkgname: "{{.PackageName}}"
   #    filename: "mock_{{.InterfaceName}}_test.go"
   #github.com/vektra/mockery/v2/pkg/fixtures/iface_typed_param:
   #  config: *inpackage_config
@@ -91,5 +94,5 @@ packages:
   #    all: True
   #    dir: "{{.InterfaceDir}}"
   #    filename: "mock_{{.MockName}}_test.go"
-  #    outpkg: "{{.PackageName}}_test"
+  #    pkgname: "{{.PackageName}}_test"
 #

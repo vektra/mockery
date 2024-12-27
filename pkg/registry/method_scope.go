@@ -2,6 +2,7 @@ package registry
 
 import (
 	"context"
+	"fmt"
 	"go/types"
 	"strconv"
 
@@ -136,15 +137,29 @@ func (m MethodScope) populateImports(ctx context.Context, t types.Type, imports 
 			m.populateImports(ctx, t.Field(i).Type(), imports)
 		}
 
+	case *types.Union:
+		log.Debug().Int("len", t.Len()).Msg("found union")
+		for i := 0; i < t.Len(); i++ {
+			term := t.Term(i)
+			m.populateImports(ctx, term.Type(), imports)
+		}
 	case *types.Interface: // anonymous interface
+		log.Debug().
+			Int("num-methods", t.NumMethods()).
+			Int("num-explicit-methods", t.NumExplicitMethods()).
+			Int("num-embeddeds", t.NumEmbeddeds()).
+			Msg("found interface")
 		for i := 0; i < t.NumExplicitMethods(); i++ {
+			log.Debug().Msg("populating import from explicit method")
 			m.populateImports(ctx, t.ExplicitMethod(i).Type(), imports)
 		}
 		for i := 0; i < t.NumEmbeddeds(); i++ {
+			log.Debug().Msg("populating import form embedded type")
 			m.populateImports(ctx, t.EmbeddedType(i), imports)
 		}
+
 	default:
-		log.Debug().Msg("unable to determine type of object")
+		log.Debug().Str("real-type", fmt.Sprintf("%T", t)).Msg("unable to determine type of object")
 	}
 }
 

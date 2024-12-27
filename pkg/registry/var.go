@@ -34,7 +34,6 @@ func (v Var) packageQualifier(pkg *types.Package) string {
 	if v.moqPkgPath != "" && v.moqPkgPath == path {
 		return ""
 	}
-
 	return v.imports[path].Qualifier()
 }
 
