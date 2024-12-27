@@ -56,7 +56,7 @@ type Config struct {
 	MockBuildTags        string                 `mapstructure:"mock-build-tags"`
 	MockName             string                 `mapstructure:"mockname"`
 	Note                 string                 `mapstructure:"note"`
-	Outpkg               string                 `mapstructure:"outpkg"`
+	PkgName              string                 `mapstructure:"pkgname"`
 	Packageprefix        string                 `mapstructure:"packageprefix"`
 	Packages             map[string]interface{} `mapstructure:"packages"`
 	Profile              string                 `mapstructure:"profile"`
@@ -891,7 +891,7 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface) error {
 		"filename": &c.FileName,
 		"dir":      &c.Dir,
 		"mockname": &c.MockName,
-		"outpkg":   &c.Outpkg,
+		"pkgname":  &c.PkgName,
 	}
 
 	changesMade := true

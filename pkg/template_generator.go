@@ -26,7 +26,6 @@ type TemplateGenerator struct {
 	templateName string
 	registry     *registry.Registry
 	formatter    Formatter
-	pkgName      string
 	pkgConfig    *Config
 	inPackage    bool
 }
@@ -36,7 +35,6 @@ func NewTemplateGenerator(
 	outPkgPath string,
 	templateName string,
 	formatter Formatter,
-	pkgName string,
 	pkgConfig *Config,
 ) (*TemplateGenerator, error) {
 	reg, err := registry.New(srcPkg, outPkgPath)
@@ -48,7 +46,6 @@ func NewTemplateGenerator(
 		templateName: templateName,
 		registry:     reg,
 		formatter:    formatter,
-		pkgName:      pkgName,
 		pkgConfig:    pkgConfig,
 		inPackage:    srcPkg.PkgPath == outPkgPath,
 	}, nil
@@ -158,7 +155,7 @@ func (g *TemplateGenerator) Generate(
 	}
 
 	data := template.Data{
-		PkgName:         g.pkgName,
+		PkgName:         g.pkgConfig.PkgName,
 		SrcPkgQualifier: "",
 		Mocks:           mockData,
 		TemplateData:    g.pkgConfig.TemplateData,

@@ -17,11 +17,16 @@ type Template struct {
 	tmpl *template.Template
 }
 
-//go:embed moq.templ
-var templateMoq string
+var (
+	//go:embed moq.templ
+	templateMoq string
+	//go:embed mockery.templ
+	templateMockery string
+)
 
 var styleTemplates = map[string]string{
-	"moq": templateMoq,
+	"moq":     templateMoq,
+	"mockery": templateMockery,
 }
 
 // New returns a new instance of Template.

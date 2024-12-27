@@ -10,7 +10,7 @@ packages:
     config:
       include-regex: '.*'
       exclude-regex: 'RequesterGenerics|UnsafeInterface|requester_unexported'
-      outpkg: test
+      pkgname: test
       template-data:
         with-resets: true
         skip-ensure: true
