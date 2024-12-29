@@ -37,6 +37,20 @@ func (v Var) packageQualifier(pkg *types.Package) string {
 	return v.imports[path].Qualifier()
 }
 
+func nillable(typ types.Type) bool {
+	switch t := typ.(type) {
+	case *types.Pointer, *types.Array, *types.Map, *types.Interface, *types.Signature, *types.Chan, *types.Slice:
+		return true
+	case *types.Named, *types.Alias, *types.TypeParam:
+		return nillable(t.Underlying())
+	}
+	return false
+}
+
+func (v Var) Nillable() bool {
+	return nillable(v.vr.Type())
+}
+
 func varName(vr *types.Var, suffix string) string {
 	name := vr.Name()
 	if name != "" && name != "_" {

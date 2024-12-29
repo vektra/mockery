@@ -36,12 +36,14 @@ packages:
       #      unroll-variadic: False
       #    - mockname: RequesterVariadic
       #      unroll-variadic: True
-      #Expecter:
-      #  configs:
-      #    - mockname: ExpecterAndRolledVariadic
-      #      unroll-variadic: False
-      #    - mockname: Expecter
-      #      unroll-variadic: True
+      Expecter:
+        configs:
+          - mockname: ExpecterAndRolledVariadic
+            template-data:
+              unroll-variadic: False
+          - mockname: Expecter
+            template-data:
+              unroll-variadic: True
       #RequesterReturnElided:
       #VariadicNoReturnInterface:
       #  config:

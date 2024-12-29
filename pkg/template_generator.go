@@ -1,12 +1,14 @@
 package pkg
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"fmt"
 	"go/format"
 	"go/token"
 	"go/types"
+	"strings"
 
 	"github.com/chigopher/pathlib"
 	"github.com/rs/zerolog"
@@ -198,7 +200,10 @@ func (g *TemplateGenerator) Generate(
 	// grab the formatter as specified in the topmost interface-level config.
 	formatted, err := g.format(buf.Bytes())
 	if err != nil {
-		fmt.Print(buf.String())
+		scanner := bufio.NewScanner(strings.NewReader(buf.String()))
+		for i := 1; scanner.Scan(); i++ {
+			fmt.Printf("%d:\t%s\n", i, scanner.Text())
+		}
 		log.Err(err).Msg("can't format mock file")
 		return []byte{}, fmt.Errorf("formatting mock file: %w", err)
 	}

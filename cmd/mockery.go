@@ -235,16 +235,6 @@ func (r *RootApp) Run() error {
 	}
 	buildTags := strings.Split(r.Config.BuildTags, " ")
 
-	// TODO: Fix boilerplate
-	//var boilerplate string
-	//if r.Config.BoilerplateFile != "" {
-	//	data, err := os.ReadFile(r.Config.BoilerplateFile)
-	//	if err != nil {
-	//		log.Fatal().Msgf("Failed to read boilerplate file %s: %v", r.Config.BoilerplateFile, err)
-	//	}
-	//	boilerplate = string(data)
-	//}
-
 	configuredPackages, err := r.Config.GetPackages(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to get package from config: %w", err)

@@ -60,12 +60,34 @@ func (m MethodData) ArgList() string {
 	return strings.Join(params, ", ")
 }
 
+// ArgTypeList returns the argument types in a comma-separated string, ex:
+// `string, int, bar.Baz`
+func (m MethodData) ArgTypeList() string {
+	params := make([]string, len(m.Params))
+	for i, p := range m.Params {
+		params[i] = p.TypeString()
+	}
+	return strings.Join(params, ", ")
+}
+
 // ArgCallList is the string representation of method call parameters,
 // ex: 's, n, foo'. In case of a last variadic parameter, it will be of
 // the format 's, n, foos...'
 func (m MethodData) ArgCallList() string {
-	params := make([]string, len(m.Params))
-	for i, p := range m.Params {
+	return m.ArgCallListSlice(0, -1)
+}
+
+// ArgCallListSlice is similar to ArgCallList, but it allows specification of
+// a slice range to use for the parameter lists. Specifying an integer less than
+// 1 for end indicates to slice to the end of the parameters. As with regular
+// Go slicing semantics, the end value is a non-inclusive index.
+func (m MethodData) ArgCallListSlice(start, end int) string {
+	if end < 0 {
+		end = len(m.Params)
+	}
+	paramsSlice := m.Params[start:end]
+	params := make([]string, len(paramsSlice))
+	for i, p := range paramsSlice {
 		params[i] = p.CallName()
 	}
 	return strings.Join(params, ", ")
@@ -92,6 +114,10 @@ func (m MethodData) ReturnArgNameList() string {
 		params[i] = p.Name()
 	}
 	return strings.Join(params, ", ")
+}
+
+func (m MethodData) IsVariadic() bool {
+	return len(m.Params) > 0 && m.Params[len(m.Params)-1].Variadic
 }
 
 type TypeParamData struct {
