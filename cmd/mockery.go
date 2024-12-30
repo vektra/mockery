@@ -214,7 +214,10 @@ func (r *RootApp) Run() error {
 	if r.Config.Print {
 		osp = &pkg.StdoutStreamProvider{}
 	}
-	buildTags := strings.Split(r.Config.BuildTags, " ")
+	var buildTags []string
+	if r.Config.BuildTags != "" {
+		buildTags = strings.Split(r.Config.BuildTags, " ")
+	}
 
 	var boilerplate string
 	if r.Config.BoilerplateFile != "" {
