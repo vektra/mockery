@@ -49,7 +49,7 @@ func (_mock *ExpecterAndRolledVariadic) ManyArgsReturns(str string, i int) ([]st
 		retVal0 []string
 		retVal1 error
 	)
-	if returnFunc, ok := ret.Get(0).(func(string, int) ([]string, error)); ok {
+	if returnFunc, ok := retArgs.Get(0).(func(string, int) ([]string, error)); ok {
 		return returnFunc(str, i)
 	}
 	if returnFunc, ok := retArgs.Get(0).(func(string, int) []string); ok {
@@ -92,7 +92,6 @@ func (_mock *ExpecterAndRolledVariadic) NoArg() string {
 
 // NoReturn provides a mock function for the type ExpecterAndRolledVariadic
 func (_mock *ExpecterAndRolledVariadic) NoReturn(str string) {
-	var retArgs mock.Arguments
 
 	_mock.Called(str)
 	return
@@ -102,13 +101,13 @@ func (_mock *ExpecterAndRolledVariadic) NoReturn(str string) {
 func (_mock *ExpecterAndRolledVariadic) Variadic(ints ...int) error {
 	var retArgs mock.Arguments
 	if len(ints) > 0 {
-		retArgs = _mock.Called(ints...)
+		retArgs = _mock.Called(ints)
 	} else {
 		retArgs = _mock.Called()
 	}
 
 	if retArgs == nil {
-		retArgs = _mock.Called(ints...)
+		retArgs = _mock.Called(ints)
 	}
 
 	if len(retArgs) == 0 {
@@ -118,7 +117,7 @@ func (_mock *ExpecterAndRolledVariadic) Variadic(ints ...int) error {
 	var (
 		retVal0 error
 	)
-	if returnFunc, ok := retArgs.Get(0).(func([]int) error); ok {
+	if returnFunc, ok := retArgs.Get(0).(func(...int) error); ok {
 		retVal0 = returnFunc(ints...)
 	} else {
 		retVal0 = retArgs.Error(0)
@@ -130,13 +129,13 @@ func (_mock *ExpecterAndRolledVariadic) Variadic(ints ...int) error {
 func (_mock *ExpecterAndRolledVariadic) VariadicMany(i int, a string, intfs ...interface{}) error {
 	var retArgs mock.Arguments
 	if len(intfs) > 0 {
-		retArgs = _mock.Called(i, a, intfs...)
+		retArgs = _mock.Called(i, a, intfs)
 	} else {
 		retArgs = _mock.Called(i, a)
 	}
 
 	if retArgs == nil {
-		retArgs = _mock.Called(i, a, intfs...)
+		retArgs = _mock.Called(i, a, intfs)
 	}
 
 	if len(retArgs) == 0 {
@@ -146,7 +145,7 @@ func (_mock *ExpecterAndRolledVariadic) VariadicMany(i int, a string, intfs ...i
 	var (
 		retVal0 error
 	)
-	if returnFunc, ok := retArgs.Get(0).(func(int, string, []interface{}) error); ok {
+	if returnFunc, ok := retArgs.Get(0).(func(int, string, ...interface{}) error); ok {
 		retVal0 = returnFunc(i, a, intfs...)
 	} else {
 		retVal0 = retArgs.Error(0)
@@ -197,7 +196,7 @@ func (_mock *Expecter) ManyArgsReturns(str string, i int) ([]string, error) {
 		retVal0 []string
 		retVal1 error
 	)
-	if returnFunc, ok := ret.Get(0).(func(string, int) ([]string, error)); ok {
+	if returnFunc, ok := retArgs.Get(0).(func(string, int) ([]string, error)); ok {
 		return returnFunc(str, i)
 	}
 	if returnFunc, ok := retArgs.Get(0).(func(string, int) []string); ok {
@@ -240,7 +239,6 @@ func (_mock *Expecter) NoArg() string {
 
 // NoReturn provides a mock function for the type Expecter
 func (_mock *Expecter) NoReturn(str string) {
-	var retArgs mock.Arguments
 
 	_mock.Called(str)
 	return
@@ -249,6 +247,7 @@ func (_mock *Expecter) NoReturn(str string) {
 // Variadic provides a mock function for the type Expecter
 func (_mock *Expecter) Variadic(ints ...int) error {
 	var retArgs mock.Arguments
+	/* TODO: finish https://github.com/vektra/mockery/blob/ede4f2c90f854f51c8618c934930f7bf6cdb5a5d/pkg/generator.go#L1109-L1153 */
 
 	if retArgs == nil {
 		retArgs = _mock.Called(ints...)
@@ -261,7 +260,7 @@ func (_mock *Expecter) Variadic(ints ...int) error {
 	var (
 		retVal0 error
 	)
-	if returnFunc, ok := retArgs.Get(0).(func([]int) error); ok {
+	if returnFunc, ok := retArgs.Get(0).(func(...int) error); ok {
 		retVal0 = returnFunc(ints...)
 	} else {
 		retVal0 = retArgs.Error(0)
@@ -272,6 +271,7 @@ func (_mock *Expecter) Variadic(ints ...int) error {
 // VariadicMany provides a mock function for the type Expecter
 func (_mock *Expecter) VariadicMany(i int, a string, intfs ...interface{}) error {
 	var retArgs mock.Arguments
+	/* TODO: finish https://github.com/vektra/mockery/blob/ede4f2c90f854f51c8618c934930f7bf6cdb5a5d/pkg/generator.go#L1109-L1153 */
 
 	if retArgs == nil {
 		retArgs = _mock.Called(i, a, intfs...)
@@ -284,7 +284,7 @@ func (_mock *Expecter) VariadicMany(i int, a string, intfs ...interface{}) error
 	var (
 		retVal0 error
 	)
-	if returnFunc, ok := retArgs.Get(0).(func(int, string, []interface{}) error); ok {
+	if returnFunc, ok := retArgs.Get(0).(func(int, string, ...interface{}) error); ok {
 		retVal0 = returnFunc(i, a, intfs...)
 	} else {
 		retVal0 = retArgs.Error(0)
@@ -372,7 +372,7 @@ func (_mock *MockRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalI
 		retVal0 TSigned
 		retVal1 TIntf
 	)
-	if returnFunc, ok := ret.Get(0).(func(TAny, TComparable) (TSigned, TIntf)); ok {
+	if returnFunc, ok := retArgs.Get(0).(func(TAny, TComparable) (TSigned, TIntf)); ok {
 		return returnFunc(v1, v2)
 	}
 	if returnFunc, ok := retArgs.Get(0).(func(TAny, TComparable) TSigned); ok {
@@ -461,7 +461,7 @@ func (_mock *MockA) Call() (test.B, error) {
 		retVal0 test.B
 		retVal1 error
 	)
-	if returnFunc, ok := ret.Get(0).(func() (test.B, error)); ok {
+	if returnFunc, ok := retArgs.Get(0).(func() (test.B, error)); ok {
 		return returnFunc()
 	}
 	if returnFunc, ok := retArgs.Get(0).(func() test.B); ok {

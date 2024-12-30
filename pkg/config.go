@@ -36,31 +36,30 @@ var (
 )
 
 type Config struct {
-	All                  bool                   `mapstructure:"all"`
-	Anchors              map[string]any         `mapstructure:"_anchors"`
-	BoilerplateFile      string                 `mapstructure:"boilerplate-file"`
-	BuildTags            string                 `mapstructure:"tags"`
-	Config               string                 `mapstructure:"config"`
-	Cpuprofile           string                 `mapstructure:"cpuprofile"`
-	Dir                  string                 `mapstructure:"dir"`
-	DisableConfigSearch  bool                   `mapstructure:"disable-config-search"`
-	DisableVersionString bool                   `mapstructure:"disable-version-string"`
-	DryRun               bool                   `mapstructure:"dry-run"`
-	Exclude              []string               `mapstructure:"exclude"`
-	ExcludeRegex         string                 `mapstructure:"exclude-regex"`
-	FileName             string                 `mapstructure:"filename"`
-	Formatter            string                 `mapstructure:"formatter"`
-	IncludeRegex         string                 `mapstructure:"include-regex"`
-	Issue845Fix          bool                   `mapstructure:"issue-845-fix"`
-	LogLevel             string                 `mapstructure:"log-level"`
-	MockBuildTags        string                 `mapstructure:"mock-build-tags"`
-	MockName             string                 `mapstructure:"mockname"`
-	Note                 string                 `mapstructure:"note"`
-	PkgName              string                 `mapstructure:"pkgname"`
-	Packages             map[string]interface{} `mapstructure:"packages"`
-	Profile              string                 `mapstructure:"profile"`
-	Recursive            bool                   `mapstructure:"recursive"`
-	SrcPkg               string                 `mapstructure:"srcpkg"`
+	All                 bool                   `mapstructure:"all"`
+	Anchors             map[string]any         `mapstructure:"_anchors"`
+	BoilerplateFile     string                 `mapstructure:"boilerplate-file"`
+	BuildTags           string                 `mapstructure:"tags"`
+	Config              string                 `mapstructure:"config"`
+	Cpuprofile          string                 `mapstructure:"cpuprofile"`
+	Dir                 string                 `mapstructure:"dir"`
+	DisableConfigSearch bool                   `mapstructure:"disable-config-search"`
+	DryRun              bool                   `mapstructure:"dry-run"`
+	Exclude             []string               `mapstructure:"exclude"`
+	ExcludeRegex        string                 `mapstructure:"exclude-regex"`
+	FileName            string                 `mapstructure:"filename"`
+	Formatter           string                 `mapstructure:"formatter"`
+	IncludeRegex        string                 `mapstructure:"include-regex"`
+	Issue845Fix         bool                   `mapstructure:"issue-845-fix"`
+	LogLevel            string                 `mapstructure:"log-level"`
+	MockBuildTags       string                 `mapstructure:"mock-build-tags"`
+	MockName            string                 `mapstructure:"mockname"`
+	Note                string                 `mapstructure:"note"`
+	PkgName             string                 `mapstructure:"pkgname"`
+	Packages            map[string]interface{} `mapstructure:"packages"`
+	Profile             string                 `mapstructure:"profile"`
+	Recursive           bool                   `mapstructure:"recursive"`
+	SrcPkg              string                 `mapstructure:"srcpkg"`
 	// StructName overrides the name given to the mock struct and should only be nonempty
 	// when generating for an exact match (non regex expression in -name).
 	StructName     string         `mapstructure:"structname"`

@@ -1,4 +1,3 @@
-disable-version-string: True
 mockname: "Mock{{.InterfaceName}}"
 filename: "mockery_mock.go"
 pkgname: mocks

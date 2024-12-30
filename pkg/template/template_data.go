@@ -70,25 +70,53 @@ func (m MethodData) ArgTypeList() string {
 	return strings.Join(params, ", ")
 }
 
-// ArgCallList is the string representation of method call parameters,
-// ex: 's, n, foo'. In case of a last variadic parameter, it will be of
-// the format 's, n, foos...'
-func (m MethodData) ArgCallList() string {
-	return m.ArgCallListSlice(0, -1)
+// ArgTypeListEllipsis returns the argument types in a comma-separated string, ex:
+// `string, int, bar.Baz`. If the last argument is variadic, it will contain an
+// ellipsis as would be expected in a variadic function definition.
+func (m MethodData) ArgTypeListEllipsis() string {
+	params := make([]string, len(m.Params))
+	for i, p := range m.Params {
+		params[i] = p.TypeStringEllipsis()
+	}
+	return strings.Join(params, ", ")
 }
 
-// ArgCallListSlice is similar to ArgCallList, but it allows specification of
+// ArgCallList is the string representation of method call parameters,
+// ex: 's, n, foo'. In case of a last variadic parameter, it will be of
+// the format 's, n, foos...'.
+func (m MethodData) ArgCallList() string {
+	return m.argCallListSlice(0, -1, true)
+}
+
+// ArgCallListNoEllipsis is the same as ArgCallList, except the last parameter, if
+// variadic, will not contain an ellipsis.
+func (m MethodData) ArgCallListNoEllipsis() string {
+	return m.argCallListSlice(0, -1, false)
+}
+
+// argCallListSlice is similar to ArgCallList, but it allows specification of
 // a slice range to use for the parameter lists. Specifying an integer less than
 // 1 for end indicates to slice to the end of the parameters. As with regular
 // Go slicing semantics, the end value is a non-inclusive index.
 func (m MethodData) ArgCallListSlice(start, end int) string {
+	return m.argCallListSlice(start, end, true)
+}
+
+func (m MethodData) ArgCallListSliceNoEllipsis(start, end int) string {
+	return m.argCallListSlice(start, end, false)
+}
+
+func (m MethodData) argCallListSlice(start, end int, ellipsis bool) string {
 	if end < 0 {
 		end = len(m.Params)
+	}
+	if end == 1 && len(m.Params) == 0 {
+		end = 0
 	}
 	paramsSlice := m.Params[start:end]
 	params := make([]string, len(paramsSlice))
 	for i, p := range paramsSlice {
-		params[i] = p.CallName()
+		params[i] = p.CallName(ellipsis)
 	}
 	return strings.Join(params, ", ")
 }
@@ -148,9 +176,9 @@ func (p ParamData) MethodArg() string {
 
 // CallName returns the string representation of the parameter to be
 // used for a method call. For a variadic paramter, it will be of the
-// format 'foos...'.
-func (p ParamData) CallName() string {
-	if p.Variadic {
+// format 'foos...' if ellipsis is true.
+func (p ParamData) CallName(ellipsis bool) string {
+	if ellipsis && p.Variadic {
 		return p.Name() + "..."
 	}
 	return p.Name()
@@ -160,4 +188,16 @@ func (p ParamData) CallName() string {
 // parameter.
 func (p ParamData) TypeString() string {
 	return p.Var.TypeString()
+}
+
+// TypeStringEllipsis returns the string representation of the type of the
+// parameter. If it is a variadic parameter, it will be represented as a
+// variadic parameter instead of a slice. For example instead of `[]string`,
+// it will return `...string`.
+func (p ParamData) TypeStringEllipsis() string {
+	typeString := p.TypeString()
+	if !p.Variadic {
+		return typeString
+	}
+	return strings.Replace(typeString, "[]", "...", 1)
 }
