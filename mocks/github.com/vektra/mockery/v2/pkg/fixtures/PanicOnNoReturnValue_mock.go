@@ -26,6 +26,14 @@ type PanicOnNoReturnValue struct {
 	mock.Mock
 }
 
+type PanicOnNoReturnValue_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *PanicOnNoReturnValue) EXPECT() *PanicOnNoReturnValue_Expecter {
+	return &PanicOnNoReturnValue_Expecter{mock: &_m.Mock}
+}
+
 // DoSomething provides a mock function for the type PanicOnNoReturnValue
 func (_mock *PanicOnNoReturnValue) DoSomething() string {
 	ret := _mock.Called()
@@ -43,10 +51,29 @@ func (_mock *PanicOnNoReturnValue) DoSomething() string {
 	return r0
 }
 
-type PanicOnNoReturnValue_expecter struct {
-	mock *mock.Mock
+// PanicOnNoReturnValue_DoSomething_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DoSomething'
+type PanicOnNoReturnValue_DoSomething_Call struct {
+	*mock.Call
 }
 
-func (_m *PanicOnNoReturnValue) EXPECT() *PanicOnNoReturnValue_expecter {
-	return &PanicOnNoReturnValue_expecter{mock: &_m.Mock}
+// DoSomething is a helper method to define mock.On call
+func (_e *PanicOnNoReturnValue_Expecter) DoSomething() *PanicOnNoReturnValue_DoSomething_Call {
+	return &PanicOnNoReturnValue_DoSomething_Call{Call: _e.mock.On("DoSomething")}
+}
+
+func (_c *PanicOnNoReturnValue_DoSomething_Call) Run(run func()) *PanicOnNoReturnValue_DoSomething_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *PanicOnNoReturnValue_DoSomething_Call) Return(sOut string) *PanicOnNoReturnValue_DoSomething_Call {
+	_c.Call.Return(sOut)
+	return _c
+}
+
+func (_c *PanicOnNoReturnValue_DoSomething_Call) RunAndReturn(run func() string) *PanicOnNoReturnValue_DoSomething_Call {
+	_c.Call.Return(run)
+	return _c
 }

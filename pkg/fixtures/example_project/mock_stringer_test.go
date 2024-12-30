@@ -26,6 +26,14 @@ type MockStringer struct {
 	mock.Mock
 }
 
+type MockStringer_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *MockStringer) EXPECT() *MockStringer_Expecter {
+	return &MockStringer_Expecter{mock: &_m.Mock}
+}
+
 // String provides a mock function for the type MockStringer
 func (_mock *MockStringer) String() string {
 	ret := _mock.Called()
@@ -43,10 +51,29 @@ func (_mock *MockStringer) String() string {
 	return r0
 }
 
-type MockStringer_expecter struct {
-	mock *mock.Mock
+// MockStringer_String_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'String'
+type MockStringer_String_Call struct {
+	*mock.Call
 }
 
-func (_m *MockStringer) EXPECT() *MockStringer_expecter {
-	return &MockStringer_expecter{mock: &_m.Mock}
+// String is a helper method to define mock.On call
+func (_e *MockStringer_Expecter) String() *MockStringer_String_Call {
+	return &MockStringer_String_Call{Call: _e.mock.On("String")}
+}
+
+func (_c *MockStringer_String_Call) Run(run func()) *MockStringer_String_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *MockStringer_String_Call) Return(sOut string) *MockStringer_String_Call {
+	_c.Call.Return(sOut)
+	return _c
+}
+
+func (_c *MockStringer_String_Call) RunAndReturn(run func() string) *MockStringer_String_Call {
+	_c.Call.Return(run)
+	return _c
 }

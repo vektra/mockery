@@ -26,6 +26,14 @@ type GetInt struct {
 	mock.Mock
 }
 
+type GetInt_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *GetInt) EXPECT() *GetInt_Expecter {
+	return &GetInt_Expecter{mock: &_m.Mock}
+}
+
 // Get provides a mock function for the type GetInt
 func (_mock *GetInt) Get() int {
 	ret := _mock.Called()
@@ -43,10 +51,29 @@ func (_mock *GetInt) Get() int {
 	return r0
 }
 
-type GetInt_expecter struct {
-	mock *mock.Mock
+// GetInt_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
+type GetInt_Get_Call struct {
+	*mock.Call
 }
 
-func (_m *GetInt) EXPECT() *GetInt_expecter {
-	return &GetInt_expecter{mock: &_m.Mock}
+// Get is a helper method to define mock.On call
+func (_e *GetInt_Expecter) Get() *GetInt_Get_Call {
+	return &GetInt_Get_Call{Call: _e.mock.On("Get")}
+}
+
+func (_c *GetInt_Get_Call) Run(run func()) *GetInt_Get_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *GetInt_Get_Call) Return(nOut int) *GetInt_Get_Call {
+	_c.Call.Return(nOut)
+	return _c
+}
+
+func (_c *GetInt_Get_Call) RunAndReturn(run func() int) *GetInt_Get_Call {
+	_c.Call.Return(run)
+	return _c
 }

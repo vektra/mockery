@@ -26,6 +26,14 @@ type StructWithTag struct {
 	mock.Mock
 }
 
+type StructWithTag_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *StructWithTag) EXPECT() *StructWithTag_Expecter {
+	return &StructWithTag_Expecter{mock: &_m.Mock}
+}
+
 // MethodA provides a mock function for the type StructWithTag
 func (_mock *StructWithTag) MethodA(v *struct {
 	FieldA int "json:\"field_a\""
@@ -63,10 +71,42 @@ func (_mock *StructWithTag) MethodA(v *struct {
 	return r0
 }
 
-type StructWithTag_expecter struct {
-	mock *mock.Mock
+// StructWithTag_MethodA_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'MethodA'
+type StructWithTag_MethodA_Call struct {
+	*mock.Call
 }
 
-func (_m *StructWithTag) EXPECT() *StructWithTag_expecter {
-	return &StructWithTag_expecter{mock: &_m.Mock}
+// MethodA is a helper method to define mock.On call
+//   - v
+func (_e *StructWithTag_Expecter) MethodA(v interface{}) *StructWithTag_MethodA_Call {
+	return &StructWithTag_MethodA_Call{Call: _e.mock.On("MethodA", v)}
+}
+
+func (_c *StructWithTag_MethodA_Call) Run(run func(v *struct {
+	FieldA int "json:\"field_a\""
+	FieldB int "json:\"field_b\" xml:\"field_b\""
+})) *StructWithTag_MethodA_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(v)
+	})
+	return _c
+}
+
+func (_c *StructWithTag_MethodA_Call) Return(valOut *struct {
+	FieldC int "json:\"field_c\""
+	FieldD int "json:\"field_d\" xml:\"field_d\""
+}) *StructWithTag_MethodA_Call {
+	_c.Call.Return(valOut)
+	return _c
+}
+
+func (_c *StructWithTag_MethodA_Call) RunAndReturn(run func(v *struct {
+	FieldA int "json:\"field_a\""
+	FieldB int "json:\"field_b\" xml:\"field_b\""
+}) *struct {
+	FieldC int "json:\"field_c\""
+	FieldD int "json:\"field_d\" xml:\"field_d\""
+}) *StructWithTag_MethodA_Call {
+	_c.Call.Return(run)
+	return _c
 }

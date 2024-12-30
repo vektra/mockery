@@ -26,10 +26,45 @@ type EmptyReturnMock struct {
 	mock.Mock
 }
 
+type EmptyReturnMock_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *EmptyReturnMock) EXPECT() *EmptyReturnMock_Expecter {
+	return &EmptyReturnMock_Expecter{mock: &_m.Mock}
+}
+
 // NoArgs provides a mock function for the type EmptyReturnMock
 func (_mock *EmptyReturnMock) NoArgs() {
 	_mock.Called()
 	return
+}
+
+// EmptyReturnMock_NoArgs_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'NoArgs'
+type EmptyReturnMock_NoArgs_Call struct {
+	*mock.Call
+}
+
+// NoArgs is a helper method to define mock.On call
+func (_e *EmptyReturnMock_Expecter) NoArgs() *EmptyReturnMock_NoArgs_Call {
+	return &EmptyReturnMock_NoArgs_Call{Call: _e.mock.On("NoArgs")}
+}
+
+func (_c *EmptyReturnMock_NoArgs_Call) Run(run func()) *EmptyReturnMock_NoArgs_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *EmptyReturnMock_NoArgs_Call) Return() *EmptyReturnMock_NoArgs_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *EmptyReturnMock_NoArgs_Call) RunAndReturn(run func()) *EmptyReturnMock_NoArgs_Call {
+	_c.Run(run)
+	return _c
 }
 
 // WithArgs provides a mock function for the type EmptyReturnMock
@@ -38,10 +73,31 @@ func (_mock *EmptyReturnMock) WithArgs(a int, b string) {
 	return
 }
 
-type EmptyReturnMock_expecter struct {
-	mock *mock.Mock
+// EmptyReturnMock_WithArgs_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'WithArgs'
+type EmptyReturnMock_WithArgs_Call struct {
+	*mock.Call
 }
 
-func (_m *EmptyReturnMock) EXPECT() *EmptyReturnMock_expecter {
-	return &EmptyReturnMock_expecter{mock: &_m.Mock}
+// WithArgs is a helper method to define mock.On call
+//   - a
+//   - b
+func (_e *EmptyReturnMock_Expecter) WithArgs(a interface{}, b interface{}) *EmptyReturnMock_WithArgs_Call {
+	return &EmptyReturnMock_WithArgs_Call{Call: _e.mock.On("WithArgs", a, b)}
+}
+
+func (_c *EmptyReturnMock_WithArgs_Call) Run(run func(a int, b string)) *EmptyReturnMock_WithArgs_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(a, b)
+	})
+	return _c
+}
+
+func (_c *EmptyReturnMock_WithArgs_Call) Return() *EmptyReturnMock_WithArgs_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *EmptyReturnMock_WithArgs_Call) RunAndReturn(run func(a int, b string)) *EmptyReturnMock_WithArgs_Call {
+	_c.Run(run)
+	return _c
 }

@@ -144,6 +144,16 @@ func (m MethodData) ReturnArgNameList() string {
 	return strings.Join(params, ", ")
 }
 
+// ReturnArgList returns the name and types of the return values. For example:
+// "foo int, bar string, err error"
+func (m MethodData) ReturnArgList() string {
+	params := make([]string, len(m.Returns))
+	for i, p := range m.Returns {
+		params[i] = p.Name() + " " + p.TypeString()
+	}
+	return strings.Join(params, ", ")
+}
+
 func (m MethodData) IsVariadic() bool {
 	return len(m.Params) > 0 && m.Params[len(m.Params)-1].Variadic
 }
@@ -200,4 +210,13 @@ func (p ParamData) TypeStringEllipsis() string {
 		return typeString
 	}
 	return strings.Replace(typeString, "[]", "...", 1)
+}
+
+// TypeStringVariadicUnderlying returns the underlying type of a variadic parameter. For
+// instance, if a function has a parameter defined as `foo ...int`, this function
+// will return "int". If the parameter is not variadic, this will behave the same
+// as `TypeString`.
+func (p ParamData) TypeStringVariadicUnderlying() string {
+	typeString := p.TypeStringEllipsis()
+	return strings.Replace(typeString, "...", "", 1)
 }

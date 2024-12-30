@@ -28,16 +28,46 @@ type Interface2 struct {
 	mock.Mock
 }
 
+type Interface2_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *Interface2) EXPECT() *Interface2_Expecter {
+	return &Interface2_Expecter{mock: &_m.Mock}
+}
+
 // F provides a mock function for the type Interface2
 func (_mock *Interface2) F(v1 type_alias.Type, v2 type_alias.S, s subpkg.S) {
 	_mock.Called(v1, v2, s)
 	return
 }
 
-type Interface2_expecter struct {
-	mock *mock.Mock
+// Interface2_F_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'F'
+type Interface2_F_Call struct {
+	*mock.Call
 }
 
-func (_m *Interface2) EXPECT() *Interface2_expecter {
-	return &Interface2_expecter{mock: &_m.Mock}
+// F is a helper method to define mock.On call
+//   - v1
+//   - v2
+//   - s
+func (_e *Interface2_Expecter) F(v1 interface{}, v2 interface{}, s interface{}) *Interface2_F_Call {
+	return &Interface2_F_Call{Call: _e.mock.On("F", v1, v2, s)}
+}
+
+func (_c *Interface2_F_Call) Run(run func(v1 type_alias.Type, v2 type_alias.S, s subpkg.S)) *Interface2_F_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(v1, v2, s)
+	})
+	return _c
+}
+
+func (_c *Interface2_F_Call) Return() *Interface2_F_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *Interface2_F_Call) RunAndReturn(run func(v1 type_alias.Type, v2 type_alias.S, s subpkg.S)) *Interface2_F_Call {
+	_c.Run(run)
+	return _c
 }

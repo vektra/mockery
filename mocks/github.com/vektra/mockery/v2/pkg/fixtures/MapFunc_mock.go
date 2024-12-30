@@ -26,6 +26,14 @@ type MapFunc struct {
 	mock.Mock
 }
 
+type MapFunc_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *MapFunc) EXPECT() *MapFunc_Expecter {
+	return &MapFunc_Expecter{mock: &_m.Mock}
+}
+
 // Get provides a mock function for the type MapFunc
 func (_mock *MapFunc) Get(m map[string]func(string) string) error {
 	ret := _mock.Called(m)
@@ -43,10 +51,30 @@ func (_mock *MapFunc) Get(m map[string]func(string) string) error {
 	return r0
 }
 
-type MapFunc_expecter struct {
-	mock *mock.Mock
+// MapFunc_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
+type MapFunc_Get_Call struct {
+	*mock.Call
 }
 
-func (_m *MapFunc) EXPECT() *MapFunc_expecter {
-	return &MapFunc_expecter{mock: &_m.Mock}
+// Get is a helper method to define mock.On call
+//   - m
+func (_e *MapFunc_Expecter) Get(m interface{}) *MapFunc_Get_Call {
+	return &MapFunc_Get_Call{Call: _e.mock.On("Get", m)}
+}
+
+func (_c *MapFunc_Get_Call) Run(run func(m map[string]func(string) string)) *MapFunc_Get_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(m)
+	})
+	return _c
+}
+
+func (_c *MapFunc_Get_Call) Return(errOut error) *MapFunc_Get_Call {
+	_c.Call.Return(errOut)
+	return _c
+}
+
+func (_c *MapFunc_Get_Call) RunAndReturn(run func(m map[string]func(string) string) error) *MapFunc_Get_Call {
+	_c.Call.Return(run)
+	return _c
 }

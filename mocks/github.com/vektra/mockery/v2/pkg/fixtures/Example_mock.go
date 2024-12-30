@@ -30,6 +30,14 @@ type Example struct {
 	mock.Mock
 }
 
+type Example_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *Example) EXPECT() *Example_Expecter {
+	return &Example_Expecter{mock: &_m.Mock}
+}
+
 // A provides a mock function for the type Example
 func (_mock *Example) A() http.Flusher {
 	ret := _mock.Called()
@@ -49,6 +57,33 @@ func (_mock *Example) A() http.Flusher {
 	return r0
 }
 
+// Example_A_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'A'
+type Example_A_Call struct {
+	*mock.Call
+}
+
+// A is a helper method to define mock.On call
+func (_e *Example_Expecter) A() *Example_A_Call {
+	return &Example_A_Call{Call: _e.mock.On("A")}
+}
+
+func (_c *Example_A_Call) Run(run func()) *Example_A_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *Example_A_Call) Return(flusherOut http.Flusher) *Example_A_Call {
+	_c.Call.Return(flusherOut)
+	return _c
+}
+
+func (_c *Example_A_Call) RunAndReturn(run func() http.Flusher) *Example_A_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // B provides a mock function for the type Example
 func (_mock *Example) B(fixtureshttp string) my_http.MyStruct {
 	ret := _mock.Called(fixtureshttp)
@@ -64,6 +99,34 @@ func (_mock *Example) B(fixtureshttp string) my_http.MyStruct {
 		r0 = ret.Get(0).(my_http.MyStruct)
 	}
 	return r0
+}
+
+// Example_B_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'B'
+type Example_B_Call struct {
+	*mock.Call
+}
+
+// B is a helper method to define mock.On call
+//   - fixtureshttp
+func (_e *Example_Expecter) B(fixtureshttp interface{}) *Example_B_Call {
+	return &Example_B_Call{Call: _e.mock.On("B", fixtureshttp)}
+}
+
+func (_c *Example_B_Call) Run(run func(fixtureshttp string)) *Example_B_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(fixtureshttp)
+	})
+	return _c
+}
+
+func (_c *Example_B_Call) Return(myStructOut my_http.MyStruct) *Example_B_Call {
+	_c.Call.Return(myStructOut)
+	return _c
+}
+
+func (_c *Example_B_Call) RunAndReturn(run func(fixtureshttp string) my_http.MyStruct) *Example_B_Call {
+	_c.Call.Return(run)
+	return _c
 }
 
 // C provides a mock function for the type Example
@@ -83,10 +146,30 @@ func (_mock *Example) C(fixtureshttp string) number_dir_http.MyStruct {
 	return r0
 }
 
-type Example_expecter struct {
-	mock *mock.Mock
+// Example_C_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'C'
+type Example_C_Call struct {
+	*mock.Call
 }
 
-func (_m *Example) EXPECT() *Example_expecter {
-	return &Example_expecter{mock: &_m.Mock}
+// C is a helper method to define mock.On call
+//   - fixtureshttp
+func (_e *Example_Expecter) C(fixtureshttp interface{}) *Example_C_Call {
+	return &Example_C_Call{Call: _e.mock.On("C", fixtureshttp)}
+}
+
+func (_c *Example_C_Call) Run(run func(fixtureshttp string)) *Example_C_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(fixtureshttp)
+	})
+	return _c
+}
+
+func (_c *Example_C_Call) Return(myStructOut number_dir_http.MyStruct) *Example_C_Call {
+	_c.Call.Return(myStructOut)
+	return _c
+}
+
+func (_c *Example_C_Call) RunAndReturn(run func(fixtureshttp string) number_dir_http.MyStruct) *Example_C_Call {
+	_c.Call.Return(run)
+	return _c
 }

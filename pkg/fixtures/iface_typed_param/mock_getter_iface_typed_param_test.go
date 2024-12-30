@@ -28,6 +28,14 @@ type MockGetterIfaceTypedParam[T io.Reader] struct {
 	mock.Mock
 }
 
+type MockGetterIfaceTypedParam_Expecter[T io.Reader] struct {
+	mock *mock.Mock
+}
+
+func (_m *MockGetterIfaceTypedParam[T]) EXPECT() *MockGetterIfaceTypedParam_Expecter[T] {
+	return &MockGetterIfaceTypedParam_Expecter[T]{mock: &_m.Mock}
+}
+
 // Get provides a mock function for the type MockGetterIfaceTypedParam
 func (_mock *MockGetterIfaceTypedParam[T]) Get() T {
 	ret := _mock.Called()
@@ -47,10 +55,29 @@ func (_mock *MockGetterIfaceTypedParam[T]) Get() T {
 	return r0
 }
 
-type MockGetterIfaceTypedParam_expecter[T io.Reader] struct {
-	mock *mock.Mock
+// MockGetterIfaceTypedParam_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
+type MockGetterIfaceTypedParam_Get_Call[T io.Reader] struct {
+	*mock.Call
 }
 
-func (_m *MockGetterIfaceTypedParam[T]) EXPECT() *MockGetterIfaceTypedParam_expecter[T] {
-	return &MockGetterIfaceTypedParam_expecter[T]{mock: &_m.Mock}
+// Get is a helper method to define mock.On call
+func (_e *MockGetterIfaceTypedParam_Expecter[T]) Get() *MockGetterIfaceTypedParam_Get_Call[T] {
+	return &MockGetterIfaceTypedParam_Get_Call[T]{Call: _e.mock.On("Get")}
+}
+
+func (_c *MockGetterIfaceTypedParam_Get_Call[T]) Run(run func()) *MockGetterIfaceTypedParam_Get_Call[T] {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *MockGetterIfaceTypedParam_Get_Call[T]) Return(vOut T) *MockGetterIfaceTypedParam_Get_Call[T] {
+	_c.Call.Return(vOut)
+	return _c
+}
+
+func (_c *MockGetterIfaceTypedParam_Get_Call[T]) RunAndReturn(run func() T) *MockGetterIfaceTypedParam_Get_Call[T] {
+	_c.Call.Return(run)
+	return _c
 }

@@ -26,6 +26,14 @@ type ExpecterAndRolledVariadic struct {
 	mock.Mock
 }
 
+type ExpecterAndRolledVariadic_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *ExpecterAndRolledVariadic) EXPECT() *ExpecterAndRolledVariadic_Expecter {
+	return &ExpecterAndRolledVariadic_Expecter{mock: &_m.Mock}
+}
+
 // ManyArgsReturns provides a mock function for the type ExpecterAndRolledVariadic
 func (_mock *ExpecterAndRolledVariadic) ManyArgsReturns(str string, i int) ([]string, error) {
 	ret := _mock.Called(str, i)
@@ -54,6 +62,35 @@ func (_mock *ExpecterAndRolledVariadic) ManyArgsReturns(str string, i int) ([]st
 	return r0, r1
 }
 
+// ExpecterAndRolledVariadic_ManyArgsReturns_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ManyArgsReturns'
+type ExpecterAndRolledVariadic_ManyArgsReturns_Call struct {
+	*mock.Call
+}
+
+// ManyArgsReturns is a helper method to define mock.On call
+//   - str
+//   - i
+func (_e *ExpecterAndRolledVariadic_Expecter) ManyArgsReturns(str interface{}, i interface{}) *ExpecterAndRolledVariadic_ManyArgsReturns_Call {
+	return &ExpecterAndRolledVariadic_ManyArgsReturns_Call{Call: _e.mock.On("ManyArgsReturns", str, i)}
+}
+
+func (_c *ExpecterAndRolledVariadic_ManyArgsReturns_Call) Run(run func(str string, i int)) *ExpecterAndRolledVariadic_ManyArgsReturns_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(str, i)
+	})
+	return _c
+}
+
+func (_c *ExpecterAndRolledVariadic_ManyArgsReturns_Call) Return(strsOut []string, errOut error) *ExpecterAndRolledVariadic_ManyArgsReturns_Call {
+	_c.Call.Return(strsOut, errOut)
+	return _c
+}
+
+func (_c *ExpecterAndRolledVariadic_ManyArgsReturns_Call) RunAndReturn(run func(str string, i int) ([]string, error)) *ExpecterAndRolledVariadic_ManyArgsReturns_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // NoArg provides a mock function for the type ExpecterAndRolledVariadic
 func (_mock *ExpecterAndRolledVariadic) NoArg() string {
 	ret := _mock.Called()
@@ -71,10 +108,65 @@ func (_mock *ExpecterAndRolledVariadic) NoArg() string {
 	return r0
 }
 
+// ExpecterAndRolledVariadic_NoArg_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'NoArg'
+type ExpecterAndRolledVariadic_NoArg_Call struct {
+	*mock.Call
+}
+
+// NoArg is a helper method to define mock.On call
+func (_e *ExpecterAndRolledVariadic_Expecter) NoArg() *ExpecterAndRolledVariadic_NoArg_Call {
+	return &ExpecterAndRolledVariadic_NoArg_Call{Call: _e.mock.On("NoArg")}
+}
+
+func (_c *ExpecterAndRolledVariadic_NoArg_Call) Run(run func()) *ExpecterAndRolledVariadic_NoArg_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *ExpecterAndRolledVariadic_NoArg_Call) Return(sOut string) *ExpecterAndRolledVariadic_NoArg_Call {
+	_c.Call.Return(sOut)
+	return _c
+}
+
+func (_c *ExpecterAndRolledVariadic_NoArg_Call) RunAndReturn(run func() string) *ExpecterAndRolledVariadic_NoArg_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // NoReturn provides a mock function for the type ExpecterAndRolledVariadic
 func (_mock *ExpecterAndRolledVariadic) NoReturn(str string) {
 	_mock.Called(str)
 	return
+}
+
+// ExpecterAndRolledVariadic_NoReturn_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'NoReturn'
+type ExpecterAndRolledVariadic_NoReturn_Call struct {
+	*mock.Call
+}
+
+// NoReturn is a helper method to define mock.On call
+//   - str
+func (_e *ExpecterAndRolledVariadic_Expecter) NoReturn(str interface{}) *ExpecterAndRolledVariadic_NoReturn_Call {
+	return &ExpecterAndRolledVariadic_NoReturn_Call{Call: _e.mock.On("NoReturn", str)}
+}
+
+func (_c *ExpecterAndRolledVariadic_NoReturn_Call) Run(run func(str string)) *ExpecterAndRolledVariadic_NoReturn_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(str)
+	})
+	return _c
+}
+
+func (_c *ExpecterAndRolledVariadic_NoReturn_Call) Return() *ExpecterAndRolledVariadic_NoReturn_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *ExpecterAndRolledVariadic_NoReturn_Call) RunAndReturn(run func(str string)) *ExpecterAndRolledVariadic_NoReturn_Call {
+	_c.Run(run)
+	return _c
 }
 
 // Variadic provides a mock function for the type ExpecterAndRolledVariadic
@@ -100,6 +192,41 @@ func (_mock *ExpecterAndRolledVariadic) Variadic(ints ...int) error {
 	return r0
 }
 
+// ExpecterAndRolledVariadic_Variadic_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Variadic'
+type ExpecterAndRolledVariadic_Variadic_Call struct {
+	*mock.Call
+}
+
+// Variadic is a helper method to define mock.On call
+//   - ints
+func (_e *ExpecterAndRolledVariadic_Expecter) Variadic(ints ...interface{}) *ExpecterAndRolledVariadic_Variadic_Call {
+	return &ExpecterAndRolledVariadic_Variadic_Call{Call: _e.mock.On("Variadic",
+		append([]interface{}{}, ints...)...)}
+}
+
+func (_c *ExpecterAndRolledVariadic_Variadic_Call) Run(run func(ints ...int)) *ExpecterAndRolledVariadic_Variadic_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		variadicArgs := make([]int, len(args)-0)
+		for i, a := range args[0:] {
+			if a != nil {
+				variadicArgs[i] = a.(int)
+			}
+		}
+		run(variadicArgs...)
+	})
+	return _c
+}
+
+func (_c *ExpecterAndRolledVariadic_Variadic_Call) Return(errOut error) *ExpecterAndRolledVariadic_Variadic_Call {
+	_c.Call.Return(errOut)
+	return _c
+}
+
+func (_c *ExpecterAndRolledVariadic_Variadic_Call) RunAndReturn(run func(ints ...int) error) *ExpecterAndRolledVariadic_Variadic_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // VariadicMany provides a mock function for the type ExpecterAndRolledVariadic
 func (_mock *ExpecterAndRolledVariadic) VariadicMany(i int, a string, intfs ...interface{}) error {
 	var tmpRet mock.Arguments
@@ -123,10 +250,39 @@ func (_mock *ExpecterAndRolledVariadic) VariadicMany(i int, a string, intfs ...i
 	return r0
 }
 
-type ExpecterAndRolledVariadic_expecter struct {
-	mock *mock.Mock
+// ExpecterAndRolledVariadic_VariadicMany_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'VariadicMany'
+type ExpecterAndRolledVariadic_VariadicMany_Call struct {
+	*mock.Call
 }
 
-func (_m *ExpecterAndRolledVariadic) EXPECT() *ExpecterAndRolledVariadic_expecter {
-	return &ExpecterAndRolledVariadic_expecter{mock: &_m.Mock}
+// VariadicMany is a helper method to define mock.On call
+//   - i
+//   - a
+//   - intfs
+func (_e *ExpecterAndRolledVariadic_Expecter) VariadicMany(i interface{}, a interface{}, intfs ...interface{}) *ExpecterAndRolledVariadic_VariadicMany_Call {
+	return &ExpecterAndRolledVariadic_VariadicMany_Call{Call: _e.mock.On("VariadicMany",
+		append([]interface{}{i, a}, intfs...)...)}
+}
+
+func (_c *ExpecterAndRolledVariadic_VariadicMany_Call) Run(run func(i int, a string, intfs ...interface{})) *ExpecterAndRolledVariadic_VariadicMany_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		variadicArgs := make([]interface{}, len(args)-2)
+		for i, a := range args[2:] {
+			if a != nil {
+				variadicArgs[i] = a.(interface{})
+			}
+		}
+		run(args[0].(int), args[1].(string), variadicArgs...)
+	})
+	return _c
+}
+
+func (_c *ExpecterAndRolledVariadic_VariadicMany_Call) Return(errOut error) *ExpecterAndRolledVariadic_VariadicMany_Call {
+	_c.Call.Return(errOut)
+	return _c
+}
+
+func (_c *ExpecterAndRolledVariadic_VariadicMany_Call) RunAndReturn(run func(i int, a string, intfs ...interface{}) error) *ExpecterAndRolledVariadic_VariadicMany_Call {
+	_c.Call.Return(run)
+	return _c
 }

@@ -27,6 +27,14 @@ type Variadic struct {
 	mock.Mock
 }
 
+type Variadic_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *Variadic) EXPECT() *Variadic_Expecter {
+	return &Variadic_Expecter{mock: &_m.Mock}
+}
+
 // VariadicFunction provides a mock function for the type Variadic
 func (_mock *Variadic) VariadicFunction(str string, vFunc test.VariadicFunction) error {
 	ret := _mock.Called(str, vFunc)
@@ -44,10 +52,31 @@ func (_mock *Variadic) VariadicFunction(str string, vFunc test.VariadicFunction)
 	return r0
 }
 
-type Variadic_expecter struct {
-	mock *mock.Mock
+// Variadic_VariadicFunction_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'VariadicFunction'
+type Variadic_VariadicFunction_Call struct {
+	*mock.Call
 }
 
-func (_m *Variadic) EXPECT() *Variadic_expecter {
-	return &Variadic_expecter{mock: &_m.Mock}
+// VariadicFunction is a helper method to define mock.On call
+//   - str
+//   - vFunc
+func (_e *Variadic_Expecter) VariadicFunction(str interface{}, vFunc interface{}) *Variadic_VariadicFunction_Call {
+	return &Variadic_VariadicFunction_Call{Call: _e.mock.On("VariadicFunction", str, vFunc)}
+}
+
+func (_c *Variadic_VariadicFunction_Call) Run(run func(str string, vFunc test.VariadicFunction)) *Variadic_VariadicFunction_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(str, vFunc)
+	})
+	return _c
+}
+
+func (_c *Variadic_VariadicFunction_Call) Return(errOut error) *Variadic_VariadicFunction_Call {
+	_c.Call.Return(errOut)
+	return _c
+}
+
+func (_c *Variadic_VariadicFunction_Call) RunAndReturn(run func(str string, vFunc test.VariadicFunction) error) *Variadic_VariadicFunction_Call {
+	_c.Call.Return(run)
+	return _c
 }

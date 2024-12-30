@@ -26,16 +26,44 @@ type RequesterArgSameAsPkg struct {
 	mock.Mock
 }
 
+type RequesterArgSameAsPkg_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *RequesterArgSameAsPkg) EXPECT() *RequesterArgSameAsPkg_Expecter {
+	return &RequesterArgSameAsPkg_Expecter{mock: &_m.Mock}
+}
+
 // Get provides a mock function for the type RequesterArgSameAsPkg
 func (_mock *RequesterArgSameAsPkg) Get(test string) {
 	_mock.Called(test)
 	return
 }
 
-type RequesterArgSameAsPkg_expecter struct {
-	mock *mock.Mock
+// RequesterArgSameAsPkg_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
+type RequesterArgSameAsPkg_Get_Call struct {
+	*mock.Call
 }
 
-func (_m *RequesterArgSameAsPkg) EXPECT() *RequesterArgSameAsPkg_expecter {
-	return &RequesterArgSameAsPkg_expecter{mock: &_m.Mock}
+// Get is a helper method to define mock.On call
+//   - test
+func (_e *RequesterArgSameAsPkg_Expecter) Get(test interface{}) *RequesterArgSameAsPkg_Get_Call {
+	return &RequesterArgSameAsPkg_Get_Call{Call: _e.mock.On("Get", test)}
+}
+
+func (_c *RequesterArgSameAsPkg_Get_Call) Run(run func(test string)) *RequesterArgSameAsPkg_Get_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(test)
+	})
+	return _c
+}
+
+func (_c *RequesterArgSameAsPkg_Get_Call) Return() *RequesterArgSameAsPkg_Get_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *RequesterArgSameAsPkg_Get_Call) RunAndReturn(run func(test string)) *RequesterArgSameAsPkg_Get_Call {
+	_c.Run(run)
+	return _c
 }

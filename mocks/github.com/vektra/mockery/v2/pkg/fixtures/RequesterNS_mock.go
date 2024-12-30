@@ -28,6 +28,14 @@ type RequesterNS struct {
 	mock.Mock
 }
 
+type RequesterNS_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *RequesterNS) EXPECT() *RequesterNS_Expecter {
+	return &RequesterNS_Expecter{mock: &_m.Mock}
+}
+
 // Get provides a mock function for the type RequesterNS
 func (_mock *RequesterNS) Get(path string) (http.Response, error) {
 	ret := _mock.Called(path)
@@ -54,10 +62,30 @@ func (_mock *RequesterNS) Get(path string) (http.Response, error) {
 	return r0, r1
 }
 
-type RequesterNS_expecter struct {
-	mock *mock.Mock
+// RequesterNS_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
+type RequesterNS_Get_Call struct {
+	*mock.Call
 }
 
-func (_m *RequesterNS) EXPECT() *RequesterNS_expecter {
-	return &RequesterNS_expecter{mock: &_m.Mock}
+// Get is a helper method to define mock.On call
+//   - path
+func (_e *RequesterNS_Expecter) Get(path interface{}) *RequesterNS_Get_Call {
+	return &RequesterNS_Get_Call{Call: _e.mock.On("Get", path)}
+}
+
+func (_c *RequesterNS_Get_Call) Run(run func(path string)) *RequesterNS_Get_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(path)
+	})
+	return _c
+}
+
+func (_c *RequesterNS_Get_Call) Return(responseOut http.Response, errOut error) *RequesterNS_Get_Call {
+	_c.Call.Return(responseOut, errOut)
+	return _c
+}
+
+func (_c *RequesterNS_Get_Call) RunAndReturn(run func(path string) (http.Response, error)) *RequesterNS_Get_Call {
+	_c.Call.Return(run)
+	return _c
 }

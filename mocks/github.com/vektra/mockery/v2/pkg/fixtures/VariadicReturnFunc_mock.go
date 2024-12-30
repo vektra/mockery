@@ -26,6 +26,14 @@ type VariadicReturnFunc struct {
 	mock.Mock
 }
 
+type VariadicReturnFunc_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *VariadicReturnFunc) EXPECT() *VariadicReturnFunc_Expecter {
+	return &VariadicReturnFunc_Expecter{mock: &_m.Mock}
+}
+
 // SampleMethod provides a mock function for the type VariadicReturnFunc
 func (_mock *VariadicReturnFunc) SampleMethod(str string) func(str string, arr []int, a ...interface{}) {
 	ret := _mock.Called(str)
@@ -45,10 +53,30 @@ func (_mock *VariadicReturnFunc) SampleMethod(str string) func(str string, arr [
 	return r0
 }
 
-type VariadicReturnFunc_expecter struct {
-	mock *mock.Mock
+// VariadicReturnFunc_SampleMethod_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'SampleMethod'
+type VariadicReturnFunc_SampleMethod_Call struct {
+	*mock.Call
 }
 
-func (_m *VariadicReturnFunc) EXPECT() *VariadicReturnFunc_expecter {
-	return &VariadicReturnFunc_expecter{mock: &_m.Mock}
+// SampleMethod is a helper method to define mock.On call
+//   - str
+func (_e *VariadicReturnFunc_Expecter) SampleMethod(str interface{}) *VariadicReturnFunc_SampleMethod_Call {
+	return &VariadicReturnFunc_SampleMethod_Call{Call: _e.mock.On("SampleMethod", str)}
+}
+
+func (_c *VariadicReturnFunc_SampleMethod_Call) Run(run func(str string)) *VariadicReturnFunc_SampleMethod_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(str)
+	})
+	return _c
+}
+
+func (_c *VariadicReturnFunc_SampleMethod_Call) Return(fnOut func(str string, arr []int, a ...interface{})) *VariadicReturnFunc_SampleMethod_Call {
+	_c.Call.Return(fnOut)
+	return _c
+}
+
+func (_c *VariadicReturnFunc_SampleMethod_Call) RunAndReturn(run func(str string) func(str string, arr []int, a ...interface{})) *VariadicReturnFunc_SampleMethod_Call {
+	_c.Call.Return(run)
+	return _c
 }

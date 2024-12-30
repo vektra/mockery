@@ -26,6 +26,14 @@ type FuncArgsCollision struct {
 	mock.Mock
 }
 
+type FuncArgsCollision_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *FuncArgsCollision) EXPECT() *FuncArgsCollision_Expecter {
+	return &FuncArgsCollision_Expecter{mock: &_m.Mock}
+}
+
 // Foo provides a mock function for the type FuncArgsCollision
 func (_mock *FuncArgsCollision) Foo(ret interface{}) error {
 	ret := _mock.Called(ret)
@@ -43,10 +51,30 @@ func (_mock *FuncArgsCollision) Foo(ret interface{}) error {
 	return r0
 }
 
-type FuncArgsCollision_expecter struct {
-	mock *mock.Mock
+// FuncArgsCollision_Foo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Foo'
+type FuncArgsCollision_Foo_Call struct {
+	*mock.Call
 }
 
-func (_m *FuncArgsCollision) EXPECT() *FuncArgsCollision_expecter {
-	return &FuncArgsCollision_expecter{mock: &_m.Mock}
+// Foo is a helper method to define mock.On call
+//   - ret
+func (_e *FuncArgsCollision_Expecter) Foo(ret interface{}) *FuncArgsCollision_Foo_Call {
+	return &FuncArgsCollision_Foo_Call{Call: _e.mock.On("Foo", ret)}
+}
+
+func (_c *FuncArgsCollision_Foo_Call) Run(run func(ret interface{})) *FuncArgsCollision_Foo_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(ret)
+	})
+	return _c
+}
+
+func (_c *FuncArgsCollision_Foo_Call) Return(errOut error) *FuncArgsCollision_Foo_Call {
+	_c.Call.Return(errOut)
+	return _c
+}
+
+func (_c *FuncArgsCollision_Foo_Call) RunAndReturn(run func(ret interface{}) error) *FuncArgsCollision_Foo_Call {
+	_c.Call.Return(run)
+	return _c
 }

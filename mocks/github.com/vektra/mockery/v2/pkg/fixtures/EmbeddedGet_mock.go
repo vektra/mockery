@@ -27,6 +27,14 @@ type EmbeddedGet[T constraints.Signed] struct {
 	mock.Mock
 }
 
+type EmbeddedGet_Expecter[T constraints.Signed] struct {
+	mock *mock.Mock
+}
+
+func (_m *EmbeddedGet[T]) EXPECT() *EmbeddedGet_Expecter[T] {
+	return &EmbeddedGet_Expecter[T]{mock: &_m.Mock}
+}
+
 // Get provides a mock function for the type EmbeddedGet
 func (_mock *EmbeddedGet[T]) Get() T {
 	ret := _mock.Called()
@@ -46,10 +54,29 @@ func (_mock *EmbeddedGet[T]) Get() T {
 	return r0
 }
 
-type EmbeddedGet_expecter[T constraints.Signed] struct {
-	mock *mock.Mock
+// EmbeddedGet_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
+type EmbeddedGet_Get_Call[T constraints.Signed] struct {
+	*mock.Call
 }
 
-func (_m *EmbeddedGet[T]) EXPECT() *EmbeddedGet_expecter[T] {
-	return &EmbeddedGet_expecter[T]{mock: &_m.Mock}
+// Get is a helper method to define mock.On call
+func (_e *EmbeddedGet_Expecter[T]) Get() *EmbeddedGet_Get_Call[T] {
+	return &EmbeddedGet_Get_Call[T]{Call: _e.mock.On("Get")}
+}
+
+func (_c *EmbeddedGet_Get_Call[T]) Run(run func()) *EmbeddedGet_Get_Call[T] {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *EmbeddedGet_Get_Call[T]) Return(vOut T) *EmbeddedGet_Get_Call[T] {
+	_c.Call.Return(vOut)
+	return _c
+}
+
+func (_c *EmbeddedGet_Get_Call[T]) RunAndReturn(run func() T) *EmbeddedGet_Get_Call[T] {
+	_c.Call.Return(run)
+	return _c
 }

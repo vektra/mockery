@@ -26,6 +26,14 @@ type interfaceAMock struct {
 	mock.Mock
 }
 
+type interfaceAMock_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *interfaceAMock) EXPECT() *interfaceAMock_Expecter {
+	return &interfaceAMock_Expecter{mock: &_m.Mock}
+}
+
 // DoB provides a mock function for the type interfaceAMock
 func (_mock *interfaceAMock) DoB(interfaceB same_name_arg_and_type.interfaceB) same_name_arg_and_type.interfaceB {
 	ret := _mock.Called(interfaceB)
@@ -43,6 +51,34 @@ func (_mock *interfaceAMock) DoB(interfaceB same_name_arg_and_type.interfaceB) s
 		}
 	}
 	return r0
+}
+
+// interfaceAMock_DoB_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DoB'
+type interfaceAMock_DoB_Call struct {
+	*mock.Call
+}
+
+// DoB is a helper method to define mock.On call
+//   - interfaceB
+func (_e *interfaceAMock_Expecter) DoB(interfaceB interface{}) *interfaceAMock_DoB_Call {
+	return &interfaceAMock_DoB_Call{Call: _e.mock.On("DoB", interfaceB)}
+}
+
+func (_c *interfaceAMock_DoB_Call) Run(run func(interfaceB same_name_arg_and_type.interfaceB)) *interfaceAMock_DoB_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(interfaceB)
+	})
+	return _c
+}
+
+func (_c *interfaceAMock_DoB_Call) Return(interfaceBMoqParamOut same_name_arg_and_type.interfaceB) *interfaceAMock_DoB_Call {
+	_c.Call.Return(interfaceBMoqParamOut)
+	return _c
+}
+
+func (_c *interfaceAMock_DoB_Call) RunAndReturn(run func(interfaceB same_name_arg_and_type.interfaceB) same_name_arg_and_type.interfaceB) *interfaceAMock_DoB_Call {
+	_c.Call.Return(run)
+	return _c
 }
 
 // DoB0 provides a mock function for the type interfaceAMock
@@ -64,6 +100,34 @@ func (_mock *interfaceAMock) DoB0(interfaceB same_name_arg_and_type.interfaceB0)
 	return r0
 }
 
+// interfaceAMock_DoB0_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DoB0'
+type interfaceAMock_DoB0_Call struct {
+	*mock.Call
+}
+
+// DoB0 is a helper method to define mock.On call
+//   - interfaceB
+func (_e *interfaceAMock_Expecter) DoB0(interfaceB interface{}) *interfaceAMock_DoB0_Call {
+	return &interfaceAMock_DoB0_Call{Call: _e.mock.On("DoB0", interfaceB)}
+}
+
+func (_c *interfaceAMock_DoB0_Call) Run(run func(interfaceB same_name_arg_and_type.interfaceB0)) *interfaceAMock_DoB0_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(interfaceB)
+	})
+	return _c
+}
+
+func (_c *interfaceAMock_DoB0_Call) Return(interfaceB0MoqParamOut same_name_arg_and_type.interfaceB0) *interfaceAMock_DoB0_Call {
+	_c.Call.Return(interfaceB0MoqParamOut)
+	return _c
+}
+
+func (_c *interfaceAMock_DoB0_Call) RunAndReturn(run func(interfaceB same_name_arg_and_type.interfaceB0) same_name_arg_and_type.interfaceB0) *interfaceAMock_DoB0_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // DoB0v2 provides a mock function for the type interfaceAMock
 func (_mock *interfaceAMock) DoB0v2(interfaceB0 same_name_arg_and_type.interfaceB0) same_name_arg_and_type.interfaceB0 {
 	ret := _mock.Called(interfaceB0)
@@ -83,10 +147,30 @@ func (_mock *interfaceAMock) DoB0v2(interfaceB0 same_name_arg_and_type.interface
 	return r0
 }
 
-type interfaceAMock_expecter struct {
-	mock *mock.Mock
+// interfaceAMock_DoB0v2_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DoB0v2'
+type interfaceAMock_DoB0v2_Call struct {
+	*mock.Call
 }
 
-func (_m *interfaceAMock) EXPECT() *interfaceAMock_expecter {
-	return &interfaceAMock_expecter{mock: &_m.Mock}
+// DoB0v2 is a helper method to define mock.On call
+//   - interfaceB0
+func (_e *interfaceAMock_Expecter) DoB0v2(interfaceB0 interface{}) *interfaceAMock_DoB0v2_Call {
+	return &interfaceAMock_DoB0v2_Call{Call: _e.mock.On("DoB0v2", interfaceB0)}
+}
+
+func (_c *interfaceAMock_DoB0v2_Call) Run(run func(interfaceB0 same_name_arg_and_type.interfaceB0)) *interfaceAMock_DoB0v2_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(interfaceB0)
+	})
+	return _c
+}
+
+func (_c *interfaceAMock_DoB0v2_Call) Return(interfaceB0MoqParamOut same_name_arg_and_type.interfaceB0) *interfaceAMock_DoB0v2_Call {
+	_c.Call.Return(interfaceB0MoqParamOut)
+	return _c
+}
+
+func (_c *interfaceAMock_DoB0v2_Call) RunAndReturn(run func(interfaceB0 same_name_arg_and_type.interfaceB0) same_name_arg_and_type.interfaceB0) *interfaceAMock_DoB0v2_Call {
+	_c.Call.Return(run)
+	return _c
 }

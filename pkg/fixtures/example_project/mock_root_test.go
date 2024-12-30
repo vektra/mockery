@@ -27,6 +27,14 @@ type MockRoot struct {
 	mock.Mock
 }
 
+type MockRoot_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *MockRoot) EXPECT() *MockRoot_Expecter {
+	return &MockRoot_Expecter{mock: &_m.Mock}
+}
+
 // ReturnsFoo provides a mock function for the type MockRoot
 func (_mock *MockRoot) ReturnsFoo() (foo.Foo, error) {
 	ret := _mock.Called()
@@ -55,16 +63,63 @@ func (_mock *MockRoot) ReturnsFoo() (foo.Foo, error) {
 	return r0, r1
 }
 
+// MockRoot_ReturnsFoo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ReturnsFoo'
+type MockRoot_ReturnsFoo_Call struct {
+	*mock.Call
+}
+
+// ReturnsFoo is a helper method to define mock.On call
+func (_e *MockRoot_Expecter) ReturnsFoo() *MockRoot_ReturnsFoo_Call {
+	return &MockRoot_ReturnsFoo_Call{Call: _e.mock.On("ReturnsFoo")}
+}
+
+func (_c *MockRoot_ReturnsFoo_Call) Run(run func()) *MockRoot_ReturnsFoo_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *MockRoot_ReturnsFoo_Call) Return(fooOut foo.Foo, errOut error) *MockRoot_ReturnsFoo_Call {
+	_c.Call.Return(fooOut, errOut)
+	return _c
+}
+
+func (_c *MockRoot_ReturnsFoo_Call) RunAndReturn(run func() (foo.Foo, error)) *MockRoot_ReturnsFoo_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // TakesBaz provides a mock function for the type MockRoot
 func (_mock *MockRoot) TakesBaz(baz *foo.Baz) {
 	_mock.Called(baz)
 	return
 }
 
-type MockRoot_expecter struct {
-	mock *mock.Mock
+// MockRoot_TakesBaz_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'TakesBaz'
+type MockRoot_TakesBaz_Call struct {
+	*mock.Call
 }
 
-func (_m *MockRoot) EXPECT() *MockRoot_expecter {
-	return &MockRoot_expecter{mock: &_m.Mock}
+// TakesBaz is a helper method to define mock.On call
+//   - baz
+func (_e *MockRoot_Expecter) TakesBaz(baz interface{}) *MockRoot_TakesBaz_Call {
+	return &MockRoot_TakesBaz_Call{Call: _e.mock.On("TakesBaz", baz)}
+}
+
+func (_c *MockRoot_TakesBaz_Call) Run(run func(baz *foo.Baz)) *MockRoot_TakesBaz_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(baz)
+	})
+	return _c
+}
+
+func (_c *MockRoot_TakesBaz_Call) Return() *MockRoot_TakesBaz_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *MockRoot_TakesBaz_Call) RunAndReturn(run func(baz *foo.Baz)) *MockRoot_TakesBaz_Call {
+	_c.Run(run)
+	return _c
 }

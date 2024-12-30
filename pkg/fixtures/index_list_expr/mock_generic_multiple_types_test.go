@@ -26,6 +26,14 @@ type MockGenericMultipleTypes[T1 any, T2 any, T3 any] struct {
 	mock.Mock
 }
 
+type MockGenericMultipleTypes_Expecter[T1 any, T2 any, T3 any] struct {
+	mock *mock.Mock
+}
+
+func (_m *MockGenericMultipleTypes[T1, T2, T3]) EXPECT() *MockGenericMultipleTypes_Expecter[T1, T2, T3] {
+	return &MockGenericMultipleTypes_Expecter[T1, T2, T3]{mock: &_m.Mock}
+}
+
 // Func provides a mock function for the type MockGenericMultipleTypes
 func (_mock *MockGenericMultipleTypes[T1, T2, T3]) Func(arg1 *T1, arg2 T2) T3 {
 	ret := _mock.Called(arg1, arg2)
@@ -45,10 +53,31 @@ func (_mock *MockGenericMultipleTypes[T1, T2, T3]) Func(arg1 *T1, arg2 T2) T3 {
 	return r0
 }
 
-type MockGenericMultipleTypes_expecter[T1 any, T2 any, T3 any] struct {
-	mock *mock.Mock
+// MockGenericMultipleTypes_Func_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Func'
+type MockGenericMultipleTypes_Func_Call[T1 any, T2 any, T3 any] struct {
+	*mock.Call
 }
 
-func (_m *MockGenericMultipleTypes[T1, T2, T3]) EXPECT() *MockGenericMultipleTypes_expecter[T1, T2, T3] {
-	return &MockGenericMultipleTypes_expecter[T1, T2, T3]{mock: &_m.Mock}
+// Func is a helper method to define mock.On call
+//   - arg1
+//   - arg2
+func (_e *MockGenericMultipleTypes_Expecter[T1, T2, T3]) Func(arg1 interface{}, arg2 interface{}) *MockGenericMultipleTypes_Func_Call[T1, T2, T3] {
+	return &MockGenericMultipleTypes_Func_Call[T1, T2, T3]{Call: _e.mock.On("Func", arg1, arg2)}
+}
+
+func (_c *MockGenericMultipleTypes_Func_Call[T1, T2, T3]) Run(run func(arg1 *T1, arg2 T2)) *MockGenericMultipleTypes_Func_Call[T1, T2, T3] {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(arg1, arg2)
+	})
+	return _c
+}
+
+func (_c *MockGenericMultipleTypes_Func_Call[T1, T2, T3]) Return(vOut T3) *MockGenericMultipleTypes_Func_Call[T1, T2, T3] {
+	_c.Call.Return(vOut)
+	return _c
+}
+
+func (_c *MockGenericMultipleTypes_Func_Call[T1, T2, T3]) RunAndReturn(run func(arg1 *T1, arg2 T2) T3) *MockGenericMultipleTypes_Func_Call[T1, T2, T3] {
+	_c.Call.Return(run)
+	return _c
 }

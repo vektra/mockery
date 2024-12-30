@@ -26,6 +26,14 @@ type UsesAny struct {
 	mock.Mock
 }
 
+type UsesAny_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *UsesAny) EXPECT() *UsesAny_Expecter {
+	return &UsesAny_Expecter{mock: &_m.Mock}
+}
+
 // GetReader provides a mock function for the type UsesAny
 func (_mock *UsesAny) GetReader() any {
 	ret := _mock.Called()
@@ -45,10 +53,29 @@ func (_mock *UsesAny) GetReader() any {
 	return r0
 }
 
-type UsesAny_expecter struct {
-	mock *mock.Mock
+// UsesAny_GetReader_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetReader'
+type UsesAny_GetReader_Call struct {
+	*mock.Call
 }
 
-func (_m *UsesAny) EXPECT() *UsesAny_expecter {
-	return &UsesAny_expecter{mock: &_m.Mock}
+// GetReader is a helper method to define mock.On call
+func (_e *UsesAny_Expecter) GetReader() *UsesAny_GetReader_Call {
+	return &UsesAny_GetReader_Call{Call: _e.mock.On("GetReader")}
+}
+
+func (_c *UsesAny_GetReader_Call) Run(run func()) *UsesAny_GetReader_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *UsesAny_GetReader_Call) Return(vOut any) *UsesAny_GetReader_Call {
+	_c.Call.Return(vOut)
+	return _c
+}
+
+func (_c *UsesAny_GetReader_Call) RunAndReturn(run func() any) *UsesAny_GetReader_Call {
+	_c.Call.Return(run)
+	return _c
 }

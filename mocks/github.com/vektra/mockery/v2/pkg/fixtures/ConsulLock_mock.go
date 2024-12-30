@@ -26,6 +26,14 @@ type ConsulLock struct {
 	mock.Mock
 }
 
+type ConsulLock_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *ConsulLock) EXPECT() *ConsulLock_Expecter {
+	return &ConsulLock_Expecter{mock: &_m.Mock}
+}
+
 // Lock provides a mock function for the type ConsulLock
 func (_mock *ConsulLock) Lock(valCh <-chan struct{}) (<-chan struct{}, error) {
 	ret := _mock.Called(valCh)
@@ -54,6 +62,34 @@ func (_mock *ConsulLock) Lock(valCh <-chan struct{}) (<-chan struct{}, error) {
 	return r0, r1
 }
 
+// ConsulLock_Lock_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Lock'
+type ConsulLock_Lock_Call struct {
+	*mock.Call
+}
+
+// Lock is a helper method to define mock.On call
+//   - valCh
+func (_e *ConsulLock_Expecter) Lock(valCh interface{}) *ConsulLock_Lock_Call {
+	return &ConsulLock_Lock_Call{Call: _e.mock.On("Lock", valCh)}
+}
+
+func (_c *ConsulLock_Lock_Call) Run(run func(valCh <-chan struct{})) *ConsulLock_Lock_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(valCh)
+	})
+	return _c
+}
+
+func (_c *ConsulLock_Lock_Call) Return(valChOut <-chan struct{}, errOut error) *ConsulLock_Lock_Call {
+	_c.Call.Return(valChOut, errOut)
+	return _c
+}
+
+func (_c *ConsulLock_Lock_Call) RunAndReturn(run func(valCh <-chan struct{}) (<-chan struct{}, error)) *ConsulLock_Lock_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Unlock provides a mock function for the type ConsulLock
 func (_mock *ConsulLock) Unlock() error {
 	ret := _mock.Called()
@@ -71,10 +107,29 @@ func (_mock *ConsulLock) Unlock() error {
 	return r0
 }
 
-type ConsulLock_expecter struct {
-	mock *mock.Mock
+// ConsulLock_Unlock_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Unlock'
+type ConsulLock_Unlock_Call struct {
+	*mock.Call
 }
 
-func (_m *ConsulLock) EXPECT() *ConsulLock_expecter {
-	return &ConsulLock_expecter{mock: &_m.Mock}
+// Unlock is a helper method to define mock.On call
+func (_e *ConsulLock_Expecter) Unlock() *ConsulLock_Unlock_Call {
+	return &ConsulLock_Unlock_Call{Call: _e.mock.On("Unlock")}
+}
+
+func (_c *ConsulLock_Unlock_Call) Run(run func()) *ConsulLock_Unlock_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *ConsulLock_Unlock_Call) Return(errOut error) *ConsulLock_Unlock_Call {
+	_c.Call.Return(errOut)
+	return _c
+}
+
+func (_c *ConsulLock_Unlock_Call) RunAndReturn(run func() error) *ConsulLock_Unlock_Call {
+	_c.Call.Return(run)
+	return _c
 }

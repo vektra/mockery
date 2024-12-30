@@ -38,11 +38,11 @@ type {{ .MockName }}{{ $mock | TypeConstraint }} struct {
 	mock.Mock
 }
 
-type {{.MockName}}_expecter{{ $mock | TypeConstraint }} struct {
+type {{.MockName}}_Expecter{{ $mock | TypeConstraint }} struct {
 	mock *mock.Mock
 }
 
-{{- $expecterNameInstantiated := printf "%s_expecter_%s" .MockName ($mock | TypeInstantiation) }}
+{{- $expecterNameInstantiated := printf "%s_Expecter%s" .MockName ($mock | TypeInstantiation) }}
 
 func (_m *{{.MockName}}{{ $mock | TypeInstantiation }}) EXPECT() *{{ $expecterNameInstantiated }} {
 	return &{{ $expecterNameInstantiated }}{mock: &_m.Mock}
@@ -139,48 +139,50 @@ func (_mock *{{$mock.MockName}}{{ $mock | TypeInstantiation }}) {{$method.Name}}
 }
 
 {{/* CREATE EXPECTER METHOD */}}
-{{- $ExpecterCallNameInstantiated := printf "%s_%s_Call%s" $mock.Name $method.Name ($mock | TypeInstantiation) }}
-{{- $ExpecterCallNameConstraint := printf "%s_%s_Call%s" $mock.Name $method.Name ($mock | TypeConstraint) }}
+{{- $ExpecterCallNameInstantiated := printf "%s_%s_Call%s" $mock.MockName $method.Name ($mock | TypeInstantiation) }}
+{{- $ExpecterCallNameConstraint := printf "%s_%s_Call%s" $mock.MockName $method.Name ($mock | TypeConstraint) }}
 
-// {{ $mock.Name }}_{{ $method.Name }}_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method '{{ $method.Name }}'
+// {{ $mock.MockName }}_{{ $method.Name }}_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method '{{ $method.Name }}'
 type {{ $ExpecterCallNameConstraint }} struct {
 	*mock.Call
 }
 
 {{/* TODO 2024-12-30 */}}
 
-// {{.MethodName}} is a helper method to define mock.On call
-{{- range .Params.Params}}
-//  - {{.}}
+// {{ $method.Name }} is a helper method to define mock.On call
+{{- range $method.Params }}
+//  - {{.Var.Name}}
 {{- end}}
-func (_e *{{ $ExpecterCallNameInstantiated }}) {{.MethodName}}({{$method.ArgList}}) *{{ $ExpecterCallNameInstantiated }}  {
-	return &{{ $ExpecterCallNameInstantiated }}{Call: _e.mock.On("{{.MethodName}}",
-			{{- if not .Params.Variadic }}
-				{{- range .Params.Names}}{{.}},{{end}}
+func (_e *{{ $expecterNameInstantiated }}) {{ $method.Name }}({{ range $method.Params }}{{ .Var.Name }} {{ if .Variadic }}...{{end}}interface{}, {{ end }}) *{{ $ExpecterCallNameInstantiated }} {
+	return &{{ $ExpecterCallNameInstantiated }}{Call: _e.mock.On("{{$method.Name}}",
+			{{- if not $method.IsVariadic }}
+				{{- range $method.Params}}{{.Var.Name}},{{end}}
 			{{- else }}
 				append([]interface{}{
-					{{- range $i, $name := .Params.Names }}
-						{{- if (lt $i $.NbNonVariadic)}} {{$name}},
-						{{- else}} }, {{$name}}...
-						{{- end}}
+					{{- range $i, $param := $method.Params }}
+						{{- if (lt $i (len $method.Params | Add -1 ))}} {{ $param.Var.Name }},
+						{{- else }} }, {{ $param.Var.Name }}...
+						{{- end }}
 					{{- end}} )...
 			{{- end }} )}
 }
 
-func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) Run(run func({{range .Params.Params}}{{.}},{{end}})) *{{.CallStruct}}{{ .InstantiatedTypeString }} {
+func (_c *{{ $ExpecterCallNameInstantiated }}) Run(run func({{ $method.ArgList }})) *{{ $ExpecterCallNameInstantiated }} {
 	_c.Call.Run(func(args mock.Arguments) {
-	{{- if not .Params.Variadic }}
-		run({{range $i, $type := .Params.Types }}args[{{$i}}].({{$type}}),{{end}})
+	{{- if not $method.IsVariadic }}
+		run({{ $method.ArgCallList }})
 	{{- else}}
-		variadicArgs := make([]{{.LastParamType}}, len(args) - {{.NbNonVariadic}})
-		for i, a := range args[{{.NbNonVariadic}}:] {
+		{{- $variadicParam := index $method.Params (len $method.Params | Add -1) }}
+		{{- $nonVariadicParams := slice $method.Params 0 (len $method.Params | Add -1 )}}
+		variadicArgs := make([]{{ $variadicParam.TypeStringVariadicUnderlying }}, len(args) - {{len $nonVariadicParams}})
+		for i, a := range args[{{len $nonVariadicParams}}:] {
 			if a != nil {
-				variadicArgs[i] = a.({{.LastParamType}})
+				variadicArgs[i] = a.({{ $variadicParam.TypeStringVariadicUnderlying }})
 			}
 		}
 		run(
-		{{- range $i, $type := .Params.Types }}
-			{{- if (lt $i $.NbNonVariadic)}}args[{{$i}}].({{$type}}),
+		{{- range $i, $param := $method.Params }}
+			{{- if (lt $i (len $nonVariadicParams))}}args[{{$i}}].({{ $param.TypeString }}),
 			{{- else}}variadicArgs...)
 			{{- end}}
 		{{- end}}
@@ -189,13 +191,13 @@ func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) Run(run func({{range .Pa
 	return _c
 }
 
-func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) Return({{range .Returns.Params}}{{.}},{{end}}) *{{.CallStruct}}{{ .InstantiatedTypeString }} {
-	_c.Call.Return({{range .Returns.Names}}{{.}},{{end}})
+func (_c *{{ $ExpecterCallNameInstantiated }}) Return({{ $method.ReturnArgList }}) *{{ $ExpecterCallNameInstantiated }} {
+	_c.Call.Return({{ $method.ReturnArgNameList }})
 	return _c
 }
 
-func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) RunAndReturn(run func({{range .Params.Types}}{{.}},{{end}})({{range .Returns.Types}}{{.}},{{end}})) *{{.CallStruct}}{{ .InstantiatedTypeString }} {
-{{- if not .Returns.Types}}
+func (_c *{{ $ExpecterCallNameInstantiated }}) RunAndReturn(run func({{ $method.ArgList }}){{ $method.ReturnArgTypeList }}) *{{ $ExpecterCallNameInstantiated }} {
+{{- if eq (len $method.Returns) 0 }}
 	_c.Run(run)
 {{- else}}
 	_c.Call.Return(run)

@@ -26,16 +26,43 @@ type requesterUnexported struct {
 	mock.Mock
 }
 
+type requesterUnexported_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *requesterUnexported) EXPECT() *requesterUnexported_Expecter {
+	return &requesterUnexported_Expecter{mock: &_m.Mock}
+}
+
 // Get provides a mock function for the type requesterUnexported
 func (_mock *requesterUnexported) Get() {
 	_mock.Called()
 	return
 }
 
-type requesterUnexported_expecter struct {
-	mock *mock.Mock
+// requesterUnexported_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
+type requesterUnexported_Get_Call struct {
+	*mock.Call
 }
 
-func (_m *requesterUnexported) EXPECT() *requesterUnexported_expecter {
-	return &requesterUnexported_expecter{mock: &_m.Mock}
+// Get is a helper method to define mock.On call
+func (_e *requesterUnexported_Expecter) Get() *requesterUnexported_Get_Call {
+	return &requesterUnexported_Get_Call{Call: _e.mock.On("Get")}
+}
+
+func (_c *requesterUnexported_Get_Call) Run(run func()) *requesterUnexported_Get_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *requesterUnexported_Get_Call) Return() *requesterUnexported_Get_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *requesterUnexported_Get_Call) RunAndReturn(run func()) *requesterUnexported_Get_Call {
+	_c.Run(run)
+	return _c
 }

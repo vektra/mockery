@@ -26,6 +26,14 @@ type Blank struct {
 	mock.Mock
 }
 
+type Blank_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *Blank) EXPECT() *Blank_Expecter {
+	return &Blank_Expecter{mock: &_m.Mock}
+}
+
 // Create provides a mock function for the type Blank
 func (_mock *Blank) Create(x interface{}) error {
 	ret := _mock.Called(x)
@@ -43,10 +51,30 @@ func (_mock *Blank) Create(x interface{}) error {
 	return r0
 }
 
-type Blank_expecter struct {
-	mock *mock.Mock
+// Blank_Create_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Create'
+type Blank_Create_Call struct {
+	*mock.Call
 }
 
-func (_m *Blank) EXPECT() *Blank_expecter {
-	return &Blank_expecter{mock: &_m.Mock}
+// Create is a helper method to define mock.On call
+//   - x
+func (_e *Blank_Expecter) Create(x interface{}) *Blank_Create_Call {
+	return &Blank_Create_Call{Call: _e.mock.On("Create", x)}
+}
+
+func (_c *Blank_Create_Call) Run(run func(x interface{})) *Blank_Create_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(x)
+	})
+	return _c
+}
+
+func (_c *Blank_Create_Call) Return(errOut error) *Blank_Create_Call {
+	_c.Call.Return(errOut)
+	return _c
+}
+
+func (_c *Blank_Create_Call) RunAndReturn(run func(x interface{}) error) *Blank_Create_Call {
+	_c.Call.Return(run)
+	return _c
 }

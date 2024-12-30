@@ -26,6 +26,14 @@ type WithFix struct {
 	mock.Mock
 }
 
+type WithFix_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *WithFix) EXPECT() *WithFix_Expecter {
+	return &WithFix_Expecter{mock: &_m.Mock}
+}
+
 // Foo provides a mock function for the type WithFix
 func (_mock *WithFix) Foo() string {
 	ret := _mock.Called()
@@ -43,10 +51,29 @@ func (_mock *WithFix) Foo() string {
 	return r0
 }
 
-type WithFix_expecter struct {
-	mock *mock.Mock
+// WithFix_Foo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Foo'
+type WithFix_Foo_Call struct {
+	*mock.Call
 }
 
-func (_m *WithFix) EXPECT() *WithFix_expecter {
-	return &WithFix_expecter{mock: &_m.Mock}
+// Foo is a helper method to define mock.On call
+func (_e *WithFix_Expecter) Foo() *WithFix_Foo_Call {
+	return &WithFix_Foo_Call{Call: _e.mock.On("Foo")}
+}
+
+func (_c *WithFix_Foo_Call) Run(run func()) *WithFix_Foo_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *WithFix_Foo_Call) Return(sOut string) *WithFix_Foo_Call {
+	_c.Call.Return(sOut)
+	return _c
+}
+
+func (_c *WithFix_Foo_Call) RunAndReturn(run func() string) *WithFix_Foo_Call {
+	_c.Call.Return(run)
+	return _c
 }

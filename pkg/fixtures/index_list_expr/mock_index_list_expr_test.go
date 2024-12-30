@@ -26,6 +26,14 @@ type MockIndexListExpr struct {
 	mock.Mock
 }
 
+type MockIndexListExpr_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *MockIndexListExpr) EXPECT() *MockIndexListExpr_Expecter {
+	return &MockIndexListExpr_Expecter{mock: &_m.Mock}
+}
+
 // Func provides a mock function for the type MockIndexListExpr
 func (_mock *MockIndexListExpr) Func(arg1 *int, arg2 string) bool {
 	ret := _mock.Called(arg1, arg2)
@@ -43,10 +51,31 @@ func (_mock *MockIndexListExpr) Func(arg1 *int, arg2 string) bool {
 	return r0
 }
 
-type MockIndexListExpr_expecter struct {
-	mock *mock.Mock
+// MockIndexListExpr_Func_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Func'
+type MockIndexListExpr_Func_Call struct {
+	*mock.Call
 }
 
-func (_m *MockIndexListExpr) EXPECT() *MockIndexListExpr_expecter {
-	return &MockIndexListExpr_expecter{mock: &_m.Mock}
+// Func is a helper method to define mock.On call
+//   - arg1
+//   - arg2
+func (_e *MockIndexListExpr_Expecter) Func(arg1 interface{}, arg2 interface{}) *MockIndexListExpr_Func_Call {
+	return &MockIndexListExpr_Func_Call{Call: _e.mock.On("Func", arg1, arg2)}
+}
+
+func (_c *MockIndexListExpr_Func_Call) Run(run func(arg1 *int, arg2 string)) *MockIndexListExpr_Func_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(arg1, arg2)
+	})
+	return _c
+}
+
+func (_c *MockIndexListExpr_Func_Call) Return(bOut bool) *MockIndexListExpr_Func_Call {
+	_c.Call.Return(bOut)
+	return _c
+}
+
+func (_c *MockIndexListExpr_Func_Call) RunAndReturn(run func(arg1 *int, arg2 string) bool) *MockIndexListExpr_Func_Call {
+	_c.Call.Return(run)
+	return _c
 }

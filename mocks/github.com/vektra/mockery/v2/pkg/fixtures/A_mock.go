@@ -27,6 +27,14 @@ type A struct {
 	mock.Mock
 }
 
+type A_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *A) EXPECT() *A_Expecter {
+	return &A_Expecter{mock: &_m.Mock}
+}
+
 // Call provides a mock function for the type A
 func (_mock *A) Call() (test.B, error) {
 	ret := _mock.Called()
@@ -53,10 +61,29 @@ func (_mock *A) Call() (test.B, error) {
 	return r0, r1
 }
 
-type A_expecter struct {
-	mock *mock.Mock
+// A_Call_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Call'
+type A_Call_Call struct {
+	*mock.Call
 }
 
-func (_m *A) EXPECT() *A_expecter {
-	return &A_expecter{mock: &_m.Mock}
+// Call is a helper method to define mock.On call
+func (_e *A_Expecter) Call() *A_Call_Call {
+	return &A_Call_Call{Call: _e.mock.On("Call")}
+}
+
+func (_c *A_Call_Call) Run(run func()) *A_Call_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *A_Call_Call) Return(bOut test.B, errOut error) *A_Call_Call {
+	_c.Call.Return(bOut, errOut)
+	return _c
+}
+
+func (_c *A_Call_Call) RunAndReturn(run func() (test.B, error)) *A_Call_Call {
+	_c.Call.Return(run)
+	return _c
 }

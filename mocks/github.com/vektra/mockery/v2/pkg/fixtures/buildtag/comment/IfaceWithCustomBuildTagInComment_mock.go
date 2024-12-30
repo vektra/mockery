@@ -28,10 +28,45 @@ type IfaceWithCustomBuildTagInComment struct {
 	mock.Mock
 }
 
+type IfaceWithCustomBuildTagInComment_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *IfaceWithCustomBuildTagInComment) EXPECT() *IfaceWithCustomBuildTagInComment_Expecter {
+	return &IfaceWithCustomBuildTagInComment_Expecter{mock: &_m.Mock}
+}
+
 // Custom2 provides a mock function for the type IfaceWithCustomBuildTagInComment
 func (_mock *IfaceWithCustomBuildTagInComment) Custom2() {
 	_mock.Called()
 	return
+}
+
+// IfaceWithCustomBuildTagInComment_Custom2_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Custom2'
+type IfaceWithCustomBuildTagInComment_Custom2_Call struct {
+	*mock.Call
+}
+
+// Custom2 is a helper method to define mock.On call
+func (_e *IfaceWithCustomBuildTagInComment_Expecter) Custom2() *IfaceWithCustomBuildTagInComment_Custom2_Call {
+	return &IfaceWithCustomBuildTagInComment_Custom2_Call{Call: _e.mock.On("Custom2")}
+}
+
+func (_c *IfaceWithCustomBuildTagInComment_Custom2_Call) Run(run func()) *IfaceWithCustomBuildTagInComment_Custom2_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *IfaceWithCustomBuildTagInComment_Custom2_Call) Return() *IfaceWithCustomBuildTagInComment_Custom2_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *IfaceWithCustomBuildTagInComment_Custom2_Call) RunAndReturn(run func()) *IfaceWithCustomBuildTagInComment_Custom2_Call {
+	_c.Run(run)
+	return _c
 }
 
 // Sprintf provides a mock function for the type IfaceWithCustomBuildTagInComment
@@ -57,10 +92,38 @@ func (_mock *IfaceWithCustomBuildTagInComment) Sprintf(format string, a ...inter
 	return r0
 }
 
-type IfaceWithCustomBuildTagInComment_expecter struct {
-	mock *mock.Mock
+// IfaceWithCustomBuildTagInComment_Sprintf_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Sprintf'
+type IfaceWithCustomBuildTagInComment_Sprintf_Call struct {
+	*mock.Call
 }
 
-func (_m *IfaceWithCustomBuildTagInComment) EXPECT() *IfaceWithCustomBuildTagInComment_expecter {
-	return &IfaceWithCustomBuildTagInComment_expecter{mock: &_m.Mock}
+// Sprintf is a helper method to define mock.On call
+//   - format
+//   - a
+func (_e *IfaceWithCustomBuildTagInComment_Expecter) Sprintf(format interface{}, a ...interface{}) *IfaceWithCustomBuildTagInComment_Sprintf_Call {
+	return &IfaceWithCustomBuildTagInComment_Sprintf_Call{Call: _e.mock.On("Sprintf",
+		append([]interface{}{format}, a...)...)}
+}
+
+func (_c *IfaceWithCustomBuildTagInComment_Sprintf_Call) Run(run func(format string, a ...interface{})) *IfaceWithCustomBuildTagInComment_Sprintf_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		variadicArgs := make([]interface{}, len(args)-1)
+		for i, a := range args[1:] {
+			if a != nil {
+				variadicArgs[i] = a.(interface{})
+			}
+		}
+		run(args[0].(string), variadicArgs...)
+	})
+	return _c
+}
+
+func (_c *IfaceWithCustomBuildTagInComment_Sprintf_Call) Return(sOut string) *IfaceWithCustomBuildTagInComment_Sprintf_Call {
+	_c.Call.Return(sOut)
+	return _c
+}
+
+func (_c *IfaceWithCustomBuildTagInComment_Sprintf_Call) RunAndReturn(run func(format string, a ...interface{}) string) *IfaceWithCustomBuildTagInComment_Sprintf_Call {
+	_c.Call.Return(run)
+	return _c
 }

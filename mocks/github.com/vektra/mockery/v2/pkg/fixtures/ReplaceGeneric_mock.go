@@ -27,6 +27,14 @@ type ReplaceGeneric[TImport any, TConstraint constraints.Signed, TKeep any] stru
 	mock.Mock
 }
 
+type ReplaceGeneric_Expecter[TImport any, TConstraint constraints.Signed, TKeep any] struct {
+	mock *mock.Mock
+}
+
+func (_m *ReplaceGeneric[TImport, TConstraint, TKeep]) EXPECT() *ReplaceGeneric_Expecter[TImport, TConstraint, TKeep] {
+	return &ReplaceGeneric_Expecter[TImport, TConstraint, TKeep]{mock: &_m.Mock}
+}
+
 // A provides a mock function for the type ReplaceGeneric
 func (_mock *ReplaceGeneric[TImport, TConstraint, TKeep]) A(t1 TImport) TKeep {
 	ret := _mock.Called(t1)
@@ -44,6 +52,34 @@ func (_mock *ReplaceGeneric[TImport, TConstraint, TKeep]) A(t1 TImport) TKeep {
 		}
 	}
 	return r0
+}
+
+// ReplaceGeneric_A_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'A'
+type ReplaceGeneric_A_Call[TImport any, TConstraint constraints.Signed, TKeep any] struct {
+	*mock.Call
+}
+
+// A is a helper method to define mock.On call
+//   - t1
+func (_e *ReplaceGeneric_Expecter[TImport, TConstraint, TKeep]) A(t1 interface{}) *ReplaceGeneric_A_Call[TImport, TConstraint, TKeep] {
+	return &ReplaceGeneric_A_Call[TImport, TConstraint, TKeep]{Call: _e.mock.On("A", t1)}
+}
+
+func (_c *ReplaceGeneric_A_Call[TImport, TConstraint, TKeep]) Run(run func(t1 TImport)) *ReplaceGeneric_A_Call[TImport, TConstraint, TKeep] {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(t1)
+	})
+	return _c
+}
+
+func (_c *ReplaceGeneric_A_Call[TImport, TConstraint, TKeep]) Return(vOut TKeep) *ReplaceGeneric_A_Call[TImport, TConstraint, TKeep] {
+	_c.Call.Return(vOut)
+	return _c
+}
+
+func (_c *ReplaceGeneric_A_Call[TImport, TConstraint, TKeep]) RunAndReturn(run func(t1 TImport) TKeep) *ReplaceGeneric_A_Call[TImport, TConstraint, TKeep] {
+	_c.Call.Return(run)
+	return _c
 }
 
 // B provides a mock function for the type ReplaceGeneric
@@ -65,6 +101,33 @@ func (_mock *ReplaceGeneric[TImport, TConstraint, TKeep]) B() TImport {
 	return r0
 }
 
+// ReplaceGeneric_B_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'B'
+type ReplaceGeneric_B_Call[TImport any, TConstraint constraints.Signed, TKeep any] struct {
+	*mock.Call
+}
+
+// B is a helper method to define mock.On call
+func (_e *ReplaceGeneric_Expecter[TImport, TConstraint, TKeep]) B() *ReplaceGeneric_B_Call[TImport, TConstraint, TKeep] {
+	return &ReplaceGeneric_B_Call[TImport, TConstraint, TKeep]{Call: _e.mock.On("B")}
+}
+
+func (_c *ReplaceGeneric_B_Call[TImport, TConstraint, TKeep]) Run(run func()) *ReplaceGeneric_B_Call[TImport, TConstraint, TKeep] {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *ReplaceGeneric_B_Call[TImport, TConstraint, TKeep]) Return(vOut TImport) *ReplaceGeneric_B_Call[TImport, TConstraint, TKeep] {
+	_c.Call.Return(vOut)
+	return _c
+}
+
+func (_c *ReplaceGeneric_B_Call[TImport, TConstraint, TKeep]) RunAndReturn(run func() TImport) *ReplaceGeneric_B_Call[TImport, TConstraint, TKeep] {
+	_c.Call.Return(run)
+	return _c
+}
+
 // C provides a mock function for the type ReplaceGeneric
 func (_mock *ReplaceGeneric[TImport, TConstraint, TKeep]) C() TConstraint {
 	ret := _mock.Called()
@@ -84,10 +147,29 @@ func (_mock *ReplaceGeneric[TImport, TConstraint, TKeep]) C() TConstraint {
 	return r0
 }
 
-type ReplaceGeneric_expecter[TImport any, TConstraint constraints.Signed, TKeep any] struct {
-	mock *mock.Mock
+// ReplaceGeneric_C_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'C'
+type ReplaceGeneric_C_Call[TImport any, TConstraint constraints.Signed, TKeep any] struct {
+	*mock.Call
 }
 
-func (_m *ReplaceGeneric[TImport, TConstraint, TKeep]) EXPECT() *ReplaceGeneric_expecter[TImport, TConstraint, TKeep] {
-	return &ReplaceGeneric_expecter[TImport, TConstraint, TKeep]{mock: &_m.Mock}
+// C is a helper method to define mock.On call
+func (_e *ReplaceGeneric_Expecter[TImport, TConstraint, TKeep]) C() *ReplaceGeneric_C_Call[TImport, TConstraint, TKeep] {
+	return &ReplaceGeneric_C_Call[TImport, TConstraint, TKeep]{Call: _e.mock.On("C")}
+}
+
+func (_c *ReplaceGeneric_C_Call[TImport, TConstraint, TKeep]) Run(run func()) *ReplaceGeneric_C_Call[TImport, TConstraint, TKeep] {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *ReplaceGeneric_C_Call[TImport, TConstraint, TKeep]) Return(vOut TConstraint) *ReplaceGeneric_C_Call[TImport, TConstraint, TKeep] {
+	_c.Call.Return(vOut)
+	return _c
+}
+
+func (_c *ReplaceGeneric_C_Call[TImport, TConstraint, TKeep]) RunAndReturn(run func() TConstraint) *ReplaceGeneric_C_Call[TImport, TConstraint, TKeep] {
+	_c.Call.Return(run)
+	return _c
 }

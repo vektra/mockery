@@ -26,6 +26,14 @@ type Requester3 struct {
 	mock.Mock
 }
 
+type Requester3_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *Requester3) EXPECT() *Requester3_Expecter {
+	return &Requester3_Expecter{mock: &_m.Mock}
+}
+
 // Get provides a mock function for the type Requester3
 func (_mock *Requester3) Get() error {
 	ret := _mock.Called()
@@ -43,10 +51,29 @@ func (_mock *Requester3) Get() error {
 	return r0
 }
 
-type Requester3_expecter struct {
-	mock *mock.Mock
+// Requester3_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
+type Requester3_Get_Call struct {
+	*mock.Call
 }
 
-func (_m *Requester3) EXPECT() *Requester3_expecter {
-	return &Requester3_expecter{mock: &_m.Mock}
+// Get is a helper method to define mock.On call
+func (_e *Requester3_Expecter) Get() *Requester3_Get_Call {
+	return &Requester3_Get_Call{Call: _e.mock.On("Get")}
+}
+
+func (_c *Requester3_Get_Call) Run(run func()) *Requester3_Get_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *Requester3_Get_Call) Return(errOut error) *Requester3_Get_Call {
+	_c.Call.Return(errOut)
+	return _c
+}
+
+func (_c *Requester3_Get_Call) RunAndReturn(run func() error) *Requester3_Get_Call {
+	_c.Call.Return(run)
+	return _c
 }

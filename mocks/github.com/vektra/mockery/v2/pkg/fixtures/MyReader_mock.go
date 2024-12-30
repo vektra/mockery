@@ -26,6 +26,14 @@ type MyReader struct {
 	mock.Mock
 }
 
+type MyReader_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *MyReader) EXPECT() *MyReader_Expecter {
+	return &MyReader_Expecter{mock: &_m.Mock}
+}
+
 // Read provides a mock function for the type MyReader
 func (_mock *MyReader) Read(p []byte) (int, error) {
 	ret := _mock.Called(p)
@@ -52,10 +60,30 @@ func (_mock *MyReader) Read(p []byte) (int, error) {
 	return r0, r1
 }
 
-type MyReader_expecter struct {
-	mock *mock.Mock
+// MyReader_Read_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Read'
+type MyReader_Read_Call struct {
+	*mock.Call
 }
 
-func (_m *MyReader) EXPECT() *MyReader_expecter {
-	return &MyReader_expecter{mock: &_m.Mock}
+// Read is a helper method to define mock.On call
+//   - p
+func (_e *MyReader_Expecter) Read(p interface{}) *MyReader_Read_Call {
+	return &MyReader_Read_Call{Call: _e.mock.On("Read", p)}
+}
+
+func (_c *MyReader_Read_Call) Run(run func(p []byte)) *MyReader_Read_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(p)
+	})
+	return _c
+}
+
+func (_c *MyReader_Read_Call) Return(nOut int, errOut error) *MyReader_Read_Call {
+	_c.Call.Return(nOut, errOut)
+	return _c
+}
+
+func (_c *MyReader_Read_Call) RunAndReturn(run func(p []byte) (int, error)) *MyReader_Read_Call {
+	_c.Call.Return(run)
+	return _c
 }

@@ -26,6 +26,14 @@ type interfaceBMock struct {
 	mock.Mock
 }
 
+type interfaceBMock_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *interfaceBMock) EXPECT() *interfaceBMock_Expecter {
+	return &interfaceBMock_Expecter{mock: &_m.Mock}
+}
+
 // GetData provides a mock function for the type interfaceBMock
 func (_mock *interfaceBMock) GetData() int {
 	ret := _mock.Called()
@@ -43,10 +51,29 @@ func (_mock *interfaceBMock) GetData() int {
 	return r0
 }
 
-type interfaceBMock_expecter struct {
-	mock *mock.Mock
+// interfaceBMock_GetData_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetData'
+type interfaceBMock_GetData_Call struct {
+	*mock.Call
 }
 
-func (_m *interfaceBMock) EXPECT() *interfaceBMock_expecter {
-	return &interfaceBMock_expecter{mock: &_m.Mock}
+// GetData is a helper method to define mock.On call
+func (_e *interfaceBMock_Expecter) GetData() *interfaceBMock_GetData_Call {
+	return &interfaceBMock_GetData_Call{Call: _e.mock.On("GetData")}
+}
+
+func (_c *interfaceBMock_GetData_Call) Run(run func()) *interfaceBMock_GetData_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *interfaceBMock_GetData_Call) Return(nOut int) *interfaceBMock_GetData_Call {
+	_c.Call.Return(nOut)
+	return _c
+}
+
+func (_c *interfaceBMock_GetData_Call) RunAndReturn(run func() int) *interfaceBMock_GetData_Call {
+	_c.Call.Return(run)
+	return _c
 }

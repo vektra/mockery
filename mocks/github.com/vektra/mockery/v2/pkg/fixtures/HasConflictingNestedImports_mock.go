@@ -29,6 +29,14 @@ type HasConflictingNestedImports struct {
 	mock.Mock
 }
 
+type HasConflictingNestedImports_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *HasConflictingNestedImports) EXPECT() *HasConflictingNestedImports_Expecter {
+	return &HasConflictingNestedImports_Expecter{mock: &_m.Mock}
+}
+
 // Get provides a mock function for the type HasConflictingNestedImports
 func (_mock *HasConflictingNestedImports) Get(path string) (http.Response, error) {
 	ret := _mock.Called(path)
@@ -55,6 +63,34 @@ func (_mock *HasConflictingNestedImports) Get(path string) (http.Response, error
 	return r0, r1
 }
 
+// HasConflictingNestedImports_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
+type HasConflictingNestedImports_Get_Call struct {
+	*mock.Call
+}
+
+// Get is a helper method to define mock.On call
+//   - path
+func (_e *HasConflictingNestedImports_Expecter) Get(path interface{}) *HasConflictingNestedImports_Get_Call {
+	return &HasConflictingNestedImports_Get_Call{Call: _e.mock.On("Get", path)}
+}
+
+func (_c *HasConflictingNestedImports_Get_Call) Run(run func(path string)) *HasConflictingNestedImports_Get_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(path)
+	})
+	return _c
+}
+
+func (_c *HasConflictingNestedImports_Get_Call) Return(responseOut http.Response, errOut error) *HasConflictingNestedImports_Get_Call {
+	_c.Call.Return(responseOut, errOut)
+	return _c
+}
+
+func (_c *HasConflictingNestedImports_Get_Call) RunAndReturn(run func(path string) (http.Response, error)) *HasConflictingNestedImports_Get_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Z provides a mock function for the type HasConflictingNestedImports
 func (_mock *HasConflictingNestedImports) Z() my_http.MyStruct {
 	ret := _mock.Called()
@@ -72,10 +108,29 @@ func (_mock *HasConflictingNestedImports) Z() my_http.MyStruct {
 	return r0
 }
 
-type HasConflictingNestedImports_expecter struct {
-	mock *mock.Mock
+// HasConflictingNestedImports_Z_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Z'
+type HasConflictingNestedImports_Z_Call struct {
+	*mock.Call
 }
 
-func (_m *HasConflictingNestedImports) EXPECT() *HasConflictingNestedImports_expecter {
-	return &HasConflictingNestedImports_expecter{mock: &_m.Mock}
+// Z is a helper method to define mock.On call
+func (_e *HasConflictingNestedImports_Expecter) Z() *HasConflictingNestedImports_Z_Call {
+	return &HasConflictingNestedImports_Z_Call{Call: _e.mock.On("Z")}
+}
+
+func (_c *HasConflictingNestedImports_Z_Call) Run(run func()) *HasConflictingNestedImports_Z_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *HasConflictingNestedImports_Z_Call) Return(myStructOut my_http.MyStruct) *HasConflictingNestedImports_Z_Call {
+	_c.Call.Return(myStructOut)
+	return _c
+}
+
+func (_c *HasConflictingNestedImports_Z_Call) RunAndReturn(run func() my_http.MyStruct) *HasConflictingNestedImports_Z_Call {
+	_c.Call.Return(run)
+	return _c
 }

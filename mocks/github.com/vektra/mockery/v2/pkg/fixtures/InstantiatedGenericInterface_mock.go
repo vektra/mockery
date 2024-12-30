@@ -26,6 +26,14 @@ type InstantiatedGenericInterface struct {
 	mock.Mock
 }
 
+type InstantiatedGenericInterface_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *InstantiatedGenericInterface) EXPECT() *InstantiatedGenericInterface_Expecter {
+	return &InstantiatedGenericInterface_Expecter{mock: &_m.Mock}
+}
+
 // Func provides a mock function for the type InstantiatedGenericInterface
 func (_mock *InstantiatedGenericInterface) Func(arg *float32) int {
 	ret := _mock.Called(arg)
@@ -43,10 +51,30 @@ func (_mock *InstantiatedGenericInterface) Func(arg *float32) int {
 	return r0
 }
 
-type InstantiatedGenericInterface_expecter struct {
-	mock *mock.Mock
+// InstantiatedGenericInterface_Func_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Func'
+type InstantiatedGenericInterface_Func_Call struct {
+	*mock.Call
 }
 
-func (_m *InstantiatedGenericInterface) EXPECT() *InstantiatedGenericInterface_expecter {
-	return &InstantiatedGenericInterface_expecter{mock: &_m.Mock}
+// Func is a helper method to define mock.On call
+//   - arg
+func (_e *InstantiatedGenericInterface_Expecter) Func(arg interface{}) *InstantiatedGenericInterface_Func_Call {
+	return &InstantiatedGenericInterface_Func_Call{Call: _e.mock.On("Func", arg)}
+}
+
+func (_c *InstantiatedGenericInterface_Func_Call) Run(run func(arg *float32)) *InstantiatedGenericInterface_Func_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(arg)
+	})
+	return _c
+}
+
+func (_c *InstantiatedGenericInterface_Func_Call) Return(nOut int) *InstantiatedGenericInterface_Func_Call {
+	_c.Call.Return(nOut)
+	return _c
+}
+
+func (_c *InstantiatedGenericInterface_Func_Call) RunAndReturn(run func(arg *float32) int) *InstantiatedGenericInterface_Func_Call {
+	_c.Call.Return(run)
+	return _c
 }

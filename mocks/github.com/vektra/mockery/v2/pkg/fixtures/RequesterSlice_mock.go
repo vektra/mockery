@@ -26,6 +26,14 @@ type RequesterSlice struct {
 	mock.Mock
 }
 
+type RequesterSlice_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *RequesterSlice) EXPECT() *RequesterSlice_Expecter {
+	return &RequesterSlice_Expecter{mock: &_m.Mock}
+}
+
 // Get provides a mock function for the type RequesterSlice
 func (_mock *RequesterSlice) Get(path string) ([]string, error) {
 	ret := _mock.Called(path)
@@ -54,10 +62,30 @@ func (_mock *RequesterSlice) Get(path string) ([]string, error) {
 	return r0, r1
 }
 
-type RequesterSlice_expecter struct {
-	mock *mock.Mock
+// RequesterSlice_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
+type RequesterSlice_Get_Call struct {
+	*mock.Call
 }
 
-func (_m *RequesterSlice) EXPECT() *RequesterSlice_expecter {
-	return &RequesterSlice_expecter{mock: &_m.Mock}
+// Get is a helper method to define mock.On call
+//   - path
+func (_e *RequesterSlice_Expecter) Get(path interface{}) *RequesterSlice_Get_Call {
+	return &RequesterSlice_Get_Call{Call: _e.mock.On("Get", path)}
+}
+
+func (_c *RequesterSlice_Get_Call) Run(run func(path string)) *RequesterSlice_Get_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(path)
+	})
+	return _c
+}
+
+func (_c *RequesterSlice_Get_Call) Return(stringsOut []string, errOut error) *RequesterSlice_Get_Call {
+	_c.Call.Return(stringsOut, errOut)
+	return _c
+}
+
+func (_c *RequesterSlice_Get_Call) RunAndReturn(run func(path string) ([]string, error)) *RequesterSlice_Get_Call {
+	_c.Call.Return(run)
+	return _c
 }

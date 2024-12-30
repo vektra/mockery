@@ -36,6 +36,17 @@ type RequesterGenerics[TAny any, TComparable comparable, TSigned constraints.Sig
 	mock.Mock
 }
 
+type RequesterGenerics_Expecter[TAny any, TComparable comparable, TSigned constraints.Signed, TIntf test.GetInt, TExternalIntf io.Writer, TGenIntf test.GetGeneric[TSigned], TInlineType interface{ ~int | ~uint }, TInlineTypeGeneric interface {
+	~int | test.GenericType[int, test.GetInt]
+	comparable
+}] struct {
+	mock *mock.Mock
+}
+
+func (_m *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) EXPECT() *RequesterGenerics_Expecter[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	return &RequesterGenerics_Expecter[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]{mock: &_m.Mock}
+}
+
 // GenericAnonymousStructs provides a mock function for the type RequesterGenerics
 func (_mock *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericAnonymousStructs(val struct{ Type1 TExternalIntf }) struct {
 	Type2 test.GenericType[string, test.EmbeddedGet[int]]
@@ -59,6 +70,41 @@ func (_mock *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf,
 		})
 	}
 	return r0
+}
+
+// RequesterGenerics_GenericAnonymousStructs_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GenericAnonymousStructs'
+type RequesterGenerics_GenericAnonymousStructs_Call[TAny any, TComparable comparable, TSigned constraints.Signed, TIntf test.GetInt, TExternalIntf io.Writer, TGenIntf test.GetGeneric[TSigned], TInlineType interface{ ~int | ~uint }, TInlineTypeGeneric interface {
+	~int | test.GenericType[int, test.GetInt]
+	comparable
+}] struct {
+	*mock.Call
+}
+
+// GenericAnonymousStructs is a helper method to define mock.On call
+//   - val
+func (_e *RequesterGenerics_Expecter[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericAnonymousStructs(val interface{}) *RequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	return &RequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]{Call: _e.mock.On("GenericAnonymousStructs", val)}
+}
+
+func (_c *RequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) Run(run func(val struct{ Type1 TExternalIntf })) *RequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(val)
+	})
+	return _c
+}
+
+func (_c *RequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) Return(valOut struct {
+	Type2 test.GenericType[string, test.EmbeddedGet[int]]
+}) *RequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	_c.Call.Return(valOut)
+	return _c
+}
+
+func (_c *RequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) RunAndReturn(run func(val struct{ Type1 TExternalIntf }) struct {
+	Type2 test.GenericType[string, test.EmbeddedGet[int]]
+}) *RequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	_c.Call.Return(run)
+	return _c
 }
 
 // GenericArguments provides a mock function for the type RequesterGenerics
@@ -91,6 +137,38 @@ func (_mock *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf,
 	return r0, r1
 }
 
+// RequesterGenerics_GenericArguments_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GenericArguments'
+type RequesterGenerics_GenericArguments_Call[TAny any, TComparable comparable, TSigned constraints.Signed, TIntf test.GetInt, TExternalIntf io.Writer, TGenIntf test.GetGeneric[TSigned], TInlineType interface{ ~int | ~uint }, TInlineTypeGeneric interface {
+	~int | test.GenericType[int, test.GetInt]
+	comparable
+}] struct {
+	*mock.Call
+}
+
+// GenericArguments is a helper method to define mock.On call
+//   - v1
+//   - v2
+func (_e *RequesterGenerics_Expecter[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericArguments(v1 interface{}, v2 interface{}) *RequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	return &RequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]{Call: _e.mock.On("GenericArguments", v1, v2)}
+}
+
+func (_c *RequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) Run(run func(v1 TAny, v2 TComparable)) *RequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(v1, v2)
+	})
+	return _c
+}
+
+func (_c *RequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) Return(vOut1 TSigned, vOut2 TIntf) *RequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	_c.Call.Return(vOut1, vOut2)
+	return _c
+}
+
+func (_c *RequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) RunAndReturn(run func(v1 TAny, v2 TComparable) (TSigned, TIntf)) *RequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GenericStructs provides a mock function for the type RequesterGenerics
 func (_mock *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericStructs(genericType test.GenericType[TAny, TIntf]) test.GenericType[TSigned, TIntf] {
 	ret := _mock.Called(genericType)
@@ -108,13 +186,33 @@ func (_mock *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf,
 	return r0
 }
 
-type RequesterGenerics_expecter[TAny any, TComparable comparable, TSigned constraints.Signed, TIntf test.GetInt, TExternalIntf io.Writer, TGenIntf test.GetGeneric[TSigned], TInlineType interface{ ~int | ~uint }, TInlineTypeGeneric interface {
+// RequesterGenerics_GenericStructs_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GenericStructs'
+type RequesterGenerics_GenericStructs_Call[TAny any, TComparable comparable, TSigned constraints.Signed, TIntf test.GetInt, TExternalIntf io.Writer, TGenIntf test.GetGeneric[TSigned], TInlineType interface{ ~int | ~uint }, TInlineTypeGeneric interface {
 	~int | test.GenericType[int, test.GetInt]
 	comparable
 }] struct {
-	mock *mock.Mock
+	*mock.Call
 }
 
-func (_m *RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) EXPECT() *RequesterGenerics_expecter[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
-	return &RequesterGenerics_expecter[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]{mock: &_m.Mock}
+// GenericStructs is a helper method to define mock.On call
+//   - genericType
+func (_e *RequesterGenerics_Expecter[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericStructs(genericType interface{}) *RequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	return &RequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]{Call: _e.mock.On("GenericStructs", genericType)}
+}
+
+func (_c *RequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) Run(run func(genericType test.GenericType[TAny, TIntf])) *RequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(genericType)
+	})
+	return _c
+}
+
+func (_c *RequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) Return(genericTypeOut test.GenericType[TSigned, TIntf]) *RequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	_c.Call.Return(genericTypeOut)
+	return _c
+}
+
+func (_c *RequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) RunAndReturn(run func(genericType test.GenericType[TAny, TIntf]) test.GenericType[TSigned, TIntf]) *RequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	_c.Call.Return(run)
+	return _c
 }

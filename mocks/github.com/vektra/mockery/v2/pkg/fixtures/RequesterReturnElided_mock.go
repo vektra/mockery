@@ -26,6 +26,14 @@ type RequesterReturnElided struct {
 	mock.Mock
 }
 
+type RequesterReturnElided_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *RequesterReturnElided) EXPECT() *RequesterReturnElided_Expecter {
+	return &RequesterReturnElided_Expecter{mock: &_m.Mock}
+}
+
 // Get provides a mock function for the type RequesterReturnElided
 func (_mock *RequesterReturnElided) Get(path string) (int, int, int, error) {
 	ret := _mock.Called(path)
@@ -64,6 +72,34 @@ func (_mock *RequesterReturnElided) Get(path string) (int, int, int, error) {
 	return r0, r1, r2, r3
 }
 
+// RequesterReturnElided_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
+type RequesterReturnElided_Get_Call struct {
+	*mock.Call
+}
+
+// Get is a helper method to define mock.On call
+//   - path
+func (_e *RequesterReturnElided_Expecter) Get(path interface{}) *RequesterReturnElided_Get_Call {
+	return &RequesterReturnElided_Get_Call{Call: _e.mock.On("Get", path)}
+}
+
+func (_c *RequesterReturnElided_Get_Call) Run(run func(path string)) *RequesterReturnElided_Get_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(path)
+	})
+	return _c
+}
+
+func (_c *RequesterReturnElided_Get_Call) Return(aOut int, bOut int, cOut int, errOut error) *RequesterReturnElided_Get_Call {
+	_c.Call.Return(aOut, bOut, cOut, errOut)
+	return _c
+}
+
+func (_c *RequesterReturnElided_Get_Call) RunAndReturn(run func(path string) (int, int, int, error)) *RequesterReturnElided_Get_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Put provides a mock function for the type RequesterReturnElided
 func (_mock *RequesterReturnElided) Put(path string) (int, error) {
 	ret := _mock.Called(path)
@@ -90,10 +126,30 @@ func (_mock *RequesterReturnElided) Put(path string) (int, error) {
 	return r0, r1
 }
 
-type RequesterReturnElided_expecter struct {
-	mock *mock.Mock
+// RequesterReturnElided_Put_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Put'
+type RequesterReturnElided_Put_Call struct {
+	*mock.Call
 }
 
-func (_m *RequesterReturnElided) EXPECT() *RequesterReturnElided_expecter {
-	return &RequesterReturnElided_expecter{mock: &_m.Mock}
+// Put is a helper method to define mock.On call
+//   - path
+func (_e *RequesterReturnElided_Expecter) Put(path interface{}) *RequesterReturnElided_Put_Call {
+	return &RequesterReturnElided_Put_Call{Call: _e.mock.On("Put", path)}
+}
+
+func (_c *RequesterReturnElided_Put_Call) Run(run func(path string)) *RequesterReturnElided_Put_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(path)
+	})
+	return _c
+}
+
+func (_c *RequesterReturnElided_Put_Call) Return(nOut int, errOut error) *RequesterReturnElided_Put_Call {
+	_c.Call.Return(nOut, errOut)
+	return _c
+}
+
+func (_c *RequesterReturnElided_Put_Call) RunAndReturn(run func(path string) (int, error)) *RequesterReturnElided_Put_Call {
+	_c.Call.Return(run)
+	return _c
 }

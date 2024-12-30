@@ -26,6 +26,14 @@ type Issue766 struct {
 	mock.Mock
 }
 
+type Issue766_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *Issue766) EXPECT() *Issue766_Expecter {
+	return &Issue766_Expecter{mock: &_m.Mock}
+}
+
 // FetchData provides a mock function for the type Issue766
 func (_mock *Issue766) FetchData(fetchFunc func(x ...int) ([]int, error)) ([]int, error) {
 	ret := _mock.Called(fetchFunc)
@@ -54,10 +62,30 @@ func (_mock *Issue766) FetchData(fetchFunc func(x ...int) ([]int, error)) ([]int
 	return r0, r1
 }
 
-type Issue766_expecter struct {
-	mock *mock.Mock
+// Issue766_FetchData_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'FetchData'
+type Issue766_FetchData_Call struct {
+	*mock.Call
 }
 
-func (_m *Issue766) EXPECT() *Issue766_expecter {
-	return &Issue766_expecter{mock: &_m.Mock}
+// FetchData is a helper method to define mock.On call
+//   - fetchFunc
+func (_e *Issue766_Expecter) FetchData(fetchFunc interface{}) *Issue766_FetchData_Call {
+	return &Issue766_FetchData_Call{Call: _e.mock.On("FetchData", fetchFunc)}
+}
+
+func (_c *Issue766_FetchData_Call) Run(run func(fetchFunc func(x ...int) ([]int, error))) *Issue766_FetchData_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(fetchFunc)
+	})
+	return _c
+}
+
+func (_c *Issue766_FetchData_Call) Return(intsOut []int, errOut error) *Issue766_FetchData_Call {
+	_c.Call.Return(intsOut, errOut)
+	return _c
+}
+
+func (_c *Issue766_FetchData_Call) RunAndReturn(run func(fetchFunc func(x ...int) ([]int, error)) ([]int, error)) *Issue766_FetchData_Call {
+	_c.Call.Return(run)
+	return _c
 }

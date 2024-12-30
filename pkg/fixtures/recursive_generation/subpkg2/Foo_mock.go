@@ -26,6 +26,14 @@ type MockFoo struct {
 	mock.Mock
 }
 
+type MockFoo_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *MockFoo) EXPECT() *MockFoo_Expecter {
+	return &MockFoo_Expecter{mock: &_m.Mock}
+}
+
 // Get provides a mock function for the type MockFoo
 func (_mock *MockFoo) Get() string {
 	ret := _mock.Called()
@@ -43,10 +51,29 @@ func (_mock *MockFoo) Get() string {
 	return r0
 }
 
-type MockFoo_expecter struct {
-	mock *mock.Mock
+// MockFoo_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
+type MockFoo_Get_Call struct {
+	*mock.Call
 }
 
-func (_m *MockFoo) EXPECT() *MockFoo_expecter {
-	return &MockFoo_expecter{mock: &_m.Mock}
+// Get is a helper method to define mock.On call
+func (_e *MockFoo_Expecter) Get() *MockFoo_Get_Call {
+	return &MockFoo_Get_Call{Call: _e.mock.On("Get")}
+}
+
+func (_c *MockFoo_Get_Call) Run(run func()) *MockFoo_Get_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *MockFoo_Get_Call) Return(sOut string) *MockFoo_Get_Call {
+	_c.Call.Return(sOut)
+	return _c
+}
+
+func (_c *MockFoo_Get_Call) RunAndReturn(run func() string) *MockFoo_Get_Call {
+	_c.Call.Return(run)
+	return _c
 }

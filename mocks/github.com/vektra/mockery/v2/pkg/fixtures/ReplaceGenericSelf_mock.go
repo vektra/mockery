@@ -26,6 +26,14 @@ type ReplaceGenericSelf[T any] struct {
 	mock.Mock
 }
 
+type ReplaceGenericSelf_Expecter[T any] struct {
+	mock *mock.Mock
+}
+
+func (_m *ReplaceGenericSelf[T]) EXPECT() *ReplaceGenericSelf_Expecter[T] {
+	return &ReplaceGenericSelf_Expecter[T]{mock: &_m.Mock}
+}
+
 // A provides a mock function for the type ReplaceGenericSelf
 func (_mock *ReplaceGenericSelf[T]) A() T {
 	ret := _mock.Called()
@@ -45,10 +53,29 @@ func (_mock *ReplaceGenericSelf[T]) A() T {
 	return r0
 }
 
-type ReplaceGenericSelf_expecter[T any] struct {
-	mock *mock.Mock
+// ReplaceGenericSelf_A_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'A'
+type ReplaceGenericSelf_A_Call[T any] struct {
+	*mock.Call
 }
 
-func (_m *ReplaceGenericSelf[T]) EXPECT() *ReplaceGenericSelf_expecter[T] {
-	return &ReplaceGenericSelf_expecter[T]{mock: &_m.Mock}
+// A is a helper method to define mock.On call
+func (_e *ReplaceGenericSelf_Expecter[T]) A() *ReplaceGenericSelf_A_Call[T] {
+	return &ReplaceGenericSelf_A_Call[T]{Call: _e.mock.On("A")}
+}
+
+func (_c *ReplaceGenericSelf_A_Call[T]) Run(run func()) *ReplaceGenericSelf_A_Call[T] {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *ReplaceGenericSelf_A_Call[T]) Return(vOut T) *ReplaceGenericSelf_A_Call[T] {
+	_c.Call.Return(vOut)
+	return _c
+}
+
+func (_c *ReplaceGenericSelf_A_Call[T]) RunAndReturn(run func() T) *ReplaceGenericSelf_A_Call[T] {
+	_c.Call.Return(run)
+	return _c
 }
