@@ -15,6 +15,8 @@ import (
     mock "github.com/stretchr/testify/mock"
 )
 
+{{/* CREATE CONSTRUCTOR */}}
+
 {{- range $i, $mock := .Mocks }} {{/* START MOCK RANGE */}}
 // New{{ .MockName }} creates a new instance of {{ .MockName }}. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
@@ -36,6 +38,17 @@ type {{ .MockName }}{{ $mock | TypeConstraint }} struct {
 	mock.Mock
 }
 
+type {{.MockName}}_expecter{{ $mock | TypeConstraint }} struct {
+	mock *mock.Mock
+}
+
+{{- $expecterNameInstantiated := printf "%s_expecter_%s" .MockName ($mock | TypeInstantiation) }}
+
+func (_m *{{.MockName}}{{ $mock | TypeInstantiation }}) EXPECT() *{{ $expecterNameInstantiated }} {
+	return &{{ $expecterNameInstantiated }}{mock: &_m.Mock}
+}
+
+{{/* RANGE OVER ALL METHODS */}}
 {{- range $methodIdx, $method := .Methods }} {{/* START METHOD RANGE */}}
 
 // {{ $method.Name }} provides a mock function for the type {{ $mock.MockName }}
@@ -124,15 +137,72 @@ func (_mock *{{$mock.MockName}}{{ $mock | TypeInstantiation }}) {{$method.Name}}
 	{{- end }}
 	return {{ range $retIdx, $ret := $method.Returns }}r{{ $retIdx }}{{ if ne $retIdx (len $method.Returns | Add -1) }}, {{ end }}{{ end }}
 }
+
+{{/* CREATE EXPECTER METHOD */}}
+{{- $ExpecterCallNameInstantiated := printf "%s_%s_Call%s" $mock.Name $method.Name ($mock | TypeInstantiation) }}
+{{- $ExpecterCallNameConstraint := printf "%s_%s_Call%s" $mock.Name $method.Name ($mock | TypeConstraint) }}
+
+// {{ $mock.Name }}_{{ $method.Name }}_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method '{{ $method.Name }}'
+type {{ $ExpecterCallNameConstraint }} struct {
+	*mock.Call
+}
+
+{{/* TODO 2024-12-30 */}}
+
+// {{.MethodName}} is a helper method to define mock.On call
+{{- range .Params.Params}}
+//  - {{.}}
+{{- end}}
+func (_e *{{ $ExpecterCallNameInstantiated }}) {{.MethodName}}({{$method.ArgList}}) *{{ $ExpecterCallNameInstantiated }}  {
+	return &{{ $ExpecterCallNameInstantiated }}{Call: _e.mock.On("{{.MethodName}}",
+			{{- if not .Params.Variadic }}
+				{{- range .Params.Names}}{{.}},{{end}}
+			{{- else }}
+				append([]interface{}{
+					{{- range $i, $name := .Params.Names }}
+						{{- if (lt $i $.NbNonVariadic)}} {{$name}},
+						{{- else}} }, {{$name}}...
+						{{- end}}
+					{{- end}} )...
+			{{- end }} )}
+}
+
+func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) Run(run func({{range .Params.Params}}{{.}},{{end}})) *{{.CallStruct}}{{ .InstantiatedTypeString }} {
+	_c.Call.Run(func(args mock.Arguments) {
+	{{- if not .Params.Variadic }}
+		run({{range $i, $type := .Params.Types }}args[{{$i}}].({{$type}}),{{end}})
+	{{- else}}
+		variadicArgs := make([]{{.LastParamType}}, len(args) - {{.NbNonVariadic}})
+		for i, a := range args[{{.NbNonVariadic}}:] {
+			if a != nil {
+				variadicArgs[i] = a.({{.LastParamType}})
+			}
+		}
+		run(
+		{{- range $i, $type := .Params.Types }}
+			{{- if (lt $i $.NbNonVariadic)}}args[{{$i}}].({{$type}}),
+			{{- else}}variadicArgs...)
+			{{- end}}
+		{{- end}}
+	{{- end}}
+	})
+	return _c
+}
+
+func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) Return({{range .Returns.Params}}{{.}},{{end}}) *{{.CallStruct}}{{ .InstantiatedTypeString }} {
+	_c.Call.Return({{range .Returns.Names}}{{.}},{{end}})
+	return _c
+}
+
+func (_c *{{.CallStruct}}{{ .InstantiatedTypeString }}) RunAndReturn(run func({{range .Params.Types}}{{.}},{{end}})({{range .Returns.Types}}{{.}},{{end}})) *{{.CallStruct}}{{ .InstantiatedTypeString }} {
+{{- if not .Returns.Types}}
+	_c.Run(run)
+{{- else}}
+	_c.Call.Return(run)
+{{- end}}
+	return _c
+}
+{{/* END TODO EXPECTER */}}
 {{- end }} {{/* END METHOD RANGE */}}
-
-
-type {{.MockName}}_expecter{{ $mock | TypeConstraint }} struct {
-	mock *mock.Mock
-}
-
-func (_m *{{.MockName}}{{ $mock | TypeInstantiation }}) EXPECT() *{{.MockName}}_expecter{{ $mock | TypeInstantiation }} {
-	return &{{.MockName}}_expecter{{ $mock | TypeInstantiation }}{mock: &_m.Mock}
-}
 {{- end }} {{/* END MOCK RANGE */}}
 
