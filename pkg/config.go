@@ -16,7 +16,6 @@ import (
 
 	"github.com/chigopher/pathlib"
 	"github.com/huandu/xstrings"
-	"github.com/iancoleman/strcase"
 	"github.com/jinzhu/copier"
 	"github.com/mitchellh/mapstructure"
 	"github.com/rs/zerolog"
@@ -50,7 +49,6 @@ type Config struct {
 	FileName            string                 `mapstructure:"filename"`
 	Formatter           string                 `mapstructure:"formatter"`
 	IncludeRegex        string                 `mapstructure:"include-regex"`
-	Issue845Fix         bool                   `mapstructure:"issue-845-fix"`
 	LogLevel            string                 `mapstructure:"log-level"`
 	MockBuildTags       string                 `mapstructure:"mock-build-tags"`
 	MockName            string                 `mapstructure:"mockname"`
@@ -80,11 +78,11 @@ func NewConfigFromViper(v *viper.Viper) (*Config, error) {
 		Config: v.ConfigFileUsed(),
 	}
 
-	v.SetDefault("dir", "mocks/{{.PackagePath}}")
+	v.SetDefault("dir", "mocks/{{.SrcPackagePath}}")
 	v.SetDefault("filename", "mock_{{.InterfaceName}}.go")
 	v.SetDefault("formatter", "goimports")
 	v.SetDefault("mockname", "Mock{{.InterfaceName}}")
-	v.SetDefault("pkgname", "{{.PackageName}}")
+	v.SetDefault("pkgname", "{{.SrcPackageName}}")
 	v.SetDefault("dry-run", false)
 	v.SetDefault("log-level", "info")
 
@@ -822,66 +820,65 @@ var templateFuncMap = template.FuncMap{
 
 // ParseTemplates parses various templated strings
 // in the config struct into their fully defined values. This mutates
-// the config object passed. It requires an *Interface object in order
-// to satisfy template variables that need information about the original
-// interface being mocked.
-func (c *Config) ParseTemplates(ctx context.Context, iface *Interface) error {
+// the config object passed. An *Interface object can be supplied to satisfy
+// template variables that need information about the original
+// interface being mocked. If this argument is nil, interface-specific template
+// variables will be set to the empty string. The srcPkg is also needed to
+// satisfy template variables regarding the source package.
+func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *packages.Package) error {
 	log := zerolog.Ctx(ctx)
 
-	mock := "mock"
-	if ast.IsExported(iface.Name) {
-		mock = "Mock"
+	mock := ""
+	if iface != nil {
+		mock = "mock"
+		if ast.IsExported(iface.Name) {
+			mock = "Mock"
+		}
 	}
 
-	workingDir, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("get working directory: %w", err)
-	}
-	var interfaceDirRelative string
-	interfaceDir := pathlib.NewPath(iface.FileName).Parent()
-	interfaceDirRelativePath, err := interfaceDir.RelativeToStr(workingDir)
-	if errors.Is(err, pathlib.ErrRelativeTo) {
-		log.Debug().
-			Stringer("interface-dir", interfaceDir).
-			Str("working-dir", workingDir).
-			Msg("can't make interfaceDir relative to working dir. Setting InterfaceDirRelative to package path.")
+	var (
+		interfaceDir         string
+		interfaceDirRelative string
+		interfaceFile        string
+		interfaceName        string
+	)
+	if iface != nil {
+		interfaceFile = iface.FileName
+		interfaceName = iface.Name
 
-		interfaceDirRelative = iface.Pkg.Types.Path()
-	} else {
+		workingDir, err := os.Getwd()
+		if err != nil {
+			return fmt.Errorf("get working directory: %w", err)
+		}
+		interfaceDirPath := pathlib.NewPath(iface.FileName).Parent()
+		interfaceDir = interfaceDirPath.String()
+		interfaceDirRelativePath, err := interfaceDirPath.RelativeToStr(workingDir)
+		if err != nil {
+			return stackerr.NewStackErr(err)
+		}
 		interfaceDirRelative = interfaceDirRelativePath.String()
 	}
-
 	// data is the struct sent to the template parser
 	data := struct {
-		ConfigDir               string
-		InterfaceDir            string
-		InterfaceDirRelative    string
-		InterfaceFile           string
-		InterfaceName           string
-		InterfaceNameCamel      string
-		InterfaceNameLowerCamel string
-		InterfaceNameSnake      string
-		InterfaceNameLower      string
-		Mock                    string
-		MockName                string
-		PackageName             string
-		PackagePath             string
+		ConfigDir            string
+		InterfaceDir         string
+		InterfaceDirRelative string
+		InterfaceFile        string
+		InterfaceName        string
+		Mock                 string
+		MockName             string
+		SrcPackageName       string
+		SrcPackagePath       string
 	}{
 		ConfigDir:            filepath.Dir(c.Config),
-		InterfaceDir:         filepath.Dir(iface.FileName),
+		InterfaceDir:         interfaceDir,
 		InterfaceDirRelative: interfaceDirRelative,
-		InterfaceFile:        iface.FileName,
-		InterfaceName:        iface.Name,
-		// Deprecated: All custom case variables of InterfaceName will be removed in the next major version
-		// Use the template functions instead
-		InterfaceNameCamel:      strcase.ToCamel(iface.Name),
-		InterfaceNameLowerCamel: strcase.ToLowerCamel(iface.Name),
-		InterfaceNameSnake:      strcase.ToSnake(iface.Name),
-		InterfaceNameLower:      strings.ToLower(iface.Name),
-		Mock:                    mock,
-		MockName:                c.MockName,
-		PackageName:             iface.Pkg.Types.Name(),
-		PackagePath:             iface.Pkg.Types.Path(),
+		InterfaceFile:        interfaceFile,
+		InterfaceName:        interfaceName,
+		Mock:                 mock,
+		MockName:             c.MockName,
+		SrcPackageName:       srcPkg.Types.Name(),
+		SrcPackagePath:       srcPkg.Types.Path(),
 	}
 	// These are the config options that we allow
 	// to be parsed by the templater. The keys are

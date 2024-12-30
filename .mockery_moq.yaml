@@ -1,7 +1,7 @@
 mockname: "{{.InterfaceName}}Mock"
 filename: "moq_test.go"
 template: moq
-dir: "mocks/moq/{{.PackagePath}}"
+dir: "mocks/moq/{{.SrcPackagePath}}"
 formatter: "goimports"
 
 packages:

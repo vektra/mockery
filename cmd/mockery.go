@@ -16,6 +16,7 @@ import (
 	"github.com/vektra/mockery/v2/pkg"
 	"github.com/vektra/mockery/v2/pkg/logging"
 	"github.com/vektra/mockery/v2/pkg/stackerr"
+	"golang.org/x/tools/go/packages"
 )
 
 var (
@@ -172,14 +173,21 @@ type InterfaceCollection struct {
 	srcPkgPath  string
 	outPkgPath  string
 	outFilePath *pathlib.Path
+	srcPkg      *packages.Package
 	interfaces  []*pkg.Interface
 }
 
-func NewInterfaceCollection(srcPkgPath string, outPkgPath string, outFilePath *pathlib.Path) *InterfaceCollection {
+func NewInterfaceCollection(
+	srcPkgPath string,
+	outPkgPath string,
+	outFilePath *pathlib.Path,
+	srcPkg *packages.Package,
+) *InterfaceCollection {
 	return &InterfaceCollection{
 		srcPkgPath:  srcPkgPath,
 		outPkgPath:  outPkgPath,
 		outFilePath: outFilePath,
+		srcPkg:      srcPkg,
 		interfaces:  make([]*pkg.Interface, 0),
 	}
 }
@@ -280,7 +288,7 @@ func (r *RootApp) Run() error {
 			return err
 		}
 		for _, ifaceConfig := range ifaceConfigs {
-			if err := ifaceConfig.ParseTemplates(ctx, iface); err != nil {
+			if err := ifaceConfig.ParseTemplates(ctx, iface, iface.Pkg); err != nil {
 				log.Err(err).Msg("Can't parse config templates for interface")
 				return err
 			}
@@ -296,6 +304,7 @@ func (r *RootApp) Run() error {
 					iface.Pkg.PkgPath,
 					outPkgPath,
 					pathlib.NewPath(ifaceConfig.Dir).Join(ifaceConfig.FileName),
+					iface.Pkg,
 				)
 			}
 			mockFileToInterfaces[filePath].Append(
@@ -311,11 +320,17 @@ func (r *RootApp) Run() error {
 	}
 
 	for outFilePath, interfacesInFile := range mockFileToInterfaces {
-		log.Debug().Int("interfaces-in-file-len", len(interfacesInFile.interfaces)).Msgf("%v", interfacesInFile)
+		fileLog := log.With().Str("file", outFilePath).Logger()
+		fileCtx := fileLog.WithContext(ctx)
+
+		fileLog.Debug().Int("interfaces-in-file-len", len(interfacesInFile.interfaces)).Msgf("%v", interfacesInFile)
 		outPkgPath := interfacesInFile.outPkgPath
 
-		packageConfig, err := r.Config.GetPackageConfig(ctx, interfacesInFile.srcPkgPath)
+		packageConfig, err := r.Config.GetPackageConfig(fileCtx, interfacesInFile.srcPkgPath)
 		if err != nil {
+			return err
+		}
+		if err := packageConfig.ParseTemplates(ctx, nil, interfacesInFile.srcPkg); err != nil {
 			return err
 		}
 		generator, err := pkg.NewTemplateGenerator(
@@ -328,7 +343,7 @@ func (r *RootApp) Run() error {
 		if err != nil {
 			return err
 		}
-		templateBytes, err := generator.Generate(ctx, interfacesInFile.interfaces)
+		templateBytes, err := generator.Generate(fileCtx, interfacesInFile.interfaces)
 		if err != nil {
 			return err
 		}
