@@ -35,122 +35,99 @@ type ExpecterAndRolledVariadic struct {
 
 // ManyArgsReturns provides a mock function for the type ExpecterAndRolledVariadic
 func (_mock *ExpecterAndRolledVariadic) ManyArgsReturns(str string, i int) ([]string, error) {
-	var retArgs mock.Arguments
+	ret := _mock.Called(str, i)
 
-	if retArgs == nil {
-		retArgs = _mock.Called(str, i)
+	if len(ret) == 0 {
+		panic("no return value specified for ManyArgsReturns")
 	}
 
-	if len(retArgs) == 0 {
-		panic("no return value specified for ExpecterAndRolledVariadic.ManyArgsReturns")
-	}
-
-	var (
-		retVal0 []string
-		retVal1 error
-	)
-	if returnFunc, ok := retArgs.Get(0).(func(string, int) ([]string, error)); ok {
+	var r0 []string
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(string, int) ([]string, error)); ok {
 		return returnFunc(str, i)
 	}
-	if returnFunc, ok := retArgs.Get(0).(func(string, int) []string); ok {
-		retVal0 = returnFunc(str, i)
+	if returnFunc, ok := ret.Get(0).(func(string, int) []string); ok {
+		r0 = returnFunc(str, i)
 	} else {
-		if retArgs.Get(0) != nil {
-			retVal0 = retArgs.Get(0).([]string)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
 		}
 	}
-	if returnFunc, ok := retArgs.Get(1).(func(string, int) error); ok {
-		retVal1 = returnFunc(str, i)
+	if returnFunc, ok := ret.Get(1).(func(string, int) error); ok {
+		r1 = returnFunc(str, i)
 	} else {
-		retVal1 = retArgs.Error(1)
+		r1 = ret.Error(1)
 	}
-	return retVal0, retVal1
+	return r0, r1
 }
 
 // NoArg provides a mock function for the type ExpecterAndRolledVariadic
 func (_mock *ExpecterAndRolledVariadic) NoArg() string {
-	var retArgs mock.Arguments
+	ret := _mock.Called()
 
-	if retArgs == nil {
-		retArgs = _mock.Called()
+	if len(ret) == 0 {
+		panic("no return value specified for NoArg")
 	}
 
-	if len(retArgs) == 0 {
-		panic("no return value specified for ExpecterAndRolledVariadic.NoArg")
-	}
-
-	var (
-		retVal0 string
-	)
-	if returnFunc, ok := retArgs.Get(0).(func() string); ok {
-		retVal0 = returnFunc()
+	var r0 string
+	if returnFunc, ok := ret.Get(0).(func() string); ok {
+		r0 = returnFunc()
 	} else {
-		retVal0 = retArgs.Get(0).(string)
+		r0 = ret.Get(0).(string)
 	}
-	return retVal0
+	return r0
 }
 
 // NoReturn provides a mock function for the type ExpecterAndRolledVariadic
 func (_mock *ExpecterAndRolledVariadic) NoReturn(str string) {
-
 	_mock.Called(str)
 	return
 }
 
 // Variadic provides a mock function for the type ExpecterAndRolledVariadic
 func (_mock *ExpecterAndRolledVariadic) Variadic(ints ...int) error {
-	var retArgs mock.Arguments
+	var tmpRet mock.Arguments
 	if len(ints) > 0 {
-		retArgs = _mock.Called(ints)
+		tmpRet = _mock.Called(ints)
 	} else {
-		retArgs = _mock.Called()
+		tmpRet = _mock.Called()
+	}
+	ret := tmpRet
+
+	if len(ret) == 0 {
+		panic("no return value specified for Variadic")
 	}
 
-	if retArgs == nil {
-		retArgs = _mock.Called(ints)
-	}
-
-	if len(retArgs) == 0 {
-		panic("no return value specified for ExpecterAndRolledVariadic.Variadic")
-	}
-
-	var (
-		retVal0 error
-	)
-	if returnFunc, ok := retArgs.Get(0).(func(...int) error); ok {
-		retVal0 = returnFunc(ints...)
+	var r0 error
+	if returnFunc, ok := ret.Get(0).(func(...int) error); ok {
+		r0 = returnFunc(ints...)
 	} else {
-		retVal0 = retArgs.Error(0)
+		r0 = ret.Error(0)
 	}
-	return retVal0
+	return r0
 }
 
 // VariadicMany provides a mock function for the type ExpecterAndRolledVariadic
 func (_mock *ExpecterAndRolledVariadic) VariadicMany(i int, a string, intfs ...interface{}) error {
-	var retArgs mock.Arguments
+	var tmpRet mock.Arguments
 	if len(intfs) > 0 {
-		retArgs = _mock.Called(i, a, intfs)
+		tmpRet = _mock.Called(i, a, intfs)
 	} else {
-		retArgs = _mock.Called(i, a)
+		tmpRet = _mock.Called(i, a)
+	}
+	ret := tmpRet
+
+	if len(ret) == 0 {
+		panic("no return value specified for VariadicMany")
 	}
 
-	if retArgs == nil {
-		retArgs = _mock.Called(i, a, intfs)
-	}
-
-	if len(retArgs) == 0 {
-		panic("no return value specified for ExpecterAndRolledVariadic.VariadicMany")
-	}
-
-	var (
-		retVal0 error
-	)
-	if returnFunc, ok := retArgs.Get(0).(func(int, string, ...interface{}) error); ok {
-		retVal0 = returnFunc(i, a, intfs...)
+	var r0 error
+	if returnFunc, ok := ret.Get(0).(func(int, string, ...interface{}) error); ok {
+		r0 = returnFunc(i, a, intfs...)
 	} else {
-		retVal0 = retArgs.Error(0)
+		r0 = ret.Error(0)
 	}
-	return retVal0
+	return r0
 }
 
 type ExpecterAndRolledVariadic_expecter struct {
@@ -182,114 +159,97 @@ type Expecter struct {
 
 // ManyArgsReturns provides a mock function for the type Expecter
 func (_mock *Expecter) ManyArgsReturns(str string, i int) ([]string, error) {
-	var retArgs mock.Arguments
+	ret := _mock.Called(str, i)
 
-	if retArgs == nil {
-		retArgs = _mock.Called(str, i)
+	if len(ret) == 0 {
+		panic("no return value specified for ManyArgsReturns")
 	}
 
-	if len(retArgs) == 0 {
-		panic("no return value specified for Expecter.ManyArgsReturns")
-	}
-
-	var (
-		retVal0 []string
-		retVal1 error
-	)
-	if returnFunc, ok := retArgs.Get(0).(func(string, int) ([]string, error)); ok {
+	var r0 []string
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(string, int) ([]string, error)); ok {
 		return returnFunc(str, i)
 	}
-	if returnFunc, ok := retArgs.Get(0).(func(string, int) []string); ok {
-		retVal0 = returnFunc(str, i)
+	if returnFunc, ok := ret.Get(0).(func(string, int) []string); ok {
+		r0 = returnFunc(str, i)
 	} else {
-		if retArgs.Get(0) != nil {
-			retVal0 = retArgs.Get(0).([]string)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
 		}
 	}
-	if returnFunc, ok := retArgs.Get(1).(func(string, int) error); ok {
-		retVal1 = returnFunc(str, i)
+	if returnFunc, ok := ret.Get(1).(func(string, int) error); ok {
+		r1 = returnFunc(str, i)
 	} else {
-		retVal1 = retArgs.Error(1)
+		r1 = ret.Error(1)
 	}
-	return retVal0, retVal1
+	return r0, r1
 }
 
 // NoArg provides a mock function for the type Expecter
 func (_mock *Expecter) NoArg() string {
-	var retArgs mock.Arguments
+	ret := _mock.Called()
 
-	if retArgs == nil {
-		retArgs = _mock.Called()
+	if len(ret) == 0 {
+		panic("no return value specified for NoArg")
 	}
 
-	if len(retArgs) == 0 {
-		panic("no return value specified for Expecter.NoArg")
-	}
-
-	var (
-		retVal0 string
-	)
-	if returnFunc, ok := retArgs.Get(0).(func() string); ok {
-		retVal0 = returnFunc()
+	var r0 string
+	if returnFunc, ok := ret.Get(0).(func() string); ok {
+		r0 = returnFunc()
 	} else {
-		retVal0 = retArgs.Get(0).(string)
+		r0 = ret.Get(0).(string)
 	}
-	return retVal0
+	return r0
 }
 
 // NoReturn provides a mock function for the type Expecter
 func (_mock *Expecter) NoReturn(str string) {
-
 	_mock.Called(str)
 	return
 }
 
 // Variadic provides a mock function for the type Expecter
 func (_mock *Expecter) Variadic(ints ...int) error {
-	var retArgs mock.Arguments
-	/* TODO: finish https://github.com/vektra/mockery/blob/ede4f2c90f854f51c8618c934930f7bf6cdb5a5d/pkg/generator.go#L1109-L1153 */
+	// int
+	_va := make([]interface{}, len(ints))
+	for _i := range ints {
+		_va[_i] = ints[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _va...)
+	ret := _mock.Called(_ca...)
 
-	if retArgs == nil {
-		retArgs = _mock.Called(ints...)
+	if len(ret) == 0 {
+		panic("no return value specified for Variadic")
 	}
 
-	if len(retArgs) == 0 {
-		panic("no return value specified for Expecter.Variadic")
-	}
-
-	var (
-		retVal0 error
-	)
-	if returnFunc, ok := retArgs.Get(0).(func(...int) error); ok {
-		retVal0 = returnFunc(ints...)
+	var r0 error
+	if returnFunc, ok := ret.Get(0).(func(...int) error); ok {
+		r0 = returnFunc(ints...)
 	} else {
-		retVal0 = retArgs.Error(0)
+		r0 = ret.Error(0)
 	}
-	return retVal0
+	return r0
 }
 
 // VariadicMany provides a mock function for the type Expecter
 func (_mock *Expecter) VariadicMany(i int, a string, intfs ...interface{}) error {
-	var retArgs mock.Arguments
-	/* TODO: finish https://github.com/vektra/mockery/blob/ede4f2c90f854f51c8618c934930f7bf6cdb5a5d/pkg/generator.go#L1109-L1153 */
+	var _ca []interface{}
+	_ca = append(_ca, i, a)
+	_ca = append(_ca, intfs...)
+	ret := _mock.Called(_ca...)
 
-	if retArgs == nil {
-		retArgs = _mock.Called(i, a, intfs...)
+	if len(ret) == 0 {
+		panic("no return value specified for VariadicMany")
 	}
 
-	if len(retArgs) == 0 {
-		panic("no return value specified for Expecter.VariadicMany")
-	}
-
-	var (
-		retVal0 error
-	)
-	if returnFunc, ok := retArgs.Get(0).(func(int, string, ...interface{}) error); ok {
-		retVal0 = returnFunc(i, a, intfs...)
+	var r0 error
+	if returnFunc, ok := ret.Get(0).(func(int, string, ...interface{}) error); ok {
+		r0 = returnFunc(i, a, intfs...)
 	} else {
-		retVal0 = retArgs.Error(0)
+		r0 = ret.Error(0)
 	}
-	return retVal0
+	return r0
 }
 
 type Expecter_expecter struct {
@@ -329,90 +289,72 @@ type MockRequesterGenerics[TAny any, TComparable comparable, TSigned constraints
 func (_mock *MockRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericAnonymousStructs(val struct{ Type1 TExternalIntf }) struct {
 	Type2 test.GenericType[string, test.EmbeddedGet[int]]
 } {
-	var retArgs mock.Arguments
+	ret := _mock.Called(val)
 
-	if retArgs == nil {
-		retArgs = _mock.Called(val)
+	if len(ret) == 0 {
+		panic("no return value specified for GenericAnonymousStructs")
 	}
 
-	if len(retArgs) == 0 {
-		panic("no return value specified for MockRequesterGenerics.GenericAnonymousStructs")
+	var r0 struct {
+		Type2 test.GenericType[string, test.EmbeddedGet[int]]
 	}
-
-	var (
-		retVal0 struct {
-			Type2 test.GenericType[string, test.EmbeddedGet[int]]
-		}
-	)
-	if returnFunc, ok := retArgs.Get(0).(func(struct{ Type1 TExternalIntf }) struct {
+	if returnFunc, ok := ret.Get(0).(func(struct{ Type1 TExternalIntf }) struct {
 		Type2 test.GenericType[string, test.EmbeddedGet[int]]
 	}); ok {
-		retVal0 = returnFunc(val)
+		r0 = returnFunc(val)
 	} else {
-		retVal0 = retArgs.Get(0).(struct {
+		r0 = ret.Get(0).(struct {
 			Type2 test.GenericType[string, test.EmbeddedGet[int]]
 		})
 	}
-	return retVal0
+	return r0
 }
 
 // GenericArguments provides a mock function for the type MockRequesterGenerics
 func (_mock *MockRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericArguments(v1 TAny, v2 TComparable) (TSigned, TIntf) {
-	var retArgs mock.Arguments
+	ret := _mock.Called(v1, v2)
 
-	if retArgs == nil {
-		retArgs = _mock.Called(v1, v2)
+	if len(ret) == 0 {
+		panic("no return value specified for GenericArguments")
 	}
 
-	if len(retArgs) == 0 {
-		panic("no return value specified for MockRequesterGenerics.GenericArguments")
-	}
-
-	var (
-		retVal0 TSigned
-		retVal1 TIntf
-	)
-	if returnFunc, ok := retArgs.Get(0).(func(TAny, TComparable) (TSigned, TIntf)); ok {
+	var r0 TSigned
+	var r1 TIntf
+	if returnFunc, ok := ret.Get(0).(func(TAny, TComparable) (TSigned, TIntf)); ok {
 		return returnFunc(v1, v2)
 	}
-	if returnFunc, ok := retArgs.Get(0).(func(TAny, TComparable) TSigned); ok {
-		retVal0 = returnFunc(v1, v2)
+	if returnFunc, ok := ret.Get(0).(func(TAny, TComparable) TSigned); ok {
+		r0 = returnFunc(v1, v2)
 	} else {
-		if retArgs.Get(0) != nil {
-			retVal0 = retArgs.Get(0).(TSigned)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(TSigned)
 		}
 	}
-	if returnFunc, ok := retArgs.Get(1).(func(TAny, TComparable) TIntf); ok {
-		retVal1 = returnFunc(v1, v2)
+	if returnFunc, ok := ret.Get(1).(func(TAny, TComparable) TIntf); ok {
+		r1 = returnFunc(v1, v2)
 	} else {
-		if retArgs.Get(1) != nil {
-			retVal1 = retArgs.Get(1).(TIntf)
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(TIntf)
 		}
 	}
-	return retVal0, retVal1
+	return r0, r1
 }
 
 // GenericStructs provides a mock function for the type MockRequesterGenerics
 func (_mock *MockRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericStructs(genericType test.GenericType[TAny, TIntf]) test.GenericType[TSigned, TIntf] {
-	var retArgs mock.Arguments
+	ret := _mock.Called(genericType)
 
-	if retArgs == nil {
-		retArgs = _mock.Called(genericType)
+	if len(ret) == 0 {
+		panic("no return value specified for GenericStructs")
 	}
 
-	if len(retArgs) == 0 {
-		panic("no return value specified for MockRequesterGenerics.GenericStructs")
-	}
-
-	var (
-		retVal0 test.GenericType[TSigned, TIntf]
-	)
-	if returnFunc, ok := retArgs.Get(0).(func(test.GenericType[TAny, TIntf]) test.GenericType[TSigned, TIntf]); ok {
-		retVal0 = returnFunc(genericType)
+	var r0 test.GenericType[TSigned, TIntf]
+	if returnFunc, ok := ret.Get(0).(func(test.GenericType[TAny, TIntf]) test.GenericType[TSigned, TIntf]); ok {
+		r0 = returnFunc(genericType)
 	} else {
-		retVal0 = retArgs.Get(0).(test.GenericType[TSigned, TIntf])
+		r0 = ret.Get(0).(test.GenericType[TSigned, TIntf])
 	}
-	return retVal0
+	return r0
 }
 
 type MockRequesterGenerics_expecter[TAny any, TComparable comparable, TSigned constraints.Signed, TIntf test.GetInt, TExternalIntf io.Writer, TGenIntf test.GetGeneric[TSigned], TInlineType interface{ ~int | ~uint }, TInlineTypeGeneric interface {
@@ -447,34 +389,28 @@ type MockA struct {
 
 // Call provides a mock function for the type MockA
 func (_mock *MockA) Call() (test.B, error) {
-	var retArgs mock.Arguments
+	ret := _mock.Called()
 
-	if retArgs == nil {
-		retArgs = _mock.Called()
+	if len(ret) == 0 {
+		panic("no return value specified for Call")
 	}
 
-	if len(retArgs) == 0 {
-		panic("no return value specified for MockA.Call")
-	}
-
-	var (
-		retVal0 test.B
-		retVal1 error
-	)
-	if returnFunc, ok := retArgs.Get(0).(func() (test.B, error)); ok {
+	var r0 test.B
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func() (test.B, error)); ok {
 		return returnFunc()
 	}
-	if returnFunc, ok := retArgs.Get(0).(func() test.B); ok {
-		retVal0 = returnFunc()
+	if returnFunc, ok := ret.Get(0).(func() test.B); ok {
+		r0 = returnFunc()
 	} else {
-		retVal0 = retArgs.Get(0).(test.B)
+		r0 = ret.Get(0).(test.B)
 	}
-	if returnFunc, ok := retArgs.Get(1).(func() error); ok {
-		retVal1 = returnFunc()
+	if returnFunc, ok := ret.Get(1).(func() error); ok {
+		r1 = returnFunc()
 	} else {
-		retVal1 = retArgs.Error(1)
+		r1 = ret.Error(1)
 	}
-	return retVal0, retVal1
+	return r0, r1
 }
 
 type MockA_expecter struct {
