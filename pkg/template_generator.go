@@ -24,7 +24,7 @@ type Formatter string
 const (
 	FORMAT_GOFMT      Formatter = "gofmt"
 	FORMAT_GOIMPORRTS Formatter = "goimports"
-	FORMAT_NOOP       Formatter = ""
+	FORMAT_NOOP       Formatter = "noop"
 )
 
 type TemplateGenerator struct {
@@ -62,7 +62,7 @@ func (g *TemplateGenerator) format(src []byte) ([]byte, error) {
 		return goimports(src)
 	case FORMAT_GOFMT:
 		return gofmt(src)
-	case "":
+	case FORMAT_NOOP:
 		return src, nil
 	}
 
@@ -70,12 +70,33 @@ func (g *TemplateGenerator) format(src []byte) ([]byte, error) {
 }
 
 func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func) template.MethodData {
+	log := zerolog.Ctx(ctx)
+
 	methodScope := g.registry.MethodScope()
 
 	signature := method.Type().(*types.Signature)
 	params := make([]template.ParamData, signature.Params().Len())
+
+	// First pass to populate all imports first. This greatly simplifies name
+	// collision logic to first allocate the package qualifiers in the file-global
+	// scope first before allocating variable names.
 	for j := 0; j < signature.Params().Len(); j++ {
 		param := signature.Params().At(j)
+		methodScope.PopulateImports(ctx, param.Type())
+	}
+	for j := 0; j < signature.Results().Len(); j++ {
+		param := signature.Results().At(j)
+		methodScope.PopulateImports(ctx, param.Type())
+	}
+
+	// Now add parameter names. Their imports have already been processed.
+	for j := 0; j < signature.Params().Len(); j++ {
+		param := signature.Params().At(j)
+		log.Debug().Str("param-string", param.String()).Msg("found parameter")
+		for _, imprt := range g.registry.Imports() {
+			log.Debug().Str("import", imprt.Path()).Str("import-qualifier", imprt.Qualifier()).Msg("existing imports")
+		}
+
 		params[j] = template.ParamData{
 			Var:      methodScope.AddVar(ctx, param, ""),
 			Variadic: signature.Variadic() && j == signature.Params().Len()-1,
@@ -86,7 +107,7 @@ func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func) 
 	for j := 0; j < signature.Results().Len(); j++ {
 		param := signature.Results().At(j)
 		returns[j] = template.ParamData{
-			Var:      methodScope.AddVar(ctx, param, "Out"),
+			Var:      methodScope.AddVar(ctx, param, ""),
 			Variadic: false,
 		}
 	}

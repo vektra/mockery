@@ -16,17 +16,26 @@ type MethodScope struct {
 	registry   *Registry
 	moqPkgPath string
 
-	vars        []*Var
-	conflicted  map[string]bool
-	allVarNames map[string]any
+	vars       []*Var
+	conflicted map[string]bool
+	// visibleNames contains a collection of all names visible to this lexical
+	// scope. This includes import qualifiers. This is used to prevent naming
+	// collisions.
+	visibleNames map[string]any
+	imports      map[string]*Package
 }
 
 func NewMethodScope(r *Registry) *MethodScope {
+	visibleNames := map[string]any{}
+	for key := range r.importQualifiers {
+		visibleNames[key] = nil
+	}
 	return &MethodScope{
-		registry:    r,
-		vars:        []*Var{},
-		conflicted:  map[string]bool{},
-		allVarNames: map[string]any{},
+		registry:     r,
+		vars:         []*Var{},
+		conflicted:   map[string]bool{},
+		visibleNames: visibleNames,
+		imports:      map[string]*Package{},
 	}
 }
 
@@ -34,26 +43,21 @@ func NewMethodScope(r *Registry) *MethodScope {
 // It ensures the returned name does not conflict with any other name visible
 // to the scope. It registers the returned name in the lexical scope such that
 // its exact value can never be allocated again.
-func (m *MethodScope) AllocateName(prefix string, suffix string) string {
+func (m *MethodScope) AllocateName(prefix string) string {
 	var suggestion string
-	for i := 0; true; i++ {
+	for i := 0; ; i++ {
 		if i == 0 {
-			suggestion = fmt.Sprintf("%s%s", prefix, suffix)
+			suggestion = prefix
 		} else {
-			suggestion = fmt.Sprintf("%s_%d_%s", prefix, i, suffix)
+			suggestion = fmt.Sprintf("%s%d", prefix, i)
 		}
 
-		// Ensure that the name does not conflict with a package import.
-		if _, suggestionExists := m.registry.searchImport(suggestion); suggestionExists {
-			continue
-		}
-
-		if _, suggestionExists := m.allVarNames[suggestion]; suggestionExists {
+		if _, suggestionExists := m.visibleNames[suggestion]; suggestionExists {
 			continue
 		}
 		break
 	}
-	m.allVarNames[suggestion] = nil
+	m.visibleNames[suggestion] = nil
 	return suggestion
 }
 
@@ -63,10 +67,20 @@ func (m *MethodScope) AllocateName(prefix string, suffix string) string {
 // without conflict with other variables and imported packages. It also
 // adds the relevant imports to the registry for each added variable.
 func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, prefix string) *Var {
-	imports := make(map[string]*Package)
-	m.populateImports(ctx, vr.Type(), imports)
+	log := zerolog.Ctx(ctx).
+		With().
+		Str("prefix", prefix).
+		Str("variable-name", vr.Name()).
+		Logger()
+	imports := m.PopulateImports(ctx, vr.Type())
 
-	name := m.AllocateName(varName(vr, prefix), "Param")
+	log.Debug().Msg("adding var")
+	for key := range m.visibleNames {
+		log.Debug().Str("visible-name", key).Msg("visible name")
+	}
+	name := m.AllocateName(varName(vr, prefix))
+	log.Debug().Str("allocated-name", name).Msg("allocated name for variable in method")
+
 	v := Var{
 		vr:         vr,
 		imports:    imports,
@@ -86,7 +100,10 @@ func (m MethodScope) populateImportNamedType(
 	imports map[string]*Package,
 ) {
 	if pkg := t.Obj().Pkg(); pkg != nil {
-		imports[pkg.Path()] = m.registry.AddImport(ctx, pkg)
+		imprt := m.registry.AddImport(ctx, pkg)
+		imports[pkg.Path()] = imprt
+		m.imports[pkg.Path()] = imprt
+		m.visibleNames[imprt.Qualifier()] = nil
 	}
 	// The imports of a Type with a TypeList must be added to the imports list
 	// For example: Foo[otherpackage.Bar] , must have otherpackage imported
@@ -97,9 +114,17 @@ func (m MethodScope) populateImportNamedType(
 	}
 }
 
+func (m MethodScope) PopulateImports(ctx context.Context, t types.Type) map[string]*Package {
+	imports := map[string]*Package{}
+	m.populateImports(ctx, t, imports)
+	return imports
+}
+
 // populateImports extracts all the package imports for a given type
 // recursively. The imported packages by a single type can be more than
 // one (ex: map[a.Type]b.Type).
+//
+// Returned are the imports that were added for the given type.
 func (m MethodScope) populateImports(ctx context.Context, t types.Type, imports map[string]*Package) {
 	log := zerolog.Ctx(ctx).With().
 		Str("type-str", t.String()).Logger()

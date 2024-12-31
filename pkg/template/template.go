@@ -117,36 +117,6 @@ var templateFuncs = template.FuncMap{
 		s += "]"
 		return s
 	},
-	"TypeConstraint": func(m MockData) string {
-		if len(m.TypeParams) == 0 {
-			return ""
-		}
-		s := "["
-		for idx, param := range m.TypeParams {
-			if idx != 0 {
-				s += ", "
-			}
-			s += exported(param.Name())
-			s += " "
-			s += param.TypeString()
-		}
-		s += "]"
-		return s
-	},
-	"TypeInstantiation": func(m MockData) string {
-		if len(m.TypeParams) == 0 {
-			return ""
-		}
-		s := "["
-		for idx, param := range m.TypeParams {
-			if idx != 0 {
-				s += ", "
-			}
-			s += exported(param.Name())
-		}
-		s += "]"
-		return s
-	},
 	// String inspection and manipulation. Note that the first argument is replaced
 	// as the last argument in some functions in order to support chained
 	// template pipelines.

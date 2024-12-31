@@ -43,6 +43,38 @@ type MockData struct {
 	TemplateData  map[string]any
 }
 
+func (m MockData) TypeConstraint() string {
+	if len(m.TypeParams) == 0 {
+		return ""
+	}
+	s := "["
+	for idx, param := range m.TypeParams {
+		if idx != 0 {
+			s += ", "
+		}
+		s += exported(param.Name())
+		s += " "
+		s += param.TypeString()
+	}
+	s += "]"
+	return s
+}
+
+func (m MockData) TypeInstantiation() string {
+	if len(m.TypeParams) == 0 {
+		return ""
+	}
+	s := "["
+	for idx, param := range m.TypeParams {
+		if idx != 0 {
+			s += ", "
+		}
+		s += exported(param.Name())
+	}
+	s += "]"
+	return s
+}
+
 // MethodData is the data which represents a method on some interface.
 type MethodData struct {
 	// Name is the method's name.

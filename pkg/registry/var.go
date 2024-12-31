@@ -16,6 +16,10 @@ type Var struct {
 	Name string
 }
 
+func (v Var) Type() types.Type {
+	return v.vr.Type()
+}
+
 // IsSlice returns whether the type (or the underlying type) is a slice.
 func (v Var) IsSlice() bool {
 	_, ok := v.vr.Type().Underlying().(*types.Slice)

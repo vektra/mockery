@@ -3,6 +3,7 @@ mockname: "{{.InterfaceName}}"
 filename: "{{.MockName}}_mock.go"
 pkgname: mocks
 tags: "custom2"
+formatter: "noop"
 _anchors: &inpackage_config
   all: True
   dir: "{{.InterfaceDir}}"
