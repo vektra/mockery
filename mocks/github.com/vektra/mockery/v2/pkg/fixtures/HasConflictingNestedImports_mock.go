@@ -5,12 +5,12 @@
 package mocks
 
 import (
-	"github.com/vektra/mockery/v2/pkg/fixtures/http"
+	http0 "github.com/vektra/mockery/v2/pkg/fixtures/http"
 	"net/http"
     mock "github.com/stretchr/testify/mock"
 )
 
-
+ 
 // NewHasConflictingNestedImports creates a new instance of HasConflictingNestedImports. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewHasConflictingNestedImports (t interface {
@@ -39,32 +39,32 @@ func (_m *HasConflictingNestedImports) EXPECT() *HasConflictingNestedImports_Exp
 	return &HasConflictingNestedImports_Expecter{mock: &_m.Mock}
 }
 
-
+ 
 
 // Get provides a mock function for the type HasConflictingNestedImports
-func (_mock *HasConflictingNestedImports) Get(path string) (http.Response, error) {
+func (_mock *HasConflictingNestedImports) Get(path string) (http.Response, error) {  
 	ret := _mock.Called(path)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Get")
 	}
 
-
+		
 	var r0 http.Response
 	var r1 error
 	if returnFunc, ok := ret.Get(0).(func(string) (http.Response, error)); ok {
 		return returnFunc(path)
-	}
+	} 
 	if returnFunc, ok := ret.Get(0).(func(string) http.Response); ok {
 		r0 = returnFunc(path)
 	} else {
 		r0 = ret.Get(0).(http.Response)
-	}
+	} 
 	if returnFunc, ok := ret.Get(1).(func(string) error); ok {
 		r1 = returnFunc(path)
 	} else {
 		r1 = ret.Error(1)
-	}
+	} 
 	return r0, r1
 }
 
@@ -99,23 +99,23 @@ func (_c *HasConflictingNestedImports_Get_Call) RunAndReturn(run func(path strin
 	_c.Call.Return(run)
 	return _c
 }
-
+ 
 
 // Z provides a mock function for the type HasConflictingNestedImports
-func (_mock *HasConflictingNestedImports) Z() http.MyStruct {
+func (_mock *HasConflictingNestedImports) Z() http0.MyStruct {  
 	ret := _mock.Called()
 
 	if len(ret) == 0 {
 		panic("no return value specified for Z")
 	}
 
-
-	var r0 http.MyStruct
-	if returnFunc, ok := ret.Get(0).(func() http.MyStruct); ok {
+		
+	var r0 http0.MyStruct 
+	if returnFunc, ok := ret.Get(0).(func() http0.MyStruct); ok {
 		r0 = returnFunc()
 	} else {
-		r0 = ret.Get(0).(http.MyStruct)
-	}
+		r0 = ret.Get(0).(http0.MyStruct)
+	} 
 	return r0
 }
 
@@ -140,14 +140,14 @@ func (_c *HasConflictingNestedImports_Z_Call) Run(run func()) *HasConflictingNes
 	return _c
 }
 
-func (_c *HasConflictingNestedImports_Z_Call) Return(myStruct http.MyStruct) *HasConflictingNestedImports_Z_Call {
+func (_c *HasConflictingNestedImports_Z_Call) Return(myStruct http0.MyStruct) *HasConflictingNestedImports_Z_Call {
 	_c.Call.Return(myStruct)
 	return _c
 }
 
-func (_c *HasConflictingNestedImports_Z_Call) RunAndReturn(run func()http.MyStruct) *HasConflictingNestedImports_Z_Call {
+func (_c *HasConflictingNestedImports_Z_Call) RunAndReturn(run func()http0.MyStruct) *HasConflictingNestedImports_Z_Call {
 	_c.Call.Return(run)
 	return _c
 }
-
+  
 

@@ -39,6 +39,19 @@ func NewMethodScope(r *Registry) *MethodScope {
 	}
 }
 
+func (m *MethodScope) ResolveVariableNameCollisions(ctx context.Context) {
+	log := zerolog.Ctx(ctx)
+	for _, v := range m.vars {
+		varLog := log.With().Str("variable-name", v.Name).Logger()
+		newName := m.AllocateName(v.Name)
+		if newName != v.Name {
+			varLog.Debug().Str("new-name", newName).Msg("variable was found to conflict with previously allocated name. Giving new name.")
+		}
+		v.Name = newName
+		m.visibleNames[v.Name] = nil
+	}
+}
+
 // AllocateName creates a new variable name in the lexical scope of the method.
 // It ensures the returned name does not conflict with any other name visible
 // to the scope. It registers the returned name in the lexical scope such that
@@ -57,7 +70,6 @@ func (m *MethodScope) AllocateName(prefix string) string {
 		}
 		break
 	}
-	m.visibleNames[suggestion] = nil
 	return suggestion
 }
 
@@ -79,7 +91,9 @@ func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, prefix string) 
 		log.Debug().Str("visible-name", key).Msg("visible name")
 	}
 	name := m.AllocateName(varName(vr, prefix))
-	log.Debug().Str("allocated-name", name).Msg("allocated name for variable in method")
+	// This suggested name is subject to change because it might come into conflict
+	// with a future package import.
+	log.Debug().Str("suggested-name", name).Msg("suggested name for variable in method")
 
 	v := Var{
 		vr:         vr,
@@ -91,7 +105,7 @@ func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, prefix string) 
 	return &v
 }
 
-func (m MethodScope) populateImportNamedType(
+func (m *MethodScope) populateImportNamedType(
 	ctx context.Context,
 	t interface {
 		Obj() *types.TypeName
@@ -114,7 +128,7 @@ func (m MethodScope) populateImportNamedType(
 	}
 }
 
-func (m MethodScope) PopulateImports(ctx context.Context, t types.Type) map[string]*Package {
+func (m *MethodScope) PopulateImports(ctx context.Context, t types.Type) map[string]*Package {
 	imports := map[string]*Package{}
 	m.populateImports(ctx, t, imports)
 	return imports
@@ -125,7 +139,7 @@ func (m MethodScope) PopulateImports(ctx context.Context, t types.Type) map[stri
 // one (ex: map[a.Type]b.Type).
 //
 // Returned are the imports that were added for the given type.
-func (m MethodScope) populateImports(ctx context.Context, t types.Type, imports map[string]*Package) {
+func (m *MethodScope) populateImports(ctx context.Context, t types.Type, imports map[string]*Package) {
 	log := zerolog.Ctx(ctx).With().
 		Str("type-str", t.String()).Logger()
 	switch t := t.(type) {

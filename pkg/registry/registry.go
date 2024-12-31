@@ -2,12 +2,9 @@ package registry
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"go/ast"
 	"go/types"
 	"sort"
-	"strings"
 
 	"github.com/rs/zerolog"
 	"golang.org/x/tools/go/packages"
@@ -21,7 +18,6 @@ type Registry struct {
 	dstPkgPath       string
 	srcPkg           *packages.Package
 	srcPkgName       string
-	aliases          map[string]string
 	imports          map[string]*Package
 	importQualifiers map[string]*Package
 }
@@ -33,7 +29,6 @@ func New(srcPkg *packages.Package, dstPkgPath string) (*Registry, error) {
 		dstPkgPath:       dstPkgPath,
 		srcPkg:           srcPkg,
 		srcPkgName:       srcPkg.Name,
-		aliases:          parseImportsAliases(srcPkg.Syntax),
 		imports:          make(map[string]*Package),
 		importQualifiers: make(map[string]*Package),
 	}, nil
@@ -89,14 +84,17 @@ func (r *Registry) AddImport(ctx context.Context, pkg *types.Package) *Package {
 		return imprt
 	}
 
-	imprt := Package{pkg: pkg, Alias: r.aliases[path]}
-	var aliasSuggestion string
+	imprt := Package{pkg: pkg}
+	originalQualifier := imprt.Qualifier()
+	var aliasSuggestion string = imprt.Qualifier()
 	for i := 0; ; i++ {
 		if _, conflict := r.importQualifiers[aliasSuggestion]; conflict {
 			aliasSuggestion = fmt.Sprintf("%s%d", imprt.Qualifier(), i)
 			continue
 		}
-		imprt.Alias = aliasSuggestion
+		if originalQualifier != aliasSuggestion {
+			imprt.Alias = aliasSuggestion
+		}
 		break
 	}
 
@@ -116,47 +114,4 @@ func (r Registry) Imports() []*Package {
 		return imports[i].Path() < imports[j].Path()
 	})
 	return imports
-}
-
-func pkgInfoFromPath(srcDir string, mode packages.LoadMode) (*packages.Package, error) {
-	pkgs, err := packages.Load(&packages.Config{
-		Mode: mode,
-		Dir:  srcDir,
-	})
-	if err != nil {
-		return nil, err
-	}
-	if len(pkgs) == 0 {
-		return nil, errors.New("package not found")
-	}
-	if len(pkgs) > 1 {
-		return nil, errors.New("found more than one package")
-	}
-	if errs := pkgs[0].Errors; len(errs) != 0 {
-		if len(errs) == 1 {
-			return nil, errs[0]
-		}
-		return nil, fmt.Errorf("%s (and %d more errors)", errs[0], len(errs)-1)
-	}
-	return pkgs[0], nil
-}
-
-func pkgInDir(pkgName, dir string) bool {
-	currentPkg, err := pkgInfoFromPath(dir, packages.NeedName)
-	if err != nil {
-		return false
-	}
-	return currentPkg.Name == pkgName || currentPkg.Name+"_test" == pkgName
-}
-
-func parseImportsAliases(syntaxTree []*ast.File) map[string]string {
-	aliases := make(map[string]string)
-	for _, syntax := range syntaxTree {
-		for _, imprt := range syntax.Imports {
-			if imprt.Name != nil && imprt.Name.Name != "." && imprt.Name.Name != "_" {
-				aliases[strings.Trim(imprt.Path.Value, `"`)] = imprt.Name.Name
-			}
-		}
-	}
-	return aliases
 }

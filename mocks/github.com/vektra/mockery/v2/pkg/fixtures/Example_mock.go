@@ -5,8 +5,8 @@
 package mocks
 
 import (
-	"github.com/vektra/mockery/v2/pkg/fixtures/12345678/http"
-	"github.com/vektra/mockery/v2/pkg/fixtures/http"
+	http1 "github.com/vektra/mockery/v2/pkg/fixtures/12345678/http"
+	http0 "github.com/vektra/mockery/v2/pkg/fixtures/http"
 	"net/http"
     mock "github.com/stretchr/testify/mock"
 )
@@ -95,7 +95,7 @@ func (_c *Example_A_Call) RunAndReturn(run func()http.Flusher) *Example_A_Call {
  
 
 // B provides a mock function for the type Example
-func (_mock *Example) B(fixtureshttp string) http.MyStruct {  
+func (_mock *Example) B(fixtureshttp string) http0.MyStruct {  
 	ret := _mock.Called(fixtureshttp)
 
 	if len(ret) == 0 {
@@ -103,11 +103,11 @@ func (_mock *Example) B(fixtureshttp string) http.MyStruct {
 	}
 
 		
-	var r0 http.MyStruct 
-	if returnFunc, ok := ret.Get(0).(func(string) http.MyStruct); ok {
+	var r0 http0.MyStruct 
+	if returnFunc, ok := ret.Get(0).(func(string) http0.MyStruct); ok {
 		r0 = returnFunc(fixtureshttp)
 	} else {
-		r0 = ret.Get(0).(http.MyStruct)
+		r0 = ret.Get(0).(http0.MyStruct)
 	} 
 	return r0
 }
@@ -134,19 +134,19 @@ func (_c *Example_B_Call) Run(run func(fixtureshttp string)) *Example_B_Call {
 	return _c
 }
 
-func (_c *Example_B_Call) Return(myStruct http.MyStruct) *Example_B_Call {
+func (_c *Example_B_Call) Return(myStruct http0.MyStruct) *Example_B_Call {
 	_c.Call.Return(myStruct)
 	return _c
 }
 
-func (_c *Example_B_Call) RunAndReturn(run func(fixtureshttp string)http.MyStruct) *Example_B_Call {
+func (_c *Example_B_Call) RunAndReturn(run func(fixtureshttp string)http0.MyStruct) *Example_B_Call {
 	_c.Call.Return(run)
 	return _c
 }
  
 
 // C provides a mock function for the type Example
-func (_mock *Example) C(fixtureshttp string) http.MyStruct {  
+func (_mock *Example) C(fixtureshttp string) http1.MyStruct {  
 	ret := _mock.Called(fixtureshttp)
 
 	if len(ret) == 0 {
@@ -154,11 +154,11 @@ func (_mock *Example) C(fixtureshttp string) http.MyStruct {
 	}
 
 		
-	var r0 http.MyStruct 
-	if returnFunc, ok := ret.Get(0).(func(string) http.MyStruct); ok {
+	var r0 http1.MyStruct 
+	if returnFunc, ok := ret.Get(0).(func(string) http1.MyStruct); ok {
 		r0 = returnFunc(fixtureshttp)
 	} else {
-		r0 = ret.Get(0).(http.MyStruct)
+		r0 = ret.Get(0).(http1.MyStruct)
 	} 
 	return r0
 }
@@ -185,12 +185,12 @@ func (_c *Example_C_Call) Run(run func(fixtureshttp string)) *Example_C_Call {
 	return _c
 }
 
-func (_c *Example_C_Call) Return(myStruct http.MyStruct) *Example_C_Call {
+func (_c *Example_C_Call) Return(myStruct http1.MyStruct) *Example_C_Call {
 	_c.Call.Return(myStruct)
 	return _c
 }
 
-func (_c *Example_C_Call) RunAndReturn(run func(fixtureshttp string)http.MyStruct) *Example_C_Call {
+func (_c *Example_C_Call) RunAndReturn(run func(fixtureshttp string)http1.MyStruct) *Example_C_Call {
 	_c.Call.Return(run)
 	return _c
 }

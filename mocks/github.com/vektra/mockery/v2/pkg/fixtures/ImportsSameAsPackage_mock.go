@@ -5,7 +5,7 @@
 package mocks
 
 import (
-	"github.com/vektra/mockery/v2/pkg/fixtures"
+	test0 "github.com/vektra/mockery/v2/pkg/fixtures"
 	"github.com/vektra/mockery/v2/pkg/fixtures/redefined_type_b"
     mock "github.com/stretchr/testify/mock"
 )
@@ -92,7 +92,7 @@ func (_c *ImportsSameAsPackage_A_Call) RunAndReturn(run func()test.B) *ImportsSa
  
 
 // B provides a mock function for the type ImportsSameAsPackage
-func (_mock *ImportsSameAsPackage) B() test.KeyManager {  
+func (_mock *ImportsSameAsPackage) B() test0.KeyManager {  
 	ret := _mock.Called()
 
 	if len(ret) == 0 {
@@ -100,12 +100,12 @@ func (_mock *ImportsSameAsPackage) B() test.KeyManager {
 	}
 
 		
-	var r0 test.KeyManager 
-	if returnFunc, ok := ret.Get(0).(func() test.KeyManager); ok {
+	var r0 test0.KeyManager 
+	if returnFunc, ok := ret.Get(0).(func() test0.KeyManager); ok {
 		r0 = returnFunc()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(test.KeyManager)
+			r0 = ret.Get(0).(test0.KeyManager)
 		}
 	} 
 	return r0
@@ -132,19 +132,19 @@ func (_c *ImportsSameAsPackage_B_Call) Run(run func()) *ImportsSameAsPackage_B_C
 	return _c
 }
 
-func (_c *ImportsSameAsPackage_B_Call) Return(keyManager test.KeyManager) *ImportsSameAsPackage_B_Call {
+func (_c *ImportsSameAsPackage_B_Call) Return(keyManager test0.KeyManager) *ImportsSameAsPackage_B_Call {
 	_c.Call.Return(keyManager)
 	return _c
 }
 
-func (_c *ImportsSameAsPackage_B_Call) RunAndReturn(run func()test.KeyManager) *ImportsSameAsPackage_B_Call {
+func (_c *ImportsSameAsPackage_B_Call) RunAndReturn(run func()test0.KeyManager) *ImportsSameAsPackage_B_Call {
 	_c.Call.Return(run)
 	return _c
 }
  
 
 // C provides a mock function for the type ImportsSameAsPackage
-func (_mock *ImportsSameAsPackage) C(c test.C)  {  _mock.Called(c)
+func (_mock *ImportsSameAsPackage) C(c test0.C)  {  _mock.Called(c)
 	return 
 }
 
@@ -163,9 +163,9 @@ func (_e *ImportsSameAsPackage_Expecter) C(c interface{}, ) *ImportsSameAsPackag
 	return &ImportsSameAsPackage_C_Call{Call: _e.mock.On("C",c, )}
 }
 
-func (_c *ImportsSameAsPackage_C_Call) Run(run func(c test.C)) *ImportsSameAsPackage_C_Call {
+func (_c *ImportsSameAsPackage_C_Call) Run(run func(c test0.C)) *ImportsSameAsPackage_C_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(test.C),)
+		run(args[0].(test0.C),)
 	})
 	return _c
 }
@@ -175,7 +175,7 @@ func (_c *ImportsSameAsPackage_C_Call) Return() *ImportsSameAsPackage_C_Call {
 	return _c
 }
 
-func (_c *ImportsSameAsPackage_C_Call) RunAndReturn(run func(c test.C)) *ImportsSameAsPackage_C_Call {
+func (_c *ImportsSameAsPackage_C_Call) RunAndReturn(run func(c test0.C)) *ImportsSameAsPackage_C_Call {
 	_c.Run(run)
 	return _c
 }

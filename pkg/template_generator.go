@@ -77,19 +77,6 @@ func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func) 
 	signature := method.Type().(*types.Signature)
 	params := make([]template.ParamData, signature.Params().Len())
 
-	// First pass to populate all imports first. This greatly simplifies name
-	// collision logic to first allocate the package qualifiers in the file-global
-	// scope first before allocating variable names.
-	for j := 0; j < signature.Params().Len(); j++ {
-		param := signature.Params().At(j)
-		methodScope.PopulateImports(ctx, param.Type())
-	}
-	for j := 0; j < signature.Results().Len(); j++ {
-		param := signature.Results().At(j)
-		methodScope.PopulateImports(ctx, param.Type())
-	}
-
-	// Now add parameter names. Their imports have already been processed.
 	for j := 0; j < signature.Params().Len(); j++ {
 		param := signature.Params().At(j)
 		log.Debug().Str("param-string", param.String()).Msg("found parameter")
@@ -171,6 +158,17 @@ func (g *TemplateGenerator) Generate(
 		methods := make([]template.MethodData, iface.NumMethods())
 		for i := 0; i < iface.NumMethods(); i++ {
 			methods[i] = g.methodData(ctx, iface.Method(i))
+		}
+		// Now that all methods have been generated, we need to resolve naming
+		// conflicts that arise between variable names and package qualifiers.
+		for _, method := range methods {
+			method.Scope.ResolveVariableNameCollisions(
+				zerolog.
+					Ctx(ctx).
+					With().
+					Str("method-name", method.Name).
+					Logger().
+					WithContext(ctx))
 		}
 
 		mockData = append(mockData, template.MockData{
