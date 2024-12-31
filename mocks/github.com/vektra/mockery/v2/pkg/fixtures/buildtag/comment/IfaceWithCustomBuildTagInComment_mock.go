@@ -70,12 +70,12 @@ func (_c *IfaceWithCustomBuildTagInComment_Custom2_Call) RunAndReturn(run func()
 }
 
 // Sprintf provides a mock function for the type IfaceWithCustomBuildTagInComment
-func (_mock *IfaceWithCustomBuildTagInComment) Sprintf(format string, a ...interface{}) string {
+func (_mock *IfaceWithCustomBuildTagInComment) Sprintf(formatParam string, aParam ...interface{}) string {
 	var tmpRet mock.Arguments
-	if len(a) > 0 {
-		tmpRet = _mock.Called(format, a)
+	if len(aParam) > 0 {
+		tmpRet = _mock.Called(formatParam, aParam)
 	} else {
-		tmpRet = _mock.Called(format)
+		tmpRet = _mock.Called(formatParam)
 	}
 	ret := tmpRet
 
@@ -85,7 +85,7 @@ func (_mock *IfaceWithCustomBuildTagInComment) Sprintf(format string, a ...inter
 
 	var r0 string
 	if returnFunc, ok := ret.Get(0).(func(string, ...interface{}) string); ok {
-		r0 = returnFunc(format, a...)
+		r0 = returnFunc(formatParam, aParam...)
 	} else {
 		r0 = ret.Get(0).(string)
 	}
@@ -98,14 +98,14 @@ type IfaceWithCustomBuildTagInComment_Sprintf_Call struct {
 }
 
 // Sprintf is a helper method to define mock.On call
-//   - format
-//   - a
-func (_e *IfaceWithCustomBuildTagInComment_Expecter) Sprintf(format interface{}, a ...interface{}) *IfaceWithCustomBuildTagInComment_Sprintf_Call {
+//   - formatParam
+//   - aParam
+func (_e *IfaceWithCustomBuildTagInComment_Expecter) Sprintf(formatParam interface{}, aParam ...interface{}) *IfaceWithCustomBuildTagInComment_Sprintf_Call {
 	return &IfaceWithCustomBuildTagInComment_Sprintf_Call{Call: _e.mock.On("Sprintf",
-		append([]interface{}{format}, a...)...)}
+		append([]interface{}{formatParam}, aParam...)...)}
 }
 
-func (_c *IfaceWithCustomBuildTagInComment_Sprintf_Call) Run(run func(format string, a ...interface{})) *IfaceWithCustomBuildTagInComment_Sprintf_Call {
+func (_c *IfaceWithCustomBuildTagInComment_Sprintf_Call) Run(run func(formatParam string, aParam ...interface{})) *IfaceWithCustomBuildTagInComment_Sprintf_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		variadicArgs := make([]interface{}, len(args)-1)
 		for i, a := range args[1:] {
@@ -118,12 +118,12 @@ func (_c *IfaceWithCustomBuildTagInComment_Sprintf_Call) Run(run func(format str
 	return _c
 }
 
-func (_c *IfaceWithCustomBuildTagInComment_Sprintf_Call) Return(sOut string) *IfaceWithCustomBuildTagInComment_Sprintf_Call {
-	_c.Call.Return(sOut)
+func (_c *IfaceWithCustomBuildTagInComment_Sprintf_Call) Return(sOutParam string) *IfaceWithCustomBuildTagInComment_Sprintf_Call {
+	_c.Call.Return(sOutParam)
 	return _c
 }
 
-func (_c *IfaceWithCustomBuildTagInComment_Sprintf_Call) RunAndReturn(run func(format string, a ...interface{}) string) *IfaceWithCustomBuildTagInComment_Sprintf_Call {
+func (_c *IfaceWithCustomBuildTagInComment_Sprintf_Call) RunAndReturn(run func(formatParam string, aParam ...interface{}) string) *IfaceWithCustomBuildTagInComment_Sprintf_Call {
 	_c.Call.Return(run)
 	return _c
 }

@@ -37,8 +37,8 @@ func (_m *RequesterArgSameAsNamedImport) EXPECT() *RequesterArgSameAsNamedImport
 }
 
 // Get provides a mock function for the type RequesterArgSameAsNamedImport
-func (_mock *RequesterArgSameAsNamedImport) Get(jsonMoqParam string) *json.RawMessage {
-	ret := _mock.Called(jsonMoqParam)
+func (_mock *RequesterArgSameAsNamedImport) Get(jsonParam string) *json.RawMessage {
+	ret := _mock.Called(jsonParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Get")
@@ -46,7 +46,7 @@ func (_mock *RequesterArgSameAsNamedImport) Get(jsonMoqParam string) *json.RawMe
 
 	var r0 *json.RawMessage
 	if returnFunc, ok := ret.Get(0).(func(string) *json.RawMessage); ok {
-		r0 = returnFunc(jsonMoqParam)
+		r0 = returnFunc(jsonParam)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*json.RawMessage)
@@ -61,24 +61,24 @@ type RequesterArgSameAsNamedImport_Get_Call struct {
 }
 
 // Get is a helper method to define mock.On call
-//   - jsonMoqParam
-func (_e *RequesterArgSameAsNamedImport_Expecter) Get(jsonMoqParam interface{}) *RequesterArgSameAsNamedImport_Get_Call {
-	return &RequesterArgSameAsNamedImport_Get_Call{Call: _e.mock.On("Get", jsonMoqParam)}
+//   - jsonParam
+func (_e *RequesterArgSameAsNamedImport_Expecter) Get(jsonParam interface{}) *RequesterArgSameAsNamedImport_Get_Call {
+	return &RequesterArgSameAsNamedImport_Get_Call{Call: _e.mock.On("Get", jsonParam)}
 }
 
-func (_c *RequesterArgSameAsNamedImport_Get_Call) Run(run func(jsonMoqParam string)) *RequesterArgSameAsNamedImport_Get_Call {
+func (_c *RequesterArgSameAsNamedImport_Get_Call) Run(run func(jsonParam string)) *RequesterArgSameAsNamedImport_Get_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(jsonMoqParam)
+		run(args[0].(string))
 	})
 	return _c
 }
 
-func (_c *RequesterArgSameAsNamedImport_Get_Call) Return(rawMessageOut *json.RawMessage) *RequesterArgSameAsNamedImport_Get_Call {
-	_c.Call.Return(rawMessageOut)
+func (_c *RequesterArgSameAsNamedImport_Get_Call) Return(rawMessageOutParam *json.RawMessage) *RequesterArgSameAsNamedImport_Get_Call {
+	_c.Call.Return(rawMessageOutParam)
 	return _c
 }
 
-func (_c *RequesterArgSameAsNamedImport_Get_Call) RunAndReturn(run func(jsonMoqParam string) *json.RawMessage) *RequesterArgSameAsNamedImport_Get_Call {
+func (_c *RequesterArgSameAsNamedImport_Get_Call) RunAndReturn(run func(jsonParam string) *json.RawMessage) *RequesterArgSameAsNamedImport_Get_Call {
 	_c.Call.Return(run)
 	return _c
 }

@@ -68,8 +68,8 @@ func (_c *MockStringer_String_Call) Run(run func()) *MockStringer_String_Call {
 	return _c
 }
 
-func (_c *MockStringer_String_Call) Return(sOut string) *MockStringer_String_Call {
-	_c.Call.Return(sOut)
+func (_c *MockStringer_String_Call) Return(sOutParam string) *MockStringer_String_Call {
+	_c.Call.Return(sOutParam)
 	return _c
 }
 

@@ -35,8 +35,8 @@ func (_m *interfaceB0Mock) EXPECT() *interfaceB0Mock_Expecter {
 }
 
 // DoB0 provides a mock function for the type interfaceB0Mock
-func (_mock *interfaceB0Mock) DoB0(interfaceB0 same_name_arg_and_type.interfaceB0) same_name_arg_and_type.interfaceB0 {
-	ret := _mock.Called(interfaceB0)
+func (_mock *interfaceB0Mock) DoB0(interfaceB0Param same_name_arg_and_type.interfaceB0) same_name_arg_and_type.interfaceB0 {
+	ret := _mock.Called(interfaceB0Param)
 
 	if len(ret) == 0 {
 		panic("no return value specified for DoB0")
@@ -44,7 +44,7 @@ func (_mock *interfaceB0Mock) DoB0(interfaceB0 same_name_arg_and_type.interfaceB
 
 	var r0 same_name_arg_and_type.interfaceB0
 	if returnFunc, ok := ret.Get(0).(func(same_name_arg_and_type.interfaceB0) same_name_arg_and_type.interfaceB0); ok {
-		r0 = returnFunc(interfaceB0)
+		r0 = returnFunc(interfaceB0Param)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(same_name_arg_and_type.interfaceB0)
@@ -59,24 +59,24 @@ type interfaceB0Mock_DoB0_Call struct {
 }
 
 // DoB0 is a helper method to define mock.On call
-//   - interfaceB0
-func (_e *interfaceB0Mock_Expecter) DoB0(interfaceB0 interface{}) *interfaceB0Mock_DoB0_Call {
-	return &interfaceB0Mock_DoB0_Call{Call: _e.mock.On("DoB0", interfaceB0)}
+//   - interfaceB0Param
+func (_e *interfaceB0Mock_Expecter) DoB0(interfaceB0Param interface{}) *interfaceB0Mock_DoB0_Call {
+	return &interfaceB0Mock_DoB0_Call{Call: _e.mock.On("DoB0", interfaceB0Param)}
 }
 
-func (_c *interfaceB0Mock_DoB0_Call) Run(run func(interfaceB0 same_name_arg_and_type.interfaceB0)) *interfaceB0Mock_DoB0_Call {
+func (_c *interfaceB0Mock_DoB0_Call) Run(run func(interfaceB0Param same_name_arg_and_type.interfaceB0)) *interfaceB0Mock_DoB0_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(interfaceB0)
+		run(args[0].(same_name_arg_and_type.interfaceB0))
 	})
 	return _c
 }
 
-func (_c *interfaceB0Mock_DoB0_Call) Return(interfaceB0MoqParamOut same_name_arg_and_type.interfaceB0) *interfaceB0Mock_DoB0_Call {
-	_c.Call.Return(interfaceB0MoqParamOut)
+func (_c *interfaceB0Mock_DoB0_Call) Return(interfaceB0MoqParamOutParam same_name_arg_and_type.interfaceB0) *interfaceB0Mock_DoB0_Call {
+	_c.Call.Return(interfaceB0MoqParamOutParam)
 	return _c
 }
 
-func (_c *interfaceB0Mock_DoB0_Call) RunAndReturn(run func(interfaceB0 same_name_arg_and_type.interfaceB0) same_name_arg_and_type.interfaceB0) *interfaceB0Mock_DoB0_Call {
+func (_c *interfaceB0Mock_DoB0_Call) RunAndReturn(run func(interfaceB0Param same_name_arg_and_type.interfaceB0) same_name_arg_and_type.interfaceB0) *interfaceB0Mock_DoB0_Call {
 	_c.Call.Return(run)
 	return _c
 }

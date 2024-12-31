@@ -35,11 +35,11 @@ func (_m *VariadicNoReturnInterface) EXPECT() *VariadicNoReturnInterface_Expecte
 }
 
 // VariadicNoReturn provides a mock function for the type VariadicNoReturnInterface
-func (_mock *VariadicNoReturnInterface) VariadicNoReturn(j int, is ...interface{}) {
-	if len(is) > 0 {
-		_mock.Called(j, is)
+func (_mock *VariadicNoReturnInterface) VariadicNoReturn(jParam int, isParam ...interface{}) {
+	if len(isParam) > 0 {
+		_mock.Called(jParam, isParam)
 	} else {
-		_mock.Called(j)
+		_mock.Called(jParam)
 	}
 	return
 }
@@ -50,14 +50,14 @@ type VariadicNoReturnInterface_VariadicNoReturn_Call struct {
 }
 
 // VariadicNoReturn is a helper method to define mock.On call
-//   - j
-//   - is
-func (_e *VariadicNoReturnInterface_Expecter) VariadicNoReturn(j interface{}, is ...interface{}) *VariadicNoReturnInterface_VariadicNoReturn_Call {
+//   - jParam
+//   - isParam
+func (_e *VariadicNoReturnInterface_Expecter) VariadicNoReturn(jParam interface{}, isParam ...interface{}) *VariadicNoReturnInterface_VariadicNoReturn_Call {
 	return &VariadicNoReturnInterface_VariadicNoReturn_Call{Call: _e.mock.On("VariadicNoReturn",
-		append([]interface{}{j}, is...)...)}
+		append([]interface{}{jParam}, isParam...)...)}
 }
 
-func (_c *VariadicNoReturnInterface_VariadicNoReturn_Call) Run(run func(j int, is ...interface{})) *VariadicNoReturnInterface_VariadicNoReturn_Call {
+func (_c *VariadicNoReturnInterface_VariadicNoReturn_Call) Run(run func(jParam int, isParam ...interface{})) *VariadicNoReturnInterface_VariadicNoReturn_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		variadicArgs := make([]interface{}, len(args)-1)
 		for i, a := range args[1:] {
@@ -75,7 +75,7 @@ func (_c *VariadicNoReturnInterface_VariadicNoReturn_Call) Return() *VariadicNoR
 	return _c
 }
 
-func (_c *VariadicNoReturnInterface_VariadicNoReturn_Call) RunAndReturn(run func(j int, is ...interface{})) *VariadicNoReturnInterface_VariadicNoReturn_Call {
+func (_c *VariadicNoReturnInterface_VariadicNoReturn_Call) RunAndReturn(run func(jParam int, isParam ...interface{})) *VariadicNoReturnInterface_VariadicNoReturn_Call {
 	_c.Run(run)
 	return _c
 }

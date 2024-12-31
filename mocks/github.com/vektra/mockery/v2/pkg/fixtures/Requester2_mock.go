@@ -35,8 +35,8 @@ func (_m *Requester2) EXPECT() *Requester2_Expecter {
 }
 
 // Get provides a mock function for the type Requester2
-func (_mock *Requester2) Get(path string) error {
-	ret := _mock.Called(path)
+func (_mock *Requester2) Get(pathParam string) error {
+	ret := _mock.Called(pathParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Get")
@@ -44,7 +44,7 @@ func (_mock *Requester2) Get(path string) error {
 
 	var r0 error
 	if returnFunc, ok := ret.Get(0).(func(string) error); ok {
-		r0 = returnFunc(path)
+		r0 = returnFunc(pathParam)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -57,24 +57,24 @@ type Requester2_Get_Call struct {
 }
 
 // Get is a helper method to define mock.On call
-//   - path
-func (_e *Requester2_Expecter) Get(path interface{}) *Requester2_Get_Call {
-	return &Requester2_Get_Call{Call: _e.mock.On("Get", path)}
+//   - pathParam
+func (_e *Requester2_Expecter) Get(pathParam interface{}) *Requester2_Get_Call {
+	return &Requester2_Get_Call{Call: _e.mock.On("Get", pathParam)}
 }
 
-func (_c *Requester2_Get_Call) Run(run func(path string)) *Requester2_Get_Call {
+func (_c *Requester2_Get_Call) Run(run func(pathParam string)) *Requester2_Get_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(path)
+		run(args[0].(string))
 	})
 	return _c
 }
 
-func (_c *Requester2_Get_Call) Return(errOut error) *Requester2_Get_Call {
-	_c.Call.Return(errOut)
+func (_c *Requester2_Get_Call) Return(errOutParam error) *Requester2_Get_Call {
+	_c.Call.Return(errOutParam)
 	return _c
 }
 
-func (_c *Requester2_Get_Call) RunAndReturn(run func(path string) error) *Requester2_Get_Call {
+func (_c *Requester2_Get_Call) RunAndReturn(run func(pathParam string) error) *Requester2_Get_Call {
 	_c.Call.Return(run)
 	return _c
 }

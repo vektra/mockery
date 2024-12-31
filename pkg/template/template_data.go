@@ -45,9 +45,19 @@ type MockData struct {
 
 // MethodData is the data which represents a method on some interface.
 type MethodData struct {
-	Name    string
-	Params  []ParamData
+	// Name is the method's name.
+	Name string
+
+	// Params represents all the arguments to the method.
+	Params []ParamData
+
+	// Returns represents all the return parameters of the method.
 	Returns []ParamData
+
+	// Scope represents the lexical scope of the method. Its primary function
+	// is keeping track of all names visible in the current scope, which allows
+	// the creation of new variables with guaranteed non-conflicting names.
+	Scope *registry.MethodScope
 }
 
 // ArgList is the string representation of method parameters, ex:

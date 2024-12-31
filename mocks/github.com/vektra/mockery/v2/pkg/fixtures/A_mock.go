@@ -78,8 +78,8 @@ func (_c *A_Call_Call) Run(run func()) *A_Call_Call {
 	return _c
 }
 
-func (_c *A_Call_Call) Return(bOut test.B, errOut error) *A_Call_Call {
-	_c.Call.Return(bOut, errOut)
+func (_c *A_Call_Call) Return(bOutParam test.B, errOutParam error) *A_Call_Call {
+	_c.Call.Return(bOutParam, errOutParam)
 	return _c
 }
 

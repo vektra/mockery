@@ -35,8 +35,8 @@ func (_m *MapFunc) EXPECT() *MapFunc_Expecter {
 }
 
 // Get provides a mock function for the type MapFunc
-func (_mock *MapFunc) Get(m map[string]func(string) string) error {
-	ret := _mock.Called(m)
+func (_mock *MapFunc) Get(mParam map[string]func(string) string) error {
+	ret := _mock.Called(mParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Get")
@@ -44,7 +44,7 @@ func (_mock *MapFunc) Get(m map[string]func(string) string) error {
 
 	var r0 error
 	if returnFunc, ok := ret.Get(0).(func(map[string]func(string) string) error); ok {
-		r0 = returnFunc(m)
+		r0 = returnFunc(mParam)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -57,24 +57,24 @@ type MapFunc_Get_Call struct {
 }
 
 // Get is a helper method to define mock.On call
-//   - m
-func (_e *MapFunc_Expecter) Get(m interface{}) *MapFunc_Get_Call {
-	return &MapFunc_Get_Call{Call: _e.mock.On("Get", m)}
+//   - mParam
+func (_e *MapFunc_Expecter) Get(mParam interface{}) *MapFunc_Get_Call {
+	return &MapFunc_Get_Call{Call: _e.mock.On("Get", mParam)}
 }
 
-func (_c *MapFunc_Get_Call) Run(run func(m map[string]func(string) string)) *MapFunc_Get_Call {
+func (_c *MapFunc_Get_Call) Run(run func(mParam map[string]func(string) string)) *MapFunc_Get_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(m)
+		run(args[0].(map[string]func(string) string))
 	})
 	return _c
 }
 
-func (_c *MapFunc_Get_Call) Return(errOut error) *MapFunc_Get_Call {
-	_c.Call.Return(errOut)
+func (_c *MapFunc_Get_Call) Return(errOutParam error) *MapFunc_Get_Call {
+	_c.Call.Return(errOutParam)
 	return _c
 }
 
-func (_c *MapFunc_Get_Call) RunAndReturn(run func(m map[string]func(string) string) error) *MapFunc_Get_Call {
+func (_c *MapFunc_Get_Call) RunAndReturn(run func(mParam map[string]func(string) string) error) *MapFunc_Get_Call {
 	_c.Call.Return(run)
 	return _c
 }

@@ -68,8 +68,8 @@ func (_c *WithFix_Foo_Call) Run(run func()) *WithFix_Foo_Call {
 	return _c
 }
 
-func (_c *WithFix_Foo_Call) Return(sOut string) *WithFix_Foo_Call {
-	_c.Call.Return(sOut)
+func (_c *WithFix_Foo_Call) Return(sOutParam string) *WithFix_Foo_Call {
+	_c.Call.Return(sOutParam)
 	return _c
 }
 

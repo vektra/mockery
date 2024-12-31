@@ -69,8 +69,8 @@ func (_c *Interface1_Foo_Call) Run(run func()) *Interface1_Foo_Call {
 	return _c
 }
 
-func (_c *Interface1_Foo_Call) Return(vOut type_alias.Type) *Interface1_Foo_Call {
-	_c.Call.Return(vOut)
+func (_c *Interface1_Foo_Call) Return(vOutParam type_alias.Type) *Interface1_Foo_Call {
+	_c.Call.Return(vOutParam)
 	return _c
 }
 

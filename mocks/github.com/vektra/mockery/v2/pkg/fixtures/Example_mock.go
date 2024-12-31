@@ -74,8 +74,8 @@ func (_c *Example_A_Call) Run(run func()) *Example_A_Call {
 	return _c
 }
 
-func (_c *Example_A_Call) Return(flusherOut http.Flusher) *Example_A_Call {
-	_c.Call.Return(flusherOut)
+func (_c *Example_A_Call) Return(flusherOutParam http.Flusher) *Example_A_Call {
+	_c.Call.Return(flusherOutParam)
 	return _c
 }
 
@@ -85,8 +85,8 @@ func (_c *Example_A_Call) RunAndReturn(run func() http.Flusher) *Example_A_Call 
 }
 
 // B provides a mock function for the type Example
-func (_mock *Example) B(fixtureshttp string) my_http.MyStruct {
-	ret := _mock.Called(fixtureshttp)
+func (_mock *Example) B(fixtureshttpParam string) my_http.MyStruct {
+	ret := _mock.Called(fixtureshttpParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for B")
@@ -94,7 +94,7 @@ func (_mock *Example) B(fixtureshttp string) my_http.MyStruct {
 
 	var r0 my_http.MyStruct
 	if returnFunc, ok := ret.Get(0).(func(string) my_http.MyStruct); ok {
-		r0 = returnFunc(fixtureshttp)
+		r0 = returnFunc(fixtureshttpParam)
 	} else {
 		r0 = ret.Get(0).(my_http.MyStruct)
 	}
@@ -107,31 +107,31 @@ type Example_B_Call struct {
 }
 
 // B is a helper method to define mock.On call
-//   - fixtureshttp
-func (_e *Example_Expecter) B(fixtureshttp interface{}) *Example_B_Call {
-	return &Example_B_Call{Call: _e.mock.On("B", fixtureshttp)}
+//   - fixtureshttpParam
+func (_e *Example_Expecter) B(fixtureshttpParam interface{}) *Example_B_Call {
+	return &Example_B_Call{Call: _e.mock.On("B", fixtureshttpParam)}
 }
 
-func (_c *Example_B_Call) Run(run func(fixtureshttp string)) *Example_B_Call {
+func (_c *Example_B_Call) Run(run func(fixtureshttpParam string)) *Example_B_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(fixtureshttp)
+		run(args[0].(string))
 	})
 	return _c
 }
 
-func (_c *Example_B_Call) Return(myStructOut my_http.MyStruct) *Example_B_Call {
-	_c.Call.Return(myStructOut)
+func (_c *Example_B_Call) Return(myStructOutParam my_http.MyStruct) *Example_B_Call {
+	_c.Call.Return(myStructOutParam)
 	return _c
 }
 
-func (_c *Example_B_Call) RunAndReturn(run func(fixtureshttp string) my_http.MyStruct) *Example_B_Call {
+func (_c *Example_B_Call) RunAndReturn(run func(fixtureshttpParam string) my_http.MyStruct) *Example_B_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // C provides a mock function for the type Example
-func (_mock *Example) C(fixtureshttp string) number_dir_http.MyStruct {
-	ret := _mock.Called(fixtureshttp)
+func (_mock *Example) C(fixtureshttpParam string) number_dir_http.MyStruct {
+	ret := _mock.Called(fixtureshttpParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for C")
@@ -139,7 +139,7 @@ func (_mock *Example) C(fixtureshttp string) number_dir_http.MyStruct {
 
 	var r0 number_dir_http.MyStruct
 	if returnFunc, ok := ret.Get(0).(func(string) number_dir_http.MyStruct); ok {
-		r0 = returnFunc(fixtureshttp)
+		r0 = returnFunc(fixtureshttpParam)
 	} else {
 		r0 = ret.Get(0).(number_dir_http.MyStruct)
 	}
@@ -152,24 +152,24 @@ type Example_C_Call struct {
 }
 
 // C is a helper method to define mock.On call
-//   - fixtureshttp
-func (_e *Example_Expecter) C(fixtureshttp interface{}) *Example_C_Call {
-	return &Example_C_Call{Call: _e.mock.On("C", fixtureshttp)}
+//   - fixtureshttpParam
+func (_e *Example_Expecter) C(fixtureshttpParam interface{}) *Example_C_Call {
+	return &Example_C_Call{Call: _e.mock.On("C", fixtureshttpParam)}
 }
 
-func (_c *Example_C_Call) Run(run func(fixtureshttp string)) *Example_C_Call {
+func (_c *Example_C_Call) Run(run func(fixtureshttpParam string)) *Example_C_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(fixtureshttp)
+		run(args[0].(string))
 	})
 	return _c
 }
 
-func (_c *Example_C_Call) Return(myStructOut number_dir_http.MyStruct) *Example_C_Call {
-	_c.Call.Return(myStructOut)
+func (_c *Example_C_Call) Return(myStructOutParam number_dir_http.MyStruct) *Example_C_Call {
+	_c.Call.Return(myStructOutParam)
 	return _c
 }
 
-func (_c *Example_C_Call) RunAndReturn(run func(fixtureshttp string) number_dir_http.MyStruct) *Example_C_Call {
+func (_c *Example_C_Call) RunAndReturn(run func(fixtureshttpParam string) number_dir_http.MyStruct) *Example_C_Call {
 	_c.Call.Return(run)
 	return _c
 }

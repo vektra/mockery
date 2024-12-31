@@ -70,8 +70,8 @@ func (_c *ImportsSameAsPackage_A_Call) Run(run func()) *ImportsSameAsPackage_A_C
 	return _c
 }
 
-func (_c *ImportsSameAsPackage_A_Call) Return(bOut redefinedtypeb.B) *ImportsSameAsPackage_A_Call {
-	_c.Call.Return(bOut)
+func (_c *ImportsSameAsPackage_A_Call) Return(bOutParam redefinedtypeb.B) *ImportsSameAsPackage_A_Call {
+	_c.Call.Return(bOutParam)
 	return _c
 }
 
@@ -116,8 +116,8 @@ func (_c *ImportsSameAsPackage_B_Call) Run(run func()) *ImportsSameAsPackage_B_C
 	return _c
 }
 
-func (_c *ImportsSameAsPackage_B_Call) Return(keyManagerOut fixtures.KeyManager) *ImportsSameAsPackage_B_Call {
-	_c.Call.Return(keyManagerOut)
+func (_c *ImportsSameAsPackage_B_Call) Return(keyManagerOutParam fixtures.KeyManager) *ImportsSameAsPackage_B_Call {
+	_c.Call.Return(keyManagerOutParam)
 	return _c
 }
 
@@ -127,8 +127,8 @@ func (_c *ImportsSameAsPackage_B_Call) RunAndReturn(run func() fixtures.KeyManag
 }
 
 // C provides a mock function for the type ImportsSameAsPackage
-func (_mock *ImportsSameAsPackage) C(c fixtures.C) {
-	_mock.Called(c)
+func (_mock *ImportsSameAsPackage) C(cParam fixtures.C) {
+	_mock.Called(cParam)
 	return
 }
 
@@ -138,14 +138,14 @@ type ImportsSameAsPackage_C_Call struct {
 }
 
 // C is a helper method to define mock.On call
-//   - c
-func (_e *ImportsSameAsPackage_Expecter) C(c interface{}) *ImportsSameAsPackage_C_Call {
-	return &ImportsSameAsPackage_C_Call{Call: _e.mock.On("C", c)}
+//   - cParam
+func (_e *ImportsSameAsPackage_Expecter) C(cParam interface{}) *ImportsSameAsPackage_C_Call {
+	return &ImportsSameAsPackage_C_Call{Call: _e.mock.On("C", cParam)}
 }
 
-func (_c *ImportsSameAsPackage_C_Call) Run(run func(c fixtures.C)) *ImportsSameAsPackage_C_Call {
+func (_c *ImportsSameAsPackage_C_Call) Run(run func(cParam fixtures.C)) *ImportsSameAsPackage_C_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(c)
+		run(args[0].(fixtures.C))
 	})
 	return _c
 }
@@ -155,7 +155,7 @@ func (_c *ImportsSameAsPackage_C_Call) Return() *ImportsSameAsPackage_C_Call {
 	return _c
 }
 
-func (_c *ImportsSameAsPackage_C_Call) RunAndReturn(run func(c fixtures.C)) *ImportsSameAsPackage_C_Call {
+func (_c *ImportsSameAsPackage_C_Call) RunAndReturn(run func(cParam fixtures.C)) *ImportsSameAsPackage_C_Call {
 	_c.Run(run)
 	return _c
 }

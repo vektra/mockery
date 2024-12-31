@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"go/types"
-	"strconv"
 
 	"github.com/rs/zerolog"
 )
@@ -17,8 +16,45 @@ type MethodScope struct {
 	registry   *Registry
 	moqPkgPath string
 
-	vars       []*Var
-	conflicted map[string]bool
+	vars        []*Var
+	conflicted  map[string]bool
+	allVarNames map[string]any
+}
+
+func NewMethodScope(r *Registry) *MethodScope {
+	return &MethodScope{
+		registry:    r,
+		vars:        []*Var{},
+		conflicted:  map[string]bool{},
+		allVarNames: map[string]any{},
+	}
+}
+
+// AllocateName creates a new variable name in the lexical scope of the method.
+// It ensures the returned name does not conflict with any other name visible
+// to the scope. It registers the returned name in the lexical scope such that
+// its exact value can never be allocated again.
+func (m *MethodScope) AllocateName(prefix string, suffix string) string {
+	var suggestion string
+	for i := 0; true; i++ {
+		if i == 0 {
+			suggestion = fmt.Sprintf("%s%s", prefix, suffix)
+		} else {
+			suggestion = fmt.Sprintf("%s_%d_%s", prefix, i, suffix)
+		}
+
+		// Ensure that the name does not conflict with a package import.
+		if _, suggestionExists := m.registry.searchImport(suggestion); suggestionExists {
+			continue
+		}
+
+		if _, suggestionExists := m.allVarNames[suggestion]; suggestionExists {
+			continue
+		}
+		break
+	}
+	m.allVarNames[suggestion] = nil
+	return suggestion
 }
 
 // AddVar allocates a variable instance and adds it to the method scope.
@@ -26,20 +62,11 @@ type MethodScope struct {
 // Variables names are generated if required and are ensured to be
 // without conflict with other variables and imported packages. It also
 // adds the relevant imports to the registry for each added variable.
-func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, suffix string) *Var {
+func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, prefix string) *Var {
 	imports := make(map[string]*Package)
 	m.populateImports(ctx, vr.Type(), imports)
-	m.resolveImportVarConflicts(imports)
 
-	name := varName(vr, suffix)
-	// Ensure that the var name does not conflict with a package import.
-	if _, ok := m.registry.searchImport(name); ok {
-		name += "MoqParam"
-	}
-	if _, ok := m.searchVar(name); ok || m.conflicted[name] {
-		name = m.resolveVarNameConflict(name)
-	}
-
+	name := m.AllocateName(varName(vr, prefix), "Param")
 	v := Var{
 		vr:         vr,
 		imports:    imports,
@@ -48,33 +75,6 @@ func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, suffix string) 
 	}
 	m.vars = append(m.vars, &v)
 	return &v
-}
-
-func (m *MethodScope) resolveVarNameConflict(suggested string) string {
-	for n := 1; ; n++ {
-		_, ok := m.searchVar(suggested + strconv.Itoa(n))
-		if ok {
-			continue
-		}
-
-		if n == 1 {
-			conflict, _ := m.searchVar(suggested)
-			conflict.Name += "1"
-			m.conflicted[suggested] = true
-			n++
-		}
-		return suggested + strconv.Itoa(n)
-	}
-}
-
-func (m MethodScope) searchVar(name string) (*Var, bool) {
-	for _, v := range m.vars {
-		if v.Name == name {
-			return v, true
-		}
-	}
-
-	return nil, false
 }
 
 func (m MethodScope) populateImportNamedType(
@@ -160,17 +160,5 @@ func (m MethodScope) populateImports(ctx context.Context, t types.Type, imports 
 
 	default:
 		log.Debug().Str("real-type", fmt.Sprintf("%T", t)).Msg("unable to determine type of object")
-	}
-}
-
-// resolveImportVarConflicts ensures that all the newly added imports do not
-// conflict with any of the existing vars.
-func (m MethodScope) resolveImportVarConflicts(imports map[string]*Package) {
-	// Ensure that all the newly added imports do not conflict with any of the
-	// existing vars.
-	for _, imprt := range imports {
-		if v, ok := m.searchVar(imprt.Qualifier()); ok {
-			v.Name += "MoqParam"
-		}
 	}
 }

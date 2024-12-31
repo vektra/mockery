@@ -35,14 +35,14 @@ func (_m *StructWithTag) EXPECT() *StructWithTag_Expecter {
 }
 
 // MethodA provides a mock function for the type StructWithTag
-func (_mock *StructWithTag) MethodA(v *struct {
+func (_mock *StructWithTag) MethodA(vParam *struct {
 	FieldA int "json:\"field_a\""
 	FieldB int "json:\"field_b\" xml:\"field_b\""
 }) *struct {
 	FieldC int "json:\"field_c\""
 	FieldD int "json:\"field_d\" xml:\"field_d\""
 } {
-	ret := _mock.Called(v)
+	ret := _mock.Called(vParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for MethodA")
@@ -59,7 +59,7 @@ func (_mock *StructWithTag) MethodA(v *struct {
 		FieldC int "json:\"field_c\""
 		FieldD int "json:\"field_d\" xml:\"field_d\""
 	}); ok {
-		r0 = returnFunc(v)
+		r0 = returnFunc(vParam)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*struct {
@@ -77,30 +77,33 @@ type StructWithTag_MethodA_Call struct {
 }
 
 // MethodA is a helper method to define mock.On call
-//   - v
-func (_e *StructWithTag_Expecter) MethodA(v interface{}) *StructWithTag_MethodA_Call {
-	return &StructWithTag_MethodA_Call{Call: _e.mock.On("MethodA", v)}
+//   - vParam
+func (_e *StructWithTag_Expecter) MethodA(vParam interface{}) *StructWithTag_MethodA_Call {
+	return &StructWithTag_MethodA_Call{Call: _e.mock.On("MethodA", vParam)}
 }
 
-func (_c *StructWithTag_MethodA_Call) Run(run func(v *struct {
+func (_c *StructWithTag_MethodA_Call) Run(run func(vParam *struct {
 	FieldA int "json:\"field_a\""
 	FieldB int "json:\"field_b\" xml:\"field_b\""
 })) *StructWithTag_MethodA_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(v)
+		run(args[0].(*struct {
+			FieldA int "json:\"field_a\""
+			FieldB int "json:\"field_b\" xml:\"field_b\""
+		}))
 	})
 	return _c
 }
 
-func (_c *StructWithTag_MethodA_Call) Return(valOut *struct {
+func (_c *StructWithTag_MethodA_Call) Return(valOutParam *struct {
 	FieldC int "json:\"field_c\""
 	FieldD int "json:\"field_d\" xml:\"field_d\""
 }) *StructWithTag_MethodA_Call {
-	_c.Call.Return(valOut)
+	_c.Call.Return(valOutParam)
 	return _c
 }
 
-func (_c *StructWithTag_MethodA_Call) RunAndReturn(run func(v *struct {
+func (_c *StructWithTag_MethodA_Call) RunAndReturn(run func(vParam *struct {
 	FieldA int "json:\"field_a\""
 	FieldB int "json:\"field_b\" xml:\"field_b\""
 }) *struct {

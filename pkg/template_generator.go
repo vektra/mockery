@@ -94,6 +94,7 @@ func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func) 
 		Name:    method.Name(),
 		Params:  params,
 		Returns: returns,
+		Scope:   methodScope,
 	}
 }
 

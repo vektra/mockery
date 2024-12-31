@@ -70,8 +70,8 @@ func (_c *UsesAny_GetReader_Call) Run(run func()) *UsesAny_GetReader_Call {
 	return _c
 }
 
-func (_c *UsesAny_GetReader_Call) Return(vOut any) *UsesAny_GetReader_Call {
-	_c.Call.Return(vOut)
+func (_c *UsesAny_GetReader_Call) Return(vOutParam any) *UsesAny_GetReader_Call {
+	_c.Call.Return(vOutParam)
 	return _c
 }
 

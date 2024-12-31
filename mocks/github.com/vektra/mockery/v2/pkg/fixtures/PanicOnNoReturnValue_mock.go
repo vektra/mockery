@@ -68,8 +68,8 @@ func (_c *PanicOnNoReturnValue_DoSomething_Call) Run(run func()) *PanicOnNoRetur
 	return _c
 }
 
-func (_c *PanicOnNoReturnValue_DoSomething_Call) Return(sOut string) *PanicOnNoReturnValue_DoSomething_Call {
-	_c.Call.Return(sOut)
+func (_c *PanicOnNoReturnValue_DoSomething_Call) Return(sOutParam string) *PanicOnNoReturnValue_DoSomething_Call {
+	_c.Call.Return(sOutParam)
 	return _c
 }
 

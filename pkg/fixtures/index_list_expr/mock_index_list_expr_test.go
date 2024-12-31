@@ -35,8 +35,8 @@ func (_m *MockIndexListExpr) EXPECT() *MockIndexListExpr_Expecter {
 }
 
 // Func provides a mock function for the type MockIndexListExpr
-func (_mock *MockIndexListExpr) Func(arg1 *int, arg2 string) bool {
-	ret := _mock.Called(arg1, arg2)
+func (_mock *MockIndexListExpr) Func(arg1Param *int, arg2Param string) bool {
+	ret := _mock.Called(arg1Param, arg2Param)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Func")
@@ -44,7 +44,7 @@ func (_mock *MockIndexListExpr) Func(arg1 *int, arg2 string) bool {
 
 	var r0 bool
 	if returnFunc, ok := ret.Get(0).(func(*int, string) bool); ok {
-		r0 = returnFunc(arg1, arg2)
+		r0 = returnFunc(arg1Param, arg2Param)
 	} else {
 		r0 = ret.Get(0).(bool)
 	}
@@ -57,25 +57,25 @@ type MockIndexListExpr_Func_Call struct {
 }
 
 // Func is a helper method to define mock.On call
-//   - arg1
-//   - arg2
-func (_e *MockIndexListExpr_Expecter) Func(arg1 interface{}, arg2 interface{}) *MockIndexListExpr_Func_Call {
-	return &MockIndexListExpr_Func_Call{Call: _e.mock.On("Func", arg1, arg2)}
+//   - arg1Param
+//   - arg2Param
+func (_e *MockIndexListExpr_Expecter) Func(arg1Param interface{}, arg2Param interface{}) *MockIndexListExpr_Func_Call {
+	return &MockIndexListExpr_Func_Call{Call: _e.mock.On("Func", arg1Param, arg2Param)}
 }
 
-func (_c *MockIndexListExpr_Func_Call) Run(run func(arg1 *int, arg2 string)) *MockIndexListExpr_Func_Call {
+func (_c *MockIndexListExpr_Func_Call) Run(run func(arg1Param *int, arg2Param string)) *MockIndexListExpr_Func_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(arg1, arg2)
+		run(args[0].(*int), args[1].(string))
 	})
 	return _c
 }
 
-func (_c *MockIndexListExpr_Func_Call) Return(bOut bool) *MockIndexListExpr_Func_Call {
-	_c.Call.Return(bOut)
+func (_c *MockIndexListExpr_Func_Call) Return(bOutParam bool) *MockIndexListExpr_Func_Call {
+	_c.Call.Return(bOutParam)
 	return _c
 }
 
-func (_c *MockIndexListExpr_Func_Call) RunAndReturn(run func(arg1 *int, arg2 string) bool) *MockIndexListExpr_Func_Call {
+func (_c *MockIndexListExpr_Func_Call) RunAndReturn(run func(arg1Param *int, arg2Param string) bool) *MockIndexListExpr_Func_Call {
 	_c.Call.Return(run)
 	return _c
 }

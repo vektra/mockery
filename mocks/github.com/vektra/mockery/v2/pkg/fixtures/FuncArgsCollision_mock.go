@@ -35,8 +35,8 @@ func (_m *FuncArgsCollision) EXPECT() *FuncArgsCollision_Expecter {
 }
 
 // Foo provides a mock function for the type FuncArgsCollision
-func (_mock *FuncArgsCollision) Foo(ret interface{}) error {
-	ret := _mock.Called(ret)
+func (_mock *FuncArgsCollision) Foo(retParam interface{}) error {
+	ret := _mock.Called(retParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Foo")
@@ -44,7 +44,7 @@ func (_mock *FuncArgsCollision) Foo(ret interface{}) error {
 
 	var r0 error
 	if returnFunc, ok := ret.Get(0).(func(interface{}) error); ok {
-		r0 = returnFunc(ret)
+		r0 = returnFunc(retParam)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -57,24 +57,24 @@ type FuncArgsCollision_Foo_Call struct {
 }
 
 // Foo is a helper method to define mock.On call
-//   - ret
-func (_e *FuncArgsCollision_Expecter) Foo(ret interface{}) *FuncArgsCollision_Foo_Call {
-	return &FuncArgsCollision_Foo_Call{Call: _e.mock.On("Foo", ret)}
+//   - retParam
+func (_e *FuncArgsCollision_Expecter) Foo(retParam interface{}) *FuncArgsCollision_Foo_Call {
+	return &FuncArgsCollision_Foo_Call{Call: _e.mock.On("Foo", retParam)}
 }
 
-func (_c *FuncArgsCollision_Foo_Call) Run(run func(ret interface{})) *FuncArgsCollision_Foo_Call {
+func (_c *FuncArgsCollision_Foo_Call) Run(run func(retParam interface{})) *FuncArgsCollision_Foo_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(ret)
+		run(args[0].(interface{}))
 	})
 	return _c
 }
 
-func (_c *FuncArgsCollision_Foo_Call) Return(errOut error) *FuncArgsCollision_Foo_Call {
-	_c.Call.Return(errOut)
+func (_c *FuncArgsCollision_Foo_Call) Return(errOutParam error) *FuncArgsCollision_Foo_Call {
+	_c.Call.Return(errOutParam)
 	return _c
 }
 
-func (_c *FuncArgsCollision_Foo_Call) RunAndReturn(run func(ret interface{}) error) *FuncArgsCollision_Foo_Call {
+func (_c *FuncArgsCollision_Foo_Call) RunAndReturn(run func(retParam interface{}) error) *FuncArgsCollision_Foo_Call {
 	_c.Call.Return(run)
 	return _c
 }

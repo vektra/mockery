@@ -35,8 +35,8 @@ func (_m *RequesterPtr) EXPECT() *RequesterPtr_Expecter {
 }
 
 // Get provides a mock function for the type RequesterPtr
-func (_mock *RequesterPtr) Get(path string) (*string, error) {
-	ret := _mock.Called(path)
+func (_mock *RequesterPtr) Get(pathParam string) (*string, error) {
+	ret := _mock.Called(pathParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Get")
@@ -45,17 +45,17 @@ func (_mock *RequesterPtr) Get(path string) (*string, error) {
 	var r0 *string
 	var r1 error
 	if returnFunc, ok := ret.Get(0).(func(string) (*string, error)); ok {
-		return returnFunc(path)
+		return returnFunc(pathParam)
 	}
 	if returnFunc, ok := ret.Get(0).(func(string) *string); ok {
-		r0 = returnFunc(path)
+		r0 = returnFunc(pathParam)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*string)
 		}
 	}
 	if returnFunc, ok := ret.Get(1).(func(string) error); ok {
-		r1 = returnFunc(path)
+		r1 = returnFunc(pathParam)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -68,24 +68,24 @@ type RequesterPtr_Get_Call struct {
 }
 
 // Get is a helper method to define mock.On call
-//   - path
-func (_e *RequesterPtr_Expecter) Get(path interface{}) *RequesterPtr_Get_Call {
-	return &RequesterPtr_Get_Call{Call: _e.mock.On("Get", path)}
+//   - pathParam
+func (_e *RequesterPtr_Expecter) Get(pathParam interface{}) *RequesterPtr_Get_Call {
+	return &RequesterPtr_Get_Call{Call: _e.mock.On("Get", pathParam)}
 }
 
-func (_c *RequesterPtr_Get_Call) Run(run func(path string)) *RequesterPtr_Get_Call {
+func (_c *RequesterPtr_Get_Call) Run(run func(pathParam string)) *RequesterPtr_Get_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(path)
+		run(args[0].(string))
 	})
 	return _c
 }
 
-func (_c *RequesterPtr_Get_Call) Return(sOut *string, errOut error) *RequesterPtr_Get_Call {
-	_c.Call.Return(sOut, errOut)
+func (_c *RequesterPtr_Get_Call) Return(sOutParam *string, errOutParam error) *RequesterPtr_Get_Call {
+	_c.Call.Return(sOutParam, errOutParam)
 	return _c
 }
 
-func (_c *RequesterPtr_Get_Call) RunAndReturn(run func(path string) (*string, error)) *RequesterPtr_Get_Call {
+func (_c *RequesterPtr_Get_Call) RunAndReturn(run func(pathParam string) (*string, error)) *RequesterPtr_Get_Call {
 	_c.Call.Return(run)
 	return _c
 }

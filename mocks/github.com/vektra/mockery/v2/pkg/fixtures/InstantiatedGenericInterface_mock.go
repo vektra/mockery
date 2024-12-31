@@ -35,8 +35,8 @@ func (_m *InstantiatedGenericInterface) EXPECT() *InstantiatedGenericInterface_E
 }
 
 // Func provides a mock function for the type InstantiatedGenericInterface
-func (_mock *InstantiatedGenericInterface) Func(arg *float32) int {
-	ret := _mock.Called(arg)
+func (_mock *InstantiatedGenericInterface) Func(argParam *float32) int {
+	ret := _mock.Called(argParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Func")
@@ -44,7 +44,7 @@ func (_mock *InstantiatedGenericInterface) Func(arg *float32) int {
 
 	var r0 int
 	if returnFunc, ok := ret.Get(0).(func(*float32) int); ok {
-		r0 = returnFunc(arg)
+		r0 = returnFunc(argParam)
 	} else {
 		r0 = ret.Get(0).(int)
 	}
@@ -57,24 +57,24 @@ type InstantiatedGenericInterface_Func_Call struct {
 }
 
 // Func is a helper method to define mock.On call
-//   - arg
-func (_e *InstantiatedGenericInterface_Expecter) Func(arg interface{}) *InstantiatedGenericInterface_Func_Call {
-	return &InstantiatedGenericInterface_Func_Call{Call: _e.mock.On("Func", arg)}
+//   - argParam
+func (_e *InstantiatedGenericInterface_Expecter) Func(argParam interface{}) *InstantiatedGenericInterface_Func_Call {
+	return &InstantiatedGenericInterface_Func_Call{Call: _e.mock.On("Func", argParam)}
 }
 
-func (_c *InstantiatedGenericInterface_Func_Call) Run(run func(arg *float32)) *InstantiatedGenericInterface_Func_Call {
+func (_c *InstantiatedGenericInterface_Func_Call) Run(run func(argParam *float32)) *InstantiatedGenericInterface_Func_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(arg)
+		run(args[0].(*float32))
 	})
 	return _c
 }
 
-func (_c *InstantiatedGenericInterface_Func_Call) Return(nOut int) *InstantiatedGenericInterface_Func_Call {
-	_c.Call.Return(nOut)
+func (_c *InstantiatedGenericInterface_Func_Call) Return(nOutParam int) *InstantiatedGenericInterface_Func_Call {
+	_c.Call.Return(nOutParam)
 	return _c
 }
 
-func (_c *InstantiatedGenericInterface_Func_Call) RunAndReturn(run func(arg *float32) int) *InstantiatedGenericInterface_Func_Call {
+func (_c *InstantiatedGenericInterface_Func_Call) RunAndReturn(run func(argParam *float32) int) *InstantiatedGenericInterface_Func_Call {
 	_c.Call.Return(run)
 	return _c
 }

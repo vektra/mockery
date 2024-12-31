@@ -103,9 +103,10 @@ func (_mock *{{$mock.MockName}}{{ $mock | TypeInstantiation }}) {{$method.Name}}
 	{{- if eq (len $method.Returns) 0 }}
 	{{- $calledString }}
 	{{- else }}
-	ret := {{ $calledString }}
+	{{- $retArgs := $method.Scope.AllocateName "ret" "" }}
+	{{ $retArgs }} := {{ $calledString }}
 
-	if len(ret) == 0 {
+	if len({{ $retArgs }}) == 0 {
 		panic("no return value specified for {{$method.Name}}")
 	}
 
@@ -114,23 +115,23 @@ func (_mock *{{$mock.MockName}}{{ $mock | TypeInstantiation }}) {{$method.Name}}
 		{{- end }}
 
 		{{- if gt (len $method.Returns) 1 }}
-	if returnFunc, ok := ret.Get(0).(func({{ $method.ArgTypeList }}) {{ $method.ReturnArgTypeList }}); ok {
+	if returnFunc, ok := {{ $retArgs }}.Get(0).(func({{ $method.ArgTypeList }}) {{ $method.ReturnArgTypeList }}); ok {
 		return returnFunc({{- if (index $mock.TemplateData "unroll-variadic") }}{{ $method.ArgCallList }}{{- else }}{{ $method.ArgCallListNoEllipsis }}{{- end }})
 	}
 		{{- end }}
 
 		{{- range $retIdx, $ret := $method.Returns }} {{/* START RETURN RANGE */}}
-	if returnFunc, ok := ret.Get({{ $retIdx }}).(func({{$method.ArgTypeListEllipsis }}) {{ (index $method.Returns $retIdx).TypeString }}); ok {
+	if returnFunc, ok := {{ $retArgs }}.Get({{ $retIdx }}).(func({{$method.ArgTypeListEllipsis }}) {{ (index $method.Returns $retIdx).TypeString }}); ok {
 		r{{ $retIdx }} = returnFunc({{ $method.ArgCallList }})
 	} else {
 		{{- if eq "error" (index $method.Returns $retIdx).TypeString }}
-		r{{ $retIdx }} = ret.Error({{ $retIdx }})
+		r{{ $retIdx }} = {{ $retArgs }}.Error({{ $retIdx }})
 		{{- else if (index $method.Returns $retIdx).Var.Nillable }}
-		if ret.Get({{ $retIdx }}) != nil {
-			r{{ $retIdx }} = ret.Get({{ $retIdx }}).({{ (index $method.Returns $retIdx).TypeString }})
+		if {{ $retArgs }}.Get({{ $retIdx }}) != nil {
+			r{{ $retIdx }} = {{ $retArgs }}.Get({{ $retIdx }}).({{ (index $method.Returns $retIdx).TypeString }})
 		}
 		{{- else }}
-		r{{ $retIdx }} = ret.Get({{ $retIdx }}).({{ (index $method.Returns $retIdx).TypeString }})
+		r{{ $retIdx }} = {{ $retArgs }}.Get({{ $retIdx }}).({{ (index $method.Returns $retIdx).TypeString }})
 		{{- end }}
 	}
 		{{- end }} {{/* END RETURN RANGE */}}
@@ -170,7 +171,7 @@ func (_e *{{ $expecterNameInstantiated }}) {{ $method.Name }}({{ range $method.P
 func (_c *{{ $ExpecterCallNameInstantiated }}) Run(run func({{ $method.ArgList }})) *{{ $ExpecterCallNameInstantiated }} {
 	_c.Call.Run(func(args mock.Arguments) {
 	{{- if not $method.IsVariadic }}
-		run({{ $method.ArgCallList }})
+		run({{range $i, $param := $method.Params }}args[{{$i}}].({{ $param.TypeString}}),{{end}})
 	{{- else}}
 		{{- $variadicParam := index $method.Params (len $method.Params | Add -1) }}
 		{{- $nonVariadicParams := slice $method.Params 0 (len $method.Params | Add -1 )}}

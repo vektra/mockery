@@ -35,8 +35,8 @@ func (_m *MyReader) EXPECT() *MyReader_Expecter {
 }
 
 // Read provides a mock function for the type MyReader
-func (_mock *MyReader) Read(p []byte) (int, error) {
-	ret := _mock.Called(p)
+func (_mock *MyReader) Read(pParam []byte) (int, error) {
+	ret := _mock.Called(pParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Read")
@@ -45,15 +45,15 @@ func (_mock *MyReader) Read(p []byte) (int, error) {
 	var r0 int
 	var r1 error
 	if returnFunc, ok := ret.Get(0).(func([]byte) (int, error)); ok {
-		return returnFunc(p)
+		return returnFunc(pParam)
 	}
 	if returnFunc, ok := ret.Get(0).(func([]byte) int); ok {
-		r0 = returnFunc(p)
+		r0 = returnFunc(pParam)
 	} else {
 		r0 = ret.Get(0).(int)
 	}
 	if returnFunc, ok := ret.Get(1).(func([]byte) error); ok {
-		r1 = returnFunc(p)
+		r1 = returnFunc(pParam)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -66,24 +66,24 @@ type MyReader_Read_Call struct {
 }
 
 // Read is a helper method to define mock.On call
-//   - p
-func (_e *MyReader_Expecter) Read(p interface{}) *MyReader_Read_Call {
-	return &MyReader_Read_Call{Call: _e.mock.On("Read", p)}
+//   - pParam
+func (_e *MyReader_Expecter) Read(pParam interface{}) *MyReader_Read_Call {
+	return &MyReader_Read_Call{Call: _e.mock.On("Read", pParam)}
 }
 
-func (_c *MyReader_Read_Call) Run(run func(p []byte)) *MyReader_Read_Call {
+func (_c *MyReader_Read_Call) Run(run func(pParam []byte)) *MyReader_Read_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(p)
+		run(args[0].([]byte))
 	})
 	return _c
 }
 
-func (_c *MyReader_Read_Call) Return(nOut int, errOut error) *MyReader_Read_Call {
-	_c.Call.Return(nOut, errOut)
+func (_c *MyReader_Read_Call) Return(nOutParam int, errOutParam error) *MyReader_Read_Call {
+	_c.Call.Return(nOutParam, errOutParam)
 	return _c
 }
 
-func (_c *MyReader_Read_Call) RunAndReturn(run func(p []byte) (int, error)) *MyReader_Read_Call {
+func (_c *MyReader_Read_Call) RunAndReturn(run func(pParam []byte) (int, error)) *MyReader_Read_Call {
 	_c.Call.Return(run)
 	return _c
 }

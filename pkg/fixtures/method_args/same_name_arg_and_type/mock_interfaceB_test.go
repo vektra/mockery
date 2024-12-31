@@ -68,8 +68,8 @@ func (_c *interfaceBMock_GetData_Call) Run(run func()) *interfaceBMock_GetData_C
 	return _c
 }
 
-func (_c *interfaceBMock_GetData_Call) Return(nOut int) *interfaceBMock_GetData_Call {
-	_c.Call.Return(nOut)
+func (_c *interfaceBMock_GetData_Call) Return(nOutParam int) *interfaceBMock_GetData_Call {
+	_c.Call.Return(nOutParam)
 	return _c
 }
 

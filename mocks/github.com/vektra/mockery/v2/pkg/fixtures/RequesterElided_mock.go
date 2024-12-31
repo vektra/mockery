@@ -35,8 +35,8 @@ func (_m *RequesterElided) EXPECT() *RequesterElided_Expecter {
 }
 
 // Get provides a mock function for the type RequesterElided
-func (_mock *RequesterElided) Get(path string, url string) error {
-	ret := _mock.Called(path, url)
+func (_mock *RequesterElided) Get(pathParam string, urlParam string) error {
+	ret := _mock.Called(pathParam, urlParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Get")
@@ -44,7 +44,7 @@ func (_mock *RequesterElided) Get(path string, url string) error {
 
 	var r0 error
 	if returnFunc, ok := ret.Get(0).(func(string, string) error); ok {
-		r0 = returnFunc(path, url)
+		r0 = returnFunc(pathParam, urlParam)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -57,25 +57,25 @@ type RequesterElided_Get_Call struct {
 }
 
 // Get is a helper method to define mock.On call
-//   - path
-//   - url
-func (_e *RequesterElided_Expecter) Get(path interface{}, url interface{}) *RequesterElided_Get_Call {
-	return &RequesterElided_Get_Call{Call: _e.mock.On("Get", path, url)}
+//   - pathParam
+//   - urlParam
+func (_e *RequesterElided_Expecter) Get(pathParam interface{}, urlParam interface{}) *RequesterElided_Get_Call {
+	return &RequesterElided_Get_Call{Call: _e.mock.On("Get", pathParam, urlParam)}
 }
 
-func (_c *RequesterElided_Get_Call) Run(run func(path string, url string)) *RequesterElided_Get_Call {
+func (_c *RequesterElided_Get_Call) Run(run func(pathParam string, urlParam string)) *RequesterElided_Get_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(path, url)
+		run(args[0].(string), args[1].(string))
 	})
 	return _c
 }
 
-func (_c *RequesterElided_Get_Call) Return(errOut error) *RequesterElided_Get_Call {
-	_c.Call.Return(errOut)
+func (_c *RequesterElided_Get_Call) Return(errOutParam error) *RequesterElided_Get_Call {
+	_c.Call.Return(errOutParam)
 	return _c
 }
 
-func (_c *RequesterElided_Get_Call) RunAndReturn(run func(path string, url string) error) *RequesterElided_Get_Call {
+func (_c *RequesterElided_Get_Call) RunAndReturn(run func(pathParam string, urlParam string) error) *RequesterElided_Get_Call {
 	_c.Call.Return(run)
 	return _c
 }

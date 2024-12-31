@@ -37,8 +37,8 @@ func (_m *Interface2) EXPECT() *Interface2_Expecter {
 }
 
 // F provides a mock function for the type Interface2
-func (_mock *Interface2) F(v1 type_alias.Type, v2 type_alias.S, s subpkg.S) {
-	_mock.Called(v1, v2, s)
+func (_mock *Interface2) F(vParam type_alias.Type, v_1_Param type_alias.S, sParam subpkg.S) {
+	_mock.Called(vParam, v_1_Param, sParam)
 	return
 }
 
@@ -48,16 +48,16 @@ type Interface2_F_Call struct {
 }
 
 // F is a helper method to define mock.On call
-//   - v1
-//   - v2
-//   - s
-func (_e *Interface2_Expecter) F(v1 interface{}, v2 interface{}, s interface{}) *Interface2_F_Call {
-	return &Interface2_F_Call{Call: _e.mock.On("F", v1, v2, s)}
+//   - vParam
+//   - v_1_Param
+//   - sParam
+func (_e *Interface2_Expecter) F(vParam interface{}, v_1_Param interface{}, sParam interface{}) *Interface2_F_Call {
+	return &Interface2_F_Call{Call: _e.mock.On("F", vParam, v_1_Param, sParam)}
 }
 
-func (_c *Interface2_F_Call) Run(run func(v1 type_alias.Type, v2 type_alias.S, s subpkg.S)) *Interface2_F_Call {
+func (_c *Interface2_F_Call) Run(run func(vParam type_alias.Type, v_1_Param type_alias.S, sParam subpkg.S)) *Interface2_F_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(v1, v2, s)
+		run(args[0].(type_alias.Type), args[1].(type_alias.S), args[2].(subpkg.S))
 	})
 	return _c
 }
@@ -67,7 +67,7 @@ func (_c *Interface2_F_Call) Return() *Interface2_F_Call {
 	return _c
 }
 
-func (_c *Interface2_F_Call) RunAndReturn(run func(v1 type_alias.Type, v2 type_alias.S, s subpkg.S)) *Interface2_F_Call {
+func (_c *Interface2_F_Call) RunAndReturn(run func(vParam type_alias.Type, v_1_Param type_alias.S, sParam subpkg.S)) *Interface2_F_Call {
 	_c.Run(run)
 	return _c
 }

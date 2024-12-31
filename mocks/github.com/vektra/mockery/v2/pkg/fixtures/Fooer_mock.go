@@ -35,8 +35,8 @@ func (_m *Fooer) EXPECT() *Fooer_Expecter {
 }
 
 // Bar provides a mock function for the type Fooer
-func (_mock *Fooer) Bar(f func([]int)) {
-	_mock.Called(f)
+func (_mock *Fooer) Bar(fParam func([]int)) {
+	_mock.Called(fParam)
 	return
 }
 
@@ -46,14 +46,14 @@ type Fooer_Bar_Call struct {
 }
 
 // Bar is a helper method to define mock.On call
-//   - f
-func (_e *Fooer_Expecter) Bar(f interface{}) *Fooer_Bar_Call {
-	return &Fooer_Bar_Call{Call: _e.mock.On("Bar", f)}
+//   - fParam
+func (_e *Fooer_Expecter) Bar(fParam interface{}) *Fooer_Bar_Call {
+	return &Fooer_Bar_Call{Call: _e.mock.On("Bar", fParam)}
 }
 
-func (_c *Fooer_Bar_Call) Run(run func(f func([]int))) *Fooer_Bar_Call {
+func (_c *Fooer_Bar_Call) Run(run func(fParam func([]int))) *Fooer_Bar_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(f)
+		run(args[0].(func([]int)))
 	})
 	return _c
 }
@@ -63,14 +63,14 @@ func (_c *Fooer_Bar_Call) Return() *Fooer_Bar_Call {
 	return _c
 }
 
-func (_c *Fooer_Bar_Call) RunAndReturn(run func(f func([]int))) *Fooer_Bar_Call {
+func (_c *Fooer_Bar_Call) RunAndReturn(run func(fParam func([]int))) *Fooer_Bar_Call {
 	_c.Run(run)
 	return _c
 }
 
 // Baz provides a mock function for the type Fooer
-func (_mock *Fooer) Baz(path string) func(x string) string {
-	ret := _mock.Called(path)
+func (_mock *Fooer) Baz(pathParam string) func(x string) string {
+	ret := _mock.Called(pathParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Baz")
@@ -78,7 +78,7 @@ func (_mock *Fooer) Baz(path string) func(x string) string {
 
 	var r0 func(x string) string
 	if returnFunc, ok := ret.Get(0).(func(string) func(x string) string); ok {
-		r0 = returnFunc(path)
+		r0 = returnFunc(pathParam)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(func(x string) string)
@@ -93,31 +93,31 @@ type Fooer_Baz_Call struct {
 }
 
 // Baz is a helper method to define mock.On call
-//   - path
-func (_e *Fooer_Expecter) Baz(path interface{}) *Fooer_Baz_Call {
-	return &Fooer_Baz_Call{Call: _e.mock.On("Baz", path)}
+//   - pathParam
+func (_e *Fooer_Expecter) Baz(pathParam interface{}) *Fooer_Baz_Call {
+	return &Fooer_Baz_Call{Call: _e.mock.On("Baz", pathParam)}
 }
 
-func (_c *Fooer_Baz_Call) Run(run func(path string)) *Fooer_Baz_Call {
+func (_c *Fooer_Baz_Call) Run(run func(pathParam string)) *Fooer_Baz_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(path)
+		run(args[0].(string))
 	})
 	return _c
 }
 
-func (_c *Fooer_Baz_Call) Return(fnOut func(x string) string) *Fooer_Baz_Call {
-	_c.Call.Return(fnOut)
+func (_c *Fooer_Baz_Call) Return(fnOutParam func(x string) string) *Fooer_Baz_Call {
+	_c.Call.Return(fnOutParam)
 	return _c
 }
 
-func (_c *Fooer_Baz_Call) RunAndReturn(run func(path string) func(x string) string) *Fooer_Baz_Call {
+func (_c *Fooer_Baz_Call) RunAndReturn(run func(pathParam string) func(x string) string) *Fooer_Baz_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // Foo provides a mock function for the type Fooer
-func (_mock *Fooer) Foo(f func(x string) string) error {
-	ret := _mock.Called(f)
+func (_mock *Fooer) Foo(fParam func(x string) string) error {
+	ret := _mock.Called(fParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Foo")
@@ -125,7 +125,7 @@ func (_mock *Fooer) Foo(f func(x string) string) error {
 
 	var r0 error
 	if returnFunc, ok := ret.Get(0).(func(func(x string) string) error); ok {
-		r0 = returnFunc(f)
+		r0 = returnFunc(fParam)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -138,24 +138,24 @@ type Fooer_Foo_Call struct {
 }
 
 // Foo is a helper method to define mock.On call
-//   - f
-func (_e *Fooer_Expecter) Foo(f interface{}) *Fooer_Foo_Call {
-	return &Fooer_Foo_Call{Call: _e.mock.On("Foo", f)}
+//   - fParam
+func (_e *Fooer_Expecter) Foo(fParam interface{}) *Fooer_Foo_Call {
+	return &Fooer_Foo_Call{Call: _e.mock.On("Foo", fParam)}
 }
 
-func (_c *Fooer_Foo_Call) Run(run func(f func(x string) string)) *Fooer_Foo_Call {
+func (_c *Fooer_Foo_Call) Run(run func(fParam func(x string) string)) *Fooer_Foo_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(f)
+		run(args[0].(func(x string) string))
 	})
 	return _c
 }
 
-func (_c *Fooer_Foo_Call) Return(errOut error) *Fooer_Foo_Call {
-	_c.Call.Return(errOut)
+func (_c *Fooer_Foo_Call) Return(errOutParam error) *Fooer_Foo_Call {
+	_c.Call.Return(errOutParam)
 	return _c
 }
 
-func (_c *Fooer_Foo_Call) RunAndReturn(run func(f func(x string) string) error) *Fooer_Foo_Call {
+func (_c *Fooer_Foo_Call) RunAndReturn(run func(fParam func(x string) string) error) *Fooer_Foo_Call {
 	_c.Call.Return(run)
 	return _c
 }

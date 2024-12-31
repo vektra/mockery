@@ -68,8 +68,8 @@ func (_c *Requester3_Get_Call) Run(run func()) *Requester3_Get_Call {
 	return _c
 }
 
-func (_c *Requester3_Get_Call) Return(errOut error) *Requester3_Get_Call {
-	_c.Call.Return(errOut)
+func (_c *Requester3_Get_Call) Return(errOutParam error) *Requester3_Get_Call {
+	_c.Call.Return(errOutParam)
 	return _c
 }
 

@@ -69,10 +69,7 @@ func (r Registry) LookupInterface(name string) (*types.Interface, *types.TypePar
 
 // MethodScope returns a new MethodScope.
 func (r *Registry) MethodScope() *MethodScope {
-	return &MethodScope{
-		registry:   r,
-		conflicted: map[string]bool{},
-	}
+	return NewMethodScope(r)
 }
 
 // AddImport adds the given package to the set of imports. It generates a

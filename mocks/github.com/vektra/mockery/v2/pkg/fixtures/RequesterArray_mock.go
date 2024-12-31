@@ -35,8 +35,8 @@ func (_m *RequesterArray) EXPECT() *RequesterArray_Expecter {
 }
 
 // Get provides a mock function for the type RequesterArray
-func (_mock *RequesterArray) Get(path string) ([2]string, error) {
-	ret := _mock.Called(path)
+func (_mock *RequesterArray) Get(pathParam string) ([2]string, error) {
+	ret := _mock.Called(pathParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Get")
@@ -45,17 +45,17 @@ func (_mock *RequesterArray) Get(path string) ([2]string, error) {
 	var r0 [2]string
 	var r1 error
 	if returnFunc, ok := ret.Get(0).(func(string) ([2]string, error)); ok {
-		return returnFunc(path)
+		return returnFunc(pathParam)
 	}
 	if returnFunc, ok := ret.Get(0).(func(string) [2]string); ok {
-		r0 = returnFunc(path)
+		r0 = returnFunc(pathParam)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([2]string)
 		}
 	}
 	if returnFunc, ok := ret.Get(1).(func(string) error); ok {
-		r1 = returnFunc(path)
+		r1 = returnFunc(pathParam)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -68,24 +68,24 @@ type RequesterArray_Get_Call struct {
 }
 
 // Get is a helper method to define mock.On call
-//   - path
-func (_e *RequesterArray_Expecter) Get(path interface{}) *RequesterArray_Get_Call {
-	return &RequesterArray_Get_Call{Call: _e.mock.On("Get", path)}
+//   - pathParam
+func (_e *RequesterArray_Expecter) Get(pathParam interface{}) *RequesterArray_Get_Call {
+	return &RequesterArray_Get_Call{Call: _e.mock.On("Get", pathParam)}
 }
 
-func (_c *RequesterArray_Get_Call) Run(run func(path string)) *RequesterArray_Get_Call {
+func (_c *RequesterArray_Get_Call) Run(run func(pathParam string)) *RequesterArray_Get_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(path)
+		run(args[0].(string))
 	})
 	return _c
 }
 
-func (_c *RequesterArray_Get_Call) Return(stringsOut [2]string, errOut error) *RequesterArray_Get_Call {
-	_c.Call.Return(stringsOut, errOut)
+func (_c *RequesterArray_Get_Call) Return(stringsOutParam [2]string, errOutParam error) *RequesterArray_Get_Call {
+	_c.Call.Return(stringsOutParam, errOutParam)
 	return _c
 }
 
-func (_c *RequesterArray_Get_Call) RunAndReturn(run func(path string) ([2]string, error)) *RequesterArray_Get_Call {
+func (_c *RequesterArray_Get_Call) RunAndReturn(run func(pathParam string) ([2]string, error)) *RequesterArray_Get_Call {
 	_c.Call.Return(run)
 	return _c
 }

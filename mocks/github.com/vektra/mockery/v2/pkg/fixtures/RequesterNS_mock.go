@@ -37,8 +37,8 @@ func (_m *RequesterNS) EXPECT() *RequesterNS_Expecter {
 }
 
 // Get provides a mock function for the type RequesterNS
-func (_mock *RequesterNS) Get(path string) (http.Response, error) {
-	ret := _mock.Called(path)
+func (_mock *RequesterNS) Get(pathParam string) (http.Response, error) {
+	ret := _mock.Called(pathParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Get")
@@ -47,15 +47,15 @@ func (_mock *RequesterNS) Get(path string) (http.Response, error) {
 	var r0 http.Response
 	var r1 error
 	if returnFunc, ok := ret.Get(0).(func(string) (http.Response, error)); ok {
-		return returnFunc(path)
+		return returnFunc(pathParam)
 	}
 	if returnFunc, ok := ret.Get(0).(func(string) http.Response); ok {
-		r0 = returnFunc(path)
+		r0 = returnFunc(pathParam)
 	} else {
 		r0 = ret.Get(0).(http.Response)
 	}
 	if returnFunc, ok := ret.Get(1).(func(string) error); ok {
-		r1 = returnFunc(path)
+		r1 = returnFunc(pathParam)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -68,24 +68,24 @@ type RequesterNS_Get_Call struct {
 }
 
 // Get is a helper method to define mock.On call
-//   - path
-func (_e *RequesterNS_Expecter) Get(path interface{}) *RequesterNS_Get_Call {
-	return &RequesterNS_Get_Call{Call: _e.mock.On("Get", path)}
+//   - pathParam
+func (_e *RequesterNS_Expecter) Get(pathParam interface{}) *RequesterNS_Get_Call {
+	return &RequesterNS_Get_Call{Call: _e.mock.On("Get", pathParam)}
 }
 
-func (_c *RequesterNS_Get_Call) Run(run func(path string)) *RequesterNS_Get_Call {
+func (_c *RequesterNS_Get_Call) Run(run func(pathParam string)) *RequesterNS_Get_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(path)
+		run(args[0].(string))
 	})
 	return _c
 }
 
-func (_c *RequesterNS_Get_Call) Return(responseOut http.Response, errOut error) *RequesterNS_Get_Call {
-	_c.Call.Return(responseOut, errOut)
+func (_c *RequesterNS_Get_Call) Return(responseOutParam http.Response, errOutParam error) *RequesterNS_Get_Call {
+	_c.Call.Return(responseOutParam, errOutParam)
 	return _c
 }
 
-func (_c *RequesterNS_Get_Call) RunAndReturn(run func(path string) (http.Response, error)) *RequesterNS_Get_Call {
+func (_c *RequesterNS_Get_Call) RunAndReturn(run func(pathParam string) (http.Response, error)) *RequesterNS_Get_Call {
 	_c.Call.Return(run)
 	return _c
 }

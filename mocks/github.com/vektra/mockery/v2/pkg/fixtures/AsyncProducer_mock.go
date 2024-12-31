@@ -70,8 +70,8 @@ func (_c *AsyncProducer_Input_Call) Run(run func()) *AsyncProducer_Input_Call {
 	return _c
 }
 
-func (_c *AsyncProducer_Input_Call) Return(boolChOut chan<- bool) *AsyncProducer_Input_Call {
-	_c.Call.Return(boolChOut)
+func (_c *AsyncProducer_Input_Call) Return(boolChOutParam chan<- bool) *AsyncProducer_Input_Call {
+	_c.Call.Return(boolChOutParam)
 	return _c
 }
 
@@ -116,8 +116,8 @@ func (_c *AsyncProducer_Output_Call) Run(run func()) *AsyncProducer_Output_Call 
 	return _c
 }
 
-func (_c *AsyncProducer_Output_Call) Return(boolChOut <-chan bool) *AsyncProducer_Output_Call {
-	_c.Call.Return(boolChOut)
+func (_c *AsyncProducer_Output_Call) Return(boolChOutParam <-chan bool) *AsyncProducer_Output_Call {
+	_c.Call.Return(boolChOutParam)
 	return _c
 }
 
@@ -162,8 +162,8 @@ func (_c *AsyncProducer_Whatever_Call) Run(run func()) *AsyncProducer_Whatever_C
 	return _c
 }
 
-func (_c *AsyncProducer_Whatever_Call) Return(boolChOut chan bool) *AsyncProducer_Whatever_Call {
-	_c.Call.Return(boolChOut)
+func (_c *AsyncProducer_Whatever_Call) Return(boolChOutParam chan bool) *AsyncProducer_Whatever_Call {
+	_c.Call.Return(boolChOutParam)
 	return _c
 }
 

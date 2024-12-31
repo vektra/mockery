@@ -36,8 +36,8 @@ func (_m *UsesOtherPkgIface) EXPECT() *UsesOtherPkgIface_Expecter {
 }
 
 // DoSomethingElse provides a mock function for the type UsesOtherPkgIface
-func (_mock *UsesOtherPkgIface) DoSomethingElse(obj test.Sibling) {
-	_mock.Called(obj)
+func (_mock *UsesOtherPkgIface) DoSomethingElse(objParam test.Sibling) {
+	_mock.Called(objParam)
 	return
 }
 
@@ -47,14 +47,14 @@ type UsesOtherPkgIface_DoSomethingElse_Call struct {
 }
 
 // DoSomethingElse is a helper method to define mock.On call
-//   - obj
-func (_e *UsesOtherPkgIface_Expecter) DoSomethingElse(obj interface{}) *UsesOtherPkgIface_DoSomethingElse_Call {
-	return &UsesOtherPkgIface_DoSomethingElse_Call{Call: _e.mock.On("DoSomethingElse", obj)}
+//   - objParam
+func (_e *UsesOtherPkgIface_Expecter) DoSomethingElse(objParam interface{}) *UsesOtherPkgIface_DoSomethingElse_Call {
+	return &UsesOtherPkgIface_DoSomethingElse_Call{Call: _e.mock.On("DoSomethingElse", objParam)}
 }
 
-func (_c *UsesOtherPkgIface_DoSomethingElse_Call) Run(run func(obj test.Sibling)) *UsesOtherPkgIface_DoSomethingElse_Call {
+func (_c *UsesOtherPkgIface_DoSomethingElse_Call) Run(run func(objParam test.Sibling)) *UsesOtherPkgIface_DoSomethingElse_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(obj)
+		run(args[0].(test.Sibling))
 	})
 	return _c
 }
@@ -64,7 +64,7 @@ func (_c *UsesOtherPkgIface_DoSomethingElse_Call) Return() *UsesOtherPkgIface_Do
 	return _c
 }
 
-func (_c *UsesOtherPkgIface_DoSomethingElse_Call) RunAndReturn(run func(obj test.Sibling)) *UsesOtherPkgIface_DoSomethingElse_Call {
+func (_c *UsesOtherPkgIface_DoSomethingElse_Call) RunAndReturn(run func(objParam test.Sibling)) *UsesOtherPkgIface_DoSomethingElse_Call {
 	_c.Run(run)
 	return _c
 }

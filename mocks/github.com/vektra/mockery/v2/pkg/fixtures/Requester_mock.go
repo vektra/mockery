@@ -35,8 +35,8 @@ func (_m *Requester) EXPECT() *Requester_Expecter {
 }
 
 // Get provides a mock function for the type Requester
-func (_mock *Requester) Get(path string) (string, error) {
-	ret := _mock.Called(path)
+func (_mock *Requester) Get(pathParam string) (string, error) {
+	ret := _mock.Called(pathParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Get")
@@ -45,15 +45,15 @@ func (_mock *Requester) Get(path string) (string, error) {
 	var r0 string
 	var r1 error
 	if returnFunc, ok := ret.Get(0).(func(string) (string, error)); ok {
-		return returnFunc(path)
+		return returnFunc(pathParam)
 	}
 	if returnFunc, ok := ret.Get(0).(func(string) string); ok {
-		r0 = returnFunc(path)
+		r0 = returnFunc(pathParam)
 	} else {
 		r0 = ret.Get(0).(string)
 	}
 	if returnFunc, ok := ret.Get(1).(func(string) error); ok {
-		r1 = returnFunc(path)
+		r1 = returnFunc(pathParam)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -66,24 +66,24 @@ type Requester_Get_Call struct {
 }
 
 // Get is a helper method to define mock.On call
-//   - path
-func (_e *Requester_Expecter) Get(path interface{}) *Requester_Get_Call {
-	return &Requester_Get_Call{Call: _e.mock.On("Get", path)}
+//   - pathParam
+func (_e *Requester_Expecter) Get(pathParam interface{}) *Requester_Get_Call {
+	return &Requester_Get_Call{Call: _e.mock.On("Get", pathParam)}
 }
 
-func (_c *Requester_Get_Call) Run(run func(path string)) *Requester_Get_Call {
+func (_c *Requester_Get_Call) Run(run func(pathParam string)) *Requester_Get_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(path)
+		run(args[0].(string))
 	})
 	return _c
 }
 
-func (_c *Requester_Get_Call) Return(sOut string, errOut error) *Requester_Get_Call {
-	_c.Call.Return(sOut, errOut)
+func (_c *Requester_Get_Call) Return(sOutParam string, errOutParam error) *Requester_Get_Call {
+	_c.Call.Return(sOutParam, errOutParam)
 	return _c
 }
 
-func (_c *Requester_Get_Call) RunAndReturn(run func(path string) (string, error)) *Requester_Get_Call {
+func (_c *Requester_Get_Call) RunAndReturn(run func(pathParam string) (string, error)) *Requester_Get_Call {
 	_c.Call.Return(run)
 	return _c
 }

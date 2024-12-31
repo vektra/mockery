@@ -72,8 +72,8 @@ func (_c *RequesterIface_Get_Call) Run(run func()) *RequesterIface_Get_Call {
 	return _c
 }
 
-func (_c *RequesterIface_Get_Call) Return(readerOut io.Reader) *RequesterIface_Get_Call {
-	_c.Call.Return(readerOut)
+func (_c *RequesterIface_Get_Call) Return(readerOutParam io.Reader) *RequesterIface_Get_Call {
+	_c.Call.Return(readerOutParam)
 	return _c
 }
 

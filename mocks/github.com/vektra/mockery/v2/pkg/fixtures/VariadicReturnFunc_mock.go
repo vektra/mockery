@@ -35,8 +35,8 @@ func (_m *VariadicReturnFunc) EXPECT() *VariadicReturnFunc_Expecter {
 }
 
 // SampleMethod provides a mock function for the type VariadicReturnFunc
-func (_mock *VariadicReturnFunc) SampleMethod(str string) func(str string, arr []int, a ...interface{}) {
-	ret := _mock.Called(str)
+func (_mock *VariadicReturnFunc) SampleMethod(strParam string) func(str string, arr []int, a ...interface{}) {
+	ret := _mock.Called(strParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for SampleMethod")
@@ -44,7 +44,7 @@ func (_mock *VariadicReturnFunc) SampleMethod(str string) func(str string, arr [
 
 	var r0 func(str string, arr []int, a ...interface{})
 	if returnFunc, ok := ret.Get(0).(func(string) func(str string, arr []int, a ...interface{})); ok {
-		r0 = returnFunc(str)
+		r0 = returnFunc(strParam)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(func(str string, arr []int, a ...interface{}))
@@ -59,24 +59,24 @@ type VariadicReturnFunc_SampleMethod_Call struct {
 }
 
 // SampleMethod is a helper method to define mock.On call
-//   - str
-func (_e *VariadicReturnFunc_Expecter) SampleMethod(str interface{}) *VariadicReturnFunc_SampleMethod_Call {
-	return &VariadicReturnFunc_SampleMethod_Call{Call: _e.mock.On("SampleMethod", str)}
+//   - strParam
+func (_e *VariadicReturnFunc_Expecter) SampleMethod(strParam interface{}) *VariadicReturnFunc_SampleMethod_Call {
+	return &VariadicReturnFunc_SampleMethod_Call{Call: _e.mock.On("SampleMethod", strParam)}
 }
 
-func (_c *VariadicReturnFunc_SampleMethod_Call) Run(run func(str string)) *VariadicReturnFunc_SampleMethod_Call {
+func (_c *VariadicReturnFunc_SampleMethod_Call) Run(run func(strParam string)) *VariadicReturnFunc_SampleMethod_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(str)
+		run(args[0].(string))
 	})
 	return _c
 }
 
-func (_c *VariadicReturnFunc_SampleMethod_Call) Return(fnOut func(str string, arr []int, a ...interface{})) *VariadicReturnFunc_SampleMethod_Call {
-	_c.Call.Return(fnOut)
+func (_c *VariadicReturnFunc_SampleMethod_Call) Return(fnOutParam func(str string, arr []int, a ...interface{})) *VariadicReturnFunc_SampleMethod_Call {
+	_c.Call.Return(fnOutParam)
 	return _c
 }
 
-func (_c *VariadicReturnFunc_SampleMethod_Call) RunAndReturn(run func(str string) func(str string, arr []int, a ...interface{})) *VariadicReturnFunc_SampleMethod_Call {
+func (_c *VariadicReturnFunc_SampleMethod_Call) RunAndReturn(run func(strParam string) func(str string, arr []int, a ...interface{})) *VariadicReturnFunc_SampleMethod_Call {
 	_c.Call.Return(run)
 	return _c
 }

@@ -36,8 +36,8 @@ func (_m *Variadic) EXPECT() *Variadic_Expecter {
 }
 
 // VariadicFunction provides a mock function for the type Variadic
-func (_mock *Variadic) VariadicFunction(str string, vFunc test.VariadicFunction) error {
-	ret := _mock.Called(str, vFunc)
+func (_mock *Variadic) VariadicFunction(strParam string, vFuncParam test.VariadicFunction) error {
+	ret := _mock.Called(strParam, vFuncParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for VariadicFunction")
@@ -45,7 +45,7 @@ func (_mock *Variadic) VariadicFunction(str string, vFunc test.VariadicFunction)
 
 	var r0 error
 	if returnFunc, ok := ret.Get(0).(func(string, test.VariadicFunction) error); ok {
-		r0 = returnFunc(str, vFunc)
+		r0 = returnFunc(strParam, vFuncParam)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -58,25 +58,25 @@ type Variadic_VariadicFunction_Call struct {
 }
 
 // VariadicFunction is a helper method to define mock.On call
-//   - str
-//   - vFunc
-func (_e *Variadic_Expecter) VariadicFunction(str interface{}, vFunc interface{}) *Variadic_VariadicFunction_Call {
-	return &Variadic_VariadicFunction_Call{Call: _e.mock.On("VariadicFunction", str, vFunc)}
+//   - strParam
+//   - vFuncParam
+func (_e *Variadic_Expecter) VariadicFunction(strParam interface{}, vFuncParam interface{}) *Variadic_VariadicFunction_Call {
+	return &Variadic_VariadicFunction_Call{Call: _e.mock.On("VariadicFunction", strParam, vFuncParam)}
 }
 
-func (_c *Variadic_VariadicFunction_Call) Run(run func(str string, vFunc test.VariadicFunction)) *Variadic_VariadicFunction_Call {
+func (_c *Variadic_VariadicFunction_Call) Run(run func(strParam string, vFuncParam test.VariadicFunction)) *Variadic_VariadicFunction_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(str, vFunc)
+		run(args[0].(string), args[1].(test.VariadicFunction))
 	})
 	return _c
 }
 
-func (_c *Variadic_VariadicFunction_Call) Return(errOut error) *Variadic_VariadicFunction_Call {
-	_c.Call.Return(errOut)
+func (_c *Variadic_VariadicFunction_Call) Return(errOutParam error) *Variadic_VariadicFunction_Call {
+	_c.Call.Return(errOutParam)
 	return _c
 }
 
-func (_c *Variadic_VariadicFunction_Call) RunAndReturn(run func(str string, vFunc test.VariadicFunction) error) *Variadic_VariadicFunction_Call {
+func (_c *Variadic_VariadicFunction_Call) RunAndReturn(run func(strParam string, vFuncParam test.VariadicFunction) error) *Variadic_VariadicFunction_Call {
 	_c.Call.Return(run)
 	return _c
 }

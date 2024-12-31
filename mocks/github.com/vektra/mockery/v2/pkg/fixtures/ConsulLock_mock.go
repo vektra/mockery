@@ -35,8 +35,8 @@ func (_m *ConsulLock) EXPECT() *ConsulLock_Expecter {
 }
 
 // Lock provides a mock function for the type ConsulLock
-func (_mock *ConsulLock) Lock(valCh <-chan struct{}) (<-chan struct{}, error) {
-	ret := _mock.Called(valCh)
+func (_mock *ConsulLock) Lock(valChParam <-chan struct{}) (<-chan struct{}, error) {
+	ret := _mock.Called(valChParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Lock")
@@ -45,17 +45,17 @@ func (_mock *ConsulLock) Lock(valCh <-chan struct{}) (<-chan struct{}, error) {
 	var r0 <-chan struct{}
 	var r1 error
 	if returnFunc, ok := ret.Get(0).(func(<-chan struct{}) (<-chan struct{}, error)); ok {
-		return returnFunc(valCh)
+		return returnFunc(valChParam)
 	}
 	if returnFunc, ok := ret.Get(0).(func(<-chan struct{}) <-chan struct{}); ok {
-		r0 = returnFunc(valCh)
+		r0 = returnFunc(valChParam)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(<-chan struct{})
 		}
 	}
 	if returnFunc, ok := ret.Get(1).(func(<-chan struct{}) error); ok {
-		r1 = returnFunc(valCh)
+		r1 = returnFunc(valChParam)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -68,24 +68,24 @@ type ConsulLock_Lock_Call struct {
 }
 
 // Lock is a helper method to define mock.On call
-//   - valCh
-func (_e *ConsulLock_Expecter) Lock(valCh interface{}) *ConsulLock_Lock_Call {
-	return &ConsulLock_Lock_Call{Call: _e.mock.On("Lock", valCh)}
+//   - valChParam
+func (_e *ConsulLock_Expecter) Lock(valChParam interface{}) *ConsulLock_Lock_Call {
+	return &ConsulLock_Lock_Call{Call: _e.mock.On("Lock", valChParam)}
 }
 
-func (_c *ConsulLock_Lock_Call) Run(run func(valCh <-chan struct{})) *ConsulLock_Lock_Call {
+func (_c *ConsulLock_Lock_Call) Run(run func(valChParam <-chan struct{})) *ConsulLock_Lock_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(valCh)
+		run(args[0].(<-chan struct{}))
 	})
 	return _c
 }
 
-func (_c *ConsulLock_Lock_Call) Return(valChOut <-chan struct{}, errOut error) *ConsulLock_Lock_Call {
-	_c.Call.Return(valChOut, errOut)
+func (_c *ConsulLock_Lock_Call) Return(valChOutParam <-chan struct{}, errOutParam error) *ConsulLock_Lock_Call {
+	_c.Call.Return(valChOutParam, errOutParam)
 	return _c
 }
 
-func (_c *ConsulLock_Lock_Call) RunAndReturn(run func(valCh <-chan struct{}) (<-chan struct{}, error)) *ConsulLock_Lock_Call {
+func (_c *ConsulLock_Lock_Call) RunAndReturn(run func(valChParam <-chan struct{}) (<-chan struct{}, error)) *ConsulLock_Lock_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -124,8 +124,8 @@ func (_c *ConsulLock_Unlock_Call) Run(run func()) *ConsulLock_Unlock_Call {
 	return _c
 }
 
-func (_c *ConsulLock_Unlock_Call) Return(errOut error) *ConsulLock_Unlock_Call {
-	_c.Call.Return(errOut)
+func (_c *ConsulLock_Unlock_Call) Return(errOutParam error) *ConsulLock_Unlock_Call {
+	_c.Call.Return(errOutParam)
 	return _c
 }
 

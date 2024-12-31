@@ -68,8 +68,8 @@ func (_c *MockFoo_Get_Call) Run(run func()) *MockFoo_Get_Call {
 	return _c
 }
 
-func (_c *MockFoo_Get_Call) Return(sOut string) *MockFoo_Get_Call {
-	_c.Call.Return(sOut)
+func (_c *MockFoo_Get_Call) Return(sOutParam string) *MockFoo_Get_Call {
+	_c.Call.Return(sOutParam)
 	return _c
 }
 

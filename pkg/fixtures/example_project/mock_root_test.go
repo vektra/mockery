@@ -80,8 +80,8 @@ func (_c *MockRoot_ReturnsFoo_Call) Run(run func()) *MockRoot_ReturnsFoo_Call {
 	return _c
 }
 
-func (_c *MockRoot_ReturnsFoo_Call) Return(fooOut foo.Foo, errOut error) *MockRoot_ReturnsFoo_Call {
-	_c.Call.Return(fooOut, errOut)
+func (_c *MockRoot_ReturnsFoo_Call) Return(fooOutParam foo.Foo, errOutParam error) *MockRoot_ReturnsFoo_Call {
+	_c.Call.Return(fooOutParam, errOutParam)
 	return _c
 }
 
@@ -91,8 +91,8 @@ func (_c *MockRoot_ReturnsFoo_Call) RunAndReturn(run func() (foo.Foo, error)) *M
 }
 
 // TakesBaz provides a mock function for the type MockRoot
-func (_mock *MockRoot) TakesBaz(baz *foo.Baz) {
-	_mock.Called(baz)
+func (_mock *MockRoot) TakesBaz(bazParam *foo.Baz) {
+	_mock.Called(bazParam)
 	return
 }
 
@@ -102,14 +102,14 @@ type MockRoot_TakesBaz_Call struct {
 }
 
 // TakesBaz is a helper method to define mock.On call
-//   - baz
-func (_e *MockRoot_Expecter) TakesBaz(baz interface{}) *MockRoot_TakesBaz_Call {
-	return &MockRoot_TakesBaz_Call{Call: _e.mock.On("TakesBaz", baz)}
+//   - bazParam
+func (_e *MockRoot_Expecter) TakesBaz(bazParam interface{}) *MockRoot_TakesBaz_Call {
+	return &MockRoot_TakesBaz_Call{Call: _e.mock.On("TakesBaz", bazParam)}
 }
 
-func (_c *MockRoot_TakesBaz_Call) Run(run func(baz *foo.Baz)) *MockRoot_TakesBaz_Call {
+func (_c *MockRoot_TakesBaz_Call) Run(run func(bazParam *foo.Baz)) *MockRoot_TakesBaz_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(baz)
+		run(args[0].(*foo.Baz))
 	})
 	return _c
 }
@@ -119,7 +119,7 @@ func (_c *MockRoot_TakesBaz_Call) Return() *MockRoot_TakesBaz_Call {
 	return _c
 }
 
-func (_c *MockRoot_TakesBaz_Call) RunAndReturn(run func(baz *foo.Baz)) *MockRoot_TakesBaz_Call {
+func (_c *MockRoot_TakesBaz_Call) RunAndReturn(run func(bazParam *foo.Baz)) *MockRoot_TakesBaz_Call {
 	_c.Run(run)
 	return _c
 }

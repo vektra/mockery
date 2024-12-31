@@ -68,8 +68,8 @@ func (_c *GetInt_Get_Call) Run(run func()) *GetInt_Get_Call {
 	return _c
 }
 
-func (_c *GetInt_Get_Call) Return(nOut int) *GetInt_Get_Call {
-	_c.Call.Return(nOut)
+func (_c *GetInt_Get_Call) Return(nOutParam int) *GetInt_Get_Call {
+	_c.Call.Return(nOutParam)
 	return _c
 }
 

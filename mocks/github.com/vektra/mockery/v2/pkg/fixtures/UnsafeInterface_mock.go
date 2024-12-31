@@ -35,8 +35,8 @@ func (_m *UnsafeInterface) EXPECT() *UnsafeInterface_Expecter {
 }
 
 // Do provides a mock function for the type UnsafeInterface
-func (_mock *UnsafeInterface) Do(ptr *Pointer) {
-	_mock.Called(ptr)
+func (_mock *UnsafeInterface) Do(ptrParam *Pointer) {
+	_mock.Called(ptrParam)
 	return
 }
 
@@ -46,14 +46,14 @@ type UnsafeInterface_Do_Call struct {
 }
 
 // Do is a helper method to define mock.On call
-//   - ptr
-func (_e *UnsafeInterface_Expecter) Do(ptr interface{}) *UnsafeInterface_Do_Call {
-	return &UnsafeInterface_Do_Call{Call: _e.mock.On("Do", ptr)}
+//   - ptrParam
+func (_e *UnsafeInterface_Expecter) Do(ptrParam interface{}) *UnsafeInterface_Do_Call {
+	return &UnsafeInterface_Do_Call{Call: _e.mock.On("Do", ptrParam)}
 }
 
-func (_c *UnsafeInterface_Do_Call) Run(run func(ptr *Pointer)) *UnsafeInterface_Do_Call {
+func (_c *UnsafeInterface_Do_Call) Run(run func(ptrParam *Pointer)) *UnsafeInterface_Do_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(ptr)
+		run(args[0].(*Pointer))
 	})
 	return _c
 }
@@ -63,7 +63,7 @@ func (_c *UnsafeInterface_Do_Call) Return() *UnsafeInterface_Do_Call {
 	return _c
 }
 
-func (_c *UnsafeInterface_Do_Call) RunAndReturn(run func(ptr *Pointer)) *UnsafeInterface_Do_Call {
+func (_c *UnsafeInterface_Do_Call) RunAndReturn(run func(ptrParam *Pointer)) *UnsafeInterface_Do_Call {
 	_c.Run(run)
 	return _c
 }

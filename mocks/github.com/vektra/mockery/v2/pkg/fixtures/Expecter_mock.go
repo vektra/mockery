@@ -35,8 +35,8 @@ func (_m *Expecter) EXPECT() *Expecter_Expecter {
 }
 
 // ManyArgsReturns provides a mock function for the type Expecter
-func (_mock *Expecter) ManyArgsReturns(str string, i int) ([]string, error) {
-	ret := _mock.Called(str, i)
+func (_mock *Expecter) ManyArgsReturns(strParam string, iParam int) ([]string, error) {
+	ret := _mock.Called(strParam, iParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for ManyArgsReturns")
@@ -45,17 +45,17 @@ func (_mock *Expecter) ManyArgsReturns(str string, i int) ([]string, error) {
 	var r0 []string
 	var r1 error
 	if returnFunc, ok := ret.Get(0).(func(string, int) ([]string, error)); ok {
-		return returnFunc(str, i)
+		return returnFunc(strParam, iParam)
 	}
 	if returnFunc, ok := ret.Get(0).(func(string, int) []string); ok {
-		r0 = returnFunc(str, i)
+		r0 = returnFunc(strParam, iParam)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]string)
 		}
 	}
 	if returnFunc, ok := ret.Get(1).(func(string, int) error); ok {
-		r1 = returnFunc(str, i)
+		r1 = returnFunc(strParam, iParam)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -68,25 +68,25 @@ type Expecter_ManyArgsReturns_Call struct {
 }
 
 // ManyArgsReturns is a helper method to define mock.On call
-//   - str
-//   - i
-func (_e *Expecter_Expecter) ManyArgsReturns(str interface{}, i interface{}) *Expecter_ManyArgsReturns_Call {
-	return &Expecter_ManyArgsReturns_Call{Call: _e.mock.On("ManyArgsReturns", str, i)}
+//   - strParam
+//   - iParam
+func (_e *Expecter_Expecter) ManyArgsReturns(strParam interface{}, iParam interface{}) *Expecter_ManyArgsReturns_Call {
+	return &Expecter_ManyArgsReturns_Call{Call: _e.mock.On("ManyArgsReturns", strParam, iParam)}
 }
 
-func (_c *Expecter_ManyArgsReturns_Call) Run(run func(str string, i int)) *Expecter_ManyArgsReturns_Call {
+func (_c *Expecter_ManyArgsReturns_Call) Run(run func(strParam string, iParam int)) *Expecter_ManyArgsReturns_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(str, i)
+		run(args[0].(string), args[1].(int))
 	})
 	return _c
 }
 
-func (_c *Expecter_ManyArgsReturns_Call) Return(strsOut []string, errOut error) *Expecter_ManyArgsReturns_Call {
-	_c.Call.Return(strsOut, errOut)
+func (_c *Expecter_ManyArgsReturns_Call) Return(strsOutParam []string, errOutParam error) *Expecter_ManyArgsReturns_Call {
+	_c.Call.Return(strsOutParam, errOutParam)
 	return _c
 }
 
-func (_c *Expecter_ManyArgsReturns_Call) RunAndReturn(run func(str string, i int) ([]string, error)) *Expecter_ManyArgsReturns_Call {
+func (_c *Expecter_ManyArgsReturns_Call) RunAndReturn(run func(strParam string, iParam int) ([]string, error)) *Expecter_ManyArgsReturns_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -125,8 +125,8 @@ func (_c *Expecter_NoArg_Call) Run(run func()) *Expecter_NoArg_Call {
 	return _c
 }
 
-func (_c *Expecter_NoArg_Call) Return(sOut string) *Expecter_NoArg_Call {
-	_c.Call.Return(sOut)
+func (_c *Expecter_NoArg_Call) Return(sOutParam string) *Expecter_NoArg_Call {
+	_c.Call.Return(sOutParam)
 	return _c
 }
 
@@ -136,8 +136,8 @@ func (_c *Expecter_NoArg_Call) RunAndReturn(run func() string) *Expecter_NoArg_C
 }
 
 // NoReturn provides a mock function for the type Expecter
-func (_mock *Expecter) NoReturn(str string) {
-	_mock.Called(str)
+func (_mock *Expecter) NoReturn(strParam string) {
+	_mock.Called(strParam)
 	return
 }
 
@@ -147,14 +147,14 @@ type Expecter_NoReturn_Call struct {
 }
 
 // NoReturn is a helper method to define mock.On call
-//   - str
-func (_e *Expecter_Expecter) NoReturn(str interface{}) *Expecter_NoReturn_Call {
-	return &Expecter_NoReturn_Call{Call: _e.mock.On("NoReturn", str)}
+//   - strParam
+func (_e *Expecter_Expecter) NoReturn(strParam interface{}) *Expecter_NoReturn_Call {
+	return &Expecter_NoReturn_Call{Call: _e.mock.On("NoReturn", strParam)}
 }
 
-func (_c *Expecter_NoReturn_Call) Run(run func(str string)) *Expecter_NoReturn_Call {
+func (_c *Expecter_NoReturn_Call) Run(run func(strParam string)) *Expecter_NoReturn_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(str)
+		run(args[0].(string))
 	})
 	return _c
 }
@@ -164,17 +164,17 @@ func (_c *Expecter_NoReturn_Call) Return() *Expecter_NoReturn_Call {
 	return _c
 }
 
-func (_c *Expecter_NoReturn_Call) RunAndReturn(run func(str string)) *Expecter_NoReturn_Call {
+func (_c *Expecter_NoReturn_Call) RunAndReturn(run func(strParam string)) *Expecter_NoReturn_Call {
 	_c.Run(run)
 	return _c
 }
 
 // Variadic provides a mock function for the type Expecter
-func (_mock *Expecter) Variadic(ints ...int) error {
+func (_mock *Expecter) Variadic(intsParam ...int) error {
 	// int
-	_va := make([]interface{}, len(ints))
-	for _i := range ints {
-		_va[_i] = ints[_i]
+	_va := make([]interface{}, len(intsParam))
+	for _i := range intsParam {
+		_va[_i] = intsParam[_i]
 	}
 	var _ca []interface{}
 	_ca = append(_ca, _va...)
@@ -186,7 +186,7 @@ func (_mock *Expecter) Variadic(ints ...int) error {
 
 	var r0 error
 	if returnFunc, ok := ret.Get(0).(func(...int) error); ok {
-		r0 = returnFunc(ints...)
+		r0 = returnFunc(intsParam...)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -199,13 +199,13 @@ type Expecter_Variadic_Call struct {
 }
 
 // Variadic is a helper method to define mock.On call
-//   - ints
-func (_e *Expecter_Expecter) Variadic(ints ...interface{}) *Expecter_Variadic_Call {
+//   - intsParam
+func (_e *Expecter_Expecter) Variadic(intsParam ...interface{}) *Expecter_Variadic_Call {
 	return &Expecter_Variadic_Call{Call: _e.mock.On("Variadic",
-		append([]interface{}{}, ints...)...)}
+		append([]interface{}{}, intsParam...)...)}
 }
 
-func (_c *Expecter_Variadic_Call) Run(run func(ints ...int)) *Expecter_Variadic_Call {
+func (_c *Expecter_Variadic_Call) Run(run func(intsParam ...int)) *Expecter_Variadic_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		variadicArgs := make([]int, len(args)-0)
 		for i, a := range args[0:] {
@@ -218,21 +218,21 @@ func (_c *Expecter_Variadic_Call) Run(run func(ints ...int)) *Expecter_Variadic_
 	return _c
 }
 
-func (_c *Expecter_Variadic_Call) Return(errOut error) *Expecter_Variadic_Call {
-	_c.Call.Return(errOut)
+func (_c *Expecter_Variadic_Call) Return(errOutParam error) *Expecter_Variadic_Call {
+	_c.Call.Return(errOutParam)
 	return _c
 }
 
-func (_c *Expecter_Variadic_Call) RunAndReturn(run func(ints ...int) error) *Expecter_Variadic_Call {
+func (_c *Expecter_Variadic_Call) RunAndReturn(run func(intsParam ...int) error) *Expecter_Variadic_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // VariadicMany provides a mock function for the type Expecter
-func (_mock *Expecter) VariadicMany(i int, a string, intfs ...interface{}) error {
+func (_mock *Expecter) VariadicMany(iParam int, aParam string, intfsParam ...interface{}) error {
 	var _ca []interface{}
-	_ca = append(_ca, i, a)
-	_ca = append(_ca, intfs...)
+	_ca = append(_ca, iParam, aParam)
+	_ca = append(_ca, intfsParam...)
 	ret := _mock.Called(_ca...)
 
 	if len(ret) == 0 {
@@ -241,7 +241,7 @@ func (_mock *Expecter) VariadicMany(i int, a string, intfs ...interface{}) error
 
 	var r0 error
 	if returnFunc, ok := ret.Get(0).(func(int, string, ...interface{}) error); ok {
-		r0 = returnFunc(i, a, intfs...)
+		r0 = returnFunc(iParam, aParam, intfsParam...)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -254,15 +254,15 @@ type Expecter_VariadicMany_Call struct {
 }
 
 // VariadicMany is a helper method to define mock.On call
-//   - i
-//   - a
-//   - intfs
-func (_e *Expecter_Expecter) VariadicMany(i interface{}, a interface{}, intfs ...interface{}) *Expecter_VariadicMany_Call {
+//   - iParam
+//   - aParam
+//   - intfsParam
+func (_e *Expecter_Expecter) VariadicMany(iParam interface{}, aParam interface{}, intfsParam ...interface{}) *Expecter_VariadicMany_Call {
 	return &Expecter_VariadicMany_Call{Call: _e.mock.On("VariadicMany",
-		append([]interface{}{i, a}, intfs...)...)}
+		append([]interface{}{iParam, aParam}, intfsParam...)...)}
 }
 
-func (_c *Expecter_VariadicMany_Call) Run(run func(i int, a string, intfs ...interface{})) *Expecter_VariadicMany_Call {
+func (_c *Expecter_VariadicMany_Call) Run(run func(iParam int, aParam string, intfsParam ...interface{})) *Expecter_VariadicMany_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		variadicArgs := make([]interface{}, len(args)-2)
 		for i, a := range args[2:] {
@@ -275,12 +275,12 @@ func (_c *Expecter_VariadicMany_Call) Run(run func(i int, a string, intfs ...int
 	return _c
 }
 
-func (_c *Expecter_VariadicMany_Call) Return(errOut error) *Expecter_VariadicMany_Call {
-	_c.Call.Return(errOut)
+func (_c *Expecter_VariadicMany_Call) Return(errOutParam error) *Expecter_VariadicMany_Call {
+	_c.Call.Return(errOutParam)
 	return _c
 }
 
-func (_c *Expecter_VariadicMany_Call) RunAndReturn(run func(i int, a string, intfs ...interface{}) error) *Expecter_VariadicMany_Call {
+func (_c *Expecter_VariadicMany_Call) RunAndReturn(run func(iParam int, aParam string, intfsParam ...interface{}) error) *Expecter_VariadicMany_Call {
 	_c.Call.Return(run)
 	return _c
 }

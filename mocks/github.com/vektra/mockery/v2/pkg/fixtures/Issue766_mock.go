@@ -35,8 +35,8 @@ func (_m *Issue766) EXPECT() *Issue766_Expecter {
 }
 
 // FetchData provides a mock function for the type Issue766
-func (_mock *Issue766) FetchData(fetchFunc func(x ...int) ([]int, error)) ([]int, error) {
-	ret := _mock.Called(fetchFunc)
+func (_mock *Issue766) FetchData(fetchFuncParam func(x ...int) ([]int, error)) ([]int, error) {
+	ret := _mock.Called(fetchFuncParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for FetchData")
@@ -45,17 +45,17 @@ func (_mock *Issue766) FetchData(fetchFunc func(x ...int) ([]int, error)) ([]int
 	var r0 []int
 	var r1 error
 	if returnFunc, ok := ret.Get(0).(func(func(x ...int) ([]int, error)) ([]int, error)); ok {
-		return returnFunc(fetchFunc)
+		return returnFunc(fetchFuncParam)
 	}
 	if returnFunc, ok := ret.Get(0).(func(func(x ...int) ([]int, error)) []int); ok {
-		r0 = returnFunc(fetchFunc)
+		r0 = returnFunc(fetchFuncParam)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]int)
 		}
 	}
 	if returnFunc, ok := ret.Get(1).(func(func(x ...int) ([]int, error)) error); ok {
-		r1 = returnFunc(fetchFunc)
+		r1 = returnFunc(fetchFuncParam)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -68,24 +68,24 @@ type Issue766_FetchData_Call struct {
 }
 
 // FetchData is a helper method to define mock.On call
-//   - fetchFunc
-func (_e *Issue766_Expecter) FetchData(fetchFunc interface{}) *Issue766_FetchData_Call {
-	return &Issue766_FetchData_Call{Call: _e.mock.On("FetchData", fetchFunc)}
+//   - fetchFuncParam
+func (_e *Issue766_Expecter) FetchData(fetchFuncParam interface{}) *Issue766_FetchData_Call {
+	return &Issue766_FetchData_Call{Call: _e.mock.On("FetchData", fetchFuncParam)}
 }
 
-func (_c *Issue766_FetchData_Call) Run(run func(fetchFunc func(x ...int) ([]int, error))) *Issue766_FetchData_Call {
+func (_c *Issue766_FetchData_Call) Run(run func(fetchFuncParam func(x ...int) ([]int, error))) *Issue766_FetchData_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(fetchFunc)
+		run(args[0].(func(x ...int) ([]int, error)))
 	})
 	return _c
 }
 
-func (_c *Issue766_FetchData_Call) Return(intsOut []int, errOut error) *Issue766_FetchData_Call {
-	_c.Call.Return(intsOut, errOut)
+func (_c *Issue766_FetchData_Call) Return(intsOutParam []int, errOutParam error) *Issue766_FetchData_Call {
+	_c.Call.Return(intsOutParam, errOutParam)
 	return _c
 }
 
-func (_c *Issue766_FetchData_Call) RunAndReturn(run func(fetchFunc func(x ...int) ([]int, error)) ([]int, error)) *Issue766_FetchData_Call {
+func (_c *Issue766_FetchData_Call) RunAndReturn(run func(fetchFuncParam func(x ...int) ([]int, error)) ([]int, error)) *Issue766_FetchData_Call {
 	_c.Call.Return(run)
 	return _c
 }

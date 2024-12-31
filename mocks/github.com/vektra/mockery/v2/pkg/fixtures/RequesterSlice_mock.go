@@ -35,8 +35,8 @@ func (_m *RequesterSlice) EXPECT() *RequesterSlice_Expecter {
 }
 
 // Get provides a mock function for the type RequesterSlice
-func (_mock *RequesterSlice) Get(path string) ([]string, error) {
-	ret := _mock.Called(path)
+func (_mock *RequesterSlice) Get(pathParam string) ([]string, error) {
+	ret := _mock.Called(pathParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Get")
@@ -45,17 +45,17 @@ func (_mock *RequesterSlice) Get(path string) ([]string, error) {
 	var r0 []string
 	var r1 error
 	if returnFunc, ok := ret.Get(0).(func(string) ([]string, error)); ok {
-		return returnFunc(path)
+		return returnFunc(pathParam)
 	}
 	if returnFunc, ok := ret.Get(0).(func(string) []string); ok {
-		r0 = returnFunc(path)
+		r0 = returnFunc(pathParam)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]string)
 		}
 	}
 	if returnFunc, ok := ret.Get(1).(func(string) error); ok {
-		r1 = returnFunc(path)
+		r1 = returnFunc(pathParam)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -68,24 +68,24 @@ type RequesterSlice_Get_Call struct {
 }
 
 // Get is a helper method to define mock.On call
-//   - path
-func (_e *RequesterSlice_Expecter) Get(path interface{}) *RequesterSlice_Get_Call {
-	return &RequesterSlice_Get_Call{Call: _e.mock.On("Get", path)}
+//   - pathParam
+func (_e *RequesterSlice_Expecter) Get(pathParam interface{}) *RequesterSlice_Get_Call {
+	return &RequesterSlice_Get_Call{Call: _e.mock.On("Get", pathParam)}
 }
 
-func (_c *RequesterSlice_Get_Call) Run(run func(path string)) *RequesterSlice_Get_Call {
+func (_c *RequesterSlice_Get_Call) Run(run func(pathParam string)) *RequesterSlice_Get_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(path)
+		run(args[0].(string))
 	})
 	return _c
 }
 
-func (_c *RequesterSlice_Get_Call) Return(stringsOut []string, errOut error) *RequesterSlice_Get_Call {
-	_c.Call.Return(stringsOut, errOut)
+func (_c *RequesterSlice_Get_Call) Return(stringsOutParam []string, errOutParam error) *RequesterSlice_Get_Call {
+	_c.Call.Return(stringsOutParam, errOutParam)
 	return _c
 }
 
-func (_c *RequesterSlice_Get_Call) RunAndReturn(run func(path string) ([]string, error)) *RequesterSlice_Get_Call {
+func (_c *RequesterSlice_Get_Call) RunAndReturn(run func(pathParam string) ([]string, error)) *RequesterSlice_Get_Call {
 	_c.Call.Return(run)
 	return _c
 }

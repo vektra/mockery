@@ -35,9 +35,9 @@ func (_m *MapToInterface) EXPECT() *MapToInterface_Expecter {
 }
 
 // Foo provides a mock function for the type MapToInterface
-func (_mock *MapToInterface) Foo(arg1 ...map[string]interface{}) {
-	if len(arg1) > 0 {
-		_mock.Called(arg1)
+func (_mock *MapToInterface) Foo(arg1Param ...map[string]interface{}) {
+	if len(arg1Param) > 0 {
+		_mock.Called(arg1Param)
 	} else {
 		_mock.Called()
 	}
@@ -50,13 +50,13 @@ type MapToInterface_Foo_Call struct {
 }
 
 // Foo is a helper method to define mock.On call
-//   - arg1
-func (_e *MapToInterface_Expecter) Foo(arg1 ...interface{}) *MapToInterface_Foo_Call {
+//   - arg1Param
+func (_e *MapToInterface_Expecter) Foo(arg1Param ...interface{}) *MapToInterface_Foo_Call {
 	return &MapToInterface_Foo_Call{Call: _e.mock.On("Foo",
-		append([]interface{}{}, arg1...)...)}
+		append([]interface{}{}, arg1Param...)...)}
 }
 
-func (_c *MapToInterface_Foo_Call) Run(run func(arg1 ...map[string]interface{})) *MapToInterface_Foo_Call {
+func (_c *MapToInterface_Foo_Call) Run(run func(arg1Param ...map[string]interface{})) *MapToInterface_Foo_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		variadicArgs := make([]map[string]interface{}, len(args)-0)
 		for i, a := range args[0:] {
@@ -74,7 +74,7 @@ func (_c *MapToInterface_Foo_Call) Return() *MapToInterface_Foo_Call {
 	return _c
 }
 
-func (_c *MapToInterface_Foo_Call) RunAndReturn(run func(arg1 ...map[string]interface{})) *MapToInterface_Foo_Call {
+func (_c *MapToInterface_Foo_Call) RunAndReturn(run func(arg1Param ...map[string]interface{})) *MapToInterface_Foo_Call {
 	_c.Run(run)
 	return _c
 }

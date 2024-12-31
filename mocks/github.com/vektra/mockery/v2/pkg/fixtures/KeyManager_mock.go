@@ -36,8 +36,8 @@ func (_m *KeyManager) EXPECT() *KeyManager_Expecter {
 }
 
 // GetKey provides a mock function for the type KeyManager
-func (_mock *KeyManager) GetKey(s string, v uint16) ([]byte, *test.Err) {
-	ret := _mock.Called(s, v)
+func (_mock *KeyManager) GetKey(sParam string, vParam uint16) ([]byte, *test.Err) {
+	ret := _mock.Called(sParam, vParam)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetKey")
@@ -46,17 +46,17 @@ func (_mock *KeyManager) GetKey(s string, v uint16) ([]byte, *test.Err) {
 	var r0 []byte
 	var r1 *test.Err
 	if returnFunc, ok := ret.Get(0).(func(string, uint16) ([]byte, *test.Err)); ok {
-		return returnFunc(s, v)
+		return returnFunc(sParam, vParam)
 	}
 	if returnFunc, ok := ret.Get(0).(func(string, uint16) []byte); ok {
-		r0 = returnFunc(s, v)
+		r0 = returnFunc(sParam, vParam)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]byte)
 		}
 	}
 	if returnFunc, ok := ret.Get(1).(func(string, uint16) *test.Err); ok {
-		r1 = returnFunc(s, v)
+		r1 = returnFunc(sParam, vParam)
 	} else {
 		if ret.Get(1) != nil {
 			r1 = ret.Get(1).(*test.Err)
@@ -71,25 +71,25 @@ type KeyManager_GetKey_Call struct {
 }
 
 // GetKey is a helper method to define mock.On call
-//   - s
-//   - v
-func (_e *KeyManager_Expecter) GetKey(s interface{}, v interface{}) *KeyManager_GetKey_Call {
-	return &KeyManager_GetKey_Call{Call: _e.mock.On("GetKey", s, v)}
+//   - sParam
+//   - vParam
+func (_e *KeyManager_Expecter) GetKey(sParam interface{}, vParam interface{}) *KeyManager_GetKey_Call {
+	return &KeyManager_GetKey_Call{Call: _e.mock.On("GetKey", sParam, vParam)}
 }
 
-func (_c *KeyManager_GetKey_Call) Run(run func(s string, v uint16)) *KeyManager_GetKey_Call {
+func (_c *KeyManager_GetKey_Call) Run(run func(sParam string, vParam uint16)) *KeyManager_GetKey_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(s, v)
+		run(args[0].(string), args[1].(uint16))
 	})
 	return _c
 }
 
-func (_c *KeyManager_GetKey_Call) Return(bytesOut []byte, errOut *test.Err) *KeyManager_GetKey_Call {
-	_c.Call.Return(bytesOut, errOut)
+func (_c *KeyManager_GetKey_Call) Return(bytesOutParam []byte, errOutParam *test.Err) *KeyManager_GetKey_Call {
+	_c.Call.Return(bytesOutParam, errOutParam)
 	return _c
 }
 
-func (_c *KeyManager_GetKey_Call) RunAndReturn(run func(s string, v uint16) ([]byte, *test.Err)) *KeyManager_GetKey_Call {
+func (_c *KeyManager_GetKey_Call) RunAndReturn(run func(sParam string, vParam uint16) ([]byte, *test.Err)) *KeyManager_GetKey_Call {
 	_c.Call.Return(run)
 	return _c
 }
