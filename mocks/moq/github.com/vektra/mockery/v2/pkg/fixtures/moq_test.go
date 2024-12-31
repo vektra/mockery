@@ -9,11 +9,11 @@ import (
 	"net/http"
 	"sync"
 
-	fixtures "github.com/vektra/mockery/v2/pkg/fixtures"
-	number_dir_http "github.com/vektra/mockery/v2/pkg/fixtures/12345678/http"
+	test "github.com/vektra/mockery/v2/pkg/fixtures"
+	http1 "github.com/vektra/mockery/v2/pkg/fixtures/12345678/http"
 	"github.com/vektra/mockery/v2/pkg/fixtures/constraints"
-	my_http "github.com/vektra/mockery/v2/pkg/fixtures/http"
-	redefinedtypeb "github.com/vektra/mockery/v2/pkg/fixtures/redefined_type_b"
+	http0 "github.com/vektra/mockery/v2/pkg/fixtures/http"
+	test0 "github.com/vektra/mockery/v2/pkg/fixtures/redefined_type_b"
 )
 
 // UsesAnyMock is a mock implementation of test.UsesAny.
@@ -642,7 +642,7 @@ func (mock *ConsulLockMock) ResetCalls() {
 //
 //		// make and configure a mocked test.KeyManager
 //		mockedKeyManager := &KeyManagerMock{
-//			GetKeyFunc: func(s string, v uint16) ([]byte, *fixtures.Err) {
+//			GetKeyFunc: func(s string, v uint16) ([]byte, *test.Err) {
 //				panic("mock out the GetKey method")
 //			},
 //		}
@@ -653,7 +653,7 @@ func (mock *ConsulLockMock) ResetCalls() {
 //	}
 type KeyManagerMock struct {
 	// GetKeyFunc mocks the GetKey method.
-	GetKeyFunc func(s string, v uint16) ([]byte, *fixtures.Err)
+	GetKeyFunc func(s string, v uint16) ([]byte, *test.Err)
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -669,7 +669,7 @@ type KeyManagerMock struct {
 }
 
 // GetKey calls GetKeyFunc.
-func (mock *KeyManagerMock) GetKey(s string, v uint16) ([]byte, *fixtures.Err) {
+func (mock *KeyManagerMock) GetKey(s string, v uint16) ([]byte, *test.Err) {
 	if mock.GetKeyFunc == nil {
 		panic("KeyManagerMock.GetKeyFunc: method is nil but KeyManager.GetKey was just called")
 	}
@@ -1716,7 +1716,7 @@ func (mock *ReplaceGenericSelfMock[T]) ResetCalls() {
 //			GetFunc: func(path string) (http.Response, error) {
 //				panic("mock out the Get method")
 //			},
-//			ZFunc: func() my_http.MyStruct {
+//			ZFunc: func() http0.MyStruct {
 //				panic("mock out the Z method")
 //			},
 //		}
@@ -1730,7 +1730,7 @@ type HasConflictingNestedImportsMock struct {
 	GetFunc func(path string) (http.Response, error)
 
 	// ZFunc mocks the Z method.
-	ZFunc func() my_http.MyStruct
+	ZFunc func() http0.MyStruct
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -1787,7 +1787,7 @@ func (mock *HasConflictingNestedImportsMock) ResetGetCalls() {
 }
 
 // Z calls ZFunc.
-func (mock *HasConflictingNestedImportsMock) Z() my_http.MyStruct {
+func (mock *HasConflictingNestedImportsMock) Z() http0.MyStruct {
 	if mock.ZFunc == nil {
 		panic("HasConflictingNestedImportsMock.ZFunc: method is nil but HasConflictingNestedImports.Z was just called")
 	}
@@ -1837,13 +1837,13 @@ func (mock *HasConflictingNestedImportsMock) ResetCalls() {
 //
 //		// make and configure a mocked test.ImportsSameAsPackage
 //		mockedImportsSameAsPackage := &ImportsSameAsPackageMock{
-//			AFunc: func() redefinedtypeb.B {
+//			AFunc: func() test0.B {
 //				panic("mock out the A method")
 //			},
-//			BFunc: func() fixtures.KeyManager {
+//			BFunc: func() test.KeyManager {
 //				panic("mock out the B method")
 //			},
-//			CFunc: func(c fixtures.C)  {
+//			CFunc: func(c test.C)  {
 //				panic("mock out the C method")
 //			},
 //		}
@@ -1854,13 +1854,13 @@ func (mock *HasConflictingNestedImportsMock) ResetCalls() {
 //	}
 type ImportsSameAsPackageMock struct {
 	// AFunc mocks the A method.
-	AFunc func() redefinedtypeb.B
+	AFunc func() test0.B
 
 	// BFunc mocks the B method.
-	BFunc func() fixtures.KeyManager
+	BFunc func() test.KeyManager
 
 	// CFunc mocks the C method.
-	CFunc func(c fixtures.C)
+	CFunc func(c test.C)
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -1873,7 +1873,7 @@ type ImportsSameAsPackageMock struct {
 		// C holds details about calls to the C method.
 		C []struct {
 			// C is the c argument value.
-			C fixtures.C
+			C test.C
 		}
 	}
 	lockA sync.RWMutex
@@ -1882,7 +1882,7 @@ type ImportsSameAsPackageMock struct {
 }
 
 // A calls AFunc.
-func (mock *ImportsSameAsPackageMock) A() redefinedtypeb.B {
+func (mock *ImportsSameAsPackageMock) A() test0.B {
 	if mock.AFunc == nil {
 		panic("ImportsSameAsPackageMock.AFunc: method is nil but ImportsSameAsPackage.A was just called")
 	}
@@ -1916,7 +1916,7 @@ func (mock *ImportsSameAsPackageMock) ResetACalls() {
 }
 
 // B calls BFunc.
-func (mock *ImportsSameAsPackageMock) B() fixtures.KeyManager {
+func (mock *ImportsSameAsPackageMock) B() test.KeyManager {
 	if mock.BFunc == nil {
 		panic("ImportsSameAsPackageMock.BFunc: method is nil but ImportsSameAsPackage.B was just called")
 	}
@@ -1950,12 +1950,12 @@ func (mock *ImportsSameAsPackageMock) ResetBCalls() {
 }
 
 // C calls CFunc.
-func (mock *ImportsSameAsPackageMock) C(c fixtures.C) {
+func (mock *ImportsSameAsPackageMock) C(c test.C) {
 	if mock.CFunc == nil {
 		panic("ImportsSameAsPackageMock.CFunc: method is nil but ImportsSameAsPackage.C was just called")
 	}
 	callInfo := struct {
-		C fixtures.C
+		C test.C
 	}{
 		C: c,
 	}
@@ -1970,10 +1970,10 @@ func (mock *ImportsSameAsPackageMock) C(c fixtures.C) {
 //
 //	len(mockedImportsSameAsPackage.CCalls())
 func (mock *ImportsSameAsPackageMock) CCalls() []struct {
-	C fixtures.C
+	C test.C
 } {
 	var calls []struct {
-		C fixtures.C
+		C test.C
 	}
 	mock.lockC.RLock()
 	calls = mock.calls.C
@@ -2458,7 +2458,7 @@ func (mock *SiblingMock) ResetCalls() {
 //
 //		// make and configure a mocked test.UsesOtherPkgIface
 //		mockedUsesOtherPkgIface := &UsesOtherPkgIfaceMock{
-//			DoSomethingElseFunc: func(obj fixtures.Sibling)  {
+//			DoSomethingElseFunc: func(obj test.Sibling)  {
 //				panic("mock out the DoSomethingElse method")
 //			},
 //		}
@@ -2469,26 +2469,26 @@ func (mock *SiblingMock) ResetCalls() {
 //	}
 type UsesOtherPkgIfaceMock struct {
 	// DoSomethingElseFunc mocks the DoSomethingElse method.
-	DoSomethingElseFunc func(obj fixtures.Sibling)
+	DoSomethingElseFunc func(obj test.Sibling)
 
 	// calls tracks calls to the methods.
 	calls struct {
 		// DoSomethingElse holds details about calls to the DoSomethingElse method.
 		DoSomethingElse []struct {
 			// Obj is the obj argument value.
-			Obj fixtures.Sibling
+			Obj test.Sibling
 		}
 	}
 	lockDoSomethingElse sync.RWMutex
 }
 
 // DoSomethingElse calls DoSomethingElseFunc.
-func (mock *UsesOtherPkgIfaceMock) DoSomethingElse(obj fixtures.Sibling) {
+func (mock *UsesOtherPkgIfaceMock) DoSomethingElse(obj test.Sibling) {
 	if mock.DoSomethingElseFunc == nil {
 		panic("UsesOtherPkgIfaceMock.DoSomethingElseFunc: method is nil but UsesOtherPkgIface.DoSomethingElse was just called")
 	}
 	callInfo := struct {
-		Obj fixtures.Sibling
+		Obj test.Sibling
 	}{
 		Obj: obj,
 	}
@@ -2503,10 +2503,10 @@ func (mock *UsesOtherPkgIfaceMock) DoSomethingElse(obj fixtures.Sibling) {
 //
 //	len(mockedUsesOtherPkgIface.DoSomethingElseCalls())
 func (mock *UsesOtherPkgIfaceMock) DoSomethingElseCalls() []struct {
-	Obj fixtures.Sibling
+	Obj test.Sibling
 } {
 	var calls []struct {
-		Obj fixtures.Sibling
+		Obj test.Sibling
 	}
 	mock.lockDoSomethingElse.RLock()
 	calls = mock.calls.DoSomethingElse
@@ -2893,7 +2893,7 @@ func (mock *Requester4Mock) ResetCalls() {
 //
 //		// make and configure a mocked test.RequesterArgSameAsImport
 //		mockedRequesterArgSameAsImport := &RequesterArgSameAsImportMock{
-//			GetFunc: func(json string) *json.RawMessage {
+//			GetFunc: func(json1 string) *json.RawMessage {
 //				panic("mock out the Get method")
 //			},
 //		}
@@ -2904,33 +2904,33 @@ func (mock *Requester4Mock) ResetCalls() {
 //	}
 type RequesterArgSameAsImportMock struct {
 	// GetFunc mocks the Get method.
-	GetFunc func(json string) *json.RawMessage
+	GetFunc func(json1 string) *json.RawMessage
 
 	// calls tracks calls to the methods.
 	calls struct {
 		// Get holds details about calls to the Get method.
 		Get []struct {
-			// JSON is the json argument value.
-			JSON string
+			// Json1 is the json1 argument value.
+			Json1 string
 		}
 	}
 	lockGet sync.RWMutex
 }
 
 // Get calls GetFunc.
-func (mock *RequesterArgSameAsImportMock) Get(json string) *json.RawMessage {
+func (mock *RequesterArgSameAsImportMock) Get(json1 string) *json.RawMessage {
 	if mock.GetFunc == nil {
 		panic("RequesterArgSameAsImportMock.GetFunc: method is nil but RequesterArgSameAsImport.Get was just called")
 	}
 	callInfo := struct {
-		JSON string
+		Json1 string
 	}{
-		JSON: json,
+		Json1: json1,
 	}
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
-	return mock.GetFunc(json)
+	return mock.GetFunc(json1)
 }
 
 // GetCalls gets all the calls that were made to Get.
@@ -2938,10 +2938,10 @@ func (mock *RequesterArgSameAsImportMock) Get(json string) *json.RawMessage {
 //
 //	len(mockedRequesterArgSameAsImport.GetCalls())
 func (mock *RequesterArgSameAsImportMock) GetCalls() []struct {
-	JSON string
+	Json1 string
 } {
 	var calls []struct {
-		JSON string
+		Json1 string
 	}
 	mock.lockGet.RLock()
 	calls = mock.calls.Get
@@ -2969,7 +2969,7 @@ func (mock *RequesterArgSameAsImportMock) ResetCalls() {
 //
 //		// make and configure a mocked test.RequesterArgSameAsNamedImport
 //		mockedRequesterArgSameAsNamedImport := &RequesterArgSameAsNamedImportMock{
-//			GetFunc: func(json_1_ string) *json.RawMessage {
+//			GetFunc: func(json1 string) *json.RawMessage {
 //				panic("mock out the Get method")
 //			},
 //		}
@@ -2980,33 +2980,33 @@ func (mock *RequesterArgSameAsImportMock) ResetCalls() {
 //	}
 type RequesterArgSameAsNamedImportMock struct {
 	// GetFunc mocks the Get method.
-	GetFunc func(json_1_ string) *json.RawMessage
+	GetFunc func(json1 string) *json.RawMessage
 
 	// calls tracks calls to the methods.
 	calls struct {
 		// Get holds details about calls to the Get method.
 		Get []struct {
-			// Json_1_ is the json_1_ argument value.
-			Json_1_ string
+			// Json1 is the json1 argument value.
+			Json1 string
 		}
 	}
 	lockGet sync.RWMutex
 }
 
 // Get calls GetFunc.
-func (mock *RequesterArgSameAsNamedImportMock) Get(json_1_ string) *json.RawMessage {
+func (mock *RequesterArgSameAsNamedImportMock) Get(json1 string) *json.RawMessage {
 	if mock.GetFunc == nil {
 		panic("RequesterArgSameAsNamedImportMock.GetFunc: method is nil but RequesterArgSameAsNamedImport.Get was just called")
 	}
 	callInfo := struct {
-		Json_1_ string
+		Json1 string
 	}{
-		Json_1_: json_1_,
+		Json1: json1,
 	}
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
-	return mock.GetFunc(json_1_)
+	return mock.GetFunc(json1)
 }
 
 // GetCalls gets all the calls that were made to Get.
@@ -3014,10 +3014,10 @@ func (mock *RequesterArgSameAsNamedImportMock) Get(json_1_ string) *json.RawMess
 //
 //	len(mockedRequesterArgSameAsNamedImport.GetCalls())
 func (mock *RequesterArgSameAsNamedImportMock) GetCalls() []struct {
-	Json_1_ string
+	Json1 string
 } {
 	var calls []struct {
-		Json_1_ string
+		Json1 string
 	}
 	mock.lockGet.RLock()
 	calls = mock.calls.Get
@@ -3045,7 +3045,7 @@ func (mock *RequesterArgSameAsNamedImportMock) ResetCalls() {
 //
 //		// make and configure a mocked test.RequesterArgSameAsPkg
 //		mockedRequesterArgSameAsPkg := &RequesterArgSameAsPkgMock{
-//			GetFunc: func(test string)  {
+//			GetFunc: func(test1 string)  {
 //				panic("mock out the Get method")
 //			},
 //		}
@@ -3056,33 +3056,33 @@ func (mock *RequesterArgSameAsNamedImportMock) ResetCalls() {
 //	}
 type RequesterArgSameAsPkgMock struct {
 	// GetFunc mocks the Get method.
-	GetFunc func(test string)
+	GetFunc func(test1 string)
 
 	// calls tracks calls to the methods.
 	calls struct {
 		// Get holds details about calls to the Get method.
 		Get []struct {
-			// Test is the test argument value.
-			Test string
+			// Test1 is the test1 argument value.
+			Test1 string
 		}
 	}
 	lockGet sync.RWMutex
 }
 
 // Get calls GetFunc.
-func (mock *RequesterArgSameAsPkgMock) Get(test string) {
+func (mock *RequesterArgSameAsPkgMock) Get(test1 string) {
 	if mock.GetFunc == nil {
 		panic("RequesterArgSameAsPkgMock.GetFunc: method is nil but RequesterArgSameAsPkg.Get was just called")
 	}
 	callInfo := struct {
-		Test string
+		Test1 string
 	}{
-		Test: test,
+		Test1: test1,
 	}
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
-	mock.GetFunc(test)
+	mock.GetFunc(test1)
 }
 
 // GetCalls gets all the calls that were made to Get.
@@ -3090,10 +3090,10 @@ func (mock *RequesterArgSameAsPkgMock) Get(test string) {
 //
 //	len(mockedRequesterArgSameAsPkg.GetCalls())
 func (mock *RequesterArgSameAsPkgMock) GetCalls() []struct {
-	Test string
+	Test1 string
 } {
 	var calls []struct {
-		Test string
+		Test1 string
 	}
 	mock.lockGet.RLock()
 	calls = mock.calls.Get
@@ -4032,10 +4032,10 @@ func (mock *RequesterVariadicMock) ResetCalls() {
 //			AFunc: func() http.Flusher {
 //				panic("mock out the A method")
 //			},
-//			BFunc: func(fixtureshttp string) my_http.MyStruct {
+//			BFunc: func(fixtureshttp string) http0.MyStruct {
 //				panic("mock out the B method")
 //			},
-//			CFunc: func(fixtureshttp string) number_dir_http.MyStruct {
+//			CFunc: func(fixtureshttp string) http1.MyStruct {
 //				panic("mock out the C method")
 //			},
 //		}
@@ -4049,10 +4049,10 @@ type ExampleMock struct {
 	AFunc func() http.Flusher
 
 	// BFunc mocks the B method.
-	BFunc func(fixtureshttp string) my_http.MyStruct
+	BFunc func(fixtureshttp string) http0.MyStruct
 
 	// CFunc mocks the C method.
-	CFunc func(fixtureshttp string) number_dir_http.MyStruct
+	CFunc func(fixtureshttp string) http1.MyStruct
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -4110,7 +4110,7 @@ func (mock *ExampleMock) ResetACalls() {
 }
 
 // B calls BFunc.
-func (mock *ExampleMock) B(fixtureshttp string) my_http.MyStruct {
+func (mock *ExampleMock) B(fixtureshttp string) http0.MyStruct {
 	if mock.BFunc == nil {
 		panic("ExampleMock.BFunc: method is nil but Example.B was just called")
 	}
@@ -4149,7 +4149,7 @@ func (mock *ExampleMock) ResetBCalls() {
 }
 
 // C calls CFunc.
-func (mock *ExampleMock) C(fixtureshttp string) number_dir_http.MyStruct {
+func (mock *ExampleMock) C(fixtureshttp string) http1.MyStruct {
 	if mock.CFunc == nil {
 		panic("ExampleMock.CFunc: method is nil but Example.C was just called")
 	}
@@ -4208,7 +4208,7 @@ func (mock *ExampleMock) ResetCalls() {
 //
 //		// make and configure a mocked test.A
 //		mockedA := &AMock{
-//			CallFunc: func() (fixtures.B, error) {
+//			CallFunc: func() (test.B, error) {
 //				panic("mock out the Call method")
 //			},
 //		}
@@ -4219,7 +4219,7 @@ func (mock *ExampleMock) ResetCalls() {
 //	}
 type AMock struct {
 	// CallFunc mocks the Call method.
-	CallFunc func() (fixtures.B, error)
+	CallFunc func() (test.B, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -4231,7 +4231,7 @@ type AMock struct {
 }
 
 // Call calls CallFunc.
-func (mock *AMock) Call() (fixtures.B, error) {
+func (mock *AMock) Call() (test.B, error) {
 	if mock.CallFunc == nil {
 		panic("AMock.CallFunc: method is nil but A.Call was just called")
 	}
@@ -4377,7 +4377,7 @@ func (mock *StructWithTagMock) ResetCalls() {
 //
 //		// make and configure a mocked test.Variadic
 //		mockedVariadic := &VariadicMock{
-//			VariadicFunctionFunc: func(str string, vFunc fixtures.VariadicFunction) error {
+//			VariadicFunctionFunc: func(str string, vFunc test.VariadicFunction) error {
 //				panic("mock out the VariadicFunction method")
 //			},
 //		}
@@ -4388,7 +4388,7 @@ func (mock *StructWithTagMock) ResetCalls() {
 //	}
 type VariadicMock struct {
 	// VariadicFunctionFunc mocks the VariadicFunction method.
-	VariadicFunctionFunc func(str string, vFunc fixtures.VariadicFunction) error
+	VariadicFunctionFunc func(str string, vFunc test.VariadicFunction) error
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -4397,20 +4397,20 @@ type VariadicMock struct {
 			// Str is the str argument value.
 			Str string
 			// VFunc is the vFunc argument value.
-			VFunc fixtures.VariadicFunction
+			VFunc test.VariadicFunction
 		}
 	}
 	lockVariadicFunction sync.RWMutex
 }
 
 // VariadicFunction calls VariadicFunctionFunc.
-func (mock *VariadicMock) VariadicFunction(str string, vFunc fixtures.VariadicFunction) error {
+func (mock *VariadicMock) VariadicFunction(str string, vFunc test.VariadicFunction) error {
 	if mock.VariadicFunctionFunc == nil {
 		panic("VariadicMock.VariadicFunctionFunc: method is nil but Variadic.VariadicFunction was just called")
 	}
 	callInfo := struct {
 		Str   string
-		VFunc fixtures.VariadicFunction
+		VFunc test.VariadicFunction
 	}{
 		Str:   str,
 		VFunc: vFunc,
@@ -4427,11 +4427,11 @@ func (mock *VariadicMock) VariadicFunction(str string, vFunc fixtures.VariadicFu
 //	len(mockedVariadic.VariadicFunctionCalls())
 func (mock *VariadicMock) VariadicFunctionCalls() []struct {
 	Str   string
-	VFunc fixtures.VariadicFunction
+	VFunc test.VariadicFunction
 } {
 	var calls []struct {
 		Str   string
-		VFunc fixtures.VariadicFunction
+		VFunc test.VariadicFunction
 	}
 	mock.lockVariadicFunction.RLock()
 	calls = mock.calls.VariadicFunction

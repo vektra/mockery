@@ -105,6 +105,13 @@ func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, prefix string) 
 	return &v
 }
 
+func (m *MethodScope) addImport(ctx context.Context, pkg *types.Package, imports map[string]*Package) {
+	imprt := m.registry.AddImport(ctx, pkg)
+	imports[pkg.Path()] = imprt
+	m.imports[pkg.Path()] = imprt
+	m.visibleNames[imprt.Qualifier()] = nil
+}
+
 func (m *MethodScope) populateImportNamedType(
 	ctx context.Context,
 	t interface {
@@ -114,10 +121,7 @@ func (m *MethodScope) populateImportNamedType(
 	imports map[string]*Package,
 ) {
 	if pkg := t.Obj().Pkg(); pkg != nil {
-		imprt := m.registry.AddImport(ctx, pkg)
-		imports[pkg.Path()] = imprt
-		m.imports[pkg.Path()] = imprt
-		m.visibleNames[imprt.Qualifier()] = nil
+		m.addImport(ctx, pkg, imports)
 	}
 	// The imports of a Type with a TypeList must be added to the imports list
 	// For example: Foo[otherpackage.Bar] , must have otherpackage imported
@@ -196,7 +200,10 @@ func (m *MethodScope) populateImports(ctx context.Context, t types.Type, imports
 			log.Debug().Msg("populating import form embedded type")
 			m.populateImports(ctx, t.EmbeddedType(i), imports)
 		}
-
+	case *types.Basic:
+		if t.Kind() == types.UnsafePointer {
+			m.addImport(ctx, types.Unsafe, imports)
+		}
 	default:
 		log.Debug().Str("real-type", fmt.Sprintf("%T", t)).Msg("unable to determine type of object")
 	}

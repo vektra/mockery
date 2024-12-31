@@ -5,6 +5,7 @@
 package mocks
 
 import (
+	"unsafe"
     mock "github.com/stretchr/testify/mock"
 )
 
@@ -40,7 +41,7 @@ func (_m *UnsafeInterface) EXPECT() *UnsafeInterface_Expecter {
  
 
 // Do provides a mock function for the type UnsafeInterface
-func (_mock *UnsafeInterface) Do(ptr *Pointer)  {  _mock.Called(ptr)
+func (_mock *UnsafeInterface) Do(ptr *unsafe.Pointer)  {  _mock.Called(ptr)
 	return 
 }
 
@@ -59,9 +60,9 @@ func (_e *UnsafeInterface_Expecter) Do(ptr interface{}, ) *UnsafeInterface_Do_Ca
 	return &UnsafeInterface_Do_Call{Call: _e.mock.On("Do",ptr, )}
 }
 
-func (_c *UnsafeInterface_Do_Call) Run(run func(ptr *Pointer)) *UnsafeInterface_Do_Call {
+func (_c *UnsafeInterface_Do_Call) Run(run func(ptr *unsafe.Pointer)) *UnsafeInterface_Do_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(*Pointer),)
+		run(args[0].(*unsafe.Pointer),)
 	})
 	return _c
 }
@@ -71,7 +72,7 @@ func (_c *UnsafeInterface_Do_Call) Return() *UnsafeInterface_Do_Call {
 	return _c
 }
 
-func (_c *UnsafeInterface_Do_Call) RunAndReturn(run func(ptr *Pointer)) *UnsafeInterface_Do_Call {
+func (_c *UnsafeInterface_Do_Call) RunAndReturn(run func(ptr *unsafe.Pointer)) *UnsafeInterface_Do_Call {
 	_c.Run(run)
 	return _c
 }
