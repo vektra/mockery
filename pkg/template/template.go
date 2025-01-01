@@ -8,8 +8,6 @@ import (
 	"strings"
 	"text/template"
 
-	_ "embed"
-
 	"github.com/huandu/xstrings"
 	"github.com/vektra/mockery/v3/pkg/registry"
 )

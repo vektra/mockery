@@ -50,9 +50,8 @@ func Test_initConfig(t *testing.T) {
 				require.NoError(t, configPath.WriteFile([]byte("all: True")))
 			}
 
-			viperObj := viper.New()
-
-			getConfig(baseDir, viperObj, nil)
+			viperObj, err := getConfig(baseDir, nil)
+			require.NoError(t, err)
 
 			assert.Equal(t, configPath.String(), viperObj.ConfigFileUsed())
 		})
@@ -71,9 +70,9 @@ name: Foo
 	configPath := pathlib.NewPath(tmpDir).Join("config.yaml")
 	require.NoError(t, configPath.WriteFile([]byte(config)))
 
-	v := viper.New()
-	getConfig(nil, v, configPath)
-	app, err := GetRootAppFromViper(v)
+	viperObj, err := getConfig(nil, configPath)
+	require.NoError(t, err)
+	app, err := GetRootAppFromViper(viperObj)
 	require.NoError(t, err)
 	assert.Error(t, app.Run())
 }
@@ -101,8 +100,9 @@ packages:
 	require.NoError(t, configPath.WriteFile([]byte(config)))
 	mockPath := pathlib.NewPath(tmpDir).Join("hello_Writer.go")
 
-	v := newViper(tmpDir)
-	getConfig(nil, v, configPath)
+	v, err := getConfig(nil, configPath)
+	require.NoError(t, err)
+
 	app, err := GetRootAppFromViper(v)
 	require.NoError(t, err)
 	require.NoError(t, app.Run())
@@ -129,8 +129,8 @@ packages:
 	require.NoError(t, configPath.WriteFile([]byte(config)))
 	mockPath := pathlib.NewPath(tmpDir).Join("mock_Writer.go")
 
-	v := newViper(tmpDir)
-	getConfig(nil, v, configPath)
+	v, err := getConfig(nil, configPath)
+	require.NoError(t, err)
 	app, err := GetRootAppFromViper(v)
 	require.NoError(t, err)
 	require.NoError(t, app.Run())
@@ -188,8 +188,8 @@ type FooInterface interface {
 
 	require.NoError(t, os.Chdir(tmpDir))
 
-	v := viper.New()
-	getConfig(nil, v, configPath)
+	v, err := getConfig(nil, configPath)
+	require.NoError(t, err)
 	app, err := GetRootAppFromViper(v)
 	require.NoError(t, err)
 	require.NoError(t, app.Run())
@@ -219,7 +219,8 @@ type Foo interface {
 	v.Set("disable-config-search", true)
 	require.NoError(t, os.Chdir(tmpDir.String()))
 
-	getConfig(nil, v, nil)
+	v, err := getConfig(nil, configPath)
+	require.NoError(t, err)
 	app, err := GetRootAppFromViper(v)
 	require.NoError(t, err)
 	require.NoError(t, app.Run())
@@ -256,7 +257,8 @@ type Foo interface {
 	v.Set("recursive", true)
 	require.NoError(t, os.Chdir(tmpDir.String()))
 
-	getConfig(nil, v, nil)
+	v, err := getConfig(nil, configPath)
+	require.NoError(t, err)
 	app, err := GetRootAppFromViper(v)
 	require.NoError(t, err)
 	require.NoError(t, app.Run())

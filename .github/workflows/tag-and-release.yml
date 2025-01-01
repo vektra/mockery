@@ -8,7 +8,13 @@ permissions:
   contents: write
 jobs:
   test:
-      uses: ./.github/workflows/reusable-testing.yml
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+          with:
+            fetch-depth: 0
+        - uses: ./.github/workflows/reusable-testing.yml
+
   tag:
     runs-on: ubuntu-latest
     needs: test
