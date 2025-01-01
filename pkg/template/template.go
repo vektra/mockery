@@ -12,7 +12,6 @@ import (
 
 	"github.com/huandu/xstrings"
 	"github.com/vektra/mockery/v3/pkg/registry"
-	"github.com/vektra/mockery/v3/pkg/stackerr"
 )
 
 // Template is the Moq template. It is capable of generating the Moq
@@ -21,26 +20,9 @@ type Template struct {
 	tmpl *template.Template
 }
 
-var (
-	//go:embed moq.templ
-	templateMoq string
-	//go:embed mockery.templ
-	templateMockery string
-)
-
-var styleTemplates = map[string]string{
-	"moq":     templateMoq,
-	"mockery": templateMockery,
-}
-
 // New returns a new instance of Template.
-func New(style string) (Template, error) {
-	templateString, styleExists := styleTemplates[style]
-	if !styleExists {
-		return Template{}, stackerr.NewStackErrf(nil, "style %s does not exist", style)
-	}
-
-	tmpl, err := template.New(style).Funcs(templateFuncs).Parse(templateString)
+func New(templateString string, name string) (Template, error) {
+	tmpl, err := template.New(name).Funcs(templateFuncs).Parse(templateString)
 	if err != nil {
 		return Template{}, err
 	}

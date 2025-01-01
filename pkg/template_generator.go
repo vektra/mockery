@@ -29,6 +29,18 @@ const (
 	FORMAT_NOOP       Formatter = "noop"
 )
 
+var (
+	//go:embed moq.templ
+	templateMoq string
+	//go:embed mockery.templ
+	templateMockery string
+)
+
+var styleTemplates = map[string]string{
+	"moq":     templateMoq,
+	"mockery": templateMockery,
+}
+
 // findPkgPath returns the fully-qualified go import path of a given dir. The
 // dir must be relative to a go.mod file. In the case it isn't, an error is returned.
 func findPkgPath(dirPath *pathlib.Path) (string, error) {
@@ -297,7 +309,24 @@ func (g *TemplateGenerator) Generate(
 	}
 	data.Imports = g.registry.Imports()
 
-	templ, err := template.New(g.templateName)
+	var templateString string
+	if strings.HasPrefix(g.templateName, "file://") {
+		templatePath := pathlib.NewPath(strings.SplitAfterN(g.templateName, "file://", 2)[1])
+		templateBytes, err := templatePath.ReadFile()
+		if err != nil {
+			log.Err(err).Str("template-path", g.templateName).Msg("Failed to read template")
+			return nil, err
+		}
+		templateString = string(templateBytes)
+	} else {
+		var styleExists bool
+		templateString, styleExists = styleTemplates[g.templateName]
+		if !styleExists {
+			return nil, stackerr.NewStackErrf(nil, "style %s does not exist", g.templateName)
+		}
+	}
+
+	templ, err := template.New(templateString, g.templateName)
 	if err != nil {
 		return []byte{}, fmt.Errorf("creating new template: %w", err)
 	}
