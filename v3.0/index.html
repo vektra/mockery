@@ -117,6 +117,22 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+<style>
+  .md-banner {
+    border: 0.075rem solid #ff1744;
+    background-color: #ff17441a;
+  }
+</style>
+mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
+
+          </div>
+          
+        </aside>
+      
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
@@ -125,7 +141,7 @@
             <div class="md-banner__inner md-grid md-typeset">
               
   You're not viewing the latest version.
-  <a href="../."> 
+  <a href="../.">
     <strong>Click here to go to latest.</strong>
   </a>
 
@@ -621,12 +637,6 @@
       
         
       
-        
-      
-        
-      
-        
-      
     
     
       
@@ -684,87 +694,6 @@
     
   
     FAQ
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="changelog/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    
-  
-    Changelog
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="migrating_to_packages/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    
-  
-    Migrating to Packages
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="deprecations/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    
-  
-    Deprecations
   
 
     
@@ -884,7 +813,13 @@
 
 
 <h1 id="mockery">mockery<a class="headerlink" href="#mockery" title="Permanent link">&para;</a></h1>
-<p>Mockery is a project that creates mock implementations of Golang interfaces. The mocks generated in this project are based off of the <a href="https://github.com/stretchr/testify">github.com/stretchr/testify</a> suite of testing packages.</p>
+<div class="admonition danger">
+<p class="admonition-title">Alpha Test</p>
+<p>Mockery <code>v3</code> is currently in alpha and should not be used for production.</p>
+</div>
+<p>Mockery is a project that creates mock implementations of Golang interfaces. It
+inspects source code and generates implementations of the interface that aid in
+testing.</p>
 <p><a class="glightbox" href="assets/images/demo.gif" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="assets/images/demo.gif" /></a>
 <a class="glightbox" href="assets/images/MockScreenshot.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="assets/images/MockScreenshot.png" /></a></p>
 <h2 id="why-mockery">Why mockery?<a class="headerlink" href="#why-mockery" title="Permanent link">&para;</a></h2>
@@ -907,10 +842,9 @@
 </code></pre></div>
 <div class="result">
 <div class="highlight"><span class="filename">Bash</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>$<span class="w"> </span>mockery
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="m">05</span><span class="w"> </span>Mar<span class="w"> </span><span class="m">23</span><span class="w"> </span><span class="m">21</span>:49<span class="w"> </span>CST<span class="w"> </span>INF<span class="w"> </span>Starting<span class="w"> </span>mockery<span class="w"> </span>dry-run<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="nv">version</span><span class="o">=</span>v2.20.0
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="m">05</span><span class="w"> </span>Mar<span class="w"> </span><span class="m">23</span><span class="w"> </span><span class="m">21</span>:49<span class="w"> </span>CST<span class="w"> </span>INF<span class="w"> </span>Using<span class="w"> </span>config:<span class="w"> </span>.mockery.yaml<span class="w"> </span>dry-run<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="nv">version</span><span class="o">=</span>v2.20.0
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="m">05</span><span class="w"> </span>Mar<span class="w"> </span><span class="m">23</span><span class="w"> </span><span class="m">21</span>:49<span class="w"> </span>CST<span class="w"> </span>INF<span class="w"> </span>Walking<span class="w"> </span>dry-run<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="nv">version</span><span class="o">=</span>v2.20.0
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="m">05</span><span class="w"> </span>Mar<span class="w"> </span><span class="m">23</span><span class="w"> </span><span class="m">21</span>:49<span class="w"> </span>CST<span class="w"> </span>INF<span class="w"> </span>Generating<span class="w"> </span>mock<span class="w"> </span>dry-run<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="nv">interface</span><span class="o">=</span>DB<span class="w"> </span>qualified-name<span class="o">=</span>github.com/org/repo<span class="w"> </span><span class="nv">version</span><span class="o">=</span>v2.20.0
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="m">05</span><span class="w"> </span>Mar<span class="w"> </span><span class="m">23</span><span class="w"> </span><span class="m">21</span>:49<span class="w"> </span>CST<span class="w"> </span>INF<span class="w"> </span>Starting<span class="w"> </span>mockery<span class="w"> </span>dry-run<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="nv">version</span><span class="o">=</span>v3.0.0
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="m">05</span><span class="w"> </span>Mar<span class="w"> </span><span class="m">23</span><span class="w"> </span><span class="m">21</span>:49<span class="w"> </span>CST<span class="w"> </span>INF<span class="w"> </span>Using<span class="w"> </span>config:<span class="w"> </span>.mockery.yaml<span class="w"> </span>dry-run<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="nv">version</span><span class="o">=</span>v3.0.0
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="m">05</span><span class="w"> </span>Mar<span class="w"> </span><span class="m">23</span><span class="w"> </span><span class="m">21</span>:49<span class="w"> </span>CST<span class="w"> </span>INF<span class="w"> </span>Generating<span class="w"> </span>mock<span class="w"> </span>dry-run<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="nv">interface</span><span class="o">=</span>DB<span class="w"> </span>qualified-name<span class="o">=</span>github.com/org/repo<span class="w"> </span><span class="nv">version</span><span class="o">=</span>v3.0.0
 </code></pre></div>
 </div>
 

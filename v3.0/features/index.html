@@ -119,6 +119,22 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+<style>
+  .md-banner {
+    border: 0.075rem solid #ff1744;
+    background-color: #ff17441a;
+  }
+</style>
+mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
+
+          </div>
+          
+        </aside>
+      
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
@@ -127,7 +143,7 @@
             <div class="md-banner__inner md-grid md-typeset">
               
   You're not viewing the latest version.
-  <a href="../.."> 
+  <a href="../..">
     <strong>Click here to go to latest.</strong>
   </a>
 
@@ -707,12 +723,6 @@
       
         
       
-        
-      
-        
-      
-        
-      
     
     
       
@@ -770,87 +780,6 @@
     
   
     FAQ
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../changelog/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    
-  
-    Changelog
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../migrating_to_packages/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    
-  
-    Migrating to Packages
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../deprecations/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    
-  
-    Deprecations
   
 
     
@@ -1157,7 +1086,7 @@ and <code>Message</code> in both cases.</p>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.5 1.5 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1m0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> v2.21.0</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
-<p>See the <a href="../migrating_to_packages/">Migration Docs</a> on how to migrate to this new feature.</p>
+<p>See the <a href="migrating_to_packages.md">Migration Docs</a> on how to migrate to this new feature.</p>
 </div>
 <p>Mockery has a configuration parameter called <code>packages</code>. In this config section, you define the packages and the interfaces you want mocks generated for. The packages can be any arbitrary package, either your own project or anything within the Go ecosystem. You may provide package-level or interface-level overrides to the default config you provide.</p>
 <p>Usage of the <code>packages</code> config section is desirable for multiple reasons:</p>
