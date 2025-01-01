@@ -130,6 +130,7 @@
   }
 </style>
 mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
+<br><a href="../.."><strong>Click here to go to v2.</strong></a>
 
           </div>
           
@@ -138,18 +139,6 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-          <aside class="md-banner md-banner--warning">
-            <div class="md-banner__inner md-grid md-typeset">
-              
-  You're not viewing the latest version.
-  <a href="../..">
-    <strong>Click here to go to latest.</strong>
-  </a>
-
-            </div>
-            <script>var el=document.querySelector("[data-md-component=outdated]"),outdated=__md_get("__outdated",sessionStorage);!0===outdated&&el&&(el.hidden=!1)</script>
-          </aside>
         
       </div>
     
@@ -908,14 +897,14 @@ brew upgrade mockery
 
 function insert_installation_command(element_to_override,version){
     element_to_override.innerHTML=`
-<div class="highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>go install github.com/vektra/mockery/v2@${version}
+<div class="highlight"><span class="filename">Text Only</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>go install github.com/vektra/mockery/v3@${version}
 </code></pre></div>
 `;
 }
 
 const version_key="/mockery/version";
 const element = document.getElementById('mockery-install-go-command');
-const url = `https://api.github.com/repos/vektra/mockery/releases/latest`;
+const url = `https://api.github.com/repos/vektra/mockery/releases/tags/v3`;
 
 let version = sessionStorage.getItem(version_key);
 if (version !== null) {
@@ -933,7 +922,7 @@ if (version !== null) {
     })
     .catch((error) =>{
           console.error(error);
-          element.innerHTML=`failed to fetch latest release info from: https://api.github.com/repos/vektra/mockery/releases/latest`;
+          element.innerHTML=`failed to fetch latest release info from: https://api.github.com/repos/vektra/mockery/releases/tags/v3`;
     }
   );
 }

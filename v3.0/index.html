@@ -128,6 +128,7 @@
   }
 </style>
 mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
+<br><a href="../."><strong>Click here to go to v2.</strong></a>
 
           </div>
           
@@ -136,18 +137,6 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-          <aside class="md-banner md-banner--warning">
-            <div class="md-banner__inner md-grid md-typeset">
-              
-  You're not viewing the latest version.
-  <a href="../.">
-    <strong>Click here to go to latest.</strong>
-  </a>
-
-            </div>
-            <script>var el=document.querySelector("[data-md-component=outdated]"),outdated=__md_get("__outdated",sessionStorage);!0===outdated&&el&&(el.hidden=!1)</script>
-          </aside>
         
       </div>
     
@@ -392,11 +381,11 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-use-mockery-over-gomock" class="md-nav__link">
+  <a href="#why-use-mockery" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          Why use mockery over gomock?
+          Why use mockery?
         </span>
       
     </span>
@@ -754,11 +743,11 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-use-mockery-over-gomock" class="md-nav__link">
+  <a href="#why-use-mockery" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          Why use mockery over gomock?
+          Why use mockery?
         </span>
       
     </span>
@@ -817,9 +806,8 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <p class="admonition-title">Alpha Test</p>
 <p>Mockery <code>v3</code> is currently in alpha and should not be used for production.</p>
 </div>
-<p>Mockery is a project that creates mock implementations of Golang interfaces. It
-inspects source code and generates implementations of the interface that aid in
-testing.</p>
+<p>Mockery is a project that creates mock implementations of Golang interfaces. It inspects source code and generates implementations of the interface that aid in testing.</p>
+<p>In addition to providing a number of different styles of mocks, mockery also allows users to provide their own template files that will then be rendered using a set of template data, methods, and functions that provide comprehensive typing information about the Go interface in question.</p>
 <p><a class="glightbox" href="assets/images/demo.gif" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="assets/images/demo.gif" /></a>
 <a class="glightbox" href="assets/images/MockScreenshot.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="assets/images/MockScreenshot.png" /></a></p>
 <h2 id="why-mockery">Why mockery?<a class="headerlink" href="#why-mockery" title="Permanent link">&para;</a></h2>
@@ -862,13 +850,13 @@ testing.</p>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;chocolate&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">flavor</span><span class="p">)</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="p">}</span>
 </code></pre></div>
-<h2 id="why-use-mockery-over-gomock">Why use mockery over gomock?<a class="headerlink" href="#why-use-mockery-over-gomock" title="Permanent link">&para;</a></h2>
+<h2 id="why-use-mockery">Why use mockery?<a class="headerlink" href="#why-use-mockery" title="Permanent link">&para;</a></h2>
 <ol>
-<li>mockery provides a much more user-friendly API and is less confusing to use</li>
-<li>mockery utilizes <code>testify</code> which is a robust and highly feature-rich testing framework</li>
-<li>mockery has rich configuration options that allow fine-grained control over how your mocks are generated</li>
-<li>mockery's CLI is more robust, user-friendly, and provides many more options</li>
-<li>mockery supports generics (this may no longer be an advantage if/when gomock supports generics)</li>
+<li>You gain access to a number of pre-curated mock implementations that can be used in testing. This includes traditional "mockery-style" mocks, as well as other styles from the open source community such as from <a href="https://github.com/matryer/moq">https://github.com/matryer/moq</a>. Such mocks allow you to quickly define how the implementation should behave under test without having to manually curate your own mocks/stubs/fakes.</li>
+<li>Mockery benefits from a large number of performance improvements that almost all other Go code-generation projects currently have not employed. This means that it's orders of magnitude faster for large codebases.</li>
+<li>Mockery provides a comprehensive, centralized, flexible, and simple configuration scheme driven off of yaml instead of relying on sprawling <code>//go:generate</code> commands.</li>
+<li>Mockery is a code-generation framework. While its original goal is to provide mock implementations for testing purposes, users can supply their own templates to auto-generate any kind of code that needs to be based off of interfaces.</li>
+<li>A number of high profile companies, projects, and communities trust Mockery.</li>
 </ol>
 <h2 id="who-uses-mockery">Who uses mockery?<a class="headerlink" href="#who-uses-mockery" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
