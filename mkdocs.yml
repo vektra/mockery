@@ -50,10 +50,10 @@ markdown_extensions:
   - pymdownx.magiclink
   - pymdownx.superfences
   - pymdownx.tabbed:
-      alternate_style: true 
+      alternate_style: true
   - toc:
       permalink: true
-  
+
 
 nav:
   - Home: index.md
@@ -63,11 +63,8 @@ nav:
     - Running: running.md
     - Examples: examples.md
   - Features: features.md
-  - Notes: 
+  - Notes:
     - FAQ: notes.md
-    - Changelog: changelog.md
-    - Migrating to Packages: migrating_to_packages.md
-    - Deprecations: deprecations.md
 
 extra_css:
   - stylesheets/extra.css

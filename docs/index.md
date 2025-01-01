@@ -1,7 +1,13 @@
 mockery
 ========
 
-Mockery is a project that creates mock implementations of Golang interfaces. The mocks generated in this project are based off of the [github.com/stretchr/testify](https://github.com/stretchr/testify) suite of testing packages.
+!!! danger "Alpha Test"
+
+	Mockery `v3` is currently in alpha and should not be used for production.
+
+Mockery is a project that creates mock implementations of Golang interfaces. It
+inspects source code and generates implementations of the interface that aid in
+testing.
 
 ![](assets/images/demo.gif)
 ![](assets/images/MockScreenshot.png)
@@ -38,10 +44,9 @@ packages:
 <div class="result">
 ```bash
 $ mockery
-05 Mar 23 21:49 CST INF Starting mockery dry-run=false version=v2.20.0
-05 Mar 23 21:49 CST INF Using config: .mockery.yaml dry-run=false version=v2.20.0
-05 Mar 23 21:49 CST INF Walking dry-run=false version=v2.20.0
-05 Mar 23 21:49 CST INF Generating mock dry-run=false interface=DB qualified-name=github.com/org/repo version=v2.20.0
+05 Mar 23 21:49 CST INF Starting mockery dry-run=false version=v3.0.0
+05 Mar 23 21:49 CST INF Using config: .mockery.yaml dry-run=false version=v3.0.0
+05 Mar 23 21:49 CST INF Generating mock dry-run=false interface=DB qualified-name=github.com/org/repo version=v3.0.0
 ```
 </div>
 

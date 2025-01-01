@@ -2,7 +2,17 @@
 
 {% block outdated %}
   You're not viewing the latest version.
-  <a href="{{ '../' ~ base_url }}"> 
+  <a href="{{ '../' ~ base_url }}">
     <strong>Click here to go to latest.</strong>
   </a>
+{% endblock %}
+
+{% block announce %}
+<style>
+  .md-banner {
+    border: 0.075rem solid #ff1744;
+    background-color: #ff17441a;
+  }
+</style>
+mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 {% endblock %}
