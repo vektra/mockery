@@ -105,7 +105,10 @@ func NewTemplateGenerator(
 	srcPkgFSPath := pathlib.NewPath(srcPkg.GoFiles[0]).Parent()
 	log := zerolog.Ctx(ctx).With().
 		Stringer("srcPkgFSPath", srcPkgFSPath).
-		Stringer("outPkgFSPath", outPkgFSPath).Logger()
+		Stringer("outPkgFSPath", outPkgFSPath).
+		Str("src-pkg-name", srcPkg.Name).
+		Str("out-pkg-name", pkgConfig.PkgName).
+		Logger()
 	if !outPkgFSPath.IsAbsolute() {
 		cwd, err := os.Getwd()
 		if err != nil {
@@ -120,18 +123,21 @@ func NewTemplateGenerator(
 		return nil, err
 	}
 	log = log.With().Str("outPkgPath", outPkgPath).Logger()
-	reg, err := registry.New(srcPkg, outPkgPath)
-	if err != nil {
-		return nil, fmt.Errorf("creating new registry: %w", err)
-	}
 
 	var inPackage bool
-
-	if srcPkgFSPath.Equals(outPkgFSPath) {
+	// Note: Technically, go allows test files to have a different package name
+	// than non-test files. In this case, the test files have to import the source
+	// package just as if it were in a different directory.
+	if pkgConfig.PkgName == srcPkg.Name && srcPkgFSPath.Equals(outPkgFSPath) {
 		log.Debug().Msg("output package detected to be in-package of original package")
 		inPackage = true
 	} else {
 		log.Debug().Msg("output package detected to not be in-package of original package")
+	}
+
+	reg, err := registry.New(srcPkg, outPkgPath, inPackage)
+	if err != nil {
+		return nil, fmt.Errorf("creating new registry: %w", err)
 	}
 
 	return &TemplateGenerator{

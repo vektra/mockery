@@ -20,17 +20,27 @@ type Registry struct {
 	srcPkgName       string
 	imports          map[string]*Package
 	importQualifiers map[string]*Package
+	// inPackage specifies whether this registry is considered to be in the same
+	// package as the srcPkg. This is needed because of the way that Go package
+	// qualifiers work. For example, test files for a package are allowed to have
+	// a different package name than the files under test, in which case they are
+	// considered to be in a separate package. In such a case, `inPackage` should
+	// be set to false such that calls to AddImport for the original source package
+	// are not ignored. Otherwise if it's set to true, AddImport ignores imports
+	// for the package in which the file already resides.
+	inPackage bool
 }
 
 // New loads the source package info and returns a new instance of
 // Registry.
-func New(srcPkg *packages.Package, dstPkgPath string) (*Registry, error) {
+func New(srcPkg *packages.Package, dstPkgPath string, inPackage bool) (*Registry, error) {
 	return &Registry{
 		dstPkgPath:       dstPkgPath,
 		srcPkg:           srcPkg,
 		srcPkgName:       srcPkg.Name,
 		imports:          make(map[string]*Package),
 		importQualifiers: make(map[string]*Package),
+		inPackage:        inPackage,
 	}, nil
 }
 
@@ -80,7 +90,7 @@ func (r *Registry) AddImport(ctx context.Context, pkg *types.Package) *Package {
 		Str("dst-pkg-path", r.dstPkgPath).
 		Logger()
 	log.Debug().Msg("adding import")
-	if path == r.dstPkgPath {
+	if path == r.dstPkgPath && r.inPackage {
 		log.Debug().Msg("path equals dst-pkg-path, not adding import")
 		return nil
 	} else {

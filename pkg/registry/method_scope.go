@@ -97,14 +97,13 @@ func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, prefix string) 
 		moqPkgPath: m.moqPkgPath,
 	}
 	// The variable type is also a visible name, so add that.
-	log.Debug().Str("type-string", v.TypeString()).Msg("VISIBLE NAME TYPE STRING")
 	m.visibleNames[v.TypeString()] = nil
-	name := m.AllocateName(varName(vr, prefix))
+
+	v.Name = m.AllocateName(varName(vr, prefix))
 	// This suggested name is subject to change because it might come into conflict
 	// with a future package import.
-	log.Debug().Str("suggested-name", name).Msg("suggested name for variable in method")
+	log.Debug().Str("suggested-name", v.Name).Msg("suggested name for variable in method")
 
-	v.Name = name
 	m.vars = append(m.vars, &v)
 	return &v
 }
