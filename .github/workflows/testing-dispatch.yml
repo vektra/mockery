@@ -1,0 +1,19 @@
+name: Go Test (manual run)
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+          description: "Tag to checkout."
+          type: string
+          required: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.inputs.tag }}
+      - uses: ./.github/workflows/reusable-testing.yml
