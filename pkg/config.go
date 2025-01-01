@@ -26,14 +26,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-var (
-	ErrNoConfigFile         = fmt.Errorf("no config file exists")
-	ErrNoGoFilesFoundInRoot = fmt.Errorf("no go files found in root search path")
-	ErrPkgNotFound          = fmt.Errorf("package not found in config")
-	ErrGoModNotFound        = fmt.Errorf("no go.mod file found")
-	ErrGoModInvalid         = fmt.Errorf("go.mod file has no module line")
-)
-
 type Config struct {
 	All                 bool                   `mapstructure:"all"`
 	Anchors             map[string]any         `mapstructure:"_anchors"`
@@ -925,60 +917,6 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 	}
 
 	return nil
-}
-
-// PkgPath returns the fully qualified package path of the output mock that this config
-// represents. For example, it might return "github.com/vektra/mockery/v3/internal".
-// This function will error if it cannot find a base go.mod file.
-func (c *Config) PkgPath() (string, error) {
-	dirPath := pathlib.NewPath(c.Dir)
-	if err := dirPath.MkdirAll(); err != nil {
-		return "", stackerr.NewStackErr(err)
-	}
-	dir, err := pathlib.NewPath(c.Dir).ResolveAll()
-	if err != nil {
-		return "", stackerr.NewStackErr(err)
-	}
-	var goModFile *pathlib.Path
-	for i := 0; ; i++ {
-		if i == 1000 {
-			return "", stackerr.NewStackErr(errors.New("failed to find go.mod after 1000 iterations"))
-		}
-		goMod := dir.Join("go.mod")
-		goModExists, err := goMod.Exists()
-		if err != nil {
-			return "", stackerr.NewStackErr(err)
-		}
-		if !goModExists {
-			parent := dir.Parent()
-			// Hit the root path
-			if dir.String() == parent.String() {
-				return "", stackerr.NewStackErrf(
-					ErrGoModNotFound, "parsing package path for %s", c.Dir)
-			}
-			dir = parent
-			continue
-		}
-		goModFile = goMod
-		break
-	}
-	fileBytes, err := goModFile.ReadFile()
-	if err != nil {
-		return "", stackerr.NewStackErr(err)
-	}
-	scanner := bufio.NewScanner(bytes.NewReader(fileBytes))
-	// Iterate over each line
-	for scanner.Scan() {
-		if !strings.HasPrefix(scanner.Text(), "module") {
-			continue
-		}
-		moduleName := strings.Split(scanner.Text(), "module ")[1]
-		return pathlib.NewPath(
-			moduleName,
-			pathlib.PathWithSeperator("/")).
-			Join(c.Dir).String(), nil
-	}
-	return "", stackerr.NewStackErr(ErrGoModInvalid)
 }
 
 func (c *Config) ClearCfgAsMap() {

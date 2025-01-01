@@ -5,7 +5,6 @@
 package type_alias_test
 
 import (
-	"github.com/vektra/mockery/v2/pkg/fixtures/type_alias"
 	"github.com/vektra/mockery/v2/pkg/fixtures/type_alias/subpkg"
     mock "github.com/stretchr/testify/mock"
 )
@@ -42,7 +41,7 @@ func (_m *Interface2) EXPECT() *Interface2_Expecter {
  
 
 // F provides a mock function for the type Interface2
-func (_mock *Interface2) F(v type_alias.Type, v1 type_alias.S, s subpkg.S)  {  _mock.Called(v, v1, s)
+func (_mock *Interface2) F(v Type, v1 S, s subpkg.S)  {  _mock.Called(v, v1, s)
 	return 
 }
 
@@ -63,9 +62,9 @@ func (_e *Interface2_Expecter) F(v interface{}, v1 interface{}, s interface{}, )
 	return &Interface2_F_Call{Call: _e.mock.On("F",v,v1,s, )}
 }
 
-func (_c *Interface2_F_Call) Run(run func(v type_alias.Type, v1 type_alias.S, s subpkg.S)) *Interface2_F_Call {
+func (_c *Interface2_F_Call) Run(run func(v Type, v1 S, s subpkg.S)) *Interface2_F_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(type_alias.Type),args[1].(type_alias.S),args[2].(subpkg.S),)
+		run(args[0].(Type),args[1].(S),args[2].(subpkg.S),)
 	})
 	return _c
 }
@@ -75,7 +74,7 @@ func (_c *Interface2_F_Call) Return() *Interface2_F_Call {
 	return _c
 }
 
-func (_c *Interface2_F_Call) RunAndReturn(run func(v type_alias.Type, v1 type_alias.S, s subpkg.S)) *Interface2_F_Call {
+func (_c *Interface2_F_Call) RunAndReturn(run func(v Type, v1 S, s subpkg.S)) *Interface2_F_Call {
 	_c.Run(run)
 	return _c
 }

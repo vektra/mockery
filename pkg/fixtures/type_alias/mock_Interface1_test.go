@@ -5,7 +5,6 @@
 package type_alias_test
 
 import (
-	"github.com/vektra/mockery/v2/pkg/fixtures/type_alias"
     mock "github.com/stretchr/testify/mock"
 )
 
@@ -41,7 +40,7 @@ func (_m *Interface1) EXPECT() *Interface1_Expecter {
  
 
 // Foo provides a mock function for the type Interface1
-func (_mock *Interface1) Foo() type_alias.Type {  
+func (_mock *Interface1) Foo() Type {  
 	ret := _mock.Called()
 
 	if len(ret) == 0 {
@@ -49,11 +48,11 @@ func (_mock *Interface1) Foo() type_alias.Type {
 	}
 
 		
-	var r0 type_alias.Type 
-	if returnFunc, ok := ret.Get(0).(func() type_alias.Type); ok {
+	var r0 Type 
+	if returnFunc, ok := ret.Get(0).(func() Type); ok {
 		r0 = returnFunc()
 	} else {
-		r0 = ret.Get(0).(type_alias.Type)
+		r0 = ret.Get(0).(Type)
 	} 
 	return r0
 }
@@ -79,12 +78,12 @@ func (_c *Interface1_Foo_Call) Run(run func()) *Interface1_Foo_Call {
 	return _c
 }
 
-func (_c *Interface1_Foo_Call) Return(v type_alias.Type) *Interface1_Foo_Call {
+func (_c *Interface1_Foo_Call) Return(v Type) *Interface1_Foo_Call {
 	_c.Call.Return(v)
 	return _c
 }
 
-func (_c *Interface1_Foo_Call) RunAndReturn(run func()type_alias.Type) *Interface1_Foo_Call {
+func (_c *Interface1_Foo_Call) RunAndReturn(run func()Type) *Interface1_Foo_Call {
 	_c.Call.Return(run)
 	return _c
 }

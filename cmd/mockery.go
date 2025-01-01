@@ -171,7 +171,6 @@ func GetRootAppFromViper(v *viper.Viper) (*RootApp, error) {
 // uniform.
 type InterfaceCollection struct {
 	srcPkgPath  string
-	outPkgPath  string
 	outFilePath *pathlib.Path
 	srcPkg      *packages.Package
 	interfaces  []*pkg.Interface
@@ -179,13 +178,11 @@ type InterfaceCollection struct {
 
 func NewInterfaceCollection(
 	srcPkgPath string,
-	outPkgPath string,
 	outFilePath *pathlib.Path,
 	srcPkg *packages.Package,
 ) *InterfaceCollection {
 	return &InterfaceCollection{
 		srcPkgPath:  srcPkgPath,
-		outPkgPath:  outPkgPath,
 		outFilePath: outFilePath,
 		srcPkg:      srcPkg,
 		interfaces:  make([]*pkg.Interface, 0),
@@ -205,15 +202,6 @@ func (i *InterfaceCollection) Append(ctx context.Context, iface *pkg.Interface) 
 	}
 	if i.outFilePath.String() != pathlib.NewPath(iface.Config.Dir).Join(iface.Config.FileName).String() {
 		msg := "all mocks within an InterfaceCollection must have the same output file path"
-		log.Error().Msg(msg)
-		return errors.New(msg)
-	}
-	ifacePkgPath, err := iface.Config.PkgPath()
-	if err != nil {
-		return err
-	}
-	if ifacePkgPath != i.outPkgPath {
-		msg := "all mocks within an InterfaceCollection must have the same output package path"
 		log.Error().Msg(msg)
 		return errors.New(msg)
 	}
@@ -293,16 +281,11 @@ func (r *RootApp) Run() error {
 				return err
 			}
 			filePath := ifaceConfig.FilePath(ctx).String()
-			outPkgPath, err := ifaceConfig.PkgPath()
-			if err != nil {
-				return err
-			}
 
 			_, ok := mockFileToInterfaces[filePath]
 			if !ok {
 				mockFileToInterfaces[filePath] = NewInterfaceCollection(
 					iface.Pkg.PkgPath,
-					outPkgPath,
 					pathlib.NewPath(ifaceConfig.Dir).Join(ifaceConfig.FileName),
 					iface.Pkg,
 				)
@@ -324,8 +307,6 @@ func (r *RootApp) Run() error {
 		fileCtx := fileLog.WithContext(ctx)
 
 		fileLog.Debug().Int("interfaces-in-file-len", len(interfacesInFile.interfaces)).Msgf("%v", interfacesInFile)
-		outPkgPath := interfacesInFile.outPkgPath
-
 		packageConfig, err := r.Config.GetPackageConfig(fileCtx, interfacesInFile.srcPkgPath)
 		if err != nil {
 			return err
@@ -334,8 +315,9 @@ func (r *RootApp) Run() error {
 			return err
 		}
 		generator, err := pkg.NewTemplateGenerator(
+			fileCtx,
 			interfacesInFile.interfaces[0].Pkg,
-			outPkgPath,
+			interfacesInFile.outFilePath.Parent(),
 			packageConfig.Template,
 			pkg.Formatter(r.Config.Formatter),
 			packageConfig,
@@ -347,8 +329,13 @@ func (r *RootApp) Run() error {
 		if err != nil {
 			return err
 		}
-		if err := pathlib.NewPath(outFilePath).WriteFile(templateBytes); err != nil {
-			return err
+		outFile := pathlib.NewPath(outFilePath)
+		if err := outFile.Parent().MkdirAll(); err != nil {
+			log.Err(err).Msg("failed to mkdir parent directories of mock file")
+			return stackerr.NewStackErr(err)
+		}
+		if err := outFile.WriteFile(templateBytes); err != nil {
+			return stackerr.NewStackErr(err)
 		}
 	}
 

@@ -5,7 +5,6 @@
 package same_name_arg_and_type
 
 import (
-	"github.com/vektra/mockery/v2/pkg/fixtures/method_args/same_name_arg_and_type"
     mock "github.com/stretchr/testify/mock"
 )
 
@@ -41,20 +40,20 @@ func (_m *interfaceB0Mock) EXPECT() *interfaceB0Mock_Expecter {
  
 
 // DoB0 provides a mock function for the type interfaceB0Mock
-func (_mock *interfaceB0Mock) DoB0(interfaceB0 same_name_arg_and_type.interfaceB0) same_name_arg_and_type.interfaceB0 {  
-	ret := _mock.Called(interfaceB0)
+func (_mock *interfaceB0Mock) DoB0(interfaceB01 interfaceB0) interfaceB0 {  
+	ret := _mock.Called(interfaceB01)
 
 	if len(ret) == 0 {
 		panic("no return value specified for DoB0")
 	}
 
 		
-	var r0 same_name_arg_and_type.interfaceB0 
-	if returnFunc, ok := ret.Get(0).(func(same_name_arg_and_type.interfaceB0) same_name_arg_and_type.interfaceB0); ok {
-		r0 = returnFunc(interfaceB0)
+	var r0 interfaceB0 
+	if returnFunc, ok := ret.Get(0).(func(interfaceB0) interfaceB0); ok {
+		r0 = returnFunc(interfaceB01)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(same_name_arg_and_type.interfaceB0)
+			r0 = ret.Get(0).(interfaceB0)
 		}
 	} 
 	return r0
@@ -70,24 +69,24 @@ type interfaceB0Mock_DoB0_Call struct {
 
 
 // DoB0 is a helper method to define mock.On call
-//  - interfaceB0
-func (_e *interfaceB0Mock_Expecter) DoB0(interfaceB0 interface{}, ) *interfaceB0Mock_DoB0_Call {
-	return &interfaceB0Mock_DoB0_Call{Call: _e.mock.On("DoB0",interfaceB0, )}
+//  - interfaceB01
+func (_e *interfaceB0Mock_Expecter) DoB0(interfaceB01 interface{}, ) *interfaceB0Mock_DoB0_Call {
+	return &interfaceB0Mock_DoB0_Call{Call: _e.mock.On("DoB0",interfaceB01, )}
 }
 
-func (_c *interfaceB0Mock_DoB0_Call) Run(run func(interfaceB0 same_name_arg_and_type.interfaceB0)) *interfaceB0Mock_DoB0_Call {
+func (_c *interfaceB0Mock_DoB0_Call) Run(run func(interfaceB01 interfaceB0)) *interfaceB0Mock_DoB0_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(same_name_arg_and_type.interfaceB0),)
+		run(args[0].(interfaceB0),)
 	})
 	return _c
 }
 
-func (_c *interfaceB0Mock_DoB0_Call) Return(interfaceB0MoqParam same_name_arg_and_type.interfaceB0) *interfaceB0Mock_DoB0_Call {
+func (_c *interfaceB0Mock_DoB0_Call) Return(interfaceB0MoqParam interfaceB0) *interfaceB0Mock_DoB0_Call {
 	_c.Call.Return(interfaceB0MoqParam)
 	return _c
 }
 
-func (_c *interfaceB0Mock_DoB0_Call) RunAndReturn(run func(interfaceB0 same_name_arg_and_type.interfaceB0)same_name_arg_and_type.interfaceB0) *interfaceB0Mock_DoB0_Call {
+func (_c *interfaceB0Mock_DoB0_Call) RunAndReturn(run func(interfaceB01 interfaceB0)interfaceB0) *interfaceB0Mock_DoB0_Call {
 	_c.Call.Return(run)
 	return _c
 }

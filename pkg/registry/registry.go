@@ -73,11 +73,18 @@ func (r *Registry) MethodScope() *MethodScope {
 // suitable alias if there are any conflicts with previously imported
 // packages.
 func (r *Registry) AddImport(ctx context.Context, pkg *types.Package) *Package {
-	log := zerolog.Ctx(ctx)
 	path := pkg.Path()
-	log.Debug().Str("method", "AddImport").Str("src-pkg-path", path).Str("dst-pkg-path", r.dstPkgPath).Msg("adding import")
+	log := zerolog.Ctx(ctx).With().
+		Str("method", "AddImport").
+		Str("src-pkg-path", path).
+		Str("dst-pkg-path", r.dstPkgPath).
+		Logger()
+	log.Debug().Msg("adding import")
 	if path == r.dstPkgPath {
+		log.Debug().Msg("path equals dst-pkg-path, not adding import")
 		return nil
+	} else {
+		log.Debug().Msg("path does not equal dst-pkg-path, adding import")
 	}
 
 	if imprt, ok := r.imports[path]; ok {

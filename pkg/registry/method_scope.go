@@ -19,7 +19,7 @@ type MethodScope struct {
 	vars       []*Var
 	conflicted map[string]bool
 	// visibleNames contains a collection of all names visible to this lexical
-	// scope. This includes import qualifiers. This is used to prevent naming
+	// scope. This includes import qualifiers, type names etc. This is used to prevent naming
 	// collisions.
 	visibleNames map[string]any
 	imports      map[string]*Package
@@ -90,17 +90,21 @@ func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, prefix string) 
 	for key := range m.visibleNames {
 		log.Debug().Str("visible-name", key).Msg("visible name")
 	}
-	name := m.AllocateName(varName(vr, prefix))
-	// This suggested name is subject to change because it might come into conflict
-	// with a future package import.
-	log.Debug().Str("suggested-name", name).Msg("suggested name for variable in method")
 
 	v := Var{
 		vr:         vr,
 		imports:    imports,
 		moqPkgPath: m.moqPkgPath,
-		Name:       name,
 	}
+	// The variable type is also a visible name, so add that.
+	log.Debug().Str("type-string", v.TypeString()).Msg("VISIBLE NAME TYPE STRING")
+	m.visibleNames[v.TypeString()] = nil
+	name := m.AllocateName(varName(vr, prefix))
+	// This suggested name is subject to change because it might come into conflict
+	// with a future package import.
+	log.Debug().Str("suggested-name", name).Msg("suggested name for variable in method")
+
+	v.Name = name
 	m.vars = append(m.vars, &v)
 	return &v
 }

@@ -4,10 +4,12 @@ import (
 	"bufio"
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"go/format"
 	"go/token"
 	"go/types"
+	"os"
 	"strings"
 
 	"github.com/chigopher/pathlib"
@@ -27,6 +29,63 @@ const (
 	FORMAT_NOOP       Formatter = "noop"
 )
 
+// findPkgPath returns the fully-qualified go import path of a given dir. The
+// dir must be relative to a go.mod file. In the case it isn't, an error is returned.
+func findPkgPath(dirPath *pathlib.Path) (string, error) {
+	if err := dirPath.MkdirAll(); err != nil {
+		return "", stackerr.NewStackErr(err)
+	}
+	dir, err := dirPath.ResolveAll()
+	if err != nil {
+		return "", stackerr.NewStackErr(err)
+	}
+	var goModFile *pathlib.Path
+	cursor := dir
+	for i := 0; ; i++ {
+		if i == 1000 {
+			return "", stackerr.NewStackErr(errors.New("failed to find go.mod after 1000 iterations"))
+		}
+		goMod := cursor.Join("go.mod")
+		goModExists, err := goMod.Exists()
+		if err != nil {
+			return "", stackerr.NewStackErr(err)
+		}
+		if !goModExists {
+			parent := cursor.Parent()
+			// Hit the root path
+			if cursor.String() == parent.String() {
+				return "", stackerr.NewStackErrf(
+					ErrGoModNotFound, "parsing package path for %s", dir.String())
+			}
+			cursor = parent
+			continue
+		}
+		goModFile = goMod
+		break
+	}
+	dirRelative, err := dir.RelativeTo(goModFile.Parent())
+	if err != nil {
+		return "", stackerr.NewStackErr(err)
+	}
+	fileBytes, err := goModFile.ReadFile()
+	if err != nil {
+		return "", stackerr.NewStackErr(err)
+	}
+	scanner := bufio.NewScanner(bytes.NewReader(fileBytes))
+	// Iterate over each line
+	for scanner.Scan() {
+		if !strings.HasPrefix(scanner.Text(), "module") {
+			continue
+		}
+		moduleName := strings.Split(scanner.Text(), "module ")[1]
+		return pathlib.NewPath(moduleName, pathlib.PathWithSeperator("/")).
+			JoinPath(dirRelative).
+			Clean().
+			String(), nil
+	}
+	return "", stackerr.NewStackErr(ErrGoModInvalid)
+}
+
 type TemplateGenerator struct {
 	templateName string
 	registry     *registry.Registry
@@ -36,15 +95,43 @@ type TemplateGenerator struct {
 }
 
 func NewTemplateGenerator(
+	ctx context.Context,
 	srcPkg *packages.Package,
-	outPkgPath string,
+	outPkgFSPath *pathlib.Path,
 	templateName string,
 	formatter Formatter,
 	pkgConfig *Config,
 ) (*TemplateGenerator, error) {
+	srcPkgFSPath := pathlib.NewPath(srcPkg.GoFiles[0]).Parent()
+	log := zerolog.Ctx(ctx).With().
+		Stringer("srcPkgFSPath", srcPkgFSPath).
+		Stringer("outPkgFSPath", outPkgFSPath).Logger()
+	if !outPkgFSPath.IsAbsolute() {
+		cwd, err := os.Getwd()
+		if err != nil {
+			log.Err(err).Msg("failed to get current working directory")
+			return nil, stackerr.NewStackErr(err)
+		}
+		outPkgFSPath = pathlib.NewPath(cwd).JoinPath(outPkgFSPath)
+	}
+	outPkgPath, err := findPkgPath(outPkgFSPath)
+	if err != nil {
+		log.Err(err).Msg("failed to find output package path")
+		return nil, err
+	}
+	log = log.With().Str("outPkgPath", outPkgPath).Logger()
 	reg, err := registry.New(srcPkg, outPkgPath)
 	if err != nil {
 		return nil, fmt.Errorf("creating new registry: %w", err)
+	}
+
+	var inPackage bool
+
+	if srcPkgFSPath.Equals(outPkgFSPath) {
+		log.Debug().Msg("output package detected to be in-package of original package")
+		inPackage = true
+	} else {
+		log.Debug().Msg("output package detected to not be in-package of original package")
 	}
 
 	return &TemplateGenerator{
@@ -52,7 +139,7 @@ func NewTemplateGenerator(
 		registry:     reg,
 		formatter:    formatter,
 		pkgConfig:    pkgConfig,
-		inPackage:    srcPkg.PkgPath == outPkgPath,
+		inPackage:    inPackage,
 	}, nil
 }
 
@@ -215,7 +302,7 @@ func (g *TemplateGenerator) Generate(
 		return []byte{}, fmt.Errorf("executing template: %w", err)
 	}
 
-	log.Debug().Msg("formatting file")
+	log.Debug().Msg("formatting file in-memory")
 	// TODO: Grabbing ifaceConfigs[0].Formatter doesn't make sense. We should instead
 	// grab the formatter as specified in the topmost interface-level config.
 	formatted, err := g.format(buf.Bytes())
@@ -224,7 +311,7 @@ func (g *TemplateGenerator) Generate(
 		for i := 1; scanner.Scan(); i++ {
 			fmt.Printf("%d:\t%s\n", i, scanner.Text())
 		}
-		log.Err(err).Msg("can't format mock file")
+		log.Err(err).Msg("can't format mock file in-memory")
 		return []byte{}, fmt.Errorf("formatting mock file: %w", err)
 	}
 	return formatted, nil
