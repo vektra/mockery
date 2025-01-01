@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/vektra/mockery/v2/pkg/fixtures/example_project"
+	"github.com/vektra/mockery/v3/pkg/fixtures/example_project"
 )
 
 func Foo(s example_project.Stringer) string {

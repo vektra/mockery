@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	mocks "github.com/vektra/mockery/v2/mocks/github.com/vektra/mockery/v2/pkg/fixtures"
+	mocks "github.com/vektra/mockery/v3/mocks/github.com/vektra/mockery/v3/pkg/fixtures"
 )
 
 func TestVariadicReturnFunc(t *testing.T) {

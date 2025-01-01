@@ -14,9 +14,9 @@ import (
 
 	"github.com/chigopher/pathlib"
 	"github.com/rs/zerolog"
-	"github.com/vektra/mockery/v2/pkg/registry"
-	"github.com/vektra/mockery/v2/pkg/stackerr"
-	"github.com/vektra/mockery/v2/pkg/template"
+	"github.com/vektra/mockery/v3/pkg/registry"
+	"github.com/vektra/mockery/v3/pkg/stackerr"
+	"github.com/vektra/mockery/v3/pkg/template"
 	"golang.org/x/tools/go/packages"
 	"golang.org/x/tools/imports"
 )

@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	mocks "github.com/vektra/mockery/v2/mocks/github.com/vektra/mockery/v2/pkg/fixtures"
+	mocks "github.com/vektra/mockery/v3/mocks/github.com/vektra/mockery/v3/pkg/fixtures"
 )
 
 func TestPanicOnNoReturnValue(t *testing.T) {

@@ -1,6 +1,6 @@
 package type_alias
 
-import "github.com/vektra/mockery/v2/pkg/fixtures/type_alias/subpkg"
+import "github.com/vektra/mockery/v3/pkg/fixtures/type_alias/subpkg"
 
 type (
 	Type = int

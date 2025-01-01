@@ -5,7 +5,7 @@ import (
 	"go/types"
 	"strings"
 
-	"github.com/vektra/mockery/v2/pkg/registry"
+	"github.com/vektra/mockery/v3/pkg/registry"
 )
 
 // Data is the template data used to render the Moq template.

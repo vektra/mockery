@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
-	"github.com/vektra/mockery/v2/pkg/stackerr"
+	"github.com/vektra/mockery/v3/pkg/stackerr"
 	"golang.org/x/term"
 )
 

@@ -5,7 +5,7 @@
 package example_project_test
 
 import (
-	"github.com/vektra/mockery/v2/pkg/fixtures/example_project/foo"
+	"github.com/vektra/mockery/v3/pkg/fixtures/example_project/foo"
     mock "github.com/stretchr/testify/mock"
 )
 

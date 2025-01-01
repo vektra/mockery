@@ -11,15 +11,15 @@ _anchors: &inpackage_config
   pkgname: "{{.SrcPackageName}}_test"
   filename: "mock_{{.InterfaceName | snakecase }}_test.go"
 packages:
-  github.com/vektra/mockery/v2/pkg/fixtures/buildtag/comment:
+  github.com/vektra/mockery/v3/pkg/fixtures/buildtag/comment:
     config:
       mock-build-tags: "custom3 && (!windows || !darwin || !freebsd)"
     interfaces:
       IfaceWithCustomBuildTagInComment:
-  github.com/vektra/mockery/v2/pkg:
+  github.com/vektra/mockery/v3/pkg:
     interfaces:
       TypesPackage:
-  github.com/vektra/mockery/v2/pkg/fixtures:
+  github.com/vektra/mockery/v3/pkg/fixtures:
     config:
       all: True
     interfaces:
@@ -45,7 +45,7 @@ packages:
         config:
           template-data:
             unroll-variadic: False
-  github.com/vektra/mockery/v2/pkg/fixtures/recursive_generation:
+  github.com/vektra/mockery/v3/pkg/fixtures/recursive_generation:
     config:
       recursive: True
       all: True
@@ -53,29 +53,29 @@ packages:
       filename: "{{.InterfaceName}}_mock.go"
       mockname: "Mock{{.InterfaceName}}"
       pkgname: "{{.SrcPackageName}}"
-  github.com/vektra/mockery/v2/pkg/fixtures/empty_return:
+  github.com/vektra/mockery/v3/pkg/fixtures/empty_return:
     config:
       all: True
       dir: "{{.InterfaceDir}}"
       mockname: "{{.InterfaceName}}Mock"
       pkgname: "{{.SrcPackageName}}"
       filename: "mock_{{.InterfaceName}}_test.go"
-  github.com/vektra/mockery/v2/pkg/fixtures/method_args/same_name_arg_and_type:
+  github.com/vektra/mockery/v3/pkg/fixtures/method_args/same_name_arg_and_type:
     config:
       all: True
       dir: "{{.InterfaceDir}}"
       mockname: "{{.InterfaceName}}Mock"
       pkgname: "{{.SrcPackageName}}"
       filename: "mock_{{.InterfaceName}}_test.go"
-  github.com/vektra/mockery/v2/pkg/fixtures/iface_typed_param:
+  github.com/vektra/mockery/v3/pkg/fixtures/iface_typed_param:
     config: *inpackage_config
-  github.com/vektra/mockery/v2/pkg/fixtures/example_project:
+  github.com/vektra/mockery/v3/pkg/fixtures/example_project:
     config: *inpackage_config
-  github.com/vektra/mockery/v2/pkg/fixtures/index_list_expr:
+  github.com/vektra/mockery/v3/pkg/fixtures/index_list_expr:
     config: *inpackage_config
-  github.com/vektra/mockery/v2/pkg/fixtures/iface_new_type:
+  github.com/vektra/mockery/v3/pkg/fixtures/iface_new_type:
     config: *inpackage_config
-  github.com/vektra/mockery/v2/pkg/fixtures/issue845:
+  github.com/vektra/mockery/v3/pkg/fixtures/issue845:
     config:
       <<: *inpackage_config
       filename: "mock_{{.MockName}}_test.go"
@@ -83,7 +83,7 @@ packages:
       Interface:
         configs:
           - mockname: WithFix
-  github.com/vektra/mockery/v2/pkg/fixtures/type_alias:
+  github.com/vektra/mockery/v3/pkg/fixtures/type_alias:
     config:
       all: True
       dir: "{{.InterfaceDir}}"

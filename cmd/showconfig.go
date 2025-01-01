@@ -8,9 +8,9 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/vektra/mockery/v2/pkg"
-	"github.com/vektra/mockery/v2/pkg/logging"
-	"github.com/vektra/mockery/v2/pkg/stackerr"
+	"github.com/vektra/mockery/v3/pkg"
+	"github.com/vektra/mockery/v3/pkg/logging"
+	"github.com/vektra/mockery/v3/pkg/stackerr"
 	"gopkg.in/yaml.v3"
 )
 

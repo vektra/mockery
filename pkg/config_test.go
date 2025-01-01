@@ -13,8 +13,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
 
-	"github.com/vektra/mockery/v2/pkg"
-	"github.com/vektra/mockery/v2/pkg/logging"
+	"github.com/vektra/mockery/v3/pkg"
+	"github.com/vektra/mockery/v3/pkg/logging"
 )
 
 func TestConfig_GetPackageConfig(t *testing.T) {
@@ -41,17 +41,17 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				All:       true,
 				BuildTags: "default_tags",
 				Packages: map[string]any{
-					"github.com/vektra/mockery/v2/pkg": map[string]any{},
+					"github.com/vektra/mockery/v3/pkg": map[string]any{},
 				},
 			},
 			args: args{
-				packageName: "github.com/vektra/mockery/v2/pkg",
+				packageName: "github.com/vektra/mockery/v3/pkg",
 			},
 			want: &pkg.Config{
 				All:       true,
 				BuildTags: "default_tags",
 				Packages: map[string]any{
-					"github.com/vektra/mockery/v2/pkg": map[string]any{},
+					"github.com/vektra/mockery/v3/pkg": map[string]any{},
 				},
 			},
 		},
@@ -63,7 +63,7 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				Packages:  map[string]any{},
 			},
 			args: args{
-				packageName: "github.com/vektra/mockery/v2/pkg",
+				packageName: "github.com/vektra/mockery/v3/pkg",
 			},
 			wantErr: true,
 			want:    nil,
@@ -75,20 +75,20 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				All:        true,
 				BuildTags:  "default_tags",
 				Packages: map[string]any{
-					"github.com/vektra/mockery/v2/pkg": map[string]any{
+					"github.com/vektra/mockery/v3/pkg": map[string]any{
 						"config": map[string]any{},
 					},
 				},
 			},
 			args: args{
-				packageName: "github.com/vektra/mockery/v2/pkg",
+				packageName: "github.com/vektra/mockery/v3/pkg",
 			},
 			want: &pkg.Config{
 				Config:    "path/to/config/.mockery.yaml",
 				All:       true,
 				BuildTags: "default_tags",
 				Packages: map[string]any{
-					"github.com/vektra/mockery/v2/pkg": map[string]any{},
+					"github.com/vektra/mockery/v3/pkg": map[string]any{},
 				},
 			},
 		},
@@ -99,7 +99,7 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				All:        true,
 				BuildTags:  "default_tags",
 				Packages: map[string]any{
-					"github.com/vektra/mockery/v2/pkg": map[string]any{
+					"github.com/vektra/mockery/v3/pkg": map[string]any{
 						"config": map[string]any{
 							"all":  false,
 							"tags": "foobar",
@@ -108,14 +108,14 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				},
 			},
 			args: args{
-				packageName: "github.com/vektra/mockery/v2/pkg",
+				packageName: "github.com/vektra/mockery/v3/pkg",
 			},
 			want: &pkg.Config{
 				Config:    "path/to/config/.mockery.yaml",
 				All:       false,
 				BuildTags: "foobar",
 				Packages: map[string]any{
-					"github.com/vektra/mockery/v2/pkg": map[string]any{},
+					"github.com/vektra/mockery/v3/pkg": map[string]any{},
 				},
 			},
 		},
@@ -126,7 +126,7 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				All:        true,
 				BuildTags:  "default_tags",
 				Packages: map[string]any{
-					"github.com/vektra/mockery/v2/pkg": map[string]any{
+					"github.com/vektra/mockery/v3/pkg": map[string]any{
 						"config": map[string]any{
 							"all":  false,
 							"tags": "foobar",
@@ -135,14 +135,14 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				},
 			},
 			args: args{
-				packageName: "github.com/vektra/mockery/v2/pkg",
+				packageName: "github.com/vektra/mockery/v3/pkg",
 			},
 			want: &pkg.Config{
 				Config:    "path/to/config/.mockery.yaml",
 				All:       false,
 				BuildTags: "foobar",
 				Packages: map[string]any{
-					"github.com/vektra/mockery/v2/pkg": map[string]any{},
+					"github.com/vektra/mockery/v3/pkg": map[string]any{},
 				},
 			},
 			repeat: 2,
@@ -153,7 +153,7 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				All:       true,
 				BuildTags: "default_tags",
 				Packages: map[string]any{
-					"github.com/vektra/mockery/v2/pkg": map[string]any{
+					"github.com/vektra/mockery/v3/pkg": map[string]any{
 						"config": map[string]any{
 							"huh?": false,
 						},
@@ -161,7 +161,7 @@ func TestConfig_GetPackageConfig(t *testing.T) {
 				},
 			},
 			args: args{
-				packageName: "github.com/vektra/mockery/v2/pkg",
+				packageName: "github.com/vektra/mockery/v3/pkg",
 			},
 			want:    nil,
 			wantErr: true,
@@ -224,11 +224,11 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				All:       true,
 				BuildTags: "default_tags",
 				Packages: map[string]any{
-					"github.com/vektra/mockery/v2/pkg": map[string]any{},
+					"github.com/vektra/mockery/v3/pkg": map[string]any{},
 				},
 			},
 			args: args{
-				packageName:   "github.com/vektra/mockery/v2/pkg",
+				packageName:   "github.com/vektra/mockery/v3/pkg",
 				interfaceName: "intf",
 			},
 			want: []*pkg.Config{
@@ -245,7 +245,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				All:        true,
 				BuildTags:  "default_tags",
 				Packages: map[string]any{
-					"github.com/vektra/mockery/v2/pkg": map[string]any{
+					"github.com/vektra/mockery/v3/pkg": map[string]any{
 						"config": map[string]any{
 							"all": false,
 						},
@@ -253,7 +253,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				},
 			},
 			args: args{
-				packageName:   "github.com/vektra/mockery/v2/pkg",
+				packageName:   "github.com/vektra/mockery/v3/pkg",
 				interfaceName: "intf",
 			},
 			want: []*pkg.Config{
@@ -270,7 +270,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				All:       true,
 				BuildTags: "default_tags",
 				Packages: map[string]any{
-					"github.com/vektra/mockery/v2/pkg": map[string]any{
+					"github.com/vektra/mockery/v3/pkg": map[string]any{
 						"config": map[string]any{
 							"all": false,
 						},
@@ -279,7 +279,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				},
 			},
 			args: args{
-				packageName:   "github.com/vektra/mockery/v2/pkg",
+				packageName:   "github.com/vektra/mockery/v3/pkg",
 				interfaceName: "intf",
 			},
 			want: []*pkg.Config{
@@ -296,7 +296,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				All:        true,
 				BuildTags:  "default_tags",
 				Packages: map[string]any{
-					"github.com/vektra/mockery/v2/pkg": map[string]any{
+					"github.com/vektra/mockery/v3/pkg": map[string]any{
 						"config": map[string]any{
 							"all": false,
 						},
@@ -307,7 +307,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				},
 			},
 			args: args{
-				packageName:   "github.com/vektra/mockery/v2/pkg",
+				packageName:   "github.com/vektra/mockery/v3/pkg",
 				interfaceName: "intf",
 			},
 			want: []*pkg.Config{
@@ -324,7 +324,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				All:       true,
 				BuildTags: "default_tags",
 				Packages: map[string]any{
-					"github.com/vektra/mockery/v2/pkg": map[string]any{
+					"github.com/vektra/mockery/v3/pkg": map[string]any{
 						"config": map[string]any{
 							"all": false,
 						},
@@ -337,7 +337,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				},
 			},
 			args: args{
-				packageName:   "github.com/vektra/mockery/v2/pkg",
+				packageName:   "github.com/vektra/mockery/v3/pkg",
 				interfaceName: "intf",
 			},
 			want: []*pkg.Config{
@@ -354,7 +354,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				All:        true,
 				BuildTags:  "default_tags",
 				Packages: map[string]any{
-					"github.com/vektra/mockery/v2/pkg": map[string]any{
+					"github.com/vektra/mockery/v3/pkg": map[string]any{
 						"config": map[string]any{
 							"all": false,
 						},
@@ -369,7 +369,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				},
 			},
 			args: args{
-				packageName:   "github.com/vektra/mockery/v2/pkg",
+				packageName:   "github.com/vektra/mockery/v3/pkg",
 				interfaceName: "intf",
 			},
 			want: []*pkg.Config{
@@ -386,7 +386,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				All:       true,
 				BuildTags: "default_tags",
 				Packages: map[string]any{
-					"github.com/vektra/mockery/v2/pkg": map[string]any{
+					"github.com/vektra/mockery/v3/pkg": map[string]any{
 						"config": map[string]any{
 							"all": false,
 						},
@@ -410,7 +410,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				},
 			},
 			args: args{
-				packageName:   "github.com/vektra/mockery/v2/pkg",
+				packageName:   "github.com/vektra/mockery/v3/pkg",
 				interfaceName: "intf",
 			},
 			want: []*pkg.Config{
@@ -430,7 +430,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				All:       true,
 				BuildTags: "default_tags",
 				Packages: map[string]any{
-					"github.com/vektra/mockery/v2/pkg": map[string]any{
+					"github.com/vektra/mockery/v3/pkg": map[string]any{
 						"config": map[string]any{
 							"all": false,
 						},
@@ -445,7 +445,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 				},
 			},
 			args: args{
-				packageName:   "github.com/vektra/mockery/v2/pkg",
+				packageName:   "github.com/vektra/mockery/v3/pkg",
 				interfaceName: "FooBarBat",
 			},
 			want:    nil,
@@ -517,8 +517,8 @@ func TestConfig_GetPackages(t *testing.T) {
 		{
 			name: "packages defined with single package",
 			yaml: `packages:
-  github.com/vektra/mockery/v2/pkg:`,
-			want: []string{"github.com/vektra/mockery/v2/pkg"},
+  github.com/vektra/mockery/v3/pkg:`,
+			want: []string{"github.com/vektra/mockery/v3/pkg"},
 		},
 	}
 	for _, tt := range tests {
@@ -897,7 +897,7 @@ func TestNewConfigFromViper(t *testing.T) {
 			name: "default packages variables",
 			yaml: `
 packages:
-  github.com/vektra/mockery/v2/pkg:
+  github.com/vektra/mockery/v3/pkg:
 `,
 			want: &pkg.Config{
 				Dir:      "mocks/{{.PackagePath}}",
@@ -913,7 +913,7 @@ packages:
 dir: barfoo
 filename: foobar.go
 packages:
-  github.com/vektra/mockery/v2/pkg:
+  github.com/vektra/mockery/v3/pkg:
 `,
 			want: &pkg.Config{
 				Dir:      "barfoo",
@@ -971,7 +971,7 @@ func TestConfig_Initialize(t *testing.T) {
 			name: "package with no go files",
 			cfgYaml: `
 packages:
-  github.com/vektra/mockery/v2/pkg/fixtures/pkg_with_no_files:
+  github.com/vektra/mockery/v3/pkg/fixtures/pkg_with_no_files:
     config:
       recursive: True
       all: True`,
@@ -981,12 +981,12 @@ packages:
 			name: "test with no subpackages present",
 			cfgYaml: `
 packages:
-  github.com/vektra/mockery/v2/pkg/fixtures/example_project/foo:
+  github.com/vektra/mockery/v3/pkg/fixtures/example_project/foo:
     config:
       recursive: True
       all: True`,
 			wantCfgMap: `packages:
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/foo:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/foo:
         config:
             all: true
             recursive: true
@@ -998,20 +998,20 @@ packages:
 with-expecter: False
 dir: foobar
 packages:
-  github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+  github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
     config:
       recursive: True
       with-expecter: True
       all: True`,
 			wantCfgMap: `dir: foobar
 packages:
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
         config:
             all: true
             dir: foobar
             recursive: true
             with-expecter: true
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
         config:
             all: true
             dir: foobar
@@ -1026,12 +1026,12 @@ with-expecter: false
 with-expecter: False
 dir: foobar
 packages:
-  github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+  github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
     config:
       recursive: True
       with-expecter: True
       all: True
-  github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+  github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
     config:
       recursive: True
       with-expecter: True
@@ -1040,13 +1040,13 @@ packages:
       dir: barbaz`,
 			wantCfgMap: `dir: foobar
 packages:
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
         config:
             all: true
             dir: foobar
             recursive: true
             with-expecter: true
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
         config:
             all: false
             dir: barbaz
@@ -1062,22 +1062,22 @@ with-expecter: false
 with-expecter: False
 dir: foobar
 packages:
-  github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+  github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
     config:
       recursive: True
       with-expecter: True
       all: True
-  github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3: {}
+  github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3: {}
 `,
 			wantCfgMap: `dir: foobar
 packages:
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
         config:
             all: true
             dir: foobar
             recursive: true
             with-expecter: true
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
         config:
             all: true
             dir: foobar
@@ -1092,25 +1092,25 @@ with-expecter: false
 with-expecter: False
 dir: foobar
 packages:
-  github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+  github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
     config:
       recursive: True
       with-expecter: True
       all: True
-  github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+  github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
     interfaces:
       Getter:
         config:
           with-expecter: False`,
 			wantCfgMap: `dir: foobar
 packages:
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
         config:
             all: true
             dir: foobar
             recursive: true
             with-expecter: true
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
         config:
             all: true
             dir: foobar
@@ -1132,7 +1132,7 @@ with-expecter: false
 with-expecter: False
 dir: foobar
 packages:
-  github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+  github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
     config:
       recursive: True
       with-expecter: True
@@ -1142,7 +1142,7 @@ packages:
 `,
 			wantCfgMap: `dir: foobar
 packages:
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
         config:
             all: true
             dir: foobar
@@ -1161,18 +1161,18 @@ dir: foobar
 recursive: True
 all: True
 packages:
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
 `,
 			wantCfgMap: `all: true
 dir: foobar
 packages:
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
         config:
             all: true
             dir: foobar
             recursive: true
             with-expecter: false
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
         config:
             all: true
             dir: foobar
@@ -1188,22 +1188,22 @@ with-expecter: false
 with-expecter: False
 dir: foobar
 packages:
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
         config:
             recursive: True
             with-expecter: True
             all: True
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3: {}
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3: {}
 `,
 			wantCfgMap: `dir: foobar
 packages:
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2:
         config:
             all: true
             dir: foobar
             recursive: true
             with-expecter: true
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_subpkgs/subpkg2/subpkg3:
         config:
             all: true
             dir: foobar
@@ -1217,17 +1217,17 @@ with-expecter: false
 			cfgYaml: `
 all: true
 packages:
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_submodules:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_submodules:
         config:
             recursive: True
 `,
 			wantCfgMap: `all: true
 packages:
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_submodules:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_submodules:
         config:
             all: true
             recursive: true
-    github.com/vektra/mockery/v2/pkg/fixtures/example_project/pkg_with_submodules/subpkg:
+    github.com/vektra/mockery/v3/pkg/fixtures/example_project/pkg_with_submodules/subpkg:
         config:
             all: true
             recursive: true

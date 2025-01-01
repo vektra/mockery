@@ -9,11 +9,11 @@ import (
 	"net/http"
 	"sync"
 
-	test "github.com/vektra/mockery/v2/pkg/fixtures"
-	http1 "github.com/vektra/mockery/v2/pkg/fixtures/12345678/http"
-	"github.com/vektra/mockery/v2/pkg/fixtures/constraints"
-	http0 "github.com/vektra/mockery/v2/pkg/fixtures/http"
-	test0 "github.com/vektra/mockery/v2/pkg/fixtures/redefined_type_b"
+	test "github.com/vektra/mockery/v3/pkg/fixtures"
+	http1 "github.com/vektra/mockery/v3/pkg/fixtures/12345678/http"
+	"github.com/vektra/mockery/v3/pkg/fixtures/constraints"
+	http0 "github.com/vektra/mockery/v3/pkg/fixtures/http"
+	test0 "github.com/vektra/mockery/v3/pkg/fixtures/redefined_type_b"
 )
 
 // UsesAnyMock is a mock implementation of test.UsesAny.

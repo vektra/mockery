@@ -5,8 +5,8 @@
 package mocks
 
 import (
-	test0 "github.com/vektra/mockery/v2/pkg/fixtures"
-	"github.com/vektra/mockery/v2/pkg/fixtures/redefined_type_b"
+	test0 "github.com/vektra/mockery/v3/pkg/fixtures"
+	"github.com/vektra/mockery/v3/pkg/fixtures/redefined_type_b"
     mock "github.com/stretchr/testify/mock"
 )
 

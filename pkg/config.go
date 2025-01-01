@@ -20,8 +20,8 @@ import (
 	"github.com/mitchellh/mapstructure"
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
-	"github.com/vektra/mockery/v2/pkg/logging"
-	"github.com/vektra/mockery/v2/pkg/stackerr"
+	"github.com/vektra/mockery/v3/pkg/logging"
+	"github.com/vektra/mockery/v3/pkg/stackerr"
 	"golang.org/x/tools/go/packages"
 	"gopkg.in/yaml.v3"
 )

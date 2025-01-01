@@ -1,6 +1,0 @@
-all: false
-log-level: info
-packages:
-  github.com/vektra/mockery/v2/pkg/fixtures:
-    interfaces:
-      SendFunc:

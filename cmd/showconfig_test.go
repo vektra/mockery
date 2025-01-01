@@ -22,7 +22,7 @@ func TestShowCfg(t *testing.T) {
 with-expecter: true
 all: true
 packages:
-  github.com/vektra/mockery/v2/pkg:
+  github.com/vektra/mockery/v3/pkg:
     config:
       all: true`))
 	assert.NoError(t, err)
@@ -31,7 +31,7 @@ packages:
 	assert.NoError(t, showConfig(nil, nil, v, buf))
 	assert.Equal(t, `all: true
 packages:
-  github.com/vektra/mockery/v2/pkg:
+  github.com/vektra/mockery/v3/pkg:
     config:
       all: true
       with-expecter: true

@@ -11,8 +11,8 @@ import (
 	_ "embed"
 
 	"github.com/huandu/xstrings"
-	"github.com/vektra/mockery/v2/pkg/registry"
-	"github.com/vektra/mockery/v2/pkg/stackerr"
+	"github.com/vektra/mockery/v3/pkg/registry"
+	"github.com/vektra/mockery/v3/pkg/stackerr"
 )
 
 // Template is the Moq template. It is capable of generating the Moq

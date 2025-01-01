@@ -1,7 +1,7 @@
 package test
 
 import (
-	test "github.com/vektra/mockery/v2/pkg/fixtures/redefined_type_b"
+	test "github.com/vektra/mockery/v3/pkg/fixtures/redefined_type_b"
 )
 
 type C int

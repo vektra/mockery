@@ -1,4 +1,4 @@
-module github.com/vektra/mockery/v2
+module github.com/vektra/mockery/v3
 
 go 1.23
 
@@ -6,9 +6,7 @@ toolchain go1.23.1
 
 require (
 	github.com/chigopher/pathlib v0.19.1
-	github.com/davecgh/go-spew v1.1.1
 	github.com/huandu/xstrings v1.4.0
-	github.com/iancoleman/strcase v0.2.0
 	github.com/jinzhu/copier v0.3.5
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mitchellh/mapstructure v1.5.0
@@ -22,6 +20,7 @@ require (
 )
 
 require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/frankban/quicktest v1.14.4 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect

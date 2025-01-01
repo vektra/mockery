@@ -5,7 +5,7 @@ dir: "mocks/moq/{{.SrcPackagePath}}"
 formatter: "goimports"
 
 packages:
-  github.com/vektra/mockery/v2/pkg/fixtures:
+  github.com/vektra/mockery/v3/pkg/fixtures:
     config:
       include-regex: '.*'
       exclude-regex: 'RequesterGenerics|UnsafeInterface|requester_unexported'

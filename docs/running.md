@@ -12,7 +12,7 @@ mockname: "{{.InterfaceName}}"
 filename: "{{.MockName}}.go"
 outpkg: mocks
 packages:
-  github.com/vektra/mockery/v2/pkg:
+  github.com/vektra/mockery/v3/pkg:
     interfaces:
       TypesPackage:
 # Lots more config...

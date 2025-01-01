@@ -5,8 +5,8 @@
 package type_alias_test
 
 import (
-	"github.com/vektra/mockery/v2/pkg/fixtures/type_alias"
-	"github.com/vektra/mockery/v2/pkg/fixtures/type_alias/subpkg"
+	"github.com/vektra/mockery/v3/pkg/fixtures/type_alias"
+	"github.com/vektra/mockery/v3/pkg/fixtures/type_alias/subpkg"
     mock "github.com/stretchr/testify/mock"
 )
 

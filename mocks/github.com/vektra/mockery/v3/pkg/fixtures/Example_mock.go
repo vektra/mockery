@@ -5,8 +5,8 @@
 package mocks
 
 import (
-	http1 "github.com/vektra/mockery/v2/pkg/fixtures/12345678/http"
-	http0 "github.com/vektra/mockery/v2/pkg/fixtures/http"
+	http1 "github.com/vektra/mockery/v3/pkg/fixtures/12345678/http"
+	http0 "github.com/vektra/mockery/v3/pkg/fixtures/http"
 	"net/http"
     mock "github.com/stretchr/testify/mock"
 )

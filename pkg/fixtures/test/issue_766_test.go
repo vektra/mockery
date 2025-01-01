@@ -3,11 +3,11 @@ package test
 import (
 	"testing"
 
-	fixtures "github.com/vektra/mockery/v2/pkg/fixtures"
+	fixtures "github.com/vektra/mockery/v3/pkg/fixtures"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	mocks "github.com/vektra/mockery/v2/mocks/github.com/vektra/mockery/v2/pkg/fixtures"
+	mocks "github.com/vektra/mockery/v3/mocks/github.com/vektra/mockery/v3/pkg/fixtures"
 )
 
 // Asserts it implements the interface

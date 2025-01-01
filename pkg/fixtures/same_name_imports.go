@@ -3,8 +3,8 @@ package test
 import (
 	"net/http"
 
-	number_dir_http "github.com/vektra/mockery/v2/pkg/fixtures/12345678/http"
-	my_http "github.com/vektra/mockery/v2/pkg/fixtures/http"
+	number_dir_http "github.com/vektra/mockery/v3/pkg/fixtures/12345678/http"
+	my_http "github.com/vektra/mockery/v3/pkg/fixtures/http"
 )
 
 // Example is an example
