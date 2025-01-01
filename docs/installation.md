@@ -41,14 +41,14 @@ Install through [brew](https://brew.sh/)
 function insert_installation_command(element_to_override,version){
     element_to_override.innerHTML=`
 ```
-go install github.com/vektra/mockery/v2@${version}
+go install github.com/vektra/mockery/v3@${version}
 ```
 `;
 }
 
 const version_key="/mockery/version";
 const element = document.getElementById('mockery-install-go-command');
-const url = `https://api.github.com/repos/vektra/mockery/releases/latest`;
+const url = `https://api.github.com/repos/vektra/mockery/releases/tags/v3`;
 
 let version = sessionStorage.getItem(version_key);
 if (version !== null) {
@@ -66,7 +66,7 @@ if (version !== null) {
     })
     .catch((error) =>{
           console.error(error);
-          element.innerHTML=`failed to fetch latest release info from: https://api.github.com/repos/vektra/mockery/releases/latest`;
+          element.innerHTML=`failed to fetch latest release info from: https://api.github.com/repos/vektra/mockery/releases/tags/v3`;
     }
   );
 }

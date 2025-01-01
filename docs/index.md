@@ -5,9 +5,9 @@ mockery
 
 	Mockery `v3` is currently in alpha and should not be used for production.
 
-Mockery is a project that creates mock implementations of Golang interfaces. It
-inspects source code and generates implementations of the interface that aid in
-testing.
+Mockery is a project that creates mock implementations of Golang interfaces. It inspects source code and generates implementations of the interface that aid in testing.
+
+In addition to providing a number of different styles of mocks, mockery also allows users to provide their own template files that will then be rendered using a set of template data, methods, and functions that provide comprehensive typing information about the Go interface in question.
 
 ![](assets/images/demo.gif)
 ![](assets/images/MockScreenshot.png)
@@ -67,14 +67,14 @@ func Test_getFromDB(t *testing.T) {
 }
 ```
 
-Why use mockery over gomock?
------------------------------
+Why use mockery?
+----------------
 
-1. mockery provides a much more user-friendly API and is less confusing to use
-2. mockery utilizes `testify` which is a robust and highly feature-rich testing framework
-3. mockery has rich configuration options that allow fine-grained control over how your mocks are generated
-4. mockery's CLI is more robust, user-friendly, and provides many more options
-5. mockery supports generics (this may no longer be an advantage if/when gomock supports generics)
+1. You gain access to a number of pre-curated mock implementations that can be used in testing. This includes traditional "mockery-style" mocks, as well as other styles from the open source community such as from https://github.com/matryer/moq. Such mocks allow you to quickly define how the implementation should behave under test without having to manually curate your own mocks/stubs/fakes.
+2. Mockery benefits from a large number of performance improvements that almost all other Go code-generation projects currently have not employed. This means that it's orders of magnitude faster for large codebases.
+3. Mockery provides a comprehensive, centralized, flexible, and simple configuration scheme driven off of yaml instead of relying on sprawling `//go:generate` commands.
+4. Mockery is a code-generation framework. While its original goal is to provide mock implementations for testing purposes, users can supply their own templates to auto-generate any kind of code that needs to be based off of interfaces.
+5. A number of high profile companies, projects, and communities trust Mockery.
 
 Who uses mockery?
 ------------------
