@@ -34,7 +34,6 @@ func getFromDB(db DB) string {
 We can use simple configuration to generate a mock implementation for the interface:
 
 ```yaml title=".mockery.yaml"
-with-expecter: True
 packages:
 	github.com/org/repo:
 		interfaces:
