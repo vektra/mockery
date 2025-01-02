@@ -9,7 +9,6 @@ import (
 	"text/template"
 
 	"github.com/huandu/xstrings"
-	"github.com/vektra/mockery/v3/registry"
 )
 
 // Template is the Moq template. It is capable of generating the Moq
@@ -63,13 +62,13 @@ func exported(s string) string {
 }
 
 var TemplateMockFuncs = template.FuncMap{
-	"importStatement": func(imprt *registry.Package) string {
+	"importStatement": func(imprt *Package) string {
 		if imprt.Alias == "" {
 			return `"` + imprt.Path() + `"`
 		}
 		return imprt.Alias + ` "` + imprt.Path() + `"`
 	},
-	"syncPkgQualifier": func(imports []*registry.Package) string {
+	"syncPkgQualifier": func(imports []*Package) string {
 		for _, imprt := range imports {
 			if imprt.Path() == "sync" {
 				return imprt.Qualifier()

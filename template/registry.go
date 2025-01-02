@@ -1,4 +1,4 @@
-package registry
+package template
 
 import (
 	"context"
@@ -33,7 +33,7 @@ type Registry struct {
 
 // New loads the source package info and returns a new instance of
 // Registry.
-func New(srcPkg *packages.Package, dstPkgPath string, inPackage bool) (*Registry, error) {
+func NewRegistry(srcPkg *packages.Package, dstPkgPath string, inPackage bool) (*Registry, error) {
 	return &Registry{
 		dstPkgPath:       dstPkgPath,
 		srcPkg:           srcPkg,

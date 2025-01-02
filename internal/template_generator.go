@@ -16,7 +16,6 @@ import (
 	"github.com/chigopher/pathlib"
 	"github.com/rs/zerolog"
 	"github.com/vektra/mockery/v3/internal/stackerr"
-	"github.com/vektra/mockery/v3/registry"
 	"github.com/vektra/mockery/v3/template"
 	"golang.org/x/tools/go/packages"
 	"golang.org/x/tools/imports"
@@ -101,7 +100,7 @@ func findPkgPath(dirPath *pathlib.Path) (string, error) {
 
 type TemplateGenerator struct {
 	templateName string
-	registry     *registry.Registry
+	registry     *template.Registry
 	formatter    Formatter
 	pkgConfig    *Config
 	inPackage    bool
@@ -148,7 +147,7 @@ func NewTemplateGenerator(
 		log.Debug().Msg("output package detected to not be in-package of original package")
 	}
 
-	reg, err := registry.New(srcPkg, outPkgPath, inPackage)
+	reg, err := template.NewRegistry(srcPkg, outPkgPath, inPackage)
 	if err != nil {
 		return nil, fmt.Errorf("creating new registry: %w", err)
 	}

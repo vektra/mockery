@@ -3,8 +3,6 @@ package template
 import (
 	"go/types"
 	"testing"
-
-	"github.com/vektra/mockery/v3/registry"
 )
 
 func TestTemplateMockFuncs(t *testing.T) {
@@ -19,8 +17,8 @@ func TestTemplateMockFuncs(t *testing.T) {
 	})
 
 	t.Run("ImportStatement", func(t *testing.T) {
-		f := TemplateMockFuncs["ImportStatement"].(func(*registry.Package) string)
-		pkg := registry.NewPackage(types.NewPackage("xyz", "xyz"))
+		f := TemplateMockFuncs["ImportStatement"].(func(*Package) string)
+		pkg := NewPackage(types.NewPackage("xyz", "xyz"))
 		if f(pkg) != `"xyz"` {
 			t.Errorf("ImportStatement(...): want: `\"xyz\"`; got: `%s`", f(pkg))
 		}
@@ -32,22 +30,22 @@ func TestTemplateMockFuncs(t *testing.T) {
 	})
 
 	t.Run("SyncPkgQualifier", func(t *testing.T) {
-		f := TemplateMockFuncs["SyncPkgQualifier"].(func([]*registry.Package) string)
+		f := TemplateMockFuncs["SyncPkgQualifier"].(func([]*Package) string)
 		if f(nil) != "sync" {
 			t.Errorf("SyncPkgQualifier(...): want: `sync`; got: `%s`", f(nil))
 		}
-		imports := []*registry.Package{
-			registry.NewPackage(types.NewPackage("sync", "sync")),
-			registry.NewPackage(types.NewPackage("github.com/some/module", "module")),
+		imports := []*Package{
+			NewPackage(types.NewPackage("sync", "sync")),
+			NewPackage(types.NewPackage("github.com/some/module", "module")),
 		}
 		if f(imports) != "sync" {
 			t.Errorf("SyncPkgQualifier(...): want: `sync`; got: `%s`", f(imports))
 		}
 
-		syncPkg := registry.NewPackage(types.NewPackage("sync", "sync"))
+		syncPkg := NewPackage(types.NewPackage("sync", "sync"))
 		syncPkg.Alias = "stdsync"
-		otherSyncPkg := registry.NewPackage(types.NewPackage("github.com/someother/sync", "sync"))
-		imports = []*registry.Package{otherSyncPkg, syncPkg}
+		otherSyncPkg := NewPackage(types.NewPackage("github.com/someother/sync", "sync"))
+		imports = []*Package{otherSyncPkg, syncPkg}
 		if f(imports) != "stdsync" {
 			t.Errorf("SyncPkgQualifier(...): want: `stdsync`; got: `%s`", f(imports))
 		}

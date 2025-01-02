@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"go/types"
 	"strings"
-
-	"github.com/vektra/mockery/v3/registry"
 )
 
+// ConfigData is the data sent to the template for the config file.
 type ConfigData struct {
 	ConfigDir            string
 	InterfaceDir         string
@@ -20,13 +19,13 @@ type ConfigData struct {
 	SrcPackagePath       string
 }
 
-// Data is the template data used to render the Moq template.
+// Data is the template data used to render the mock template.
 type Data struct {
 	Boilerplate     string
 	BuildTags       string
 	PkgName         string
 	SrcPkgQualifier string
-	Imports         []*registry.Package
+	Imports         []*Package
 	Mocks           []MockData
 	TemplateData    map[string]any
 }
@@ -98,7 +97,7 @@ type MethodData struct {
 	// Scope represents the lexical scope of the method. Its primary function
 	// is keeping track of all names visible in the current scope, which allows
 	// the creation of new variables with guaranteed non-conflicting names.
-	Scope *registry.MethodScope
+	Scope *MethodScope
 }
 
 // ArgList is the string representation of method parameters, ex:
@@ -217,7 +216,7 @@ type TypeParamData struct {
 // ParamData is the data which represents a parameter to some method of
 // an interface.
 type ParamData struct {
-	Var      *registry.Var
+	Var      *Var
 	Variadic bool
 }
 
