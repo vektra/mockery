@@ -26,17 +26,17 @@ type MethodScope struct {
 }
 
 func NewMethodScope(r *Registry) *MethodScope {
-	visibleNames := map[string]any{}
-	for key := range r.importQualifiers {
-		visibleNames[key] = nil
-	}
-	return &MethodScope{
+	m := &MethodScope{
 		registry:     r,
 		vars:         []*Var{},
 		conflicted:   map[string]bool{},
-		visibleNames: visibleNames,
+		visibleNames: map[string]any{},
 		imports:      map[string]*Package{},
 	}
+	for key := range r.importQualifiers {
+		m.AddName(key)
+	}
+	return m
 }
 
 func (m *MethodScope) ResolveVariableNameCollisions(ctx context.Context) {
@@ -48,7 +48,7 @@ func (m *MethodScope) ResolveVariableNameCollisions(ctx context.Context) {
 			varLog.Debug().Str("new-name", newName).Msg("variable was found to conflict with previously allocated name. Giving new name.")
 		}
 		v.Name = newName
-		m.visibleNames[v.Name] = nil
+		m.AddName(v.Name)
 	}
 }
 
@@ -65,7 +65,7 @@ func (m *MethodScope) AllocateName(prefix string) string {
 			suggestion = fmt.Sprintf("%s%d", prefix, i)
 		}
 
-		if _, suggestionExists := m.visibleNames[suggestion]; suggestionExists {
+		if m.NameExists(suggestion) {
 			continue
 		}
 		break
@@ -78,41 +78,40 @@ func (m *MethodScope) AllocateName(prefix string) string {
 // Variables names are generated if required and are ensured to be
 // without conflict with other variables and imported packages. It also
 // adds the relevant imports to the registry for each added variable.
-func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, prefix string) *Var {
-	log := zerolog.Ctx(ctx).
-		With().
-		Str("prefix", prefix).
-		Str("variable-name", vr.Name()).
-		Logger()
-	imports := m.populateImports(ctx, vr.Type())
-
-	log.Debug().Msg("adding var")
-	for key := range m.visibleNames {
-		log.Debug().Str("visible-name", key).Msg("visible name")
-	}
-
+func (m *MethodScope) AddVar(vr *types.Var, prefix string) *Var {
+	imports := m.populateImports(context.Background(), vr.Type())
 	v := Var{
 		vr:         vr,
 		imports:    imports,
 		moqPkgPath: m.moqPkgPath,
 	}
 	// The variable type is also a visible name, so add that.
-	m.visibleNames[v.TypeString()] = nil
+	m.AddName(v.TypeString())
 
 	v.Name = m.AllocateName(varName(vr, prefix))
-	// This suggested name is subject to change because it might come into conflict
-	// with a future package import.
-	log.Debug().Str("suggested-name", v.Name).Msg("suggested name for variable in method")
 
 	m.vars = append(m.vars, &v)
 	return &v
+}
+
+// AddName records name as visible in the current scope. This may be useful
+// in cases where a template statically adds its own name that needs to be registered
+// with the scope to prevent future naming collisions.
+func (m *MethodScope) AddName(name string) {
+	m.visibleNames[name] = nil
+}
+
+// NameExists returns whether or not the name is currently visible in the scope.
+func (m *MethodScope) NameExists(name string) bool {
+	_, exists := m.visibleNames[name]
+	return exists
 }
 
 func (m *MethodScope) addImport(ctx context.Context, pkg *types.Package, imports map[string]*Package) {
 	imprt := m.registry.AddImport(ctx, pkg)
 	imports[pkg.Path()] = imprt
 	m.imports[pkg.Path()] = imprt
-	m.visibleNames[imprt.Qualifier()] = nil
+	m.AddName(imprt.Qualifier())
 }
 
 func (m *MethodScope) populateImportNamedType(

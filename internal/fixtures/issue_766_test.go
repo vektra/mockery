@@ -3,15 +3,12 @@ package test
 import (
 	"testing"
 
-	fixtures "github.com/vektra/mockery/v3/internal/fixtures"
-
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	mocks "github.com/vektra/mockery/v3/mocks/github.com/vektra/mockery/v3/internal/fixtures"
 )
 
 // Asserts it implements the interface
-var _ fixtures.Issue766 = new(mocks.Issue766)
+var _ Issue766 = new(MockIssue766)
 
 func TestIssue766(t *testing.T) {
 	fetchFunc := func(i ...int) ([]int, error) {
@@ -23,7 +20,7 @@ func TestIssue766(t *testing.T) {
 	}
 
 	expected := []int{1, 2, 3}
-	mockFetchData := mocks.NewIssue766(t)
+	mockFetchData := NewMockIssue766(t)
 	mockFetchData.
 		EXPECT().
 		FetchData(mock.AnythingOfType("func(...int) ([]int, error)")).

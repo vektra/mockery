@@ -1,4 +1,4 @@
-package test
+package empty_return
 
 type EmptyReturn interface {
 	NoArgs()

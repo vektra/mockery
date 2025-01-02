@@ -28,8 +28,8 @@ func (s *testStruct) ExecDoB0v2() interfaceB0 {
 
 func Test(t *testing.T) {
 	t.Run("ExecDoB", func(t *testing.T) {
-		mockInterfaceB := new(interfaceBMock)
-		mockInterfaceA := new(interfaceAMock)
+		mockInterfaceB := NewMockinterfaceB(t)
+		mockInterfaceA := NewMockinterfaceA(t)
 		mockInterfaceA.On("DoB", mock.Anything).Return(mockInterfaceB)
 
 		s := testStruct{
@@ -38,11 +38,10 @@ func Test(t *testing.T) {
 		res := s.ExecDoB()
 		assert.Equal(t, mockInterfaceB, res)
 
-		mockInterfaceA.AssertExpectations(t)
 	})
 	t.Run("ExecDoB0", func(t *testing.T) {
-		mockInterfaceB0 := new(interfaceB0Mock)
-		mockInterfaceA := new(interfaceAMock)
+		mockInterfaceB0 := NewMockinterfaceB0(t)
+		mockInterfaceA := NewMockinterfaceA(t)
 		mockInterfaceA.On("DoB0", mock.Anything).Return(mockInterfaceB0)
 
 		s := testStruct{
@@ -51,11 +50,10 @@ func Test(t *testing.T) {
 		res := s.ExecDoB0()
 		assert.Equal(t, mockInterfaceB0, res)
 
-		mockInterfaceA.AssertExpectations(t)
 	})
 	t.Run("ExecDoB0v2", func(t *testing.T) {
-		mockInterfaceB0 := new(interfaceB0Mock)
-		mockInterfaceA := new(interfaceAMock)
+		mockInterfaceB0 := NewMockinterfaceB0(t)
+		mockInterfaceA := NewMockinterfaceA(t)
 		mockInterfaceA.On("DoB0v2", mock.Anything).Return(mockInterfaceB0)
 
 		s := testStruct{
@@ -64,6 +62,5 @@ func Test(t *testing.T) {
 		res := s.ExecDoB0v2()
 		assert.Equal(t, mockInterfaceB0, res)
 
-		mockInterfaceA.AssertExpectations(t)
 	})
 }

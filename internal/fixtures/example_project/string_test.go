@@ -1,13 +1,12 @@
-package example_project_test
+package example_project
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/vektra/mockery/v3/internal/fixtures/example_project"
 )
 
-func Foo(s example_project.Stringer) string {
+func Foo(s Stringer) string {
 	return s.String()
 }
 

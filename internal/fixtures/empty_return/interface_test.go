@@ -1,4 +1,4 @@
-package test
+package empty_return
 
 import (
 	"testing"
@@ -7,7 +7,7 @@ import (
 )
 
 func Test(t *testing.T) {
-	m := NewEmptyReturnMock(t)
+	m := NewMockEmptyReturn(t)
 	var target EmptyReturn = m
 
 	t.Run("NoArgs", func(t *testing.T) {

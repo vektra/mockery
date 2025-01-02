@@ -1,4 +1,4 @@
-package index_list_expr_test
+package index_list_expr
 
 import (
 	"testing"

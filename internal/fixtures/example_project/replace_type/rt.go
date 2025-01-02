@@ -1,8 +1,8 @@
 package replace_type
 
 import (
-	"github.com/vektra/mockery/v3/pkg/fixtures/example_project/replace_type/rti/rt1"
-	"github.com/vektra/mockery/v3/pkg/fixtures/example_project/replace_type/rti/rt2"
+	"github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type/rti/rt1"
+	"github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type/rti/rt2"
 )
 
 type RType interface {

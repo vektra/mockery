@@ -1,4 +1,4 @@
-package iface_new_type_test
+package iface_new_type
 
 import (
 	"testing"

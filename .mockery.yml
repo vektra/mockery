@@ -1,34 +1,20 @@
 template: "mockery"
-mockname: "{{.InterfaceName}}"
-filename: "{{.MockName}}_mock.go"
-pkgname: mocks
 tags: "custom2"
 formatter: "noop"
-_anchors: &inpackage_config
-  all: True
-  dir: "{{.InterfaceDir}}"
-  mockname: "Mock{{.InterfaceName}}"
-  pkgname: "{{.SrcPackageName}}_test"
-  filename: "mock_{{.InterfaceName | snakecase }}_test.go"
+all: True
+dir: "{{.InterfaceDir}}"
+mockname: "Mock{{.InterfaceName}}"
+pkgname: "{{.SrcPackageName}}"
+filename: "mocks_test.go"
 packages:
   github.com/vektra/mockery/v3/internal/fixtures/buildtag/comment:
-    config:
-      mock-build-tags: "custom3 && (!windows || !darwin || !freebsd)"
-    interfaces:
-      IfaceWithCustomBuildTagInComment:
   github.com/vektra/mockery/v3/pkg:
+    config:
+      all: False
     interfaces:
       TypesPackage:
   github.com/vektra/mockery/v3/internal/fixtures:
-    config:
-      all: True
-      dir: "{{.InterfaceDir}}"
-      filename: "mocks.go"
-      pkgname: "test"
-      mockname: "Mock{{.InterfaceName}}"
     interfaces:
-      Requester:
-      RequesterArgSameAsNamedImport:
       RequesterVariadic:
         configs:
           - mockname: MockRequesterVariadicOneArgument
@@ -45,52 +31,15 @@ packages:
           - mockname: MockExpecter
             template-data:
               unroll-variadic: True
-      RequesterReturnElided:
       VariadicNoReturnInterface:
         config:
           template-data:
             unroll-variadic: False
   github.com/vektra/mockery/v3/internal/fixtures/recursive_generation:
-    config:
-      recursive: True
-      all: True
-      dir: "{{.InterfaceDir}}"
-      filename: "{{.InterfaceName}}_mock.go"
-      mockname: "Mock{{.InterfaceName}}"
-      pkgname: "{{.SrcPackageName}}"
   github.com/vektra/mockery/v3/internal/fixtures/empty_return:
-    config:
-      all: True
-      dir: "{{.InterfaceDir}}"
-      mockname: "{{.InterfaceName}}Mock"
-      pkgname: "{{.SrcPackageName}}"
-      filename: "mock_{{.InterfaceName}}_test.go"
   github.com/vektra/mockery/v3/internal/fixtures/method_args/same_name_arg_and_type:
-    config:
-      all: True
-      dir: "{{.InterfaceDir}}"
-      mockname: "{{.InterfaceName}}Mock"
-      pkgname: "{{.SrcPackageName}}"
-      filename: "mock_{{.InterfaceName}}_test.go"
   github.com/vektra/mockery/v3/internal/fixtures/iface_typed_param:
-    config: *inpackage_config
   github.com/vektra/mockery/v3/internal/fixtures/example_project:
-    config: *inpackage_config
   github.com/vektra/mockery/v3/internal/fixtures/index_list_expr:
-    config: *inpackage_config
   github.com/vektra/mockery/v3/internal/fixtures/iface_new_type:
-    config: *inpackage_config
-  github.com/vektra/mockery/v3/internal/fixtures/issue845:
-    config:
-      <<: *inpackage_config
-      filename: "mock_{{.MockName}}_test.go"
-    interfaces:
-      Interface:
-        configs:
-          - mockname: WithFix
   github.com/vektra/mockery/v3/internal/fixtures/type_alias:
-    config:
-      all: True
-      dir: "{{.InterfaceDir}}"
-      filename: "mock_{{.MockName}}_test.go"
-      pkgname: "{{.SrcPackageName}}_test"

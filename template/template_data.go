@@ -8,6 +8,18 @@ import (
 	"github.com/vektra/mockery/v3/registry"
 )
 
+type ConfigData struct {
+	ConfigDir            string
+	InterfaceDir         string
+	InterfaceDirRelative string
+	InterfaceFile        string
+	InterfaceName        string
+	Mock                 string
+	MockName             string
+	SrcPackageName       string
+	SrcPackagePath       string
+}
+
 // Data is the template data used to render the Moq template.
 type Data struct {
 	Boilerplate     string
@@ -16,9 +28,6 @@ type Data struct {
 	SrcPkgQualifier string
 	Imports         []*registry.Package
 	Mocks           []MockData
-	StubImpl        bool
-	SkipEnsure      bool
-	WithResets      bool
 	TemplateData    map[string]any
 }
 

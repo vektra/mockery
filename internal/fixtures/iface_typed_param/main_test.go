@@ -1,4 +1,4 @@
-package iface_typed_param_test
+package iface_typed_param
 
 import (
 	"bufio"

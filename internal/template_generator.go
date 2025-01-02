@@ -191,7 +191,7 @@ func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func) 
 		}
 
 		params[j] = template.ParamData{
-			Var:      methodScope.AddVar(ctx, param, ""),
+			Var:      methodScope.AddVar(param, ""),
 			Variadic: signature.Variadic() && j == signature.Params().Len()-1,
 		}
 	}
@@ -200,7 +200,7 @@ func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func) 
 	for j := 0; j < signature.Results().Len(); j++ {
 		param := signature.Results().At(j)
 		returns[j] = template.ParamData{
-			Var:      methodScope.AddVar(ctx, param, ""),
+			Var:      methodScope.AddVar(param, ""),
 			Variadic: false,
 		}
 	}
@@ -241,7 +241,7 @@ func (g *TemplateGenerator) typeParams(ctx context.Context, tparams *types.TypeP
 		tp := tparams.At(i)
 		typeParam := types.NewParam(token.Pos(i), tp.Obj().Pkg(), tp.Obj().Name(), tp.Constraint())
 		tpd[i] = template.TypeParamData{
-			ParamData:  template.ParamData{Var: scope.AddVar(ctx, typeParam, "")},
+			ParamData:  template.ParamData{Var: scope.AddVar(typeParam, "")},
 			Constraint: explicitConstraintType(typeParam),
 		}
 	}

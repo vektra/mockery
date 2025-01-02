@@ -797,17 +797,7 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 		interfaceDirRelative = interfaceDirRelativePath.String()
 	}
 	// data is the struct sent to the template parser
-	data := struct {
-		ConfigDir            string
-		InterfaceDir         string
-		InterfaceDirRelative string
-		InterfaceFile        string
-		InterfaceName        string
-		Mock                 string
-		MockName             string
-		SrcPackageName       string
-		SrcPackagePath       string
-	}{
+	data := mockeryTemplate.ConfigData{
 		ConfigDir:            filepath.Dir(c.Config),
 		InterfaceDir:         interfaceDir,
 		InterfaceDirRelative: interfaceDirRelative,
