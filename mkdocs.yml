@@ -62,10 +62,11 @@ nav:
     - Configuration: configuration.md
     - Templates: templates.md
     - Running: running.md
-    - Examples: examples.md
-  - Features: features.md
+  - Templates:
+    - template-mockery.md
+    - template-moq.md
   - Notes:
-    - FAQ: notes.md
+    - FAQ: faq.md
 
 extra_css:
   - stylesheets/extra.css
