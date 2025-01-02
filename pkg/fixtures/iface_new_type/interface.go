@@ -9,4 +9,5 @@ type Interface1 interface {
 type (
 	Interface2 Interface1
 	Interface3 subpkg.SubPkgInterface
+	Interface4 = subpkg.SubPkgInterface
 )
