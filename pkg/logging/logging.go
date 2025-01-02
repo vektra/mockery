@@ -73,10 +73,14 @@ func GetLogger(levelStr string) (zerolog.Logger, error) {
 		return zerolog.Logger{}, stackerr.NewStackErrf(err, "Couldn't parse log level")
 	}
 	out := os.Stderr
+	// This is essentially RFC3339Nano, but we don't truncate trailing zeros so
+	// that the log fields are somewhat aligned.
+	timeFormat := "2006-01-02T15:04:05.000000000Z07:00"
 	writer := zerolog.ConsoleWriter{
 		Out:        out,
-		TimeFormat: time.RFC822,
+		TimeFormat: timeFormat,
 	}
+	zerolog.TimeFieldFormat = timeFormat
 	if !term.IsTerminal(int(out.Fd())) || os.Getenv("TERM") == "dumb" { //nolint:gosec
 		writer.NoColor = true
 	}

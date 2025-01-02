@@ -226,11 +226,13 @@ func (r *RootApp) Run() error {
 	}
 	parser := pkg.NewParser(buildTags)
 
+	log.Info().Msg("Parsing configured packages...")
 	interfaces, err := parser.ParsePackages(ctx, configuredPackages)
 	if err != nil {
 		log.Error().Err(err).Msg("unable to parse packages")
 		return err
 	}
+	log.Info().Msg("Done parsing configured packages.")
 	// maps the following:
 	// outputFilePath|fullyQualifiedInterfaceName|[]*pkg.Interface
 	// The reason why we need an interior map of fully qualified interface name
@@ -256,7 +258,7 @@ func (r *RootApp) Run() error {
 			ifaceLog.Debug().Msg("config doesn't specify to generate this interface, skipping.")
 			continue
 		}
-		ifaceLog.Debug().Msg("config specifies to generate this interface")
+		ifaceLog.Info().Msg("Adding interface")
 		ifaceConfigs, err := r.Config.GetInterfaceConfig(ctx, iface.Pkg.PkgPath, iface.Name)
 		if err != nil {
 			return err
@@ -311,15 +313,18 @@ func (r *RootApp) Run() error {
 		if err != nil {
 			return err
 		}
+		fileLog.Info().Msg("Executing template")
 		templateBytes, err := generator.Generate(fileCtx, interfacesInFile.interfaces)
 		if err != nil {
 			return err
 		}
+
 		outFile := pathlib.NewPath(outFilePath)
 		if err := outFile.Parent().MkdirAll(); err != nil {
 			log.Err(err).Msg("failed to mkdir parent directories of mock file")
 			return stackerr.NewStackErr(err)
 		}
+		fileLog.Info().Msg("Writing template to file")
 		if err := outFile.WriteFile(templateBytes); err != nil {
 			return stackerr.NewStackErr(err)
 		}
