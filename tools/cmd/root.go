@@ -42,7 +42,7 @@ func NewRootCmd() *cobra.Command {
 	}
 
 	logger = zerolog.New(zerolog.ConsoleWriter{
-		Out: os.Stdout,
+		Out: os.Stderr,
 	}).Hook(timestampHook{})
 
 	subCommands := []func(v *viper.Viper) (*cobra.Command, error){
@@ -64,8 +64,8 @@ func printStack(err error) {
 	}
 	newErr, ok := err.(*errors.Error)
 	if ok {
-		fmt.Printf("%v\n", newErr.ErrorStack())
+		fmt.Fprintf(os.Stderr, "%v\n", newErr.ErrorStack())
 	} else {
-		fmt.Printf("%v\n", err)
+		fmt.Fprintf(os.Stderr, "%v\n", err)
 	}
 }

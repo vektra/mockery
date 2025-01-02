@@ -38,7 +38,11 @@ jobs:
         id: tag
         run: |
           set +e
-          task -x tag
+          task -x tag 2>versions.txt
+
+          echo "requested_version=$(cut -d',' -f 1 versions.txt)" >> $GITHUB_OUTPUT
+          echo "previous_version=$(cut -d',' -f 2 versions.txt)" >> $GITHUB_OUTPUT
+
           tag_result="$?"
           echo "tag_result=$tag_result" >> $GITHUB_OUTPUT
           # The range between 8 and 63 inclusive is reserved for custom
@@ -88,3 +92,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GORELEASER_GITHUB_TOKEN }}
           HOMEBREW_TAP_TOKEN: ${{ secrets.GORELEASER_HOMEBREW_TAP_TOKEN }}
+          GORELEASER_CURRENT_TAG: ${{ needs.tag.outputs.requested_version }}
+          GORELEASER_PREVIOUS_TAG: ${{ needs.tag.outputs.previous_version }}
