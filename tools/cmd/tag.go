@@ -32,7 +32,11 @@ func NewTagCmd(v *viper.Viper) (*cobra.Command, error) {
 				printStack(err)
 				os.Exit(1)
 			}
-			if err := tagger.Tag(); err != nil {
+			requestedVersion, previousVersion, err := tagger.Tag()
+			if requestedVersion != nil && previousVersion != nil {
+				fmt.Fprintf(os.Stdout, "v%s,v%s", requestedVersion.String(), previousVersion.String())
+			}
+			if err != nil {
 				if errors.Is(ErrNoNewVersion, err) {
 					os.Exit(EXIT_CODE_NO_NEW_VERSION)
 				}
@@ -61,6 +65,9 @@ func (t *Tagger) createTag(repo *git.Repository, version string) error {
 	}
 	majorVersion := strings.Split(version, ".")[0]
 	for _, v := range []string{version, majorVersion} {
+		if err := repo.DeleteTag(v); err != nil {
+			logger.Info().Err(err).Str("tag", v).Msg("failed to delete tag, but probably not an issue.")
+		}
 		_, err = repo.CreateTag(v, hash.Hash(), &git.CreateTagOptions{
 			Tagger: &object.Signature{
 				Name:  "Landon Clipp",
@@ -113,6 +120,11 @@ func (t *Tagger) largestTagSemver(repo *git.Repository, major uint64) (*semver.V
 		} else {
 			versionString = tag.Name
 		}
+		versionParts := strings.Split(versionString, ".")
+		if len(versionParts) < 3 {
+			// This is not a full version tag, so ignore it
+			return nil
+		}
 
 		version, err := semver.NewVersion(versionString)
 		if err != nil {
@@ -147,59 +159,55 @@ type Tagger struct {
 	Version string `mapstructure:"version" validate:"required"`
 }
 
-func (t *Tagger) Tag() error {
+func (t *Tagger) Tag() (requestedVersion *semver.Version, previousVersion *semver.Version, err error) {
 	repo, err := git.PlainOpen(".")
 	if err != nil {
-		return errors.New(err)
+		return nil, nil, errors.New(err)
 	}
 
-	requestedVersion, err := semver.NewVersion(t.Version)
+	requestedVersion, err = semver.NewVersion(t.Version)
 	if err != nil {
 		logger.Err(err).Str("requested-version", string(t.Version)).Msg("error when constructing semver from version config")
-		return errors.New(err)
+		return requestedVersion, nil, errors.New(err)
 	}
 
-	largestTag, err := t.largestTagSemver(repo, requestedVersion.Major())
+	previousVersion, err = t.largestTagSemver(repo, requestedVersion.Major())
 	if err != nil {
-		return err
-	}
-	taggedVersion, err := semver.NewVersion(largestTag.String())
-	if err != nil {
-		return errors.New(err)
+		return requestedVersion, previousVersion, err
 	}
 	logger := logger.With().
-		Stringer("tagged-version", taggedVersion).Logger()
+		Stringer("previous-version", previousVersion).Logger()
 
 	logger.Info().Msg("found largest semver tag")
 
 	logger = logger.With().
 		Stringer("requested-version", requestedVersion).
 		Logger()
-	if !requestedVersion.GreaterThan(taggedVersion) {
+	if !requestedVersion.GreaterThan(previousVersion) {
 		logger.Info().
 			Msg("VERSION is not greater than latest git tag, nothing to do.")
-		return ErrNoNewVersion
+		return requestedVersion, previousVersion, ErrNoNewVersion
 	}
 
 	worktree, err := repo.Worktree()
 	if err != nil {
-		return errors.New(err)
+		return requestedVersion, previousVersion, errors.New(err)
 	}
 
 	status, err := worktree.Status()
 	if err != nil {
-		return errors.New(err)
+		return requestedVersion, previousVersion, errors.New(err)
 	}
 	if !status.IsClean() {
 		logger.Error().Msg("git is in a dirty state, can't tag.")
 		fmt.Println(status.String())
-		return errors.New("dirty git state")
+		return requestedVersion, previousVersion, errors.New("dirty git state")
 	}
 
 	if err := t.createTag(repo, fmt.Sprintf("v%s", requestedVersion.String())); err != nil {
-		return err
+		return requestedVersion, previousVersion, err
 	}
 	logger.Info().Msg("created new tag. Push to origin still required.")
 
-	return nil
+	return requestedVersion, previousVersion, nil
 }

@@ -96,4 +96,4 @@ tasks:
   tag.push:
     desc: Push tags to origin
     cmds:
-    - git push origin --tags
+    - git push origin --tags --force
