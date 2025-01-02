@@ -65,6 +65,9 @@ func (t *Tagger) createTag(repo *git.Repository, version string) error {
 	}
 	majorVersion := strings.Split(version, ".")[0]
 	for _, v := range []string{version, majorVersion} {
+		if err := repo.DeleteTag(v); err != nil {
+			logger.Warn().Err(err).Msg("failed to delete tag, might be okay.")
+		}
 		_, err = repo.CreateTag(v, hash.Hash(), &git.CreateTagOptions{
 			Tagger: &object.Signature{
 				Name:  "Landon Clipp",
