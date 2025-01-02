@@ -594,19 +594,6 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#legacy-config-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Legacy config options
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -927,19 +914,6 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#legacy-config-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Legacy config options
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -974,7 +948,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 
 
 <h1 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h1>
-<p>mockery uses <a href="https://github.com/spf13/viper">spf13/viper</a> under the hood for its configuration parsing. </p>
+<p>mockery uses <a href="https://github.com/spf13/viper">spf13/viper</a> under the hood for its configuration parsing.</p>
 <h2 id="merging-precedence">Merging Precedence<a class="headerlink" href="#merging-precedence" title="Permanent link">&para;</a></h2>
 <p>The configuration applied to a specific mocked interface is merged according to the following precedence (in decreasing priority):</p>
 <ol>
@@ -985,7 +959,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <li>Top-level defaults in <code>.mockery.yaml</code></li>
 </ol>
 <h2 id="formatting">Formatting<a class="headerlink" href="#formatting" title="Permanent link">&para;</a></h2>
-<p>If a parameter is named <code>with-expecter</code> and we want a value of <code>True</code>, then these are the formats for each source:</p>
+<p>If a parameter is named <code>enable-feature</code> and we want a value of <code>True</code>, then these are the formats for each source:</p>
 <table>
 <thead>
 <tr>
@@ -996,30 +970,29 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <tbody>
 <tr>
 <td>command line</td>
-<td><code>--with-expecter=true</code></td>
+<td><code>--enable-feature=true</code></td>
 </tr>
 <tr>
 <td>Environment variable</td>
-<td><code>MOCKERY_WITH_EXPECTER=True</code></td>
+<td><code>MOCKERY_ENABLE_FEATURE=True</code></td>
 </tr>
 <tr>
 <td>yaml</td>
-<td><code>with-expecter: True</code></td>
+<td><code>enable-feature: True</code></td>
 </tr>
 </tbody>
 </table>
 <h2 id="recommended-basic-config">Recommended Basic Config<a class="headerlink" href="#recommended-basic-config" title="Permanent link">&para;</a></h2>
 <p>Copy the recommended basic configuration to a file called <code>.mockery.yaml</code> at the top-level of your repo:</p>
-<div class="highlight"><span class="filename">.mockery.yaml</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">with-expecter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">packages</span><span class="p">:</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">github.com/your-org/your-go-project</span><span class="p">:</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">        </span><span class="c1"># place your package-specific config here</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">        </span><span class="nt">config</span><span class="p">:</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">        </span><span class="nt">interfaces</span><span class="p">:</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">            </span><span class="c1"># select the interfaces you want mocked</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">            </span><span class="nt">Foo</span><span class="p">:</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">                </span><span class="c1"># Modify package-level config for this specific interface (if applicable)</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">                </span><span class="nt">config</span><span class="p">:</span>
+<div class="highlight"><span class="filename">.mockery.yaml</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">packages</span><span class="p">:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">github.com/your-org/your-go-project</span><span class="p">:</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">        </span><span class="c1"># place your package-specific config here</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">        </span><span class="nt">config</span><span class="p">:</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">        </span><span class="nt">interfaces</span><span class="p">:</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">            </span><span class="c1"># select the interfaces you want mocked</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">            </span><span class="nt">Foo</span><span class="p">:</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">                </span><span class="c1"># Modify package-level config for this specific interface (if applicable)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">                </span><span class="nt">config</span><span class="p">:</span>
 </code></pre></div>
 <p>mockery will search upwards from your current-working-directory up to the root path, so the same configuration should be able to follow you within your project.</p>
 <p>See the <a href="../features/#examples"><code>features</code> section</a> for more details on how the config is structured.</p>
@@ -1047,6 +1020,12 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <td>Generate all interfaces for the specified packages.</td>
 </tr>
 <tr>
+<td><code>_anchors</code></td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
+<td><code class="highlight"><span class="p p-Indicator">{}</span></code></td>
+<td>Unused by mockery, but allowed in the config schema so that you may define arbitrary yaml anchors.</td>
+</tr>
+<tr>
 <td><code>boilerplate-file</code></td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
 <td><code class="highlight"><span class="s">&quot;&quot;</span></code></td>
@@ -1061,32 +1040,8 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <tr>
 <td><code>dir</code></td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7l233.4-233.3c12.5-12.5 32.8-12.5 45.3 0z"/></svg></span></td>
-<td><code class="highlight"><span class="s">&quot;mocks/{{.PackagePath}}&quot;</span></code></td>
+<td><code class="highlight"><span class="s">&quot;mocks/{{.SrcPackagePath}}&quot;</span></code></td>
 <td>The directory where the mock file will be outputted to.</td>
-</tr>
-<tr>
-<td><code>disable-config-search</code></td>
-<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
-<td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">false</span></code></td>
-<td>Disable searching for configuration files</td>
-</tr>
-<tr>
-<td><code>disable-func-mocks</code></td>
-<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
-<td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">false</span></code></td>
-<td>Disable generation of function mocks.</td>
-</tr>
-<tr>
-<td><code>disable-version-string</code></td>
-<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
-<td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">false</span></code></td>
-<td>Disable the version string in the generated mock files.</td>
-</tr>
-<tr>
-<td><code>dry-run</code></td>
-<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
-<td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">false</span></code></td>
-<td>Print the actions that would be taken, but don't perform the actions.</td>
 </tr>
 <tr>
 <td><code>exclude</code></td>
@@ -1107,22 +1062,16 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <td>The name of the file the mock will reside in.</td>
 </tr>
 <tr>
-<td><code>include-auto-generated</code></td>
+<td><code>formatter</code></td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
-<td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">true</span></code></td>
-<td>Set to <code class="highlight"><span class="l l-Scalar l-Scalar-Plain">false</span></code> if you need mockery to skip auto-generated files during its recursive package discovery. When set to <code class="highlight"><span class="l l-Scalar l-Scalar-Plain">true</span></code>, mockery includes auto-generated files when determining if a particular directory is an importable package.</td>
+<td><code class="highlight"><span class="s">&quot;goimports&quot;</span><span class="w">                   </span><span class="nt">| The formatter to use on the rendered template. Choices are</span><span class="p">:</span></code>gofmt<code>,</code>goimports<code>,</code>noop`.</td>
+<td></td>
 </tr>
 <tr>
 <td><code>include-regex</code></td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
 <td><code class="highlight"><span class="s">&quot;&quot;</span></code></td>
 <td>When set, only interface names that match the expression will be generated. This setting is ignored if <code>all: True</code> is specified in the configuration. To further refine the interfaces generated, use <code>exclude-regex</code>.</td>
-</tr>
-<tr>
-<td><code>inpackage</code></td>
-<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
-<td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">false</span></code></td>
-<td>When generating mocks alongside the original interfaces, you must specify <code>inpackage: True</code> to inform mockery that the mock is being placed in the same package as the original interface.</td>
 </tr>
 <tr>
 <td><code>log-level</code></td>
@@ -1155,6 +1104,12 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <td>A dictionary containing configuration describing the packages and interfaces to generate mocks for.</td>
 </tr>
 <tr>
+<td><code>pkgname</code></td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7l233.4-233.3c12.5-12.5 32.8-12.5 45.3 0z"/></svg></span></td>
+<td><code class="highlight"><span class="s">&quot;{{.SrcPackageName}}&quot;</span><span class="w">         </span><span class="p p-Indicator">|</span><span class="err"> The</span></code>#!go package name` given to the generated mock files.</td>
+<td></td>
+</tr>
+<tr>
 <td><code>print</code></td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
 <td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">false</span></code></td>
@@ -1179,10 +1134,16 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <td>A space-separated list of additional build tags to load packages.</td>
 </tr>
 <tr>
-<td><a href="../features/#expecter-structs"><code>with-expecter</code></a></td>
+<td><code>template</code></td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
-<td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">true</span></code></td>
-<td>Use <code>with-expecter: True</code> to generate <code>EXPECT()</code> methods for your mocks. This is the preferred way to set up your mocks.</td>
+<td><code class="highlight"><span class="s">&quot;&quot;</span></code></td>
+<td>The template to use. The choices are <code>moq</code>, <code>mockery</code>, or a file path provided by <code>file://path/to/file.txt</code>.</td>
+</tr>
+<tr>
+<td><code>template-data</code></td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
+<td><code class="highlight"><span class="p p-Indicator">{}</span></code></td>
+<td>A <code>map[string]any</code> that provides arbitrary options to the template. Each template will have a different set of accepted keys. Refer to each template's documentation for more details.</td>
 </tr>
 </tbody>
 </table>
@@ -1301,7 +1262,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 </div>
 </div>
 <h2 id="templated-strings">Templated Strings<a class="headerlink" href="#templated-strings" title="Permanent link">&para;</a></h2>
-<p>mockery configuration makes use of the Go templating system. </p>
+<p>mockery configuration makes use of the Go templating system.</p>
 <h3 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">&para;</a></h3>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -1409,85 +1370,6 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <li><a href="https://pkg.go.dev/os#ExpandEnv"><code>expandEnv</code> string</a></li>
 <li><a href="https://pkg.go.dev/os#Getenv"><code>getenv</code> string</a></li>
 </ul>
-<h2 id="legacy-config-options">Legacy config options<a class="headerlink" href="#legacy-config-options" title="Permanent link">&para;</a></h2>
-<details class="danger">
-<summary>legacy configuration options</summary>
-<p>The legacy config options will be removed in v3 and are deprecated (but supported) in v2.</p>
-<table>
-<thead>
-<tr>
-<th>name</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>all</code></td>
-<td>It's common for a big package to have a lot of interfaces, so mockery provides <code>all</code>. This option will tell mockery to scan all files under the directory named by <code>--dir</code> ("." by default) and generates mocks for any interfaces it finds. This option implies <code>recursive: True</code>.</td>
-</tr>
-<tr>
-<td><code>boilerplate-file</code></td>
-<td>Specify a path to a file that contains comments you want displayed at the top of all generated mock files. This is commonly used to display license headers at the top of your source code.</td>
-</tr>
-<tr>
-<td><code>case</code></td>
-<td>mockery generates files using the casing of the original interface name.  This can be modified by specifying <code>case: underscore</code> to format the generated file name using underscore casing.</td>
-</tr>
-<tr>
-<td><code>exclude</code></td>
-<td>This parameter is a list of strings representing path prefixes that should be excluded from mock generation.</td>
-</tr>
-<tr>
-<td><code>exported</code></td>
-<td>Use <code>exported: True</code> to generate public mocks for private interfaces.</td>
-</tr>
-<tr>
-<td><code>filename</code></td>
-<td>Use the <code>filename</code> and <code>structname</code> to override the default generated file and struct name. These options are only compatible with non-regular expressions in <code>name</code>, where only one mock is generated.</td>
-</tr>
-<tr>
-<td><code>inpackage-suffix</code></td>
-<td>When <code>inpackage-suffix</code> is set to <code>True</code>, mock files are suffixed with <code>_mock</code> instead of being prefixed with <code>mock_</code> for InPackage mocks</td>
-</tr>
-<tr>
-<td><code>inpackage</code> and <code>keeptree</code></td>
-<td>For some complex repositories, there could be multiple interfaces with the same name but in different packages. In that case, <code>inpackage</code> allows generating the mocked interfaces directly in the package that it mocks. In the case you don't want to generate the mocks into the package but want to keep a similar structure, use the option <code>keeptree</code>.</td>
-</tr>
-<tr>
-<td><code>name</code></td>
-<td>The <code>name</code> option takes either the name or matching regular expression of the interface to generate mock(s) for.</td>
-</tr>
-<tr>
-<td><code>output</code></td>
-<td>mockery always generates files with the package <code>mocks</code> to keep things clean and simple. You can control which mocks directory is used by using <code>output</code>, which defaults to <code>./mocks</code>.</td>
-</tr>
-<tr>
-<td><code>outpkg</code></td>
-<td>Use <code>outpkg</code> to specify the package name of the generated mocks.</td>
-</tr>
-<tr>
-<td><code>print</code></td>
-<td>Use <code>print: True</code> to have the resulting code printed out instead of written to disk.</td>
-</tr>
-<tr>
-<td><code>recursive</code></td>
-<td>Use the <code>recursive</code> option to search subdirectories for the interface(s). This option is only compatible with <code>name</code>. The <code>all</code> option implies <code>recursive: True</code>.</td>
-</tr>
-<tr>
-<td><code>replace-type source=destination</code></td>
-<td>Replaces aliases, packages and/or types during generation.</td>
-</tr>
-<tr>
-<td><code>testonly</code></td>
-<td>Prepend every mock file with <code>_test.go</code>. This is useful in cases where you are generating mocks <code>inpackage</code> but don't want the mocks to be visible to code outside of tests.</td>
-</tr>
-<tr>
-<td><code>with-expecter</code></td>
-<td>Use <code>with-expecter: True</code> to generate <code>EXPECT()</code> methods for your mocks. This is the prefervar(--md-code-hl-number-color) way to setup your mocks.</td>
-</tr>
-</tbody>
-</table>
-</details>
 
 
 
