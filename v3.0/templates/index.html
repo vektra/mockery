@@ -624,6 +624,33 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#mockeryyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          <code>.mockery.yml</code>
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=".mockery.yml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Functions
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#variables" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -636,8 +663,27 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+        
           <li class="md-nav__item">
-  <a href="#functions" class="md-nav__link">
+  <a href="#template-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Template Files
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Template Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#functions_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
@@ -646,6 +692,24 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variables_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Variables
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -975,6 +1039,33 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#mockeryyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          <code>.mockery.yml</code>
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=".mockery.yml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Functions
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#variables" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -987,8 +1078,27 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+        
           <li class="md-nav__item">
-  <a href="#functions" class="md-nav__link">
+  <a href="#template-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Template Files
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Template Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#functions_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
@@ -997,6 +1107,24 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variables_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Variables
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1341,123 +1469,27 @@ section below shows what will be rendered for the given interface.</p>
 <td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">bool</span></code></td>
 <td>Return zero values when no mock implementation is provided, do not panic.</td>
 </tr>
+<tr>
+<td><code>with-resets</code></td>
+<td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">bool</span></code></td>
+<td>Generates methods that allow resetting calls made to the mocks.</td>
+</tr>
 </tbody>
 </table>
 <h3 id="template-file"><code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;file://</span></code><a class="headerlink" href="#template-file" title="Permanent link">&para;</a></h3>
 <p>You may also provide mockery a path to your own file using the <code>file://</code> protocol specifier. The string after <code>file://</code> will be the relative or absolute path of your template.</p>
 <h2 id="data-provided-to-templates">Data Provided To Templates<a class="headerlink" href="#data-provided-to-templates" title="Permanent link">&para;</a></h2>
-<div class="admonition warning">
-<p class="admonition-title">Construction</p>
-<p>This section is under construction.</p>
-</div>
-<p>mockery configuration makes use of the Go templating system.</p>
-<h3 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">&para;</a></h3>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Templated variables are only available when using the <code>packages</code> config feature.</p>
-</div>
-<p>Variables that are marked as being templated are capable of using mockery-provided template parameters.</p>
-<table>
-<thead>
-<tr>
-<th>name</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ConfigDir</td>
-<td>The directory path of the config file used. This is used to allow generation of mocks in a directory relative to the <code>.mockery.yaml</code> file, e.g. external interfaces.</td>
-</tr>
-<tr>
-<td>InterfaceDir</td>
-<td>The directory path of the original interface being mocked. This can be used as <br><code class="highlight"><span class="nt">dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{.InterfaceDir}}&quot;</span></code> to place your mocks adjacent to the original interface. This should not be used for external interfaces.</td>
-</tr>
-<tr>
-<td>InterfaceDirRelative</td>
-<td>The directory path of the original interface being mocked, relative to the current working directory. If the path cannot be made relative to the current working directory, this variable will be set equal to <code>PackagePath</code></td>
-</tr>
-<tr>
-<td>InterfaceFile</td>
-<td>The file path of the original interface being mocked. <strong>NOTE:</strong> This option will only write one mock implementation to the output file. If multiple mocks are defined in your original file, only one mock will be written to the output.</td>
-</tr>
-<tr>
-<td>InterfaceName</td>
-<td>The name of the original interface being mocked</td>
-</tr>
-<tr>
-<td>InterfaceNameCamel</td>
-<td>Converts a string <code>interface_name</code> to <code>InterfaceName</code>. <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use <code>{{ .InterfaceName | camelcase }}</code> instead</td>
-</tr>
-<tr>
-<td>InterfaceNameLowerCamel</td>
-<td>Converts <code>InterfaceName</code> to <code>interfaceName</code> . <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use <code>{{ .InterfaceName | camelcase | firstLower }}</code> instead</td>
-</tr>
-<tr>
-<td>InterfaceNameSnake</td>
-<td>Converts <code>InterfaceName</code> to <code>interface_name</code> . <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use <code>{{ .InterfaceName | snakecase }}</code> instead</td>
-</tr>
-<tr>
-<td>InterfaceNameLower</td>
-<td>Converts <code>InterfaceName</code> to <code>interfacename</code> . <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use <code>{{ .InterfaceName | lower }}</code> instead</td>
-</tr>
-<tr>
-<td>Mock</td>
-<td>A string that is <code>Mock</code> if the interface is exported, or <code>mock</code> if it is not exported. Useful when setting the name of your mock to something like: <br><code class="highlight"><span class="nt">mockname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{.Mock}}{{.InterfaceName}}&quot;</span></code><br> This way, the mock name will retain the exported-ness of the original interface.</td>
-</tr>
-<tr>
-<td>MockName</td>
-<td>The name of the mock that will be generated. Note that this is simply the <code>mockname</code> configuration variable</td>
-</tr>
-<tr>
-<td>PackageName</td>
-<td>The name of the package from the original interface</td>
-</tr>
-<tr>
-<td>PackagePath</td>
-<td>The fully qualified package path of the original interface</td>
-</tr>
-</tbody>
-</table>
-<h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Templated functions are only available when using the <code>packages</code> config feature.</p>
-</div>
-<p>Template functions allow you to inspect and manipulate template variables.</p>
-<p>All template functions are calling native Go functions under the hood, so signatures and return values matches the Go functions you are probably already familiar with.</p>
-<p>To learn more about the templating syntax, please <a href="https://pkg.go.dev/text/template">see the Go <code>text/template</code> documentation</a></p>
-<ul>
-<li><a href="https://pkg.go.dev/strings#Contains"><code>contains</code> string substr</a></li>
-<li><a href="https://pkg.go.dev/strings#HasPrefix"><code>hasPrefix</code> string prefix</a></li>
-<li><a href="https://pkg.go.dev/strings#HasSuffix"><code>hasSuffix</code> string suffix</a></li>
-<li><a href="https://pkg.go.dev/strings#Join"><code>join</code> elems sep</a></li>
-<li><a href="https://pkg.go.dev/strings#Replace"><code>replace</code> string old new n</a></li>
-<li><a href="https://pkg.go.dev/strings#ReplaceAll"><code>replaceAll</code> string old new</a></li>
-<li><a href="https://pkg.go.dev/strings#Split"><code>split</code> string sep</a></li>
-<li><a href="https://pkg.go.dev/strings#SplitAfter"><code>splitAfter</code> string sep</a></li>
-<li><a href="https://pkg.go.dev/strings#SplitAfterN"><code>splitAfterN</code> string sep n</a></li>
-<li><a href="https://pkg.go.dev/strings#Trim"><code>trim</code> string cutset</a></li>
-<li><a href="https://pkg.go.dev/strings#TrimLeft"><code>trimLeft</code> string cutset</a></li>
-<li><a href="https://pkg.go.dev/strings#TrimPrefix"><code>trimPrefix</code> string prefix</a></li>
-<li><a href="https://pkg.go.dev/strings#TrimRight"><code>trimRight</code> string cutset</a></li>
-<li><a href="https://pkg.go.dev/strings#TrimSpace"><code>trimSpace</code> string</a></li>
-<li><a href="https://pkg.go.dev/strings#TrimSuffix"><code>trimSuffix</code> string suffix</a></li>
-<li><a href="https://pkg.go.dev/strings#ToLower"><code>lower</code> string</a></li>
-<li><a href="https://pkg.go.dev/strings#ToUpper"><code>upper</code> string</a></li>
-<li><a href="https://pkg.go.dev/github.com/huandu/xstrings#ToCamelCase"><code>camelcase</code> string</a></li>
-<li><a href="https://pkg.go.dev/github.com/huandu/xstrings#ToSnakeCase"><code>snakecase</code> string</a></li>
-<li><a href="https://pkg.go.dev/github.com/huandu/xstrings#ToKebabCase"><code>kebabcase</code> string</a></li>
-<li><a href="https://pkg.go.dev/github.com/huandu/xstrings#FirstRuneToLower"><code>firstLower</code> string</a></li>
-<li><a href="https://pkg.go.dev/github.com/huandu/xstrings#FirstRuneToUpper"><code>firstUpper</code> string</a></li>
-<li><a href="https://pkg.go.dev/regexp#MatchString"><code>matchString</code> pattern</a></li>
-<li><a href="https://pkg.go.dev/regexp#QuoteMeta"><code>quoteMeta</code> string</a></li>
-<li><a href="https://pkg.go.dev/path/filepath#Base"><code>base</code> string</a></li>
-<li><a href="https://pkg.go.dev/path/filepath#Clean"><code>clean</code> string</a></li>
-<li><a href="https://pkg.go.dev/path/filepath#Dir"><code>dir</code> string</a></li>
-<li><a href="https://pkg.go.dev/os#ExpandEnv"><code>expandEnv</code> string</a></li>
-<li><a href="https://pkg.go.dev/os#Getenv"><code>getenv</code> string</a></li>
-</ul>
+<p>Mockery has two separate template instances: one for the <code>.mockery.yml</code> file, and one for the mock templates. Each instance has a different set of variables and functions available to it. All functions are <a href="https://pkg.go.dev/text/template#hdr-Pipelines">pipeline-compatible</a>.</p>
+<h3 id="mockeryyml"><code>.mockery.yml</code><a class="headerlink" href="#mockeryyml" title="Permanent link">&para;</a></h3>
+<h4 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h4>
+<p>As seen in the <a href="../configuration/">configuration</a> section, mockery configuration has template variables and methods available to it. The functions available for use are defined in the <a href="https://pkg.go.dev/github.com/vektra/mockery/v3/template#pkg-variables"><code>StringManipulationFuncs</code></a>.</p>
+<h4 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">&para;</a></h4>
+<p>The variables available are defined in the <a href="https://pkg.go.dev/github.com/vektra/mockery/v3/template#ConfigData"><code>template.ConfigData</code></a> struct.</p>
+<h3 id="template-files">Template Files<a class="headerlink" href="#template-files" title="Permanent link">&para;</a></h3>
+<h4 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h4>
+<p>Template files have both <a href="https://pkg.go.dev/github.com/vektra/mockery/v3/template#pkg-variables"><code>StringManipulationFuncs</code></a> and <a href="https://pkg.go.dev/github.com/vektra/mockery/v3@v3.0.0-alpha.10/template#pkg-variables"><code>TemplateMockFuncs</code></a> available as functions.</p>
+<h4 id="variables_1">Variables<a class="headerlink" href="#variables_1" title="Permanent link">&para;</a></h4>
+<p>The template is supplied with the <a href="https://pkg.go.dev/github.com/vektra/mockery/v3/template#Data"><code>template.Data</code></a> struct. Some attributes return types such as <a href="https://pkg.go.dev/github.com/vektra/mockery/v3@v3.0.0-alpha.10/template#MockData"><code>template.MockData</code></a> and <a href="https://pkg.go.dev/github.com/vektra/mockery/v3/registry#Package"><code>registry.Package</code></a> which themselves contain methods that may also be called.</p>
 
 
 
