@@ -84,3 +84,13 @@ brews:
     folder: Formula
     test: |
         system "#{bin}mockery --version"
+
+release:
+  prerelease: true
+  make_latest: false
+
+git:
+  ignore_tags:
+    - v2
+    - v3
+  prerelease_suffix: "-"

@@ -96,4 +96,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GORELEASER_GITHUB_TOKEN }}
           HOMEBREW_TAP_TOKEN: ${{ secrets.GORELEASER_HOMEBREW_TAP_TOKEN }}
           GORELEASER_CURRENT_TAG: ${{ needs.tag.outputs.requested_version }}
-          GORELEASER_PREVIOUS_TAG: ${{ needs.tag.outputs.previous_version }}
+          #GORELEASER_PREVIOUS_TAG: ${{ needs.tag.outputs.previous_version }}
