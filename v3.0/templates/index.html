@@ -849,6 +849,8 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       
         
       
+        
+      
     
     
       
@@ -906,6 +908,33 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
     
   
     FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../v3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    
+  
+    v3
   
 
     
@@ -1191,6 +1220,12 @@ templates that you can select with the <code class="highlight"><span class="nt">
 </code></pre></div>
 <h3 id="template-file"><code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;file://</span></code><a class="headerlink" href="#template-file" title="Permanent link">&para;</a></h3>
 <p>You may also provide mockery a path to your own file using the <code>file://</code> protocol specifier. The string after <code>file://</code> will be the relative or absolute path of your template.</p>
+<p>The templates are rendered with the data as shown in the <a href="#template-files">section below</a>.</p>
+<p>You can see examples of how the mockery project utilizes the template system to generate the different mock styles:</p>
+<ul>
+<li><a href="https://github.com/vektra/mockery/blob/v3/internal/moq.templ"><code>moq.templ</code></a></li>
+<li><a href="https://github.com/vektra/mockery/blob/v3/internal/mockery.templ"><code>mockery.templ</code></a></li>
+</ul>
 <h2 id="data-provided-to-templates">Data Provided To Templates<a class="headerlink" href="#data-provided-to-templates" title="Permanent link">&para;</a></h2>
 <p>Mockery has two separate template instances: one for the <code>.mockery.yml</code> file, and one for the mock templates. Each instance has a different set of variables and functions available to it. All functions are <a href="https://pkg.go.dev/text/template#hdr-Pipelines">pipeline-compatible</a>.</p>
 <h3 id="mockeryyml"><code>.mockery.yml</code><a class="headerlink" href="#mockeryyml" title="Permanent link">&para;</a></h3>

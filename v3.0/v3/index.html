@@ -10,29 +10,29 @@
       
       
       
-        <link rel="canonical" href="https://vektra.github.io/mockery/latest/">
+        <link rel="canonical" href="https://vektra.github.io/mockery/latest/v3/">
       
       
+        <link rel="prev" href="../faq/">
       
-        <link rel="next" href="installation/">
       
       
         
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49+insiders-4.53.14">
     
     
       
-        <title>mockery</title>
+        <title>v3 - mockery</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.6f50c755.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.6f50c755.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -51,9 +51,9 @@
       
     
     
-      <link rel="stylesheet" href="stylesheets/extra.css">
+      <link rel="stylesheet" href="../stylesheets/extra.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -71,18 +71,18 @@
     
   
 <meta property="og:type" content="website" />
-<meta property="og:title" content="mockery" />
+<meta property="og:title" content="v3 - mockery" />
 <meta property="og:description" content="Create mock implementations of your Golang interfaces using mockery and testify." />
-<meta property="og:image" content="https://vektra.github.io/mockery/latest/assets/images/social/index.png" />
+<meta property="og:image" content="https://vektra.github.io/mockery/latest/assets/images/social/v3.png" />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:url" content="https://vektra.github.io/mockery/latest/" />
+<meta property="og:url" content="https://vektra.github.io/mockery/latest/v3/" />
 <meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:title" content="mockery" />
+<meta property="twitter:title" content="v3 - mockery" />
 <meta property="twitter:description" content="Create mock implementations of your Golang interfaces using mockery and testify." />
-<meta property="twitter:image" content="https://vektra.github.io/mockery/latest/assets/images/social/index.png" />
- <link href="assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+<meta property="twitter:image" content="https://vektra.github.io/mockery/latest/assets/images/social/v3.png" />
+ <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
     html.glightbox-open { overflow: initial; height: 100%; }
     .gslide-title { margin-top: 0px; user-select: text; }
     .gslide-desc { color: #666; user-select: text; }
@@ -91,7 +91,7 @@
     .gdesc-inner { font-size: 0.75rem; }
     body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
     body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
-    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="assets/javascripts/glightbox.min.js"></script></head>
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
   
   
     
@@ -110,7 +110,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#mockery" class="md-skip">
+        <a href="#v3-release" class="md-skip">
           Skip to content
         </a>
       
@@ -128,7 +128,7 @@
   }
 </style>
 mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
-<br><a href="../."><strong>Click here to go to v2.</strong></a>
+<br><a href="../.."><strong>Click here to go to v2.</strong></a>
 
           </div>
           
@@ -147,7 +147,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="mockery" class="md-header__button md-logo" aria-label="mockery" data-md-component="logo">
+    <a href=".." title="mockery" class="md-header__button md-logo" aria-label="mockery" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M400.1 194.8c-10.9 2.8-19.9 4.3-29.1 7.6-7.3 1.9-14.7 3.9-23.2 6.1l-.6.1c-4.2 1.2-4.6 1.3-8.5-3.2-4.7-5.3-8.1-8.7-14.6-11.9-19.7-9.6-38.7-6.8-56.4 4.7-21.2 13.7-32.1 34-31.8 59.2.3 25 17.4 45.5 41.2 48.9 22 2.8 39.8-4.6 53.8-20.5 2.1-2.6 4-5.3 6.1-8.3.8-1 1.5-2.1 2.3-3.3h-60.1c-6.5 0-8.1-4-5.9-9.3 4-9.7 11.5-25.9 15.9-34 .9-1.8 3.1-5.8 6.9-5.8h101.1c4.5-13.4 11.8-26.9 21.6-39.7 22.7-29.9 49.3-45.5 87.2-52 31.8-5.6 61.7-2.5 88.9 15.9 24.6 16.8 39.8 39.6 43.9 69.5 5.3 42.1-6.9 76.3-36.7 105.6-19.7 20.9-44.9 34-73.9 39.9-5.6 1-11.1 1.5-16.5 2-2.9.2-5.7.5-8.5.8-28.3-.6-54.2-8.7-76-27.4-15.3-13.3-25.9-29.6-31.1-48.5-3.7 7.3-8 14.4-14 21.1-21.6 29.6-50.9 48-87.9 52.9-30.6 4.1-58.9-1.8-83.9-20.5-23-17.5-36.1-40.5-39.5-69.2-4.1-34 5.9-65.4 26.4-91.3 22.2-29 51.5-47.4 87.3-53.9 29.3-6.2 57.3-1.9 82.6 15.3 16.5 10.9 28.3 25.8 36.1 43.9 1.9 2.8.6 4.4-3.1 5.3m-351.8 5.6c-1.25 0-1.56-.6-.94-1.6l6.55-8.4c.62-.9 2.18-1.5 3.43-1.5H168.6c1.2 0 1.5.9.9 1.8l-5.3 8.1c-.6 1-2.2 1.9-3.1 1.9zM1.246 229.1c-1.246 0-1.558-.7-.934-1.6l6.543-8.4c.624-.9 2.182-1.6 3.425-1.6H152.4c1.2 0 1.8 1 1.5 1.9l-2.5 7.5c-.3 1.2-1.5 1.9-2.8 1.9zm74.474 26.8c-.62.9-.31 1.8.93 1.8l67.95.3c.9 0 2.2-.9 2.2-2.1l.6-7.5c0-1.3-.6-2.2-1.9-2.2H83.2c-1.25 0-2.49.9-3.12 1.9zm501.48-18c-.2-2.6-.3-4.8-.7-7-5.6-30.8-34-48.3-63.6-41.4-29 6.5-47.7 24.9-54.5 54.2-5.6 24.3 6.2 48.9 28.6 58.9 17.2 7.5 34.3 6.6 50.8-1.9 24.6-13.6 38-32.7 39.6-59.5-.1-1.2-.1-2.3-.2-3.3"/></svg>
@@ -167,7 +167,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              v3
             
           </span>
         </div>
@@ -280,7 +280,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="mockery" class="md-nav__button md-logo" aria-label="mockery" data-md-component="logo">
+    <a href=".." title="mockery" class="md-nav__button md-logo" aria-label="mockery" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M400.1 194.8c-10.9 2.8-19.9 4.3-29.1 7.6-7.3 1.9-14.7 3.9-23.2 6.1l-.6.1c-4.2 1.2-4.6 1.3-8.5-3.2-4.7-5.3-8.1-8.7-14.6-11.9-19.7-9.6-38.7-6.8-56.4 4.7-21.2 13.7-32.1 34-31.8 59.2.3 25 17.4 45.5 41.2 48.9 22 2.8 39.8-4.6 53.8-20.5 2.1-2.6 4-5.3 6.1-8.3.8-1 1.5-2.1 2.3-3.3h-60.1c-6.5 0-8.1-4-5.9-9.3 4-9.7 11.5-25.9 15.9-34 .9-1.8 3.1-5.8 6.9-5.8h101.1c4.5-13.4 11.8-26.9 21.6-39.7 22.7-29.9 49.3-45.5 87.2-52 31.8-5.6 61.7-2.5 88.9 15.9 24.6 16.8 39.8 39.6 43.9 69.5 5.3 42.1-6.9 76.3-36.7 105.6-19.7 20.9-44.9 34-73.9 39.9-5.6 1-11.1 1.5-16.5 2-2.9.2-5.7.5-8.5.8-28.3-.6-54.2-8.7-76-27.4-15.3-13.3-25.9-29.6-31.1-48.5-3.7 7.3-8 14.4-14 21.1-21.6 29.6-50.9 48-87.9 52.9-30.6 4.1-58.9-1.8-83.9-20.5-23-17.5-36.1-40.5-39.5-69.2-4.1-34 5.9-65.4 26.4-91.3 22.2-29 51.5-47.4 87.3-53.9 29.3-6.2 57.3-1.9 82.6 15.3 16.5 10.9 28.3 25.8 36.1 43.9 1.9 2.8.6 4.4-3.1 5.3m-351.8 5.6c-1.25 0-1.56-.6-.94-1.6l6.55-8.4c.62-.9 2.18-1.5 3.43-1.5H168.6c1.2 0 1.5.9.9 1.8l-5.3 8.1c-.6 1-2.2 1.9-3.1 1.9zM1.246 229.1c-1.246 0-1.558-.7-.934-1.6l6.543-8.4c.624-.9 2.182-1.6 3.425-1.6H152.4c1.2 0 1.8 1 1.5 1.9l-2.5 7.5c-.3 1.2-1.5 1.9-2.8 1.9zm74.474 26.8c-.62.9-.31 1.8.93 1.8l67.95.3c.9 0 2.2-.9 2.2-2.1l.6-7.5c0-1.3-.6-2.2-1.9-2.2H83.2c-1.25 0-2.49.9-3.12 1.9zm501.48-18c-.2-2.6-.3-4.8-.7-7-5.6-30.8-34-48.3-63.6-41.4-29 6.5-47.7 24.9-54.5 54.2-5.6 24.3 6.2 48.9 28.6 58.9 17.2 7.5 34.3 6.6 50.8-1.9 24.6-13.6 38-32.7 39.6-59.5-.1-1.2-.1-2.3-.2-3.3"/></svg>
@@ -307,36 +307,10 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -351,65 +325,6 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#why-mockery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Why mockery?
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-use-mockery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Why use mockery?
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#who-uses-mockery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Who uses mockery?
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -481,7 +396,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="installation/" class="md-nav__link">
+      <a href="../installation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -508,7 +423,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="configuration/" class="md-nav__link">
+      <a href="../configuration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -535,7 +450,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="templates/" class="md-nav__link">
+      <a href="../templates/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -562,7 +477,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="running/" class="md-nav__link">
+      <a href="../running/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -652,7 +567,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="template-mockery/" class="md-nav__link">
+      <a href="../template-mockery/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -679,7 +594,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="template-moq/" class="md-nav__link">
+      <a href="../template-moq/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -710,8 +625,10 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       
   
   
+    
   
   
+  
     
     
       
@@ -727,11 +644,11 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
@@ -751,7 +668,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -769,7 +686,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="faq/" class="md-nav__link">
+      <a href="../faq/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -793,10 +710,36 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="v3/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    
+  
+    v3
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -811,6 +754,39 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#v2-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          v2 Migration
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -850,37 +826,11 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#why-mockery" class="md-nav__link">
+  <a href="#v2-migration" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          Why mockery?
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-use-mockery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Why use mockery?
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#who-uses-mockery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Who uses mockery?
+          v2 Migration
         </span>
       
     </span>
@@ -905,7 +855,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 
 
   
-    <a href="https://github.com/vektra/mockery/edit/master/docs/index.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/vektra/mockery/edit/master/docs/v3.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -914,127 +864,25 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
     
       
     
-    <a href="https://github.com/vektra/mockery/raw/master/docs/index.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/vektra/mockery/raw/master/docs/v3.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
     </a>
   
 
 
-<h1 id="mockery">mockery<a class="headerlink" href="#mockery" title="Permanent link">&para;</a></h1>
-<div class="admonition danger">
-<p class="admonition-title">Alpha Test</p>
-<p>Mockery <code>v3</code> is currently in alpha and should not be used for production.</p>
-</div>
-<p>Mockery is a project that creates mock implementations of Golang interfaces. It inspects source code and generates implementations of the interface that aid in testing.</p>
-<p>In addition to providing a number of different styles of mocks, mockery also allows users to provide their own template files that will then be rendered using a set of template data, methods, and functions that provide comprehensive typing information about the Go interface in question.</p>
-<p><a class="glightbox" href="assets/images/demo.gif" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="assets/images/demo.gif" /></a>
-<a class="glightbox" href="assets/images/MockScreenshot.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="assets/images/MockScreenshot.png" /></a></p>
-<h2 id="why-mockery">Why mockery?<a class="headerlink" href="#why-mockery" title="Permanent link">&para;</a></h2>
-<p>When you have an interface like this:</p>
-<div class="highlight"><span class="filename">db.go</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">type</span><span class="w"> </span><span class="nx">DB</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nx">Get</span><span class="p">(</span><span class="nx">val</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">string</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">}</span>
-</code></pre></div>
-<p>and a function that takes this interface:</p>
-<div class="highlight"><span class="filename">db_getter.go</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">func</span><span class="w"> </span><span class="nx">getFromDB</span><span class="p">(</span><span class="nx">db</span><span class="w"> </span><span class="nx">DB</span><span class="p">)</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;ice cream&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">}</span>
-</code></pre></div>
-<p>We can use simple configuration to generate a mock implementation for the interface:</p>
-<div class="highlight"><span class="filename">.mockery.yaml</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">packages</span><span class="p">:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">github.com/org/repo</span><span class="p">:</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">        </span><span class="nt">interfaces</span><span class="p">:</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">            </span><span class="nt">DB</span><span class="p">:</span>
-</code></pre></div>
-<div class="result">
-<div class="highlight"><span class="filename">Bash</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>$<span class="w"> </span>mockery
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="m">05</span><span class="w"> </span>Mar<span class="w"> </span><span class="m">23</span><span class="w"> </span><span class="m">21</span>:49<span class="w"> </span>CST<span class="w"> </span>INF<span class="w"> </span>Starting<span class="w"> </span>mockery<span class="w"> </span>dry-run<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="nv">version</span><span class="o">=</span>v3.0.0
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="m">05</span><span class="w"> </span>Mar<span class="w"> </span><span class="m">23</span><span class="w"> </span><span class="m">21</span>:49<span class="w"> </span>CST<span class="w"> </span>INF<span class="w"> </span>Using<span class="w"> </span>config:<span class="w"> </span>.mockery.yaml<span class="w"> </span>dry-run<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="nv">version</span><span class="o">=</span>v3.0.0
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="m">05</span><span class="w"> </span>Mar<span class="w"> </span><span class="m">23</span><span class="w"> </span><span class="m">21</span>:49<span class="w"> </span>CST<span class="w"> </span>INF<span class="w"> </span>Generating<span class="w"> </span>mock<span class="w"> </span>dry-run<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="nv">interface</span><span class="o">=</span>DB<span class="w"> </span>qualified-name<span class="o">=</span>github.com/org/repo<span class="w"> </span><span class="nv">version</span><span class="o">=</span>v3.0.0
-</code></pre></div>
-</div>
-
-<p>We can then use the mock object in a test:</p>
-<div class="highlight"><span class="filename">db_getter_test.go</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="s">&quot;testing&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="s">&quot;github.com/stretchr/testify/assert&quot;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="kd">func</span><span class="w"> </span><span class="nx">Test_getFromDB</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="nx">mockDB</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewMockDB</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="nx">mockDB</span><span class="p">.</span><span class="nx">EXPECT</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;ice cream&quot;</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="s">&quot;chocolate&quot;</span><span class="p">).</span><span class="nx">Once</span><span class="p">()</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="nx">flavor</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">getFromDB</span><span class="p">(</span><span class="nx">mockDB</span><span class="p">)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;chocolate&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">flavor</span><span class="p">)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="p">}</span>
-</code></pre></div>
-<h2 id="why-use-mockery">Why use mockery?<a class="headerlink" href="#why-use-mockery" title="Permanent link">&para;</a></h2>
+<h1 id="v3-release">v3 Release<a class="headerlink" href="#v3-release" title="Permanent link">&para;</a></h1>
+<p>Mockery releases version 3 of the project that provides a number of high-profile benefits over v2:</p>
 <ol>
-<li>You gain access to a number of pre-curated mock implementations that can be used in testing. This includes traditional "mockery-style" mocks, as well as other styles from the open source community such as from <a href="https://github.com/matryer/moq">https://github.com/matryer/moq</a>. Such mocks allow you to quickly define how the implementation should behave under test without having to manually curate your own mocks/stubs/fakes.</li>
-<li>Mockery benefits from a large number of performance improvements that almost all other Go code-generation projects currently have not employed. This means that it's orders of magnitude faster for large codebases.</li>
-<li>Mockery provides a comprehensive, centralized, flexible, and simple configuration scheme driven off of yaml instead of relying on sprawling <code>//go:generate</code> commands.</li>
-<li>Mockery is a code-generation framework. While its original goal is to provide mock implementations for testing purposes, users can supply their own templates to auto-generate any kind of code that needs to be based off of interfaces.</li>
-<li>A number of high profile companies, projects, and communities trust Mockery.</li>
+<li>Allows generation of <a href="../template-moq/"><code>moq</code></a>-style templates. The <a href="https://github.com/matryer/moq">https://github.com/matryer/moq</a> project is being folded into mockery to combine the speed and configuration flexibility of mockery with the simplicity of moq-style mocks.</li>
+<li>Changes the generation scheme to be entirely driven off of Go templates. This means that the data provided to templates is considered as part of the public API.</li>
+<li>Mockery now allows users to specify their own templates to make code generation far easier. Mockery handles the problem of parsing source code and enables you to focus on creating <a href="../templates/#template-file">your own interface implementations</a>.</li>
 </ol>
-<h2 id="who-uses-mockery">Who uses mockery?<a class="headerlink" href="#who-uses-mockery" title="Permanent link">&para;</a></h2>
-<div class="grid cards">
-<ul>
-<li><figure markdown>
-    <a href="https://github.com/grafana/grafana"><img alt="Grafana logo" class="center" src="assets/images/logos/grafana.svg" width="100" /></a>
-    <figcaption><a href="https://github.com/grafana/grafana">Grafana</a></figcaption>
-  </figure></li>
-<li><figure markdown>
-    <a href="https://github.com/google/skia"><img alt="Google logo" class="center" src="assets/images/logos/google.svg" width="100" /></a>
-    <figcaption><a href="https://github.com/google/skia">Google Skia</a></figcaption>
-  </figure></li>
-<li><figure markdown>
-    <a href="https://github.com/google/syzkaller"><img alt="Google logo" class="center" src="assets/images/logos/google.svg" width="100" /></a>
-    <figcaption><a href="https://github.com/google/syzkaller">Google Skyzkaller</a></figcaption>
-  </figure></li>
-<li><figure markdown>
-    <a href="https://github.com/search?q=org%3Ahashicorp%20mockery&amp;type=code"><img alt="Hashicorp logo" class="center" src="assets/images/logos/hashicorp.svg" width="100" /></a>
-    <figcaption><a href="https://github.com/search?q=org%3Ahashicorp%20mockery&amp;type=code">Hashicorp</a></figcaption>
-  </figure></li>
-<li><figure markdown>
-    <a href="https://github.com/uber/cadence"><img alt="Uber logo" class="center" src="assets/images/logos/uber.svg" width="100" /></a>
-    <figcaption><a href="https://github.com/uber/cadence">Uber Cadence</a></figcaption>
-  </figure></li>
-<li><figure markdown>
-    <a href="https://github.com/jaegertracing/jaeger"><img alt="Jaeger logo" class="center" src="assets/images/logos/jaeger.png" width="300" /></a>
-    <figcaption><a href="https://github.com/jaegertracing/jaeger">Jaegertracing</a></figcaption>
-  </figure></li>
-<li><figure markdown>
-    <a href="https://github.com/splunk/kafka-mq-go"><img alt="Splunk logo" class="center" src="assets/images/logos/splunk.svg" width="300" /></a>
-    <figcaption><a href="https://github.com/splunk/kafka-mq-go">Splunk kafka-mq-go</a></figcaption>
-  </figure></li>
-<li><figure markdown>
-    <a href="https://github.com/ignite/cli"><img alt="Ignite Logo" class="center" src="assets/images/logos/ignite-cli.png" width="300" /></a>
-  </figure></li>
-<li><figure markdown>
-    <a href="https://github.com/tendermint/tendermint"><img alt="Tendermint Logo" class="center" src="assets/images/logos/tendermint.svg" width="300" /></a>
-  </figure></li>
-<li><figure markdown>
-    <a href="https://github.com/DataDog/datadog-agent"><img alt="Datadog logo" class="center" src="assets/images/logos/datadog.svg" width="300" /></a>
-  </figure></li>
-<li><a href="https://seatgeek.com"><img alt="Seatgeek Logo" src="assets/images/logos/seatgeek.svg" /></a></li>
-<li><figure markdown>
-    <a href="https://github.com/eksctl-io/eksctl"><img alt="Amazon logo" class="center" src="assets/images/logos/amazon.svg" width="300" /></a>
-    <figcaption><a href="https://github.com/eksctl-io/eksctl">eksctl</a></figcaption>
-  </figure></li>
-<li><figure markdown>
-    <a href="https://github.com/search?q=org%3Amongodb%20mockery&amp;type=code"><img alt="MongoDB Logo" class="center" src="assets/images/logos/mongodb.svg" width="300" /></a>
-  </figure></li>
-<li><figure markdown>
-    <a href="https://taskfile.dev/"><img alt="go-task logo" class="center" src="assets/images/logos/go-task.svg" width="300" /></a>
-    <figcaption><a href="https://taskfile.dev/">Task</a>
-  </markdown></li>
-<li><figure markdown>
-    <a href="https://github.com/cerbos/cerbos"><img alt="cerbos logo" class="center" src="assets/images/logos/cerbos.png" width="300" /></a>
-  </markdown></li>
-</ul>
+<h2 id="v2-migration">v2 Migration<a class="headerlink" href="#v2-migration" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Construction</p>
+<p>This section is under construction.</p>
 </div>
-<p><a class="md-button md-button--primary md-button--stretch" href="installation/">Get Started</a></p>
 
 
 
@@ -1083,16 +931,16 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
     </div>
     
     
-    <script id="__config" type="application/json">{"base": ".", "features": ["content.code.annotate", "content.code.copy", "content.action.edit", "content.action.view", "navigation.indexes", "navigation.sections", "navigation.tracking", "toc.follow"], "search": "assets/javascripts/workers/search.c7c1ca2c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.annotate", "content.code.copy", "content.action.edit", "content.action.view", "navigation.indexes", "navigation.sections", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.c7c1ca2c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="assets/javascripts/bundle.b71cdcd1.min.js"></script>
+      <script src="../assets/javascripts/bundle.b71cdcd1.min.js"></script>
       
         <script src="https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js"></script>
       
-        <script src="javascripts/tablesort.js"></script>
+        <script src="../javascripts/tablesort.js"></script>
       
-        <script src="js/open_in_new_tab.js"></script>
+        <script src="../js/open_in_new_tab.js"></script>
       
     
   <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
