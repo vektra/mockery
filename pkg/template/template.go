@@ -20,7 +20,15 @@ type Template struct {
 
 // New returns a new instance of Template.
 func New(templateString string, name string) (Template, error) {
-	tmpl, err := template.New(name).Funcs(templateFuncs).Parse(templateString)
+	mergedFuncMap := template.FuncMap{}
+	for key, val := range StringManipulationFuncs {
+		mergedFuncMap[key] = val
+	}
+	for key, val := range TemplateMockFuncs {
+		mergedFuncMap[key] = val
+	}
+
+	tmpl, err := template.New(name).Funcs(mergedFuncMap).Parse(templateString)
 	if err != nil {
 		return Template{}, err
 	}
@@ -54,14 +62,14 @@ func exported(s string) string {
 	return strings.ToUpper(s[0:1]) + s[1:]
 }
 
-var templateFuncs = template.FuncMap{
-	"ImportStatement": func(imprt *registry.Package) string {
+var TemplateMockFuncs = template.FuncMap{
+	"importStatement": func(imprt *registry.Package) string {
 		if imprt.Alias == "" {
 			return `"` + imprt.Path() + `"`
 		}
 		return imprt.Alias + ` "` + imprt.Path() + `"`
 	},
-	"SyncPkgQualifier": func(imports []*registry.Package) string {
+	"syncPkgQualifier": func(imports []*registry.Package) string {
 		for _, imprt := range imports {
 			if imprt.Path() == "sync" {
 				return imprt.Qualifier()
@@ -70,9 +78,9 @@ var templateFuncs = template.FuncMap{
 
 		return "sync"
 	},
-	"Exported": exported,
+	"exported": exported,
 
-	"MocksSomeMethod": func(mocks []MockData) bool {
+	"mocksSomeMethod": func(mocks []MockData) bool {
 		for _, m := range mocks {
 			if len(m.Methods) > 0 {
 				return true
@@ -81,7 +89,7 @@ var templateFuncs = template.FuncMap{
 
 		return false
 	},
-	"TypeConstraintTest": func(m MockData) string {
+	"typeConstraintTest": func(m MockData) string {
 		if len(m.TypeParams) == 0 {
 			return ""
 		}
@@ -97,45 +105,48 @@ var templateFuncs = template.FuncMap{
 		s += "]"
 		return s
 	},
+}
+
+var StringManipulationFuncs = template.FuncMap{
 	// String inspection and manipulation. Note that the first argument is replaced
 	// as the last argument in some functions in order to support chained
 	// template pipelines.
-	"Contains":    func(substr string, s string) bool { return strings.Contains(s, substr) },
-	"HasPrefix":   func(prefix string, s string) bool { return strings.HasPrefix(s, prefix) },
-	"HasSuffix":   func(suffix string, s string) bool { return strings.HasSuffix(s, suffix) },
-	"Join":        func(sep string, elems []string) string { return strings.Join(elems, sep) },
-	"Replace":     func(old string, new string, n int, s string) string { return strings.Replace(s, old, new, n) },
-	"ReplaceAll":  func(old string, new string, s string) string { return strings.ReplaceAll(s, old, new) },
-	"Split":       func(sep string, s string) []string { return strings.Split(s, sep) },
-	"SplitAfter":  func(sep string, s string) []string { return strings.SplitAfter(s, sep) },
-	"SplitAfterN": func(sep string, n int, s string) []string { return strings.SplitAfterN(s, sep, n) },
-	"Trim":        func(cutset string, s string) string { return strings.Trim(s, cutset) },
-	"TrimLeft":    func(cutset string, s string) string { return strings.TrimLeft(s, cutset) },
-	"TrimPrefix":  func(prefix string, s string) string { return strings.TrimPrefix(s, prefix) },
-	"TrimRight":   func(cutset string, s string) string { return strings.TrimRight(s, cutset) },
-	"TrimSpace":   strings.TrimSpace,
-	"TrimSuffix":  func(suffix string, s string) string { return strings.TrimSuffix(s, suffix) },
-	"Lower":       strings.ToLower,
-	"Upper":       strings.ToUpper,
-	"Camelcase":   xstrings.ToCamelCase,
-	"Snakecase":   xstrings.ToSnakeCase,
-	"Kebabcase":   xstrings.ToKebabCase,
-	"FirstLower":  xstrings.FirstRuneToLower,
-	"FirstUpper":  xstrings.FirstRuneToUpper,
+	"contains":    func(substr string, s string) bool { return strings.Contains(s, substr) },
+	"hasPrefix":   func(prefix string, s string) bool { return strings.HasPrefix(s, prefix) },
+	"hasSuffix":   func(suffix string, s string) bool { return strings.HasSuffix(s, suffix) },
+	"join":        func(sep string, elems []string) string { return strings.Join(elems, sep) },
+	"replace":     func(old string, new string, n int, s string) string { return strings.Replace(s, old, new, n) },
+	"replaceAll":  func(old string, new string, s string) string { return strings.ReplaceAll(s, old, new) },
+	"split":       func(sep string, s string) []string { return strings.Split(s, sep) },
+	"splitAfter":  func(sep string, s string) []string { return strings.SplitAfter(s, sep) },
+	"splitAfterN": func(sep string, n int, s string) []string { return strings.SplitAfterN(s, sep, n) },
+	"trim":        func(cutset string, s string) string { return strings.Trim(s, cutset) },
+	"trimLeft":    func(cutset string, s string) string { return strings.TrimLeft(s, cutset) },
+	"trimPrefix":  func(prefix string, s string) string { return strings.TrimPrefix(s, prefix) },
+	"trimRight":   func(cutset string, s string) string { return strings.TrimRight(s, cutset) },
+	"trimSpace":   strings.TrimSpace,
+	"trimSuffix":  func(suffix string, s string) string { return strings.TrimSuffix(s, suffix) },
+	"lower":       strings.ToLower,
+	"upper":       strings.ToUpper,
+	"camelcase":   xstrings.ToCamelCase,
+	"snakecase":   xstrings.ToSnakeCase,
+	"kebabcase":   xstrings.ToKebabCase,
+	"firstLower":  xstrings.FirstRuneToLower,
+	"firstUpper":  xstrings.FirstRuneToUpper,
 
 	// Regular expression matching
-	"MatchString": regexp.MatchString,
-	"QuoteMeta":   regexp.QuoteMeta,
+	"matchString": regexp.MatchString,
+	"quoteMeta":   regexp.QuoteMeta,
 
 	// Filepath manipulation
-	"Base":  filepath.Base,
-	"Clean": filepath.Clean,
-	"Dir":   filepath.Dir,
+	"base":  filepath.Base,
+	"clean": filepath.Clean,
+	"dir":   filepath.Dir,
 
 	// Basic access to reading environment variables
-	"ExpandEnv": os.ExpandEnv,
-	"Getenv":    os.Getenv,
+	"expandEnv": os.ExpandEnv,
+	"getenv":    os.Getenv,
 
 	// Arithmetic
-	"Add": func(i1, i2 int) int { return i1 + i2 },
+	"add": func(i1, i2 int) int { return i1 + i2 },
 }

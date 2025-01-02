@@ -7,9 +7,9 @@ import (
 	"github.com/vektra/mockery/v3/pkg/registry"
 )
 
-func TestTemplateFuncs(t *testing.T) {
+func TestTemplateMockFuncs(t *testing.T) {
 	t.Run("Exported", func(t *testing.T) {
-		f := templateFuncs["Exported"].(func(string) string)
+		f := TemplateMockFuncs["exported"].(func(string) string)
 		if f("") != "" {
 			t.Errorf("Exported(...) want: ``; got: `%s`", f(""))
 		}
@@ -19,7 +19,7 @@ func TestTemplateFuncs(t *testing.T) {
 	})
 
 	t.Run("ImportStatement", func(t *testing.T) {
-		f := templateFuncs["ImportStatement"].(func(*registry.Package) string)
+		f := TemplateMockFuncs["ImportStatement"].(func(*registry.Package) string)
 		pkg := registry.NewPackage(types.NewPackage("xyz", "xyz"))
 		if f(pkg) != `"xyz"` {
 			t.Errorf("ImportStatement(...): want: `\"xyz\"`; got: `%s`", f(pkg))
@@ -32,7 +32,7 @@ func TestTemplateFuncs(t *testing.T) {
 	})
 
 	t.Run("SyncPkgQualifier", func(t *testing.T) {
-		f := templateFuncs["SyncPkgQualifier"].(func([]*registry.Package) string)
+		f := TemplateMockFuncs["SyncPkgQualifier"].(func([]*registry.Package) string)
 		if f(nil) != "sync" {
 			t.Errorf("SyncPkgQualifier(...): want: `sync`; got: `%s`", f(nil))
 		}

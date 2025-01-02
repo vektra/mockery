@@ -10,7 +10,7 @@ package {{.PkgName}}
 
 import (
 {{- range .Imports}}
-	{{. | ImportStatement}}
+	{{. | importStatement}}
 {{- end}}
     mock "github.com/stretchr/testify/mock"
 )
@@ -71,19 +71,19 @@ func (_mock *{{$mock.MockName}}{{ $mock.TypeInstantiation }}) {{$method.Name}}({
 	{{- $calledString = "" }}
 	{{- end }}
 
-	{{- $lastParam := index $method.Params (len $method.Params | Add -1 )}}
+	{{- $lastParam := index $method.Params (len $method.Params | add -1 )}}
 	if len({{ $lastParam.Var.Name }}) > 0 {
 		{{- if ne (len $method.Returns) 0}}tmpRet = {{ end }}_mock.Called({{- if (index $mock.TemplateData "unroll-variadic") }}{{ $method.ArgCallList }}{{- else }}{{ $method.ArgCallListNoEllipsis }}{{- end }})
 	} else {
-		{{- if ne (len $method.Returns) 0}}tmpRet = {{ end }}_mock.Called({{- if (index $mock.TemplateData "unroll-variadic") }}{{ $method.ArgCallListSlice 0 (len $method.Params | Add -1 )}}{{- else }}{{ $method.ArgCallListSliceNoEllipsis 0 (len $method.Params | Add -1 )}}{{- end }})
+		{{- if ne (len $method.Returns) 0}}tmpRet = {{ end }}_mock.Called({{- if (index $mock.TemplateData "unroll-variadic") }}{{ $method.ArgCallListSlice 0 (len $method.Params | add -1 )}}{{- else }}{{ $method.ArgCallListSliceNoEllipsis 0 (len $method.Params | add -1 )}}{{- end }})
 	}
 	{{- else }}
 	{{- $calledString = printf "_mock.Called(%s)" $method.ArgCallList }}
 	{{- end }}
 {{- else }}
-	{{- $lastParam := (index $method.Params (len $method.Params | Add -1)) }}
+	{{- $lastParam := (index $method.Params (len $method.Params | add -1)) }}
 	{{- $variadicArgsName := $lastParam.Var.Name }}
-	{{- $strippedTypeString := TrimPrefix "..." $lastParam.TypeStringEllipsis }}
+	{{- $strippedTypeString := trimPrefix "..." $lastParam.TypeStringEllipsis }}
 
 	{{- if and (ne $strippedTypeString "interface{}") (ne $strippedTypeString "any") }}
 	// {{ $strippedTypeString }}
@@ -95,7 +95,7 @@ func (_mock *{{$mock.MockName}}{{ $mock.TypeInstantiation }}) {{$method.Name}}({
 	{{- end }}
 	var _ca []interface{}
 	{{- if gt (len $method.Params) 1 }}
-	_ca = append(_ca, {{ $method.ArgCallListSlice 0 (len $method.Params | Add -1) }})
+	_ca = append(_ca, {{ $method.ArgCallListSlice 0 (len $method.Params | add -1) }})
 	{{- end }}
 	_ca = append(_ca, {{ $variadicArgsName }}...)
 	{{- $calledString = "_mock.Called(_ca...)" }}
@@ -136,7 +136,7 @@ func (_mock *{{$mock.MockName}}{{ $mock.TypeInstantiation }}) {{$method.Name}}({
 	}
 		{{- end }} {{/* END RETURN RANGE */}}
 	{{- end }}
-	return {{ range $retIdx, $ret := $method.Returns }}r{{ $retIdx }}{{ if ne $retIdx (len $method.Returns | Add -1) }}, {{ end }}{{ end }}
+	return {{ range $retIdx, $ret := $method.Returns }}r{{ $retIdx }}{{ if ne $retIdx (len $method.Returns | add -1) }}, {{ end }}{{ end }}
 }
 
 {{/* CREATE EXPECTER METHOD */}}
@@ -161,7 +161,7 @@ func (_e *{{ $expecterNameInstantiated }}) {{ $method.Name }}({{ range $method.P
 			{{- else }}
 				append([]interface{}{
 					{{- range $i, $param := $method.Params }}
-						{{- if (lt $i (len $method.Params | Add -1 ))}} {{ $param.Var.Name }},
+						{{- if (lt $i (len $method.Params | add -1 ))}} {{ $param.Var.Name }},
 						{{- else }} }, {{ $param.Var.Name }}...
 						{{- end }}
 					{{- end}} )...
@@ -173,8 +173,8 @@ func (_c *{{ $ExpecterCallNameInstantiated }}) Run(run func({{ $method.ArgList }
 	{{- if not $method.IsVariadic }}
 		run({{range $i, $param := $method.Params }}args[{{$i}}].({{ $param.TypeString}}),{{end}})
 	{{- else}}
-		{{- $variadicParam := index $method.Params (len $method.Params | Add -1) }}
-		{{- $nonVariadicParams := slice $method.Params 0 (len $method.Params | Add -1 )}}
+		{{- $variadicParam := index $method.Params (len $method.Params | add -1) }}
+		{{- $nonVariadicParams := slice $method.Params 0 (len $method.Params | add -1 )}}
 		variadicArgs := make([]{{ $variadicParam.TypeStringVariadicUnderlying }}, len(args) - {{len $nonVariadicParams}})
 		for i, a := range args[{{len $nonVariadicParams}}:] {
 			if a != nil {

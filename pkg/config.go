@@ -15,13 +15,13 @@ import (
 	"strings"
 
 	"github.com/chigopher/pathlib"
-	"github.com/huandu/xstrings"
 	"github.com/jinzhu/copier"
 	"github.com/mitchellh/mapstructure"
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
 	"github.com/vektra/mockery/v3/pkg/logging"
 	"github.com/vektra/mockery/v3/pkg/stackerr"
+	mockeryTemplate "github.com/vektra/mockery/v3/pkg/template"
 	"golang.org/x/tools/go/packages"
 	"gopkg.in/yaml.v3"
 )
@@ -66,7 +66,6 @@ func NewConfigFromViper(v *viper.Viper) (*Config, error) {
 	v.SetDefault("formatter", "goimports")
 	v.SetDefault("mockname", "Mock{{.InterfaceName}}")
 	v.SetDefault("pkgname", "{{.SrcPackageName}}")
-	v.SetDefault("dry-run", false)
 	v.SetDefault("log-level", "info")
 
 	if err := v.UnmarshalExact(c); err != nil {
@@ -757,50 +756,6 @@ func (c *Config) TagName(name string) string {
 
 var ErrInfiniteLoop = fmt.Errorf("infinite loop in template variables detected")
 
-// Functions available in the template for manipulating
-//
-// Since the map and its functions are stateless, it exists as
-// a package var rather than being initialized on every call
-// in [parseConfigTemplates] and [generator.printTemplate]
-var templateFuncMap = template.FuncMap{
-	// String inspection and manipulation
-	"contains":    strings.Contains,
-	"hasPrefix":   strings.HasPrefix,
-	"hasSuffix":   strings.HasSuffix,
-	"join":        strings.Join,
-	"replace":     strings.Replace,
-	"replaceAll":  strings.ReplaceAll,
-	"split":       strings.Split,
-	"splitAfter":  strings.SplitAfter,
-	"splitAfterN": strings.SplitAfterN,
-	"trim":        strings.Trim,
-	"trimLeft":    strings.TrimLeft,
-	"trimPrefix":  strings.TrimPrefix,
-	"trimRight":   strings.TrimRight,
-	"trimSpace":   strings.TrimSpace,
-	"trimSuffix":  strings.TrimSuffix,
-	"lower":       strings.ToLower,
-	"upper":       strings.ToUpper,
-	"camelcase":   xstrings.ToCamelCase,
-	"snakecase":   xstrings.ToSnakeCase,
-	"kebabcase":   xstrings.ToKebabCase,
-	"firstLower":  xstrings.FirstRuneToLower,
-	"firstUpper":  xstrings.FirstRuneToUpper,
-
-	// Regular expression matching
-	"matchString": regexp.MatchString,
-	"quoteMeta":   regexp.QuoteMeta,
-
-	// Filepath manipulation
-	"base":  filepath.Base,
-	"clean": filepath.Clean,
-	"dir":   filepath.Dir,
-
-	// Basic access to reading environment variables
-	"expandEnv": os.ExpandEnv,
-	"getenv":    os.Getenv,
-}
-
 // ParseTemplates parses various templated strings
 // in the config struct into their fully defined values. This mutates
 // the config object passed. An *Interface object can be supplied to satisfy
@@ -891,7 +846,7 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 		for name, attributePointer := range templateMap {
 			oldVal := *attributePointer
 
-			attributeTempl, err := template.New("interface-template").Funcs(templateFuncMap).Parse(*attributePointer)
+			attributeTempl, err := template.New("config-template").Funcs(mockeryTemplate.StringManipulationFuncs).Parse(*attributePointer)
 			if err != nil {
 				return fmt.Errorf("failed to parse %s template: %w", name, err)
 			}

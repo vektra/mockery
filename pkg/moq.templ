@@ -5,9 +5,11 @@ package {{.PkgName}}
 
 import (
 {{- range .Imports}}
-	{{. | ImportStatement}}
+	{{. | importStatement}}
 {{- end}}
+{{- if .Mocks | mocksSomeMethod }}
     "sync"
+{{- end }}
     "fmt"
 )
 
@@ -54,7 +56,7 @@ var _ {{$.SrcPkgQualifier}}{{.InterfaceName -}}
 type {{.MockName}}
 {{- if .TypeParams -}}
 	[{{- range $index, $param := .TypeParams}}
-			{{- if $index}}, {{end}}{{$param.Name | Exported}} {{$param.TypeString}}
+			{{- if $index}}, {{end}}{{$param.Name | exported}} {{$param.TypeString}}
 	{{- end -}}]
 {{- end }} struct {
 {{- range .Methods}}
@@ -67,14 +69,14 @@ type {{.MockName}}
 		// {{.Name}} holds details about calls to the {{.Name}} method.
 		{{.Name}} []struct {
 			{{- range .Params}}
-			// {{.Name | Exported}} is the {{.Name}} argument value.
-			{{.Name | Exported}} {{.TypeString}}
+			// {{.Name | exported}} is the {{.Name}} argument value.
+			{{.Name | exported}} {{.TypeString}}
 			{{- end}}
 		}
 {{- end}}
 	}
 {{- range .Methods}}
-	lock{{.Name}} {{$.Imports | SyncPkgQualifier}}.RWMutex
+	lock{{.Name}} {{$.Imports | syncPkgQualifier}}.RWMutex
 {{- end}}
 }
 {{range .Methods}}
@@ -87,11 +89,11 @@ func (mock *{{$mock.MockName}}{{ $mock.TypeInstantiation }}) {{.Name}}({{.ArgLis
 {{- end}}
 	callInfo := struct {
 		{{- range .Params}}
-		{{.Name | Exported}} {{.TypeString}}
+		{{.Name | exported}} {{.TypeString}}
 		{{- end}}
 	}{
 		{{- range .Params}}
-		{{.Name | Exported}}: {{.Name}},
+		{{.Name | exported}}: {{.Name}},
 		{{- end}}
 	}
 	mock.lock{{.Name}}.Lock()
@@ -125,12 +127,12 @@ func (mock *{{$mock.MockName}}{{ $mock.TypeInstantiation }}) {{.Name}}({{.ArgLis
 //	len(mocked{{$mock.InterfaceName}}.{{.Name}}Calls())
 func (mock *{{$mock.MockName}}{{ $mock.TypeInstantiation }}) {{.Name}}Calls() []struct {
 		{{- range .Params}}
-		{{.Name | Exported}} {{.TypeString}}
+		{{.Name | exported}} {{.TypeString}}
 		{{- end}}
 	} {
 	var calls []struct {
 		{{- range .Params}}
-		{{.Name | Exported}} {{.TypeString}}
+		{{.Name | exported}} {{.TypeString}}
 		{{- end}}
 	}
 	mock.lock{{.Name}}.RLock()
