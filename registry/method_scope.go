@@ -84,7 +84,7 @@ func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, prefix string) 
 		Str("prefix", prefix).
 		Str("variable-name", vr.Name()).
 		Logger()
-	imports := m.PopulateImports(ctx, vr.Type())
+	imports := m.populateImports(ctx, vr.Type())
 
 	log.Debug().Msg("adding var")
 	for key := range m.visibleNames {
@@ -130,23 +130,23 @@ func (m *MethodScope) populateImportNamedType(
 	// For example: Foo[otherpackage.Bar] , must have otherpackage imported
 	if targs := t.TypeArgs(); targs != nil {
 		for i := 0; i < targs.Len(); i++ {
-			m.populateImports(ctx, targs.At(i), imports)
+			m.populateImportsHelper(ctx, targs.At(i), imports)
 		}
 	}
 }
 
-func (m *MethodScope) PopulateImports(ctx context.Context, t types.Type) map[string]*Package {
+func (m *MethodScope) populateImports(ctx context.Context, t types.Type) map[string]*Package {
 	imports := map[string]*Package{}
-	m.populateImports(ctx, t, imports)
+	m.populateImportsHelper(ctx, t, imports)
 	return imports
 }
 
-// populateImports extracts all the package imports for a given type
+// populateImportsHelper extracts all the package imports for a given type
 // recursively. The imported packages by a single type can be more than
 // one (ex: map[a.Type]b.Type).
 //
 // Returned are the imports that were added for the given type.
-func (m *MethodScope) populateImports(ctx context.Context, t types.Type, imports map[string]*Package) {
+func (m *MethodScope) populateImportsHelper(ctx context.Context, t types.Type, imports map[string]*Package) {
 	log := zerolog.Ctx(ctx).With().
 		Str("type-str", t.String()).Logger()
 	switch t := t.(type) {
@@ -155,39 +155,39 @@ func (m *MethodScope) populateImports(ctx context.Context, t types.Type, imports
 	case *types.Alias:
 		m.populateImportNamedType(ctx, t, imports)
 	case *types.Array:
-		m.populateImports(ctx, t.Elem(), imports)
+		m.populateImportsHelper(ctx, t.Elem(), imports)
 
 	case *types.Slice:
-		m.populateImports(ctx, t.Elem(), imports)
+		m.populateImportsHelper(ctx, t.Elem(), imports)
 
 	case *types.Signature:
 		for i := 0; i < t.Params().Len(); i++ {
-			m.populateImports(ctx, t.Params().At(i).Type(), imports)
+			m.populateImportsHelper(ctx, t.Params().At(i).Type(), imports)
 		}
 		for i := 0; i < t.Results().Len(); i++ {
-			m.populateImports(ctx, t.Results().At(i).Type(), imports)
+			m.populateImportsHelper(ctx, t.Results().At(i).Type(), imports)
 		}
 
 	case *types.Map:
-		m.populateImports(ctx, t.Key(), imports)
-		m.populateImports(ctx, t.Elem(), imports)
+		m.populateImportsHelper(ctx, t.Key(), imports)
+		m.populateImportsHelper(ctx, t.Elem(), imports)
 
 	case *types.Chan:
-		m.populateImports(ctx, t.Elem(), imports)
+		m.populateImportsHelper(ctx, t.Elem(), imports)
 
 	case *types.Pointer:
-		m.populateImports(ctx, t.Elem(), imports)
+		m.populateImportsHelper(ctx, t.Elem(), imports)
 
 	case *types.Struct: // anonymous struct
 		for i := 0; i < t.NumFields(); i++ {
-			m.populateImports(ctx, t.Field(i).Type(), imports)
+			m.populateImportsHelper(ctx, t.Field(i).Type(), imports)
 		}
 
 	case *types.Union:
 		log.Debug().Int("len", t.Len()).Msg("found union")
 		for i := 0; i < t.Len(); i++ {
 			term := t.Term(i)
-			m.populateImports(ctx, term.Type(), imports)
+			m.populateImportsHelper(ctx, term.Type(), imports)
 		}
 	case *types.Interface: // anonymous interface
 		log.Debug().
@@ -197,11 +197,11 @@ func (m *MethodScope) populateImports(ctx context.Context, t types.Type, imports
 			Msg("found interface")
 		for i := 0; i < t.NumExplicitMethods(); i++ {
 			log.Debug().Msg("populating import from explicit method")
-			m.populateImports(ctx, t.ExplicitMethod(i).Type(), imports)
+			m.populateImportsHelper(ctx, t.ExplicitMethod(i).Type(), imports)
 		}
 		for i := 0; i < t.NumEmbeddeds(); i++ {
 			log.Debug().Msg("populating import form embedded type")
-			m.populateImports(ctx, t.EmbeddedType(i), imports)
+			m.populateImportsHelper(ctx, t.EmbeddedType(i), imports)
 		}
 	case *types.Basic:
 		if t.Kind() == types.UnsafePointer {
