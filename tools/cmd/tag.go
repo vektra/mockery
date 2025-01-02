@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/Masterminds/semver/v3"
@@ -58,17 +59,21 @@ func (t *Tagger) createTag(repo *git.Repository, version string) error {
 		logger.Info().Str("tag", version).Msg("would have created tag")
 		return nil
 	}
-	_, err = repo.CreateTag(version, hash.Hash(), &git.CreateTagOptions{
-		Tagger: &object.Signature{
-			Name:  "Lambda Labs",
-			Email: "primitives@lambdal.com",
-			When:  time.Now(),
-		},
-		Message: version,
-	})
-	if err != nil {
-		return errors.New(err)
+	majorVersion := strings.Split(version, ".")[0]
+	for _, v := range []string{version, majorVersion} {
+		_, err = repo.CreateTag(v, hash.Hash(), &git.CreateTagOptions{
+			Tagger: &object.Signature{
+				Name:  "Landon Clipp",
+				Email: "11232769+LandonTClipp@users.noreply.github.com",
+				When:  time.Now(),
+			},
+			Message: v,
+		})
+		if err != nil {
+			return errors.New(err)
+		}
 	}
+
 	logger.Info().Str("tag", version).Msg("tag successfully created")
 	return nil
 }
