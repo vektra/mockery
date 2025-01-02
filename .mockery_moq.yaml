@@ -1,6 +1,6 @@
 template: moq
 packages:
-    github.com/vektra/mockery/v3/pkg/fixtures:
+    github.com/vektra/mockery/v3/internal/fixtures:
         config:
             dir: "{{.InterfaceDir}}"
             filename: "mocks_moq.go"

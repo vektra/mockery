@@ -307,7 +307,6 @@ Moq-style mocks are far simpler, and probably more intuitive, than mockery-style
 
 You may also provide mockery a path to your own file using the `file://` protocol specifier. The string after `file://` will be the relative or absolute path of your template.
 
-
 ## Data Provided To Templates
 
 !!! warning "Construction"

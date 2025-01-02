@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/vektra/mockery/v3/pkg/logging"
+	"github.com/vektra/mockery/v3/internal/logging"
 )
 
 func NewVersionCmd() *cobra.Command {

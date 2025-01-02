@@ -13,9 +13,9 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/vektra/mockery/v3/pkg"
-	"github.com/vektra/mockery/v3/pkg/logging"
-	"github.com/vektra/mockery/v3/pkg/stackerr"
+	"github.com/vektra/mockery/v3/internal"
+	"github.com/vektra/mockery/v3/internal/logging"
+	"github.com/vektra/mockery/v3/internal/stackerr"
 	"golang.org/x/tools/go/packages"
 )
 

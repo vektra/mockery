@@ -4,6 +4,6 @@ toolchain go1.23.1
 
 use (
 	.
-	./pkg/fixtures/example_project/pkg_with_submodules
+	./internal/fixtures/example_project/pkg_with_submodules
 	./tools
 )
