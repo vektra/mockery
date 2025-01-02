@@ -34,7 +34,7 @@ func NewTagCmd(v *viper.Viper) (*cobra.Command, error) {
 			}
 			requestedVersion, previousVersion, err := tagger.Tag()
 			if requestedVersion != nil && previousVersion != nil {
-				fmt.Fprintf(os.Stdout, "%s,%s", requestedVersion.String(), previousVersion.String())
+				fmt.Fprintf(os.Stdout, "v%s,v%s", requestedVersion.String(), previousVersion.String())
 			}
 			if err != nil {
 				if errors.Is(ErrNoNewVersion, err) {
@@ -117,6 +117,11 @@ func (t *Tagger) largestTagSemver(repo *git.Repository, major uint64) (*semver.V
 		} else {
 			versionString = tag.Name
 		}
+		versionParts := strings.Split(versionString, ".")
+		if len(versionParts) < 3 {
+			// This is not a full version tag, so ignore it
+			return nil
+		}
 
 		version, err := semver.NewVersion(versionString)
 		if err != nil {
@@ -167,19 +172,15 @@ func (t *Tagger) Tag() (requestedVersion *semver.Version, previousVersion *semve
 	if err != nil {
 		return requestedVersion, previousVersion, err
 	}
-	taggedVersion, err := semver.NewVersion(previousVersion.String())
-	if err != nil {
-		return requestedVersion, previousVersion, errors.New(err)
-	}
 	logger := logger.With().
-		Stringer("tagged-version", taggedVersion).Logger()
+		Stringer("previous-version", previousVersion).Logger()
 
 	logger.Info().Msg("found largest semver tag")
 
 	logger = logger.With().
 		Stringer("requested-version", requestedVersion).
 		Logger()
-	if !requestedVersion.GreaterThan(taggedVersion) {
+	if !requestedVersion.GreaterThan(previousVersion) {
 		logger.Info().
 			Msg("VERSION is not greater than latest git tag, nothing to do.")
 		return requestedVersion, previousVersion, ErrNoNewVersion
