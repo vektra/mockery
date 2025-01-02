@@ -90,7 +90,7 @@ jobs:
       - name: GoReleaser
         uses: goreleaser/goreleaser-action@v2.7.0
         with:
-          args: release --rm-dist
+          args: release --clean
           version: "<2"
         env:
           GITHUB_TOKEN: ${{ secrets.GORELEASER_GITHUB_TOKEN }}
