@@ -52,6 +52,13 @@ func TestRequesterMoq(t *testing.T) {
 
 You may also provide mockery a path to your own file using the `file://` protocol specifier. The string after `file://` will be the relative or absolute path of your template.
 
+The templates are rendered with the data as shown in the [section below](#template-files).
+
+You can see examples of how the mockery project utilizes the template system to generate the different mock styles:
+
+- [`moq.templ`](https://github.com/vektra/mockery/blob/v3/internal/moq.templ)
+- [`mockery.templ`](https://github.com/vektra/mockery/blob/v3/internal/mockery.templ)
+
 ## Data Provided To Templates
 
 Mockery has two separate template instances: one for the `.mockery.yml` file, and one for the mock templates. Each instance has a different set of variables and functions available to it. All functions are [pipeline-compatible](https://pkg.go.dev/text/template#hdr-Pipelines).

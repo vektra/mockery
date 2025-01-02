@@ -67,6 +67,7 @@ nav:
     - template-moq.md
   - Notes:
     - FAQ: faq.md
+    - v3: v3.md
 
 extra_css:
   - stylesheets/extra.css
