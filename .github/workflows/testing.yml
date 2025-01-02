@@ -2,14 +2,8 @@ name: Go Test
 
 on:
   pull_request:
-    branches: [master, v3]
+    branches: [ master, v3 ]
 
 jobs:
   test:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-          with:
-            fetch-depth: 0
-        - uses: ./.github/workflows/reusable-testing.yml
-
+      uses: ./.github/workflows/reusable-testing.yml

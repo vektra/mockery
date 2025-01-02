@@ -2,6 +2,11 @@ name: Reusable Go Test
 
 on:
   workflow_call:
+    inputs:
+      ref:
+        required: false
+        type: string
+        default: ""
 
 jobs:
   test:
@@ -11,6 +16,11 @@ jobs:
         os: ["macos-latest", "ubuntu-latest"]
         go_vers: ["1.22", "1.23"]
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.ref }}
+
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
