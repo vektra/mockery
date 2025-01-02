@@ -14,6 +14,8 @@ jobs:
     #needs: test
     outputs:
       tag_result: ${{ steps.tag.outputs.tag_result }}
+      requested_version: ${{ steps.tag.outputs.requested_version }}
+      previous_version: ${{ steps.tag.outputs.previous_version }}
     steps:
       - run: sudo apt update && sudo apt install -y git && git --version
       - uses: actions/checkout@v2
