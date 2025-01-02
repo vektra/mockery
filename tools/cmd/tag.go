@@ -78,7 +78,7 @@ func (t *Tagger) createTag(repo *git.Repository, version string) error {
 	return nil
 }
 
-func (t *Tagger) largestTagSemver(repo *git.Repository) (*semver.Version, error) {
+func (t *Tagger) largestTagSemver(repo *git.Repository, major uint64) (*semver.Version, error) {
 	largestTag, err := semver.NewVersion("v0.0.0")
 	if err != nil {
 		return nil, errors.New(err)
@@ -118,7 +118,7 @@ func (t *Tagger) largestTagSemver(repo *git.Repository) (*semver.Version, error)
 		if err != nil {
 			return errors.New(err)
 		}
-		if version.GreaterThan(largestTag) {
+		if version.GreaterThan(largestTag) && version.Major() == major {
 			largestTag = version
 		}
 		return nil
@@ -152,7 +152,14 @@ func (t *Tagger) Tag() error {
 	if err != nil {
 		return errors.New(err)
 	}
-	largestTag, err := t.largestTagSemver(repo)
+
+	requestedVersion, err := semver.NewVersion(t.Version)
+	if err != nil {
+		logger.Err(err).Str("requested-version", string(t.Version)).Msg("error when constructing semver from version config")
+		return errors.New(err)
+	}
+
+	largestTag, err := t.largestTagSemver(repo, requestedVersion.Major())
 	if err != nil {
 		return err
 	}
@@ -164,12 +171,6 @@ func (t *Tagger) Tag() error {
 		Stringer("tagged-version", taggedVersion).Logger()
 
 	logger.Info().Msg("found largest semver tag")
-
-	requestedVersion, err := semver.NewVersion(t.Version)
-	if err != nil {
-		logger.Err(err).Str("requested-version", string(t.Version)).Msg("error when constructing semver from version config")
-		return errors.New(err)
-	}
 
 	logger = logger.With().
 		Stringer("requested-version", requestedVersion).
