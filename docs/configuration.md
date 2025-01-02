@@ -1,7 +1,7 @@
 Configuration
 ==============
 
-mockery uses [spf13/viper](https://github.com/spf13/viper) under the hood for its configuration parsing. 
+mockery uses [spf13/viper](https://github.com/spf13/viper) under the hood for its configuration parsing.
 
 Merging Precedence
 ------------------
@@ -17,13 +17,13 @@ The configuration applied to a specific mocked interface is merged according to 
 Formatting
 ----------
 
-If a parameter is named `with-expecter` and we want a value of `True`, then these are the formats for each source:
+If a parameter is named `enable-feature` and we want a value of `True`, then these are the formats for each source:
 
 | source               | value                        |
 |----------------------|------------------------------|
-| command line         | `--with-expecter=true`       |
-| Environment variable | `MOCKERY_WITH_EXPECTER=True` |
-| yaml                 | `with-expecter: True`        |
+| command line         | `--enable-feature=true`       |
+| Environment variable | `MOCKERY_ENABLE_FEATURE=True` |
+| yaml                 | `enable-feature: True`        |
 
 Recommended Basic Config
 -------------------------
@@ -31,7 +31,6 @@ Recommended Basic Config
 Copy the recommended basic configuration to a file called `.mockery.yaml` at the top-level of your repo:
 
 ```yaml title=".mockery.yaml"
-with-expecter: true
 packages:
     github.com/your-org/your-go-project:
         # place your package-specific config here
@@ -60,29 +59,27 @@ Parameter Descriptions
 | name                                                   | templated                 | default                               | description                                                                                                                                                                                                                                          |
 |--------------------------------------------------------|---------------------------|---------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `all`                                                  | :fontawesome-solid-x:     | `#!yaml false`                        | Generate all interfaces for the specified packages.                                                                                                                                                                                                  |
+| `_anchors`                                             | :fontawesome-solid-x:     | `#!yaml {}`                           | Unused by mockery, but allowed in the config schema so that you may define arbitrary yaml anchors.                                                                                                                                                   |
 | `boilerplate-file`                                     | :fontawesome-solid-x:     | `#!yaml ""`                           | Specify a path to a file that contains comments you want displayed at the top of all generated mock files. This is commonly used to display license headers at the top of your source code.                                                          |
 | `config`                                               | :fontawesome-solid-x:     | `#!yaml ""`                           | Set the location of the mockery config file.                                                                                                                                                                                                         |
-| `dir`                                                  | :fontawesome-solid-check: | `#!yaml "mocks/{{.PackagePath}}"`     | The directory where the mock file will be outputted to.                                                                                                                                                                                              |
-| `disable-config-search`                                | :fontawesome-solid-x:     | `#!yaml false`                        | Disable searching for configuration files                                                                                                                                                                                                            |
-| `disable-func-mocks`                                   | :fontawesome-solid-x:     | `#!yaml false`                        | Disable generation of function mocks.                                                                                                                                                                                                                |
-| `disable-version-string`                               | :fontawesome-solid-x:     | `#!yaml false`                        | Disable the version string in the generated mock files.                                                                                                                                                                                              |
-| `dry-run`                                              | :fontawesome-solid-x:     | `#!yaml false`                        | Print the actions that would be taken, but don't perform the actions.                                                                                                                                                                                |
+| `dir`                                                  | :fontawesome-solid-check: | `#!yaml "mocks/{{.SrcPackagePath}}"`  | The directory where the mock file will be outputted to.                                                                                                                                                                                              |
 | `exclude`                                              | :fontawesome-solid-x:     | `#!yaml []`                           | Specify subpackages to exclude when using `#!yaml recursive: True`                                                                                                                                                                                   |
 | `exclude-regex`                                        | :fontawesome-solid-x:     | `#!yaml ""`                           | When set along with `include-regex`, then interfaces which match `include-regex` but also match `exclude-regex` will not be generated. If `all` is set, or if `include-regex` is not set, then `exclude-regex` has no effect.                        |
 | `filename`                                             | :fontawesome-solid-check: | `#!yaml "mock_{{.InterfaceName}}.go"` | The name of the file the mock will reside in.                                                                                                                                                                                                        |
-| `include-auto-generated`                               | :fontawesome-solid-x:     | `#!yaml true`                         | Set to `#!yaml false` if you need mockery to skip auto-generated files during its recursive package discovery. When set to `#!yaml true`, mockery includes auto-generated files when determining if a particular directory is an importable package. |
+| `formatter`                                            | :fontawesome-solid-x:     | `#!yaml "goimports"                   | The formatter to use on the rendered template. Choices are: `gofmt`, `goimports`, `noop`.                                                                                                                                                            |
 | `include-regex`                                        | :fontawesome-solid-x:     | `#!yaml ""`                           | When set, only interface names that match the expression will be generated. This setting is ignored if `all: True` is specified in the configuration. To further refine the interfaces generated, use `exclude-regex`.                               |
-| `inpackage`                                            | :fontawesome-solid-x:     | `#!yaml false`                        | When generating mocks alongside the original interfaces, you must specify `inpackage: True` to inform mockery that the mock is being placed in the same package as the original interface.                                                           |
 | `log-level`                                            | :fontawesome-solid-x:     | `#!yaml "info"`                       | Set the level of the logger                                                                                                                                                                                                                          |
-| `mock-build-tags`                                      | :fontawesome-solid-x:     | `#!yaml ""`                           | Set the build tags of the generated mocks. Read more about the [format](https://pkg.go.dev/cmd/go#hdr-Build_constraints).                                                                                                                             |
+| `mock-build-tags`                                      | :fontawesome-solid-x:     | `#!yaml ""`                           | Set the build tags of the generated mocks. Read more about the [format](https://pkg.go.dev/cmd/go#hdr-Build_constraints).                                                                                                                            |
 | `mockname`                                             | :fontawesome-solid-check: | `#!yaml "Mock{{.InterfaceName}}"`     | The name of the generated mock.                                                                                                                                                                                                                      |
 | `outpkg`                                               | :fontawesome-solid-check: | `#!yaml "{{.PackageName}}"`           | Use `outpkg` to specify the package name of the generated mocks.                                                                                                                                                                                     |
 | [`packages`](features.md#packages-configuration)       | :fontawesome-solid-x:     | `#!yaml null`                         | A dictionary containing configuration describing the packages and interfaces to generate mocks for.                                                                                                                                                  |
+| `pkgname`                                              | :fontawesome-solid-check: | `#!yaml "{{.SrcPackageName}}"         | The `#!go package name` given to the generated mock files.                                                                                                                                                                                           |
 | `print`                                                | :fontawesome-solid-x:     | `#!yaml false`                        | Use `print: True` to have the resulting code printed out instead of written to disk.                                                                                                                                                                 |
 | [`recursive`](features.md#recursive-package-discovery) | :fontawesome-solid-x:     | `#!yaml false`                        | When set to `true` on a particular package, mockery will recursively search for all sub-packages and inject those packages into the config map.                                                                                                      |
 | [`replace-type`](features.md#replace-types)            | :fontawesome-solid-x:     | `#!yaml null`                         | Replaces aliases, packages and/or types during generation.                                                                                                                                                                                           |
-| `tags`                                                 | :fontawesome-solid-x:     | `#!yaml ""`                           | A space-separated list of additional build tags to load packages.                                                                                                                                                                                                                |
-| [`with-expecter`](features.md#expecter-structs)        | :fontawesome-solid-x:     | `#!yaml true`                         | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the preferred way to set up your mocks.                                                                                                                             |
+| `tags`                                                 | :fontawesome-solid-x:     | `#!yaml ""`                           | A space-separated list of additional build tags to load packages.                                                                                                                                                                                    |
+| `template`                                             | :fontawesome-solid-x:     | `#!yaml ""`                           | The template to use. The choices are `moq`, `mockery`, or a file path provided by `file://path/to/file.txt`.                                                                                                                                         |
+| `template-data`                                        | :fontawesome-solid-x:     | `#!yaml {}`                           | A `map[string]any` that provides arbitrary options to the template. Each template will have a different set of accepted keys. Refer to each template's documentation for more details.                                                               |
 
 Layouts
 -------
@@ -130,7 +127,7 @@ Using different configuration parameters, we can deploy our mocks on-disk in var
         }
         ```
     === "adjacent to interface"
-    
+
     	!!! warning
 
             Mockery does not protect against modifying original source code. Do not generate mocks using this config with uncommitted code changes.
@@ -186,7 +183,7 @@ Using different configuration parameters, we can deploy our mocks on-disk in var
 Templated Strings
 ------------------
 
-mockery configuration makes use of the Go templating system. 
+mockery configuration makes use of the Go templating system.
 
 ### Variables
 
@@ -202,7 +199,7 @@ Variables that are marked as being templated are capable of using mockery-provid
 | InterfaceDirRelative    | The directory path of the original interface being mocked, relative to the current working directory. If the path cannot be made relative to the current working directory, this variable will be set equal to `PackagePath`                                                                  |
 | InterfaceFile           | The file path of the original interface being mocked. **NOTE:** This option will only write one mock implementation to the output file. If multiple mocks are defined in your original file, only one mock will be written to the output.                                                     |
 | InterfaceName           | The name of the original interface being mocked                                                                                                                                                                                                                                               |
-| InterfaceNameCamel      | Converts a string `interface_name` to `InterfaceName`. <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use `{{ .InterfaceName | camelcase }}` instead                                                                                                                                                                     | 
+| InterfaceNameCamel      | Converts a string `interface_name` to `InterfaceName`. <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use `{{ .InterfaceName | camelcase }}` instead                                                                                                                                                                     |
 | InterfaceNameLowerCamel | Converts `InterfaceName` to `interfaceName` . <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use `{{ .InterfaceName | camelcase | firstLower }}` instead                                                                                                                                                                |
 | InterfaceNameSnake      | Converts `InterfaceName` to `interface_name` . <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use `{{ .InterfaceName | snakecase }}` instead                                                                                                                                                                             |
 | InterfaceNameLower      | Converts `InterfaceName` to `interfacename` . <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use `{{ .InterfaceName | lower }}` instead                                                                                                                                                                                  |
@@ -251,29 +248,3 @@ To learn more about the templating syntax, please [see the Go `text/template` do
 * [`dir` string](https://pkg.go.dev/path/filepath#Dir)
 * [`expandEnv` string](https://pkg.go.dev/os#ExpandEnv)
 * [`getenv` string](https://pkg.go.dev/os#Getenv)
-
-Legacy config options
----------------------
-
-??? danger "legacy configuration options"
-
-    The legacy config options will be removed in v3 and are deprecated (but supported) in v2.
-    
-    | name | description |
-    |------|-------------|
-    | `all`  |  It's common for a big package to have a lot of interfaces, so mockery provides `all`. This option will tell mockery to scan all files under the directory named by `--dir` ("." by default) and generates mocks for any interfaces it finds. This option implies `recursive: True`. |
-    | `boilerplate-file` | Specify a path to a file that contains comments you want displayed at the top of all generated mock files. This is commonly used to display license headers at the top of your source code. |
-    | `case` | mockery generates files using the casing of the original interface name.  This can be modified by specifying `case: underscore` to format the generated file name using underscore casing. |
-    | `exclude` | This parameter is a list of strings representing path prefixes that should be excluded from mock generation. |
-    | `exported` | Use `exported: True` to generate public mocks for private interfaces. |
-    | `filename` | Use the `filename` and `structname` to override the default generated file and struct name. These options are only compatible with non-regular expressions in `name`, where only one mock is generated. |
-    | `inpackage-suffix` | When `inpackage-suffix` is set to `True`, mock files are suffixed with `_mock` instead of being prefixed with `mock_` for InPackage mocks |
-    | `inpackage` and `keeptree` | For some complex repositories, there could be multiple interfaces with the same name but in different packages. In that case, `inpackage` allows generating the mocked interfaces directly in the package that it mocks. In the case you don't want to generate the mocks into the package but want to keep a similar structure, use the option `keeptree`. |
-    | `name`  | The `name` option takes either the name or matching regular expression of the interface to generate mock(s) for. |
-    | `output` | mockery always generates files with the package `mocks` to keep things clean and simple. You can control which mocks directory is used by using `output`, which defaults to `./mocks`. |
-    |`outpkg`| Use `outpkg` to specify the package name of the generated mocks.|
-    | `print` | Use `print: True` to have the resulting code printed out instead of written to disk. |
-    | `recursive`  |  Use the `recursive` option to search subdirectories for the interface(s). This option is only compatible with `name`. The `all` option implies `recursive: True`. |
-    | `replace-type source=destination` | Replaces aliases, packages and/or types during generation.|
-    | `testonly` | Prepend every mock file with `_test.go`. This is useful in cases where you are generating mocks `inpackage` but don't want the mocks to be visible to code outside of tests. |
-    | `with-expecter` | Use `with-expecter: True` to generate `EXPECT()` methods for your mocks. This is the prefervar(--md-code-hl-number-color) way to setup your mocks. |

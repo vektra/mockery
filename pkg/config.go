@@ -27,36 +27,27 @@ import (
 )
 
 type Config struct {
-	All                 bool                   `mapstructure:"all"`
-	Anchors             map[string]any         `mapstructure:"_anchors"`
-	BoilerplateFile     string                 `mapstructure:"boilerplate-file"`
-	BuildTags           string                 `mapstructure:"tags"`
-	Config              string                 `mapstructure:"config"`
-	Cpuprofile          string                 `mapstructure:"cpuprofile"`
-	Dir                 string                 `mapstructure:"dir"`
-	DisableConfigSearch bool                   `mapstructure:"disable-config-search"`
-	DryRun              bool                   `mapstructure:"dry-run"`
-	Exclude             []string               `mapstructure:"exclude"`
-	ExcludeRegex        string                 `mapstructure:"exclude-regex"`
-	FileName            string                 `mapstructure:"filename"`
-	Formatter           string                 `mapstructure:"formatter"`
-	IncludeRegex        string                 `mapstructure:"include-regex"`
-	LogLevel            string                 `mapstructure:"log-level"`
-	MockBuildTags       string                 `mapstructure:"mock-build-tags"`
-	MockName            string                 `mapstructure:"mockname"`
-	Note                string                 `mapstructure:"note"`
-	PkgName             string                 `mapstructure:"pkgname"`
-	Packages            map[string]interface{} `mapstructure:"packages"`
-	Profile             string                 `mapstructure:"profile"`
-	Recursive           bool                   `mapstructure:"recursive"`
-	SrcPkg              string                 `mapstructure:"srcpkg"`
-	// StructName overrides the name given to the mock struct and should only be nonempty
-	// when generating for an exact match (non regex expression in -name).
-	StructName     string         `mapstructure:"structname"`
-	Template       string         `mapstructure:"template"`
-	TemplateData   map[string]any `mapstructure:"template-data"`
-	UnrollVariadic bool           `mapstructure:"unroll-variadic"`
-	Version        bool           `mapstructure:"version"`
+	All             bool                   `mapstructure:"all"`
+	Anchors         map[string]any         `mapstructure:"_anchors"`
+	BoilerplateFile string                 `mapstructure:"boilerplate-file"`
+	BuildTags       string                 `mapstructure:"tags"`
+	Config          string                 `mapstructure:"config"`
+	Dir             string                 `mapstructure:"dir"`
+	Exclude         []string               `mapstructure:"exclude"`
+	ExcludeRegex    string                 `mapstructure:"exclude-regex"`
+	FileName        string                 `mapstructure:"filename"`
+	Formatter       string                 `mapstructure:"formatter"`
+	IncludeRegex    string                 `mapstructure:"include-regex"`
+	LogLevel        string                 `mapstructure:"log-level"`
+	MockBuildTags   string                 `mapstructure:"mock-build-tags"`
+	MockName        string                 `mapstructure:"mockname"`
+	PkgName         string                 `mapstructure:"pkgname"`
+	Packages        map[string]interface{} `mapstructure:"packages"`
+	Recursive       bool                   `mapstructure:"recursive"`
+	Template        string                 `mapstructure:"template"`
+	TemplateData    map[string]any         `mapstructure:"template-data"`
+	UnrollVariadic  bool                   `mapstructure:"unroll-variadic"`
+	Version         bool                   `mapstructure:"version"`
 	// Viper throws away case-sensitivity when it marshals into this struct. This
 	// destroys necessary information we need, specifically around interface names.
 	// So, we re-read the config into this map outside of viper.

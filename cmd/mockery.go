@@ -215,7 +215,6 @@ func (r *RootApp) Run() error {
 		fmt.Fprintf(os.Stderr, "Failed to initialize logger: %v\n", err)
 		return err
 	}
-	log = log.With().Bool(logging.LogKeyDryRun, r.Config.DryRun).Logger()
 	log.Info().Msgf("Starting mockery")
 	log.Info().Msgf("Using config: %s", r.Config.Config)
 	ctx := log.WithContext(context.Background())
