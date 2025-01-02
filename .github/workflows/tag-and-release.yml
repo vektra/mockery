@@ -40,6 +40,7 @@ jobs:
           set +e
           task -x tag 1>/tmp/versions.txt
 
+          printf "versions: $(cat /tmp/versions.txt)\n"
           echo "requested_version=$(cut -d',' -f 1 /tmp/versions.txt)" >> $GITHUB_OUTPUT
           echo "previous_version=$(cut -d',' -f 2 /tmp/versions.txt)" >> $GITHUB_OUTPUT
 
