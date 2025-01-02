@@ -2,19 +2,12 @@ name: Test and maybe create a new release
 
 on:
   push:
-    branches:
-      - v3
+    branches: [master, v3]
 permissions:
   contents: write
 jobs:
   test:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-          with:
-            fetch-depth: 0
-        - uses: ./.github/workflows/reusable-testing.yml
-
+      uses: ./.github/workflows/reusable-testing.yml
   tag:
     runs-on: ubuntu-latest
     needs: test
