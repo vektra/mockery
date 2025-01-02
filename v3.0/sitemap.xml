@@ -5,23 +5,11 @@
          <lastmod>2025-01-02</lastmod>
     </url>
     <url>
-         <loc>https://vektra.github.io/mockery/latest/changelog/</loc>
-         <lastmod>2025-01-02</lastmod>
-    </url>
-    <url>
          <loc>https://vektra.github.io/mockery/latest/configuration/</loc>
          <lastmod>2025-01-02</lastmod>
     </url>
     <url>
-         <loc>https://vektra.github.io/mockery/latest/deprecations/</loc>
-         <lastmod>2025-01-02</lastmod>
-    </url>
-    <url>
-         <loc>https://vektra.github.io/mockery/latest/examples/</loc>
-         <lastmod>2025-01-02</lastmod>
-    </url>
-    <url>
-         <loc>https://vektra.github.io/mockery/latest/features/</loc>
+         <loc>https://vektra.github.io/mockery/latest/faq/</loc>
          <lastmod>2025-01-02</lastmod>
     </url>
     <url>
@@ -29,11 +17,15 @@
          <lastmod>2025-01-02</lastmod>
     </url>
     <url>
-         <loc>https://vektra.github.io/mockery/latest/notes/</loc>
+         <loc>https://vektra.github.io/mockery/latest/running/</loc>
          <lastmod>2025-01-02</lastmod>
     </url>
     <url>
-         <loc>https://vektra.github.io/mockery/latest/running/</loc>
+         <loc>https://vektra.github.io/mockery/latest/template-mockery/</loc>
+         <lastmod>2025-01-02</lastmod>
+    </url>
+    <url>
+         <loc>https://vektra.github.io/mockery/latest/template-moq/</loc>
          <lastmod>2025-01-02</lastmod>
     </url>
     <url>

@@ -350,8 +350,6 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       
         
       
-        
-      
     
     
       
@@ -588,6 +586,69 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    
+  
+    Templates
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Templates
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
               
                 
   
@@ -595,13 +656,40 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="../examples/" class="md-nav__link">
+      <a href="../template-mockery/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
     
   
-    Examples
+    Mockery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../template-moq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    
+  
+    Moq
   
 
     
@@ -618,32 +706,6 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
           </ul>
         </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../features/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    
-  
-    Features
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -709,7 +771,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="../notes/" class="md-nav__link">
+      <a href="../faq/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -969,7 +1031,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <td>Use <code>outpkg</code> to specify the package name of the generated mocks.</td>
 </tr>
 <tr>
-<td><a href="../features/#packages-configuration"><code>packages</code></a></td>
+<td><a href="features.md#packages-configuration"><code>packages</code></a></td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
 <td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">null</span></code></td>
 <td>A dictionary containing configuration describing the packages and interfaces to generate mocks for.</td>
@@ -981,7 +1043,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <td></td>
 </tr>
 <tr>
-<td><a href="../features/#recursive-package-discovery"><code>recursive</code></a></td>
+<td><a href="features.md#recursive-package-discovery"><code>recursive</code></a></td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
 <td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">false</span></code></td>
 <td>When set to <code>true</code> on a particular package, mockery will recursively search for all sub-packages and inject those packages into the config map.</td>
