@@ -21,7 +21,7 @@ tasks:
   mocks.remove:
     desc: remove all mock files
     cmds:
-      - find . -name '*_mock.go' -o -name 'mock_*_test.go' | xargs -r rm
+      - find . -name '*_mock.go' -o -name 'mock_*_test.go' -o -name 'mocks.go' -o -name "mocks_moq.go" | xargs -r rm
       - rm -rf mocks/
 
   mocks.generate.mockery:

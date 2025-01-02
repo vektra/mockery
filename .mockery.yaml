@@ -22,22 +22,27 @@ packages:
   github.com/vektra/mockery/v3/pkg/fixtures:
     config:
       all: True
+      dir: "{{.InterfaceDir}}"
+      filename: "mocks.go"
+      pkgname: "test"
+      mockname: "Mock{{.InterfaceName}}"
     interfaces:
+      Requester:
       RequesterArgSameAsNamedImport:
       RequesterVariadic:
         configs:
-          - mockname: RequesterVariadicOneArgument
+          - mockname: MockRequesterVariadicOneArgument
             template-data:
               unroll-variadic: False
-          - mockname: RequesterVariadic
+          - mockname: MockRequesterVariadic
             template-data:
               unroll-variadic: True
       Expecter:
         configs:
-          - mockname: ExpecterAndRolledVariadic
+          - mockname: MockExpecterAndRolledVariadic
             template-data:
               unroll-variadic: False
-          - mockname: Expecter
+          - mockname: MockExpecter
             template-data:
               unroll-variadic: True
       RequesterReturnElided:

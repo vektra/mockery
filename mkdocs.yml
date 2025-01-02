@@ -60,6 +60,7 @@ nav:
   - Getting Started:
     - Installation: installation.md
     - Configuration: configuration.md
+    - Templates: templates.md
     - Running: running.md
     - Examples: examples.md
   - Features: features.md

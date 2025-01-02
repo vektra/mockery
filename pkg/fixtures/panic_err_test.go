@@ -1,16 +1,14 @@
-package test_test
+package test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	mocks "github.com/vektra/mockery/v3/mocks/github.com/vektra/mockery/v3/pkg/fixtures"
 )
 
 func TestPanicOnNoReturnValue(t *testing.T) {
-	m := mocks.NewPanicOnNoReturnValue(t)
+	m := NewMockPanicOnNoReturnValue(t)
 	m.EXPECT().DoSomething()
 
 	var panicOccurred bool

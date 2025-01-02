@@ -1,16 +1,10 @@
-mockname: "{{.InterfaceName}}Mock"
-filename: "moq_test.go"
 template: moq
-dir: "mocks/moq/{{.SrcPackagePath}}"
-formatter: "goimports"
-
 packages:
-  github.com/vektra/mockery/v3/pkg/fixtures:
-    config:
-      include-regex: '.*'
-      exclude-regex: 'RequesterGenerics|UnsafeInterface|requester_unexported'
-      pkgname: test
-      template-data:
-        with-resets: true
-        skip-ensure: true
-        stub-impl: false
+    github.com/vektra/mockery/v3/pkg/fixtures:
+        config:
+            dir: "{{.InterfaceDir}}"
+            filename: "mocks_moq.go"
+            pkgname: "test"
+            mockname: "Moq{{.InterfaceName}}"
+        interfaces:
+            Requester:
