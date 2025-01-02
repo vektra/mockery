@@ -13,7 +13,8 @@ import (
 )
 
 func TestNewRootCmd(t *testing.T) {
-	cmd := NewRootCmd()
+	cmd, err := NewRootCmd()
+	assert.NoError(t, err)
 	assert.Equal(t, "mockery", cmd.Name())
 }
 
@@ -187,75 +188,6 @@ type FooInterface interface {
 		"mock_FooInterface.go")
 
 	require.NoError(t, os.Chdir(tmpDir))
-
-	v, err := getConfig(nil, configPath)
-	require.NoError(t, err)
-	app, err := GetRootAppFromViper(v)
-	require.NoError(t, err)
-	require.NoError(t, app.Run())
-
-	exists, err := mockPath.Exists()
-	require.NoError(t, err)
-	assert.True(t, exists)
-}
-
-func TestRunLegacyNoConfig(t *testing.T) {
-	tmpDir := pathlib.NewPath(t.TempDir())
-
-	mockPath := tmpDir.Join("Foo.go")
-	codePath := tmpDir.Join("foo.go")
-	require.NoError(t, codePath.WriteFile([]byte(`
-package test
-
-type Foo interface {
-	Get(str string) string
-}`)))
-
-	v := viper.New()
-	v.Set("log-level", "debug")
-	v.Set("outpkg", "foobar")
-	v.Set("name", "Foo")
-	v.Set("output", tmpDir.String())
-	v.Set("disable-config-search", true)
-	require.NoError(t, os.Chdir(tmpDir.String()))
-
-	v, err := getConfig(nil, configPath)
-	require.NoError(t, err)
-	app, err := GetRootAppFromViper(v)
-	require.NoError(t, err)
-	require.NoError(t, app.Run())
-
-	exists, err := mockPath.Exists()
-	require.NoError(t, err)
-	assert.True(t, exists)
-}
-
-func TestRunLegacyNoConfigDirSet(t *testing.T) {
-	tmpDir := pathlib.NewPath(t.TempDir())
-
-	subdir := tmpDir.Join("subdir")
-	require.NoError(t, subdir.MkdirAll())
-
-	mockPath := subdir.Join("Foo.go")
-	codePath := subdir.Join("foo.go")
-
-	err := codePath.WriteFile([]byte(`
-package test
-
-type Foo interface {
-	Get(str string) string
-}`))
-	require.NoError(t, err, "failed to write go file")
-
-	v := viper.New()
-	v.Set("log-level", "debug")
-	v.Set("outpkg", "foobar")
-	v.Set("name", "Foo")
-	v.Set("output", subdir.String())
-	v.Set("disable-config-search", true)
-	v.Set("dir", subdir.String())
-	v.Set("recursive", true)
-	require.NoError(t, os.Chdir(tmpDir.String()))
 
 	v, err := getConfig(nil, configPath)
 	require.NoError(t, err)
