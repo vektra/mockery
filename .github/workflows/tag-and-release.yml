@@ -38,10 +38,10 @@ jobs:
         id: tag
         run: |
           set +e
-          task -x tag 1>versions.txt
+          task -x tag 1>/tmp/versions.txt
 
-          echo "requested_version=$(cut -d',' -f 1 versions.txt)" >> $GITHUB_OUTPUT
-          echo "previous_version=$(cut -d',' -f 2 versions.txt)" >> $GITHUB_OUTPUT
+          echo "requested_version=$(cut -d',' -f 1 /tmp/versions.txt)" >> $GITHUB_OUTPUT
+          echo "previous_version=$(cut -d',' -f 2 /tmp/versions.txt)" >> $GITHUB_OUTPUT
 
           tag_result="$?"
           echo "tag_result=$tag_result" >> $GITHUB_OUTPUT
