@@ -485,6 +485,19 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#parameter-descriptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Parameter Descriptions
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#merging-precedence" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -516,19 +529,6 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       
         <span class="md-typeset">
           Recommended Basic Config
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#parameter-descriptions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Parameter Descriptions
         </span>
       
     </span>
@@ -805,6 +805,19 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#parameter-descriptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Parameter Descriptions
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#merging-precedence" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -836,19 +849,6 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       
         <span class="md-typeset">
           Recommended Basic Config
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#parameter-descriptions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Parameter Descriptions
         </span>
       
     </span>
@@ -949,53 +949,6 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 
 <h1 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h1>
 <p>mockery uses <a href="https://github.com/spf13/viper">spf13/viper</a> under the hood for its configuration parsing.</p>
-<h2 id="merging-precedence">Merging Precedence<a class="headerlink" href="#merging-precedence" title="Permanent link">&para;</a></h2>
-<p>The configuration applied to a specific mocked interface is merged according to the following precedence (in decreasing priority):</p>
-<ol>
-<li>Interface-specific config in <code>.mockery.yaml</code></li>
-<li>Package-specific config in <code>.mockery.yaml</code></li>
-<li>Command-line options</li>
-<li>Environment variables</li>
-<li>Top-level defaults in <code>.mockery.yaml</code></li>
-</ol>
-<h2 id="formatting">Formatting<a class="headerlink" href="#formatting" title="Permanent link">&para;</a></h2>
-<p>If a parameter is named <code>enable-feature</code> and we want a value of <code>True</code>, then these are the formats for each source:</p>
-<table>
-<thead>
-<tr>
-<th>source</th>
-<th>value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>command line</td>
-<td><code>--enable-feature=true</code></td>
-</tr>
-<tr>
-<td>Environment variable</td>
-<td><code>MOCKERY_ENABLE_FEATURE=True</code></td>
-</tr>
-<tr>
-<td>yaml</td>
-<td><code>enable-feature: True</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="recommended-basic-config">Recommended Basic Config<a class="headerlink" href="#recommended-basic-config" title="Permanent link">&para;</a></h2>
-<p>Copy the recommended basic configuration to a file called <code>.mockery.yaml</code> at the top-level of your repo:</p>
-<div class="highlight"><span class="filename">.mockery.yaml</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">packages</span><span class="p">:</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">github.com/your-org/your-go-project</span><span class="p">:</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">        </span><span class="c1"># place your package-specific config here</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">        </span><span class="nt">config</span><span class="p">:</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">        </span><span class="nt">interfaces</span><span class="p">:</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">            </span><span class="c1"># select the interfaces you want mocked</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">            </span><span class="nt">Foo</span><span class="p">:</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">                </span><span class="c1"># Modify package-level config for this specific interface (if applicable)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">                </span><span class="nt">config</span><span class="p">:</span>
-</code></pre></div>
-<p>mockery will search upwards from your current-working-directory up to the root path, so the same configuration should be able to follow you within your project.</p>
-<p>See the <a href="../features/#examples"><code>features</code> section</a> for more details on how the config is structured.</p>
 <h2 id="parameter-descriptions">Parameter Descriptions<a class="headerlink" href="#parameter-descriptions" title="Permanent link">&para;</a></h2>
 <div class="admonition success">
 <p class="admonition-title">new style <code>packages</code> config</p>
@@ -1110,22 +1063,10 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <td></td>
 </tr>
 <tr>
-<td><code>print</code></td>
-<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
-<td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">false</span></code></td>
-<td>Use <code>print: True</code> to have the resulting code printed out instead of written to disk.</td>
-</tr>
-<tr>
 <td><a href="../features/#recursive-package-discovery"><code>recursive</code></a></td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
 <td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">false</span></code></td>
 <td>When set to <code>true</code> on a particular package, mockery will recursively search for all sub-packages and inject those packages into the config map.</td>
-</tr>
-<tr>
-<td><a href="../features/#replace-types"><code>replace-type</code></a></td>
-<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
-<td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">null</span></code></td>
-<td>Replaces aliases, packages and/or types during generation.</td>
 </tr>
 <tr>
 <td><code>tags</code></td>
@@ -1147,6 +1088,53 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 </tr>
 </tbody>
 </table>
+<h2 id="merging-precedence">Merging Precedence<a class="headerlink" href="#merging-precedence" title="Permanent link">&para;</a></h2>
+<p>The configuration applied to a specific mocked interface is merged according to the following precedence (in decreasing priority):</p>
+<ol>
+<li>Interface-specific config in <code>.mockery.yaml</code></li>
+<li>Package-specific config in <code>.mockery.yaml</code></li>
+<li>Command-line options</li>
+<li>Environment variables</li>
+<li>Top-level defaults in <code>.mockery.yaml</code></li>
+</ol>
+<h2 id="formatting">Formatting<a class="headerlink" href="#formatting" title="Permanent link">&para;</a></h2>
+<p>If a parameter is named <code>enable-feature</code> and we want a value of <code>True</code>, then these are the formats for each source:</p>
+<table>
+<thead>
+<tr>
+<th>source</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>command line</td>
+<td><code>--enable-feature=true</code></td>
+</tr>
+<tr>
+<td>Environment variable</td>
+<td><code>MOCKERY_ENABLE_FEATURE=True</code></td>
+</tr>
+<tr>
+<td>yaml</td>
+<td><code>enable-feature: True</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="recommended-basic-config">Recommended Basic Config<a class="headerlink" href="#recommended-basic-config" title="Permanent link">&para;</a></h2>
+<p>Copy the recommended basic configuration to a file called <code>.mockery.yaml</code> at the top-level of your repo:</p>
+<div class="highlight"><span class="filename">.mockery.yaml</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">packages</span><span class="p">:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">github.com/your-org/your-go-project</span><span class="p">:</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">        </span><span class="c1"># place your package-specific config here</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">        </span><span class="nt">config</span><span class="p">:</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">        </span><span class="nt">interfaces</span><span class="p">:</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">            </span><span class="c1"># select the interfaces you want mocked</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">            </span><span class="nt">Foo</span><span class="p">:</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">                </span><span class="c1"># Modify package-level config for this specific interface (if applicable)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">                </span><span class="nt">config</span><span class="p">:</span>
+</code></pre></div>
+<p>mockery will search upwards from your current-working-directory up to the root path, so the same configuration should be able to follow you within your project.</p>
+<p>See the <a href="../features/#examples"><code>features</code> section</a> for more details on how the config is structured.</p>
 <h2 id="layouts">Layouts<a class="headerlink" href="#layouts" title="Permanent link">&para;</a></h2>
 <p>Using different configuration parameters, we can deploy our mocks on-disk in various ways. These are some common layouts:</p>
 <div class="admonition info">
