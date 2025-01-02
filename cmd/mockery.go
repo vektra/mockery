@@ -20,12 +20,13 @@ import (
 )
 
 var (
-	cfgFile = ""
+	cfgFile            = ""
+	ErrCfgFileNotFound = errors.New("config file not found")
 )
 
 func NewRootCmd() (*cobra.Command, error) {
 	viperCfg, err := getConfig(nil, nil)
-	if err != nil {
+	if err != nil && !errors.Is(err, ErrCfgFileNotFound) {
 		return nil, err
 	}
 	cmd := &cobra.Command{
@@ -46,7 +47,6 @@ func NewRootCmd() (*cobra.Command, error) {
 
 	pFlags := cmd.PersistentFlags()
 	pFlags.StringVar(&cfgFile, "config", "", "config file to use")
-	pFlags.Bool("version", false, "prints the installed version of mockery")
 	pFlags.String("tags", "", "space-separated list of additional build tags to load packages")
 	pFlags.String("mock-build-tags", "", "set the build tags of the generated mocks. Read more about the format: https://pkg.go.dev/cmd/go#hdr-Build_constraints")
 	pFlags.String("log-level", "info", "Level of logging")
@@ -58,6 +58,7 @@ func NewRootCmd() (*cobra.Command, error) {
 	}
 
 	cmd.AddCommand(NewShowConfigCmd())
+	cmd.AddCommand(NewVersionCmd())
 	return cmd, nil
 }
 
@@ -100,46 +101,42 @@ func getConfig(
 	viperObj.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 	viperObj.AutomaticEnv()
 
-	if !viperObj.GetBool("disable-config-search") {
-		if configPath == nil && cfgFile != "" {
-			// Use config file from the flag.
-			viperObj.SetConfigFile(cfgFile)
-		} else if configPath != nil {
-			viperObj.SetConfigFile(configPath.String())
-		} else if viperObj.IsSet("config") {
-			viperObj.SetConfigFile(viperObj.GetString("config"))
-		} else {
-			// Find home directory.
-			home, err := homedir.Dir()
-			if err != nil {
-				log.Fatal().Err(err).Msgf("Failed to find homedir")
-			}
-
-			currentDir := baseSearchPath
-
-			for {
-				viperObj.AddConfigPath(currentDir.String())
-				if len(currentDir.Parts()) <= 1 {
-					break
-				}
-				currentDir = currentDir.Parent()
-			}
-
-			viperObj.AddConfigPath(home)
-			viperObj.SetConfigName(".mockery")
+	if configPath == nil && cfgFile != "" {
+		// Use config file from the flag.
+		viperObj.SetConfigFile(cfgFile)
+	} else if configPath != nil {
+		viperObj.SetConfigFile(configPath.String())
+	} else if viperObj.IsSet("config") {
+		viperObj.SetConfigFile(viperObj.GetString("config"))
+	} else {
+		// Find home directory.
+		home, err := homedir.Dir()
+		if err != nil {
+			log.Fatal().Err(err).Msgf("Failed to find homedir")
 		}
-		if err := viperObj.ReadInConfig(); err != nil {
-			log, _ := logging.GetLogger("debug")
-			log.Err(err).Msg("couldn't read any config file")
-			return nil, err
+
+		currentDir := baseSearchPath
+
+		for {
+			viperObj.AddConfigPath(currentDir.String())
+			if len(currentDir.Parts()) <= 1 {
+				break
+			}
+			currentDir = currentDir.Parent()
 		}
+
+		viperObj.AddConfigPath(home)
+		viperObj.SetConfigName(".mockery")
+	}
+	if err := viperObj.ReadInConfig(); err != nil {
+		log, _ := logging.GetLogger("debug")
+		log.Debug().Err(err).Msg("couldn't read any config file")
+		return viperObj, ErrCfgFileNotFound
 	}
 
 	viperObj.Set("config", viperObj.ConfigFileUsed())
 	return viperObj, nil
 }
-
-const regexMetadataChars = "\\.+*?()|[]{}^$"
 
 type RootApp struct {
 	pkg.Config
@@ -206,6 +203,10 @@ func (r *RootApp) Run() error {
 		return err
 	}
 	log.Info().Msgf("Starting mockery")
+	if r.Config.Config == "" {
+		log.Error().Msg("Config file not found. Mockery requires a config file to run.")
+		return ErrCfgFileNotFound
+	}
 	log.Info().Msgf("Using config: %s", r.Config.Config)
 	ctx := log.WithContext(context.Background())
 
@@ -213,10 +214,6 @@ func (r *RootApp) Run() error {
 		return err
 	}
 
-	if r.Config.Version {
-		fmt.Println(logging.GetSemverInfo())
-		return nil
-	}
 	buildTags := strings.Split(r.Config.BuildTags, " ")
 
 	configuredPackages, err := r.Config.GetPackages(ctx)
