@@ -313,3 +313,69 @@ You may also provide mockery a path to your own file using the `file://` protoco
 !!! warning "Construction"
 
     This section is under construction.
+
+mockery configuration makes use of the Go templating system.
+
+### Variables
+
+!!! note
+    Templated variables are only available when using the `packages` config feature.
+
+Variables that are marked as being templated are capable of using mockery-provided template parameters.
+
+| name                    | description                                                                                                                                                                                                                                                                                   |
+|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ConfigDir               | The directory path of the config file used. This is used to allow generation of mocks in a directory relative to the `.mockery.yaml` file, e.g. external interfaces.                                                                                                                          |
+| InterfaceDir            | The directory path of the original interface being mocked. This can be used as <br>`#!yaml dir: "{{.InterfaceDir}}"` to place your mocks adjacent to the original interface. This should not be used for external interfaces.                                                                 |
+| InterfaceDirRelative    | The directory path of the original interface being mocked, relative to the current working directory. If the path cannot be made relative to the current working directory, this variable will be set equal to `PackagePath`                                                                  |
+| InterfaceFile           | The file path of the original interface being mocked. **NOTE:** This option will only write one mock implementation to the output file. If multiple mocks are defined in your original file, only one mock will be written to the output.                                                     |
+| InterfaceName           | The name of the original interface being mocked                                                                                                                                                                                                                                               |
+| InterfaceNameCamel      | Converts a string `interface_name` to `InterfaceName`. <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use `{{ .InterfaceName | camelcase }}` instead                                                                                                                                                                     |
+| InterfaceNameLowerCamel | Converts `InterfaceName` to `interfaceName` . <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use `{{ .InterfaceName | camelcase | firstLower }}` instead                                                                                                                                                                |
+| InterfaceNameSnake      | Converts `InterfaceName` to `interface_name` . <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use `{{ .InterfaceName | snakecase }}` instead                                                                                                                                                                             |
+| InterfaceNameLower      | Converts `InterfaceName` to `interfacename` . <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use `{{ .InterfaceName | lower }}` instead                                                                                                                                                                                  |
+| Mock                    | A string that is `Mock` if the interface is exported, or `mock` if it is not exported. Useful when setting the name of your mock to something like: <br>`#!yaml mockname: "{{.Mock}}{{.InterfaceName}}"`<br> This way, the mock name will retain the exported-ness of the original interface. |
+| MockName                | The name of the mock that will be generated. Note that this is simply the `mockname` configuration variable                                                                                                                                                                                   |
+| PackageName             | The name of the package from the original interface                                                                                                                                                                                                                                           |
+| PackagePath             | The fully qualified package path of the original interface                                                                                                                                                                                                                                    |
+
+### Functions
+
+!!! note
+    Templated functions are only available when using the `packages` config feature.
+
+Template functions allow you to inspect and manipulate template variables.
+
+All template functions are calling native Go functions under the hood, so signatures and return values matches the Go functions you are probably already familiar with.
+
+To learn more about the templating syntax, please [see the Go `text/template` documentation](https://pkg.go.dev/text/template)
+
+* [`contains` string substr](https://pkg.go.dev/strings#Contains)
+* [`hasPrefix` string prefix](https://pkg.go.dev/strings#HasPrefix)
+* [`hasSuffix` string suffix](https://pkg.go.dev/strings#HasSuffix)
+* [`join` elems sep](https://pkg.go.dev/strings#Join)
+* [`replace` string old new n](https://pkg.go.dev/strings#Replace)
+* [`replaceAll` string old new](https://pkg.go.dev/strings#ReplaceAll)
+* [`split` string sep](https://pkg.go.dev/strings#Split)
+* [`splitAfter` string sep](https://pkg.go.dev/strings#SplitAfter)
+* [`splitAfterN` string sep n](https://pkg.go.dev/strings#SplitAfterN)
+* [`trim` string cutset](https://pkg.go.dev/strings#Trim)
+* [`trimLeft` string cutset](https://pkg.go.dev/strings#TrimLeft)
+* [`trimPrefix` string prefix](https://pkg.go.dev/strings#TrimPrefix)
+* [`trimRight` string cutset](https://pkg.go.dev/strings#TrimRight)
+* [`trimSpace` string](https://pkg.go.dev/strings#TrimSpace)
+* [`trimSuffix` string suffix](https://pkg.go.dev/strings#TrimSuffix)
+* [`lower` string](https://pkg.go.dev/strings#ToLower)
+* [`upper` string](https://pkg.go.dev/strings#ToUpper)
+* [`camelcase` string](https://pkg.go.dev/github.com/huandu/xstrings#ToCamelCase)
+* [`snakecase` string](https://pkg.go.dev/github.com/huandu/xstrings#ToSnakeCase)
+* [`kebabcase` string](https://pkg.go.dev/github.com/huandu/xstrings#ToKebabCase)
+* [`firstLower` string](https://pkg.go.dev/github.com/huandu/xstrings#FirstRuneToLower)
+* [`firstUpper` string](https://pkg.go.dev/github.com/huandu/xstrings#FirstRuneToUpper)
+* [`matchString` pattern](https://pkg.go.dev/regexp#MatchString)
+* [`quoteMeta` string](https://pkg.go.dev/regexp#QuoteMeta)
+* [`base` string](https://pkg.go.dev/path/filepath#Base)
+* [`clean` string](https://pkg.go.dev/path/filepath#Clean)
+* [`dir` string](https://pkg.go.dev/path/filepath#Dir)
+* [`expandEnv` string](https://pkg.go.dev/os#ExpandEnv)
+* [`getenv` string](https://pkg.go.dev/os#Getenv)

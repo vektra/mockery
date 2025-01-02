@@ -1,17 +1,51 @@
 Configuration
 ==============
 
-mockery uses [spf13/viper](https://github.com/spf13/viper) under the hood for its configuration parsing.
+All configuration is specified in a `.mockery.yml` file. An example config file may look like this:
+
+```yaml
+all: False
+boilerplate-file: ./path/to/boilerplate.txt
+template: mockery
+packages:
+  github.com/vektra/example:
+    config:
+      # Make use of the template variables to place the mock in the same
+      # directory as the original interface.
+      dir: "{{.InterfaceDir}}"
+      filename: "mocks_test.go"
+      outpkg: "{{.PackageName}}_test"
+      mockname: "Mock{{.InterfaceName}}"
+    interfaces:
+      Foo:
+      Bar:
+        config:
+          # Make it unexported instead
+          mockname: "mock{{.InterfaceName}}"
+      Baz:
+        # Create two mock implementations of Baz with different names.
+        configs:
+          - filename: "mocks_baz_one_test.go"
+            mockname: "MockBazOne"
+          - filename: "mocks_baz_two_test.go"
+            mockname: "MockBazTwo"
+  io:
+    config:
+      dir: path/to/io/mocks
+      filename: "mocks_io.go"
+
+```
+
+These are the highlights of the config scheme:
+
+1. The parameters are merged hierarchically
+2. There are a number of template variables available to generalize config values.
+3. The style of mock to be generated is specified using the [`template`](templates.md) parameter.
+
+An output file may contain multiple mocks, but the only rule is that all the mocks in the file must come from the same package. Because of this, mocks for different packages must go in different files.
 
 Parameter Descriptions
 -----------------------
-
-!!! success "new style `packages` config"
-    The [`packages`]() config section is the new style of configuration. All old config semantics, including `go:generate` and any config files lacking the `packages` section is officially deprecated as of v2.31.0. Legacy semantics will be completely removed in v3.
-
-    Please see the [features section](features.md#packages-configuration) for more details on how `packages` works, including some example configuration.
-
-    Please see the [migration docs](migrating_to_packages.md) for details on how to migrate your config.
 
 | name                                                   | templated                 | default                               | description                                                                                                                                                                                                                                          |
 |--------------------------------------------------------|---------------------------|---------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -59,191 +93,3 @@ If a parameter is named `enable-feature` and we want a value of `True`, then the
 | Environment variable | `MOCKERY_ENABLE_FEATURE=True` |
 | yaml                 | `enable-feature: True`        |
 
-Recommended Basic Config
--------------------------
-
-Copy the recommended basic configuration to a file called `.mockery.yaml` at the top-level of your repo:
-
-```yaml title=".mockery.yaml"
-packages:
-    github.com/your-org/your-go-project:
-        # place your package-specific config here
-        config:
-        interfaces:
-            # select the interfaces you want mocked
-            Foo:
-                # Modify package-level config for this specific interface (if applicable)
-                config:
-```
-
-mockery will search upwards from your current-working-directory up to the root path, so the same configuration should be able to follow you within your project.
-
-See the [`features` section](features.md#examples) for more details on how the config is structured.
-
-Layouts
--------
-
-Using different configuration parameters, we can deploy our mocks on-disk in various ways. These are some common layouts:
-
-!!! info "layouts"
-
-    === "defaults"
-
-        ```yaml
-        filename: "mock_{{.InterfaceName}}.go"
-        dir: "mocks/{{.PackagePath}}"
-        mockname: "Mock{{.InterfaceName}}"
-        outpkg: "{{.PackageName}}"
-        ```
-
-        If these variables aren't specified, the above values will be applied to the config options. This strategy places your mocks into a separate `mocks/` directory.
-
-        **Interface Description**
-
-        | name | value |
-        |------|-------|
-        | `InterfaceName` | `MyDatabase` |
-        | `PackagePath` | `github.com/user/project/pkgName` |
-        | `PackageName` | `pkgName` |
-
-        **Output**
-
-        The mock will be generated at:
-
-        ```
-        mocks/github.com/user/project/pkgName/mock_MyDatabase.go
-        ```
-
-        The mock file will look like:
-
-        ```go
-        package pkgName
-
-        import mock "github.com/stretchr/testify/mock"
-
-        type MockMyDatabase struct {
-          mock.Mock
-        }
-        ```
-    === "adjacent to interface"
-
-    	!!! warning
-
-            Mockery does not protect against modifying original source code. Do not generate mocks using this config with uncommitted code changes.
-
-
-        ```yaml
-        filename: "mock_{{.InterfaceName}}.go"
-        dir: "{{.InterfaceDir}}"
-        mockname: "Mock{{.InterfaceName}}"
-        outpkg: "{{.PackageName}}"
-        inpackage: True
-        ```
-
-        Instead of the mocks being generated in a different folder, you may elect to generate the mocks alongside the original interface in your package. This may be the way most people define their configs, as it removes circular import issues that can happen with the default config.
-
-        For example, the mock might be generated along side the original source file like this:
-
-        ```
-        ./path/to/pkg/db.go
-        ./path/to/pkg/mock_MyDatabase.go
-        ```
-
-        **Interface Description**
-
-        | name | value |
-        |------|-------|
-        | `InterfaceName` | `MyDatabase` |
-        | `PackagePath` | `github.com/user/project/path/to/pkg`
-        | `PackagePathRelative` | `path/to/pkg` |
-        | `PackageName` | `pkgName` |
-        | `SourceFile` | `./path/to/pkg/db.go` |
-
-        **Output**
-
-        Mock file will be generated at:
-
-        ```
-        ./path/to/pkg/mock_MyDatabase.go
-        ```
-
-        The mock file will look like:
-
-        ```go
-        package pkgName
-
-        import mock "github.com/stretchr/testify/mock"
-
-        type MockMyDatabase struct {
-          mock.Mock
-        }
-        ```
-
-Templated Strings
-------------------
-
-mockery configuration makes use of the Go templating system.
-
-### Variables
-
-!!! note
-    Templated variables are only available when using the `packages` config feature.
-
-Variables that are marked as being templated are capable of using mockery-provided template parameters.
-
-| name                    | description                                                                                                                                                                                                                                                                                   |
-|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ConfigDir               | The directory path of the config file used. This is used to allow generation of mocks in a directory relative to the `.mockery.yaml` file, e.g. external interfaces.                                                                                                                          |
-| InterfaceDir            | The directory path of the original interface being mocked. This can be used as <br>`#!yaml dir: "{{.InterfaceDir}}"` to place your mocks adjacent to the original interface. This should not be used for external interfaces.                                                                 |
-| InterfaceDirRelative    | The directory path of the original interface being mocked, relative to the current working directory. If the path cannot be made relative to the current working directory, this variable will be set equal to `PackagePath`                                                                  |
-| InterfaceFile           | The file path of the original interface being mocked. **NOTE:** This option will only write one mock implementation to the output file. If multiple mocks are defined in your original file, only one mock will be written to the output.                                                     |
-| InterfaceName           | The name of the original interface being mocked                                                                                                                                                                                                                                               |
-| InterfaceNameCamel      | Converts a string `interface_name` to `InterfaceName`. <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use `{{ .InterfaceName | camelcase }}` instead                                                                                                                                                                     |
-| InterfaceNameLowerCamel | Converts `InterfaceName` to `interfaceName` . <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use `{{ .InterfaceName | camelcase | firstLower }}` instead                                                                                                                                                                |
-| InterfaceNameSnake      | Converts `InterfaceName` to `interface_name` . <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use `{{ .InterfaceName | snakecase }}` instead                                                                                                                                                                             |
-| InterfaceNameLower      | Converts `InterfaceName` to `interfacename` . <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use `{{ .InterfaceName | lower }}` instead                                                                                                                                                                                  |
-| Mock                    | A string that is `Mock` if the interface is exported, or `mock` if it is not exported. Useful when setting the name of your mock to something like: <br>`#!yaml mockname: "{{.Mock}}{{.InterfaceName}}"`<br> This way, the mock name will retain the exported-ness of the original interface. |
-| MockName                | The name of the mock that will be generated. Note that this is simply the `mockname` configuration variable                                                                                                                                                                                   |
-| PackageName             | The name of the package from the original interface                                                                                                                                                                                                                                           |
-| PackagePath             | The fully qualified package path of the original interface                                                                                                                                                                                                                                    |
-
-### Functions
-
-!!! note
-    Templated functions are only available when using the `packages` config feature.
-
-Template functions allow you to inspect and manipulate template variables.
-
-All template functions are calling native Go functions under the hood, so signatures and return values matches the Go functions you are probably already familiar with.
-
-To learn more about the templating syntax, please [see the Go `text/template` documentation](https://pkg.go.dev/text/template)
-
-* [`contains` string substr](https://pkg.go.dev/strings#Contains)
-* [`hasPrefix` string prefix](https://pkg.go.dev/strings#HasPrefix)
-* [`hasSuffix` string suffix](https://pkg.go.dev/strings#HasSuffix)
-* [`join` elems sep](https://pkg.go.dev/strings#Join)
-* [`replace` string old new n](https://pkg.go.dev/strings#Replace)
-* [`replaceAll` string old new](https://pkg.go.dev/strings#ReplaceAll)
-* [`split` string sep](https://pkg.go.dev/strings#Split)
-* [`splitAfter` string sep](https://pkg.go.dev/strings#SplitAfter)
-* [`splitAfterN` string sep n](https://pkg.go.dev/strings#SplitAfterN)
-* [`trim` string cutset](https://pkg.go.dev/strings#Trim)
-* [`trimLeft` string cutset](https://pkg.go.dev/strings#TrimLeft)
-* [`trimPrefix` string prefix](https://pkg.go.dev/strings#TrimPrefix)
-* [`trimRight` string cutset](https://pkg.go.dev/strings#TrimRight)
-* [`trimSpace` string](https://pkg.go.dev/strings#TrimSpace)
-* [`trimSuffix` string suffix](https://pkg.go.dev/strings#TrimSuffix)
-* [`lower` string](https://pkg.go.dev/strings#ToLower)
-* [`upper` string](https://pkg.go.dev/strings#ToUpper)
-* [`camelcase` string](https://pkg.go.dev/github.com/huandu/xstrings#ToCamelCase)
-* [`snakecase` string](https://pkg.go.dev/github.com/huandu/xstrings#ToSnakeCase)
-* [`kebabcase` string](https://pkg.go.dev/github.com/huandu/xstrings#ToKebabCase)
-* [`firstLower` string](https://pkg.go.dev/github.com/huandu/xstrings#FirstRuneToLower)
-* [`firstUpper` string](https://pkg.go.dev/github.com/huandu/xstrings#FirstRuneToUpper)
-* [`matchString` pattern](https://pkg.go.dev/regexp#MatchString)
-* [`quoteMeta` string](https://pkg.go.dev/regexp#QuoteMeta)
-* [`base` string](https://pkg.go.dev/path/filepath#Base)
-* [`clean` string](https://pkg.go.dev/path/filepath#Clean)
-* [`dir` string](https://pkg.go.dev/path/filepath#Dir)
-* [`expandEnv` string](https://pkg.go.dev/os#ExpandEnv)
-* [`getenv` string](https://pkg.go.dev/os#Getenv)
