@@ -15,8 +15,8 @@ import (
 	"strings"
 
 	"github.com/chigopher/pathlib"
+	"github.com/go-viper/mapstructure/v2"
 	"github.com/jinzhu/copier"
-	"github.com/mitchellh/mapstructure"
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
 	"github.com/vektra/mockery/v3/internal/logging"
