@@ -96,10 +96,6 @@ Who uses mockery?
 	<figcaption>[Hashicorp](https://github.com/search?q=org%3Ahashicorp%20mockery&type=code)</figcaption>
   </figure>
 - <figure markdown>
-	[![Uber logo](assets/images/logos/uber.svg){ class="center" width="100" }](https://github.com/uber/cadence)
-	<figcaption>[Uber Cadence](https://github.com/uber/cadence)</figcaption>
-  </figure>
-- <figure markdown>
 	[![Jaeger logo](assets/images/logos/jaeger.png){ class="center" width="300" }](https://github.com/jaegertracing/jaeger)
 	<figcaption>[Jaegertracing](https://github.com/jaegertracing/jaeger)</figcaption>
   </figure>
