@@ -247,12 +247,24 @@ func (p *Parser) packageInterfaces(
 			continue
 		}
 
-		typ, ok := obj.Type().(*types.Named)
+		var typ *types.Named
+		var name string
+
+		ttyp := obj.Type()
+
+		if talias, ok := obj.Type().(*types.Alias); ok {
+			name = talias.Obj().Name()
+			ttyp = types.Unalias(obj.Type())
+		}
+
+		typ, ok := ttyp.(*types.Named)
 		if !ok {
 			continue
 		}
 
-		name = typ.Obj().Name()
+		if name == "" {
+			name = typ.Obj().Name()
+		}
 
 		if typ.Obj().Pkg() == nil {
 			continue
