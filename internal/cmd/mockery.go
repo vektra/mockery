@@ -13,7 +13,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/vektra/mockery/v3/internal"
+	pkg "github.com/vektra/mockery/v3/internal"
 	"github.com/vektra/mockery/v3/internal/logging"
 	"github.com/vektra/mockery/v3/internal/stackerr"
 	"golang.org/x/tools/go/packages"
@@ -157,9 +157,14 @@ func GetRootAppFromViper(v *viper.Viper) (*RootApp, error) {
 // asserts that various properties of the interfaces added to the collection are
 // uniform.
 type InterfaceCollection struct {
+	// Mockery needs to assert that certain properties of the added interfaces
+	// are uniform for all members of the collection. This includes things like
+	// 1. Package name of the output mock file
+	// 2. Source package path (only one package per output file is allowed)
 	srcPkgPath  string
 	outFilePath *pathlib.Path
 	srcPkg      *packages.Package
+	pkgName     string
 	interfaces  []*pkg.Interface
 }
 
@@ -167,6 +172,7 @@ func NewInterfaceCollection(
 	srcPkgPath string,
 	outFilePath *pathlib.Path,
 	srcPkg *packages.Package,
+	pkgName string,
 ) *InterfaceCollection {
 	return &InterfaceCollection{
 		srcPkgPath:  srcPkgPath,
@@ -190,6 +196,11 @@ func (i *InterfaceCollection) Append(ctx context.Context, iface *pkg.Interface) 
 	if i.outFilePath.String() != pathlib.NewPath(iface.Config.Dir).Join(iface.Config.FileName).String() {
 		msg := "all mocks within an InterfaceCollection must have the same output file path"
 		log.Error().Msg(msg)
+		return errors.New(msg)
+	}
+	if i.pkgName != iface.Config.PkgName {
+		msg := "all mocks in an output file must have the same pkgname"
+		log.Error().Str("expected-pkgname", i.pkgName).Str("interface-pkgname", iface.Config.PkgName).Msg(msg)
 		return errors.New(msg)
 	}
 	i.interfaces = append(i.interfaces, iface)
@@ -276,6 +287,7 @@ func (r *RootApp) Run() error {
 					iface.Pkg.PkgPath,
 					pathlib.NewPath(ifaceConfig.Dir).Join(ifaceConfig.FileName),
 					iface.Pkg,
+					iface.Config.PkgName,
 				)
 			}
 			mockFileToInterfaces[filePath].Append(
