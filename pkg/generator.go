@@ -423,7 +423,8 @@ func (g *Generator) generateImports(ctx context.Context) {
 func (g *Generator) GeneratePrologue(ctx context.Context, pkg string) {
 	g.populateImports(ctx)
 
-	if !g.config.Issue845Fix {
+	// If both `inpackage` and `outpkg` are set warn
+	if g.config.InPackage && g.config.Outpkg != "" {
 		logging.WarnDeprecated(
 			ctx,
 			"issue-845-fix must be set to True to remove this warning. Visit the link for more details.",
@@ -431,6 +432,9 @@ func (g *Generator) GeneratePrologue(ctx context.Context, pkg string) {
 				"url": logging.DocsURL("/deprecations/#issue-845-fix"),
 			},
 		)
+	}
+
+	if !g.config.Issue845Fix {
 		if g.config.InPackage {
 			g.printf("package %s\n\n", g.iface.Pkg.Name())
 		} else {
