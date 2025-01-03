@@ -11,11 +11,6 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
-type packageLoadEntry struct {
-	pkgs []*packages.Package
-	err  error
-}
-
 type Parser struct {
 	parserPackages []*types.Package
 	conf           packages.Config
