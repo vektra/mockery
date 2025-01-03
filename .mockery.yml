@@ -14,7 +14,6 @@ packages:
     interfaces:
       TypesPackage:
   github.com/vektra/mockery/v3/internal/fixtures:
-    interfaces:
       RequesterVariadic:
         configs:
           - mockname: MockRequesterVariadicOneArgument

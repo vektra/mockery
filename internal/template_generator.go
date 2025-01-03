@@ -102,8 +102,9 @@ type TemplateGenerator struct {
 	templateName string
 	registry     *template.Registry
 	formatter    Formatter
-	pkgConfig    *Config
 	inPackage    bool
+	pkgConfig    *Config
+	pkgName      string
 }
 
 func NewTemplateGenerator(
@@ -112,6 +113,7 @@ func NewTemplateGenerator(
 	outPkgFSPath *pathlib.Path,
 	templateName string,
 	formatter Formatter,
+	pkgConfig *Config,
 	pkgName string,
 ) (*TemplateGenerator, error) {
 	srcPkgFSPath := pathlib.NewPath(srcPkg.GoFiles[0]).Parent()
@@ -156,8 +158,9 @@ func NewTemplateGenerator(
 		templateName: templateName,
 		registry:     reg,
 		formatter:    formatter,
-		pkgConfig:    pkgConfig,
 		inPackage:    inPackage,
+		pkgConfig:    pkgConfig,
+		pkgName:      pkgName,
 	}, nil
 }
 
@@ -300,7 +303,7 @@ func (g *TemplateGenerator) Generate(
 	data := template.Data{
 		Boilerplate:     boilerplate,
 		BuildTags:       g.pkgConfig.MockBuildTags,
-		PkgName:         g.pkgConfig.PkgName,
+		PkgName:         g.pkgName,
 		SrcPkgQualifier: "",
 		Mocks:           mockData,
 		TemplateData:    g.pkgConfig.TemplateData,

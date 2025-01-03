@@ -164,7 +164,7 @@ type InterfaceCollection struct {
 	srcPkgPath  string
 	outFilePath *pathlib.Path
 	srcPkg      *packages.Package
-	pkgName     string
+	outPkgName  string
 	interfaces  []*pkg.Interface
 }
 
@@ -172,12 +172,13 @@ func NewInterfaceCollection(
 	srcPkgPath string,
 	outFilePath *pathlib.Path,
 	srcPkg *packages.Package,
-	pkgName string,
+	outPkgName string,
 ) *InterfaceCollection {
 	return &InterfaceCollection{
 		srcPkgPath:  srcPkgPath,
 		outFilePath: outFilePath,
 		srcPkg:      srcPkg,
+		outPkgName:  outPkgName,
 		interfaces:  make([]*pkg.Interface, 0),
 	}
 }
@@ -185,11 +186,11 @@ func NewInterfaceCollection(
 func (i *InterfaceCollection) Append(ctx context.Context, iface *pkg.Interface) error {
 	log := zerolog.Ctx(ctx).With().
 		Str(logging.LogKeyInterface, iface.Name).
-		Str(logging.LogKeyPackageName, iface.Pkg.Name).
+		Str("source-pkgname", iface.Pkg.Name).
 		Str(logging.LogKeyPackagePath, iface.Pkg.PkgPath).
 		Str("expected-package-path", i.srcPkgPath).Logger()
 	if iface.Pkg.PkgPath != i.srcPkgPath {
-		msg := "cannot mix interfaces from different packages in the same file."
+		msg := "cannot mix interfaces from different packages in the same file"
 		log.Error().Msg(msg)
 		return errors.New(msg)
 	}
@@ -198,9 +199,9 @@ func (i *InterfaceCollection) Append(ctx context.Context, iface *pkg.Interface) 
 		log.Error().Msg(msg)
 		return errors.New(msg)
 	}
-	if i.pkgName != iface.Config.PkgName {
+	if i.outPkgName != iface.Config.PkgName {
 		msg := "all mocks in an output file must have the same pkgname"
-		log.Error().Str("expected-pkgname", i.pkgName).Str("interface-pkgname", iface.Config.PkgName).Msg(msg)
+		log.Error().Str("output-pkgname", i.outPkgName).Str("interface-pkgname", iface.Config.PkgName).Msg(msg)
 		return errors.New(msg)
 	}
 	i.interfaces = append(i.interfaces, iface)
@@ -256,7 +257,7 @@ func (r *RootApp) Run() error {
 		ifaceLog := log.
 			With().
 			Str(logging.LogKeyInterface, iface.Name).
-			Str(logging.LogKeyQualifiedName, iface.Pkg.Types.Path()).
+			Str(logging.LogKeyPackagePath, iface.Pkg.Types.Path()).
 			Logger()
 
 		ifaceCtx := ifaceLog.WithContext(ctx)
@@ -287,10 +288,10 @@ func (r *RootApp) Run() error {
 					iface.Pkg.PkgPath,
 					pathlib.NewPath(ifaceConfig.Dir).Join(ifaceConfig.FileName),
 					iface.Pkg,
-					iface.Config.PkgName,
+					ifaceConfig.PkgName,
 				)
 			}
-			mockFileToInterfaces[filePath].Append(
+			if err := mockFileToInterfaces[filePath].Append(
 				ctx,
 				pkg.NewInterface(
 					iface.Name,
@@ -298,7 +299,9 @@ func (r *RootApp) Run() error {
 					iface.File,
 					iface.Pkg,
 					ifaceConfig),
-			)
+			); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -320,7 +323,8 @@ func (r *RootApp) Run() error {
 			interfacesInFile.outFilePath.Parent(),
 			packageConfig.Template,
 			pkg.Formatter(r.Config.Formatter),
-			interfacesInFile.pkgName,
+			packageConfig,
+			interfacesInFile.outPkgName,
 		)
 		if err != nil {
 			return err
