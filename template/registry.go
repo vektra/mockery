@@ -7,6 +7,7 @@ import (
 	"sort"
 
 	"github.com/rs/zerolog"
+	"github.com/vektra/mockery/v3/internal/stackerr"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -58,7 +59,7 @@ func (r Registry) SrcPkgName() string {
 func (r Registry) LookupInterface(name string) (*types.Interface, *types.TypeParamList, error) {
 	obj := r.SrcPkg().Types.Scope().Lookup(name)
 	if obj == nil {
-		return nil, nil, fmt.Errorf("interface not found: %s", name)
+		return nil, nil, stackerr.NewStackErr(fmt.Errorf("interface not found: %s", name))
 	}
 
 	if !types.IsInterface(obj.Type()) {

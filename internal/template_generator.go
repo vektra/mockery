@@ -257,6 +257,7 @@ func (g *TemplateGenerator) Generate(
 	for _, ifaceMock := range interfaces {
 		iface, tparams, err := g.registry.LookupInterface(ifaceMock.Name)
 		if err != nil {
+			log.Err(err).Msg("error looking up interface")
 			return []byte{}, err
 		}
 

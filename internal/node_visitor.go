@@ -29,7 +29,7 @@ func (nv *NodeVisitor) add(ctx context.Context, n *ast.TypeSpec) {
 	log.Debug().
 		Str("node-name", n.Name.Name).
 		Str("node-type", fmt.Sprintf("%T", n.Type)).
-		Msg("found node with acceptable type for mocking")
+		Msg("found type declaration that is a possible interface")
 	nv.declaredInterfaces = append(nv.declaredInterfaces, n.Name.Name)
 }
 

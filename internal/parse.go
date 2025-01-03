@@ -84,6 +84,11 @@ func (p *Parser) ParsePackages(ctx context.Context, packageNames []string) ([]*I
 					continue
 				}
 
+				if !types.IsInterface(obj.Type()) {
+					ifaceLog.Debug().Msg("type is not an interface, skipping")
+					continue
+				}
+
 				name := typ.Obj().Name()
 
 				if typ.Obj().Pkg() == nil {
