@@ -112,14 +112,14 @@ func NewTemplateGenerator(
 	outPkgFSPath *pathlib.Path,
 	templateName string,
 	formatter Formatter,
-	pkgConfig *Config,
+	pkgName string,
 ) (*TemplateGenerator, error) {
 	srcPkgFSPath := pathlib.NewPath(srcPkg.GoFiles[0]).Parent()
 	log := zerolog.Ctx(ctx).With().
 		Stringer("srcPkgFSPath", srcPkgFSPath).
 		Stringer("outPkgFSPath", outPkgFSPath).
 		Str("src-pkg-name", srcPkg.Name).
-		Str("out-pkg-name", pkgConfig.PkgName).
+		Str("out-pkg-name", pkgName).
 		Logger()
 	if !outPkgFSPath.IsAbsolute() {
 		cwd, err := os.Getwd()
@@ -140,7 +140,7 @@ func NewTemplateGenerator(
 	// Note: Technically, go allows test files to have a different package name
 	// than non-test files. In this case, the test files have to import the source
 	// package just as if it were in a different directory.
-	if pkgConfig.PkgName == srcPkg.Name && srcPkgFSPath.Equals(outPkgFSPath) {
+	if pkgName == srcPkg.Name && srcPkgFSPath.Equals(outPkgFSPath) {
 		log.Debug().Msg("output package detected to be in-package of original package")
 		inPackage = true
 	} else {

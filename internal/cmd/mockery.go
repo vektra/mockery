@@ -320,7 +320,7 @@ func (r *RootApp) Run() error {
 			interfacesInFile.outFilePath.Parent(),
 			packageConfig.Template,
 			pkg.Formatter(r.Config.Formatter),
-			packageConfig,
+			interfacesInFile.pkgName,
 		)
 		if err != nil {
 			return err
