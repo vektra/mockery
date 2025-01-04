@@ -4,11 +4,12 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"os"
 
+	koanfYAML "github.com/knadh/koanf/parsers/yaml"
+	"github.com/kr/pretty"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/vektra/mockery/v3/internal"
+	pkg "github.com/vektra/mockery/v3/internal"
 	"github.com/vektra/mockery/v3/internal/logging"
 	"github.com/vektra/mockery/v3/internal/stackerr"
 	"gopkg.in/yaml.v3"
@@ -20,11 +21,14 @@ func NewShowConfigCmd() *cobra.Command {
 		Short: "Show the yaml config",
 		Long:  `Print out a yaml representation of the yaml config file. This does not show config from exterior sources like CLI, environment etc.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			cfg, err := getConfig(nil, nil)
+			conf, k, err := pkg.NewConfig(nil, nil)
 			if err != nil {
 				return err
 			}
-			return showConfig(cmd, args, cfg, os.Stdout)
+			b, _ := k.Marshal(koanfYAML.Parser())
+			fmt.Println(string(b))
+			pretty.Print(conf)
+			return nil
 		},
 	}
 }

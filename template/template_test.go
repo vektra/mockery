@@ -17,7 +17,7 @@ func TestTemplateMockFuncs(t *testing.T) {
 	})
 
 	t.Run("ImportStatement", func(t *testing.T) {
-		f := TemplateMockFuncs["ImportStatement"].(func(*Package) string)
+		f := TemplateMockFuncs["importStatement"].(func(*Package) string)
 		pkg := NewPackage(types.NewPackage("xyz", "xyz"))
 		if f(pkg) != `"xyz"` {
 			t.Errorf("ImportStatement(...): want: `\"xyz\"`; got: `%s`", f(pkg))
@@ -30,7 +30,7 @@ func TestTemplateMockFuncs(t *testing.T) {
 	})
 
 	t.Run("SyncPkgQualifier", func(t *testing.T) {
-		f := TemplateMockFuncs["SyncPkgQualifier"].(func([]*Package) string)
+		f := TemplateMockFuncs["syncPkgQualifier"].(func([]*Package) string)
 		if f(nil) != "sync" {
 			t.Errorf("SyncPkgQualifier(...): want: `sync`; got: `%s`", f(nil))
 		}

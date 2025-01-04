@@ -12,6 +12,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	pkg "github.com/vektra/mockery/v3/internal"
 	"github.com/vektra/mockery/v3/internal/logging"
@@ -29,6 +30,8 @@ func NewRootCmd() (*cobra.Command, error) {
 	if err != nil && !errors.Is(err, ErrCfgFileNotFound) {
 		return nil, err
 	}
+
+	var pFlags *pflag.FlagSet
 	cmd := &cobra.Command{
 		Use:   "mockery",
 		Short: "Generate mock objects for your Golang interfaces",
@@ -44,8 +47,7 @@ func NewRootCmd() (*cobra.Command, error) {
 			}
 		},
 	}
-
-	pFlags := cmd.PersistentFlags()
+	pFlags = cmd.PersistentFlags()
 	pFlags.StringVar(&cfgFile, "config", "", "config file to use")
 	pFlags.String("tags", "", "space-separated list of additional build tags to load packages")
 	pFlags.String("mock-build-tags", "", "set the build tags of the generated mocks. Read more about the format: https://pkg.go.dev/cmd/go#hdr-Build_constraints")

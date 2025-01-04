@@ -17,7 +17,12 @@ import (
 	"github.com/chigopher/pathlib"
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/jinzhu/copier"
+	koanfYAML "github.com/knadh/koanf/parsers/yaml"
+	"github.com/knadh/koanf/providers/file"
+	"github.com/knadh/koanf/providers/posflag"
+	"github.com/knadh/koanf/v2"
 	"github.com/rs/zerolog"
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"github.com/vektra/mockery/v3/internal/logging"
 	"github.com/vektra/mockery/v3/internal/stackerr"
@@ -26,34 +31,100 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type RootConfig struct {
+	Config
+	Packages map[string]PackageConfig `koanf:"packages"`
+}
+
+type PackageConfig struct {
+	Config     Config                     `koanf:"config"`
+	Interfaces map[string]InterfaceConfig `koanf:"interfaces"`
+}
+
+type InterfaceConfig struct {
+	Config  Config   `koanf:"config"`
+	Configs []Config `koanf:"configs"`
+}
+
 type Config struct {
-	All             bool                   `mapstructure:"all"`
-	Anchors         map[string]any         `mapstructure:"_anchors"`
-	BoilerplateFile string                 `mapstructure:"boilerplate-file"`
-	BuildTags       string                 `mapstructure:"tags"`
-	Config          string                 `mapstructure:"config"`
-	Dir             string                 `mapstructure:"dir"`
-	Exclude         []string               `mapstructure:"exclude"`
-	ExcludeRegex    string                 `mapstructure:"exclude-regex"`
-	FileName        string                 `mapstructure:"filename"`
-	Formatter       string                 `mapstructure:"formatter"`
-	IncludeRegex    string                 `mapstructure:"include-regex"`
-	LogLevel        string                 `mapstructure:"log-level"`
-	MockBuildTags   string                 `mapstructure:"mock-build-tags"`
-	MockName        string                 `mapstructure:"mockname"`
-	PkgName         string                 `mapstructure:"pkgname"`
-	Packages        map[string]interface{} `mapstructure:"packages"`
-	Recursive       bool                   `mapstructure:"recursive"`
-	Template        string                 `mapstructure:"template"`
-	TemplateData    map[string]any         `mapstructure:"template-data"`
-	UnrollVariadic  bool                   `mapstructure:"unroll-variadic"`
-	Version         bool                   `mapstructure:"version"`
+	All             bool                   `koanf:"all"`
+	Anchors         map[string]any         `koanf:"_anchors"`
+	BoilerplateFile string                 `koanf:"boilerplate-file"`
+	BuildTags       string                 `koanf:"tags"`
+	Config          string                 `koanf:"config"`
+	Dir             string                 `koanf:"dir"`
+	Exclude         []string               `koanf:"exclude"`
+	ExcludeRegex    string                 `koanf:"exclude-regex"`
+	FileName        string                 `koanf:"filename"`
+	Formatter       string                 `koanf:"formatter"`
+	IncludeRegex    string                 `koanf:"include-regex"`
+	LogLevel        string                 `koanf:"log-level"`
+	MockBuildTags   string                 `koanf:"mock-build-tags"`
+	MockName        string                 `koanf:"mockname"`
+	PkgName         string                 `koanf:"pkgname"`
+	Packages        map[string]interface{} `koanf:"packages"`
+	Recursive       bool                   `koanf:"recursive"`
+	Template        string                 `koanf:"template"`
+	TemplateData    map[string]any         `koanf:"template-data"`
+	UnrollVariadic  bool                   `koanf:"unroll-variadic"`
+	Version         bool                   `koanf:"version"`
 	// Viper throws away case-sensitivity when it marshals into this struct. This
 	// destroys necessary information we need, specifically around interface names.
 	// So, we re-read the config into this map outside of viper.
 	// https://github.com/spf13/viper/issues/1014
 	_cfgAsMap      map[string]any
 	pkgConfigCache map[string]*Config
+}
+
+func findConfig() (*pathlib.Path, error) {
+	cwd, err := os.Getwd()
+	if err != nil {
+		return nil, fmt.Errorf("getting current working directory: %w", err)
+	}
+	currentPath := pathlib.NewPath(cwd)
+	for len(currentPath.Parts()) != 1 {
+		for _, confName := range []string{".mockery.yaml", ".mockery.yml"} {
+			configPath := currentPath.Join(confName)
+			isFile, err := configPath.Exists()
+			if err != nil {
+				return nil, fmt.Errorf("checking if %s is file: %w", configPath.String(), err)
+			}
+			if isFile {
+				return configPath, nil
+			}
+		}
+		currentPath = currentPath.Parent()
+	}
+	return nil, errors.New("mockery config file not found")
+}
+
+func NewConfig(configFile *pathlib.Path, flags *pflag.FlagSet) (*RootConfig, *koanf.Koanf, error) {
+	// 2. Flags
+	// 3. Config file
+	var err error
+	var rootConfig RootConfig
+	k := koanf.New("::")
+	if configFile == nil {
+		configFile, err = findConfig()
+		if err != nil {
+			return nil, k, fmt.Errorf("discovering mockery config: %w", err)
+		}
+	}
+
+	if flags != nil {
+		if err := k.Load(posflag.Provider(flags, ".", k), nil); err != nil {
+			return nil, k, fmt.Errorf("loading flags: %w", err)
+		}
+	}
+
+	if err := k.Load(file.Provider(configFile.String()), koanfYAML.Parser()); err != nil {
+		return nil, k, fmt.Errorf("loading config file: %w", err)
+	}
+
+	if err := k.Unmarshal("", &rootConfig); err != nil {
+		return nil, k, fmt.Errorf("unmarshalling config: %w", err)
+	}
+	return &rootConfig, k, nil
 }
 
 func NewConfigFromViper(v *viper.Viper) (*Config, error) {

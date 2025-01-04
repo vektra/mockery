@@ -32,9 +32,9 @@ func TestExpecter(t *testing.T) {
 		require.True(t, runCalled)
 
 		// Call again panic
-		require.Panics(t, func() {
+		assert.Panics(t, func() {
 			expMock.NoArg()
-		})
+		}, "call did not panic")
 		expMock.AssertExpectations(t)
 	})
 
