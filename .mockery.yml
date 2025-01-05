@@ -1,6 +1,6 @@
 template: "mockery"
 tags: "custom2"
-formatter: "noop"
+formatter: "goimports"
 all: True
 dir: "{{.InterfaceDir}}"
 mockname: "Mock{{.InterfaceName}}"
@@ -8,12 +8,8 @@ pkgname: "{{.SrcPackageName}}"
 filename: "mocks_test.go"
 packages:
   github.com/vektra/mockery/v3/internal/fixtures/buildtag/comment:
-  github.com/vektra/mockery/v3/pkg:
-    config:
-      all: False
-    interfaces:
-      TypesPackage:
   github.com/vektra/mockery/v3/internal/fixtures:
+    interfaces:
       RequesterVariadic:
         configs:
           - mockname: MockRequesterVariadicOneArgument
@@ -35,6 +31,8 @@ packages:
           template-data:
             unroll-variadic: False
   github.com/vektra/mockery/v3/internal/fixtures/recursive_generation:
+    config:
+      recursive: True
   github.com/vektra/mockery/v3/internal/fixtures/empty_return:
   github.com/vektra/mockery/v3/internal/fixtures/method_args/same_name_arg_and_type:
   github.com/vektra/mockery/v3/internal/fixtures/iface_typed_param:

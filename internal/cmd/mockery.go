@@ -8,12 +8,9 @@ import (
 	"strings"
 
 	"github.com/chigopher/pathlib"
-	"github.com/mitchellh/go-homedir"
 	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"github.com/spf13/viper"
 	pkg "github.com/vektra/mockery/v3/internal"
 	"github.com/vektra/mockery/v3/internal/logging"
 	"github.com/vektra/mockery/v3/internal/stackerr"
@@ -26,17 +23,26 @@ var (
 )
 
 func NewRootCmd() (*cobra.Command, error) {
-	viperCfg, err := getConfig(nil, nil)
-	if err != nil && !errors.Is(err, ErrCfgFileNotFound) {
-		return nil, err
-	}
-
 	var pFlags *pflag.FlagSet
 	cmd := &cobra.Command{
 		Use:   "mockery",
 		Short: "Generate mock objects for your Golang interfaces",
 		Run: func(cmd *cobra.Command, args []string) {
-			r, err := GetRootAppFromViper(viperCfg)
+			// We don't have a fully configured logger yet. Use the log level from
+			// pflags to create a logger.
+			level, err := pFlags.GetString("log-level")
+			if err != nil {
+				fmt.Printf("failed to get log-level from flags: %s", err.Error())
+				os.Exit(1)
+			}
+			log, err := logging.GetLogger(level)
+			if err != nil {
+				fmt.Printf("failed to get logger: %s", err.Error())
+				os.Exit(1)
+			}
+			ctx := log.WithContext(context.Background())
+
+			r, err := GetRootApp(ctx, pFlags)
 			if err != nil {
 				printStackTrace(err)
 				os.Exit(1)
@@ -54,10 +60,6 @@ func NewRootCmd() (*cobra.Command, error) {
 	pFlags.String("log-level", "info", "Level of logging")
 	pFlags.String("boilerplate-file", "", "File to read a boilerplate text from. Text should be a go block comment, i.e. /* ... */")
 	pFlags.Bool("unroll-variadic", true, "For functions with variadic arguments, do not unroll the arguments into the underlying testify call. Instead, pass variadic slice as-is.")
-
-	if err := viperCfg.BindPFlags(pFlags); err != nil {
-		panic(fmt.Sprintf("failed to bind PFlags: %v", err))
-	}
 
 	cmd.AddCommand(NewShowConfigCmd())
 	cmd.AddCommand(NewVersionCmd())
@@ -83,70 +85,21 @@ func Execute() {
 	}
 }
 
-func getConfig(
-	baseSearchPath *pathlib.Path,
-	configPath *pathlib.Path,
-) (*viper.Viper, error) {
-	viperObj := viper.NewWithOptions(viper.KeyDelimiter("::"))
-	if baseSearchPath == nil {
-		currentWorkingDir, err := os.Getwd()
-		if err != nil {
-			panic(err)
-		}
-		baseSearchPath = pathlib.NewPath(currentWorkingDir)
-	}
-	if viperObj == nil {
-		viperObj = viper.NewWithOptions(viper.KeyDelimiter("::"))
-	}
-
-	viperObj.SetEnvPrefix("MOCKERY")
-	viperObj.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
-	viperObj.AutomaticEnv()
-
-	if configPath == nil && cfgFile != "" {
-		// Use config file from the flag.
-		viperObj.SetConfigFile(cfgFile)
-	} else if configPath != nil {
-		viperObj.SetConfigFile(configPath.String())
-	} else if viperObj.IsSet("config") {
-		viperObj.SetConfigFile(viperObj.GetString("config"))
-	} else {
-		// Find home directory.
-		home, err := homedir.Dir()
-		if err != nil {
-			log.Fatal().Err(err).Msgf("Failed to find homedir")
-		}
-
-		currentDir := baseSearchPath
-
-		for {
-			viperObj.AddConfigPath(currentDir.String())
-			if len(currentDir.Parts()) <= 1 {
-				break
-			}
-			currentDir = currentDir.Parent()
-		}
-
-		viperObj.AddConfigPath(home)
-		viperObj.SetConfigName(".mockery")
-	}
-	if err := viperObj.ReadInConfig(); err != nil {
-		log, _ := logging.GetLogger("debug")
-		log.Debug().Err(err).Msg("couldn't read any config file")
-		return viperObj, ErrCfgFileNotFound
-	}
-
-	viperObj.Set("config", viperObj.ConfigFileUsed())
-	return viperObj, nil
-}
-
 type RootApp struct {
-	pkg.Config
+	Config pkg.RootConfig
 }
 
-func GetRootAppFromViper(v *viper.Viper) (*RootApp, error) {
+func GetRootApp(ctx context.Context, flags *pflag.FlagSet) (*RootApp, error) {
+	var configFile *pathlib.Path
 	r := &RootApp{}
-	config, err := pkg.NewConfigFromViper(v)
+	configFromFlags, err := flags.GetString("config")
+	if err != nil {
+		return nil, err
+	}
+	if configFromFlags != "" {
+		configFile = pathlib.NewPath(configFromFlags)
+	}
+	config, _, err := pkg.NewRootConfig(ctx, configFile, flags)
 	if err != nil {
 		return nil, stackerr.NewStackErrf(err, "failed to get config")
 	}
@@ -216,12 +169,7 @@ func (r *RootApp) Run() error {
 		fmt.Fprintf(os.Stderr, "Failed to initialize logger: %v\n", err)
 		return err
 	}
-	log.Info().Msgf("Starting mockery")
-	if r.Config.Config == "" {
-		log.Error().Msg("Config file not found. Mockery requires a config file to run.")
-		return ErrCfgFileNotFound
-	}
-	log.Info().Msgf("Using config: %s", r.Config.Config)
+	log.Info().Str("config-file", r.Config.ConfigFileUsed().String()).Msgf("Starting mockery")
 	ctx := log.WithContext(context.Background())
 
 	if err := r.Config.Initialize(ctx); err != nil {
@@ -236,7 +184,7 @@ func (r *RootApp) Run() error {
 	}
 	if len(configuredPackages) == 0 {
 		log.Error().Msg("no packages specified in config")
-		return nil
+		return fmt.Errorf("no packages specified in config")
 	}
 	parser := pkg.NewParser(buildTags)
 
@@ -264,7 +212,12 @@ func (r *RootApp) Run() error {
 
 		ifaceCtx := ifaceLog.WithContext(ctx)
 
-		shouldGenerate, err := r.Config.ShouldGenerateInterface(ifaceCtx, iface.Pkg.Types.Path(), iface.Name)
+		pkgConfig, err := r.Config.GetPackageConfig(ctx, iface.Pkg.PkgPath)
+		if err != nil {
+			return fmt.Errorf("getting package %s: %w", iface.Pkg.PkgPath, err)
+		}
+
+		shouldGenerate, err := pkgConfig.ShouldGenerateInterface(ifaceCtx, iface.Name)
 		if err != nil {
 			return err
 		}
@@ -272,17 +225,19 @@ func (r *RootApp) Run() error {
 			ifaceLog.Debug().Msg("config doesn't specify to generate this interface, skipping.")
 			continue
 		}
-		ifaceLog.Info().Msg("Adding interface")
-		ifaceConfigs, err := r.Config.GetInterfaceConfig(ctx, iface.Pkg.PkgPath, iface.Name)
-		if err != nil {
-			return err
+		ifaceLog.Info().Msg("adding interface")
+		if pkgConfig.Interfaces == nil {
+			ifaceLog.Debug().Msg("interfaces is nil")
 		}
-		for _, ifaceConfig := range ifaceConfigs {
-			if err := ifaceConfig.ParseTemplates(ctx, iface, iface.Pkg); err != nil {
+		ifaceConfig := pkgConfig.GetInterfaceConfig(ctx, iface.Name)
+		ifaceLog.Debug().Int("len", len(ifaceConfig.Configs)).Str("fmt", fmt.Sprintf("%#v", ifaceConfig)).Msg("interface configs length")
+		for _, ifaceConfig := range ifaceConfig.Configs {
+			if err := ifaceConfig.ParseTemplates(ifaceCtx, iface, iface.Pkg); err != nil {
 				log.Err(err).Msg("Can't parse config templates for interface")
 				return err
 			}
-			filePath := ifaceConfig.FilePath(ctx).String()
+			filePath := ifaceConfig.FilePath().String()
+			ifaceLog.Debug().Str("collection", filePath).Msg("adding interface to collection")
 
 			_, ok := mockFileToInterfaces[filePath]
 			if !ok {
@@ -316,16 +271,16 @@ func (r *RootApp) Run() error {
 		if err != nil {
 			return err
 		}
-		if err := packageConfig.ParseTemplates(ctx, nil, interfacesInFile.srcPkg); err != nil {
+		if err := packageConfig.Config.ParseTemplates(ctx, nil, interfacesInFile.srcPkg); err != nil {
 			return err
 		}
 		generator, err := pkg.NewTemplateGenerator(
 			fileCtx,
 			interfacesInFile.interfaces[0].Pkg,
 			interfacesInFile.outFilePath.Parent(),
-			packageConfig.Template,
+			packageConfig.Config.Template,
 			pkg.Formatter(r.Config.Formatter),
-			packageConfig,
+			packageConfig.Config,
 			interfacesInFile.outPkgName,
 		)
 		if err != nil {
