@@ -33,12 +33,12 @@ func NewRootCmd() (*cobra.Command, error) {
 			}
 			level, err := pFlags.GetString("log-level")
 			if err != nil {
-				fmt.Printf("failed to get log-level from flags: %s", err.Error())
+				fmt.Printf("failed to get log-level from flags: %s\n", err.Error())
 				os.Exit(1)
 			}
 			log, err := logging.GetLogger(level)
 			if err != nil {
-				fmt.Printf("failed to get logger: %s", err.Error())
+				fmt.Printf("failed to get logger: %s\n", err.Error())
 				os.Exit(1)
 			}
 			ctx := log.WithContext(context.Background())
@@ -91,16 +91,8 @@ type RootApp struct {
 }
 
 func GetRootApp(ctx context.Context, flags *pflag.FlagSet) (*RootApp, error) {
-	var configFile *pathlib.Path
 	r := &RootApp{}
-	configFromFlags, err := flags.GetString("config")
-	if err != nil {
-		return nil, err
-	}
-	if configFromFlags != "" {
-		configFile = pathlib.NewPath(configFromFlags)
-	}
-	config, _, err := pkg.NewRootConfig(ctx, configFile, flags)
+	config, _, err := pkg.NewRootConfig(ctx, flags)
 	if err != nil {
 		return nil, stackerr.NewStackErrf(err, "failed to get config")
 	}

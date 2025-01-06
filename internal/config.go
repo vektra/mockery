@@ -38,25 +38,17 @@ type RootConfig struct {
 
 func NewRootConfig(
 	ctx context.Context,
-	configFile *pathlib.Path,
 	flags *pflag.FlagSet,
 ) (*RootConfig, *koanf.Koanf, error) {
+	var configFile *pathlib.Path
+
 	log := zerolog.Ctx(ctx)
 	var err error
-	strPtr := func(s string) *string {
-		return &s
-	}
-	defaultConfig := &Config{
-		Dir:       strPtr("{{.InterfaceDir}}"),
-		FileName:  strPtr("mocks_test.go"),
-		Formatter: strPtr("goimports"),
-		MockName:  strPtr("Mock{{.InterfaceName}}"),
-		PkgName:   strPtr("{{.SrcPackageName}}"),
-		LogLevel:  strPtr("info"),
-	}
-	// Set all the other parameters to their respective zero-values. Need to use
+
+	conf := &Config{}
+	// Set all parameters to their respective zero-values. Need to use
 	// reflection for this sadly.
-	v := reflect.ValueOf(defaultConfig).Elem()
+	v := reflect.ValueOf(conf).Elem()
 	for i := 0; i < v.NumField(); i++ {
 		field := v.Field(i)
 		if field.Kind() != reflect.Pointer {
@@ -69,26 +61,29 @@ func NewRootConfig(
 	}
 
 	var rootConfig RootConfig = RootConfig{
-		Config: defaultConfig,
+		Config: conf,
 	}
 	k := koanf.New("|")
 	rootConfig.koanf = k
-	if configFile != nil {
-		log.Debug().Str("config-file-args", configFile.String()).Msg("config file from args")
-	}
+	k.Set("dir", "{{.InterfaceDir}}")
+	k.Set("filename", "mocks_test.go")
+	k.Set("formatter", "goimports")
+	k.Set("mockname", "Mock{{.InterfaceName}}")
+	k.Set("pkgname", "{{.SrcPackageName}}")
+	k.Set("log-level", "info")
 
-	if configFile == nil {
-		configFileFromEnv := os.Getenv("MOCKERY_CONFIG")
-		if configFileFromEnv != "" {
-			configFile = pathlib.NewPath(configFileFromEnv)
-		}
+	configFileFromEnv := os.Getenv("MOCKERY_CONFIG")
+	if configFileFromEnv != "" {
+		configFile = pathlib.NewPath(configFileFromEnv)
 	}
 	if configFile == nil {
 		configFileFromFlags, err := flags.GetString("config")
 		if err != nil {
 			return nil, nil, fmt.Errorf("getting --config from flags: %w", err)
 		}
-		configFile = pathlib.NewPath(configFileFromFlags)
+		if configFileFromFlags != "" {
+			configFile = pathlib.NewPath(configFileFromFlags)
+		}
 	}
 	if configFile == nil {
 		log.Debug().Msg("config file not specified, searching")
