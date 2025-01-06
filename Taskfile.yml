@@ -32,7 +32,7 @@ tasks:
   mocks.generate.moq:
     silent: True
     cmds:
-      - MOCKERY_CONFIG=./.mockery_moq.yaml go run .
+      - MOCKERY_CONFIG=./.mockery_moq.yml go run .
 
   mocks.generate:
     desc: generate mocks

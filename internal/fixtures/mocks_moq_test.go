@@ -51,14 +51,17 @@ type MoqUsesAny struct {
 
 // GetReader calls GetReaderFunc.
 func (mock *MoqUsesAny) GetReader() any {
-	if mock.GetReaderFunc == nil {
-		panic("MoqUsesAny.GetReaderFunc: method is nil but UsesAny.GetReader was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockGetReader.Lock()
 	mock.calls.GetReader = append(mock.calls.GetReader, callInfo)
 	mock.lockGetReader.Unlock()
+	if mock.GetReaderFunc == nil {
+		var (
+			v any
+		)
+		return v
+	}
 	return mock.GetReaderFunc()
 }
 
@@ -74,6 +77,20 @@ func (mock *MoqUsesAny) GetReaderCalls() []struct {
 	calls = mock.calls.GetReader
 	mock.lockGetReader.RUnlock()
 	return calls
+}
+
+// ResetGetReaderCalls reset all the calls that were made to GetReader.
+func (mock *MoqUsesAny) ResetGetReaderCalls() {
+	mock.lockGetReader.Lock()
+	mock.calls.GetReader = nil
+	mock.lockGetReader.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqUsesAny) ResetCalls() {
+	mock.lockGetReader.Lock()
+	mock.calls.GetReader = nil
+	mock.lockGetReader.Unlock()
 }
 
 // Ensure, that MoqFooer does implement Fooer.
@@ -136,9 +153,6 @@ type MoqFooer struct {
 
 // Bar calls BarFunc.
 func (mock *MoqFooer) Bar(f func([]int)) {
-	if mock.BarFunc == nil {
-		panic("MoqFooer.BarFunc: method is nil but Fooer.Bar was just called")
-	}
 	callInfo := struct {
 		F func([]int)
 	}{
@@ -147,6 +161,9 @@ func (mock *MoqFooer) Bar(f func([]int)) {
 	mock.lockBar.Lock()
 	mock.calls.Bar = append(mock.calls.Bar, callInfo)
 	mock.lockBar.Unlock()
+	if mock.BarFunc == nil {
+		return
+	}
 	mock.BarFunc(f)
 }
 
@@ -166,11 +183,15 @@ func (mock *MoqFooer) BarCalls() []struct {
 	return calls
 }
 
+// ResetBarCalls reset all the calls that were made to Bar.
+func (mock *MoqFooer) ResetBarCalls() {
+	mock.lockBar.Lock()
+	mock.calls.Bar = nil
+	mock.lockBar.Unlock()
+}
+
 // Baz calls BazFunc.
 func (mock *MoqFooer) Baz(path string) func(x string) string {
-	if mock.BazFunc == nil {
-		panic("MoqFooer.BazFunc: method is nil but Fooer.Baz was just called")
-	}
 	callInfo := struct {
 		Path string
 	}{
@@ -179,6 +200,12 @@ func (mock *MoqFooer) Baz(path string) func(x string) string {
 	mock.lockBaz.Lock()
 	mock.calls.Baz = append(mock.calls.Baz, callInfo)
 	mock.lockBaz.Unlock()
+	if mock.BazFunc == nil {
+		var (
+			fn func(x string) string
+		)
+		return fn
+	}
 	return mock.BazFunc(path)
 }
 
@@ -198,11 +225,15 @@ func (mock *MoqFooer) BazCalls() []struct {
 	return calls
 }
 
+// ResetBazCalls reset all the calls that were made to Baz.
+func (mock *MoqFooer) ResetBazCalls() {
+	mock.lockBaz.Lock()
+	mock.calls.Baz = nil
+	mock.lockBaz.Unlock()
+}
+
 // Foo calls FooFunc.
 func (mock *MoqFooer) Foo(f func(x string) string) error {
-	if mock.FooFunc == nil {
-		panic("MoqFooer.FooFunc: method is nil but Fooer.Foo was just called")
-	}
 	callInfo := struct {
 		F func(x string) string
 	}{
@@ -211,6 +242,12 @@ func (mock *MoqFooer) Foo(f func(x string) string) error {
 	mock.lockFoo.Lock()
 	mock.calls.Foo = append(mock.calls.Foo, callInfo)
 	mock.lockFoo.Unlock()
+	if mock.FooFunc == nil {
+		var (
+			err error
+		)
+		return err
+	}
 	return mock.FooFunc(f)
 }
 
@@ -228,6 +265,28 @@ func (mock *MoqFooer) FooCalls() []struct {
 	calls = mock.calls.Foo
 	mock.lockFoo.RUnlock()
 	return calls
+}
+
+// ResetFooCalls reset all the calls that were made to Foo.
+func (mock *MoqFooer) ResetFooCalls() {
+	mock.lockFoo.Lock()
+	mock.calls.Foo = nil
+	mock.lockFoo.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqFooer) ResetCalls() {
+	mock.lockBar.Lock()
+	mock.calls.Bar = nil
+	mock.lockBar.Unlock()
+
+	mock.lockBaz.Lock()
+	mock.calls.Baz = nil
+	mock.lockBaz.Unlock()
+
+	mock.lockFoo.Lock()
+	mock.calls.Foo = nil
+	mock.lockFoo.Unlock()
 }
 
 // Ensure, that MoqMapFunc does implement MapFunc.
@@ -266,9 +325,6 @@ type MoqMapFunc struct {
 
 // Get calls GetFunc.
 func (mock *MoqMapFunc) Get(m map[string]func(string) string) error {
-	if mock.GetFunc == nil {
-		panic("MoqMapFunc.GetFunc: method is nil but MapFunc.Get was just called")
-	}
 	callInfo := struct {
 		M map[string]func(string) string
 	}{
@@ -277,6 +333,12 @@ func (mock *MoqMapFunc) Get(m map[string]func(string) string) error {
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			err error
+		)
+		return err
+	}
 	return mock.GetFunc(m)
 }
 
@@ -294,6 +356,20 @@ func (mock *MoqMapFunc) GetCalls() []struct {
 	calls = mock.calls.Get
 	mock.lockGet.RUnlock()
 	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqMapFunc) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqMapFunc) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqAsyncProducer does implement AsyncProducer.
@@ -350,14 +426,17 @@ type MoqAsyncProducer struct {
 
 // Input calls InputFunc.
 func (mock *MoqAsyncProducer) Input() chan<- bool {
-	if mock.InputFunc == nil {
-		panic("MoqAsyncProducer.InputFunc: method is nil but AsyncProducer.Input was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockInput.Lock()
 	mock.calls.Input = append(mock.calls.Input, callInfo)
 	mock.lockInput.Unlock()
+	if mock.InputFunc == nil {
+		var (
+			boolCh chan<- bool
+		)
+		return boolCh
+	}
 	return mock.InputFunc()
 }
 
@@ -375,16 +454,26 @@ func (mock *MoqAsyncProducer) InputCalls() []struct {
 	return calls
 }
 
+// ResetInputCalls reset all the calls that were made to Input.
+func (mock *MoqAsyncProducer) ResetInputCalls() {
+	mock.lockInput.Lock()
+	mock.calls.Input = nil
+	mock.lockInput.Unlock()
+}
+
 // Output calls OutputFunc.
 func (mock *MoqAsyncProducer) Output() <-chan bool {
-	if mock.OutputFunc == nil {
-		panic("MoqAsyncProducer.OutputFunc: method is nil but AsyncProducer.Output was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockOutput.Lock()
 	mock.calls.Output = append(mock.calls.Output, callInfo)
 	mock.lockOutput.Unlock()
+	if mock.OutputFunc == nil {
+		var (
+			boolCh <-chan bool
+		)
+		return boolCh
+	}
 	return mock.OutputFunc()
 }
 
@@ -402,16 +491,26 @@ func (mock *MoqAsyncProducer) OutputCalls() []struct {
 	return calls
 }
 
+// ResetOutputCalls reset all the calls that were made to Output.
+func (mock *MoqAsyncProducer) ResetOutputCalls() {
+	mock.lockOutput.Lock()
+	mock.calls.Output = nil
+	mock.lockOutput.Unlock()
+}
+
 // Whatever calls WhateverFunc.
 func (mock *MoqAsyncProducer) Whatever() chan bool {
-	if mock.WhateverFunc == nil {
-		panic("MoqAsyncProducer.WhateverFunc: method is nil but AsyncProducer.Whatever was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockWhatever.Lock()
 	mock.calls.Whatever = append(mock.calls.Whatever, callInfo)
 	mock.lockWhatever.Unlock()
+	if mock.WhateverFunc == nil {
+		var (
+			boolCh chan bool
+		)
+		return boolCh
+	}
 	return mock.WhateverFunc()
 }
 
@@ -427,6 +526,28 @@ func (mock *MoqAsyncProducer) WhateverCalls() []struct {
 	calls = mock.calls.Whatever
 	mock.lockWhatever.RUnlock()
 	return calls
+}
+
+// ResetWhateverCalls reset all the calls that were made to Whatever.
+func (mock *MoqAsyncProducer) ResetWhateverCalls() {
+	mock.lockWhatever.Lock()
+	mock.calls.Whatever = nil
+	mock.lockWhatever.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqAsyncProducer) ResetCalls() {
+	mock.lockInput.Lock()
+	mock.calls.Input = nil
+	mock.lockInput.Unlock()
+
+	mock.lockOutput.Lock()
+	mock.calls.Output = nil
+	mock.lockOutput.Unlock()
+
+	mock.lockWhatever.Lock()
+	mock.calls.Whatever = nil
+	mock.lockWhatever.Unlock()
 }
 
 // Ensure, that MoqConsulLock does implement ConsulLock.
@@ -475,9 +596,6 @@ type MoqConsulLock struct {
 
 // Lock calls LockFunc.
 func (mock *MoqConsulLock) Lock(valCh <-chan struct{}) (<-chan struct{}, error) {
-	if mock.LockFunc == nil {
-		panic("MoqConsulLock.LockFunc: method is nil but ConsulLock.Lock was just called")
-	}
 	callInfo := struct {
 		ValCh <-chan struct{}
 	}{
@@ -486,6 +604,13 @@ func (mock *MoqConsulLock) Lock(valCh <-chan struct{}) (<-chan struct{}, error) 
 	mock.lockLock.Lock()
 	mock.calls.Lock = append(mock.calls.Lock, callInfo)
 	mock.lockLock.Unlock()
+	if mock.LockFunc == nil {
+		var (
+			valCh1 <-chan struct{}
+			err    error
+		)
+		return valCh1, err
+	}
 	return mock.LockFunc(valCh)
 }
 
@@ -505,16 +630,26 @@ func (mock *MoqConsulLock) LockCalls() []struct {
 	return calls
 }
 
+// ResetLockCalls reset all the calls that were made to Lock.
+func (mock *MoqConsulLock) ResetLockCalls() {
+	mock.lockLock.Lock()
+	mock.calls.Lock = nil
+	mock.lockLock.Unlock()
+}
+
 // Unlock calls UnlockFunc.
 func (mock *MoqConsulLock) Unlock() error {
-	if mock.UnlockFunc == nil {
-		panic("MoqConsulLock.UnlockFunc: method is nil but ConsulLock.Unlock was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockUnlock.Lock()
 	mock.calls.Unlock = append(mock.calls.Unlock, callInfo)
 	mock.lockUnlock.Unlock()
+	if mock.UnlockFunc == nil {
+		var (
+			err error
+		)
+		return err
+	}
 	return mock.UnlockFunc()
 }
 
@@ -530,6 +665,24 @@ func (mock *MoqConsulLock) UnlockCalls() []struct {
 	calls = mock.calls.Unlock
 	mock.lockUnlock.RUnlock()
 	return calls
+}
+
+// ResetUnlockCalls reset all the calls that were made to Unlock.
+func (mock *MoqConsulLock) ResetUnlockCalls() {
+	mock.lockUnlock.Lock()
+	mock.calls.Unlock = nil
+	mock.lockUnlock.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqConsulLock) ResetCalls() {
+	mock.lockLock.Lock()
+	mock.calls.Lock = nil
+	mock.lockLock.Unlock()
+
+	mock.lockUnlock.Lock()
+	mock.calls.Unlock = nil
+	mock.lockUnlock.Unlock()
 }
 
 // Ensure, that MoqKeyManager does implement KeyManager.
@@ -570,9 +723,6 @@ type MoqKeyManager struct {
 
 // GetKey calls GetKeyFunc.
 func (mock *MoqKeyManager) GetKey(s string, v uint16) ([]byte, *Err) {
-	if mock.GetKeyFunc == nil {
-		panic("MoqKeyManager.GetKeyFunc: method is nil but KeyManager.GetKey was just called")
-	}
 	callInfo := struct {
 		S string
 		V uint16
@@ -583,6 +733,13 @@ func (mock *MoqKeyManager) GetKey(s string, v uint16) ([]byte, *Err) {
 	mock.lockGetKey.Lock()
 	mock.calls.GetKey = append(mock.calls.GetKey, callInfo)
 	mock.lockGetKey.Unlock()
+	if mock.GetKeyFunc == nil {
+		var (
+			bytes []byte
+			err   *Err
+		)
+		return bytes, err
+	}
 	return mock.GetKeyFunc(s, v)
 }
 
@@ -602,6 +759,20 @@ func (mock *MoqKeyManager) GetKeyCalls() []struct {
 	calls = mock.calls.GetKey
 	mock.lockGetKey.RUnlock()
 	return calls
+}
+
+// ResetGetKeyCalls reset all the calls that were made to GetKey.
+func (mock *MoqKeyManager) ResetGetKeyCalls() {
+	mock.lockGetKey.Lock()
+	mock.calls.GetKey = nil
+	mock.lockGetKey.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqKeyManager) ResetCalls() {
+	mock.lockGetKey.Lock()
+	mock.calls.GetKey = nil
+	mock.lockGetKey.Unlock()
 }
 
 // Ensure, that MoqBlank does implement Blank.
@@ -640,9 +811,6 @@ type MoqBlank struct {
 
 // Create calls CreateFunc.
 func (mock *MoqBlank) Create(x interface{}) error {
-	if mock.CreateFunc == nil {
-		panic("MoqBlank.CreateFunc: method is nil but Blank.Create was just called")
-	}
 	callInfo := struct {
 		X interface{}
 	}{
@@ -651,6 +819,12 @@ func (mock *MoqBlank) Create(x interface{}) error {
 	mock.lockCreate.Lock()
 	mock.calls.Create = append(mock.calls.Create, callInfo)
 	mock.lockCreate.Unlock()
+	if mock.CreateFunc == nil {
+		var (
+			err error
+		)
+		return err
+	}
 	return mock.CreateFunc(x)
 }
 
@@ -668,6 +842,20 @@ func (mock *MoqBlank) CreateCalls() []struct {
 	calls = mock.calls.Create
 	mock.lockCreate.RUnlock()
 	return calls
+}
+
+// ResetCreateCalls reset all the calls that were made to Create.
+func (mock *MoqBlank) ResetCreateCalls() {
+	mock.lockCreate.Lock()
+	mock.calls.Create = nil
+	mock.lockCreate.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqBlank) ResetCalls() {
+	mock.lockCreate.Lock()
+	mock.calls.Create = nil
+	mock.lockCreate.Unlock()
 }
 
 // Ensure, that MoqExpecter does implement Expecter.
@@ -758,9 +946,6 @@ type MoqExpecter struct {
 
 // ManyArgsReturns calls ManyArgsReturnsFunc.
 func (mock *MoqExpecter) ManyArgsReturns(str string, i int) ([]string, error) {
-	if mock.ManyArgsReturnsFunc == nil {
-		panic("MoqExpecter.ManyArgsReturnsFunc: method is nil but Expecter.ManyArgsReturns was just called")
-	}
 	callInfo := struct {
 		Str string
 		I   int
@@ -771,6 +956,13 @@ func (mock *MoqExpecter) ManyArgsReturns(str string, i int) ([]string, error) {
 	mock.lockManyArgsReturns.Lock()
 	mock.calls.ManyArgsReturns = append(mock.calls.ManyArgsReturns, callInfo)
 	mock.lockManyArgsReturns.Unlock()
+	if mock.ManyArgsReturnsFunc == nil {
+		var (
+			strs []string
+			err  error
+		)
+		return strs, err
+	}
 	return mock.ManyArgsReturnsFunc(str, i)
 }
 
@@ -792,16 +984,26 @@ func (mock *MoqExpecter) ManyArgsReturnsCalls() []struct {
 	return calls
 }
 
+// ResetManyArgsReturnsCalls reset all the calls that were made to ManyArgsReturns.
+func (mock *MoqExpecter) ResetManyArgsReturnsCalls() {
+	mock.lockManyArgsReturns.Lock()
+	mock.calls.ManyArgsReturns = nil
+	mock.lockManyArgsReturns.Unlock()
+}
+
 // NoArg calls NoArgFunc.
 func (mock *MoqExpecter) NoArg() string {
-	if mock.NoArgFunc == nil {
-		panic("MoqExpecter.NoArgFunc: method is nil but Expecter.NoArg was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockNoArg.Lock()
 	mock.calls.NoArg = append(mock.calls.NoArg, callInfo)
 	mock.lockNoArg.Unlock()
+	if mock.NoArgFunc == nil {
+		var (
+			s string
+		)
+		return s
+	}
 	return mock.NoArgFunc()
 }
 
@@ -819,11 +1021,15 @@ func (mock *MoqExpecter) NoArgCalls() []struct {
 	return calls
 }
 
+// ResetNoArgCalls reset all the calls that were made to NoArg.
+func (mock *MoqExpecter) ResetNoArgCalls() {
+	mock.lockNoArg.Lock()
+	mock.calls.NoArg = nil
+	mock.lockNoArg.Unlock()
+}
+
 // NoReturn calls NoReturnFunc.
 func (mock *MoqExpecter) NoReturn(str string) {
-	if mock.NoReturnFunc == nil {
-		panic("MoqExpecter.NoReturnFunc: method is nil but Expecter.NoReturn was just called")
-	}
 	callInfo := struct {
 		Str string
 	}{
@@ -832,6 +1038,9 @@ func (mock *MoqExpecter) NoReturn(str string) {
 	mock.lockNoReturn.Lock()
 	mock.calls.NoReturn = append(mock.calls.NoReturn, callInfo)
 	mock.lockNoReturn.Unlock()
+	if mock.NoReturnFunc == nil {
+		return
+	}
 	mock.NoReturnFunc(str)
 }
 
@@ -851,11 +1060,15 @@ func (mock *MoqExpecter) NoReturnCalls() []struct {
 	return calls
 }
 
+// ResetNoReturnCalls reset all the calls that were made to NoReturn.
+func (mock *MoqExpecter) ResetNoReturnCalls() {
+	mock.lockNoReturn.Lock()
+	mock.calls.NoReturn = nil
+	mock.lockNoReturn.Unlock()
+}
+
 // Variadic calls VariadicFunc.
 func (mock *MoqExpecter) Variadic(ints ...int) error {
-	if mock.VariadicFunc == nil {
-		panic("MoqExpecter.VariadicFunc: method is nil but Expecter.Variadic was just called")
-	}
 	callInfo := struct {
 		Ints []int
 	}{
@@ -864,6 +1077,12 @@ func (mock *MoqExpecter) Variadic(ints ...int) error {
 	mock.lockVariadic.Lock()
 	mock.calls.Variadic = append(mock.calls.Variadic, callInfo)
 	mock.lockVariadic.Unlock()
+	if mock.VariadicFunc == nil {
+		var (
+			err error
+		)
+		return err
+	}
 	return mock.VariadicFunc(ints...)
 }
 
@@ -883,11 +1102,15 @@ func (mock *MoqExpecter) VariadicCalls() []struct {
 	return calls
 }
 
+// ResetVariadicCalls reset all the calls that were made to Variadic.
+func (mock *MoqExpecter) ResetVariadicCalls() {
+	mock.lockVariadic.Lock()
+	mock.calls.Variadic = nil
+	mock.lockVariadic.Unlock()
+}
+
 // VariadicMany calls VariadicManyFunc.
 func (mock *MoqExpecter) VariadicMany(i int, a string, intfs ...interface{}) error {
-	if mock.VariadicManyFunc == nil {
-		panic("MoqExpecter.VariadicManyFunc: method is nil but Expecter.VariadicMany was just called")
-	}
 	callInfo := struct {
 		I     int
 		A     string
@@ -900,6 +1123,12 @@ func (mock *MoqExpecter) VariadicMany(i int, a string, intfs ...interface{}) err
 	mock.lockVariadicMany.Lock()
 	mock.calls.VariadicMany = append(mock.calls.VariadicMany, callInfo)
 	mock.lockVariadicMany.Unlock()
+	if mock.VariadicManyFunc == nil {
+		var (
+			err error
+		)
+		return err
+	}
 	return mock.VariadicManyFunc(i, a, intfs...)
 }
 
@@ -921,6 +1150,36 @@ func (mock *MoqExpecter) VariadicManyCalls() []struct {
 	calls = mock.calls.VariadicMany
 	mock.lockVariadicMany.RUnlock()
 	return calls
+}
+
+// ResetVariadicManyCalls reset all the calls that were made to VariadicMany.
+func (mock *MoqExpecter) ResetVariadicManyCalls() {
+	mock.lockVariadicMany.Lock()
+	mock.calls.VariadicMany = nil
+	mock.lockVariadicMany.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqExpecter) ResetCalls() {
+	mock.lockManyArgsReturns.Lock()
+	mock.calls.ManyArgsReturns = nil
+	mock.lockManyArgsReturns.Unlock()
+
+	mock.lockNoArg.Lock()
+	mock.calls.NoArg = nil
+	mock.lockNoArg.Unlock()
+
+	mock.lockNoReturn.Lock()
+	mock.calls.NoReturn = nil
+	mock.lockNoReturn.Unlock()
+
+	mock.lockVariadic.Lock()
+	mock.calls.Variadic = nil
+	mock.lockVariadic.Unlock()
+
+	mock.lockVariadicMany.Lock()
+	mock.calls.VariadicMany = nil
+	mock.lockVariadicMany.Unlock()
 }
 
 // Ensure, that MoqVariadicNoReturnInterface does implement VariadicNoReturnInterface.
@@ -961,9 +1220,6 @@ type MoqVariadicNoReturnInterface struct {
 
 // VariadicNoReturn calls VariadicNoReturnFunc.
 func (mock *MoqVariadicNoReturnInterface) VariadicNoReturn(j int, is ...interface{}) {
-	if mock.VariadicNoReturnFunc == nil {
-		panic("MoqVariadicNoReturnInterface.VariadicNoReturnFunc: method is nil but VariadicNoReturnInterface.VariadicNoReturn was just called")
-	}
 	callInfo := struct {
 		J  int
 		Is []interface{}
@@ -974,6 +1230,9 @@ func (mock *MoqVariadicNoReturnInterface) VariadicNoReturn(j int, is ...interfac
 	mock.lockVariadicNoReturn.Lock()
 	mock.calls.VariadicNoReturn = append(mock.calls.VariadicNoReturn, callInfo)
 	mock.lockVariadicNoReturn.Unlock()
+	if mock.VariadicNoReturnFunc == nil {
+		return
+	}
 	mock.VariadicNoReturnFunc(j, is...)
 }
 
@@ -993,6 +1252,20 @@ func (mock *MoqVariadicNoReturnInterface) VariadicNoReturnCalls() []struct {
 	calls = mock.calls.VariadicNoReturn
 	mock.lockVariadicNoReturn.RUnlock()
 	return calls
+}
+
+// ResetVariadicNoReturnCalls reset all the calls that were made to VariadicNoReturn.
+func (mock *MoqVariadicNoReturnInterface) ResetVariadicNoReturnCalls() {
+	mock.lockVariadicNoReturn.Lock()
+	mock.calls.VariadicNoReturn = nil
+	mock.lockVariadicNoReturn.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqVariadicNoReturnInterface) ResetCalls() {
+	mock.lockVariadicNoReturn.Lock()
+	mock.calls.VariadicNoReturn = nil
+	mock.lockVariadicNoReturn.Unlock()
 }
 
 // Ensure, that MoqFuncArgsCollision does implement FuncArgsCollision.
@@ -1031,9 +1304,6 @@ type MoqFuncArgsCollision struct {
 
 // Foo calls FooFunc.
 func (mock *MoqFuncArgsCollision) Foo(ret interface{}) error {
-	if mock.FooFunc == nil {
-		panic("MoqFuncArgsCollision.FooFunc: method is nil but FuncArgsCollision.Foo was just called")
-	}
 	callInfo := struct {
 		Ret interface{}
 	}{
@@ -1042,6 +1312,12 @@ func (mock *MoqFuncArgsCollision) Foo(ret interface{}) error {
 	mock.lockFoo.Lock()
 	mock.calls.Foo = append(mock.calls.Foo, callInfo)
 	mock.lockFoo.Unlock()
+	if mock.FooFunc == nil {
+		var (
+			err error
+		)
+		return err
+	}
 	return mock.FooFunc(ret)
 }
 
@@ -1059,6 +1335,20 @@ func (mock *MoqFuncArgsCollision) FooCalls() []struct {
 	calls = mock.calls.Foo
 	mock.lockFoo.RUnlock()
 	return calls
+}
+
+// ResetFooCalls reset all the calls that were made to Foo.
+func (mock *MoqFuncArgsCollision) ResetFooCalls() {
+	mock.lockFoo.Lock()
+	mock.calls.Foo = nil
+	mock.lockFoo.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqFuncArgsCollision) ResetCalls() {
+	mock.lockFoo.Lock()
+	mock.calls.Foo = nil
+	mock.lockFoo.Unlock()
 }
 
 // Ensure, that MoqGetInt does implement GetInt.
@@ -1095,14 +1385,17 @@ type MoqGetInt struct {
 
 // Get calls GetFunc.
 func (mock *MoqGetInt) Get() int {
-	if mock.GetFunc == nil {
-		panic("MoqGetInt.GetFunc: method is nil but GetInt.Get was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			n int
+		)
+		return n
+	}
 	return mock.GetFunc()
 }
 
@@ -1118,6 +1411,20 @@ func (mock *MoqGetInt) GetCalls() []struct {
 	calls = mock.calls.Get
 	mock.lockGet.RUnlock()
 	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqGetInt) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqGetInt) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqGetGeneric does implement GetGeneric.
@@ -1154,14 +1461,17 @@ type MoqGetGeneric[T constraints.Integer] struct {
 
 // Get calls GetFunc.
 func (mock *MoqGetGeneric[T]) Get() T {
-	if mock.GetFunc == nil {
-		panic("MoqGetGeneric.GetFunc: method is nil but GetGeneric.Get was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			v T
+		)
+		return v
+	}
 	return mock.GetFunc()
 }
 
@@ -1177,6 +1487,20 @@ func (mock *MoqGetGeneric[T]) GetCalls() []struct {
 	calls = mock.calls.Get
 	mock.lockGet.RUnlock()
 	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqGetGeneric[T]) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqGetGeneric[T]) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqEmbeddedGet does implement EmbeddedGet.
@@ -1213,14 +1537,17 @@ type MoqEmbeddedGet[T constraints.Signed] struct {
 
 // Get calls GetFunc.
 func (mock *MoqEmbeddedGet[T]) Get() T {
-	if mock.GetFunc == nil {
-		panic("MoqEmbeddedGet.GetFunc: method is nil but EmbeddedGet.Get was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			v T
+		)
+		return v
+	}
 	return mock.GetFunc()
 }
 
@@ -1236,6 +1563,20 @@ func (mock *MoqEmbeddedGet[T]) GetCalls() []struct {
 	calls = mock.calls.Get
 	mock.lockGet.RUnlock()
 	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqEmbeddedGet[T]) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqEmbeddedGet[T]) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqReplaceGeneric does implement ReplaceGeneric.
@@ -1294,9 +1635,6 @@ type MoqReplaceGeneric[TImport any, TConstraint constraints.Signed, TKeep any] s
 
 // A calls AFunc.
 func (mock *MoqReplaceGeneric[TImport, TConstraint, TKeep]) A(t1 TImport) TKeep {
-	if mock.AFunc == nil {
-		panic("MoqReplaceGeneric.AFunc: method is nil but ReplaceGeneric.A was just called")
-	}
 	callInfo := struct {
 		T1 TImport
 	}{
@@ -1305,6 +1643,12 @@ func (mock *MoqReplaceGeneric[TImport, TConstraint, TKeep]) A(t1 TImport) TKeep 
 	mock.lockA.Lock()
 	mock.calls.A = append(mock.calls.A, callInfo)
 	mock.lockA.Unlock()
+	if mock.AFunc == nil {
+		var (
+			v TKeep
+		)
+		return v
+	}
 	return mock.AFunc(t1)
 }
 
@@ -1324,16 +1668,26 @@ func (mock *MoqReplaceGeneric[TImport, TConstraint, TKeep]) ACalls() []struct {
 	return calls
 }
 
+// ResetACalls reset all the calls that were made to A.
+func (mock *MoqReplaceGeneric[TImport, TConstraint, TKeep]) ResetACalls() {
+	mock.lockA.Lock()
+	mock.calls.A = nil
+	mock.lockA.Unlock()
+}
+
 // B calls BFunc.
 func (mock *MoqReplaceGeneric[TImport, TConstraint, TKeep]) B() TImport {
-	if mock.BFunc == nil {
-		panic("MoqReplaceGeneric.BFunc: method is nil but ReplaceGeneric.B was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockB.Lock()
 	mock.calls.B = append(mock.calls.B, callInfo)
 	mock.lockB.Unlock()
+	if mock.BFunc == nil {
+		var (
+			v TImport
+		)
+		return v
+	}
 	return mock.BFunc()
 }
 
@@ -1351,16 +1705,26 @@ func (mock *MoqReplaceGeneric[TImport, TConstraint, TKeep]) BCalls() []struct {
 	return calls
 }
 
+// ResetBCalls reset all the calls that were made to B.
+func (mock *MoqReplaceGeneric[TImport, TConstraint, TKeep]) ResetBCalls() {
+	mock.lockB.Lock()
+	mock.calls.B = nil
+	mock.lockB.Unlock()
+}
+
 // C calls CFunc.
 func (mock *MoqReplaceGeneric[TImport, TConstraint, TKeep]) C() TConstraint {
-	if mock.CFunc == nil {
-		panic("MoqReplaceGeneric.CFunc: method is nil but ReplaceGeneric.C was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockC.Lock()
 	mock.calls.C = append(mock.calls.C, callInfo)
 	mock.lockC.Unlock()
+	if mock.CFunc == nil {
+		var (
+			v TConstraint
+		)
+		return v
+	}
 	return mock.CFunc()
 }
 
@@ -1376,6 +1740,28 @@ func (mock *MoqReplaceGeneric[TImport, TConstraint, TKeep]) CCalls() []struct {
 	calls = mock.calls.C
 	mock.lockC.RUnlock()
 	return calls
+}
+
+// ResetCCalls reset all the calls that were made to C.
+func (mock *MoqReplaceGeneric[TImport, TConstraint, TKeep]) ResetCCalls() {
+	mock.lockC.Lock()
+	mock.calls.C = nil
+	mock.lockC.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqReplaceGeneric[TImport, TConstraint, TKeep]) ResetCalls() {
+	mock.lockA.Lock()
+	mock.calls.A = nil
+	mock.lockA.Unlock()
+
+	mock.lockB.Lock()
+	mock.calls.B = nil
+	mock.lockB.Unlock()
+
+	mock.lockC.Lock()
+	mock.calls.C = nil
+	mock.lockC.Unlock()
 }
 
 // Ensure, that MoqReplaceGenericSelf does implement ReplaceGenericSelf.
@@ -1412,14 +1798,17 @@ type MoqReplaceGenericSelf[T any] struct {
 
 // A calls AFunc.
 func (mock *MoqReplaceGenericSelf[T]) A() T {
-	if mock.AFunc == nil {
-		panic("MoqReplaceGenericSelf.AFunc: method is nil but ReplaceGenericSelf.A was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockA.Lock()
 	mock.calls.A = append(mock.calls.A, callInfo)
 	mock.lockA.Unlock()
+	if mock.AFunc == nil {
+		var (
+			v T
+		)
+		return v
+	}
 	return mock.AFunc()
 }
 
@@ -1435,6 +1824,20 @@ func (mock *MoqReplaceGenericSelf[T]) ACalls() []struct {
 	calls = mock.calls.A
 	mock.lockA.RUnlock()
 	return calls
+}
+
+// ResetACalls reset all the calls that were made to A.
+func (mock *MoqReplaceGenericSelf[T]) ResetACalls() {
+	mock.lockA.Lock()
+	mock.calls.A = nil
+	mock.lockA.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqReplaceGenericSelf[T]) ResetCalls() {
+	mock.lockA.Lock()
+	mock.calls.A = nil
+	mock.lockA.Unlock()
 }
 
 // Ensure, that MoqHasConflictingNestedImports does implement HasConflictingNestedImports.
@@ -1483,9 +1886,6 @@ type MoqHasConflictingNestedImports struct {
 
 // Get calls GetFunc.
 func (mock *MoqHasConflictingNestedImports) Get(path string) (http.Response, error) {
-	if mock.GetFunc == nil {
-		panic("MoqHasConflictingNestedImports.GetFunc: method is nil but HasConflictingNestedImports.Get was just called")
-	}
 	callInfo := struct {
 		Path string
 	}{
@@ -1494,6 +1894,13 @@ func (mock *MoqHasConflictingNestedImports) Get(path string) (http.Response, err
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			response http.Response
+			err      error
+		)
+		return response, err
+	}
 	return mock.GetFunc(path)
 }
 
@@ -1513,16 +1920,26 @@ func (mock *MoqHasConflictingNestedImports) GetCalls() []struct {
 	return calls
 }
 
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqHasConflictingNestedImports) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
 // Z calls ZFunc.
 func (mock *MoqHasConflictingNestedImports) Z() http0.MyStruct {
-	if mock.ZFunc == nil {
-		panic("MoqHasConflictingNestedImports.ZFunc: method is nil but HasConflictingNestedImports.Z was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockZ.Lock()
 	mock.calls.Z = append(mock.calls.Z, callInfo)
 	mock.lockZ.Unlock()
+	if mock.ZFunc == nil {
+		var (
+			myStruct http0.MyStruct
+		)
+		return myStruct
+	}
 	return mock.ZFunc()
 }
 
@@ -1538,6 +1955,24 @@ func (mock *MoqHasConflictingNestedImports) ZCalls() []struct {
 	calls = mock.calls.Z
 	mock.lockZ.RUnlock()
 	return calls
+}
+
+// ResetZCalls reset all the calls that were made to Z.
+func (mock *MoqHasConflictingNestedImports) ResetZCalls() {
+	mock.lockZ.Lock()
+	mock.calls.Z = nil
+	mock.lockZ.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqHasConflictingNestedImports) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+
+	mock.lockZ.Lock()
+	mock.calls.Z = nil
+	mock.lockZ.Unlock()
 }
 
 // Ensure, that MoqImportsSameAsPackage does implement ImportsSameAsPackage.
@@ -1596,14 +2031,17 @@ type MoqImportsSameAsPackage struct {
 
 // A calls AFunc.
 func (mock *MoqImportsSameAsPackage) A() test.B {
-	if mock.AFunc == nil {
-		panic("MoqImportsSameAsPackage.AFunc: method is nil but ImportsSameAsPackage.A was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockA.Lock()
 	mock.calls.A = append(mock.calls.A, callInfo)
 	mock.lockA.Unlock()
+	if mock.AFunc == nil {
+		var (
+			b test.B
+		)
+		return b
+	}
 	return mock.AFunc()
 }
 
@@ -1621,16 +2059,26 @@ func (mock *MoqImportsSameAsPackage) ACalls() []struct {
 	return calls
 }
 
+// ResetACalls reset all the calls that were made to A.
+func (mock *MoqImportsSameAsPackage) ResetACalls() {
+	mock.lockA.Lock()
+	mock.calls.A = nil
+	mock.lockA.Unlock()
+}
+
 // B calls BFunc.
 func (mock *MoqImportsSameAsPackage) B() KeyManager {
-	if mock.BFunc == nil {
-		panic("MoqImportsSameAsPackage.BFunc: method is nil but ImportsSameAsPackage.B was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockB.Lock()
 	mock.calls.B = append(mock.calls.B, callInfo)
 	mock.lockB.Unlock()
+	if mock.BFunc == nil {
+		var (
+			keyManager KeyManager
+		)
+		return keyManager
+	}
 	return mock.BFunc()
 }
 
@@ -1648,11 +2096,15 @@ func (mock *MoqImportsSameAsPackage) BCalls() []struct {
 	return calls
 }
 
+// ResetBCalls reset all the calls that were made to B.
+func (mock *MoqImportsSameAsPackage) ResetBCalls() {
+	mock.lockB.Lock()
+	mock.calls.B = nil
+	mock.lockB.Unlock()
+}
+
 // C calls CFunc.
 func (mock *MoqImportsSameAsPackage) C(c C) {
-	if mock.CFunc == nil {
-		panic("MoqImportsSameAsPackage.CFunc: method is nil but ImportsSameAsPackage.C was just called")
-	}
 	callInfo := struct {
 		C C
 	}{
@@ -1661,6 +2113,9 @@ func (mock *MoqImportsSameAsPackage) C(c C) {
 	mock.lockC.Lock()
 	mock.calls.C = append(mock.calls.C, callInfo)
 	mock.lockC.Unlock()
+	if mock.CFunc == nil {
+		return
+	}
 	mock.CFunc(c)
 }
 
@@ -1678,6 +2133,28 @@ func (mock *MoqImportsSameAsPackage) CCalls() []struct {
 	calls = mock.calls.C
 	mock.lockC.RUnlock()
 	return calls
+}
+
+// ResetCCalls reset all the calls that were made to C.
+func (mock *MoqImportsSameAsPackage) ResetCCalls() {
+	mock.lockC.Lock()
+	mock.calls.C = nil
+	mock.lockC.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqImportsSameAsPackage) ResetCalls() {
+	mock.lockA.Lock()
+	mock.calls.A = nil
+	mock.lockA.Unlock()
+
+	mock.lockB.Lock()
+	mock.calls.B = nil
+	mock.lockB.Unlock()
+
+	mock.lockC.Lock()
+	mock.calls.C = nil
+	mock.lockC.Unlock()
 }
 
 // Ensure, that MoqGenericInterface does implement GenericInterface.
@@ -1716,9 +2193,6 @@ type MoqGenericInterface[M any] struct {
 
 // Func calls FuncFunc.
 func (mock *MoqGenericInterface[M]) Func(arg *M) int {
-	if mock.FuncFunc == nil {
-		panic("MoqGenericInterface.FuncFunc: method is nil but GenericInterface.Func was just called")
-	}
 	callInfo := struct {
 		Arg *M
 	}{
@@ -1727,6 +2201,12 @@ func (mock *MoqGenericInterface[M]) Func(arg *M) int {
 	mock.lockFunc.Lock()
 	mock.calls.Func = append(mock.calls.Func, callInfo)
 	mock.lockFunc.Unlock()
+	if mock.FuncFunc == nil {
+		var (
+			n int
+		)
+		return n
+	}
 	return mock.FuncFunc(arg)
 }
 
@@ -1744,6 +2224,20 @@ func (mock *MoqGenericInterface[M]) FuncCalls() []struct {
 	calls = mock.calls.Func
 	mock.lockFunc.RUnlock()
 	return calls
+}
+
+// ResetFuncCalls reset all the calls that were made to Func.
+func (mock *MoqGenericInterface[M]) ResetFuncCalls() {
+	mock.lockFunc.Lock()
+	mock.calls.Func = nil
+	mock.lockFunc.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqGenericInterface[M]) ResetCalls() {
+	mock.lockFunc.Lock()
+	mock.calls.Func = nil
+	mock.lockFunc.Unlock()
 }
 
 // Ensure, that MoqInstantiatedGenericInterface does implement InstantiatedGenericInterface.
@@ -1782,9 +2276,6 @@ type MoqInstantiatedGenericInterface struct {
 
 // Func calls FuncFunc.
 func (mock *MoqInstantiatedGenericInterface) Func(arg *float32) int {
-	if mock.FuncFunc == nil {
-		panic("MoqInstantiatedGenericInterface.FuncFunc: method is nil but InstantiatedGenericInterface.Func was just called")
-	}
 	callInfo := struct {
 		Arg *float32
 	}{
@@ -1793,6 +2284,12 @@ func (mock *MoqInstantiatedGenericInterface) Func(arg *float32) int {
 	mock.lockFunc.Lock()
 	mock.calls.Func = append(mock.calls.Func, callInfo)
 	mock.lockFunc.Unlock()
+	if mock.FuncFunc == nil {
+		var (
+			n int
+		)
+		return n
+	}
 	return mock.FuncFunc(arg)
 }
 
@@ -1810,6 +2307,20 @@ func (mock *MoqInstantiatedGenericInterface) FuncCalls() []struct {
 	calls = mock.calls.Func
 	mock.lockFunc.RUnlock()
 	return calls
+}
+
+// ResetFuncCalls reset all the calls that were made to Func.
+func (mock *MoqInstantiatedGenericInterface) ResetFuncCalls() {
+	mock.lockFunc.Lock()
+	mock.calls.Func = nil
+	mock.lockFunc.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqInstantiatedGenericInterface) ResetCalls() {
+	mock.lockFunc.Lock()
+	mock.calls.Func = nil
+	mock.lockFunc.Unlock()
 }
 
 // Ensure, that MoqMyReader does implement MyReader.
@@ -1848,9 +2359,6 @@ type MoqMyReader struct {
 
 // Read calls ReadFunc.
 func (mock *MoqMyReader) Read(p []byte) (int, error) {
-	if mock.ReadFunc == nil {
-		panic("MoqMyReader.ReadFunc: method is nil but MyReader.Read was just called")
-	}
 	callInfo := struct {
 		P []byte
 	}{
@@ -1859,6 +2367,13 @@ func (mock *MoqMyReader) Read(p []byte) (int, error) {
 	mock.lockRead.Lock()
 	mock.calls.Read = append(mock.calls.Read, callInfo)
 	mock.lockRead.Unlock()
+	if mock.ReadFunc == nil {
+		var (
+			n   int
+			err error
+		)
+		return n, err
+	}
 	return mock.ReadFunc(p)
 }
 
@@ -1876,6 +2391,20 @@ func (mock *MoqMyReader) ReadCalls() []struct {
 	calls = mock.calls.Read
 	mock.lockRead.RUnlock()
 	return calls
+}
+
+// ResetReadCalls reset all the calls that were made to Read.
+func (mock *MoqMyReader) ResetReadCalls() {
+	mock.lockRead.Lock()
+	mock.calls.Read = nil
+	mock.lockRead.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqMyReader) ResetCalls() {
+	mock.lockRead.Lock()
+	mock.calls.Read = nil
+	mock.lockRead.Unlock()
 }
 
 // Ensure, that MoqIssue766 does implement Issue766.
@@ -1914,9 +2443,6 @@ type MoqIssue766 struct {
 
 // FetchData calls FetchDataFunc.
 func (mock *MoqIssue766) FetchData(fetchFunc func(x ...int) ([]int, error)) ([]int, error) {
-	if mock.FetchDataFunc == nil {
-		panic("MoqIssue766.FetchDataFunc: method is nil but Issue766.FetchData was just called")
-	}
 	callInfo := struct {
 		FetchFunc func(x ...int) ([]int, error)
 	}{
@@ -1925,6 +2451,13 @@ func (mock *MoqIssue766) FetchData(fetchFunc func(x ...int) ([]int, error)) ([]i
 	mock.lockFetchData.Lock()
 	mock.calls.FetchData = append(mock.calls.FetchData, callInfo)
 	mock.lockFetchData.Unlock()
+	if mock.FetchDataFunc == nil {
+		var (
+			ints []int
+			err  error
+		)
+		return ints, err
+	}
 	return mock.FetchDataFunc(fetchFunc)
 }
 
@@ -1942,6 +2475,20 @@ func (mock *MoqIssue766) FetchDataCalls() []struct {
 	calls = mock.calls.FetchData
 	mock.lockFetchData.RUnlock()
 	return calls
+}
+
+// ResetFetchDataCalls reset all the calls that were made to FetchData.
+func (mock *MoqIssue766) ResetFetchDataCalls() {
+	mock.lockFetchData.Lock()
+	mock.calls.FetchData = nil
+	mock.lockFetchData.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqIssue766) ResetCalls() {
+	mock.lockFetchData.Lock()
+	mock.calls.FetchData = nil
+	mock.lockFetchData.Unlock()
 }
 
 // Ensure, that MoqMapToInterface does implement MapToInterface.
@@ -1980,9 +2527,6 @@ type MoqMapToInterface struct {
 
 // Foo calls FooFunc.
 func (mock *MoqMapToInterface) Foo(arg1 ...map[string]interface{}) {
-	if mock.FooFunc == nil {
-		panic("MoqMapToInterface.FooFunc: method is nil but MapToInterface.Foo was just called")
-	}
 	callInfo := struct {
 		Arg1 []map[string]interface{}
 	}{
@@ -1991,6 +2535,9 @@ func (mock *MoqMapToInterface) Foo(arg1 ...map[string]interface{}) {
 	mock.lockFoo.Lock()
 	mock.calls.Foo = append(mock.calls.Foo, callInfo)
 	mock.lockFoo.Unlock()
+	if mock.FooFunc == nil {
+		return
+	}
 	mock.FooFunc(arg1...)
 }
 
@@ -2008,6 +2555,20 @@ func (mock *MoqMapToInterface) FooCalls() []struct {
 	calls = mock.calls.Foo
 	mock.lockFoo.RUnlock()
 	return calls
+}
+
+// ResetFooCalls reset all the calls that were made to Foo.
+func (mock *MoqMapToInterface) ResetFooCalls() {
+	mock.lockFoo.Lock()
+	mock.calls.Foo = nil
+	mock.lockFoo.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqMapToInterface) ResetCalls() {
+	mock.lockFoo.Lock()
+	mock.calls.Foo = nil
+	mock.lockFoo.Unlock()
 }
 
 // Ensure, that MoqSibling does implement Sibling.
@@ -2044,14 +2605,14 @@ type MoqSibling struct {
 
 // DoSomething calls DoSomethingFunc.
 func (mock *MoqSibling) DoSomething() {
-	if mock.DoSomethingFunc == nil {
-		panic("MoqSibling.DoSomethingFunc: method is nil but Sibling.DoSomething was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockDoSomething.Lock()
 	mock.calls.DoSomething = append(mock.calls.DoSomething, callInfo)
 	mock.lockDoSomething.Unlock()
+	if mock.DoSomethingFunc == nil {
+		return
+	}
 	mock.DoSomethingFunc()
 }
 
@@ -2067,6 +2628,20 @@ func (mock *MoqSibling) DoSomethingCalls() []struct {
 	calls = mock.calls.DoSomething
 	mock.lockDoSomething.RUnlock()
 	return calls
+}
+
+// ResetDoSomethingCalls reset all the calls that were made to DoSomething.
+func (mock *MoqSibling) ResetDoSomethingCalls() {
+	mock.lockDoSomething.Lock()
+	mock.calls.DoSomething = nil
+	mock.lockDoSomething.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqSibling) ResetCalls() {
+	mock.lockDoSomething.Lock()
+	mock.calls.DoSomething = nil
+	mock.lockDoSomething.Unlock()
 }
 
 // Ensure, that MoqUsesOtherPkgIface does implement UsesOtherPkgIface.
@@ -2105,9 +2680,6 @@ type MoqUsesOtherPkgIface struct {
 
 // DoSomethingElse calls DoSomethingElseFunc.
 func (mock *MoqUsesOtherPkgIface) DoSomethingElse(obj Sibling) {
-	if mock.DoSomethingElseFunc == nil {
-		panic("MoqUsesOtherPkgIface.DoSomethingElseFunc: method is nil but UsesOtherPkgIface.DoSomethingElse was just called")
-	}
 	callInfo := struct {
 		Obj Sibling
 	}{
@@ -2116,6 +2688,9 @@ func (mock *MoqUsesOtherPkgIface) DoSomethingElse(obj Sibling) {
 	mock.lockDoSomethingElse.Lock()
 	mock.calls.DoSomethingElse = append(mock.calls.DoSomethingElse, callInfo)
 	mock.lockDoSomethingElse.Unlock()
+	if mock.DoSomethingElseFunc == nil {
+		return
+	}
 	mock.DoSomethingElseFunc(obj)
 }
 
@@ -2133,6 +2708,20 @@ func (mock *MoqUsesOtherPkgIface) DoSomethingElseCalls() []struct {
 	calls = mock.calls.DoSomethingElse
 	mock.lockDoSomethingElse.RUnlock()
 	return calls
+}
+
+// ResetDoSomethingElseCalls reset all the calls that were made to DoSomethingElse.
+func (mock *MoqUsesOtherPkgIface) ResetDoSomethingElseCalls() {
+	mock.lockDoSomethingElse.Lock()
+	mock.calls.DoSomethingElse = nil
+	mock.lockDoSomethingElse.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqUsesOtherPkgIface) ResetCalls() {
+	mock.lockDoSomethingElse.Lock()
+	mock.calls.DoSomethingElse = nil
+	mock.lockDoSomethingElse.Unlock()
 }
 
 // Ensure, that MoqPanicOnNoReturnValue does implement PanicOnNoReturnValue.
@@ -2169,14 +2758,17 @@ type MoqPanicOnNoReturnValue struct {
 
 // DoSomething calls DoSomethingFunc.
 func (mock *MoqPanicOnNoReturnValue) DoSomething() string {
-	if mock.DoSomethingFunc == nil {
-		panic("MoqPanicOnNoReturnValue.DoSomethingFunc: method is nil but PanicOnNoReturnValue.DoSomething was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockDoSomething.Lock()
 	mock.calls.DoSomething = append(mock.calls.DoSomething, callInfo)
 	mock.lockDoSomething.Unlock()
+	if mock.DoSomethingFunc == nil {
+		var (
+			s string
+		)
+		return s
+	}
 	return mock.DoSomethingFunc()
 }
 
@@ -2192,6 +2784,100 @@ func (mock *MoqPanicOnNoReturnValue) DoSomethingCalls() []struct {
 	calls = mock.calls.DoSomething
 	mock.lockDoSomething.RUnlock()
 	return calls
+}
+
+// ResetDoSomethingCalls reset all the calls that were made to DoSomething.
+func (mock *MoqPanicOnNoReturnValue) ResetDoSomethingCalls() {
+	mock.lockDoSomething.Lock()
+	mock.calls.DoSomething = nil
+	mock.lockDoSomething.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqPanicOnNoReturnValue) ResetCalls() {
+	mock.lockDoSomething.Lock()
+	mock.calls.DoSomething = nil
+	mock.lockDoSomething.Unlock()
+}
+
+// MoqRequesterSkipEnsure is a mock implementation of Requester.
+//
+//	func TestSomethingThatUsesRequester(t *testing.T) {
+//
+//		// make and configure a mocked Requester
+//		mockedRequester := &MoqRequesterSkipEnsure{
+//			GetFunc: func(path string) (string, error) {
+//				panic("mock out the Get method")
+//			},
+//		}
+//
+//		// use mockedRequester in code that requires Requester
+//		// and then make assertions.
+//
+//	}
+type MoqRequesterSkipEnsure struct {
+	// GetFunc mocks the Get method.
+	GetFunc func(path string) (string, error)
+
+	// calls tracks calls to the methods.
+	calls struct {
+		// Get holds details about calls to the Get method.
+		Get []struct {
+			// Path is the path argument value.
+			Path string
+		}
+	}
+	lockGet sync.RWMutex
+}
+
+// Get calls GetFunc.
+func (mock *MoqRequesterSkipEnsure) Get(path string) (string, error) {
+	callInfo := struct {
+		Path string
+	}{
+		Path: path,
+	}
+	mock.lockGet.Lock()
+	mock.calls.Get = append(mock.calls.Get, callInfo)
+	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			s   string
+			err error
+		)
+		return s, err
+	}
+	return mock.GetFunc(path)
+}
+
+// GetCalls gets all the calls that were made to Get.
+// Check the length with:
+//
+//	len(mockedRequester.GetCalls())
+func (mock *MoqRequesterSkipEnsure) GetCalls() []struct {
+	Path string
+} {
+	var calls []struct {
+		Path string
+	}
+	mock.lockGet.RLock()
+	calls = mock.calls.Get
+	mock.lockGet.RUnlock()
+	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqRequesterSkipEnsure) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqRequesterSkipEnsure) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqRequester does implement Requester.
@@ -2230,9 +2916,6 @@ type MoqRequester struct {
 
 // Get calls GetFunc.
 func (mock *MoqRequester) Get(path string) (string, error) {
-	if mock.GetFunc == nil {
-		panic("MoqRequester.GetFunc: method is nil but Requester.Get was just called")
-	}
 	callInfo := struct {
 		Path string
 	}{
@@ -2241,6 +2924,13 @@ func (mock *MoqRequester) Get(path string) (string, error) {
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			s   string
+			err error
+		)
+		return s, err
+	}
 	return mock.GetFunc(path)
 }
 
@@ -2258,6 +2948,20 @@ func (mock *MoqRequester) GetCalls() []struct {
 	calls = mock.calls.Get
 	mock.lockGet.RUnlock()
 	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqRequester) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqRequester) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqRequester2 does implement Requester2.
@@ -2296,9 +3000,6 @@ type MoqRequester2 struct {
 
 // Get calls GetFunc.
 func (mock *MoqRequester2) Get(path string) error {
-	if mock.GetFunc == nil {
-		panic("MoqRequester2.GetFunc: method is nil but Requester2.Get was just called")
-	}
 	callInfo := struct {
 		Path string
 	}{
@@ -2307,6 +3008,12 @@ func (mock *MoqRequester2) Get(path string) error {
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			err error
+		)
+		return err
+	}
 	return mock.GetFunc(path)
 }
 
@@ -2324,6 +3031,20 @@ func (mock *MoqRequester2) GetCalls() []struct {
 	calls = mock.calls.Get
 	mock.lockGet.RUnlock()
 	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqRequester2) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqRequester2) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqRequester3 does implement Requester3.
@@ -2360,14 +3081,17 @@ type MoqRequester3 struct {
 
 // Get calls GetFunc.
 func (mock *MoqRequester3) Get() error {
-	if mock.GetFunc == nil {
-		panic("MoqRequester3.GetFunc: method is nil but Requester3.Get was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			err error
+		)
+		return err
+	}
 	return mock.GetFunc()
 }
 
@@ -2383,6 +3107,20 @@ func (mock *MoqRequester3) GetCalls() []struct {
 	calls = mock.calls.Get
 	mock.lockGet.RUnlock()
 	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqRequester3) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqRequester3) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqRequester4 does implement Requester4.
@@ -2419,14 +3157,14 @@ type MoqRequester4 struct {
 
 // Get calls GetFunc.
 func (mock *MoqRequester4) Get() {
-	if mock.GetFunc == nil {
-		panic("MoqRequester4.GetFunc: method is nil but Requester4.Get was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		return
+	}
 	mock.GetFunc()
 }
 
@@ -2442,6 +3180,20 @@ func (mock *MoqRequester4) GetCalls() []struct {
 	calls = mock.calls.Get
 	mock.lockGet.RUnlock()
 	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqRequester4) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqRequester4) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqRequesterArgSameAsImport does implement RequesterArgSameAsImport.
@@ -2480,9 +3232,6 @@ type MoqRequesterArgSameAsImport struct {
 
 // Get calls GetFunc.
 func (mock *MoqRequesterArgSameAsImport) Get(json1 string) *json.RawMessage {
-	if mock.GetFunc == nil {
-		panic("MoqRequesterArgSameAsImport.GetFunc: method is nil but RequesterArgSameAsImport.Get was just called")
-	}
 	callInfo := struct {
 		Json1 string
 	}{
@@ -2491,6 +3240,12 @@ func (mock *MoqRequesterArgSameAsImport) Get(json1 string) *json.RawMessage {
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			rawMessage *json.RawMessage
+		)
+		return rawMessage
+	}
 	return mock.GetFunc(json1)
 }
 
@@ -2508,6 +3263,20 @@ func (mock *MoqRequesterArgSameAsImport) GetCalls() []struct {
 	calls = mock.calls.Get
 	mock.lockGet.RUnlock()
 	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqRequesterArgSameAsImport) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqRequesterArgSameAsImport) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqRequesterArgSameAsNamedImport does implement RequesterArgSameAsNamedImport.
@@ -2546,9 +3315,6 @@ type MoqRequesterArgSameAsNamedImport struct {
 
 // Get calls GetFunc.
 func (mock *MoqRequesterArgSameAsNamedImport) Get(json1 string) *json.RawMessage {
-	if mock.GetFunc == nil {
-		panic("MoqRequesterArgSameAsNamedImport.GetFunc: method is nil but RequesterArgSameAsNamedImport.Get was just called")
-	}
 	callInfo := struct {
 		Json1 string
 	}{
@@ -2557,6 +3323,12 @@ func (mock *MoqRequesterArgSameAsNamedImport) Get(json1 string) *json.RawMessage
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			rawMessage *json.RawMessage
+		)
+		return rawMessage
+	}
 	return mock.GetFunc(json1)
 }
 
@@ -2574,6 +3346,20 @@ func (mock *MoqRequesterArgSameAsNamedImport) GetCalls() []struct {
 	calls = mock.calls.Get
 	mock.lockGet.RUnlock()
 	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqRequesterArgSameAsNamedImport) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqRequesterArgSameAsNamedImport) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqRequesterArgSameAsPkg does implement RequesterArgSameAsPkg.
@@ -2612,9 +3398,6 @@ type MoqRequesterArgSameAsPkg struct {
 
 // Get calls GetFunc.
 func (mock *MoqRequesterArgSameAsPkg) Get(test1 string) {
-	if mock.GetFunc == nil {
-		panic("MoqRequesterArgSameAsPkg.GetFunc: method is nil but RequesterArgSameAsPkg.Get was just called")
-	}
 	callInfo := struct {
 		Test1 string
 	}{
@@ -2623,6 +3406,9 @@ func (mock *MoqRequesterArgSameAsPkg) Get(test1 string) {
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		return
+	}
 	mock.GetFunc(test1)
 }
 
@@ -2640,6 +3426,20 @@ func (mock *MoqRequesterArgSameAsPkg) GetCalls() []struct {
 	calls = mock.calls.Get
 	mock.lockGet.RUnlock()
 	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqRequesterArgSameAsPkg) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqRequesterArgSameAsPkg) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqRequesterArray does implement RequesterArray.
@@ -2678,9 +3478,6 @@ type MoqRequesterArray struct {
 
 // Get calls GetFunc.
 func (mock *MoqRequesterArray) Get(path string) ([2]string, error) {
-	if mock.GetFunc == nil {
-		panic("MoqRequesterArray.GetFunc: method is nil but RequesterArray.Get was just called")
-	}
 	callInfo := struct {
 		Path string
 	}{
@@ -2689,6 +3486,13 @@ func (mock *MoqRequesterArray) Get(path string) ([2]string, error) {
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			strings [2]string
+			err     error
+		)
+		return strings, err
+	}
 	return mock.GetFunc(path)
 }
 
@@ -2706,6 +3510,20 @@ func (mock *MoqRequesterArray) GetCalls() []struct {
 	calls = mock.calls.Get
 	mock.lockGet.RUnlock()
 	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqRequesterArray) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqRequesterArray) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqRequesterElided does implement RequesterElided.
@@ -2746,9 +3564,6 @@ type MoqRequesterElided struct {
 
 // Get calls GetFunc.
 func (mock *MoqRequesterElided) Get(path string, url string) error {
-	if mock.GetFunc == nil {
-		panic("MoqRequesterElided.GetFunc: method is nil but RequesterElided.Get was just called")
-	}
 	callInfo := struct {
 		Path string
 		URL  string
@@ -2759,6 +3574,12 @@ func (mock *MoqRequesterElided) Get(path string, url string) error {
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			err error
+		)
+		return err
+	}
 	return mock.GetFunc(path, url)
 }
 
@@ -2778,6 +3599,20 @@ func (mock *MoqRequesterElided) GetCalls() []struct {
 	calls = mock.calls.Get
 	mock.lockGet.RUnlock()
 	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqRequesterElided) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqRequesterElided) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqRequesterIface does implement RequesterIface.
@@ -2814,14 +3649,17 @@ type MoqRequesterIface struct {
 
 // Get calls GetFunc.
 func (mock *MoqRequesterIface) Get() io.Reader {
-	if mock.GetFunc == nil {
-		panic("MoqRequesterIface.GetFunc: method is nil but RequesterIface.Get was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			reader io.Reader
+		)
+		return reader
+	}
 	return mock.GetFunc()
 }
 
@@ -2837,6 +3675,20 @@ func (mock *MoqRequesterIface) GetCalls() []struct {
 	calls = mock.calls.Get
 	mock.lockGet.RUnlock()
 	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqRequesterIface) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqRequesterIface) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqRequesterNS does implement RequesterNS.
@@ -2875,9 +3727,6 @@ type MoqRequesterNS struct {
 
 // Get calls GetFunc.
 func (mock *MoqRequesterNS) Get(path string) (http.Response, error) {
-	if mock.GetFunc == nil {
-		panic("MoqRequesterNS.GetFunc: method is nil but RequesterNS.Get was just called")
-	}
 	callInfo := struct {
 		Path string
 	}{
@@ -2886,6 +3735,13 @@ func (mock *MoqRequesterNS) Get(path string) (http.Response, error) {
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			response http.Response
+			err      error
+		)
+		return response, err
+	}
 	return mock.GetFunc(path)
 }
 
@@ -2903,6 +3759,20 @@ func (mock *MoqRequesterNS) GetCalls() []struct {
 	calls = mock.calls.Get
 	mock.lockGet.RUnlock()
 	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqRequesterNS) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqRequesterNS) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqRequesterPtr does implement RequesterPtr.
@@ -2941,9 +3811,6 @@ type MoqRequesterPtr struct {
 
 // Get calls GetFunc.
 func (mock *MoqRequesterPtr) Get(path string) (*string, error) {
-	if mock.GetFunc == nil {
-		panic("MoqRequesterPtr.GetFunc: method is nil but RequesterPtr.Get was just called")
-	}
 	callInfo := struct {
 		Path string
 	}{
@@ -2952,6 +3819,13 @@ func (mock *MoqRequesterPtr) Get(path string) (*string, error) {
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			s   *string
+			err error
+		)
+		return s, err
+	}
 	return mock.GetFunc(path)
 }
 
@@ -2969,6 +3843,20 @@ func (mock *MoqRequesterPtr) GetCalls() []struct {
 	calls = mock.calls.Get
 	mock.lockGet.RUnlock()
 	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqRequesterPtr) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqRequesterPtr) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqRequesterReturnElided does implement RequesterReturnElided.
@@ -3019,9 +3907,6 @@ type MoqRequesterReturnElided struct {
 
 // Get calls GetFunc.
 func (mock *MoqRequesterReturnElided) Get(path string) (int, int, int, error) {
-	if mock.GetFunc == nil {
-		panic("MoqRequesterReturnElided.GetFunc: method is nil but RequesterReturnElided.Get was just called")
-	}
 	callInfo := struct {
 		Path string
 	}{
@@ -3030,6 +3915,15 @@ func (mock *MoqRequesterReturnElided) Get(path string) (int, int, int, error) {
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			a   int
+			b   int
+			c   int
+			err error
+		)
+		return a, b, c, err
+	}
 	return mock.GetFunc(path)
 }
 
@@ -3049,11 +3943,15 @@ func (mock *MoqRequesterReturnElided) GetCalls() []struct {
 	return calls
 }
 
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqRequesterReturnElided) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
 // Put calls PutFunc.
 func (mock *MoqRequesterReturnElided) Put(path string) (int, error) {
-	if mock.PutFunc == nil {
-		panic("MoqRequesterReturnElided.PutFunc: method is nil but RequesterReturnElided.Put was just called")
-	}
 	callInfo := struct {
 		Path string
 	}{
@@ -3062,6 +3960,13 @@ func (mock *MoqRequesterReturnElided) Put(path string) (int, error) {
 	mock.lockPut.Lock()
 	mock.calls.Put = append(mock.calls.Put, callInfo)
 	mock.lockPut.Unlock()
+	if mock.PutFunc == nil {
+		var (
+			n   int
+			err error
+		)
+		return n, err
+	}
 	return mock.PutFunc(path)
 }
 
@@ -3079,6 +3984,24 @@ func (mock *MoqRequesterReturnElided) PutCalls() []struct {
 	calls = mock.calls.Put
 	mock.lockPut.RUnlock()
 	return calls
+}
+
+// ResetPutCalls reset all the calls that were made to Put.
+func (mock *MoqRequesterReturnElided) ResetPutCalls() {
+	mock.lockPut.Lock()
+	mock.calls.Put = nil
+	mock.lockPut.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqRequesterReturnElided) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+
+	mock.lockPut.Lock()
+	mock.calls.Put = nil
+	mock.lockPut.Unlock()
 }
 
 // Ensure, that MoqRequesterSlice does implement RequesterSlice.
@@ -3117,9 +4040,6 @@ type MoqRequesterSlice struct {
 
 // Get calls GetFunc.
 func (mock *MoqRequesterSlice) Get(path string) ([]string, error) {
-	if mock.GetFunc == nil {
-		panic("MoqRequesterSlice.GetFunc: method is nil but RequesterSlice.Get was just called")
-	}
 	callInfo := struct {
 		Path string
 	}{
@@ -3128,6 +4048,13 @@ func (mock *MoqRequesterSlice) Get(path string) ([]string, error) {
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			strings []string
+			err     error
+		)
+		return strings, err
+	}
 	return mock.GetFunc(path)
 }
 
@@ -3145,6 +4072,20 @@ func (mock *MoqRequesterSlice) GetCalls() []struct {
 	calls = mock.calls.Get
 	mock.lockGet.RUnlock()
 	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqRequesterSlice) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqRequesterSlice) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqrequesterUnexported does implement requesterUnexported.
@@ -3181,14 +4122,14 @@ type MoqrequesterUnexported struct {
 
 // Get calls GetFunc.
 func (mock *MoqrequesterUnexported) Get() {
-	if mock.GetFunc == nil {
-		panic("MoqrequesterUnexported.GetFunc: method is nil but requesterUnexported.Get was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		return
+	}
 	mock.GetFunc()
 }
 
@@ -3204,6 +4145,20 @@ func (mock *MoqrequesterUnexported) GetCalls() []struct {
 	calls = mock.calls.Get
 	mock.lockGet.RUnlock()
 	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqrequesterUnexported) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqrequesterUnexported) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
 }
 
 // Ensure, that MoqRequesterVariadic does implement RequesterVariadic.
@@ -3282,9 +4237,6 @@ type MoqRequesterVariadic struct {
 
 // Get calls GetFunc.
 func (mock *MoqRequesterVariadic) Get(values ...string) bool {
-	if mock.GetFunc == nil {
-		panic("MoqRequesterVariadic.GetFunc: method is nil but RequesterVariadic.Get was just called")
-	}
 	callInfo := struct {
 		Values []string
 	}{
@@ -3293,6 +4245,12 @@ func (mock *MoqRequesterVariadic) Get(values ...string) bool {
 	mock.lockGet.Lock()
 	mock.calls.Get = append(mock.calls.Get, callInfo)
 	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			b bool
+		)
+		return b
+	}
 	return mock.GetFunc(values...)
 }
 
@@ -3312,11 +4270,15 @@ func (mock *MoqRequesterVariadic) GetCalls() []struct {
 	return calls
 }
 
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqRequesterVariadic) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
 // MultiWriteToFile calls MultiWriteToFileFunc.
 func (mock *MoqRequesterVariadic) MultiWriteToFile(filename string, w ...io.Writer) string {
-	if mock.MultiWriteToFileFunc == nil {
-		panic("MoqRequesterVariadic.MultiWriteToFileFunc: method is nil but RequesterVariadic.MultiWriteToFile was just called")
-	}
 	callInfo := struct {
 		Filename string
 		W        []io.Writer
@@ -3327,6 +4289,12 @@ func (mock *MoqRequesterVariadic) MultiWriteToFile(filename string, w ...io.Writ
 	mock.lockMultiWriteToFile.Lock()
 	mock.calls.MultiWriteToFile = append(mock.calls.MultiWriteToFile, callInfo)
 	mock.lockMultiWriteToFile.Unlock()
+	if mock.MultiWriteToFileFunc == nil {
+		var (
+			s string
+		)
+		return s
+	}
 	return mock.MultiWriteToFileFunc(filename, w...)
 }
 
@@ -3348,11 +4316,15 @@ func (mock *MoqRequesterVariadic) MultiWriteToFileCalls() []struct {
 	return calls
 }
 
+// ResetMultiWriteToFileCalls reset all the calls that were made to MultiWriteToFile.
+func (mock *MoqRequesterVariadic) ResetMultiWriteToFileCalls() {
+	mock.lockMultiWriteToFile.Lock()
+	mock.calls.MultiWriteToFile = nil
+	mock.lockMultiWriteToFile.Unlock()
+}
+
 // OneInterface calls OneInterfaceFunc.
 func (mock *MoqRequesterVariadic) OneInterface(a ...interface{}) bool {
-	if mock.OneInterfaceFunc == nil {
-		panic("MoqRequesterVariadic.OneInterfaceFunc: method is nil but RequesterVariadic.OneInterface was just called")
-	}
 	callInfo := struct {
 		A []interface{}
 	}{
@@ -3361,6 +4333,12 @@ func (mock *MoqRequesterVariadic) OneInterface(a ...interface{}) bool {
 	mock.lockOneInterface.Lock()
 	mock.calls.OneInterface = append(mock.calls.OneInterface, callInfo)
 	mock.lockOneInterface.Unlock()
+	if mock.OneInterfaceFunc == nil {
+		var (
+			b bool
+		)
+		return b
+	}
 	return mock.OneInterfaceFunc(a...)
 }
 
@@ -3380,11 +4358,15 @@ func (mock *MoqRequesterVariadic) OneInterfaceCalls() []struct {
 	return calls
 }
 
+// ResetOneInterfaceCalls reset all the calls that were made to OneInterface.
+func (mock *MoqRequesterVariadic) ResetOneInterfaceCalls() {
+	mock.lockOneInterface.Lock()
+	mock.calls.OneInterface = nil
+	mock.lockOneInterface.Unlock()
+}
+
 // Sprintf calls SprintfFunc.
 func (mock *MoqRequesterVariadic) Sprintf(format string, a ...interface{}) string {
-	if mock.SprintfFunc == nil {
-		panic("MoqRequesterVariadic.SprintfFunc: method is nil but RequesterVariadic.Sprintf was just called")
-	}
 	callInfo := struct {
 		Format string
 		A      []interface{}
@@ -3395,6 +4377,12 @@ func (mock *MoqRequesterVariadic) Sprintf(format string, a ...interface{}) strin
 	mock.lockSprintf.Lock()
 	mock.calls.Sprintf = append(mock.calls.Sprintf, callInfo)
 	mock.lockSprintf.Unlock()
+	if mock.SprintfFunc == nil {
+		var (
+			s string
+		)
+		return s
+	}
 	return mock.SprintfFunc(format, a...)
 }
 
@@ -3414,6 +4402,32 @@ func (mock *MoqRequesterVariadic) SprintfCalls() []struct {
 	calls = mock.calls.Sprintf
 	mock.lockSprintf.RUnlock()
 	return calls
+}
+
+// ResetSprintfCalls reset all the calls that were made to Sprintf.
+func (mock *MoqRequesterVariadic) ResetSprintfCalls() {
+	mock.lockSprintf.Lock()
+	mock.calls.Sprintf = nil
+	mock.lockSprintf.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqRequesterVariadic) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+
+	mock.lockMultiWriteToFile.Lock()
+	mock.calls.MultiWriteToFile = nil
+	mock.lockMultiWriteToFile.Unlock()
+
+	mock.lockOneInterface.Lock()
+	mock.calls.OneInterface = nil
+	mock.lockOneInterface.Unlock()
+
+	mock.lockSprintf.Lock()
+	mock.calls.Sprintf = nil
+	mock.lockSprintf.Unlock()
 }
 
 // Ensure, that MoqExample does implement Example.
@@ -3474,14 +4488,17 @@ type MoqExample struct {
 
 // A calls AFunc.
 func (mock *MoqExample) A() http.Flusher {
-	if mock.AFunc == nil {
-		panic("MoqExample.AFunc: method is nil but Example.A was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockA.Lock()
 	mock.calls.A = append(mock.calls.A, callInfo)
 	mock.lockA.Unlock()
+	if mock.AFunc == nil {
+		var (
+			flusher http.Flusher
+		)
+		return flusher
+	}
 	return mock.AFunc()
 }
 
@@ -3499,11 +4516,15 @@ func (mock *MoqExample) ACalls() []struct {
 	return calls
 }
 
+// ResetACalls reset all the calls that were made to A.
+func (mock *MoqExample) ResetACalls() {
+	mock.lockA.Lock()
+	mock.calls.A = nil
+	mock.lockA.Unlock()
+}
+
 // B calls BFunc.
 func (mock *MoqExample) B(fixtureshttp string) http0.MyStruct {
-	if mock.BFunc == nil {
-		panic("MoqExample.BFunc: method is nil but Example.B was just called")
-	}
 	callInfo := struct {
 		Fixtureshttp string
 	}{
@@ -3512,6 +4533,12 @@ func (mock *MoqExample) B(fixtureshttp string) http0.MyStruct {
 	mock.lockB.Lock()
 	mock.calls.B = append(mock.calls.B, callInfo)
 	mock.lockB.Unlock()
+	if mock.BFunc == nil {
+		var (
+			myStruct http0.MyStruct
+		)
+		return myStruct
+	}
 	return mock.BFunc(fixtureshttp)
 }
 
@@ -3531,11 +4558,15 @@ func (mock *MoqExample) BCalls() []struct {
 	return calls
 }
 
+// ResetBCalls reset all the calls that were made to B.
+func (mock *MoqExample) ResetBCalls() {
+	mock.lockB.Lock()
+	mock.calls.B = nil
+	mock.lockB.Unlock()
+}
+
 // C calls CFunc.
 func (mock *MoqExample) C(fixtureshttp string) http1.MyStruct {
-	if mock.CFunc == nil {
-		panic("MoqExample.CFunc: method is nil but Example.C was just called")
-	}
 	callInfo := struct {
 		Fixtureshttp string
 	}{
@@ -3544,6 +4575,12 @@ func (mock *MoqExample) C(fixtureshttp string) http1.MyStruct {
 	mock.lockC.Lock()
 	mock.calls.C = append(mock.calls.C, callInfo)
 	mock.lockC.Unlock()
+	if mock.CFunc == nil {
+		var (
+			myStruct http1.MyStruct
+		)
+		return myStruct
+	}
 	return mock.CFunc(fixtureshttp)
 }
 
@@ -3561,6 +4598,28 @@ func (mock *MoqExample) CCalls() []struct {
 	calls = mock.calls.C
 	mock.lockC.RUnlock()
 	return calls
+}
+
+// ResetCCalls reset all the calls that were made to C.
+func (mock *MoqExample) ResetCCalls() {
+	mock.lockC.Lock()
+	mock.calls.C = nil
+	mock.lockC.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqExample) ResetCalls() {
+	mock.lockA.Lock()
+	mock.calls.A = nil
+	mock.lockA.Unlock()
+
+	mock.lockB.Lock()
+	mock.calls.B = nil
+	mock.lockB.Unlock()
+
+	mock.lockC.Lock()
+	mock.calls.C = nil
+	mock.lockC.Unlock()
 }
 
 // Ensure, that MoqA does implement A.
@@ -3597,14 +4656,18 @@ type MoqA struct {
 
 // Call calls CallFunc.
 func (mock *MoqA) Call() (B, error) {
-	if mock.CallFunc == nil {
-		panic("MoqA.CallFunc: method is nil but A.Call was just called")
-	}
 	callInfo := struct {
 	}{}
 	mock.lockCall.Lock()
 	mock.calls.Call = append(mock.calls.Call, callInfo)
 	mock.lockCall.Unlock()
+	if mock.CallFunc == nil {
+		var (
+			b   B
+			err error
+		)
+		return b, err
+	}
 	return mock.CallFunc()
 }
 
@@ -3620,6 +4683,20 @@ func (mock *MoqA) CallCalls() []struct {
 	calls = mock.calls.Call
 	mock.lockCall.RUnlock()
 	return calls
+}
+
+// ResetCallCalls reset all the calls that were made to Call.
+func (mock *MoqA) ResetCallCalls() {
+	mock.lockCall.Lock()
+	mock.calls.Call = nil
+	mock.lockCall.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqA) ResetCalls() {
+	mock.lockCall.Lock()
+	mock.calls.Call = nil
+	mock.lockCall.Unlock()
 }
 
 // Ensure, that MoqStructWithTag does implement StructWithTag.
@@ -3673,9 +4750,6 @@ func (mock *MoqStructWithTag) MethodA(v *struct {
 	FieldC int "json:\"field_c\""
 	FieldD int "json:\"field_d\" xml:\"field_d\""
 } {
-	if mock.MethodAFunc == nil {
-		panic("MoqStructWithTag.MethodAFunc: method is nil but StructWithTag.MethodA was just called")
-	}
 	callInfo := struct {
 		V *struct {
 			FieldA int "json:\"field_a\""
@@ -3687,6 +4761,15 @@ func (mock *MoqStructWithTag) MethodA(v *struct {
 	mock.lockMethodA.Lock()
 	mock.calls.MethodA = append(mock.calls.MethodA, callInfo)
 	mock.lockMethodA.Unlock()
+	if mock.MethodAFunc == nil {
+		var (
+			val *struct {
+				FieldC int "json:\"field_c\""
+				FieldD int "json:\"field_d\" xml:\"field_d\""
+			}
+		)
+		return val
+	}
 	return mock.MethodAFunc(v)
 }
 
@@ -3710,6 +4793,20 @@ func (mock *MoqStructWithTag) MethodACalls() []struct {
 	calls = mock.calls.MethodA
 	mock.lockMethodA.RUnlock()
 	return calls
+}
+
+// ResetMethodACalls reset all the calls that were made to MethodA.
+func (mock *MoqStructWithTag) ResetMethodACalls() {
+	mock.lockMethodA.Lock()
+	mock.calls.MethodA = nil
+	mock.lockMethodA.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqStructWithTag) ResetCalls() {
+	mock.lockMethodA.Lock()
+	mock.calls.MethodA = nil
+	mock.lockMethodA.Unlock()
 }
 
 // Ensure, that MoqUnsafeInterface does implement UnsafeInterface.
@@ -3748,9 +4845,6 @@ type MoqUnsafeInterface struct {
 
 // Do calls DoFunc.
 func (mock *MoqUnsafeInterface) Do(ptr *unsafe.Pointer) {
-	if mock.DoFunc == nil {
-		panic("MoqUnsafeInterface.DoFunc: method is nil but UnsafeInterface.Do was just called")
-	}
 	callInfo := struct {
 		Ptr *unsafe.Pointer
 	}{
@@ -3759,6 +4853,9 @@ func (mock *MoqUnsafeInterface) Do(ptr *unsafe.Pointer) {
 	mock.lockDo.Lock()
 	mock.calls.Do = append(mock.calls.Do, callInfo)
 	mock.lockDo.Unlock()
+	if mock.DoFunc == nil {
+		return
+	}
 	mock.DoFunc(ptr)
 }
 
@@ -3776,6 +4873,20 @@ func (mock *MoqUnsafeInterface) DoCalls() []struct {
 	calls = mock.calls.Do
 	mock.lockDo.RUnlock()
 	return calls
+}
+
+// ResetDoCalls reset all the calls that were made to Do.
+func (mock *MoqUnsafeInterface) ResetDoCalls() {
+	mock.lockDo.Lock()
+	mock.calls.Do = nil
+	mock.lockDo.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqUnsafeInterface) ResetCalls() {
+	mock.lockDo.Lock()
+	mock.calls.Do = nil
+	mock.lockDo.Unlock()
 }
 
 // Ensure, that MoqVariadic does implement Variadic.
@@ -3816,9 +4927,6 @@ type MoqVariadic struct {
 
 // VariadicFunction calls VariadicFunctionFunc.
 func (mock *MoqVariadic) VariadicFunction(str string, vFunc VariadicFunction) error {
-	if mock.VariadicFunctionFunc == nil {
-		panic("MoqVariadic.VariadicFunctionFunc: method is nil but Variadic.VariadicFunction was just called")
-	}
 	callInfo := struct {
 		Str   string
 		VFunc VariadicFunction
@@ -3829,6 +4937,12 @@ func (mock *MoqVariadic) VariadicFunction(str string, vFunc VariadicFunction) er
 	mock.lockVariadicFunction.Lock()
 	mock.calls.VariadicFunction = append(mock.calls.VariadicFunction, callInfo)
 	mock.lockVariadicFunction.Unlock()
+	if mock.VariadicFunctionFunc == nil {
+		var (
+			err error
+		)
+		return err
+	}
 	return mock.VariadicFunctionFunc(str, vFunc)
 }
 
@@ -3848,6 +4962,20 @@ func (mock *MoqVariadic) VariadicFunctionCalls() []struct {
 	calls = mock.calls.VariadicFunction
 	mock.lockVariadicFunction.RUnlock()
 	return calls
+}
+
+// ResetVariadicFunctionCalls reset all the calls that were made to VariadicFunction.
+func (mock *MoqVariadic) ResetVariadicFunctionCalls() {
+	mock.lockVariadicFunction.Lock()
+	mock.calls.VariadicFunction = nil
+	mock.lockVariadicFunction.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqVariadic) ResetCalls() {
+	mock.lockVariadicFunction.Lock()
+	mock.calls.VariadicFunction = nil
+	mock.lockVariadicFunction.Unlock()
 }
 
 // Ensure, that MoqVariadicReturnFunc does implement VariadicReturnFunc.
@@ -3886,9 +5014,6 @@ type MoqVariadicReturnFunc struct {
 
 // SampleMethod calls SampleMethodFunc.
 func (mock *MoqVariadicReturnFunc) SampleMethod(str string) func(str string, arr []int, a ...interface{}) {
-	if mock.SampleMethodFunc == nil {
-		panic("MoqVariadicReturnFunc.SampleMethodFunc: method is nil but VariadicReturnFunc.SampleMethod was just called")
-	}
 	callInfo := struct {
 		Str string
 	}{
@@ -3897,6 +5022,12 @@ func (mock *MoqVariadicReturnFunc) SampleMethod(str string) func(str string, arr
 	mock.lockSampleMethod.Lock()
 	mock.calls.SampleMethod = append(mock.calls.SampleMethod, callInfo)
 	mock.lockSampleMethod.Unlock()
+	if mock.SampleMethodFunc == nil {
+		var (
+			fn func(str string, arr []int, a ...interface{})
+		)
+		return fn
+	}
 	return mock.SampleMethodFunc(str)
 }
 
@@ -3914,4 +5045,18 @@ func (mock *MoqVariadicReturnFunc) SampleMethodCalls() []struct {
 	calls = mock.calls.SampleMethod
 	mock.lockSampleMethod.RUnlock()
 	return calls
+}
+
+// ResetSampleMethodCalls reset all the calls that were made to SampleMethod.
+func (mock *MoqVariadicReturnFunc) ResetSampleMethodCalls() {
+	mock.lockSampleMethod.Lock()
+	mock.calls.SampleMethod = nil
+	mock.lockSampleMethod.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqVariadicReturnFunc) ResetCalls() {
+	mock.lockSampleMethod.Lock()
+	mock.calls.SampleMethod = nil
+	mock.lockSampleMethod.Unlock()
 }

@@ -132,28 +132,63 @@ func (c *RootConfig) ConfigFileUsed() *pathlib.Path {
 	return c.configFile
 }
 
+// mergreStringMaps merges two (possibly nested) maps.
+func mergeStringMaps(src, dest map[string]any) {
+	for srcKey, srcValue := range src {
+		if destValue, exists := dest[srcKey]; exists {
+			// If the source value is a map, merge recursively
+			if destMap, ok := destValue.(map[string]any); ok {
+				if srcMap, ok := srcValue.(map[string]any); ok {
+					mergeStringMaps(srcMap, destMap)
+					continue
+				}
+			}
+			continue
+		}
+		// Otherwise, set the value directly
+		dest[srcKey] = srcValue
+	}
+}
+
 // mergeConfigs merges the values from c1 into c2.
-func mergeConfigs(ctx context.Context, c1 Config, c2 *Config) {
+func mergeConfigs(ctx context.Context, src Config, dest *Config) {
 	log := zerolog.Ctx(ctx)
 	// Merge root config with package config
-	c1Value := reflect.ValueOf(c1)
-	c2Value := reflect.ValueOf(c2)
+	srcValue := reflect.ValueOf(src)
+	destValue := reflect.ValueOf(dest)
 
-	for i := 0; i < c1Value.NumField(); i++ {
+	for i := 0; i < srcValue.NumField(); i++ {
 		fieldLog := log.With().
 			Int("index", i).
-			Str("name", c1Value.Type().Field(i).Name).
+			Str("name", srcValue.Type().Field(i).Name).
 			Logger()
 		fieldLog.Debug().Msg("Iterating over field for merging")
-		c1FieldValue := c1Value.Field(i)
-		c2FieldValue := c2Value.Elem().Field(i)
+		srcFieldValue := srcValue.Field(i)
+		destFieldValue := destValue.Elem().Field(i)
 
-		if c2FieldValue.CanSet() && c2FieldValue.IsZero() {
-			c2FieldValue.Set(c1FieldValue)
+		if srcFieldValue.Kind() == reflect.Map {
+			srcMap := srcFieldValue.Interface().(map[string]any)
+			destMap := destFieldValue.Interface().(map[string]any)
+			if destMap == nil {
+				destFieldValue.Set(reflect.ValueOf(make(map[string]any)))
+			}
+			destMap = destFieldValue.Interface().(map[string]any)
+			mergeStringMaps(srcMap, destMap)
+		} else if srcFieldValue.Kind() == reflect.Pointer && destFieldValue.IsNil() {
+			// Attribute is a pointer. We need to allocate a new value of the
+			// same type as the type being pointed to.
+			newValue := reflect.New(srcFieldValue.Elem().Type())
+			// Then, set this new value to the same value as the src.
+			newValue.Elem().Set(srcFieldValue.Elem())
+			// newValue is already an address, so we can set destFieldValue
+			// to it as-is.
+			destFieldValue.Set(newValue)
+		} else if destFieldValue.CanSet() && destFieldValue.IsZero() {
+			destFieldValue.Set(srcFieldValue)
 		} else {
 			fieldLog.Debug().
-				Bool("can-set", c2FieldValue.CanSet()).
-				Bool("is-zero", c2FieldValue.IsZero()).
+				Bool("can-set", destFieldValue.CanSet()).
+				Bool("is-zero", destFieldValue.IsZero()).
 				Msg("field not addressable, not merging.")
 		}
 	}

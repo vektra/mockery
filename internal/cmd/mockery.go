@@ -235,7 +235,6 @@ func (r *RootApp) Run() error {
 			ifaceLog.Debug().Msg("interfaces is nil")
 		}
 		ifaceConfig := pkgConfig.GetInterfaceConfig(ctx, iface.Name)
-		ifaceLog.Debug().Int("len", len(ifaceConfig.Configs)).Str("fmt", fmt.Sprintf("%#v", ifaceConfig)).Msg("interface configs length")
 		for _, ifaceConfig := range ifaceConfig.Configs {
 			if err := ifaceConfig.ParseTemplates(ifaceCtx, iface, iface.Pkg); err != nil {
 				log.Err(err).Msg("Can't parse config templates for interface")
@@ -278,15 +277,13 @@ func (r *RootApp) Run() error {
 		if err != nil {
 			return err
 		}
-		fileLog.Debug().Str("mock-name", *packageConfig.Config.MockName).Msg("package config mockname before parsing")
 		if err := packageConfig.Config.ParseTemplates(ctx, nil, interfacesInFile.srcPkg); err != nil {
 			return err
 		}
-		fileLog.Debug().Str("mock-name", *packageConfig.Config.MockName).Msg("package config mockname after parsing")
 
 		generator, err := pkg.NewTemplateGenerator(
 			fileCtx,
-			interfacesInFile.interfaces[0].Pkg,
+			interfacesInFile.srcPkg,
 			interfacesInFile.outFilePath.Parent(),
 			*packageConfig.Config.Template,
 			pkg.Formatter(*r.Config.Formatter),
