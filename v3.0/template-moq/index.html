@@ -1013,6 +1013,16 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 </thead>
 <tbody>
 <tr>
+<td><code>boilerplate-file</code></td>
+<td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">string</span></code></td>
+<td>Specify a path to a file that contains comments you want displayed at the top of all generated mock files. This is commonly used to display license headers at the top of your source code.</td>
+</tr>
+<tr>
+<td><code>mock-build-tags</code></td>
+<td><code class="highlight"><span class="s">&quot;&quot;</span></code></td>
+<td>Set the build tags of the generated mocks. Read more about the <a href="https://pkg.go.dev/cmd/go#hdr-Build_constraints">format</a>.</td>
+</tr>
+<tr>
 <td><code>skip-ensure</code></td>
 <td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">bool</span></code></td>
 <td>Suppress mock implementation check, avoid import cycle if mocks generated outside of the tested package.</td>
