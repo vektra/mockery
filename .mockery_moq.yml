@@ -1,5 +1,4 @@
 template: moq
-boilerplate-file: "./.boilerplate.txt"
 mockname: "Moq{{.InterfaceName}}"
 filename: "mocks_moq_test.go"
 all: true
@@ -7,6 +6,7 @@ template-data:
     skip-ensure: False
     stub-impl: True
     with-resets: True
+    boilerplate-file: "./.boilerplate.txt"
 packages:
     github.com/vektra/mockery/v3/internal/fixtures:
         config:

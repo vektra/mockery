@@ -120,6 +120,8 @@ Moq-style mocks are far simpler, and probably more intuitive, than mockery-style
 
 | key | type | description |
 |-----|------|-------------|
+| `boilerplate-file`  | `#!yaml string` | Specify a path to a file that contains comments you want displayed at the top of all generated mock files. This is commonly used to display license headers at the top of your source code. |
+| `mock-build-tags` | `#!yaml ""` | Set the build tags of the generated mocks. Read more about the [format](https://pkg.go.dev/cmd/go#hdr-Build_constraints). |
 | `skip-ensure` | `#!yaml bool` | Suppress mock implementation check, avoid import cycle if mocks generated outside of the tested package. |
 | `stub-impl` | `#!yaml bool` | Return zero values when no mock implementation is provided, do not panic. |
 | `with-resets` | `#!yaml bool` | Generates methods that allow resetting calls made to the mocks. |

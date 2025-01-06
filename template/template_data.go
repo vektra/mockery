@@ -21,8 +21,6 @@ type ConfigData struct {
 
 // Data is the template data used to render the mock template.
 type Data struct {
-	Boilerplate     string
-	BuildTags       string
 	PkgName         string
 	SrcPkgQualifier string
 	Imports         []*Package

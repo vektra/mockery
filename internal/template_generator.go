@@ -298,21 +298,8 @@ func (g *TemplateGenerator) Generate(
 			TemplateData:  ifaceMock.Config.TemplateData,
 		})
 	}
-	var boilerplate string
-	if *g.pkgConfig.BoilerplateFile != "" {
-		var err error
-		boilerplatePath := pathlib.NewPath(*g.pkgConfig.BoilerplateFile)
-		boilerplateBytes, err := boilerplatePath.ReadFile()
-		if err != nil {
-			log.Err(err).Msg("unable to find boilerplate file")
-			return nil, stackerr.NewStackErr(err)
-		}
-		boilerplate = string(boilerplateBytes)
-	}
 
 	data := template.Data{
-		Boilerplate:     boilerplate,
-		BuildTags:       *g.pkgConfig.MockBuildTags,
 		PkgName:         g.pkgName,
 		SrcPkgQualifier: "",
 		Mocks:           mockData,

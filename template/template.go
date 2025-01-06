@@ -104,6 +104,16 @@ var TemplateMockFuncs = template.FuncMap{
 		s += "]"
 		return s
 	},
+	"readFile": func(path string) string {
+		if path == "" {
+			return ""
+		}
+		fileBytes, err := os.ReadFile(path)
+		if err != nil {
+			panic(err.Error())
+		}
+		return string(fileBytes)
+	},
 }
 
 var StringManipulationFuncs = template.FuncMap{

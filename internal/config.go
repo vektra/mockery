@@ -406,7 +406,6 @@ func (c *InterfaceConfig) Initialize(ctx context.Context) error {
 type Config struct {
 	All                *bool          `koanf:"all"`
 	Anchors            map[string]any `koanf:"_anchors"`
-	BoilerplateFile    *string        `koanf:"boilerplate-file"`
 	BuildTags          *string        `koanf:"tags"`
 	ConfigFile         *string        `koanf:"config"`
 	Dir                *string        `koanf:"dir"`
@@ -416,7 +415,6 @@ type Config struct {
 	Formatter          *string        `koanf:"formatter"`
 	IncludeRegex       *string        `koanf:"include-regex"`
 	LogLevel           *string        `koanf:"log-level"`
-	MockBuildTags      *string        `koanf:"mock-build-tags"`
 	MockName           *string        `koanf:"mockname"`
 	PkgName            *string        `koanf:"pkgname"`
 	Recursive          *bool          `koanf:"recursive"`
