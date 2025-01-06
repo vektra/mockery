@@ -20,7 +20,7 @@ import (
 
 {{range $i, $mock := .Mocks -}}
 
-{{- if not (index $.TemplateData "skip-ensure") -}}
+{{- if not (index $mock.TemplateData "skip-ensure") -}}
 // Ensure, that {{.MockName}} does implement {{$.SrcPkgQualifier}}{{.InterfaceName}}.
 // If this is not the case, regenerate this file with moq.
 var _ {{$.SrcPkgQualifier}}{{.InterfaceName -}}

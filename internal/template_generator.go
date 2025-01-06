@@ -289,6 +289,7 @@ func (g *TemplateGenerator) Generate(
 					WithContext(ctx))
 		}
 
+		ifaceLog.Debug().Str("template-data", fmt.Sprintf("%v", ifaceMock.Config.TemplateData)).Msg("printing template data")
 		mockData = append(mockData, template.MockData{
 			InterfaceName: ifaceMock.Name,
 			MockName:      *ifaceMock.Config.MockName,
