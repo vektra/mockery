@@ -135,19 +135,31 @@ func NewInterfaceCollection(
 }
 
 func (i *InterfaceCollection) Append(ctx context.Context, iface *pkg.Interface) error {
+	collectionFilepath := i.outFilePath.String()
+	interfaceFilepath := iface.Config.FilePath().String()
 	log := zerolog.Ctx(ctx).With().
 		Str(logging.LogKeyInterface, iface.Name).
-		Str("source-pkgname", iface.Pkg.Name).
-		Str(logging.LogKeyPackagePath, iface.Pkg.PkgPath).
-		Str("expected-package-path", i.srcPkgPath).Logger()
-	if i.outFilePath.String() != pathlib.NewPath(*iface.Config.Dir).Join(*iface.Config.FileName).String() {
+		Str("collection-pkgname", i.outPkgName).
+		Str("interface-pkgname", *iface.Config.PkgName).
+		Str("collection-pkgpath", i.srcPkgPath).
+		Str("interface-pkgpath", iface.Pkg.PkgPath).
+		Str("collection-filepath", collectionFilepath).
+		Str("interface-filepath", interfaceFilepath).
+		Logger()
+
+	if collectionFilepath != interfaceFilepath {
 		msg := "all mocks in an InterfaceCollection must have the same output file path"
 		log.Error().Msg(msg)
 		return errors.New(msg)
 	}
 	if i.outPkgName != *iface.Config.PkgName {
 		msg := "all mocks in an output file must have the same pkgname"
-		log.Error().Str("output-pkgname", i.outPkgName).Str("interface-pkgname", *iface.Config.PkgName).Msg(msg)
+		log.Error().Str("interface-pkgname", *iface.Config.PkgName).Msg(msg)
+		return errors.New(msg)
+	}
+	if i.srcPkgPath != iface.Pkg.PkgPath {
+		msg := "all mocks in an output file must come from the same source package"
+		log.Error().Msg(msg)
 		return errors.New(msg)
 	}
 	if i.template != *iface.Config.Template {
@@ -222,7 +234,6 @@ func (r *RootApp) Run() error {
 			ifaceLog.Debug().Msg("config doesn't specify to generate this interface, skipping")
 			continue
 		}
-		ifaceLog.Info().Msg("adding interface")
 		if pkgConfig.Interfaces == nil {
 			ifaceLog.Debug().Msg("interfaces is nil")
 		}
@@ -232,20 +243,20 @@ func (r *RootApp) Run() error {
 				log.Err(err).Msg("Can't parse config templates for interface")
 				return err
 			}
-			filePath := ifaceConfig.FilePath().String()
-			ifaceLog.Debug().Str("collection", filePath).Msg("adding interface to collection")
+			filePath := ifaceConfig.FilePath().Clean()
+			ifaceLog.Info().Str("collection", filePath.String()).Msg("adding interface to collection")
 
-			_, ok := mockFileToInterfaces[filePath]
+			_, ok := mockFileToInterfaces[filePath.String()]
 			if !ok {
-				mockFileToInterfaces[filePath] = NewInterfaceCollection(
+				mockFileToInterfaces[filePath.String()] = NewInterfaceCollection(
 					iface.Pkg.PkgPath,
-					pathlib.NewPath(*ifaceConfig.Dir).Join(*ifaceConfig.FileName),
+					filePath,
 					iface.Pkg,
 					*ifaceConfig.PkgName,
 					*ifaceConfig.Template,
 				)
 			}
-			if err := mockFileToInterfaces[filePath].Append(
+			if err := mockFileToInterfaces[filePath.String()].Append(
 				ctx,
 				pkg.NewInterface(
 					iface.Name,
@@ -297,6 +308,16 @@ func (r *RootApp) Run() error {
 			return stackerr.NewStackErr(err)
 		}
 		fileLog.Info().Msg("Writing template to file")
+		outFileExists, err := outFile.Exists()
+		if err != nil {
+			fileLog.Err(err).Msg("can't determine if outfile exists")
+			return fmt.Errorf("determining if outfile exists: %w", err)
+		}
+		if outFileExists {
+			fileLog.Error().Msg("output file exists, can't write mocks")
+			return fmt.Errorf("outfile exists")
+		}
+
 		if err := outFile.WriteFile(templateBytes); err != nil {
 			return stackerr.NewStackErr(err)
 		}

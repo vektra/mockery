@@ -2,7 +2,7 @@ template: "mockery"
 tags: "custom2"
 formatter: "goimports"
 all: True
-dir: "{{.InterfaceDir}}"
+dir: "{{.InterfaceDirRelative}}"
 mockname: "Mock{{.InterfaceName}}"
 pkgname: "{{.SrcPackageName}}"
 filename: "mocks_test.go"
@@ -42,4 +42,10 @@ packages:
   github.com/vektra/mockery/v3/internal/fixtures/index_list_expr:
   github.com/vektra/mockery/v3/internal/fixtures/iface_new_type:
   github.com/vektra/mockery/v3/internal/fixtures/type_alias:
+  io:
+    config:
+      all: True
+      dir: internal/fixtures/
+      filename: mocks_io_test.go
+      pkgname: test
 

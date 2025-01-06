@@ -265,10 +265,10 @@ func (c *RootConfig) subPackages(pkgPath string) ([]string, error) {
 	return convertPkgPath(pkgs), nil
 }
 
-func (c *RootConfig) GetPackageConfig(ctx context.Context, packageName string) (*PackageConfig, error) {
-	pkgConfig, ok := c.Packages[packageName]
+func (c *RootConfig) GetPackageConfig(ctx context.Context, pkgPath string) (*PackageConfig, error) {
+	pkgConfig, ok := c.Packages[pkgPath]
 	if !ok {
-		return nil, fmt.Errorf("package %s does not exist in the config", packageName)
+		return nil, stackerr.NewStackErr(fmt.Errorf("package %s does not exist in the config", pkgPath))
 	}
 	return pkgConfig, nil
 }
@@ -447,7 +447,7 @@ func findConfig() (*pathlib.Path, error) {
 }
 
 func (c *Config) FilePath() *pathlib.Path {
-	return pathlib.NewPath(*c.Dir).Join(*c.FileName)
+	return pathlib.NewPath(*c.Dir).Join(*c.FileName).Clean()
 }
 
 func (c *Config) ShouldExcludeSubpkg(pkgPath string) bool {
@@ -519,9 +519,11 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 		interfaceDir = interfaceDirPath.String()
 		interfaceDirRelativePath, err := interfaceDirPath.RelativeToStr(workingDir)
 		if err != nil {
-			return stackerr.NewStackErr(err)
+			log.Debug().Err(err).Msg("can't make path relative to working dir, setting to './'")
+			interfaceDirRelative = "."
+		} else {
+			interfaceDirRelative = interfaceDirRelativePath.String()
 		}
-		interfaceDirRelative = interfaceDirRelativePath.String()
 	}
 	// data is the struct sent to the template parser
 	data := mockeryTemplate.ConfigData{

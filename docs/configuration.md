@@ -5,7 +5,8 @@ All configuration is specified in a `.mockery.yml` file. An example config file 
 
 ```yaml
 all: False
-boilerplate-file: ./path/to/boilerplate.txt
+template-data:
+  boilerplate-file: ./path/to/boilerplate.txt
 template: mockery
 packages:
   github.com/vektra/example:
