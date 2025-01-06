@@ -18,7 +18,6 @@ import (
 )
 
 var (
-	cfgFile            = ""
 	ErrCfgFileNotFound = errors.New("config file not found")
 )
 
@@ -28,8 +27,10 @@ func NewRootCmd() (*cobra.Command, error) {
 		Use:   "mockery",
 		Short: "Generate mock objects for your Golang interfaces",
 		Run: func(cmd *cobra.Command, args []string) {
-			// We don't have a fully configured logger yet. Use the log level from
-			// pflags to create a logger.
+			if err := pFlags.Parse(args); err != nil {
+				fmt.Printf("failed to parse flags: %s", err.Error())
+				os.Exit(1)
+			}
 			level, err := pFlags.GetString("log-level")
 			if err != nil {
 				fmt.Printf("failed to get log-level from flags: %s", err.Error())
@@ -54,10 +55,10 @@ func NewRootCmd() (*cobra.Command, error) {
 		},
 	}
 	pFlags = cmd.PersistentFlags()
-	pFlags.StringVar(&cfgFile, "config", "", "config file to use")
+	pFlags.String("config", "", "config file to use")
 	pFlags.String("tags", "", "space-separated list of additional build tags to load packages")
 	pFlags.String("mock-build-tags", "", "set the build tags of the generated mocks. Read more about the format: https://pkg.go.dev/cmd/go#hdr-Build_constraints")
-	pFlags.String("log-level", "info", "Level of logging")
+	pFlags.String("log-level", os.Getenv("MOCKERY_LOG_LEVEL"), "Level of logging")
 	pFlags.String("boilerplate-file", "", "File to read a boilerplate text from. Text should be a go block comment, i.e. /* ... */")
 	pFlags.Bool("unroll-variadic", true, "For functions with variadic arguments, do not unroll the arguments into the underlying testify call. Instead, pass variadic slice as-is.")
 
@@ -121,6 +122,7 @@ type InterfaceCollection struct {
 	srcPkg      *packages.Package
 	outPkgName  string
 	interfaces  []*pkg.Interface
+	template    string
 }
 
 func NewInterfaceCollection(
@@ -128,6 +130,7 @@ func NewInterfaceCollection(
 	outFilePath *pathlib.Path,
 	srcPkg *packages.Package,
 	outPkgName string,
+	template string,
 ) *InterfaceCollection {
 	return &InterfaceCollection{
 		srcPkgPath:  srcPkgPath,
@@ -135,6 +138,7 @@ func NewInterfaceCollection(
 		srcPkg:      srcPkg,
 		outPkgName:  outPkgName,
 		interfaces:  make([]*pkg.Interface, 0),
+		template:    template,
 	}
 }
 
@@ -144,19 +148,19 @@ func (i *InterfaceCollection) Append(ctx context.Context, iface *pkg.Interface) 
 		Str("source-pkgname", iface.Pkg.Name).
 		Str(logging.LogKeyPackagePath, iface.Pkg.PkgPath).
 		Str("expected-package-path", i.srcPkgPath).Logger()
-	if iface.Pkg.PkgPath != i.srcPkgPath {
-		msg := "cannot mix interfaces from different packages in the same file"
-		log.Error().Msg(msg)
-		return errors.New(msg)
-	}
 	if i.outFilePath.String() != pathlib.NewPath(iface.Config.Dir).Join(iface.Config.FileName).String() {
-		msg := "all mocks within an InterfaceCollection must have the same output file path"
+		msg := "all mocks in an InterfaceCollection must have the same output file path"
 		log.Error().Msg(msg)
 		return errors.New(msg)
 	}
 	if i.outPkgName != iface.Config.PkgName {
 		msg := "all mocks in an output file must have the same pkgname"
 		log.Error().Str("output-pkgname", i.outPkgName).Str("interface-pkgname", iface.Config.PkgName).Msg(msg)
+		return errors.New(msg)
+	}
+	if i.template != iface.Config.Template {
+		msg := "all mocks in an output file must use the same template"
+		log.Error().Str("expected-template", i.template).Str("interface-template", iface.Config.Template).Msg(msg)
 		return errors.New(msg)
 	}
 	i.interfaces = append(i.interfaces, iface)
@@ -216,6 +220,7 @@ func (r *RootApp) Run() error {
 		if err != nil {
 			return fmt.Errorf("getting package %s: %w", iface.Pkg.PkgPath, err)
 		}
+		ifaceLog.Debug().Str("root-mock-name", r.Config.Config.MockName).Str("pkg-mock-name", pkgConfig.Config.MockName).Msg("mock-name during first GetPackageConfig")
 
 		shouldGenerate, err := pkgConfig.ShouldGenerateInterface(ifaceCtx, iface.Name)
 		if err != nil {
@@ -246,6 +251,7 @@ func (r *RootApp) Run() error {
 					pathlib.NewPath(ifaceConfig.Dir).Join(ifaceConfig.FileName),
 					iface.Pkg,
 					ifaceConfig.PkgName,
+					ifaceConfig.Template,
 				)
 			}
 			if err := mockFileToInterfaces[filePath].Append(
@@ -267,13 +273,17 @@ func (r *RootApp) Run() error {
 		fileCtx := fileLog.WithContext(ctx)
 
 		fileLog.Debug().Int("interfaces-in-file-len", len(interfacesInFile.interfaces)).Msgf("%v", interfacesInFile)
+
 		packageConfig, err := r.Config.GetPackageConfig(fileCtx, interfacesInFile.srcPkgPath)
 		if err != nil {
 			return err
 		}
+		fileLog.Debug().Str("mock-name", packageConfig.Config.MockName).Msg("package config mockname before parsing")
 		if err := packageConfig.Config.ParseTemplates(ctx, nil, interfacesInFile.srcPkg); err != nil {
 			return err
 		}
+		fileLog.Debug().Str("mock-name", packageConfig.Config.MockName).Msg("package config mockname after parsing")
+
 		generator, err := pkg.NewTemplateGenerator(
 			fileCtx,
 			interfacesInFile.interfaces[0].Pkg,

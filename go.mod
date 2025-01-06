@@ -5,6 +5,7 @@ go 1.23
 toolchain go1.23.1
 
 require (
+	github.com/brunoga/deep v1.2.4
 	github.com/chigopher/pathlib v0.19.1
 	github.com/huandu/xstrings v1.5.0
 	github.com/knadh/koanf/parsers/yaml v0.1.0

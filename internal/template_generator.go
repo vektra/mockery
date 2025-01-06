@@ -258,11 +258,20 @@ func (g *TemplateGenerator) Generate(
 	log := zerolog.Ctx(ctx)
 	mockData := []template.MockData{}
 	for _, ifaceMock := range interfaces {
+		ifaceLog := log.With().
+			Str("interface-name", ifaceMock.Name).
+			Str("package-path", ifaceMock.Pkg.PkgPath).
+			Str("mock-name", ifaceMock.Config.MockName).
+			Logger()
+		ctx := ifaceLog.WithContext(ctx)
+
+		ifaceLog.Debug().Msg("looking up interface in registry")
 		iface, tparams, err := g.registry.LookupInterface(ifaceMock.Name)
 		if err != nil {
 			log.Err(err).Msg("error looking up interface")
 			return []byte{}, err
 		}
+		ifaceLog.Debug().Msg("found interface")
 
 		methods := make([]template.MethodData, iface.NumMethods())
 		for i := 0; i < iface.NumMethods(); i++ {

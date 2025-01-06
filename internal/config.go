@@ -14,6 +14,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/brunoga/deep"
 	"github.com/chigopher/pathlib"
 	koanfYAML "github.com/knadh/koanf/parsers/yaml"
 	"github.com/knadh/koanf/providers/env"
@@ -40,11 +41,12 @@ func NewRootConfig(
 	configFile *pathlib.Path,
 	flags *pflag.FlagSet,
 ) (*RootConfig, *koanf.Koanf, error) {
+	log := zerolog.Ctx(ctx)
 	var err error
 	var rootConfig RootConfig = RootConfig{
 		Config: &Config{
-			Dir:       "mocks/{{.SrcPackagePath}}",
-			FileName:  "mock_{{.InterfaceName}}.go",
+			Dir:       "{{.InterfaceDir}}",
+			FileName:  "mocks_test.go",
 			Formatter: "goimports",
 			MockName:  "Mock{{.InterfaceName}}",
 			PkgName:   "{{.SrcPackageName}}",
@@ -54,11 +56,23 @@ func NewRootConfig(
 
 	k := koanf.New("|")
 	rootConfig.koanf = k
+	if configFile != nil {
+		log.Debug().Str("config-file-args", configFile.String()).Msg("config file from args")
+	}
+
 	if configFile == nil {
+		configFileFromEnv := os.Getenv("MOCKERY_CONFIG")
+		if configFileFromEnv != "" {
+			configFile = pathlib.NewPath(configFileFromEnv)
+		}
+	}
+	if configFile == nil {
+		log.Debug().Msg("config file not specified, searching")
 		configFile, err = findConfig()
 		if err != nil {
 			return nil, k, fmt.Errorf("discovering mockery config: %w", err)
 		}
+		log.Debug().Str("config-file", configFile.String()).Msg("config file found")
 	}
 	rootConfig.configFile = configFile
 	k.Load(
@@ -240,17 +254,25 @@ func (c *PackageConfig) Initialize(ctx context.Context) error {
 	return nil
 }
 
-func (c *PackageConfig) GetInterfaceConfig(ctx context.Context, interfaceName string) *InterfaceConfig {
+func (c PackageConfig) GetInterfaceConfig(ctx context.Context, interfaceName string) *InterfaceConfig {
+	log := zerolog.Ctx(ctx)
 	if ifaceConfig, ok := c.Interfaces[interfaceName]; ok {
 		return ifaceConfig
 	}
 	ifaceConfig := NewInterfaceConfig()
-	ifaceConfig.Config = c.Config
-	ifaceConfig.Configs = []*Config{c.Config}
+
+	newConfig, err := deep.Copy(c.Config)
+	if err != nil {
+		log.Err(err).Msg("issue when deep-copying package config to interface config")
+		panic(err)
+	}
+
+	ifaceConfig.Config = newConfig
+	ifaceConfig.Configs = []*Config{newConfig}
 	return ifaceConfig
 }
 
-func (c *PackageConfig) ShouldGenerateInterface(ctx context.Context, interfaceName string) (bool, error) {
+func (c PackageConfig) ShouldGenerateInterface(ctx context.Context, interfaceName string) (bool, error) {
 	log := zerolog.Ctx(ctx)
 	if c.Config.All {
 		if c.Config.IncludeRegex != "" {
