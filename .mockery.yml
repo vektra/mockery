@@ -5,7 +5,7 @@ all: True
 dir: "{{.InterfaceDirRelative}}"
 mockname: "Mock{{.InterfaceName}}"
 pkgname: "{{.SrcPackageName}}"
-filename: "mocks_test.go"
+filename: "mocks_{{.SrcPackageName}}_test.go"
 template-data:
   boilerplate-file: "./.boilerplate.txt"
 packages:
@@ -46,6 +46,5 @@ packages:
     config:
       all: True
       dir: internal/fixtures/
-      filename: mocks_io_test.go
       pkgname: test
 
