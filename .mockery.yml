@@ -6,6 +6,7 @@ dir: "{{.InterfaceDir}}"
 mockname: "Mock{{.InterfaceName}}"
 pkgname: "{{.SrcPackageName}}"
 filename: "mocks_test.go"
+boilerplate-file: "./.boilerplate.txt"
 packages:
   github.com/vektra/mockery/v3/internal/fixtures/buildtag/comment:
   github.com/vektra/mockery/v3/internal/fixtures:
@@ -40,3 +41,4 @@ packages:
   github.com/vektra/mockery/v3/internal/fixtures/index_list_expr:
   github.com/vektra/mockery/v3/internal/fixtures/iface_new_type:
   github.com/vektra/mockery/v3/internal/fixtures/type_alias:
+

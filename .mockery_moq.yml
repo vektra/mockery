@@ -1,0 +1,11 @@
+template: moq
+boilerplate-file: "./.boilerplate.txt"
+mockname: "Moq{{.InterfaceName}}"
+filename: "mocks_moq_test.go"
+all: true
+packages:
+    github.com/vektra/mockery/v3/internal/fixtures:
+        config:
+            all: false
+            include-regex: '.*'
+            exclude-regex: 'RequesterGenerics'

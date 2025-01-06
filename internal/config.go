@@ -43,17 +43,34 @@ func NewRootConfig(
 ) (*RootConfig, *koanf.Koanf, error) {
 	log := zerolog.Ctx(ctx)
 	var err error
-	var rootConfig RootConfig = RootConfig{
-		Config: &Config{
-			Dir:       "{{.InterfaceDir}}",
-			FileName:  "mocks_test.go",
-			Formatter: "goimports",
-			MockName:  "Mock{{.InterfaceName}}",
-			PkgName:   "{{.SrcPackageName}}",
-			LogLevel:  "info",
-		},
+	strPtr := func(s string) *string {
+		return &s
+	}
+	defaultConfig := &Config{
+		Dir:       strPtr("{{.InterfaceDir}}"),
+		FileName:  strPtr("mocks_test.go"),
+		Formatter: strPtr("goimports"),
+		MockName:  strPtr("Mock{{.InterfaceName}}"),
+		PkgName:   strPtr("{{.SrcPackageName}}"),
+		LogLevel:  strPtr("info"),
+	}
+	// Set all the other parameters to their respective zero-values. Need to use
+	// reflection for this sadly.
+	v := reflect.ValueOf(defaultConfig).Elem()
+	for i := 0; i < v.NumField(); i++ {
+		field := v.Field(i)
+		if field.Kind() != reflect.Pointer {
+			continue
+		}
+		if !field.IsNil() {
+			continue
+		}
+		field.Set(reflect.New(field.Type().Elem()))
 	}
 
+	var rootConfig RootConfig = RootConfig{
+		Config: defaultConfig,
+	}
 	k := koanf.New("|")
 	rootConfig.koanf = k
 	if configFile != nil {
@@ -65,6 +82,13 @@ func NewRootConfig(
 		if configFileFromEnv != "" {
 			configFile = pathlib.NewPath(configFileFromEnv)
 		}
+	}
+	if configFile == nil {
+		configFileFromFlags, err := flags.GetString("config")
+		if err != nil {
+			return nil, nil, fmt.Errorf("getting --config from flags: %w", err)
+		}
+		configFile = pathlib.NewPath(configFileFromFlags)
 	}
 	if configFile == nil {
 		log.Debug().Msg("config file not specified, searching")
@@ -156,8 +180,12 @@ func (c *RootConfig) Initialize(ctx context.Context) error {
 		if err := pkgConfig.Initialize(pkgCtx); err != nil {
 			return fmt.Errorf("initializing root config: %w", err)
 		}
-		if pkgConfig.Config.Recursive {
-			recursivePackages = append(recursivePackages, pkgName)
+		if *pkgConfig.Config.Recursive {
+			if !c.ShouldExcludeSubpkg(pkgName) {
+				recursivePackages = append(recursivePackages, pkgName)
+			} else {
+				pkgLog.Debug().Msg("package was marked for exclusion")
+			}
 		}
 	}
 
@@ -274,13 +302,14 @@ func (c PackageConfig) GetInterfaceConfig(ctx context.Context, interfaceName str
 
 func (c PackageConfig) ShouldGenerateInterface(ctx context.Context, interfaceName string) (bool, error) {
 	log := zerolog.Ctx(ctx)
-	if c.Config.All {
-		if c.Config.IncludeRegex != "" {
+	if *c.Config.All {
+		if *c.Config.IncludeRegex != "" {
 			log.Warn().Msg("interface config has both `all` and `include-regex` set: `include-regex` will be ignored")
 		}
-		if c.Config.ExcludeRegex != "" {
+		if *c.Config.ExcludeRegex != "" {
 			log.Warn().Msg("interface config has both `all` and `exclude-regex` set: `exclude-regex` will be ignored")
 		}
+		log.Debug().Msg("`all: true` is set, interface should be generated")
 		return true, nil
 	}
 
@@ -288,8 +317,8 @@ func (c PackageConfig) ShouldGenerateInterface(ctx context.Context, interfaceNam
 		return true, nil
 	}
 
-	includeRegex := c.Config.IncludeRegex
-	excludeRegex := c.Config.ExcludeRegex
+	includeRegex := *c.Config.IncludeRegex
+	excludeRegex := *c.Config.ExcludeRegex
 	if includeRegex == "" {
 		if excludeRegex != "" {
 			log.Warn().Msg("interface config has `exclude-regex` set but not `include-regex`: `exclude-regex` will be ignored")
@@ -301,8 +330,10 @@ func (c PackageConfig) ShouldGenerateInterface(ctx context.Context, interfaceNam
 		return false, fmt.Errorf("evaluating `include-regex`: %w", err)
 	}
 	if !includedByRegex {
+		log.Debug().Msg("interface does not match include-regex")
 		return false, nil
 	}
+	log.Debug().Msg("interface matches include-regex")
 	if excludeRegex == "" {
 		return true, nil
 	}
@@ -310,7 +341,12 @@ func (c PackageConfig) ShouldGenerateInterface(ctx context.Context, interfaceNam
 	if err != nil {
 		return false, fmt.Errorf("evaluating `exclude-regex`: %w", err)
 	}
-	return !excludedByRegex, nil
+	if excludedByRegex {
+		log.Debug().Msg("interface matches exclude-regex")
+		return false, nil
+	}
+	log.Debug().Msg("interface does not match exclude-regex")
+	return true, nil
 }
 
 type InterfaceConfig struct {
@@ -338,26 +374,26 @@ func (c *InterfaceConfig) Initialize(ctx context.Context) error {
 }
 
 type Config struct {
-	All             bool           `koanf:"all"`
-	Anchors         map[string]any `koanf:"_anchors"`
-	BoilerplateFile string         `koanf:"boilerplate-file"`
-	BuildTags       string         `koanf:"tags"`
-	ConfigFile      string         `koanf:"config"`
-	Dir             string         `koanf:"dir"`
-	Exclude         []string       `koanf:"exclude"`
-	ExcludeRegex    string         `koanf:"exclude-regex"`
-	FileName        string         `koanf:"filename"`
-	Formatter       string         `koanf:"formatter"`
-	IncludeRegex    string         `koanf:"include-regex"`
-	LogLevel        string         `koanf:"log-level"`
-	MockBuildTags   string         `koanf:"mock-build-tags"`
-	MockName        string         `koanf:"mockname"`
-	PkgName         string         `koanf:"pkgname"`
-	Recursive       bool           `koanf:"recursive"`
-	Template        string         `koanf:"template"`
-	TemplateData    map[string]any `koanf:"template-data"`
-	UnrollVariadic  bool           `koanf:"unroll-variadic"`
-	Version         bool           `koanf:"version"`
+	All                *bool          `koanf:"all"`
+	Anchors            map[string]any `koanf:"_anchors"`
+	BoilerplateFile    *string        `koanf:"boilerplate-file"`
+	BuildTags          *string        `koanf:"tags"`
+	ConfigFile         *string        `koanf:"config"`
+	Dir                *string        `koanf:"dir"`
+	ExcludeSubpkgRegex []string       `koanf:"exclude-subpkg-regex"`
+	ExcludeRegex       *string        `koanf:"exclude-regex"`
+	FileName           *string        `koanf:"filename"`
+	Formatter          *string        `koanf:"formatter"`
+	IncludeRegex       *string        `koanf:"include-regex"`
+	LogLevel           *string        `koanf:"log-level"`
+	MockBuildTags      *string        `koanf:"mock-build-tags"`
+	MockName           *string        `koanf:"mockname"`
+	PkgName            *string        `koanf:"pkgname"`
+	Recursive          *bool          `koanf:"recursive"`
+	Template           *string        `koanf:"template"`
+	TemplateData       map[string]any `koanf:"template-data"`
+	UnrollVariadic     *bool          `koanf:"unroll-variadic"`
+	Version            *bool          `koanf:"version"`
 }
 
 func findConfig() (*pathlib.Path, error) {
@@ -383,12 +419,16 @@ func findConfig() (*pathlib.Path, error) {
 }
 
 func (c *Config) FilePath() *pathlib.Path {
-	return pathlib.NewPath(c.Dir).Join(c.FileName)
+	return pathlib.NewPath(*c.Dir).Join(*c.FileName)
 }
 
-func (c *Config) ExcludePath(path string) bool {
-	for _, ex := range c.Exclude {
-		if strings.HasPrefix(path, ex) {
+func (c *Config) ShouldExcludeSubpkg(pkgPath string) bool {
+	for _, regex := range c.ExcludeSubpkgRegex {
+		matched, err := regexp.MatchString(regex, pkgPath)
+		if err != nil {
+			panic(err)
+		}
+		if matched {
 			return true
 		}
 	}
@@ -457,13 +497,13 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 	}
 	// data is the struct sent to the template parser
 	data := mockeryTemplate.ConfigData{
-		ConfigDir:            filepath.Dir(c.ConfigFile),
+		ConfigDir:            filepath.Dir(*c.ConfigFile),
 		InterfaceDir:         interfaceDir,
 		InterfaceDirRelative: interfaceDirRelative,
 		InterfaceFile:        interfaceFile,
 		InterfaceName:        interfaceName,
 		Mock:                 mock,
-		MockName:             c.MockName,
+		MockName:             *c.MockName,
 		SrcPackageName:       srcPkg.Types.Name(),
 		SrcPackagePath:       srcPkg.Types.Path(),
 	}
@@ -471,10 +511,10 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 	// to be parsed by the templater. The keys are
 	// just labels we're using for logs/errors
 	templateMap := map[string]*string{
-		"filename": &c.FileName,
-		"dir":      &c.Dir,
-		"mockname": &c.MockName,
-		"pkgname":  &c.PkgName,
+		"filename": c.FileName,
+		"dir":      c.Dir,
+		"mockname": c.MockName,
+		"pkgname":  c.PkgName,
 	}
 
 	changesMade := true

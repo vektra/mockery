@@ -148,19 +148,19 @@ func (i *InterfaceCollection) Append(ctx context.Context, iface *pkg.Interface) 
 		Str("source-pkgname", iface.Pkg.Name).
 		Str(logging.LogKeyPackagePath, iface.Pkg.PkgPath).
 		Str("expected-package-path", i.srcPkgPath).Logger()
-	if i.outFilePath.String() != pathlib.NewPath(iface.Config.Dir).Join(iface.Config.FileName).String() {
+	if i.outFilePath.String() != pathlib.NewPath(*iface.Config.Dir).Join(*iface.Config.FileName).String() {
 		msg := "all mocks in an InterfaceCollection must have the same output file path"
 		log.Error().Msg(msg)
 		return errors.New(msg)
 	}
-	if i.outPkgName != iface.Config.PkgName {
+	if i.outPkgName != *iface.Config.PkgName {
 		msg := "all mocks in an output file must have the same pkgname"
-		log.Error().Str("output-pkgname", i.outPkgName).Str("interface-pkgname", iface.Config.PkgName).Msg(msg)
+		log.Error().Str("output-pkgname", i.outPkgName).Str("interface-pkgname", *iface.Config.PkgName).Msg(msg)
 		return errors.New(msg)
 	}
-	if i.template != iface.Config.Template {
+	if i.template != *iface.Config.Template {
 		msg := "all mocks in an output file must use the same template"
-		log.Error().Str("expected-template", i.template).Str("interface-template", iface.Config.Template).Msg(msg)
+		log.Error().Str("expected-template", i.template).Str("interface-template", *iface.Config.Template).Msg(msg)
 		return errors.New(msg)
 	}
 	i.interfaces = append(i.interfaces, iface)
@@ -168,7 +168,7 @@ func (i *InterfaceCollection) Append(ctx context.Context, iface *pkg.Interface) 
 }
 
 func (r *RootApp) Run() error {
-	log, err := logging.GetLogger(r.Config.LogLevel)
+	log, err := logging.GetLogger(*r.Config.LogLevel)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to initialize logger: %v\n", err)
 		return err
@@ -180,7 +180,7 @@ func (r *RootApp) Run() error {
 		return err
 	}
 
-	buildTags := strings.Split(r.Config.BuildTags, " ")
+	buildTags := strings.Split(*r.Config.BuildTags, " ")
 
 	configuredPackages, err := r.Config.GetPackages(ctx)
 	if err != nil {
@@ -220,14 +220,14 @@ func (r *RootApp) Run() error {
 		if err != nil {
 			return fmt.Errorf("getting package %s: %w", iface.Pkg.PkgPath, err)
 		}
-		ifaceLog.Debug().Str("root-mock-name", r.Config.Config.MockName).Str("pkg-mock-name", pkgConfig.Config.MockName).Msg("mock-name during first GetPackageConfig")
+		ifaceLog.Debug().Str("root-mock-name", *r.Config.Config.MockName).Str("pkg-mock-name", *pkgConfig.Config.MockName).Msg("mock-name during first GetPackageConfig")
 
 		shouldGenerate, err := pkgConfig.ShouldGenerateInterface(ifaceCtx, iface.Name)
 		if err != nil {
 			return err
 		}
 		if !shouldGenerate {
-			ifaceLog.Debug().Msg("config doesn't specify to generate this interface, skipping.")
+			ifaceLog.Debug().Msg("config doesn't specify to generate this interface, skipping")
 			continue
 		}
 		ifaceLog.Info().Msg("adding interface")
@@ -248,10 +248,10 @@ func (r *RootApp) Run() error {
 			if !ok {
 				mockFileToInterfaces[filePath] = NewInterfaceCollection(
 					iface.Pkg.PkgPath,
-					pathlib.NewPath(ifaceConfig.Dir).Join(ifaceConfig.FileName),
+					pathlib.NewPath(*ifaceConfig.Dir).Join(*ifaceConfig.FileName),
 					iface.Pkg,
-					ifaceConfig.PkgName,
-					ifaceConfig.Template,
+					*ifaceConfig.PkgName,
+					*ifaceConfig.Template,
 				)
 			}
 			if err := mockFileToInterfaces[filePath].Append(
@@ -278,18 +278,18 @@ func (r *RootApp) Run() error {
 		if err != nil {
 			return err
 		}
-		fileLog.Debug().Str("mock-name", packageConfig.Config.MockName).Msg("package config mockname before parsing")
+		fileLog.Debug().Str("mock-name", *packageConfig.Config.MockName).Msg("package config mockname before parsing")
 		if err := packageConfig.Config.ParseTemplates(ctx, nil, interfacesInFile.srcPkg); err != nil {
 			return err
 		}
-		fileLog.Debug().Str("mock-name", packageConfig.Config.MockName).Msg("package config mockname after parsing")
+		fileLog.Debug().Str("mock-name", *packageConfig.Config.MockName).Msg("package config mockname after parsing")
 
 		generator, err := pkg.NewTemplateGenerator(
 			fileCtx,
 			interfacesInFile.interfaces[0].Pkg,
 			interfacesInFile.outFilePath.Parent(),
-			packageConfig.Config.Template,
-			pkg.Formatter(r.Config.Formatter),
+			*packageConfig.Config.Template,
+			pkg.Formatter(*r.Config.Formatter),
 			packageConfig.Config,
 			interfacesInFile.outPkgName,
 		)

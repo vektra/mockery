@@ -261,7 +261,7 @@ func (g *TemplateGenerator) Generate(
 		ifaceLog := log.With().
 			Str("interface-name", ifaceMock.Name).
 			Str("package-path", ifaceMock.Pkg.PkgPath).
-			Str("mock-name", ifaceMock.Config.MockName).
+			Str("mock-name", *ifaceMock.Config.MockName).
 			Logger()
 		ctx := ifaceLog.WithContext(ctx)
 
@@ -291,16 +291,16 @@ func (g *TemplateGenerator) Generate(
 
 		mockData = append(mockData, template.MockData{
 			InterfaceName: ifaceMock.Name,
-			MockName:      ifaceMock.Config.MockName,
+			MockName:      *ifaceMock.Config.MockName,
 			TypeParams:    g.typeParams(ctx, tparams),
 			Methods:       methods,
 			TemplateData:  ifaceMock.Config.TemplateData,
 		})
 	}
 	var boilerplate string
-	if g.pkgConfig.BoilerplateFile != "" {
+	if *g.pkgConfig.BoilerplateFile != "" {
 		var err error
-		boilerplatePath := pathlib.NewPath(g.pkgConfig.BoilerplateFile)
+		boilerplatePath := pathlib.NewPath(*g.pkgConfig.BoilerplateFile)
 		boilerplateBytes, err := boilerplatePath.ReadFile()
 		if err != nil {
 			log.Err(err).Msg("unable to find boilerplate file")
@@ -311,7 +311,7 @@ func (g *TemplateGenerator) Generate(
 
 	data := template.Data{
 		Boilerplate:     boilerplate,
-		BuildTags:       g.pkgConfig.MockBuildTags,
+		BuildTags:       *g.pkgConfig.MockBuildTags,
 		PkgName:         g.pkgName,
 		SrcPkgQualifier: "",
 		Mocks:           mockData,
@@ -335,7 +335,7 @@ func (g *TemplateGenerator) Generate(
 		var styleExists bool
 		templateString, styleExists = styleTemplates[g.templateName]
 		if !styleExists {
-			return nil, stackerr.NewStackErrf(nil, "style %s does not exist", g.templateName)
+			return nil, stackerr.NewStackErrf(nil, "template '%s' does not exist", g.templateName)
 		}
 	}
 

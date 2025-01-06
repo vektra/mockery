@@ -22,8 +22,9 @@ func NewShowConfigCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
+
 			ctx := log.WithContext(context.Background())
-			conf, _, err := pkg.NewRootConfig(ctx, nil, nil)
+			conf, _, err := pkg.NewRootConfig(ctx, nil, cmd.Parent().PersistentFlags())
 			if err != nil {
 				return err
 			}
