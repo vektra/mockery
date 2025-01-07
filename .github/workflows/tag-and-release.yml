@@ -2,8 +2,7 @@ name: Test and maybe create a new release
 
 on:
   push:
-    branches:
-      - master
+    branches: [master, v3]
 permissions:
   contents: write
 jobs:
@@ -14,6 +13,8 @@ jobs:
     needs: test
     outputs:
       tag_result: ${{ steps.tag.outputs.tag_result }}
+      requested_version: ${{ steps.tag.outputs.requested_version }}
+      previous_version: ${{ steps.tag.outputs.previous_version }}
     steps:
       - run: sudo apt update && sudo apt install -y git && git --version
       - uses: actions/checkout@v2
@@ -38,7 +39,12 @@ jobs:
         id: tag
         run: |
           set +e
-          task -x tag
+          task -x tag 1>/tmp/versions.txt
+
+          printf "versions: $(cat /tmp/versions.txt)\n"
+          echo "requested_version=$(cut -d',' -f 1 /tmp/versions.txt)" >> $GITHUB_OUTPUT
+          echo "previous_version=$(cut -d',' -f 2 /tmp/versions.txt)" >> $GITHUB_OUTPUT
+
           tag_result="$?"
           echo "tag_result=$tag_result" >> $GITHUB_OUTPUT
           # The range between 8 and 63 inclusive is reserved for custom
@@ -83,8 +89,10 @@ jobs:
       - name: GoReleaser
         uses: goreleaser/goreleaser-action@v2.7.0
         with:
-          args: release --rm-dist
+          args: release --clean
           version: "<2"
         env:
           GITHUB_TOKEN: ${{ secrets.GORELEASER_GITHUB_TOKEN }}
           HOMEBREW_TAP_TOKEN: ${{ secrets.GORELEASER_HOMEBREW_TAP_TOKEN }}
+          GORELEASER_CURRENT_TAG: ${{ needs.tag.outputs.requested_version }}
+          #GORELEASER_PREVIOUS_TAG: ${{ needs.tag.outputs.previous_version }}

@@ -2,9 +2,8 @@ name: Go Test
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ master, v3 ]
 
 jobs:
   test:
       uses: ./.github/workflows/reusable-testing.yml
-

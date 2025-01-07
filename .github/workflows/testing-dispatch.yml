@@ -1,0 +1,15 @@
+name: Go Test (manual run)
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+          description: "Tag/commit to checkout."
+          type: string
+          required: true
+
+jobs:
+  test:
+      uses: ./.github/workflows/reusable-testing.yml
+      with:
+        ref: ${{ inputs.ref }}
