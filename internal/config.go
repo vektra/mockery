@@ -23,10 +23,11 @@ import (
 	"github.com/knadh/koanf/v2"
 	"github.com/rs/zerolog"
 	"github.com/spf13/pflag"
+	"golang.org/x/tools/go/packages"
+
 	"github.com/vektra/mockery/v3/internal/logging"
 	"github.com/vektra/mockery/v3/internal/stackerr"
 	mockeryTemplate "github.com/vektra/mockery/v3/template"
-	"golang.org/x/tools/go/packages"
 )
 
 type RootConfig struct {
@@ -211,11 +212,7 @@ func (c *RootConfig) Initialize(ctx context.Context) error {
 			return fmt.Errorf("initializing root config: %w", err)
 		}
 		if *pkgConfig.Config.Recursive {
-			if !c.ShouldExcludeSubpkg(pkgName) {
-				recursivePackages = append(recursivePackages, pkgName)
-			} else {
-				pkgLog.Debug().Msg("package was marked for exclusion")
-			}
+			recursivePackages = append(recursivePackages, pkgName)
 		}
 	}
 
@@ -230,6 +227,12 @@ func (c *RootConfig) Initialize(ctx context.Context) error {
 		}
 		parentPkgConfig := c.Packages[recursivePackageName]
 		for _, subpkg := range subpkgs {
+			if *parentPkgConfig.Config.Recursive {
+				if c.ShouldExcludeSubpkg(subpkg) {
+					pkgLog.Debug().Msg("package was marked for exclusion")
+					continue
+				}
+			}
 			var subPkgConfig *PackageConfig
 			if existingSubPkg, exists := c.Packages[subpkg]; exists {
 				subPkgConfig = existingSubPkg
