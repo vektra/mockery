@@ -23,11 +23,10 @@ import (
 	"github.com/knadh/koanf/v2"
 	"github.com/rs/zerolog"
 	"github.com/spf13/pflag"
-	"golang.org/x/tools/go/packages"
-
 	"github.com/vektra/mockery/v3/internal/logging"
 	"github.com/vektra/mockery/v3/internal/stackerr"
 	mockeryTemplate "github.com/vektra/mockery/v3/template"
+	"golang.org/x/tools/go/packages"
 )
 
 type RootConfig struct {
