@@ -247,6 +247,25 @@ func (r *RootApp) Run() error {
 			nil,
 		)
 	}
+	if r.Config.ResolveTypeAlias {
+		logging.WarnDeprecated(
+			ctx,
+			"resolve-type-alias",
+			"resolve-type-alias will be permanently set to False in v3. Please modify your config to set the parameter to False.",
+			nil,
+		)
+	}
+	if r.Config.Packages == nil {
+		logging.WarnDeprecated(
+			ctx,
+			"packages",
+			"use of the packages config will be the only way to generate mocks in v3. Please migrate your config to use the packages feature.",
+			map[string]any{
+				"url":       logging.DocsURL("/features/#packages-configuration"),
+				"migration": logging.DocsURL("/migrating_to_packages/"),
+			},
+		)
+	}
 
 	configuredPackages, err := r.Config.GetPackages(ctx)
 	if err != nil && !errors.Is(err, os.ErrNotExist) {
@@ -318,15 +337,6 @@ func (r *RootApp) Run() error {
 	} else {
 		log.Fatal().Msgf("Use --name to specify the name of the interface or --all for all interfaces found")
 	}
-
-	logging.WarnDeprecated(
-		ctx,
-		"packages",
-		"use of the packages config will be the only way to generate mocks in v3. Please migrate your config to use the packages feature.",
-		map[string]any{
-			"url":       logging.DocsURL("/features/#packages-configuration"),
-			"migration": logging.DocsURL("/migrating_to_packages/"),
-		})
 
 	if r.Config.Profile != "" {
 		f, err := os.Create(r.Config.Profile)
