@@ -21,7 +21,7 @@ The [`packages`](features.md#packages-configuration) feature will be the only wa
 !!! tip ""
 
     To resolve this warning:
-    
+
     ```yaml title=".mockery.yaml"
     issue-845-fix: True
     ```
@@ -60,7 +60,7 @@ if being generated with `#!yaml inpackage: True`.
 !!! tip ""
 
     To resolve this warning:
-    
+
     ```yaml title=".mockery.yaml"
     resolve-type-alias: False
     ```
@@ -84,10 +84,23 @@ be set to `False`. This will be the permanent behavior in Mockery v3.
 !!! tip ""
 
     To resolve this warning:
-    
+
     ```yaml title=".mockery.yaml"
     with-expecter: True
     ```
 
 This parameter enables the [expecter structs](features.md#expecter-structs). In Mockery v3, this parameter will be permanently
 enabled. In order to remove the deprecation warning, you must set this parameter to `#!yaml with-expecter: True`.
+
+`quiet`
+-------
+
+!!! tip ""
+
+    To resolve this warning:
+
+    ```yaml title=".mockery.yaml"
+    quiet: False
+    ```
+
+The `--quiet` parameter is superseded by `--log-level=""`. It will be removed in v3.

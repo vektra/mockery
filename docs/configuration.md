@@ -1,7 +1,7 @@
 Configuration
 ==============
 
-mockery uses [spf13/viper](https://github.com/spf13/viper) under the hood for its configuration parsing. 
+mockery uses [spf13/viper](https://github.com/spf13/viper) under the hood for its configuration parsing.
 
 Merging Precedence
 ------------------
@@ -64,6 +64,8 @@ Parameter Descriptions
 | `config`                                               | :fontawesome-solid-x:     | `#!yaml ""`                           | Set the location of the mockery config file.                                                                                                                                                                                                         |
 | `dir`                                                  | :fontawesome-solid-check: | `#!yaml "mocks/{{.PackagePath}}"`     | The directory where the mock file will be outputted to.                                                                                                                                                                                              |
 | `disable-config-search`                                | :fontawesome-solid-x:     | `#!yaml false`                        | Disable searching for configuration files                                                                                                                                                                                                            |
+| `disable-deprecation-warnings`                         | :fontawesome-solid-x:     | `#!yaml false`                        | Disable all warnings for deprecated behavior. |
+| `disabled-deprecation-warnings`                        | :fontawesome-solid-x:     | `#!yaml []`                           | A list of strings that will selectively disable certain deprecation warnings. The name of each warning is given in the `deprecation-name` attribute of the log message. |
 | `disable-func-mocks`                                   | :fontawesome-solid-x:     | `#!yaml false`                        | Disable generation of function mocks.                                                                                                                                                                                                                |
 | `disable-version-string`                               | :fontawesome-solid-x:     | `#!yaml false`                        | Disable the version string in the generated mock files.                                                                                                                                                                                              |
 | `dry-run`                                              | :fontawesome-solid-x:     | `#!yaml false`                        | Print the actions that would be taken, but don't perform the actions.                                                                                                                                                                                |
@@ -130,7 +132,7 @@ Using different configuration parameters, we can deploy our mocks on-disk in var
         }
         ```
     === "adjacent to interface"
-    
+
     	!!! warning
 
             Mockery does not protect against modifying original source code. Do not generate mocks using this config with uncommitted code changes.
@@ -186,7 +188,7 @@ Using different configuration parameters, we can deploy our mocks on-disk in var
 Templated Strings
 ------------------
 
-mockery configuration makes use of the Go templating system. 
+mockery configuration makes use of the Go templating system.
 
 ### Variables
 
@@ -202,7 +204,7 @@ Variables that are marked as being templated are capable of using mockery-provid
 | InterfaceDirRelative    | The directory path of the original interface being mocked, relative to the current working directory. If the path cannot be made relative to the current working directory, this variable will be set equal to `PackagePath`                                                                  |
 | InterfaceFile           | The file path of the original interface being mocked. **NOTE:** This option will only write one mock implementation to the output file. If multiple mocks are defined in your original file, only one mock will be written to the output.                                                     |
 | InterfaceName           | The name of the original interface being mocked                                                                                                                                                                                                                                               |
-| InterfaceNameCamel      | Converts a string `interface_name` to `InterfaceName`. <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use `{{ .InterfaceName | camelcase }}` instead                                                                                                                                                                     | 
+| InterfaceNameCamel      | Converts a string `interface_name` to `InterfaceName`. <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use `{{ .InterfaceName | camelcase }}` instead                                                                                                                                                                     |
 | InterfaceNameLowerCamel | Converts `InterfaceName` to `interfaceName` . <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use `{{ .InterfaceName | camelcase | firstLower }}` instead                                                                                                                                                                |
 | InterfaceNameSnake      | Converts `InterfaceName` to `interface_name` . <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use `{{ .InterfaceName | snakecase }}` instead                                                                                                                                                                             |
 | InterfaceNameLower      | Converts `InterfaceName` to `interfacename` . <br /><b style="color:var(--md-code-hl-number-color);">DEPRECATED</b>: use `{{ .InterfaceName | lower }}` instead                                                                                                                                                                                  |
@@ -258,7 +260,7 @@ Legacy config options
 ??? danger "legacy configuration options"
 
     The legacy config options will be removed in v3 and are deprecated (but supported) in v2.
-    
+
     | name | description |
     |------|-------------|
     | `all`  |  It's common for a big package to have a lot of interfaces, so mockery provides `all`. This option will tell mockery to scan all files under the directory named by `--dir` ("." by default) and generates mocks for any interfaces it finds. This option implies `recursive: True`. |

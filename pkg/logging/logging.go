@@ -28,8 +28,11 @@ const (
 	defaultSemVer = "v0.0.0-dev"
 )
 
-// SemVer is the version of mockery at build time.
-var SemVer = ""
+var (
+	SemVer                      = ""
+	DisableDeprecationWarnings  bool
+	DisabledDeprecationWarnings []string
+)
 
 var ErrPkgNotExist = errors.New("package does not exist")
 
@@ -86,7 +89,6 @@ func GetLogger(levelStr string) (zerolog.Logger, error) {
 		With().
 		Str("version", GetSemverInfo()).
 		Logger()
-
 	return log, nil
 }
 
@@ -108,6 +110,21 @@ func Info(ctx context.Context, prefix string, message string, fields map[string]
 	event.Msgf("%s: %s", prefix, message)
 }
 
-func WarnDeprecated(ctx context.Context, message string, fields map[string]any) {
+func WarnDeprecated(ctx context.Context, name, message string, fields map[string]any) {
+	if DisableDeprecationWarnings {
+		return
+	}
+	for _, disabledWarning := range DisabledDeprecationWarnings {
+		if disabledWarning == name {
+			return
+		}
+	}
+	if fields == nil {
+		fields = map[string]any{}
+	}
+	fields["deprecation-name"] = name
+	if _, ok := fields["url"]; !ok {
+		fields["url"] = DocsURL(fmt.Sprintf("/deprecations/#%s", name))
+	}
 	Warn(ctx, "DEPRECATION", message, fields)
 }
