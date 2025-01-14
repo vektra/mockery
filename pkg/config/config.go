@@ -827,3 +827,38 @@ func (c *Config) LogUnsupportedPackagesConfig(ctx context.Context) {
 		Logger()
 	l.Error().Msg("use of unsupported options detected. mockery behavior is undefined.")
 }
+
+func (c *Config) LogDeprecatedConfig(ctx context.Context) {
+	if !c.WithExpecter {
+		logging.WarnDeprecated(
+			ctx,
+			"with-expecter",
+			"with-expecter will be permanently set to True in v3",
+			nil,
+		)
+	}
+	if c.Quiet {
+		logging.WarnDeprecated(
+			ctx,
+			"quiet",
+			"The --quiet parameter will be removed in v3. Use --log-level=\"\" instead",
+			nil,
+		)
+	}
+	if c.ResolveTypeAlias {
+		logging.WarnDeprecated(
+			ctx,
+			"resolve-type-alias",
+			"resolve-type-alias will be permanently set to False in v3. Please modify your config to set the parameter to False.",
+			nil,
+		)
+	}
+	if c.DisableVersionString {
+		logging.WarnDeprecated(
+			ctx,
+			"disable-version-string",
+			"disable-version-string will be permanently set to True in v3",
+			nil,
+		)
+	}
+}

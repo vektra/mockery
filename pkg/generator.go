@@ -541,6 +541,16 @@ func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 	case *types.Alias:
 		log.Debug().Msg("found type alias")
 		if g.config.ResolveTypeAlias {
+			// Technically, this log message is duplicated from when we call it in cmd/mockery.go. That's
+			// needed because each interface can have different values for this parameter.
+			logging.WarnDeprecated(
+				ctx,
+				"resolve-type-alias",
+				"resolve-type-alias will be permanently set to False in v3. Please modify your config to set the parameter to False.",
+				map[string]any{
+					"url": logging.DocsURL("/deprecations/#resolve-type-alias"),
+				},
+			)
 			return g.renderType(ctx, t.Rhs())
 		}
 		log.Debug().Msg("not resolving type alias to underlying type")

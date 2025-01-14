@@ -104,3 +104,15 @@ enabled. In order to remove the deprecation warning, you must set this parameter
     ```
 
 The `--quiet` parameter is superseded by `--log-level=""`. It will be removed in v3.
+
+`disable-version-string`
+-----------------------
+!!! tip ""
+
+    To resolve this warning:
+
+    ```yaml title=".mockery.yaml"
+    disable-version-string: True
+    ```
+
+Mockery will no longer print the version of mockery used as a comment in the mock files.

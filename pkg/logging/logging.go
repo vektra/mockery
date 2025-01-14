@@ -32,6 +32,7 @@ var (
 	SemVer                      = ""
 	DisableDeprecationWarnings  bool
 	DisabledDeprecationWarnings []string
+	seenWarnings                []string
 )
 
 var ErrPkgNotExist = errors.New("package does not exist")
@@ -119,6 +120,12 @@ func WarnDeprecated(ctx context.Context, name, message string, fields map[string
 			return
 		}
 	}
+	for _, seenWarning := range seenWarnings {
+		if seenWarning == name {
+			return
+		}
+	}
+	seenWarnings = append(seenWarnings, name)
 	if fields == nil {
 		fields = map[string]any{}
 	}

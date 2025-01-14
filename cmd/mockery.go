@@ -231,30 +231,6 @@ func (r *RootApp) Run() error {
 		boilerplate = string(data)
 	}
 
-	if !r.Config.WithExpecter {
-		logging.WarnDeprecated(
-			ctx,
-			"with-expecter",
-			"with-expecter will be permanently set to True in v3",
-			nil,
-		)
-	}
-	if r.Config.Quiet {
-		logging.WarnDeprecated(
-			ctx,
-			"quiet",
-			"The --quiet parameter will be removed in v3. Use --log-level=\"\" instead",
-			nil,
-		)
-	}
-	if r.Config.ResolveTypeAlias {
-		logging.WarnDeprecated(
-			ctx,
-			"resolve-type-alias",
-			"resolve-type-alias will be permanently set to False in v3. Please modify your config to set the parameter to False.",
-			nil,
-		)
-	}
 	if r.Config.Packages == nil {
 		logging.WarnDeprecated(
 			ctx,
