@@ -8,7 +8,7 @@ import (
 	"go/types"
 	"os"
 	"path/filepath"
-	"sort"
+	"slices"
 	"strings"
 
 	"github.com/rs/zerolog"
@@ -224,13 +224,15 @@ func (p *Parser) Find(name string) (*Interface, error) {
 }
 
 func (p *Parser) Interfaces() []*Interface {
-	ifaces := make(sortableIFaceList, 0)
+	var ifaces []*Interface
 	for _, entry := range p.files {
 		declaredIfaces := entry.interfaces
 		ifaces = p.packageInterfaces(entry.pkg.Types, entry.fileName, declaredIfaces, ifaces)
 	}
 
-	sort.Sort(ifaces)
+	slices.SortFunc(ifaces, func(a, b *Interface) int {
+		return strings.Compare(a.Name, b.Name)
+	})
 	return ifaces
 }
 
@@ -333,20 +335,6 @@ func (iface *Interface) Methods() []*Method {
 		methods[i] = &Method{Name: fn.Name(), Signature: fn.Type().(*types.Signature)}
 	}
 	return methods
-}
-
-type sortableIFaceList []*Interface
-
-func (s sortableIFaceList) Len() int {
-	return len(s)
-}
-
-func (s sortableIFaceList) Swap(i, j int) {
-	s[i], s[j] = s[j], s[i]
-}
-
-func (s sortableIFaceList) Less(i, j int) bool {
-	return strings.Compare(s[i].Name, s[j].Name) == -1
 }
 
 type NodeVisitor struct {

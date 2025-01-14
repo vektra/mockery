@@ -8,10 +8,11 @@ import (
 	"go/ast"
 	"go/types"
 	"io"
+	"maps"
 	"os"
 	"path/filepath"
 	"regexp"
-	"sort"
+	"slices"
 	"strings"
 	"text/template"
 	"unicode"
@@ -391,14 +392,6 @@ func (g *Generator) expecterName() string {
 	return g.mockName() + "_Expecter"
 }
 
-func (g *Generator) sortedImportNames() (importNames []string) {
-	for name := range g.nameToPackagePath {
-		importNames = append(importNames, name)
-	}
-	sort.Strings(importNames)
-	return
-}
-
 func (g *Generator) generateImports(ctx context.Context) {
 	log := zerolog.Ctx(ctx)
 
@@ -406,11 +399,11 @@ func (g *Generator) generateImports(ctx context.Context) {
 
 	pkgPath := g.nameToPackagePath[g.iface.Pkg.Name()]
 	// Sort by import name so that we get a deterministic order
-	for _, name := range g.sortedImportNames() {
-		logImport := log.With().Str(logging.LogKeyImport, g.nameToPackagePath[name]).Logger()
+	for _, name := range slices.Sorted(maps.Keys(g.nameToPackagePath)) {
+		path := g.nameToPackagePath[name]
+		logImport := log.With().Str(logging.LogKeyImport, path).Logger()
 		logImport.Debug().Msgf("found import")
 
-		path := g.nameToPackagePath[name]
 		if !g.config.KeepTree && g.config.InPackage && path == pkgPath {
 			logImport.Debug().Msgf("import (%s) equals interface's package path (%s), skipping", path, pkgPath)
 			continue
