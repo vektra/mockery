@@ -107,6 +107,7 @@ The `--quiet` parameter is superseded by `--log-level=""`. It will be removed in
 
 `disable-version-string`
 -----------------------
+
 !!! tip ""
 
     To resolve this warning:
@@ -116,3 +117,17 @@ The `--quiet` parameter is superseded by `--log-level=""`. It will be removed in
     ```
 
 Mockery will no longer print the version of mockery used as a comment in the mock files.
+
+`structname`
+------------
+
+!!! tip ""
+
+    To resolve this warning:
+
+    ```yaml title=".mockery.yaml"
+    structname: ""
+    mockname: "NameOfMock"
+    ```
+
+If you're receiving this warning, you are likely not using the `packages` config feature anyway. It should be noted that `structname` will not be a config option in v3. Receipt of this warning means you need to upgrade to use the `packages` config feature.

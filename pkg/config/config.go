@@ -861,4 +861,12 @@ func (c *Config) LogDeprecatedConfig(ctx context.Context) {
 			nil,
 		)
 	}
+	if c.StructName != "" {
+		logging.WarnDeprecated(
+			ctx,
+			"structname",
+			"structname will be removed as a parameter in v3",
+			nil,
+		)
+	}
 }
