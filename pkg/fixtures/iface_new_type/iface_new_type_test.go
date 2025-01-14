@@ -14,7 +14,7 @@ func TestParsing(t *testing.T) {
 	require.NoError(t, parser.ParsePackages(ctx, []string{"github.com/vektra/mockery/v2/pkg/fixtures/iface_new_type"}))
 	require.NoError(t, parser.Load(ctx))
 
-	for _, ifaceName := range []string{"Interface1", "Interface2", "Interface3"} {
+	for _, ifaceName := range []string{"Interface1", "Interface2", "Interface3", "Interface4"} {
 		iface, err := parser.Find(ifaceName)
 		require.NoError(t, err)
 		require.NotNil(t, iface)
@@ -33,4 +33,8 @@ func TestUsage(t *testing.T) {
 	interface3 := NewMockInterface3(t)
 	interface3.EXPECT().Method1().Return()
 	interface3.Method1()
+
+	interface4 := NewMockInterface4(t)
+	interface4.EXPECT().Method1().Return()
+	interface4.Method1()
 }
