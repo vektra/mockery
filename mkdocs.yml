@@ -31,6 +31,7 @@ theme:
     - content.code.copy
     - content.action.edit
     - content.action.view
+    - content.tooltips
     - navigation.indexes
     - navigation.sections
     - navigation.tracking
@@ -39,6 +40,9 @@ markdown_extensions:
   - admonition
   - attr_list
   - md_in_html
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
@@ -50,10 +54,10 @@ markdown_extensions:
   - pymdownx.magiclink
   - pymdownx.superfences
   - pymdownx.tabbed:
-      alternate_style: true 
+      alternate_style: true
   - toc:
       permalink: true
-  
+
 
 nav:
   - Home: index.md
@@ -63,7 +67,7 @@ nav:
     - Running: running.md
     - Examples: examples.md
   - Features: features.md
-  - Notes: 
+  - Notes:
     - FAQ: notes.md
     - Changelog: changelog.md
     - Migrating to Packages: migrating_to_packages.md

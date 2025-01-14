@@ -33,6 +33,7 @@ var (
 	DisableDeprecationWarnings  bool
 	DisabledDeprecationWarnings []string
 	seenWarnings                []string
+	deferredCalls               []func()
 )
 
 var ErrPkgNotExist = errors.New("package does not exist")
@@ -46,6 +47,12 @@ func GetSemverInfo() string {
 		return version.Main.Version
 	}
 	return defaultSemVer
+}
+
+func LogDeprecationWarnings() {
+	for _, warn := range deferredCalls {
+		warn()
+	}
 }
 
 func getMinorSemver(semver string) string {
@@ -111,7 +118,9 @@ func Info(ctx context.Context, prefix string, message string, fields map[string]
 	event.Msgf("%s: %s", prefix, message)
 }
 
-func WarnDeprecated(ctx context.Context, name, message string, fields map[string]any) {
+func WarnDeprecated(name, message string, fields map[string]any) {
+	log, _ := GetLogger("warn")
+	ctx := log.WithContext(context.Background())
 	if DisableDeprecationWarnings {
 		return
 	}
@@ -133,5 +142,8 @@ func WarnDeprecated(ctx context.Context, name, message string, fields map[string
 	if _, ok := fields["url"]; !ok {
 		fields["url"] = DocsURL(fmt.Sprintf("/deprecations/#%s", name))
 	}
-	Warn(ctx, "DEPRECATION", message, fields)
+
+	deferredCalls = append(deferredCalls, func() {
+		Warn(ctx, "DEPRECATION", message, fields)
+	})
 }

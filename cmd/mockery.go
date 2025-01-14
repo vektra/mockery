@@ -198,6 +198,7 @@ func (r *RootApp) Run() error {
 	}
 	logging.DisableDeprecationWarnings = r.Config.DisableDeprecationWarnings
 	logging.DisabledDeprecationWarnings = r.Config.DisabledDeprecationWarnings
+	defer logging.LogDeprecationWarnings()
 
 	log = log.With().Bool(logging.LogKeyDryRun, r.Config.DryRun).Logger()
 	log.Info().Msgf("Starting mockery")
@@ -233,7 +234,6 @@ func (r *RootApp) Run() error {
 
 	if r.Config.Packages == nil {
 		logging.WarnDeprecated(
-			ctx,
 			"packages",
 			"use of the packages config will be the only way to generate mocks in v3. Please migrate your config to use the packages feature.",
 			map[string]any{

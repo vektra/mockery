@@ -425,7 +425,6 @@ func (g *Generator) GeneratePrologue(ctx context.Context, pkg string) {
 
 	if !g.config.Issue845Fix {
 		logging.WarnDeprecated(
-			ctx,
 			"issue-845-fix",
 			"issue-845-fix must be set to True to remove this warning. Visit the link for more details.",
 			map[string]any{
@@ -544,12 +543,9 @@ func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 			// Technically, this log message is duplicated from when we call it in cmd/mockery.go. That's
 			// needed because each interface can have different values for this parameter.
 			logging.WarnDeprecated(
-				ctx,
 				"resolve-type-alias",
 				"resolve-type-alias will be permanently set to False in v3. Please modify your config to set the parameter to False.",
-				map[string]any{
-					"url": logging.DocsURL("/deprecations/#resolve-type-alias"),
-				},
+				nil,
 			)
 			return g.renderType(ctx, t.Rhs())
 		}

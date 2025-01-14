@@ -831,7 +831,6 @@ func (c *Config) LogUnsupportedPackagesConfig(ctx context.Context) {
 func (c *Config) LogDeprecatedConfig(ctx context.Context) {
 	if !c.WithExpecter {
 		logging.WarnDeprecated(
-			ctx,
 			"with-expecter",
 			"with-expecter will be permanently set to True in v3",
 			nil,
@@ -839,7 +838,6 @@ func (c *Config) LogDeprecatedConfig(ctx context.Context) {
 	}
 	if c.Quiet {
 		logging.WarnDeprecated(
-			ctx,
 			"quiet",
 			"The --quiet parameter will be removed in v3. Use --log-level=\"\" instead",
 			nil,
@@ -847,7 +845,6 @@ func (c *Config) LogDeprecatedConfig(ctx context.Context) {
 	}
 	if c.ResolveTypeAlias {
 		logging.WarnDeprecated(
-			ctx,
 			"resolve-type-alias",
 			"resolve-type-alias will be permanently set to False in v3. Please modify your config to set the parameter to False.",
 			nil,
@@ -855,7 +852,6 @@ func (c *Config) LogDeprecatedConfig(ctx context.Context) {
 	}
 	if c.DisableVersionString {
 		logging.WarnDeprecated(
-			ctx,
 			"disable-version-string",
 			"disable-version-string will be permanently set to True in v3",
 			nil,
@@ -863,7 +859,6 @@ func (c *Config) LogDeprecatedConfig(ctx context.Context) {
 	}
 	if c.StructName != "" {
 		logging.WarnDeprecated(
-			ctx,
 			"structname",
 			"structname will be removed as a parameter in v3",
 			nil,
