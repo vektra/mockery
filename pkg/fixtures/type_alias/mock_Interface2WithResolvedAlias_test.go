@@ -51,7 +51,7 @@ func (_c *Interface2WithResolvedAlias_F_Call) Return() *Interface2WithResolvedAl
 }
 
 func (_c *Interface2WithResolvedAlias_F_Call) RunAndReturn(run func(int, subpkg.S, subpkg.S)) *Interface2WithResolvedAlias_F_Call {
-	_c.Call.Return(run)
+	_c.Run(run)
 	return _c
 }
 

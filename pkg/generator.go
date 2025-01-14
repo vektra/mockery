@@ -425,7 +425,7 @@ func (g *Generator) GeneratePrologue(ctx context.Context, pkg string) {
 
 	if !g.config.Issue845Fix {
 		logging.WarnDeprecated(
-			ctx,
+			"issue-845-fix",
 			"issue-845-fix must be set to True to remove this warning. Visit the link for more details.",
 			map[string]any{
 				"url": logging.DocsURL("/deprecations/#issue-845-fix"),
@@ -540,13 +540,6 @@ func (g *Generator) renderType(ctx context.Context, typ types.Type) string {
 	case *types.Alias:
 		log.Debug().Msg("found type alias")
 		if g.config.ResolveTypeAlias {
-			logging.WarnDeprecated(
-				ctx,
-				"resolve-type-alias will be permanently set to False in v3. Please modify your config to set the parameter to False.",
-				map[string]any{
-					"url": logging.DocsURL("/deprecations/#resolve-type-alias"),
-				},
-			)
 			return g.renderType(ctx, t.Rhs())
 		}
 		log.Debug().Msg("not resolving type alias to underlying type")

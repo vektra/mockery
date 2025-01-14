@@ -52,7 +52,7 @@ func (_c *Interface2WithUnresolvedAlias_F_Call) Return() *Interface2WithUnresolv
 }
 
 func (_c *Interface2WithUnresolvedAlias_F_Call) RunAndReturn(run func(type_alias.Type, type_alias.S, subpkg.S)) *Interface2WithUnresolvedAlias_F_Call {
-	_c.Call.Return(run)
+	_c.Run(run)
 	return _c
 }
 

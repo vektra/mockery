@@ -13,3 +13,17 @@
 .md-grid {
     max-width: none;
 }
+
+.deprecated {
+    color: var(--md-code-hl-number-color);
+    font-weight: bold;
+}
+
+a .deprecation {
+    transition: color 125ms;
+    color: var(--md-code-hl-number-color);
+}
+
+.deprecation:hover {
+    color: darkred;
+}

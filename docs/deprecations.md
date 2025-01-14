@@ -21,7 +21,7 @@ The [`packages`](features.md#packages-configuration) feature will be the only wa
 !!! tip ""
 
     To resolve this warning:
-    
+
     ```yaml title=".mockery.yaml"
     issue-845-fix: True
     ```
@@ -60,7 +60,7 @@ if being generated with `#!yaml inpackage: True`.
 !!! tip ""
 
     To resolve this warning:
-    
+
     ```yaml title=".mockery.yaml"
     resolve-type-alias: False
     ```
@@ -84,10 +84,50 @@ be set to `False`. This will be the permanent behavior in Mockery v3.
 !!! tip ""
 
     To resolve this warning:
-    
+
     ```yaml title=".mockery.yaml"
     with-expecter: True
     ```
 
 This parameter enables the [expecter structs](features.md#expecter-structs). In Mockery v3, this parameter will be permanently
 enabled. In order to remove the deprecation warning, you must set this parameter to `#!yaml with-expecter: True`.
+
+`quiet`
+-------
+
+!!! tip ""
+
+    To resolve this warning:
+
+    ```yaml title=".mockery.yaml"
+    quiet: False
+    ```
+
+The `--quiet` parameter is superseded by `--log-level=""`. It will be removed in v3.
+
+`disable-version-string`
+-----------------------
+
+!!! tip ""
+
+    To resolve this warning:
+
+    ```yaml title=".mockery.yaml"
+    disable-version-string: True
+    ```
+
+Mockery will no longer print the version of mockery used as a comment in the mock files.
+
+`structname`
+------------
+
+!!! tip ""
+
+    To resolve this warning:
+
+    ```yaml title=".mockery.yaml"
+    structname: ""
+    mockname: "NameOfMock"
+    ```
+
+If you're receiving this warning, you are likely not using the `packages` config feature anyway. It should be noted that `structname` will not be a config option in v3. Receipt of this warning means you need to upgrade to use the `packages` config feature.

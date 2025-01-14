@@ -326,6 +326,7 @@ func (m *Outputter) Generate(ctx context.Context, iface *Interface) error {
 		if err := parseConfigTemplates(ctx, interfaceConfig, iface); err != nil {
 			return fmt.Errorf("failed to parse config template: %w", err)
 		}
+		interfaceConfig.LogDeprecatedConfig(ctx)
 
 		g := GeneratorConfig{
 			Boilerplate:          m.boilerplate,
