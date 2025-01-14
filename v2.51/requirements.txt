@@ -1,0 +1,7 @@
+mike @ git+https://github.com/jimporter/mike.git
+mkdocs
+mkdocs-glightbox
+git+https://${GH_TOKEN}@github.com/squidfunk/mkdocs-material-insiders.git
+mkdocs-open-in-new-tab
+cairosvg
+pillow
