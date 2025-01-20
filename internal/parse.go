@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog"
-	"github.com/vektra/mockery/v3/template"
+	"github.com/vektra/mockery/v3/config"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -38,9 +38,9 @@ func NewParser(buildTags []string) *Parser {
 	return p
 }
 
-func (p *Parser) ParsePackages(ctx context.Context, packageNames []string) ([]*template.Interface, error) {
+func (p *Parser) ParsePackages(ctx context.Context, packageNames []string) ([]*config.Interface, error) {
 	log := zerolog.Ctx(ctx)
-	interfaces := []*template.Interface{}
+	interfaces := []*config.Interface{}
 
 	packages, err := packages.Load(&p.conf, packageNames...)
 	if err != nil {
@@ -91,7 +91,7 @@ func (p *Parser) ParsePackages(ctx context.Context, packageNames []string) ([]*t
 					continue
 				}
 
-				interfaces = append(interfaces, template.NewInterface(
+				interfaces = append(interfaces, config.NewInterface(
 					name,
 					file,
 					fileSyntax,

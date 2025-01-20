@@ -15,6 +15,7 @@ import (
 
 	"github.com/chigopher/pathlib"
 	"github.com/rs/zerolog"
+	"github.com/vektra/mockery/v3/config"
 	"github.com/vektra/mockery/v3/internal/stackerr"
 	"github.com/vektra/mockery/v3/template"
 	"golang.org/x/tools/go/packages"
@@ -103,7 +104,7 @@ type TemplateGenerator struct {
 	registry     *template.Registry
 	formatter    Formatter
 	inPackage    bool
-	pkgConfig    *template.Config
+	pkgConfig    *config.Config
 	pkgName      string
 }
 
@@ -113,7 +114,7 @@ func NewTemplateGenerator(
 	outPkgFSPath *pathlib.Path,
 	templateName string,
 	formatter Formatter,
-	pkgConfig *template.Config,
+	pkgConfig *config.Config,
 	pkgName string,
 ) (*TemplateGenerator, error) {
 	srcPkgFSPath := pathlib.NewPath(srcPkg.GoFiles[0]).Parent()
@@ -177,7 +178,7 @@ func (g *TemplateGenerator) format(src []byte) ([]byte, error) {
 	return nil, fmt.Errorf("unknown formatter type: %s", g.formatter)
 }
 
-func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func, ifaceConfig *template.Config) (template.MethodData, error) {
+func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func, ifaceConfig *config.Config) (template.MethodData, error) {
 	log := zerolog.Ctx(ctx)
 
 	methodScope := g.registry.MethodScope()
@@ -306,7 +307,7 @@ func (g *TemplateGenerator) typeParams(ctx context.Context, tparams *types.TypeP
 
 func (g *TemplateGenerator) Generate(
 	ctx context.Context,
-	interfaces []*template.Interface,
+	interfaces []*config.Interface,
 ) ([]byte, error) {
 	log := zerolog.Ctx(ctx)
 	mockData := []template.MockData{}

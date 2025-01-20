@@ -54,17 +54,16 @@ markdown_extensions:
   - toc:
       permalink: true
 
-
 nav:
   - Home: index.md
   - Getting Started:
     - Installation: installation.md
     - Configuration: configuration.md
-    - Templates: templates.md
     - Running: running.md
   - Templates:
-    - template-testify.md
-    - template-matryer.md
+    - template/index.md
+    - template/testify.md
+    - template/matryer.md
   - Features:
     - replace-type.md
   - Notes:

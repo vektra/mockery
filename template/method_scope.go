@@ -6,6 +6,7 @@ import (
 	"go/types"
 
 	"github.com/rs/zerolog"
+	"github.com/vektra/mockery/v3/config"
 	"github.com/vektra/mockery/v3/internal/stackerr"
 	"golang.org/x/tools/go/packages"
 )
@@ -99,7 +100,7 @@ var _ TypesPackage = fakePackage{}
 // Variables names are generated if required and are ensured to be
 // without conflict with other variables and imported packages. It also
 // adds the relevant imports to the registry for each added variable.
-func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, prefix string, replacement *ReplaceType) (*Var, error) {
+func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, prefix string, replacement *config.ReplaceType) (*Var, error) {
 	var (
 		imports map[string]*Package = map[string]*Package{}
 		v       Var
