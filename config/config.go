@@ -1,4 +1,4 @@
-package template
+package config
 
 import (
 	"bufio"
@@ -7,12 +7,12 @@ import (
 	"errors"
 	"fmt"
 	"go/ast"
-	"html/template"
 	"os"
 	"path/filepath"
 	"reflect"
 	"regexp"
 	"strings"
+	"text/template"
 
 	"github.com/brunoga/deep"
 	"github.com/chigopher/pathlib"
@@ -25,6 +25,7 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/vektra/mockery/v3/internal/logging"
 	"github.com/vektra/mockery/v3/internal/stackerr"
+	"github.com/vektra/mockery/v3/shared"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -36,8 +37,18 @@ type Interface struct {
 	Config   *Config
 }
 
-// ConfigData is the data sent to the template for the config file.
-type ConfigData struct {
+func NewInterface(name string, filename string, file *ast.File, pkg *packages.Package, config *Config) *Interface {
+	return &Interface{
+		Name:     name,
+		FileName: filename,
+		File:     file,
+		Pkg:      pkg,
+		Config:   config,
+	}
+}
+
+// Data is the data sent to the template for the config file.
+type Data struct {
 	// ConfigDir is the directory of where the mockery config file is located.
 	ConfigDir string
 	// InterfaceDir is the directory of the interface being mocked.
@@ -56,16 +67,6 @@ type ConfigData struct {
 	SrcPackageName string
 	// SrcPackagePath is the fully qualified package path of the source package. e.g. "github.com/vektra/mockery/v3".
 	SrcPackagePath string
-}
-
-func NewInterface(name string, filename string, file *ast.File, pkg *packages.Package, config *Config) *Interface {
-	return &Interface{
-		Name:     name,
-		FileName: filename,
-		File:     file,
-		Pkg:      pkg,
-		Config:   config,
-	}
 }
 
 type RootConfig struct {
@@ -592,7 +593,7 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 		}
 	}
 	// data is the struct sent to the template parser
-	data := ConfigData{
+	data := Data{
 		ConfigDir:            filepath.Dir(*c.ConfigFile),
 		InterfaceDir:         interfaceDir,
 		InterfaceDirRelative: interfaceDirRelative,
@@ -631,7 +632,7 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 		for name, attributePointer := range templateMap {
 			oldVal := *attributePointer
 
-			attributeTempl, err := template.New("config-template").Funcs(StringManipulationFuncs).Parse(*attributePointer)
+			attributeTempl, err := template.New("config-template").Funcs(shared.StringManipulationFuncs).Parse(*attributePointer)
 			if err != nil {
 				return fmt.Errorf("failed to parse %s template: %w", name, err)
 			}

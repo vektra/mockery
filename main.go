@@ -1,3 +1,4 @@
+// Package main implements shit
 package main
 
 import (

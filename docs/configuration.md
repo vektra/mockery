@@ -1,6 +1,9 @@
 Configuration
 ==============
 
+Example
+-------
+
 All configuration is specified in a `.mockery.yml` file. An example config file may look like this:
 
 ```yaml
@@ -41,7 +44,7 @@ These are the highlights of the config scheme:
 
 1. The parameters are merged hierarchically
 2. There are a number of template variables available to generalize config values.
-3. The style of mock to be generated is specified using the [`template`](templates.md) parameter.
+3. The style of mock to be generated is specified using the [`template`](templates/index.md) parameter.
 
 An output file may contain multiple mocks, but the only rule is that all the mocks in the file must come from the same package. Because of this, mocks for different packages must go in different files.
 
@@ -72,29 +75,29 @@ Parameter Descriptions
 | `template-data`                                        | :fontawesome-solid-x:     | `#!yaml {}`                           | A `map[string]any` that provides arbitrary options to the template. Each template will have a different set of accepted keys. Refer to each template's documentation for more details.                                                               |
 
 
-Config Templates
-----------------
+Templates
+---------
 
-Parameters marked as being templated have access to a number of template variables and functions.
+Parameters marked as being templated have access to a number of template variables and functions through the Go [`text/template`](https://pkg.go.dev/text/template#hdr-Examples) system.
 
 ### Variables
 
-The variables provided are specified in the [`ConfigData`](https://pkg.go.dev/github.com/vektra/mockery/v3/template#ConfigData) struct.
+The variables provided are specified in the [`config.Data`](https://pkg.go.dev/github.com/vektra/mockery/v3/config#Data) struct.
 
 ### Functions
 
-All of the functions defined in [`StringManipulationFuncs`](https://pkg.go.dev/github.com/vektra/mockery/v3/template#pkg-variables) are available to templated parameters.
+All of the functions defined in [`StringManipulationFuncs`](https://pkg.go.dev/github.com/vektra/mockery/v3/shared#pkg-variables) are available to templated parameters.
 
 Merging Precedence
 ------------------
 
-The configuration applied to a specific mocked interface is merged according to the following precedence (in decreasing priority):
+The configuration applied to a specific mocked interface is merged according to the following precedence (in increasing priority):
 
-1. Interface-specific config in `.mockery.yaml`
-2. Package-specific config in `.mockery.yaml`
+1. Top-level defaults in `.mockery.yaml`
+2. Environment variables
 3. Command-line options
-4. Environment variables
-5. Top-level defaults in `.mockery.yaml`
+4. Package-specific config in `.mockery.yaml`
+5. Interface-specific config in `.mockery.yaml`
 
 Formatting
 ----------
@@ -105,5 +108,5 @@ If a parameter is named `enable-feature` and we want a value of `True`, then the
 |----------------------|------------------------------|
 | command line         | `--enable-feature=true`       |
 | Environment variable | `MOCKERY_ENABLE_FEATURE=True` |
-| yaml                 | `enable-feature: True`        |
+| yaml                 | `#!yaml enable-feature: True` |
 
