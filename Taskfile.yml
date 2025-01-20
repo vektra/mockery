@@ -83,7 +83,7 @@ tasks:
       - ./e2e/run_all.sh
 
   test.ci:
-    deps: [fmt, lint]
+    deps: [lint]
     cmds:
       - task: mocks.remove
       - task: mocks.generate
