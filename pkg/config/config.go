@@ -502,8 +502,14 @@ func (c *Config) addSubPkgConfig(ctx context.Context, subPkgPath string, parentP
 		log.Trace().Msgf("parent-package config: %v", parentPkgConfig)
 
 		// Merge the parent config with the sub-package config.
-		parentConfigSection := parentPkgConfig["config"].(map[string]any)
-		subPkgConfigSection := subPkgConfig["config"].(map[string]any)
+		parentConfigSection, ok := parentPkgConfig["config"].(map[string]any)
+		if !ok {
+			parentConfigSection = map[string]any{}
+		}
+		subPkgConfigSection, ok := subPkgConfig["config"].(map[string]any)
+		if !ok {
+			subPkgConfigSection = map[string]any{}
+		}
 		for key, val := range parentConfigSection {
 			if _, keyInSubPkg := subPkgConfigSection[key]; !keyInSubPkg {
 				subPkgConfigSection[key] = val
