@@ -418,6 +418,7 @@ type Config struct {
 	MockName           *string        `koanf:"mockname"`
 	PkgName            *string        `koanf:"pkgname"`
 	Recursive          *bool          `koanf:"recursive"`
+	ReplaceType        []string       `koanf:"replace-type"`
 	Template           *string        `koanf:"template"`
 	TemplateData       map[string]any `koanf:"template-data"`
 	UnrollVariadic     *bool          `koanf:"unroll-variadic"`

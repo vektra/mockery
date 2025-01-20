@@ -192,6 +192,7 @@ func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func) 
 			log.Debug().Str("import", imprt.Path()).Str("import-qualifier", imprt.Qualifier()).Msg("existing imports")
 		}
 
+		// TODO: ReplaceTypes logic should go here in the AddVar.
 		params[j] = template.ParamData{
 			Var:      methodScope.AddVar(param, ""),
 			Variadic: signature.Variadic() && j == signature.Params().Len()-1,
@@ -287,6 +288,7 @@ func (g *TemplateGenerator) Generate(
 					Str("method-name", method.Name).
 					Logger().
 					WithContext(ctx))
+			method.Scope.ReplaceTypes()
 		}
 
 		ifaceLog.Debug().Str("template-data", fmt.Sprintf("%v", ifaceMock.Config.TemplateData)).Msg("printing template data")
