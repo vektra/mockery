@@ -30,15 +30,15 @@ const (
 )
 
 var (
-	//go:embed moq.templ
-	templateMoq string
-	//go:embed mockery.templ
-	templateMockery string
+	//go:embed mock_matryer.templ
+	templateMatryer string
+	//go:embed mock_testify.templ
+	templateTestify string
 )
 
 var styleTemplates = map[string]string{
-	"moq":     templateMoq,
-	"mockery": templateMockery,
+	"matryer": templateMatryer,
+	"testify": templateTestify,
 }
 
 // findPkgPath returns the fully-qualified go import path of a given dir. The

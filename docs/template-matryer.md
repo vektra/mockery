@@ -1,8 +1,8 @@
 ---
-title: Moq
+title: matryer
 ---
 
-Moq
+matryer/moq
 ====
 
 
@@ -21,7 +21,7 @@ Moq
 === "`.mockery.yml`"
 
     ```yaml
-    template: moq
+    template: matryer
     packages:
         github.com/vektra/mockery/v3/pkg/fixtures:
             config:
@@ -112,7 +112,7 @@ Moq
     }
     ```
 
-Moq-style mocks are far simpler, and probably more intuitive, than mockery-style mocks. All that's needed is to define the function that will be run when the mock's method is called.
+Moq-style mocks are far simpler, and probably more intuitive, than testify-style mocks. All that's needed is to define the function that will be run when the mock's method is called.
 
 ## `template-data`
 

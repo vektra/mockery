@@ -1,6 +1,6 @@
-template: moq
+template: matryer
 mockname: "Moq{{.InterfaceName}}"
-filename: "mocks_moq_test.go"
+filename: "mocks_matryer_test.go"
 all: true
 template-data:
     skip-ensure: False

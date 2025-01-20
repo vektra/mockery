@@ -1,11 +1,11 @@
 ---
-title: Mockery
+title: testify
 ---
 
 Mockery
 =======
 
-Features for `#!yaml template: mockery`.
+Features for `#!yaml template: testify`.
 
 Choosing this template will render a traditional "mockery-style" template. The
 section below shows what will be rendered for the given interface.
@@ -25,7 +25,7 @@ section below shows what will be rendered for the given interface.
 === "`.mockery.yml`"
 
     ```yaml
-    template: mockery
+    template: testify
     packages:
         github.com/vektra/mockery/v3/pkg/fixtures:
             config:
