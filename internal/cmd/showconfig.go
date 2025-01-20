@@ -8,8 +8,8 @@ import (
 	"github.com/knadh/koanf/providers/structs"
 	"github.com/knadh/koanf/v2"
 	"github.com/spf13/cobra"
-	pkg "github.com/vektra/mockery/v3/internal"
 	"github.com/vektra/mockery/v3/internal/logging"
+	"github.com/vektra/mockery/v3/template"
 )
 
 func NewShowConfigCmd() *cobra.Command {
@@ -24,7 +24,7 @@ func NewShowConfigCmd() *cobra.Command {
 			}
 
 			ctx := log.WithContext(context.Background())
-			conf, _, err := pkg.NewRootConfig(ctx, cmd.Parent().PersistentFlags())
+			conf, _, err := template.NewRootConfig(ctx, cmd.Parent().PersistentFlags())
 			if err != nil {
 				return err
 			}

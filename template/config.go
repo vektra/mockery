@@ -1,4 +1,4 @@
-package pkg
+package template
 
 import (
 	"bufio"
@@ -25,9 +25,26 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/vektra/mockery/v3/internal/logging"
 	"github.com/vektra/mockery/v3/internal/stackerr"
-	mockeryTemplate "github.com/vektra/mockery/v3/template"
 	"golang.org/x/tools/go/packages"
 )
+
+type Interface struct {
+	Name     string // Name of the type to be mocked.
+	FileName string
+	File     *ast.File
+	Pkg      *packages.Package
+	Config   *Config
+}
+
+func NewInterface(name string, filename string, file *ast.File, pkg *packages.Package, config *Config) *Interface {
+	return &Interface{
+		Name:     name,
+		FileName: filename,
+		File:     file,
+		Pkg:      pkg,
+		Config:   config,
+	}
+}
 
 type RootConfig struct {
 	*Config    `koanf:",squash"`
@@ -162,8 +179,16 @@ func mergeConfigs(ctx context.Context, src Config, dest *Config) {
 		destFieldValue := destValue.Elem().Field(i)
 
 		if srcFieldValue.Kind() == reflect.Map {
-			srcMap := srcFieldValue.Interface().(map[string]any)
-			destMap := destFieldValue.Interface().(map[string]any)
+			srcMap, ok := srcFieldValue.Interface().(map[string]any)
+			if !ok {
+				log.Debug().Msg("field value is not `any`, skipping merge")
+				continue
+			}
+			destMap, ok := destFieldValue.Interface().(map[string]any)
+			if !ok {
+				log.Debug().Msg("dest map value is not `any`, skipping")
+				continue
+			}
 			if destMap == nil {
 				destFieldValue.Set(reflect.ValueOf(make(map[string]any)))
 			}
@@ -403,6 +428,11 @@ func (c *InterfaceConfig) Initialize(ctx context.Context) error {
 	return nil
 }
 
+type ReplaceType struct {
+	PkgPath  string `koanf:"pkg-path"`
+	TypeName string `koanf:"type-name"`
+}
+
 type Config struct {
 	All                *bool          `koanf:"all"`
 	Anchors            map[string]any `koanf:"_anchors"`
@@ -418,11 +448,12 @@ type Config struct {
 	MockName           *string        `koanf:"mockname"`
 	PkgName            *string        `koanf:"pkgname"`
 	Recursive          *bool          `koanf:"recursive"`
-	ReplaceType        []string       `koanf:"replace-type"`
-	Template           *string        `koanf:"template"`
-	TemplateData       map[string]any `koanf:"template-data"`
-	UnrollVariadic     *bool          `koanf:"unroll-variadic"`
-	Version            *bool          `koanf:"version"`
+	// ReplaceType is a nested map of format map["package path"]["type name"]*ReplaceType
+	ReplaceType    map[string]map[string]*ReplaceType `koanf:"replace-type"`
+	Template       *string                            `koanf:"template"`
+	TemplateData   map[string]any                     `koanf:"template-data"`
+	UnrollVariadic *bool                              `koanf:"unroll-variadic"`
+	Version        *bool                              `koanf:"version"`
 }
 
 func findConfig() (*pathlib.Path, error) {
@@ -527,7 +558,7 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 		}
 	}
 	// data is the struct sent to the template parser
-	data := mockeryTemplate.ConfigData{
+	data := ConfigData{
 		ConfigDir:            filepath.Dir(*c.ConfigFile),
 		InterfaceDir:         interfaceDir,
 		InterfaceDirRelative: interfaceDirRelative,
@@ -566,7 +597,7 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 		for name, attributePointer := range templateMap {
 			oldVal := *attributePointer
 
-			attributeTempl, err := template.New("config-template").Funcs(mockeryTemplate.StringManipulationFuncs).Parse(*attributePointer)
+			attributeTempl, err := template.New("config-template").Funcs(StringManipulationFuncs).Parse(*attributePointer)
 			if err != nil {
 				return fmt.Errorf("failed to parse %s template: %w", name, err)
 			}
@@ -583,4 +614,12 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 	}
 
 	return nil
+}
+
+func (c *Config) GetReplacement(pkgPath string, typeName string) *ReplaceType {
+	pkgMap := c.ReplaceType[pkgPath]
+	if pkgMap == nil {
+		return nil
+	}
+	return pkgMap[typeName]
 }

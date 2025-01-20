@@ -1,4 +1,4 @@
-package pkg_test
+package internal_test
 
 import (
 	"path/filepath"

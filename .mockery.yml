@@ -10,6 +10,20 @@ template-data:
   boilerplate-file: "./.boilerplate.txt"
 packages:
   github.com/vektra/mockery/v3/internal/fixtures/buildtag/comment:
+  github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type:
+    config:
+      recursive: True
+    interfaces:
+      RType:
+        configs:
+        - {}
+        - mockname: RTypeReplaced1
+          replace-type:
+            github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type/rti/rt1:
+              RType1:
+                pkg-path: github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type/rti/rt2
+                type-name: RType2
+
   github.com/vektra/mockery/v3/internal/fixtures:
     interfaces:
       RequesterVariadic:
