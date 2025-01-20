@@ -232,7 +232,11 @@ func (r *RootApp) Run() error {
 		boilerplate = string(data)
 	}
 
-	if r.Config.Packages == nil {
+	configuredPackages, err := r.Config.GetPackages(ctx)
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
+		return fmt.Errorf("failed to determine configured packages: %w", err)
+	}
+	if len(configuredPackages) == 0 {
 		logging.WarnDeprecated(
 			"packages",
 			"use of the packages config will be the only way to generate mocks in v3. Please migrate your config to use the packages feature.",
@@ -241,13 +245,7 @@ func (r *RootApp) Run() error {
 				"migration": logging.DocsURL("/migrating_to_packages/"),
 			},
 		)
-	}
-
-	configuredPackages, err := r.Config.GetPackages(ctx)
-	if err != nil && !errors.Is(err, os.ErrNotExist) {
-		return fmt.Errorf("failed to determine configured packages: %w", err)
-	}
-	if len(configuredPackages) != 0 {
+	} else {
 		r.Config.LogUnsupportedPackagesConfig(ctx)
 
 		configuredPackages, err := r.Config.GetPackages(ctx)
