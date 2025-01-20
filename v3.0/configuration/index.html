@@ -16,7 +16,7 @@
         <link rel="prev" href="../installation/">
       
       
-        <link rel="next" href="../templates/">
+        <link rel="next" href="../running/">
       
       
         
@@ -348,8 +348,6 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       
         
       
-        
-      
     
     
       
@@ -485,6 +483,19 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Example
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#parameter-descriptions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -498,17 +509,17 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 </li>
       
         <li class="md-nav__item">
-  <a href="#config-templates" class="md-nav__link">
+  <a href="#templates" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          Config Templates
+          Templates
         </span>
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Config Templates">
+    <nav class="md-nav" aria-label="Templates">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -584,33 +595,6 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="../templates/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    
-  
-    Templates
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../running/" class="md-nav__link">
         
   
@@ -648,6 +632,10 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
     
       
         
+          
+        
+      
+        
       
         
       
@@ -666,8 +654,10 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../template/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     
@@ -680,8 +670,14 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
@@ -695,13 +691,15 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
           <ul class="md-nav__list" data-md-scrollfix>
             
               
+            
+              
                 
   
   
   
   
     <li class="md-nav__item">
-      <a href="../template-testify/" class="md-nav__link">
+      <a href="../template/testify/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -728,7 +726,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="../template-matryer/" class="md-nav__link">
+      <a href="../template/matryer/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -987,6 +985,19 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Example
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#parameter-descriptions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1000,17 +1011,17 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 </li>
       
         <li class="md-nav__item">
-  <a href="#config-templates" class="md-nav__link">
+  <a href="#templates" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          Config Templates
+          Templates
         </span>
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Config Templates">
+    <nav class="md-nav" aria-label="Templates">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1104,6 +1115,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 
 
 <h1 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h1>
+<h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h2>
 <p>All configuration is specified in a <code>.mockery.yml</code> file. An example config file may look like this:</p>
 <div class="highlight"><span class="filename">YAML</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">all</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">template-data</span><span class="p">:</span>
@@ -1140,7 +1152,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <ol>
 <li>The parameters are merged hierarchically</li>
 <li>There are a number of template variables available to generalize config values.</li>
-<li>The style of mock to be generated is specified using the <a href="../templates/"><code>template</code></a> parameter.</li>
+<li>The style of mock to be generated is specified using the <a href="templates/index.md"><code>template</code></a> parameter.</li>
 </ol>
 <p>An output file may contain multiple mocks, but the only rule is that all the mocks in the file must come from the same package. Because of this, mocks for different packages must go in different files.</p>
 <h2 id="parameter-descriptions">Parameter Descriptions<a class="headerlink" href="#parameter-descriptions" title="Permanent link">&para;</a></h2>
@@ -1276,20 +1288,20 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 </tr>
 </tbody>
 </table>
-<h2 id="config-templates">Config Templates<a class="headerlink" href="#config-templates" title="Permanent link">&para;</a></h2>
-<p>Parameters marked as being templated have access to a number of template variables and functions.</p>
+<h2 id="templates">Templates<a class="headerlink" href="#templates" title="Permanent link">&para;</a></h2>
+<p>Parameters marked as being templated have access to a number of template variables and functions through the Go <a href="https://pkg.go.dev/text/template#hdr-Examples"><code>text/template</code></a> system.</p>
 <h3 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">&para;</a></h3>
-<p>The variables provided are specified in the <a href="https://pkg.go.dev/github.com/vektra/mockery/v3/template#ConfigData"><code>ConfigData</code></a> struct.</p>
+<p>The variables provided are specified in the <a href="https://pkg.go.dev/github.com/vektra/mockery/v3/config#Data"><code>config.Data</code></a> struct.</p>
 <h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
-<p>All of the functions defined in <a href="https://pkg.go.dev/github.com/vektra/mockery/v3/template#pkg-variables"><code>StringManipulationFuncs</code></a> are available to templated parameters.</p>
+<p>All of the functions defined in <a href="https://pkg.go.dev/github.com/vektra/mockery/v3/shared#pkg-variables"><code>StringManipulationFuncs</code></a> are available to templated parameters.</p>
 <h2 id="merging-precedence">Merging Precedence<a class="headerlink" href="#merging-precedence" title="Permanent link">&para;</a></h2>
-<p>The configuration applied to a specific mocked interface is merged according to the following precedence (in decreasing priority):</p>
+<p>The configuration applied to a specific mocked interface is merged according to the following precedence (in increasing priority):</p>
 <ol>
-<li>Interface-specific config in <code>.mockery.yaml</code></li>
-<li>Package-specific config in <code>.mockery.yaml</code></li>
-<li>Command-line options</li>
-<li>Environment variables</li>
 <li>Top-level defaults in <code>.mockery.yaml</code></li>
+<li>Environment variables</li>
+<li>Command-line options</li>
+<li>Package-specific config in <code>.mockery.yaml</code></li>
+<li>Interface-specific config in <code>.mockery.yaml</code></li>
 </ol>
 <h2 id="formatting">Formatting<a class="headerlink" href="#formatting" title="Permanent link">&para;</a></h2>
 <p>If a parameter is named <code>enable-feature</code> and we want a value of <code>True</code>, then these are the formats for each source:</p>
@@ -1311,7 +1323,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 </tr>
 <tr>
 <td>yaml</td>
-<td><code>enable-feature: True</code></td>
+<td><code class="highlight"><span class="nt">enable-feature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span></code></td>
 </tr>
 </tbody>
 </table>
