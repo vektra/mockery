@@ -63,8 +63,8 @@ nav:
     - Templates: templates.md
     - Running: running.md
   - Templates:
-    - template-mockery.md
-    - template-moq.md
+    - template-testify.md
+    - template-matryer.md
   - Features:
     - replace-type.md
   - Notes:

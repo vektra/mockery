@@ -1,4 +1,4 @@
-template: "mockery"
+template: "testify"
 tags: "custom2"
 formatter: "goimports"
 all: True
