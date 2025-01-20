@@ -18,7 +18,7 @@ var (
 
 // Test that the generated code for ExpecterTest interface is usable
 func TestExpecter(t *testing.T) {
-	expMock := NewMockExpecter(t)
+	expMock := MockExpecter{}
 
 	t.Run("NoArg", func(t *testing.T) {
 		var runCalled bool
@@ -34,7 +34,7 @@ func TestExpecter(t *testing.T) {
 		// Call again panic
 		assert.Panics(t, func() {
 			expMock.NoArg()
-		}, "call did not panic")
+		})
 		expMock.AssertExpectations(t)
 	})
 

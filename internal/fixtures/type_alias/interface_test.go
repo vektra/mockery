@@ -17,7 +17,7 @@ func TestTypeAlias(t *testing.T) {
 	}{
 		{
 			name:          "With alias unresolved",
-			filepath:      "./mocks_test.go",
+			filepath:      "./mocks_type_alias_test.go",
 			expectedRegex: `func \(_mock \*MockInterface1\) Foo\(\) Type {`,
 		},
 	} {
