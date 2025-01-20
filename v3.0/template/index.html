@@ -982,7 +982,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 templates that you can select with the <code class="highlight"><span class="nt">template</span><span class="p">:</span></code> config parameter.</p>
 <h2 id="template-options">Template Options<a class="headerlink" href="#template-options" title="Permanent link">&para;</a></h2>
 <h3 id="template-testify"><code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;testify&quot;</span></code><a class="headerlink" href="#template-testify" title="Permanent link">&para;</a></h3>
-<p><a href="template-testify.md"><code>testify</code></a> templates generate powerful, testify-based mock objects. They allow you to create expectations using argument-to-return-value matching logic.</p>
+<p><a href="testify/"><code>testify</code></a> templates generate powerful, testify-based mock objects. They allow you to create expectations using argument-to-return-value matching logic.</p>
 <div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">package</span><span class="w"> </span><span class="nx">test</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
@@ -1000,7 +1000,7 @@ templates that you can select with the <code class="highlight"><span class="nt">
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="template-matryer"><code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;matryer&quot;</span></code><a class="headerlink" href="#template-matryer" title="Permanent link">&para;</a></h3>
-<p><a href="template-matryer.md"><code>matryer</code></a> templates draw from the mocks generated from the project at <a href="https://github.com/matryer/moq">https://github.com/matryer/moq</a>. This project was folded into mockery, and thus moq-style mocks can be natively generated from within mockery.</p>
+<p><a href="matryer/"><code>matryer</code></a> templates draw from the mocks generated from the project at <a href="https://github.com/matryer/moq">https://github.com/matryer/moq</a>. This project was folded into mockery, and thus moq-style mocks can be natively generated from within mockery.</p>
 <p>Mocks generated using this template allow you to define precise functions to be run. Example:</p>
 <div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">func</span><span class="w"> </span><span class="nx">TestRequesterMoq</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nx">m</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">MoqRequester</span><span class="p">{</span>

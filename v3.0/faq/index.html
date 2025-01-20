@@ -845,32 +845,6 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 </li>
       
         <li class="md-nav__item">
-  <a href="#multiple-expectations-with-identical-arguments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Multiple Expectations With Identical Arguments
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#variadic-arguments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Variadic Arguments
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#semantic-versioning" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1005,32 +979,6 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 </li>
       
         <li class="md-nav__item">
-  <a href="#multiple-expectations-with-identical-arguments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Multiple Expectations With Identical Arguments
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#variadic-arguments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Variadic Arguments
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#semantic-versioning" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1116,73 +1064,14 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <li>Reinstall mockery</li>
 </ol>
 <p>Additionally, this issue only happens when compiling mockery from source, such as with <code>go install</code>. Our docs <a href="../installation#go-install">recommend not to use <code>go install</code></a> as the success of your build depends on the compatibility of your Go version with the semantics in use. You would not encounter this issue if using one of the installation methods that install pre-built binaries, like downloading the <code>.tar.gz</code> binaries, or through <code>brew install</code>.</p>
-<h2 id="multiple-expectations-with-identical-arguments">Multiple Expectations With Identical Arguments<a class="headerlink" href="#multiple-expectations-with-identical-arguments" title="Permanent link">&para;</a></h2>
-<p>There might be instances where you want a mock to return different values on successive calls that provide the same arguments. For example, we might want to test this behavior:</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// Return &quot;foo&quot; on the first call</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nx">getter</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewGetter</span><span class="p">()</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nx">assert</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;foo&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">getter</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;key&quot;</span><span class="p">))</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1">// Return &quot;bar&quot; on the second call</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nx">assert</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">getter</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;key&quot;</span><span class="p">))</span>
-</code></pre></div>
-<p>This can be done by using the <code>.Once()</code> method on the mock call expectation:</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nx">mockGetter</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewMockGetter</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nx">mockGetter</span><span class="p">.</span><span class="nx">EXPECT</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="nx">mock</span><span class="p">.</span><span class="nx">anything</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">).</span><span class="nx">Once</span><span class="p">()</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nx">mockGetter</span><span class="p">.</span><span class="nx">EXPECT</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="nx">mock</span><span class="p">.</span><span class="nx">anything</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="s">&quot;bar&quot;</span><span class="p">).</span><span class="nx">Once</span><span class="p">()</span>
-</code></pre></div>
-<p>Or you can identify an arbitrary number of times each value should be returned:</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nx">mockGetter</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewMockGetter</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nx">mockGetter</span><span class="p">.</span><span class="nx">EXPECT</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="nx">mock</span><span class="p">.</span><span class="nx">anything</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">).</span><span class="nx">Times</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nx">mockGetter</span><span class="p">.</span><span class="nx">EXPECT</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="nx">mock</span><span class="p">.</span><span class="nx">anything</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="s">&quot;bar&quot;</span><span class="p">).</span><span class="nx">Times</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre></div>
-<p>Note that with proper Go support in your IDE, all the available methods are self-documented in autocompletion help contexts.</p>
-<h2 id="variadic-arguments">Variadic Arguments<a class="headerlink" href="#variadic-arguments" title="Permanent link">&para;</a></h2>
-<p>Consider if we have a function <code class="highlight"><span class="kd">func</span><span class="w"> </span><span class="nx">Bar</span><span class="p">(</span><span class="nx">message</span><span class="w"> </span><span class="o">...</span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">error</span></code>. A typical assertion might look like this:</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">func</span><span class="w"> </span><span class="nx">TestFoo</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nx">m</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewMockFoo</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nx">m</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;Bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;world&quot;</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
-</code></pre></div>
-<p>We might also want to make an assertion that says "any number of variadic arguments":</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nx">m</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;Bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">mock</span><span class="p">.</span><span class="nx">Anything</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
-</code></pre></div>
-<p>However, what we've given to mockery is ambiguous because it is impossible to distinguish between these two intentions:</p>
-<ol>
-<li>Any number of variadic arguments of any value</li>
-<li>A single variadic argument of any value</li>
-</ol>
-<p>This is fixed in <a href="https://github.com/vektra/mockery/pull/359">#359</a> where you can provide <code>unroll-variadic: False</code> to get back to the old behavior. Thus, if you want to assert (1), you can then do:</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nx">m</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;Bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">mock</span><span class="p">.</span><span class="nx">Anything</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
-</code></pre></div>
-<p>If you want to assert (2), you must set <code>unroll-variadic: True</code>. Then this assertion's intention will be modified to mean the second case:</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nx">m</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;Bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">mock</span><span class="p">.</span><span class="nx">Anything</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
-</code></pre></div>
-<p>An upstream patch to <code>testify</code> is currently underway to allow passing <code>mock.Anything</code> directly to the variadic slice: <a href="https://github.com/stretchr/testify/pull/1348">https://github.com/stretchr/testify/pull/1348</a></p>
-<p>If this is merged, it would become possible to describe the above two cases respectively:</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// case 1</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nx">m</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;Bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">mock</span><span class="p">.</span><span class="nx">Anything</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">// case 2</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nx">m</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;Bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">[]</span><span class="kd">interface</span><span class="p">{}{</span><span class="nx">mock</span><span class="p">.</span><span class="nx">Anything</span><span class="p">}).</span><span class="nx">Return</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
-</code></pre></div>
-<p>References:</p>
-<ul>
-<li><a href="https://github.com/vektra/mockery/pull/359">https://github.com/vektra/mockery/pull/359</a></li>
-<li><a href="https://github.com/vektra/mockery/pull/123">https://github.com/vektra/mockery/pull/123</a></li>
-<li><a href="https://github.com/vektra/mockery/pull/550">https://github.com/vektra/mockery/pull/550</a></li>
-<li><a href="https://github.com/vektra/mockery/issues/541">https://github.com/vektra/mockery/issues/541</a></li>
-</ul>
 <h2 id="semantic-versioning">Semantic Versioning<a class="headerlink" href="#semantic-versioning" title="Permanent link">&para;</a></h2>
-<p>The versioning in this project applies only to the behavior of the mockery binary itself. This project explicitly does not promise a stable internal API, but rather a stable executable. The versioning applies to the following:</p>
+<p>The mockery project follows the standard Semantic Versioning Semantics. The versioning applies to the following areas:</p>
 <ol>
-<li>CLI arguments.</li>
-<li>Parsing of Go code. New features in the Go language will be supported in a backwards-compatible manner, except during major version bumps.</li>
-<li>Behavior of mock objects. Mock objects can be considered to be part of the public API.</li>
-<li>Behavior of mockery given a set of arguments.</li>
+<li>The shape of mocks generated by pre-curated templates.</li>
+<li>Functions and data provided to templates specified with <code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;file://&quot;</span></code>.</li>
+<li>Configuration options.</li>
 </ol>
-<p>What the version does <em>not</em> track:</p>
-<ol>
-<li>The interfaces, objects, methods etc. in the vektra/mockery package.</li>
-<li>Compatibility of <code>go get</code>-ing mockery with new or old versions of Go.</li>
-</ol>
+<p>Mockery is not meant to be used as an imported library. Importing mockery code in external modules is not supported.</p>
 <h2 id="mocking-interfaces-in-main">Mocking interfaces in <code>main</code><a class="headerlink" href="#mocking-interfaces-in-main" title="Permanent link">&para;</a></h2>
 <p>When your interfaces are in the main package, you should supply the <code>--inpackage</code> flag.
 This will generate mocks in the same package as the target code, avoiding import issues.</p>

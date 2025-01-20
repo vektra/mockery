@@ -654,19 +654,6 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#replace-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Replace Types
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#mock-constructors" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -698,6 +685,51 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       
         <span class="md-typeset">
           Return Value Providers
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Notes
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variadic-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Variadic Arguments
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-expectations-with-identical-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Multiple Expectations With Identical Arguments
         </span>
       
     </span>
@@ -1025,19 +1057,6 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#replace-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Replace Types
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#mock-constructors" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1069,6 +1088,51 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       
         <span class="md-typeset">
           Return Value Providers
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Notes
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variadic-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Variadic Arguments
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-expectations-with-identical-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Multiple Expectations With Identical Arguments
         </span>
       
     </span>
@@ -1298,120 +1362,21 @@ section below shows what will be rendered for the given interface.</p>
 <tr>
 <td><code>unroll-variadic</code></td>
 <td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">bool</span></code></td>
-<td>If set to <code class="highlight"><span class="nt">unroll-variadic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span></code>, will expand the variadic argument to testify using the <code>...</code> syntax. See <a href="./notes.md#variadic-arguments">notes</a> for more details.</td>
+<td>If set to <code class="highlight"><span class="nt">unroll-variadic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span></code>, will expand the variadic argument to testify using the <code>...</code> syntax. See <a href="#variadic-arguments">notes</a> for more details.</td>
 </tr>
 </tbody>
 </table>
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
-<h3 id="replace-types">Replace Types<a class="headerlink" href="#replace-types" title="Permanent link">&para;</a></h3>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.5 1.5 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1m0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> v2.23.0</p>
-<p>The <code>replace-type</code> parameter allows adding a list of type replacements to be made in package and/or type names.
-This can help overcome issues like usage of type aliases that point to internal packages.</p>
-<p>The format of the parameter is:</p>
-<p><code>originalPackagePath.originalTypeName=newPackageName:newPackagePath.newTypeName</code></p>
-<p>For example:</p>
-<div class="highlight"><span class="filename">Bash</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>mockery<span class="w"> </span>--replace-type<span class="w"> </span>github.com/vektra/mockery/v3/baz/internal/foo.InternalBaz<span class="o">=</span>baz:github.com/vektra/mockery/v3/baz.Baz
-</code></pre></div>
-<p>This will replace any imported named <code>"github.com/vektra/mockery/v3/baz/internal/foo"</code>
-with <code>baz "github.com/vektra/mockery/v3/baz"</code>. The alias is defined with <code>:</code> before
-the package name. Also, the <code>InternalBaz</code> type that comes from this package will be renamed to <code>baz.Baz</code>.</p>
-<p>This next example fixes a common problem of type aliases that point to an internal package.</p>
-<p><code>cloud.google.com/go/pubsub.Message</code> is a type alias defined like this:</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span><span class="nx">ipubsub</span><span class="w"> </span><span class="s">&quot;cloud.google.com/go/internal/pubsub&quot;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="p">)</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="kd">type</span><span class="w"> </span><span class="nx">Message</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">ipubsub</span><span class="p">.</span><span class="nx">Message</span>
-</code></pre></div>
-<p>The Go parser that mockery uses doesn't provide a way to detect this alias and sends the application the package and
-type name of the type in the internal package, which will not work.</p>
-<p>We can use <code>replace-type</code> with only the package part to replace any import of <code>cloud.google.com/go/internal/pubsub</code> to
-<code>cloud.google.com/go/pubsub</code>. We don't need to change the alias or type name in this case, because they are <code>pubsub</code>
-and <code>Message</code> in both cases.</p>
-<div class="highlight"><span class="filename">Bash</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>mockery<span class="w"> </span>--replace-type<span class="w"> </span>cloud.google.com/go/internal/pubsub<span class="o">=</span>cloud.google.com/go/pubsub
-</code></pre></div>
-<p>Original source:</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span><span class="s">&quot;cloud.google.com/go/pubsub&quot;</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="p">)</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="kd">type</span><span class="w"> </span><span class="nx">Handler</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span><span class="nx">HandleMessage</span><span class="p">(</span><span class="nx">m</span><span class="w"> </span><span class="nx">pubsub</span><span class="p">.</span><span class="nx">Message</span><span class="p">)</span><span class="w"> </span><span class="kt">error</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="p">}</span>
-</code></pre></div>
-<p>Invalid mock generated without this parameter (points to an <code>internal</code> folder):</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">    </span><span class="nx">mock</span><span class="w"> </span><span class="s">&quot;github.com/stretchr/testify/mock&quot;</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span><span class="nx">pubsub</span><span class="w"> </span><span class="s">&quot;cloud.google.com/go/internal/pubsub&quot;</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="p">)</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">_m</span><span class="w"> </span><span class="o">*</span><span class="nx">Handler</span><span class="p">)</span><span class="w"> </span><span class="nx">HandleMessage</span><span class="p">(</span><span class="nx">m</span><span class="w"> </span><span class="nx">pubsub</span><span class="p">.</span><span class="nx">Message</span><span class="p">)</span><span class="w"> </span><span class="kt">error</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">    </span><span class="c1">// ...</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="p">}</span>
-</code></pre></div>
-<p>Correct mock generated with this parameter.</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span><span class="nx">mock</span><span class="w"> </span><span class="s">&quot;github.com/stretchr/testify/mock&quot;</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="nx">pubsub</span><span class="w"> </span><span class="s">&quot;cloud.google.com/go/pubsub&quot;</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="p">)</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">_m</span><span class="w"> </span><span class="o">*</span><span class="nx">Handler</span><span class="p">)</span><span class="w"> </span><span class="nx">HandleMessage</span><span class="p">(</span><span class="nx">m</span><span class="w"> </span><span class="nx">pubsub</span><span class="p">.</span><span class="nx">Message</span><span class="p">)</span><span class="w"> </span><span class="kt">error</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span><span class="c1">// ...</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="p">}</span>
-</code></pre></div>
-<p>Generic type constraints can also be replaced by targeting the changed parameter with the square bracket notation on the left-hand side.</p>
-<div class="highlight"><span class="filename">Bash</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>mockery<span class="w"> </span>--replace-type<span class="w"> </span>github.com/vektra/mockery/v3/baz/internal/foo.InternalBaz<span class="o">[</span>T<span class="o">]=</span>github.com/vektra/mockery/v3/baz.Baz
-</code></pre></div>
-<p>For example:</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kd">type</span><span class="w"> </span><span class="nx">InternalBaz</span><span class="p">[</span><span class="nx">T</span><span class="w"> </span><span class="kt">any</span><span class="p">]</span><span class="w"> </span><span class="kd">struct</span><span class="p">{}</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="nx">InternalBaz</span><span class="p">[</span><span class="nx">T</span><span class="p">])</span><span class="w"> </span><span class="nx">Foo</span><span class="p">()</span><span class="w"> </span><span class="nx">T</span><span class="w"> </span><span class="p">{}</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1">// Becomes</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="kd">type</span><span class="w"> </span><span class="nx">InternalBaz</span><span class="p">[</span><span class="nx">T</span><span class="w"> </span><span class="nx">baz</span><span class="p">.</span><span class="nx">Baz</span><span class="p">]</span><span class="w"> </span><span class="kd">struct</span><span class="p">{}</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="nx">InternalBaz</span><span class="p">[</span><span class="nx">T</span><span class="p">])</span><span class="w"> </span><span class="nx">Foo</span><span class="p">()</span><span class="w"> </span><span class="nx">T</span><span class="w"> </span><span class="p">{}</span>
-</code></pre></div>
-<p>If a type constraint needs to be removed and replaced with a type, target the constraint with square brackets and include a '-' in front to have it removed.</p>
-<div class="highlight"><span class="filename">Bash</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>mockery<span class="w"> </span>--replace-type<span class="w"> </span>github.com/vektra/mockery/v3/baz/internal/foo.InternalBaz<span class="o">[</span>-T<span class="o">]=</span>github.com/vektra/mockery/v3/baz.Baz
-</code></pre></div>
-<p>For example:</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kd">type</span><span class="w"> </span><span class="nx">InternalBaz</span><span class="p">[</span><span class="nx">T</span><span class="w"> </span><span class="kt">any</span><span class="p">]</span><span class="w"> </span><span class="kd">struct</span><span class="p">{}</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="nx">InternalBaz</span><span class="p">[</span><span class="nx">T</span><span class="p">])</span><span class="w"> </span><span class="nx">Foo</span><span class="p">()</span><span class="w"> </span><span class="nx">T</span><span class="w"> </span><span class="p">{}</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1">// Becomes</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="kd">type</span><span class="w"> </span><span class="nx">InternalBaz</span><span class="w"> </span><span class="kd">struct</span><span class="p">{}</span>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="nx">InternalBaz</span><span class="p">)</span><span class="w"> </span><span class="nx">Foo</span><span class="p">()</span><span class="w"> </span><span class="nx">baz</span><span class="p">.</span><span class="nx">Baz</span><span class="w"> </span><span class="p">{}</span>
-</code></pre></div>
-<p>When replacing a generic constraint, you can replace the type with a pointer by adding a '*' before the output type name.</p>
-<div class="highlight"><span class="filename">Bash</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>mockery<span class="w"> </span>--replace-type<span class="w"> </span>github.com/vektra/mockery/v3/baz/internal/foo.InternalBaz<span class="o">[</span>-T<span class="o">]=</span>github.com/vektra/mockery/v3/baz.*Baz
-</code></pre></div>
-<p>For example:</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kd">type</span><span class="w"> </span><span class="nx">InternalBaz</span><span class="p">[</span><span class="nx">T</span><span class="w"> </span><span class="kt">any</span><span class="p">]</span><span class="w"> </span><span class="kd">struct</span><span class="p">{}</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="nx">InternalBaz</span><span class="p">[</span><span class="nx">T</span><span class="p">])</span><span class="w"> </span><span class="nx">Foo</span><span class="p">()</span><span class="w"> </span><span class="nx">T</span><span class="w"> </span><span class="p">{}</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1">// Becomes</span>
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="kd">type</span><span class="w"> </span><span class="nx">InternalBaz</span><span class="w"> </span><span class="kd">struct</span><span class="p">{}</span>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="nx">InternalBaz</span><span class="p">)</span><span class="w"> </span><span class="nx">Foo</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">baz</span><span class="p">.</span><span class="nx">Baz</span><span class="w"> </span><span class="p">{}</span>
-</code></pre></div>
 <h3 id="mock-constructors">Mock Constructors<a class="headerlink" href="#mock-constructors" title="Permanent link">&para;</a></h3>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.5 1.5 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1m0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> v2.11.0</p>
 <p>All mock objects have constructor functions. These constructors do basic test setup so that the expectations you set in the code are asserted before the test exits.</p>
 <p>Previously something like this would need to be done:
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nx">factory</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">mocks</span><span class="p">.</span><span class="nx">Factory</span><span class="p">{}</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nx">factory</span><span class="p">.</span><span class="nx">Test</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span><span class="w"> </span><span class="c1">// so that mock does not panic when a method is unexpected</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="k">defer</span><span class="w"> </span><span class="nx">factory</span><span class="p">.</span><span class="nx">AssertExpectations</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nx">factory</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">mocks</span><span class="p">.</span><span class="nx">Factory</span><span class="p">{}</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nx">factory</span><span class="p">.</span><span class="nx">Test</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span><span class="w"> </span><span class="c1">// so that mock does not panic when a method is unexpected</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">defer</span><span class="w"> </span><span class="nx">factory</span><span class="p">.</span><span class="nx">AssertExpectations</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
 </code></pre></div></p>
 <p>Instead, you may simply use the constructor:
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nx">factory</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">mocks</span><span class="p">.</span><span class="nx">NewFactory</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nx">factory</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">mocks</span><span class="p">.</span><span class="nx">NewFactory</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
 </code></pre></div></p>
 <p>The constructor sets up common functionalities automatically</p>
 <ul>
@@ -1422,21 +1387,21 @@ and <code>Message</code> in both cases.</p>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.5 1.5 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1m0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> v2.10.0 · <code>with-expecter: True</code></p>
 <p>Mockery now supports an "expecter" struct, which allows your tests to use type-safe methods to generate call expectations. When enabled through the <code>with-expecter: True</code> mockery configuration, you can enter into the expecter interface by simply calling <code>.EXPECT()</code> on your mock object.</p>
 <p>For example, given an interface such as
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kd">type</span><span class="w"> </span><span class="nx">Requester</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">    </span><span class="nx">Get</span><span class="p">(</span><span class="nx">path</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="p">}</span>
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kd">type</span><span class="w"> </span><span class="nx">Requester</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">    </span><span class="nx">Get</span><span class="p">(</span><span class="nx">path</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="p">}</span>
 </code></pre></div></p>
 <p>You can use the expecter interface as such:
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nx">requesterMock</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">mocks</span><span class="p">.</span><span class="nx">NewRequester</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nx">requesterMock</span><span class="p">.</span><span class="nx">EXPECT</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;some path&quot;</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="s">&quot;result&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">)</span>
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nx">requesterMock</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">mocks</span><span class="p">.</span><span class="nx">NewRequester</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nx">requesterMock</span><span class="p">.</span><span class="nx">EXPECT</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;some path&quot;</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="s">&quot;result&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">)</span>
 </code></pre></div></p>
 <p>A <code>RunAndReturn</code> method is also available on the expecter struct that allows you to dynamically set a return value based on the input to the mock's call.</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nx">requesterMock</span><span class="p">.</span><span class="nx">EXPECT</span><span class="p">().</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">    </span><span class="nx">Get</span><span class="p">(</span><span class="nx">mock</span><span class="p">.</span><span class="nx">Anything</span><span class="p">).</span>
-<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">    </span><span class="nx">RunAndReturn</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">path</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">        </span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;was called&quot;</span><span class="p">)</span>
-<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;result for &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">path</span><span class="p">),</span><span class="w"> </span><span class="kc">nil</span>
-<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">    </span><span class="p">})</span>
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nx">requesterMock</span><span class="p">.</span><span class="nx">EXPECT</span><span class="p">().</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">    </span><span class="nx">Get</span><span class="p">(</span><span class="nx">mock</span><span class="p">.</span><span class="nx">Anything</span><span class="p">).</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="nx">RunAndReturn</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">path</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">        </span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;was called&quot;</span><span class="p">)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;result for &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">path</span><span class="p">),</span><span class="w"> </span><span class="kc">nil</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span><span class="p">})</span>
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -1445,31 +1410,86 @@ and <code>Message</code> in both cases.</p>
 <h3 id="return-value-providers">Return Value Providers<a class="headerlink" href="#return-value-providers" title="Permanent link">&para;</a></h3>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.5 1.5 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1m0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> v2.20.0</p>
 <p>Return Value Providers can be used one of two ways. You may either define a single function with the exact same signature (number and type of input and return parameters) and pass that as a single value to <code>Return</code>, or you may pass multiple values to <code>Return</code> (one for each return parameter of the mocked function.)  If you are using the second form, for each of the return values of the mocked function, <code>Return</code> needs a function which takes the same arguments as the mocked function, and returns one of the return values. For example, if the return argument signature of <code>passthrough</code> in the above example was instead <code>(string, error)</code> in the interface, <code>Return</code> would also need a second function argument to define the error value:</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="kd">type</span><span class="w"> </span><span class="nx">Proxy</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">    </span><span class="nx">passthrough</span><span class="p">(</span><span class="nx">ctx</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">s</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span>
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="p">}</span>
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kd">type</span><span class="w"> </span><span class="nx">Proxy</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span><span class="nx">passthrough</span><span class="p">(</span><span class="nx">ctx</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">s</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="p">}</span>
 </code></pre></div>
 <p>First form:</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="nx">proxyMock</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">mocks</span><span class="p">.</span><span class="nx">NewProxy</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="nx">proxyMock</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;passthrough&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">mock</span><span class="p">.</span><span class="nx">AnythingOfType</span><span class="p">(</span><span class="s">&quot;context.Context&quot;</span><span class="p">),</span><span class="w"> </span><span class="nx">mock</span><span class="p">.</span><span class="nx">AnythingOfType</span><span class="p">(</span><span class="s">&quot;string&quot;</span><span class="p">)).</span>
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="nx">Return</span><span class="p">(</span>
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="w">    </span><span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">s</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">s</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
-<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="p">)</span>
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nx">proxyMock</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">mocks</span><span class="p">.</span><span class="nx">NewProxy</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nx">proxyMock</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;passthrough&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">mock</span><span class="p">.</span><span class="nx">AnythingOfType</span><span class="p">(</span><span class="s">&quot;context.Context&quot;</span><span class="p">),</span><span class="w"> </span><span class="nx">mock</span><span class="p">.</span><span class="nx">AnythingOfType</span><span class="p">(</span><span class="s">&quot;string&quot;</span><span class="p">)).</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nx">Return</span><span class="p">(</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span><span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">s</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">s</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="p">)</span>
 </code></pre></div>
 <p>Second form:</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="nx">proxyMock</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">mocks</span><span class="p">.</span><span class="nx">NewProxy</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="nx">proxyMock</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;passthrough&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">mock</span><span class="p">.</span><span class="nx">AnythingOfType</span><span class="p">(</span><span class="s">&quot;context.Context&quot;</span><span class="p">),</span><span class="w"> </span><span class="nx">mock</span><span class="p">.</span><span class="nx">AnythingOfType</span><span class="p">(</span><span class="s">&quot;string&quot;</span><span class="p">)).</span>
-<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="nx">Return</span><span class="p">(</span>
-<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="w">    </span><span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">s</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">s</span>
-<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="w">    </span><span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">s</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">error</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span>
-<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="p">)</span>
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nx">proxyMock</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">mocks</span><span class="p">.</span><span class="nx">NewProxy</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nx">proxyMock</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;passthrough&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">mock</span><span class="p">.</span><span class="nx">AnythingOfType</span><span class="p">(</span><span class="s">&quot;context.Context&quot;</span><span class="p">),</span><span class="w"> </span><span class="nx">mock</span><span class="p">.</span><span class="nx">AnythingOfType</span><span class="p">(</span><span class="s">&quot;string&quot;</span><span class="p">)).</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="nx">Return</span><span class="p">(</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span><span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">s</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">s</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span><span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">s</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">error</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="p">)</span>
 </code></pre></div>
+<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
+<h3 id="variadic-arguments">Variadic Arguments<a class="headerlink" href="#variadic-arguments" title="Permanent link">&para;</a></h3>
+<p>Consider if we have a function <code class="highlight"><span class="kd">func</span><span class="w"> </span><span class="nx">Bar</span><span class="p">(</span><span class="nx">message</span><span class="w"> </span><span class="o">...</span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">error</span></code>. A typical assertion might look like this:</p>
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kd">func</span><span class="w"> </span><span class="nx">TestFoo</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nx">m</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewMockFoo</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="nx">m</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;Bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;world&quot;</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
+</code></pre></div>
+<p>We might also want to make an assertion that says "any number of variadic arguments":</p>
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nx">m</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;Bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">mock</span><span class="p">.</span><span class="nx">Anything</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
+</code></pre></div>
+<p>However, what we've given to mockery is ambiguous because it is impossible to distinguish between these two intentions:</p>
+<ol>
+<li>Any number of variadic arguments of any value</li>
+<li>A single variadic argument of any value</li>
+</ol>
+<p>This is fixed in <a href="https://github.com/vektra/mockery/pull/359">#359</a> where you can provide <code>unroll-variadic: False</code> to get back to the old behavior. Thus, if you want to assert (1), you can then do:</p>
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nx">m</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;Bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">mock</span><span class="p">.</span><span class="nx">Anything</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
+</code></pre></div>
+<p>If you want to assert (2), you must set <code>unroll-variadic: True</code>. Then this assertion's intention will be modified to mean the second case:</p>
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nx">m</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;Bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">mock</span><span class="p">.</span><span class="nx">Anything</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
+</code></pre></div>
+<p>An upstream patch to <code>testify</code> is currently underway to allow passing <code>mock.Anything</code> directly to the variadic slice: <a href="https://github.com/stretchr/testify/pull/1348">https://github.com/stretchr/testify/pull/1348</a></p>
+<p>If this is merged, it would become possible to describe the above two cases respectively:</p>
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1">// case 1</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nx">m</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;Bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">mock</span><span class="p">.</span><span class="nx">Anything</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="c1">// case 2</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="nx">m</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;Bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">[]</span><span class="kd">interface</span><span class="p">{}{</span><span class="nx">mock</span><span class="p">.</span><span class="nx">Anything</span><span class="p">}).</span><span class="nx">Return</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
+</code></pre></div>
+<p>References:</p>
+<ul>
+<li><a href="https://github.com/vektra/mockery/pull/359">https://github.com/vektra/mockery/pull/359</a></li>
+<li><a href="https://github.com/vektra/mockery/pull/123">https://github.com/vektra/mockery/pull/123</a></li>
+<li><a href="https://github.com/vektra/mockery/pull/550">https://github.com/vektra/mockery/pull/550</a></li>
+<li><a href="https://github.com/vektra/mockery/issues/541">https://github.com/vektra/mockery/issues/541</a></li>
+</ul>
+<h3 id="multiple-expectations-with-identical-arguments">Multiple Expectations With Identical Arguments<a class="headerlink" href="#multiple-expectations-with-identical-arguments" title="Permanent link">&para;</a></h3>
+<p>There might be instances where you want a mock to return different values on successive calls that provide the same arguments. For example, we might want to test this behavior:</p>
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1">// Return &quot;foo&quot; on the first call</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nx">getter</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewGetter</span><span class="p">()</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="nx">assert</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;foo&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">getter</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;key&quot;</span><span class="p">))</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="c1">// Return &quot;bar&quot; on the second call</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="nx">assert</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">getter</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;key&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>This can be done by using the <code>.Once()</code> method on the mock call expectation:</p>
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nx">mockGetter</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewMockGetter</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nx">mockGetter</span><span class="p">.</span><span class="nx">EXPECT</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="nx">mock</span><span class="p">.</span><span class="nx">anything</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">).</span><span class="nx">Once</span><span class="p">()</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="nx">mockGetter</span><span class="p">.</span><span class="nx">EXPECT</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="nx">mock</span><span class="p">.</span><span class="nx">anything</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="s">&quot;bar&quot;</span><span class="p">).</span><span class="nx">Once</span><span class="p">()</span>
+</code></pre></div>
+<p>Or you can identify an arbitrary number of times each value should be returned:</p>
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nx">mockGetter</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewMockGetter</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nx">mockGetter</span><span class="p">.</span><span class="nx">EXPECT</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="nx">mock</span><span class="p">.</span><span class="nx">anything</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">).</span><span class="nx">Times</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="nx">mockGetter</span><span class="p">.</span><span class="nx">EXPECT</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="nx">mock</span><span class="p">.</span><span class="nx">anything</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="s">&quot;bar&quot;</span><span class="p">).</span><span class="nx">Times</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div>
+<p>Note that with proper Go support in your IDE, all the available methods are self-documented in autocompletion help contexts.</p>
 
 
 

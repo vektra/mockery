@@ -1152,7 +1152,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <ol>
 <li>The parameters are merged hierarchically</li>
 <li>There are a number of template variables available to generalize config values.</li>
-<li>The style of mock to be generated is specified using the <a href="templates/index.md"><code>template</code></a> parameter.</li>
+<li>The style of mock to be generated is specified using the <a href="../template/"><code>template</code></a> parameter.</li>
 </ol>
 <p>An output file may contain multiple mocks, but the only rule is that all the mocks in the file must come from the same package. Because of this, mocks for different packages must go in different files.</p>
 <h2 id="parameter-descriptions">Parameter Descriptions<a class="headerlink" href="#parameter-descriptions" title="Permanent link">&para;</a></h2>
@@ -1245,7 +1245,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <td>Use <code>outpkg</code> to specify the package name of the generated mocks.</td>
 </tr>
 <tr>
-<td><a href="features.md#packages-configuration"><code>packages</code></a></td>
+<td><code>packages</code></td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
 <td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">null</span></code></td>
 <td>A dictionary containing configuration describing the packages and interfaces to generate mocks for.</td>
@@ -1257,7 +1257,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <td></td>
 </tr>
 <tr>
-<td><a href="features.md#recursive-package-discovery"><code>recursive</code></a></td>
+<td><code>recursive</code></td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
 <td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">false</span></code></td>
 <td>When set to <code>true</code> on a particular package, mockery will recursively search for all sub-packages and inject those packages into the config map.</td>
