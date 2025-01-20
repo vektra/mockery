@@ -8,7 +8,7 @@ templates that you can select with the `#!yaml template:` config parameter.
 
 ### `#!yaml template: "testify"`
 
-[`testify`](template-testify.md) templates generate powerful, testify-based mock objects. They allow you to create expectations using argument-to-return-value matching logic.
+[`testify`](testify.md) templates generate powerful, testify-based mock objects. They allow you to create expectations using argument-to-return-value matching logic.
 
 ```go
 package test
@@ -30,7 +30,7 @@ func TestRequesterMock(t *testing.T) {
 
 ### `#!yaml template: "matryer"`
 
-[`matryer`](template-matryer.md) templates draw from the mocks generated from the project at https://github.com/matryer/moq. This project was folded into mockery, and thus moq-style mocks can be natively generated from within mockery.
+[`matryer`](matryer.md) templates draw from the mocks generated from the project at https://github.com/matryer/moq. This project was folded into mockery, and thus moq-style mocks can be natively generated from within mockery.
 
 Mocks generated using this template allow you to define precise functions to be run. Example:
 

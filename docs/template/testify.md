@@ -184,155 +184,10 @@ This style of mock also has other interesting methods:
 |-----|------|-------------|
 | `boilerplate-file`  | `#!yaml string` | Specify a path to a file that contains comments you want displayed at the top of all generated mock files. This is commonly used to display license headers at the top of your source code. |
 | `mock-build-tags` | `#!yaml ""` | Set the build tags of the generated mocks. Read more about the [format](https://pkg.go.dev/cmd/go#hdr-Build_constraints). |
-| `unroll-variadic` | `#!yaml bool` | If set to `#!yaml unroll-variadic: true`, will expand the variadic argument to testify using the `...` syntax. See [notes](./notes.md#variadic-arguments) for more details. |
+| `unroll-variadic` | `#!yaml bool` | If set to `#!yaml unroll-variadic: true`, will expand the variadic argument to testify using the `...` syntax. See [notes](#variadic-arguments) for more details. |
 
 
 ## Features
-
-### Replace Types
-
-:octicons-tag-24: v2.23.0
-
-The `replace-type` parameter allows adding a list of type replacements to be made in package and/or type names.
-This can help overcome issues like usage of type aliases that point to internal packages.
-
-The format of the parameter is:
-
-
-`originalPackagePath.originalTypeName=newPackageName:newPackagePath.newTypeName`
-
-
-For example:
-
-```shell
-mockery --replace-type github.com/vektra/mockery/v3/baz/internal/foo.InternalBaz=baz:github.com/vektra/mockery/v3/baz.Baz
-```
-
-This will replace any imported named `"github.com/vektra/mockery/v3/baz/internal/foo"`
-with `baz "github.com/vektra/mockery/v3/baz"`. The alias is defined with `:` before
-the package name. Also, the `InternalBaz` type that comes from this package will be renamed to `baz.Baz`.
-
-This next example fixes a common problem of type aliases that point to an internal package.
-
-`cloud.google.com/go/pubsub.Message` is a type alias defined like this:
-
-```go
-import (
-    ipubsub "cloud.google.com/go/internal/pubsub"
-)
-
-type Message = ipubsub.Message
-```
-
-The Go parser that mockery uses doesn't provide a way to detect this alias and sends the application the package and
-type name of the type in the internal package, which will not work.
-
-We can use `replace-type` with only the package part to replace any import of `cloud.google.com/go/internal/pubsub` to
-`cloud.google.com/go/pubsub`. We don't need to change the alias or type name in this case, because they are `pubsub`
-and `Message` in both cases.
-
-```shell
-mockery --replace-type cloud.google.com/go/internal/pubsub=cloud.google.com/go/pubsub
-```
-
-Original source:
-
-```go
-import (
-    "cloud.google.com/go/pubsub"
-)
-
-type Handler struct {
-    HandleMessage(m pubsub.Message) error
-}
-```
-
-Invalid mock generated without this parameter (points to an `internal` folder):
-
-```go
-import (
-    mock "github.com/stretchr/testify/mock"
-
-    pubsub "cloud.google.com/go/internal/pubsub"
-)
-
-func (_m *Handler) HandleMessage(m pubsub.Message) error {
-    // ...
-    return nil
-}
-```
-
-Correct mock generated with this parameter.
-
-```go
-import (
-    mock "github.com/stretchr/testify/mock"
-
-    pubsub "cloud.google.com/go/pubsub"
-)
-
-func (_m *Handler) HandleMessage(m pubsub.Message) error {
-    // ...
-    return nil
-}
-```
-
-Generic type constraints can also be replaced by targeting the changed parameter with the square bracket notation on the left-hand side.
-
-```shell
-mockery --replace-type github.com/vektra/mockery/v3/baz/internal/foo.InternalBaz[T]=github.com/vektra/mockery/v3/baz.Baz
-```
-
-For example:
-
-```go
-type InternalBaz[T any] struct{}
-
-func (*InternalBaz[T]) Foo() T {}
-
-// Becomes
-type InternalBaz[T baz.Baz] struct{}
-
-func (*InternalBaz[T]) Foo() T {}
-```
-
-If a type constraint needs to be removed and replaced with a type, target the constraint with square brackets and include a '-' in front to have it removed.
-
-```shell
-mockery --replace-type github.com/vektra/mockery/v3/baz/internal/foo.InternalBaz[-T]=github.com/vektra/mockery/v3/baz.Baz
-```
-
-For example:
-
-```go
-type InternalBaz[T any] struct{}
-
-func (*InternalBaz[T]) Foo() T {}
-
-// Becomes
-type InternalBaz struct{}
-
-func (*InternalBaz) Foo() baz.Baz {}
-```
-
-When replacing a generic constraint, you can replace the type with a pointer by adding a '*' before the output type name.
-
-```shell
-mockery --replace-type github.com/vektra/mockery/v3/baz/internal/foo.InternalBaz[-T]=github.com/vektra/mockery/v3/baz.*Baz
-```
-
-For example:
-
-```go
-type InternalBaz[T any] struct{}
-
-func (*InternalBaz[T]) Foo() T {}
-
-// Becomes
-type InternalBaz struct{}
-
-func (*InternalBaz) Foo() *baz.Baz {}
-```
 
 ### Mock Constructors
 
@@ -432,3 +287,87 @@ Return(
     },
 )
 ```
+
+## Notes
+
+### Variadic Arguments
+
+Consider if we have a function `#!go func Bar(message ...string) error`. A typical assertion might look like this:
+
+```go
+func TestFoo(t *testing.T) {
+  m := NewMockFoo(t)
+  m.On("Bar", "hello", "world").Return(nil)
+```
+
+We might also want to make an assertion that says "any number of variadic arguments":
+
+```go
+m.On("Bar", mock.Anything).Return(nil)
+```
+
+However, what we've given to mockery is ambiguous because it is impossible to distinguish between these two intentions:
+
+1. Any number of variadic arguments of any value
+2. A single variadic argument of any value
+
+This is fixed in [#359](https://github.com/vektra/mockery/pull/359) where you can provide `unroll-variadic: False` to get back to the old behavior. Thus, if you want to assert (1), you can then do:
+
+```go
+m.On("Bar", mock.Anything).Return(nil)
+```
+
+If you want to assert (2), you must set `unroll-variadic: True`. Then this assertion's intention will be modified to mean the second case:
+
+```go
+m.On("Bar", mock.Anything).Return(nil)
+```
+
+An upstream patch to `testify` is currently underway to allow passing `mock.Anything` directly to the variadic slice: [https://github.com/stretchr/testify/pull/1348](https://github.com/stretchr/testify/pull/1348)
+
+If this is merged, it would become possible to describe the above two cases respectively:
+
+```go
+// case 1
+m.On("Bar", mock.Anything).Return(nil)
+// case 2
+m.On("Bar", []interface{}{mock.Anything}).Return(nil)
+```
+
+References:
+
+- [https://github.com/vektra/mockery/pull/359](https://github.com/vektra/mockery/pull/359)
+- [https://github.com/vektra/mockery/pull/123](https://github.com/vektra/mockery/pull/123)
+- [https://github.com/vektra/mockery/pull/550](https://github.com/vektra/mockery/pull/550)
+- [https://github.com/vektra/mockery/issues/541](https://github.com/vektra/mockery/issues/541)
+
+### Multiple Expectations With Identical Arguments
+
+There might be instances where you want a mock to return different values on successive calls that provide the same arguments. For example, we might want to test this behavior:
+
+```go
+// Return "foo" on the first call
+getter := NewGetter()
+assert(t, "foo", getter.Get("key"))
+
+// Return "bar" on the second call
+assert(t, "bar", getter.Get("key"))
+```
+
+This can be done by using the `.Once()` method on the mock call expectation:
+
+```go
+mockGetter := NewMockGetter(t)
+mockGetter.EXPECT().Get(mock.anything).Return("foo").Once()
+mockGetter.EXPECT().Get(mock.anything).Return("bar").Once()
+```
+
+Or you can identify an arbitrary number of times each value should be returned:
+
+```go
+mockGetter := NewMockGetter(t)
+mockGetter.EXPECT().Get(mock.anything).Return("foo").Times(4)
+mockGetter.EXPECT().Get(mock.anything).Return("bar").Times(2)
+```
+
+Note that with proper Go support in your IDE, all the available methods are self-documented in autocompletion help contexts.
