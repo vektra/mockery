@@ -474,12 +474,14 @@ type Config struct {
 	ExcludeSubpkgRegex []string       `koanf:"exclude-subpkg-regex"`
 	ExcludeRegex       *string        `koanf:"exclude-regex"`
 	FileName           *string        `koanf:"filename"`
-	Formatter          *string        `koanf:"formatter"`
-	IncludeRegex       *string        `koanf:"include-regex"`
-	LogLevel           *string        `koanf:"log-level"`
-	MockName           *string        `koanf:"mockname"`
-	PkgName            *string        `koanf:"pkgname"`
-	Recursive          *bool          `koanf:"recursive"`
+	// ForceFileWrite controls whether mockery will overwrite existing files when generating mocks. This is by default set to false.
+	ForceFileWrite bool    `koanf:"force-file-write"`
+	Formatter      *string `koanf:"formatter"`
+	IncludeRegex   *string `koanf:"include-regex"`
+	LogLevel       *string `koanf:"log-level"`
+	MockName       *string `koanf:"mockname"`
+	PkgName        *string `koanf:"pkgname"`
+	Recursive      *bool   `koanf:"recursive"`
 	// ReplaceType is a nested map of format map["package path"]["type name"]*ReplaceType
 	ReplaceType    map[string]map[string]*ReplaceType `koanf:"replace-type"`
 	Template       *string                            `koanf:"template"`

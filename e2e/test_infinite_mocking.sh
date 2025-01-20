@@ -4,6 +4,7 @@
 
 # New mocks may legimitately be created, so we run mockery once first
 num_files_before=$(find . -type f | wc -l)
+export MOCKERY_FORCE_FILE_WRITE="true"
 go run github.com/go-task/task/v3/cmd/task mocks.generate
 num_files_after=$(find . -type f | wc -l)
 

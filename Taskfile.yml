@@ -85,9 +85,9 @@ tasks:
   test.ci:
     deps: [lint]
     cmds:
-      - task: mocks.remove
-      - task: mocks.generate
+      - task: mocks
       - task: test
+      - task: mocks.remove
       - task: test.e2e
 
   default:
