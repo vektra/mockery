@@ -18,9 +18,7 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
-var (
-	ErrCfgFileNotFound = errors.New("config file not found")
-)
+var ErrCfgFileNotFound = errors.New("config file not found")
 
 func NewRootCmd() (*cobra.Command, error) {
 	var pFlags *pflag.FlagSet
@@ -82,7 +80,7 @@ func Execute() {
 	if err != nil {
 		os.Exit(1)
 	}
-	if cmd.Execute(); err != nil {
+	if err := cmd.Execute(); err != nil {
 		os.Exit(1)
 	}
 }

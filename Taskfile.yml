@@ -12,7 +12,7 @@ tasks:
     sources:
       - "**/*.go"
     cmds:
-      - go fmt ./...
+      - gofumpt -l -w .
 
   mocks:
     desc: generate new mocks from scratch

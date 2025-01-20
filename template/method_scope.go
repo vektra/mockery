@@ -164,6 +164,7 @@ func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, prefix string, 
 			moqPkgPath: m.moqPkgPath,
 		}
 	} else {
+		//nolint:contextcheck
 		imports = m.populateImports(context.Background(), vr.Type())
 		v = Var{
 			vr:         vr,

@@ -82,12 +82,19 @@ func NewRootConfig(
 	}
 	k := koanf.New("|")
 	rootConfig.koanf = k
-	k.Set("dir", "{{.InterfaceDir}}")
-	k.Set("filename", "mocks_test.go")
-	k.Set("formatter", "goimports")
-	k.Set("mockname", "Mock{{.InterfaceName}}")
-	k.Set("pkgname", "{{.SrcPackageName}}")
-	k.Set("log-level", "info")
+	for key, val := range map[string]string{
+		"dir":       "{{.InterfaceDir}}",
+		"filename":  "mocks_test.go",
+		"formatter": "goimports",
+		"mockname":  "Mock{{.InterfaceName}}",
+		"pkgname":   "{{.SrcPackageName}}",
+		"log-level": "info",
+	} {
+		if err := k.Set(key, val); err != nil {
+			log.Err(err).Msg("failed to set default value")
+			return nil, nil, stackerr.NewStackErr(err)
+		}
+	}
 
 	configFileFromEnv := os.Getenv("MOCKERY_CONFIG")
 	if configFileFromEnv != "" {
@@ -111,7 +118,7 @@ func NewRootConfig(
 		log.Debug().Str("config-file", configFile.String()).Msg("config file found")
 	}
 	rootConfig.configFile = configFile
-	k.Load(
+	if err := k.Load(
 		env.Provider(
 			"MOCKERY_",
 			".",
@@ -119,7 +126,10 @@ func NewRootConfig(
 				return strings.Replace(strings.ToLower(strings.TrimPrefix(s, "MOCKERY_")), "_", "-", -1)
 			}),
 		nil,
-	)
+	); err != nil {
+		log.Err(err).Msg("failed to load environment provider")
+		return nil, nil, stackerr.NewStackErr(err)
+	}
 
 	if err := k.Load(file.Provider(configFile.String()), koanfYAML.Parser()); err != nil {
 		return nil, k, fmt.Errorf("loading config file: %w", err)

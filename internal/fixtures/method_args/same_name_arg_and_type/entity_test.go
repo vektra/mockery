@@ -37,7 +37,6 @@ func Test(t *testing.T) {
 		}
 		res := s.ExecDoB()
 		assert.Equal(t, mockInterfaceB, res)
-
 	})
 	t.Run("ExecDoB0", func(t *testing.T) {
 		mockInterfaceB0 := NewMockinterfaceB0(t)
@@ -49,7 +48,6 @@ func Test(t *testing.T) {
 		}
 		res := s.ExecDoB0()
 		assert.Equal(t, mockInterfaceB0, res)
-
 	})
 	t.Run("ExecDoB0v2", func(t *testing.T) {
 		mockInterfaceB0 := NewMockinterfaceB0(t)
@@ -61,6 +59,5 @@ func Test(t *testing.T) {
 		}
 		res := s.ExecDoB0v2()
 		assert.Equal(t, mockInterfaceB0, res)
-
 	})
 }

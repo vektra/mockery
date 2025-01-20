@@ -30,7 +30,10 @@ func NewShowConfigCmd() *cobra.Command {
 			}
 
 			k := koanf.New("|")
-			k.Load(structs.Provider(conf, "koanf"), nil)
+			if err := k.Load(structs.Provider(conf, "koanf"), nil); err != nil {
+				log.Err(err).Msg("failed to load config")
+				return err
+			}
 			b, _ := k.Marshal(koanfYAML.Parser())
 			fmt.Println(string(b))
 

@@ -24,9 +24,9 @@ import (
 type Formatter string
 
 const (
-	FORMAT_GOFMT      Formatter = "gofmt"
-	FORMAT_GOIMPORRTS Formatter = "goimports"
-	FORMAT_NOOP       Formatter = "noop"
+	FormatGofmt     Formatter = "gofmt"
+	FormatGoImports Formatter = "goimports"
+	FormatNoop      Formatter = "noop"
 )
 
 var (
@@ -166,11 +166,11 @@ func NewTemplateGenerator(
 
 func (g *TemplateGenerator) format(src []byte) ([]byte, error) {
 	switch g.formatter {
-	case FORMAT_GOIMPORRTS:
+	case FormatGoImports:
 		return goimports(src)
-	case FORMAT_GOFMT:
+	case FormatGofmt:
 		return gofmt(src)
-	case FORMAT_NOOP:
+	case FormatNoop:
 		return src, nil
 	}
 
