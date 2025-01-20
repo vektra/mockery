@@ -27,7 +27,7 @@ jobs:
           go-version: ${{ matrix.go_vers }}
 
       - name: Download dependencies
-        run: go mod download
+        run: go mod download -x
 
       - name: Test
         run: go run github.com/go-task/task/v3/cmd/task test.ci
