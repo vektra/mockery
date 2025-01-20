@@ -36,6 +36,28 @@ type Interface struct {
 	Config   *Config
 }
 
+// ConfigData is the data sent to the template for the config file.
+type ConfigData struct {
+	// ConfigDir is the directory of where the mockery config file is located.
+	ConfigDir string
+	// InterfaceDir is the directory of the interface being mocked.
+	InterfaceDir string
+	// InterfaceDirRelative is the same as InterfaceDir, but made relative to the ConfigDir.
+	InterfaceDirRelative string
+	// InterfaceFile is the filename of where the interface is defined.
+	InterfaceFile string
+	// InterfaceName is the name of the interface (duh).
+	InterfaceName string
+	// Mock is a parameter that takes the value of "Mock" if the interface is exported, and "mock" otherwise.
+	Mock string
+	// MockName is the configured name of the mock.
+	MockName string
+	// SrcPackageName is the name of the source package as defined by the `package [name]` in the source package.
+	SrcPackageName string
+	// SrcPackagePath is the fully qualified package path of the source package. e.g. "github.com/vektra/mockery/v3".
+	SrcPackagePath string
+}
+
 func NewInterface(name string, filename string, file *ast.File, pkg *packages.Package, config *Config) *Interface {
 	return &Interface{
 		Name:     name,

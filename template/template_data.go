@@ -6,19 +6,6 @@ import (
 	"strings"
 )
 
-// ConfigData is the data sent to the template for the config file.
-type ConfigData struct {
-	ConfigDir            string
-	InterfaceDir         string
-	InterfaceDirRelative string
-	InterfaceFile        string
-	InterfaceName        string
-	Mock                 string
-	MockName             string
-	SrcPackageName       string
-	SrcPackagePath       string
-}
-
 // Data is the template data used to render the mock template.
 type Data struct {
 	PkgName         string
