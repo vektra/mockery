@@ -1,7 +1,7 @@
 name: documentation
 on:
   push:
-    branches: [ v3 ]
+    branches: [ master, v3 ]
 permissions:
   contents: write
 jobs:

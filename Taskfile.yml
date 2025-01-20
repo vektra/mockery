@@ -12,7 +12,7 @@ tasks:
     sources:
       - "**/*.go"
     cmds:
-      - go fmt ./...
+      - gofumpt -l -w .
 
   mocks:
     desc: generate new mocks from scratch
@@ -83,11 +83,11 @@ tasks:
       - ./e2e/run_all.sh
 
   test.ci:
-    deps: [fmt, lint]
+    deps: [lint]
     cmds:
-      - task: mocks.remove
-      - task: mocks.generate
+      - task: mocks
       - task: test
+      - task: mocks.remove
       - task: test.e2e
 
   default:

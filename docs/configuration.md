@@ -57,6 +57,7 @@ Parameter Descriptions
 | `exclude-subpkg-regex`                                 | :fontawesome-solid-x:     | `#!yaml []`                           | A list of regular expressions that denote which subpackages should be excluded when `#!yaml recursive: true` |
 | `exclude-regex`                                        | :fontawesome-solid-x:     | `#!yaml ""`                           | When set along with `include-regex`, then interfaces which match `include-regex` but also match `exclude-regex` will not be generated. If `all` is set, or if `include-regex` is not set, then `exclude-regex` has no effect.                        |
 | `filename`                                             | :fontawesome-solid-check: | `#!yaml "mock_{{.InterfaceName}}.go"` | The name of the file the mock will reside in.                                                                                                                                                                                                        |
+| `force-file-write`                                     | :fontawesome-solid-x:     | `#!yaml false`                        | When set to `#!yaml force-file-write: true`, mockery will forcibly overwrite any existing files. |
 | `formatter`                                            | :fontawesome-solid-x:     | `#!yaml "goimports"`                  | The formatter to use on the rendered template. Choices are: `gofmt`, `goimports`, `noop`.                                                                                                                                                            |
 | `include-regex`                                        | :fontawesome-solid-x:     | `#!yaml ""`                           | When set, only interface names that match the expression will be generated. This setting is ignored if `all: True` is specified in the configuration. To further refine the interfaces generated, use `exclude-regex`.                               |
 | `log-level`                                            | :fontawesome-solid-x:     | `#!yaml "info"`                       | Set the level of the logger                                                                                                                                                                                                                          |
@@ -65,10 +66,24 @@ Parameter Descriptions
 | [`packages`](features.md#packages-configuration)       | :fontawesome-solid-x:     | `#!yaml null`                         | A dictionary containing configuration describing the packages and interfaces to generate mocks for.                                                                                                                                                  |
 | `pkgname`                                              | :fontawesome-solid-check: | `#!yaml "{{.SrcPackageName}}"         | The `#!go package name` given to the generated mock files.                                                                                                                                                                                           |
 | [`recursive`](features.md#recursive-package-discovery) | :fontawesome-solid-x:     | `#!yaml false`                        | When set to `true` on a particular package, mockery will recursively search for all sub-packages and inject those packages into the config map.                                                                                                      |
+| [`replace-type`](replace-type.md)                      | :fontawesome-solid-x:     | `#!yaml {}`                           | Use this parameter to specify type replacements.                                 |
 | `tags`                                                 | :fontawesome-solid-x:     | `#!yaml ""`                           | A space-separated list of additional build tags to load packages.                                                                                                                                                                                    |
 | `template`                                             | :fontawesome-solid-x:     | `#!yaml ""`                           | The template to use. The choices are `moq`, `mockery`, or a file path provided by `file://path/to/file.txt`.                                                                                                                                         |
 | `template-data`                                        | :fontawesome-solid-x:     | `#!yaml {}`                           | A `map[string]any` that provides arbitrary options to the template. Each template will have a different set of accepted keys. Refer to each template's documentation for more details.                                                               |
 
+
+Config Templates
+----------------
+
+Parameters marked as being templated have access to a number of template variables and functions.
+
+### Variables
+
+The variables provided are specified in the [`ConfigData`](https://pkg.go.dev/github.com/vektra/mockery/v3/template#ConfigData) struct.
+
+### Functions
+
+All of the functions defined in [`StringManipulationFuncs`](https://pkg.go.dev/github.com/vektra/mockery/v3/template#pkg-variables) are available to templated parameters.
 
 Merging Precedence
 ------------------

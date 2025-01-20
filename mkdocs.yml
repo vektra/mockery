@@ -65,6 +65,8 @@ nav:
   - Templates:
     - template-mockery.md
     - template-moq.md
+  - Features:
+    - replace-type.md
   - Notes:
     - FAQ: faq.md
     - v3: v3.md

@@ -6,6 +6,8 @@ import (
 	"go/types"
 
 	"github.com/rs/zerolog"
+	"github.com/vektra/mockery/v3/internal/stackerr"
+	"golang.org/x/tools/go/packages"
 )
 
 // MethodScope is the sub-registry for allocating variables present in
@@ -73,25 +75,108 @@ func (m *MethodScope) AllocateName(prefix string) string {
 	return suggestion
 }
 
+// fakePackage is used during type replacements (the replace-type parameter).
+// We don't want to call `packages.Load` in order to obtain a real `*packages.Package`
+// object, so we instead can create a mock implementation and provide the necessary
+// values (obtained from `replace-type`).
+type fakePackage struct {
+	name string
+	path string
+}
+
+func (f fakePackage) Name() string {
+	return f.name
+}
+
+func (f fakePackage) Path() string {
+	return f.path
+}
+
+var _ TypesPackage = fakePackage{}
+
 // AddVar allocates a variable instance and adds it to the method scope.
 //
 // Variables names are generated if required and are ensured to be
 // without conflict with other variables and imported packages. It also
 // adds the relevant imports to the registry for each added variable.
-func (m *MethodScope) AddVar(vr *types.Var, prefix string) *Var {
-	imports := m.populateImports(context.Background(), vr.Type())
-	v := Var{
-		vr:         vr,
-		imports:    imports,
-		moqPkgPath: m.moqPkgPath,
+func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, prefix string, replacement *ReplaceType) (*Var, error) {
+	var (
+		imports map[string]*Package = map[string]*Package{}
+		v       Var
+	)
+
+	log := zerolog.Ctx(ctx)
+
+	if replacement != nil {
+		newLogger := log.With().
+			Str("replace-pkg-path", replacement.PkgPath).
+			Str("replace-type-name", replacement.TypeName).Logger()
+		log = &newLogger
+		ctx = log.WithContext(ctx)
+		log.Debug().Msg("working with replacement")
+
+		// Type replacements are really tricky. Mockery needs to correctly
+		// gather type information from the package specified in the replacement.
+		// This basically means that we need to call packages.Load to satisfy this requirement,
+		// then find the type name in the replacement.
+		//
+		// NOTE: This section WILL be slow, because `packages.Load` is slow. Future
+		// enhancement will be to find a way to either cache these calls, batch
+		// them together for all replace-type instances, or find a way to avoid
+		// this altogether.
+		var conf packages.Config
+		conf.Mode = packages.NeedTypes |
+			packages.NeedTypesSizes |
+			packages.NeedSyntax |
+			packages.NeedTypesInfo |
+			packages.NeedImports |
+			packages.NeedName |
+			packages.NeedFiles |
+			packages.NeedCompiledGoFiles
+		pkgs, err := packages.Load(&conf, replacement.PkgPath)
+		if err != nil {
+			log.Err(err).Msg("couldn't load package")
+			return nil, stackerr.NewStackErr(err)
+		}
+		var object types.Object
+		var objectPkg *packages.Package
+		for _, pkg := range pkgs {
+			object = pkg.Types.Scope().Lookup(replacement.TypeName)
+			if object != nil {
+				objectPkg = pkg
+				break
+			}
+		}
+		if object == nil {
+			log.Error().Msg("type-name was not found in the referenced package")
+			return nil, stackerr.NewStackErr(fmt.Errorf("type does not exist in referenced package"))
+		}
+
+		m.addImport(
+			ctx,
+			objectPkg.Types,
+			imports,
+		)
+		v = Var{
+			vr:         vr,
+			typ:        object.Type(),
+			imports:    imports,
+			moqPkgPath: m.moqPkgPath,
+		}
+	} else {
+		//nolint:contextcheck
+		imports = m.populateImports(context.Background(), vr.Type())
+		v = Var{
+			vr:         vr,
+			typ:        vr.Type(),
+			imports:    imports,
+			moqPkgPath: m.moqPkgPath,
+		}
+		m.AddName(v.TypeString())
 	}
-	// The variable type is also a visible name, so add that.
-	m.AddName(v.TypeString())
-
 	v.Name = m.AllocateName(varName(vr, prefix))
-
 	m.vars = append(m.vars, &v)
-	return &v
+	return &v, nil
 }
 
 // AddName records name as visible in the current scope. This may be useful
@@ -107,7 +192,7 @@ func (m *MethodScope) NameExists(name string) bool {
 	return exists
 }
 
-func (m *MethodScope) addImport(ctx context.Context, pkg *types.Package, imports map[string]*Package) {
+func (m *MethodScope) addImport(ctx context.Context, pkg TypesPackage, imports map[string]*Package) {
 	imprt := m.registry.AddImport(ctx, pkg)
 	imports[pkg.Path()] = imprt
 	m.imports[pkg.Path()] = imprt

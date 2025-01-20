@@ -83,7 +83,7 @@ func (r *Registry) MethodScope() *MethodScope {
 // AddImport adds the given package to the set of imports. It generates a
 // suitable alias if there are any conflicts with previously imported
 // packages.
-func (r *Registry) AddImport(ctx context.Context, pkg *types.Package) *Package {
+func (r *Registry) AddImport(ctx context.Context, pkg TypesPackage) *Package {
 	path := pkg.Path()
 	log := zerolog.Ctx(ctx).With().
 		Str("method", "AddImport").

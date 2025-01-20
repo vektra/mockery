@@ -1,4 +1,4 @@
-package pkg
+package internal
 
 import (
 	"bufio"
@@ -24,9 +24,9 @@ import (
 type Formatter string
 
 const (
-	FORMAT_GOFMT      Formatter = "gofmt"
-	FORMAT_GOIMPORRTS Formatter = "goimports"
-	FORMAT_NOOP       Formatter = "noop"
+	FormatGofmt     Formatter = "gofmt"
+	FormatGoImports Formatter = "goimports"
+	FormatNoop      Formatter = "noop"
 )
 
 var (
@@ -103,7 +103,7 @@ type TemplateGenerator struct {
 	registry     *template.Registry
 	formatter    Formatter
 	inPackage    bool
-	pkgConfig    *Config
+	pkgConfig    *template.Config
 	pkgName      string
 }
 
@@ -113,7 +113,7 @@ func NewTemplateGenerator(
 	outPkgFSPath *pathlib.Path,
 	templateName string,
 	formatter Formatter,
-	pkgConfig *Config,
+	pkgConfig *template.Config,
 	pkgName string,
 ) (*TemplateGenerator, error) {
 	srcPkgFSPath := pathlib.NewPath(srcPkg.GoFiles[0]).Parent()
@@ -166,18 +166,18 @@ func NewTemplateGenerator(
 
 func (g *TemplateGenerator) format(src []byte) ([]byte, error) {
 	switch g.formatter {
-	case FORMAT_GOIMPORRTS:
+	case FormatGoImports:
 		return goimports(src)
-	case FORMAT_GOFMT:
+	case FormatGofmt:
 		return gofmt(src)
-	case FORMAT_NOOP:
+	case FormatNoop:
 		return src, nil
 	}
 
 	return nil, fmt.Errorf("unknown formatter type: %s", g.formatter)
 }
 
-func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func) template.MethodData {
+func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func, ifaceConfig *template.Config) (template.MethodData, error) {
 	log := zerolog.Ctx(ctx)
 
 	methodScope := g.registry.MethodScope()
@@ -192,8 +192,34 @@ func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func) 
 			log.Debug().Str("import", imprt.Path()).Str("import-qualifier", imprt.Qualifier()).Msg("existing imports")
 		}
 
+		var paramPkgPath string
+		var paramObjName string
+		switch t := param.Type().(type) {
+		case *types.Named:
+			pkg := t.Obj().Pkg()
+			if pkg != nil {
+				paramPkgPath = pkg.Path()
+			}
+			paramObjName = t.Obj().Name()
+		case *types.Alias:
+			pkg := t.Obj().Pkg()
+			if pkg != nil {
+				paramPkgPath = pkg.Path()
+			}
+			paramObjName = t.Obj().Name()
+		}
+		replacement := ifaceConfig.GetReplacement(paramPkgPath, paramObjName)
+		if replacement != nil {
+			log.Debug().Str("replace-to-pkg-path", replacement.PkgPath).Str("replace-to-type-name", replacement.TypeName).Msg("found replacement")
+		} else {
+			log.Debug().Str("param-pkg-path", paramPkgPath).Msg("replacement not found")
+		}
+		v, err := methodScope.AddVar(ctx, param, "", replacement)
+		if err != nil {
+			return template.MethodData{}, err
+		}
 		params[j] = template.ParamData{
-			Var:      methodScope.AddVar(param, ""),
+			Var:      v,
 			Variadic: signature.Variadic() && j == signature.Params().Len()-1,
 		}
 	}
@@ -201,8 +227,31 @@ func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func) 
 	returns := make([]template.ParamData, signature.Results().Len())
 	for j := 0; j < signature.Results().Len(); j++ {
 		param := signature.Results().At(j)
+
+		var paramPkgPath string
+		var paramObjName string
+		switch t := param.Type().(type) {
+		case *types.Named:
+			pkg := t.Obj().Pkg()
+			if pkg != nil {
+				paramPkgPath = pkg.Path()
+			}
+			paramObjName = t.Obj().Name()
+		case *types.Alias:
+			pkg := t.Obj().Pkg()
+			if pkg != nil {
+				paramPkgPath = pkg.Path()
+			}
+			paramObjName = t.Obj().Name()
+		}
+
+		replacement := ifaceConfig.GetReplacement(paramPkgPath, paramObjName)
+		v, err := methodScope.AddVar(ctx, param, "", replacement)
+		if err != nil {
+			return template.MethodData{}, err
+		}
 		returns[j] = template.ParamData{
-			Var:      methodScope.AddVar(param, ""),
+			Var:      v,
 			Variadic: false,
 		}
 	}
@@ -211,7 +260,7 @@ func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func) 
 		Params:  params,
 		Returns: returns,
 		Scope:   methodScope,
-	}
+	}, nil
 }
 
 func explicitConstraintType(typeParam *types.Var) (t types.Type) {
@@ -230,10 +279,10 @@ func explicitConstraintType(typeParam *types.Var) (t types.Type) {
 	return nil
 }
 
-func (g *TemplateGenerator) typeParams(ctx context.Context, tparams *types.TypeParamList) []template.TypeParamData {
+func (g *TemplateGenerator) typeParams(ctx context.Context, tparams *types.TypeParamList) ([]template.TypeParamData, error) {
 	var tpd []template.TypeParamData
 	if tparams == nil {
-		return tpd
+		return tpd, nil
 	}
 
 	tpd = make([]template.TypeParamData, tparams.Len())
@@ -242,18 +291,22 @@ func (g *TemplateGenerator) typeParams(ctx context.Context, tparams *types.TypeP
 	for i := 0; i < len(tpd); i++ {
 		tp := tparams.At(i)
 		typeParam := types.NewParam(token.Pos(i), tp.Obj().Pkg(), tp.Obj().Name(), tp.Constraint())
+		v, err := scope.AddVar(ctx, typeParam, "", nil)
+		if err != nil {
+			return nil, err
+		}
 		tpd[i] = template.TypeParamData{
-			ParamData:  template.ParamData{Var: scope.AddVar(typeParam, "")},
+			ParamData:  template.ParamData{Var: v},
 			Constraint: explicitConstraintType(typeParam),
 		}
 	}
 
-	return tpd
+	return tpd, nil
 }
 
 func (g *TemplateGenerator) Generate(
 	ctx context.Context,
-	interfaces []*Interface,
+	interfaces []*template.Interface,
 ) ([]byte, error) {
 	log := zerolog.Ctx(ctx)
 	mockData := []template.MockData{}
@@ -275,7 +328,11 @@ func (g *TemplateGenerator) Generate(
 
 		methods := make([]template.MethodData, iface.NumMethods())
 		for i := 0; i < iface.NumMethods(); i++ {
-			methods[i] = g.methodData(ctx, iface.Method(i))
+			methodData, err := g.methodData(ctx, iface.Method(i), ifaceMock.Config)
+			if err != nil {
+				return nil, err
+			}
+			methods[i] = methodData
 		}
 		// Now that all methods have been generated, we need to resolve naming
 		// conflicts that arise between variable names and package qualifiers.
@@ -290,10 +347,14 @@ func (g *TemplateGenerator) Generate(
 		}
 
 		ifaceLog.Debug().Str("template-data", fmt.Sprintf("%v", ifaceMock.Config.TemplateData)).Msg("printing template data")
+		tParams, err := g.typeParams(ctx, tparams)
+		if err != nil {
+			return nil, err
+		}
 		mockData = append(mockData, template.MockData{
 			InterfaceName: ifaceMock.Name,
 			MockName:      *ifaceMock.Config.MockName,
-			TypeParams:    g.typeParams(ctx, tparams),
+			TypeParams:    tParams,
 			Methods:       methods,
 			TemplateData:  ifaceMock.Config.TemplateData,
 		})
@@ -339,8 +400,6 @@ func (g *TemplateGenerator) Generate(
 	}
 
 	log.Debug().Msg("formatting file in-memory")
-	// TODO: Grabbing ifaceConfigs[0].Formatter doesn't make sense. We should instead
-	// grab the formatter as specified in the topmost interface-level config.
 	formatted, err := g.format(buf.Bytes())
 	if err != nil {
 		scanner := bufio.NewScanner(strings.NewReader(buf.String()))

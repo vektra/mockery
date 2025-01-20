@@ -14,12 +14,11 @@ import (
 	pkg "github.com/vektra/mockery/v3/internal"
 	"github.com/vektra/mockery/v3/internal/logging"
 	"github.com/vektra/mockery/v3/internal/stackerr"
+	"github.com/vektra/mockery/v3/template"
 	"golang.org/x/tools/go/packages"
 )
 
-var (
-	ErrCfgFileNotFound = errors.New("config file not found")
-)
+var ErrCfgFileNotFound = errors.New("config file not found")
 
 func NewRootCmd() (*cobra.Command, error) {
 	var pFlags *pflag.FlagSet
@@ -81,18 +80,18 @@ func Execute() {
 	if err != nil {
 		os.Exit(1)
 	}
-	if cmd.Execute(); err != nil {
+	if err := cmd.Execute(); err != nil {
 		os.Exit(1)
 	}
 }
 
 type RootApp struct {
-	Config pkg.RootConfig
+	Config template.RootConfig
 }
 
 func GetRootApp(ctx context.Context, flags *pflag.FlagSet) (*RootApp, error) {
 	r := &RootApp{}
-	config, _, err := pkg.NewRootConfig(ctx, flags)
+	config, _, err := template.NewRootConfig(ctx, flags)
 	if err != nil {
 		return nil, stackerr.NewStackErrf(err, "failed to get config")
 	}
@@ -113,7 +112,7 @@ type InterfaceCollection struct {
 	outFilePath *pathlib.Path
 	srcPkg      *packages.Package
 	outPkgName  string
-	interfaces  []*pkg.Interface
+	interfaces  []*template.Interface
 	template    string
 }
 
@@ -122,19 +121,19 @@ func NewInterfaceCollection(
 	outFilePath *pathlib.Path,
 	srcPkg *packages.Package,
 	outPkgName string,
-	template string,
+	templ string,
 ) *InterfaceCollection {
 	return &InterfaceCollection{
 		srcPkgPath:  srcPkgPath,
 		outFilePath: outFilePath,
 		srcPkg:      srcPkg,
 		outPkgName:  outPkgName,
-		interfaces:  make([]*pkg.Interface, 0),
-		template:    template,
+		interfaces:  make([]*template.Interface, 0),
+		template:    templ,
 	}
 }
 
-func (i *InterfaceCollection) Append(ctx context.Context, iface *pkg.Interface) error {
+func (i *InterfaceCollection) Append(ctx context.Context, iface *template.Interface) error {
 	collectionFilepath := i.outFilePath.String()
 	interfaceFilepath := iface.Config.FilePath().String()
 	log := zerolog.Ctx(ctx).With().
@@ -258,7 +257,7 @@ func (r *RootApp) Run() error {
 			}
 			if err := mockFileToInterfaces[filePath.String()].Append(
 				ctx,
-				pkg.NewInterface(
+				template.NewInterface(
 					iface.Name,
 					iface.FileName,
 					iface.File,
@@ -313,8 +312,8 @@ func (r *RootApp) Run() error {
 			fileLog.Err(err).Msg("can't determine if outfile exists")
 			return fmt.Errorf("determining if outfile exists: %w", err)
 		}
-		if outFileExists {
-			fileLog.Error().Msg("output file exists, can't write mocks")
+		if outFileExists && !packageConfig.Config.ForceFileWrite {
+			fileLog.Error().Bool("force-file-write", packageConfig.Config.ForceFileWrite).Msg("output file exists, can't write mocks")
 			return fmt.Errorf("outfile exists")
 		}
 

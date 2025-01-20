@@ -9,7 +9,12 @@ import (
 //
 // It should be created using a method scope instance.
 type Var struct {
-	vr         *types.Var
+	vr *types.Var
+	// typ is stored separately from `vr.Type()` because it's possible
+	// for a variable to be replaced with another variable via replace-type.
+	// In such a case, `vr.Type()` refers to the original type and `typ` refers
+	// to the replacer type.
+	typ        types.Type
 	imports    map[string]*Package
 	moqPkgPath string
 
@@ -17,19 +22,19 @@ type Var struct {
 }
 
 func (v Var) Type() types.Type {
-	return v.vr.Type()
+	return v.typ
 }
 
 // IsSlice returns whether the type (or the underlying type) is a slice.
 func (v Var) IsSlice() bool {
-	_, ok := v.vr.Type().Underlying().(*types.Slice)
+	_, ok := v.Type().Underlying().(*types.Slice)
 	return ok
 }
 
 // TypeString returns the variable type with the package qualifier in the
 // format 'pkg.Type'.
 func (v Var) TypeString() string {
-	return types.TypeString(v.vr.Type(), v.packageQualifier)
+	return types.TypeString(v.Type(), v.packageQualifier)
 }
 
 // packageQualifier is a types.Qualifier.
@@ -52,7 +57,7 @@ func nillable(typ types.Type) bool {
 }
 
 func (v Var) Nillable() bool {
-	return nillable(v.vr.Type())
+	return nillable(v.Type())
 }
 
 func varName(vr *types.Var, suffix string) string {

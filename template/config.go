@@ -1,4 +1,4 @@
-package pkg
+package template
 
 import (
 	"bufio"
@@ -25,9 +25,48 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/vektra/mockery/v3/internal/logging"
 	"github.com/vektra/mockery/v3/internal/stackerr"
-	mockeryTemplate "github.com/vektra/mockery/v3/template"
 	"golang.org/x/tools/go/packages"
 )
+
+type Interface struct {
+	Name     string // Name of the type to be mocked.
+	FileName string
+	File     *ast.File
+	Pkg      *packages.Package
+	Config   *Config
+}
+
+// ConfigData is the data sent to the template for the config file.
+type ConfigData struct {
+	// ConfigDir is the directory of where the mockery config file is located.
+	ConfigDir string
+	// InterfaceDir is the directory of the interface being mocked.
+	InterfaceDir string
+	// InterfaceDirRelative is the same as InterfaceDir, but made relative to the ConfigDir.
+	InterfaceDirRelative string
+	// InterfaceFile is the filename of where the interface is defined.
+	InterfaceFile string
+	// InterfaceName is the name of the interface (duh).
+	InterfaceName string
+	// Mock is a parameter that takes the value of "Mock" if the interface is exported, and "mock" otherwise.
+	Mock string
+	// MockName is the configured name of the mock.
+	MockName string
+	// SrcPackageName is the name of the source package as defined by the `package [name]` in the source package.
+	SrcPackageName string
+	// SrcPackagePath is the fully qualified package path of the source package. e.g. "github.com/vektra/mockery/v3".
+	SrcPackagePath string
+}
+
+func NewInterface(name string, filename string, file *ast.File, pkg *packages.Package, config *Config) *Interface {
+	return &Interface{
+		Name:     name,
+		FileName: filename,
+		File:     file,
+		Pkg:      pkg,
+		Config:   config,
+	}
+}
 
 type RootConfig struct {
 	*Config    `koanf:",squash"`
@@ -65,12 +104,19 @@ func NewRootConfig(
 	}
 	k := koanf.New("|")
 	rootConfig.koanf = k
-	k.Set("dir", "{{.InterfaceDir}}")
-	k.Set("filename", "mocks_test.go")
-	k.Set("formatter", "goimports")
-	k.Set("mockname", "Mock{{.InterfaceName}}")
-	k.Set("pkgname", "{{.SrcPackageName}}")
-	k.Set("log-level", "info")
+	for key, val := range map[string]string{
+		"dir":       "{{.InterfaceDir}}",
+		"filename":  "mocks_test.go",
+		"formatter": "goimports",
+		"mockname":  "Mock{{.InterfaceName}}",
+		"pkgname":   "{{.SrcPackageName}}",
+		"log-level": "info",
+	} {
+		if err := k.Set(key, val); err != nil {
+			log.Err(err).Msg("failed to set default value")
+			return nil, nil, stackerr.NewStackErr(err)
+		}
+	}
 
 	configFileFromEnv := os.Getenv("MOCKERY_CONFIG")
 	if configFileFromEnv != "" {
@@ -94,7 +140,7 @@ func NewRootConfig(
 		log.Debug().Str("config-file", configFile.String()).Msg("config file found")
 	}
 	rootConfig.configFile = configFile
-	k.Load(
+	if err := k.Load(
 		env.Provider(
 			"MOCKERY_",
 			".",
@@ -102,7 +148,10 @@ func NewRootConfig(
 				return strings.Replace(strings.ToLower(strings.TrimPrefix(s, "MOCKERY_")), "_", "-", -1)
 			}),
 		nil,
-	)
+	); err != nil {
+		log.Err(err).Msg("failed to load environment provider")
+		return nil, nil, stackerr.NewStackErr(err)
+	}
 
 	if err := k.Load(file.Provider(configFile.String()), koanfYAML.Parser()); err != nil {
 		return nil, k, fmt.Errorf("loading config file: %w", err)
@@ -162,8 +211,16 @@ func mergeConfigs(ctx context.Context, src Config, dest *Config) {
 		destFieldValue := destValue.Elem().Field(i)
 
 		if srcFieldValue.Kind() == reflect.Map {
-			srcMap := srcFieldValue.Interface().(map[string]any)
-			destMap := destFieldValue.Interface().(map[string]any)
+			srcMap, ok := srcFieldValue.Interface().(map[string]any)
+			if !ok {
+				log.Debug().Msg("field value is not `any`, skipping merge")
+				continue
+			}
+			destMap, ok := destFieldValue.Interface().(map[string]any)
+			if !ok {
+				log.Debug().Msg("dest map value is not `any`, skipping")
+				continue
+			}
 			if destMap == nil {
 				destFieldValue.Set(reflect.ValueOf(make(map[string]any)))
 			}
@@ -403,6 +460,11 @@ func (c *InterfaceConfig) Initialize(ctx context.Context) error {
 	return nil
 }
 
+type ReplaceType struct {
+	PkgPath  string `koanf:"pkg-path"`
+	TypeName string `koanf:"type-name"`
+}
+
 type Config struct {
 	All                *bool          `koanf:"all"`
 	Anchors            map[string]any `koanf:"_anchors"`
@@ -412,16 +474,20 @@ type Config struct {
 	ExcludeSubpkgRegex []string       `koanf:"exclude-subpkg-regex"`
 	ExcludeRegex       *string        `koanf:"exclude-regex"`
 	FileName           *string        `koanf:"filename"`
-	Formatter          *string        `koanf:"formatter"`
-	IncludeRegex       *string        `koanf:"include-regex"`
-	LogLevel           *string        `koanf:"log-level"`
-	MockName           *string        `koanf:"mockname"`
-	PkgName            *string        `koanf:"pkgname"`
-	Recursive          *bool          `koanf:"recursive"`
-	Template           *string        `koanf:"template"`
-	TemplateData       map[string]any `koanf:"template-data"`
-	UnrollVariadic     *bool          `koanf:"unroll-variadic"`
-	Version            *bool          `koanf:"version"`
+	// ForceFileWrite controls whether mockery will overwrite existing files when generating mocks. This is by default set to false.
+	ForceFileWrite bool    `koanf:"force-file-write"`
+	Formatter      *string `koanf:"formatter"`
+	IncludeRegex   *string `koanf:"include-regex"`
+	LogLevel       *string `koanf:"log-level"`
+	MockName       *string `koanf:"mockname"`
+	PkgName        *string `koanf:"pkgname"`
+	Recursive      *bool   `koanf:"recursive"`
+	// ReplaceType is a nested map of format map["package path"]["type name"]*ReplaceType
+	ReplaceType    map[string]map[string]*ReplaceType `koanf:"replace-type"`
+	Template       *string                            `koanf:"template"`
+	TemplateData   map[string]any                     `koanf:"template-data"`
+	UnrollVariadic *bool                              `koanf:"unroll-variadic"`
+	Version        *bool                              `koanf:"version"`
 }
 
 func findConfig() (*pathlib.Path, error) {
@@ -526,7 +592,7 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 		}
 	}
 	// data is the struct sent to the template parser
-	data := mockeryTemplate.ConfigData{
+	data := ConfigData{
 		ConfigDir:            filepath.Dir(*c.ConfigFile),
 		InterfaceDir:         interfaceDir,
 		InterfaceDirRelative: interfaceDirRelative,
@@ -565,7 +631,7 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 		for name, attributePointer := range templateMap {
 			oldVal := *attributePointer
 
-			attributeTempl, err := template.New("config-template").Funcs(mockeryTemplate.StringManipulationFuncs).Parse(*attributePointer)
+			attributeTempl, err := template.New("config-template").Funcs(StringManipulationFuncs).Parse(*attributePointer)
 			if err != nil {
 				return fmt.Errorf("failed to parse %s template: %w", name, err)
 			}
@@ -582,4 +648,12 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 	}
 
 	return nil
+}
+
+func (c *Config) GetReplacement(pkgPath string, typeName string) *ReplaceType {
+	pkgMap := c.ReplaceType[pkgPath]
+	if pkgMap == nil {
+		return nil
+	}
+	return pkgMap[typeName]
 }

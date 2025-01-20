@@ -116,6 +116,7 @@ var TemplateMockFuncs = template.FuncMap{
 	},
 }
 
+//nolint:predeclared
 var StringManipulationFuncs = template.FuncMap{
 	// String inspection and manipulation. Note that the first argument is replaced
 	// as the last argument in some functions in order to support chained

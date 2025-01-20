@@ -1,6 +1,6 @@
 #!/bin/bash
 
-go run github.com/go-task/task/v3/cmd/task mocks.generate
+go run github.com/go-task/task/v3/cmd/task mocks
 rt=$?
 if [ $rt -ne 0 ]; then
     echo "ERROR: non-zero return code from mockery"
