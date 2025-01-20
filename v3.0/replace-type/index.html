@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://vektra.github.io/mockery/latest/running/">
+        <link rel="canonical" href="https://vektra.github.io/mockery/latest/replace-type/">
       
       
-        <link rel="prev" href="../templates/">
+        <link rel="prev" href="../template-moq/">
       
       
-        <link rel="next" href="../template-mockery/">
+        <link rel="next" href="../faq/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Running - mockery</title>
+        <title>replace-type - mockery</title>
       
     
     
@@ -73,17 +73,17 @@
     
   
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Running - mockery" />
+<meta property="og:title" content="replace-type - mockery" />
 <meta property="og:description" content="Create mock implementations of your Golang interfaces using mockery and testify." />
-<meta property="og:image" content="https://vektra.github.io/mockery/latest/assets/images/social/running.png" />
+<meta property="og:image" content="https://vektra.github.io/mockery/latest/assets/images/social/replace-type.png" />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:url" content="https://vektra.github.io/mockery/latest/running/" />
+<meta property="og:url" content="https://vektra.github.io/mockery/latest/replace-type/" />
 <meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:title" content="Running - mockery" />
+<meta property="twitter:title" content="replace-type - mockery" />
 <meta property="twitter:description" content="Create mock implementations of your Golang interfaces using mockery and testify." />
-<meta property="twitter:image" content="https://vektra.github.io/mockery/latest/assets/images/social/running.png" />
+<meta property="twitter:image" content="https://vektra.github.io/mockery/latest/assets/images/social/replace-type.png" />
  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
     html.glightbox-open { overflow: initial; height: 100%; }
     .gslide-title { margin-top: 0px; user-select: text; }
@@ -112,7 +112,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#running" class="md-skip">
+        <a href="#description" class="md-skip">
           Skip to content
         </a>
       
@@ -169,7 +169,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Running
+              replace-type
             
           </span>
         </div>
@@ -335,10 +335,8 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       
   
   
-    
   
   
-  
     
     
       
@@ -358,11 +356,11 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
@@ -382,7 +380,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -478,19 +476,10 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../running/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -505,7 +494,6 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
 
       </a>
-      
     </li>
   
 
@@ -639,8 +627,10 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       
   
   
+    
   
   
+  
     
     
       
@@ -654,11 +644,11 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
@@ -678,7 +668,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -693,10 +683,34 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../replace-type/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    
+  
+    replace-type
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -711,6 +725,50 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Description
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#background" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Background
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -857,8 +915,40 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Description
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#background" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Background
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -875,7 +965,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 
 
   
-    <a href="https://github.com/vektra/mockery/edit/master/docs/running.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/vektra/mockery/edit/master/docs/replace-type.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -884,43 +974,67 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
     
       
     
-    <a href="https://github.com/vektra/mockery/raw/master/docs/running.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/vektra/mockery/raw/master/docs/replace-type.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
     </a>
   
 
 
-<h1 id="running">Running<a class="headerlink" href="#running" title="Permanent link">&para;</a></h1>
-<p>If your <code>.mockery.yaml</code> file has been populated with the packages and interfaces you want mocked, mockery can be run with no arguments. Take for example how the mockery project itself is configured:</p>
-<div class="highlight"><span class="filename">YAML</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">quiet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">keeptree</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">disable-version-string</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">with-expecter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">mockname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{.InterfaceName}}&quot;</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{.MockName}}.go&quot;</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nt">outpkg</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mocks</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nt">packages</span><span class="p">:</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="nt">github.com/vektra/mockery/v3/pkg</span><span class="p">:</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">interfaces</span><span class="p">:</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">      </span><span class="nt">TypesPackage</span><span class="p">:</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Lots more config...</span>
+  <h1>replace-type</h1>
+
+<h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
+<p>The <code class="highlight"><span class="nt">replace-type</span><span class="p">:</span></code> parameter allows you to replace a type in the generated mocks with another type. Take for example the following interface:</p>
+<div class="highlight"><span class="filename">interface.go</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">package</span><span class="w"> </span><span class="nx">replace_type</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="s">&quot;github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type/rti/rt1&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="s">&quot;github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type/rti/rt2&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="kd">type</span><span class="w"> </span><span class="nx">RType</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nx">Replace1</span><span class="p">(</span><span class="nx">f</span><span class="w"> </span><span class="nx">rt1</span><span class="p">.</span><span class="nx">RType1</span><span class="p">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="p">}</span>
 </code></pre></div>
-<p>From anywhere within your repo, you can simply call <code>mockery</code> once, and it will find your config either by respecting the <code class="highlight"><span class="l l-Scalar l-Scalar-Plain">config</span></code> path you gave it, or by searching upwards from the current working directory.</p>
-<div class="highlight"><span class="filename">Bash</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>mockery
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="m">08</span><span class="w"> </span>Jul<span class="w"> </span><span class="m">23</span><span class="w"> </span><span class="m">01</span>:40<span class="w"> </span>EDT<span class="w"> </span>INF<span class="w"> </span>Starting<span class="w"> </span>mockery<span class="w"> </span>dry-run<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="nv">version</span><span class="o">=</span>v2.31.0
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="m">08</span><span class="w"> </span>Jul<span class="w"> </span><span class="m">23</span><span class="w"> </span><span class="m">01</span>:40<span class="w"> </span>EDT<span class="w"> </span>INF<span class="w"> </span>Using<span class="w"> </span>config:<span class="w"> </span>/Users/landonclipp/git/LandonTClipp/mockery/.mockery.yaml<span class="w"> </span>dry-run<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="nv">version</span><span class="o">=</span>v2.31.0
+<p>You can selectively replace the <code>rt1.RType1</code> with a new type if so desired. For example:</p>
+<div class="highlight"><span class="filename">.mockery.yml</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">replace-type</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type/rti/rt1</span><span class="p">:</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">RType1</span><span class="p">:</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">pkg-path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type/rti/rt2</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">type-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RType2</span>
 </code></pre></div>
-<div class="admonition question">
-<p class="admonition-title">Command line arguments</p>
-<p>It is valid to specify arguments from the command line. The configuration precedence is specified in the <a href="../configuration/#merging-precedence">Configuration</a> docs.</p>
+<p>The mock will now replace all instances of <code>rt1.RType1</code> with <code>rt2.RType2</code>. You can see the before and after of <code>mockery</code>-style mocks:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">before</label><label for="__tabbed_1_2">after</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// Replace2 provides a mock function for the type RTypeReplaced1</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">_mock</span><span class="w"> </span><span class="o">*</span><span class="nx">RTypeReplaced1</span><span class="p">)</span><span class="w"> </span><span class="nx">Replace1</span><span class="p">(</span><span class="nx">f</span><span class="w"> </span><span class="nx">rt1</span><span class="p">.</span><span class="nx">RType1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nx">_mock</span><span class="p">.</span><span class="nx">Called</span><span class="p">(</span><span class="nx">f</span><span class="p">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="k">return</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">}</span>
+</code></pre></div>
 </div>
+<div class="tabbed-block">
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// Replace2 provides a mock function for the type RTypeReplaced1</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">_mock</span><span class="w"> </span><span class="o">*</span><span class="nx">RTypeReplaced1</span><span class="p">)</span><span class="w"> </span><span class="nx">Replace1</span><span class="p">(</span><span class="nx">f</span><span class="w"> </span><span class="nx">rt2</span><span class="p">.</span><span class="nx">RType2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nx">_mock</span><span class="p">.</span><span class="nx">Called</span><span class="p">(</span><span class="nx">f</span><span class="p">)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="k">return</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="background">Background<a class="headerlink" href="#background" title="Permanent link">&para;</a></h2>
+<p>This parameter is useful if you need to need to work around packages that use internal types. Take for example the situation found <a href="https://github.com/vektra/mockery/issues/864#issuecomment-2567788637">here</a>, noted by <a href="https://github.com/RangelReale">RangelReale</a>.</p>
 
 
 
 
 
 
+
+  
+  
 
 
 
