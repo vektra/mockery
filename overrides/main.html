@@ -2,7 +2,13 @@
 
 {% block outdated %}
   You're not viewing the latest version.
-  <a href="{{ '../' ~ base_url }}"> 
+  <a href="{{ '../' ~ base_url }}">
     <strong>Click here to go to latest.</strong>
   </a>
+{% endblock %}
+{% block announce %}
+mockery is undergoing a v3 revamp.
+<a href="{{ 'https://vektra.github.io/mockery/v3.0/' }}">
+  <strong>Visit the v3 docs and give us your input!</strong>
+</a>
 {% endblock %}
