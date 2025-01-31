@@ -11,8 +11,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/rs/zerolog"
 	"github.com/vektra/mockery/v2/pkg/logging"
+
+	"github.com/rs/zerolog"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -221,6 +222,24 @@ func (p *Parser) Find(name string) (*Interface, error) {
 		}
 	}
 	return nil, ErrNotInterface
+}
+
+func (p *Parser) Has(packageName, interfaceName string) bool {
+	for _, entry := range p.files {
+		if entry.pkg.PkgPath != packageName {
+			continue
+		}
+
+		for _, ifaceName := range entry.interfaces {
+			if ifaceName != interfaceName {
+				continue
+			}
+
+			return true
+		}
+	}
+
+	return false
 }
 
 func (p *Parser) Interfaces() []*Interface {

@@ -103,7 +103,6 @@ func NewConfigFromViper(v *viper.Viper) (*Config, error) {
 		v.SetDefault("case", "camel")
 		v.SetDefault("dir", ".")
 		v.SetDefault("output", "./mocks")
-
 	} else {
 		v.SetDefault("dir", "mocks/{{.PackagePath}}")
 		v.SetDefault("filename", "mock_{{.InterfaceName}}.go")
@@ -734,7 +733,7 @@ func (c *Config) mergeInConfig(ctx context.Context) error {
 				configSectionTyped[key] = value
 			}
 		}
-		interfaces, err := c.getInterfacesForPackage(pkgCtx, pkgPath)
+		interfaces, err := c.GetInterfacesForPackage(pkgCtx, pkgPath)
 		if err != nil {
 			return fmt.Errorf("failed to get interfaces for package: %w", err)
 		}
@@ -777,7 +776,7 @@ func (c *Config) mergeInConfig(ctx context.Context) error {
 	return nil
 }
 
-func (c *Config) getInterfacesForPackage(ctx context.Context, pkgPath string) ([]string, error) {
+func (c *Config) GetInterfacesForPackage(ctx context.Context, pkgPath string) ([]string, error) {
 	interfaces := []string{}
 	packageMap, err := c.getPackageConfigMap(ctx, pkgPath)
 	if err != nil {

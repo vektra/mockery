@@ -127,3 +127,6 @@ packages:
             mockname: Interface2WithUnresolvedAlias
           - resolve-type-alias: True
             mockname: Interface2WithResolvedAlias
+  github.com/vektra/mockery/v2/pkg/:
+    interfaces:
+      InterfaceDoesntExist:

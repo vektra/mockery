@@ -10,15 +10,16 @@ import (
 	"runtime/pprof"
 	"strings"
 
+	"github.com/vektra/mockery/v2/pkg"
+	"github.com/vektra/mockery/v2/pkg/config"
+	"github.com/vektra/mockery/v2/pkg/logging"
+	"github.com/vektra/mockery/v2/pkg/stackerr"
+
 	"github.com/chigopher/pathlib"
 	"github.com/mitchellh/go-homedir"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/vektra/mockery/v2/pkg"
-	"github.com/vektra/mockery/v2/pkg/config"
-	"github.com/vektra/mockery/v2/pkg/logging"
-	"github.com/vektra/mockery/v2/pkg/stackerr"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -258,6 +259,7 @@ func (r *RootApp) Run() error {
 			log.Error().Err(err).Msg("unable to parse packages")
 			return err
 		}
+
 		log.Info().Msg("done loading, visiting interface nodes")
 		for _, iface := range parser.Interfaces() {
 			ifaceLog := log.
@@ -281,6 +283,25 @@ func (r *RootApp) Run() error {
 			outputter := pkg.NewOutputter(&r.Config, boilerplate, r.Config.DryRun)
 			if err := outputter.Generate(ifaceCtx, iface); err != nil {
 				return err
+			}
+		}
+
+		// Output interfaces that were specified but not found.
+		// We do that here and not before the loop because it's easier to
+		// see for the user.
+		for _, p := range configuredPackages {
+			ifaceList, err := r.Config.GetInterfacesForPackage(ctx, p)
+			if err != nil {
+				log.Error().Msgf("Failed to get interfaces for package %s: %v", p, err)
+			}
+
+			for _, name := range ifaceList {
+				if !parser.Has(p, name) {
+					log.Warn().Ctx(ctx).
+						Str(logging.LogKeyInterface, name).
+						Str(logging.LogKeyQualifiedName, p).
+						Msg("no such interface")
+				}
 			}
 		}
 
