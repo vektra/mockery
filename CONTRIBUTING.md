@@ -6,7 +6,7 @@ Read our [Code of Conduct](https://github.com/vektra/mockery/blob/master/CODE_OF
 
 ## Local development setup
 
-All of the local development tools are go-based and are versioned in our go.mod file. Simply call `go download -x` to initialize and download all of our tooling.
+All of the local development tools are go-based and are versioned in our go.mod file. Simply call `go mod download -x` to initialize and download all of our tooling.
 
 This project uses Taskfile, a better alternative to Makefile. Run `task -l` for list of valid targets.
 
