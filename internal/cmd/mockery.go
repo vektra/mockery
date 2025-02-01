@@ -7,14 +7,15 @@ import (
 	"os"
 	"strings"
 
-	"github.com/chigopher/pathlib"
-	"github.com/rs/zerolog"
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 	"github.com/vektra/mockery/v3/config"
 	pkg "github.com/vektra/mockery/v3/internal"
 	"github.com/vektra/mockery/v3/internal/logging"
 	"github.com/vektra/mockery/v3/internal/stackerr"
+
+	"github.com/chigopher/pathlib"
+	"github.com/rs/zerolog"
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -195,6 +196,31 @@ func (r *RootApp) Run() error {
 	}
 	parser := pkg.NewParser(buildTags)
 
+	// Let's build a missing map here to keep track of seen interfaces.
+	// (pkg -> list of interface names)
+	// After seeing an interface it'll be deleted from the map, keeping only
+	// missing interfaces or packages in there.
+	//
+	// NOTE: We do that here without relying on parser, because parses iterates
+	// over existing go files and interfaces, while user could've had a typo in
+	// interface or pacakge name, making it impossible for parser to find these
+	// files/interfaces in the first place.
+	log.Debug().Msg("Making seen map...")
+	missingMap := make(map[string]map[string]struct{}, len(configuredPackages))
+	for _, p := range configuredPackages {
+		config, err := r.Config.GetPackageConfig(ctx, p)
+		if err != nil {
+			return err
+		}
+		if _, ok := missingMap[p]; !ok {
+			missingMap[p] = make(map[string]struct{}, len(config.Interfaces))
+		}
+
+		for ifaceName := range config.Interfaces {
+			missingMap[p][ifaceName] = struct{}{}
+		}
+	}
+
 	log.Info().Msg("Parsing configured packages...")
 	interfaces, err := parser.ParsePackages(ctx, configuredPackages)
 	if err != nil {
@@ -206,8 +232,8 @@ func (r *RootApp) Run() error {
 	// outputFilePath|fullyQualifiedInterfaceName|[]*pkg.Interface
 	// The reason why we need an interior map of fully qualified interface name
 	// to a slice of *pkg.Interface (which represents all information necessary
-	// to create the output mock) is because mockery allows multiple mocks to be
-	// created for each input interface.
+	// to create the output mock) is because mockery allows multiple mocks to
+	// be created for each input interface.
 	mockFileToInterfaces := map[string]*InterfaceCollection{}
 
 	for _, iface := range interfaces {
@@ -216,6 +242,14 @@ func (r *RootApp) Run() error {
 			Str(logging.LogKeyInterface, iface.Name).
 			Str(logging.LogKeyPackagePath, iface.Pkg.Types.Path()).
 			Logger()
+
+		if _, exist := missingMap[iface.Pkg.PkgPath]; exist {
+			delete(missingMap[iface.Pkg.PkgPath], iface.Name)
+
+			if len(missingMap[iface.Pkg.PkgPath]) == 0 {
+				delete(missingMap, iface.Pkg.PkgPath)
+			}
+		}
 
 		ifaceCtx := ifaceLog.WithContext(ctx)
 
@@ -319,6 +353,17 @@ func (r *RootApp) Run() error {
 
 		if err := outFile.WriteFile(templateBytes); err != nil {
 			return stackerr.NewStackErr(err)
+		}
+	}
+
+	// The loop above could exit early, so sometimes warnings won't be shown
+	// until other errors are fixed
+	for packageName := range missingMap {
+		for iface := range missingMap[packageName] {
+			log.Warn().
+				Str(logging.LogKeyInterface, iface).
+				Str(logging.LogKeyPackagePath, packageName).
+				Msg("no such interface")
 		}
 	}
 
