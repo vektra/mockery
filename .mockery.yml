@@ -16,14 +16,13 @@ packages:
     interfaces:
       RType:
         configs:
-        - {}
-        - mockname: RTypeReplaced1
-          replace-type:
-            github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type/rti/rt1:
-              RType1:
-                pkg-path: github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type/rti/rt2
-                type-name: RType2
-
+          - {}
+          - mockname: RTypeReplaced1
+            replace-type:
+              github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type/rti/rt1:
+                RType1:
+                  pkg-path: github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type/rti/rt2
+                  type-name: RType2
   github.com/vektra/mockery/v3/internal/fixtures:
     interfaces:
       RequesterVariadic:
@@ -61,4 +60,6 @@ packages:
       all: True
       dir: internal/fixtures/
       pkgname: test
-
+  github.com/vektra/mockery/v3/internal:
+    interfaces:
+      InterfaceDoesntExist:
