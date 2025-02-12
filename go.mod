@@ -7,7 +7,7 @@ toolchain go1.24.0
 require (
 	github.com/chigopher/pathlib v0.19.1
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
-	github.com/huandu/xstrings v1.5.0
+	github.com/huandu/xstrings v1.4.0
 	github.com/iancoleman/strcase v0.3.0
 	github.com/jinzhu/copier v0.4.0
 	github.com/mitchellh/go-homedir v1.1.0
