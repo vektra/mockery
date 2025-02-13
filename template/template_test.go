@@ -314,15 +314,19 @@ func TestTemplateMockFuncs(t *testing.T) {
 		},
 		{
 			name:       "readFile",
-			inTemplate: "{{readFile .Mocks}}",
+			inTemplate: "{{readFile .TemplateData.f}}",
 			dataInit: func() Data {
 				f, err := os.CreateTemp(".", "readFileTest")
 				require.NoError(t, err)
 
+				t.Cleanup(func() {
+					os.Remove(f.Name())
+				})
+
 				_, err = f.WriteString("content")
 				require.NoError(t, err)
 
-				return Data{TemplateData: map[string]any{"f": "readFileTest"}}
+				return Data{TemplateData: map[string]any{"f": f.Name()}}
 			},
 			want: "content",
 		},
