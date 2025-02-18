@@ -63,18 +63,6 @@ docker_manifests:
     image_templates:
       - vektra/mockery:{{ .Tag }}-amd64
       - vektra/mockery:{{ .Tag }}-arm64
-  - name_template: vektra/mockery:v{{ .Major }}
-    image_templates:
-      - vektra/mockery:{{ .Tag }}-amd64
-      - vektra/mockery:{{ .Tag }}-arm64
-  - name_template: vektra/mockery:v{{ .Major }}.{{ .Minor }}
-    image_templates:
-      - vektra/mockery:{{ .Tag }}-amd64
-      - vektra/mockery:{{ .Tag }}-arm64
-  - name_template: vektra/mockery:latest
-    image_templates:
-      - vektra/mockery:{{ .Tag }}-amd64
-      - vektra/mockery:{{ .Tag }}-arm64
 brews:
   - homepage: https://github.com/vektra/mockery
     description: "A mock code autogenerator for Go"
