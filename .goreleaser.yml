@@ -63,16 +63,6 @@ docker_manifests:
     image_templates:
       - vektra/mockery:{{ .Tag }}-amd64
       - vektra/mockery:{{ .Tag }}-arm64
-brews:
-  - homepage: https://github.com/vektra/mockery
-    description: "A mock code autogenerator for Go"
-    tap:
-        owner: vektra
-        name: homebrew-tap
-        token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
-    folder: Formula
-    test: |
-        system "#{bin}mockery --version"
 
 release:
   prerelease: true
