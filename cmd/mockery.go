@@ -66,7 +66,7 @@ func NewRootCmd() *cobra.Command {
 	pFlags.Bool("testonly", false, "generate a mock in a _test.go file")
 	pFlags.String("case", "", "name the mocked file using casing convention [camel, snake, underscore]")
 	pFlags.String("note", "", "comment to insert into prologue of each generated file")
-	pFlags.String("cpuprofile", "", "write cpu profile to file")
+	pFlags.String("profile", "", "write cpu profile to file")
 	pFlags.Bool("version", false, "prints the installed version of mockery")
 	pFlags.Bool("quiet", false, `suppresses logger output (equivalent to --log-level="")`)
 	pFlags.Bool("keeptree", false, "keep the tree structure of the original interface files into a different repository. Must be used with XX")
@@ -215,6 +215,18 @@ func (r *RootApp) Run() error {
 		return nil
 	}
 
+	if r.Config.Profile != "" {
+		f, err := os.Create(r.Config.Profile)
+		if err != nil {
+			return stackerr.NewStackErrf(err, "Failed to create profile file")
+		}
+		defer f.Close()
+		if err := pprof.StartCPUProfile(f); err != nil {
+			return fmt.Errorf("failed to start CPU profile: %w", err)
+		}
+		defer pprof.StopCPUProfile()
+	}
+
 	var osp pkg.OutputStreamProvider
 	if r.Config.Print {
 		osp = &pkg.StdoutStreamProvider{}
@@ -331,18 +343,6 @@ func (r *RootApp) Run() error {
 		filter = regexp.MustCompile(".*")
 	} else {
 		log.Fatal().Msgf("Use --name to specify the name of the interface or --all for all interfaces found")
-	}
-
-	if r.Config.Profile != "" {
-		f, err := os.Create(r.Config.Profile)
-		if err != nil {
-			return stackerr.NewStackErrf(err, "Failed to create profile file")
-		}
-		defer f.Close()
-		if err := pprof.StartCPUProfile(f); err != nil {
-			return fmt.Errorf("failed to start CPU profile: %w", err)
-		}
-		defer pprof.StopCPUProfile()
 	}
 
 	baseDir := r.Config.Dir
