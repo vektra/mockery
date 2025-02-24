@@ -855,7 +855,7 @@ func (c *Config) LogDeprecatedConfig(ctx context.Context) {
 			nil,
 		)
 	}
-	if c.DisableVersionString {
+	if !c.DisableVersionString {
 		logging.WarnDeprecated(
 			"disable-version-string",
 			"disable-version-string will be permanently set to True in v3",
