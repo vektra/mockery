@@ -66,6 +66,7 @@ func NewRootCmd() *cobra.Command {
 	pFlags.Bool("testonly", false, "generate a mock in a _test.go file")
 	pFlags.String("case", "", "name the mocked file using casing convention [camel, snake, underscore]")
 	pFlags.String("note", "", "comment to insert into prologue of each generated file")
+	pFlags.String("cpuprofile", "", "write cpu profile to file")
 	pFlags.String("profile", "", "write cpu profile to file")
 	pFlags.Bool("version", false, "prints the installed version of mockery")
 	pFlags.Bool("quiet", false, `suppresses logger output (equivalent to --log-level="")`)
@@ -215,8 +216,12 @@ func (r *RootApp) Run() error {
 		return nil
 	}
 
-	if r.Config.Profile != "" {
-		f, err := os.Create(r.Config.Profile)
+	if r.Config.Profile != "" || r.Config.Cpuprofile != "" {
+		profile := r.Config.Profile
+		if profile == "" {
+			profile = r.Config.Cpuprofile
+		}
+		f, err := os.Create(profile)
 		if err != nil {
 			return stackerr.NewStackErrf(err, "Failed to create profile file")
 		}

@@ -38,6 +38,7 @@ type Config struct {
 	BuildTags                   string                 `mapstructure:"tags"`
 	Case                        string                 `mapstructure:"case"`
 	Config                      string                 `mapstructure:"config"`
+	Cpuprofile                  string                 `mapstructure:"cpuprofile"`
 	Dir                         string                 `mapstructure:"dir"`
 	DisableConfigSearch         bool                   `mapstructure:"disable-config-search"`
 	DisableDeprecationWarnings  bool                   `mapstructure:"disable-deprecation-warnings"`
