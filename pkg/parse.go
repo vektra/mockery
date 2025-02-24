@@ -214,7 +214,7 @@ func (p *Parser) Find(name string) (*Interface, error) {
 	for _, entry := range p.files {
 		for _, iface := range entry.interfaces {
 			if iface == name {
-				list := p.packageInterfaces(entry.pkg.Types, entry.fileName, []string{name}, nil)
+				list := p.packageInterfaces(entry.pkg.Types, entry, []string{name}, nil)
 				if len(list) > 0 {
 					return list[0], nil
 				}
@@ -246,7 +246,7 @@ func (p *Parser) Interfaces() []*Interface {
 	ifaces := make(sortableIFaceList, 0)
 	for _, entry := range p.files {
 		declaredIfaces := entry.interfaces
-		ifaces = p.packageInterfaces(entry.pkg.Types, entry.fileName, declaredIfaces, ifaces)
+		ifaces = p.packageInterfaces(entry.pkg.Types, entry, declaredIfaces, ifaces)
 	}
 
 	sort.Sort(ifaces)
@@ -255,7 +255,7 @@ func (p *Parser) Interfaces() []*Interface {
 
 func (p *Parser) packageInterfaces(
 	pkg *types.Package,
-	fileName string,
+	file *fileEntry,
 	declaredInterfaces []string,
 	ifaces []*Interface,
 ) []*Interface {
@@ -293,8 +293,9 @@ func (p *Parser) packageInterfaces(
 			Name:          name,
 			Pkg:           pkg,
 			QualifiedName: pkg.Path(),
-			FileName:      fileName,
+			FileName:      file.fileName,
 			NamedType:     typ,
+			File:          file.syntax,
 		}
 
 		iface, ok := typ.Underlying().(*types.Interface)
