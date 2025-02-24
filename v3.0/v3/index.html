@@ -21,11 +21,11 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.4+insiders-4.53.15">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5+insiders-4.53.15">
     
     
       
-        <title>v3 - mockery</title>
+        <title>v3 Release - mockery</title>
       
     
     
@@ -71,7 +71,7 @@
     
   
 <meta property="og:type" content="website" />
-<meta property="og:title" content="v3 - mockery" />
+<meta property="og:title" content="v3 Release - mockery" />
 <meta property="og:description" content="Create mock implementations of your Golang interfaces using mockery and testify." />
 <meta property="og:image" content="https://vektra.github.io/mockery/latest/assets/images/social/v3.png" />
 <meta property="og:image:type" content="image/png" />
@@ -79,7 +79,7 @@
 <meta property="og:image:height" content="630" />
 <meta property="og:url" content="https://vektra.github.io/mockery/latest/v3/" />
 <meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:title" content="v3 - mockery" />
+<meta property="twitter:title" content="v3 Release - mockery" />
 <meta property="twitter:description" content="Create mock implementations of your Golang interfaces using mockery and testify." />
 <meta property="twitter:image" content="https://vektra.github.io/mockery/latest/assets/images/social/v3.png" />
  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
@@ -127,7 +127,7 @@
     background-color: #ff17441a;
   }
 </style>
-mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
+mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 <br><a href="../.."><strong>Click here to go to v2.</strong></a>
 
           </div>
@@ -167,7 +167,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              v3
+              v3 Release
             
           </span>
         </div>
@@ -801,7 +801,9 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   <span class="md-ellipsis">
     
   
-    v3
+    <span class="md-typeset">
+      v3 Release
+    </span>
   
 
     
@@ -818,7 +820,9 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   <span class="md-ellipsis">
     
   
-    v3
+    <span class="md-typeset">
+      v3 Release
+    </span>
   
 
     
@@ -1034,6 +1038,19 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v2-support-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          v2 Support Lifecycle
+        </span>
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1273,6 +1290,19 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#v2-support-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          v2 Support Lifecycle
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1339,7 +1369,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <h4 id="keeptree-true"><code class="highlight"><span class="nt">keeptree</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span></code><a class="headerlink" href="#keeptree-true" title="Permanent link">&para;</a></h4>
 <p>Mockery v2 provided a <code>keeptree</code> parameter that was deprecated and used only in the pre-<code>packages</code> config schema. This parameter has no use in v3 and has been removed.</p>
 <h4 id="replace-type"><code class="highlight"><span class="nt">replace-type</span><span class="p">:</span></code><a class="headerlink" href="#replace-type" title="Permanent link">&para;</a></h4>
-<p>The <code class="highlight"><span class="nt">replace-type</span><span class="p">:</span></code> parameter has an updated schema. In v2, <a href="https://vektra.github.io/mockery/latest-v2/features/#replace-types">users provided a list of strings</a>, where each string needed to confirm to a specific format that was parsed at runtime. In v3, the <a href="../replace-type/">schema is more explicit</a> to make it simpler. </p>
+<p>The <code class="highlight"><span class="nt">replace-type</span><span class="p">:</span></code> parameter has an updated schema. In v2, <a href="https://vektra.github.io/mockery/latest-v2/features/#replace-types">users provided a list of strings</a>, where each string needed to confirm to a specific format that was parsed at runtime. In v3, the <a href="../replace-type/">schema is more explicit</a> to make it simpler.</p>
 <h4 id="struct-name"><code class="highlight"><span class="nt">struct-name</span><span class="p">:</span></code><a class="headerlink" href="#struct-name" title="Permanent link">&para;</a></h4>
 <p>The <code>struct-name</code> parameter has been replaced with <code>mock-name</code>.</p>
 <h4 id="resolve-alias"><code class="highlight"><span class="nt">resolve-alias</span><span class="p">:</span></code><a class="headerlink" href="#resolve-alias" title="Permanent link">&para;</a></h4>
@@ -1350,6 +1380,22 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
 <p>This parameter has been moved under the <code class="highlight"><span class="nt">template-data</span><span class="p">:</span></code> parameter. Parameters that apply only to specific templates are not expressed in the top-level schema and are instead passed through the schemaless <code class="highlight"><span class="nt">template-data</span><span class="p">:</span></code> map.</p>
 <h4 id="exclude"><code class="highlight"><span class="nt">exclude</span><span class="p">:</span></code><a class="headerlink" href="#exclude" title="Permanent link">&para;</a></h4>
 <p>This parameter in v2 was renamed to <code>exclude-subpkg-regex:</code>.</p>
+<h2 id="v2-support-lifecycle">v2 Support Lifecycle<a class="headerlink" href="#v2-support-lifecycle" title="Permanent link">&para;</a></h2>
+<p>In order to give the community ample time to adjust to v3, the mockery maintainers will support v2 until Dec 31, 2029 in the following ways:</p>
+<ol>
+<li>Bug fixes</li>
+<li>Security/vulnerability fixes</li>
+<li>Dependency updates to support future Go language versions.<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></li>
+</ol>
+<p>From the date at which v3 is released for full production, the Mockery project will support feature updates to v2 for a period of 6 months.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>More specifically, we agree to update our dependencies used in parsing Go types such that Mockery is capable of parsing new syntax introduced in the Go language. The mockery project will <em>not</em> support changes to the generated code in a manner that makes use of any new language features. The only promise is that Mockery will be able to parse modules that use such new syntax or other language features without failing.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
 
 
 
@@ -1398,7 +1444,7 @@ mockery v3 is currently in alpha. <strong>Do not use for production.</strong>
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.annotate", "content.code.copy", "content.action.edit", "content.action.view", "navigation.indexes", "navigation.sections", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.c7c1ca2c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.footnote.tooltips", "navigation.indexes", "navigation.sections", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.c7c1ca2c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../assets/javascripts/bundle.5a789024.min.js"></script>
