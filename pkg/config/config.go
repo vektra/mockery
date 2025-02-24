@@ -21,8 +21,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const doNotEditComment = "DO NOT EDIT"
-
 var (
 	ErrNoConfigFile         = fmt.Errorf("no config file exists")
 	ErrNoGoFilesFoundInRoot = fmt.Errorf("no go files found in root search path")
