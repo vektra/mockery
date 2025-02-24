@@ -27,10 +27,11 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
   features:
-    - content.code.annotate
-    - content.code.copy
     - content.action.edit
     - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.footnote.tooltips
     - navigation.indexes
     - navigation.sections
     - navigation.tracking
@@ -38,6 +39,7 @@ theme:
 markdown_extensions:
   - admonition
   - attr_list
+  - footnotes
   - md_in_html
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
@@ -67,8 +69,8 @@ nav:
   - Features:
     - replace-type.md
   - Notes:
-    - FAQ: faq.md
-    - v3: v3.md
+    - faq.md
+    - v3.md
 
 extra_css:
   - stylesheets/extra.css

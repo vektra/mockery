@@ -1,9 +1,11 @@
 mockery
 ========
 
-!!! danger "Alpha Test"
+[v3 Migration Docs](v3.md){ .md-button .md-button--stretch }
 
-	Mockery `v3` is currently in alpha and should not be used for production.
+!!! danger "Beta Test"
+
+	Mockery `v3` is currently in beta and should not be used for production.
 
 Mockery is a project that creates mock implementations of Golang interfaces. It inspects source code and generates implementations of the interface that aid in testing.
 

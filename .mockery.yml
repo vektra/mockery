@@ -1,4 +1,5 @@
 template: "testify"
+force-file-write: true
 tags: "custom2"
 formatter: "goimports"
 all: True
