@@ -834,7 +834,7 @@ func TestConfig_ShouldGenerateInterface(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.c.Config = writeConfigFile(t, tt.c)
 
-			got, err := tt.c.ShouldGenerateInterface(context.Background(), "some_package", "SomeInterface")
+			got, err := tt.c.ShouldGenerateInterface(context.Background(), "some_package", "SomeInterface", false)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Config.ShouldGenerateInterface() error = %v, wantErr %v", err, tt.wantErr)
 				return
