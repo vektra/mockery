@@ -1,6 +1,19 @@
 Deprecations
 =============
 
+`fail-on-missing`
+---------------
+
+!!! tip ""
+
+    To resolve this warning:
+
+    ```yaml title=".mockery.yaml"
+    fail-on-missing: True
+    ```
+
+This behavior will be permanently set to `true` in v3.
+
 `packages`
 ----------
 

@@ -1,0 +1,5 @@
+fail-on-missing: true
+packages:
+  github.com/vektra/mockery/v3/internal:
+    interfaces:
+      InterfaceDoesntExist:

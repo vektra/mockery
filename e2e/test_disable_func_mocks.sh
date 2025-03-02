@@ -1,4 +1,6 @@
 #!/bin/bash
+go run github.com/go-task/task/v3/cmd/task mocks.remove || exit 1
+go run github.com/go-task/task/v3/cmd/task mocks.generate || exit 1
 
 export MOCKERY_CONFIG="e2e/.mockery-disable-func-mock.yaml"
 export MOCKERY_LOG_LEVEL="error"
