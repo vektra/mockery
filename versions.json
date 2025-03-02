@@ -8,12 +8,17 @@
     ]
   },
   {
-    "version": "v2.52",
-    "title": "v2.52",
+    "version": "v2.53",
+    "title": "v2.53",
     "aliases": [
       "latest-v2",
       "latest"
     ]
+  },
+  {
+    "version": "v2.52",
+    "title": "v2.52",
+    "aliases": []
   },
   {
     "version": "v2.51",
