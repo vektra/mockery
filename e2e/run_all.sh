@@ -2,11 +2,13 @@
 set -e
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-for file in $(ls $SCRIPT_DIR/test_*.sh); do
+for test in $(ls -d $SCRIPT_DIR/test_*); do
+    file="$test"
+    if [ -d "$test" ]; then
+        file="$test/run.sh"
+    fi
     echo "=========="
     echo "RUNNING $file"
     echo "=========="
-    go run github.com/go-task/task/v3/cmd/task mocks.remove || exit 1
-    go run github.com/go-task/task/v3/cmd/task mocks.generate || exit 1
     $file
 done

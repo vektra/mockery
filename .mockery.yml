@@ -61,6 +61,3 @@ packages:
       all: True
       dir: internal/fixtures/
       pkgname: test
-  github.com/vektra/mockery/v3/internal:
-    interfaces:
-      InterfaceDoesntExist:

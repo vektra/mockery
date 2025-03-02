@@ -358,13 +358,18 @@ func (r *RootApp) Run() error {
 
 	// The loop above could exit early, so sometimes warnings won't be shown
 	// until other errors are fixed
+	var foundMissing bool
 	for packagePath := range missingMap {
 		for ifaceName := range missingMap[packagePath] {
-			log.Warn().
+			foundMissing = true
+			log.Error().
 				Str(logging.LogKeyInterface, ifaceName).
 				Str(logging.LogKeyPackagePath, packagePath).
 				Msg("interface not found in source")
 		}
+	}
+	if foundMissing {
+		os.Exit(1)
 	}
 
 	return nil
