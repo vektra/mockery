@@ -17,6 +17,7 @@ import (
 
 	"github.com/chigopher/pathlib"
 	"github.com/mitchellh/go-homedir"
+	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -289,6 +290,7 @@ func (r *RootApp) Run() error {
 		// Output interfaces that were specified but not found.
 		// We do that here and not before the loop because it's easier to
 		// see for the user.
+		var foundMissing bool
 		for _, p := range configuredPackages {
 			ifaceList, err := r.Config.GetInterfacesForPackage(ctx, p)
 			if err != nil {
@@ -297,11 +299,19 @@ func (r *RootApp) Run() error {
 
 			for _, name := range ifaceList {
 				if !parser.Has(p, name) {
-					log.Warn().Ctx(ctx).
+					level := zerolog.WarnLevel
+					if r.Config.FailOnMissing {
+						level = zerolog.ErrorLevel
+					}
+					log.WithLevel(level).Ctx(ctx).
 						Str(logging.LogKeyInterface, name).
 						Str(logging.LogKeyQualifiedName, p).
 						Msg("no such interface")
+					foundMissing = true
 				}
+			}
+			if foundMissing && r.Config.FailOnMissing {
+				os.Exit(1)
 			}
 		}
 

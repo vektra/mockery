@@ -49,6 +49,7 @@ type Config struct {
 	Exclude                     []string               `mapstructure:"exclude"`
 	ExcludeRegex                string                 `mapstructure:"exclude-regex"`
 	Exported                    bool                   `mapstructure:"exported"`
+	FailOnMissing               bool                   `mapstructure:"fail-on-missing"`
 	FileName                    string                 `mapstructure:"filename"`
 	InPackage                   bool                   `mapstructure:"inpackage"`
 	InPackageSuffix             bool                   `mapstructure:"inpackage-suffix"`

@@ -65,9 +65,6 @@ tasks:
 
   test.e2e:
     desc: run end-to-end tests
-    sources:
-      - "**/*.go"
-      - "./.mockery.yaml"
     cmds:
       - ./e2e/run_all.sh
 
