@@ -67,7 +67,6 @@ func NewRootCmd() *cobra.Command {
 	pFlags.String("case", "", "name the mocked file using casing convention [camel, snake, underscore]")
 	pFlags.String("note", "", "comment to insert into prologue of each generated file")
 	pFlags.String("cpuprofile", "", "write cpu profile to file")
-	pFlags.String("profile", "", "write cpu profile to file")
 	pFlags.Bool("version", false, "prints the installed version of mockery")
 	pFlags.Bool("quiet", false, `suppresses logger output (equivalent to --log-level="")`)
 	pFlags.Bool("keeptree", false, "keep the tree structure of the original interface files into a different repository. Must be used with XX")
