@@ -216,6 +216,22 @@ func (r *RootApp) Run() error {
 		return nil
 	}
 
+	if r.Config.Profile != "" || r.Config.Cpuprofile != "" {
+		profile := r.Config.Profile
+		if profile == "" {
+			profile = r.Config.Cpuprofile
+		}
+		f, err := os.Create(profile)
+		if err != nil {
+			return stackerr.NewStackErrf(err, "Failed to create profile file")
+		}
+		defer f.Close()
+		if err := pprof.StartCPUProfile(f); err != nil {
+			return fmt.Errorf("failed to start CPU profile: %w", err)
+		}
+		defer pprof.StopCPUProfile()
+	}
+
 	var osp pkg.OutputStreamProvider
 	if r.Config.Print {
 		osp = &pkg.StdoutStreamProvider{}
@@ -341,18 +357,6 @@ func (r *RootApp) Run() error {
 		filter = regexp.MustCompile(".*")
 	} else {
 		log.Fatal().Msgf("Use --name to specify the name of the interface or --all for all interfaces found")
-	}
-
-	if r.Config.Profile != "" {
-		f, err := os.Create(r.Config.Profile)
-		if err != nil {
-			return stackerr.NewStackErrf(err, "Failed to create profile file")
-		}
-		defer f.Close()
-		if err := pprof.StartCPUProfile(f); err != nil {
-			return fmt.Errorf("failed to start CPU profile: %w", err)
-		}
-		defer pprof.StopCPUProfile()
 	}
 
 	baseDir := r.Config.Dir
