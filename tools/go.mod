@@ -1,6 +1,6 @@
 module github.com/vektra/mockery/tools
 
-go 1.24.0
+go 1.23
 
 require (
 	github.com/go-errors/errors v1.5.1
