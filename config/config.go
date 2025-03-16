@@ -20,6 +20,7 @@ import (
 	"github.com/knadh/koanf/providers/env"
 	"github.com/knadh/koanf/providers/file"
 	"github.com/knadh/koanf/providers/posflag"
+	"github.com/knadh/koanf/providers/structs"
 	"github.com/knadh/koanf/v2"
 	"github.com/rs/zerolog"
 	"github.com/spf13/pflag"
@@ -69,9 +70,34 @@ type Data struct {
 	SrcPackagePath string
 }
 
+func addr[T any](v T) *T {
+	return &v
+}
+
+func NewDefaultKoanf(ctx context.Context) (*koanf.Koanf, error) {
+	c := Config{
+		All:            addr(false),
+		Dir:            addr("{{.InterfaceDir}}"),
+		FileName:       addr("mocks_test.go"),
+		ForceFileWrite: addr(false),
+		Formatter:      addr("goimports"),
+		LogLevel:       addr("info"),
+		MockName:       addr("Mock{{.InterfaceName}}"),
+		PkgName:        addr("{{.SrcPackageName}}"),
+		Recursive:      addr(false),
+		Template:       addr("testify"),
+		TemplateData:   map[string]any{},
+	}
+	k := koanf.New("|")
+	if err := k.Load(structs.Provider(c, "koanf"), nil); err != nil {
+		return nil, stackerr.NewStackErr(err)
+	}
+	return k, nil
+}
+
 type RootConfig struct {
-	*Config    `koanf:",squash"`
-	Packages   map[string]*PackageConfig `koanf:"packages"`
+	Config     `koanf:",squash" yaml:",inline"`
+	Packages   map[string]*PackageConfig `koanf:"packages" yaml:"packages"`
 	koanf      *koanf.Koanf
 	configFile *pathlib.Path
 }
@@ -100,23 +126,13 @@ func NewRootConfig(
 		field.Set(reflect.New(field.Type().Elem()))
 	}
 
-	var rootConfig RootConfig = RootConfig{
-		Config: conf,
+	k, err := NewDefaultKoanf(ctx)
+	if err != nil {
+		return nil, nil, err
 	}
-	k := koanf.New("|")
-	rootConfig.koanf = k
-	for key, val := range map[string]string{
-		"dir":       "{{.InterfaceDir}}",
-		"filename":  "mocks_test.go",
-		"formatter": "goimports",
-		"mockname":  "Mock{{.InterfaceName}}",
-		"pkgname":   "{{.SrcPackageName}}",
-		"log-level": "info",
-	} {
-		if err := k.Set(key, val); err != nil {
-			log.Err(err).Msg("failed to set default value")
-			return nil, nil, stackerr.NewStackErr(err)
-		}
+	var rootConfig RootConfig = RootConfig{
+		Config: *conf,
+		koanf:  k,
 	}
 
 	configFileFromEnv := os.Getenv("MOCKERY_CONFIG")
@@ -264,7 +280,7 @@ func (c *RootConfig) Initialize(ctx context.Context) error {
 		pkgLog := log.With().Str("package-path", pkgName).Logger()
 		pkgCtx := pkgLog.WithContext(ctx)
 
-		mergeConfigs(pkgCtx, *c.Config, pkgConfig.Config)
+		mergeConfigs(pkgCtx, c.Config, pkgConfig.Config)
 		if err := pkgConfig.Initialize(pkgCtx); err != nil {
 			return fmt.Errorf("initializing root config: %w", err)
 		}
@@ -342,8 +358,8 @@ func (c *RootConfig) GetPackages(ctx context.Context) ([]string, error) {
 }
 
 type PackageConfig struct {
-	Config     *Config                     `koanf:"config"`
-	Interfaces map[string]*InterfaceConfig `koanf:"interfaces"`
+	Config     *Config                     `koanf:"config" yaml:"config,omitempty"`
+	Interfaces map[string]*InterfaceConfig `koanf:"interfaces" yaml:"interfaces,omitempty"`
 }
 
 func NewPackageConfig() *PackageConfig {
@@ -438,8 +454,8 @@ func (c PackageConfig) ShouldGenerateInterface(ctx context.Context, interfaceNam
 }
 
 type InterfaceConfig struct {
-	Config  *Config   `koanf:"config"`
-	Configs []*Config `koanf:"configs"`
+	Config  *Config   `koanf:"config" yaml:"config,omitempty"`
+	Configs []*Config `koanf:"configs" yaml:"configs,omitempty"`
 }
 
 func NewInterfaceConfig() *InterfaceConfig {
@@ -462,33 +478,32 @@ func (c *InterfaceConfig) Initialize(ctx context.Context) error {
 }
 
 type ReplaceType struct {
-	PkgPath  string `koanf:"pkg-path"`
-	TypeName string `koanf:"type-name"`
+	PkgPath  string `koanf:"pkg-path" yaml:"pkg-path,omitempty"`
+	TypeName string `koanf:"type-name" yaml:"type-name,omitempty"`
 }
 
 type Config struct {
-	All                *bool          `koanf:"all"`
-	Anchors            map[string]any `koanf:"_anchors"`
-	BuildTags          *string        `koanf:"tags"`
-	ConfigFile         *string        `koanf:"config"`
-	Dir                *string        `koanf:"dir"`
-	ExcludeSubpkgRegex []string       `koanf:"exclude-subpkg-regex"`
-	ExcludeRegex       *string        `koanf:"exclude-regex"`
-	FileName           *string        `koanf:"filename"`
+	All                *bool          `koanf:"all" yaml:"all,omitempty"`
+	Anchors            map[string]any `koanf:"_anchors" yaml:"_anchors,omitempty"`
+	BuildTags          *string        `koanf:"build-tags" yaml:"build-tags,omitempty"`
+	ConfigFile         *string        `koanf:"config" yaml:"config,omitempty"`
+	Dir                *string        `koanf:"dir" yaml:"dir,omitempty"`
+	ExcludeSubpkgRegex []string       `koanf:"exclude-subpkg-regex" yaml:"exclude-subpkg-regex,omitempty"`
+	ExcludeRegex       *string        `koanf:"exclude-regex" yaml:"exclude-regex,omitempty"`
+	FileName           *string        `koanf:"filename" yaml:"filename,omitempty"`
 	// ForceFileWrite controls whether mockery will overwrite existing files when generating mocks. This is by default set to false.
-	ForceFileWrite bool    `koanf:"force-file-write"`
-	Formatter      *string `koanf:"formatter"`
-	IncludeRegex   *string `koanf:"include-regex"`
-	LogLevel       *string `koanf:"log-level"`
-	MockName       *string `koanf:"mockname"`
-	PkgName        *string `koanf:"pkgname"`
-	Recursive      *bool   `koanf:"recursive"`
+	ForceFileWrite *bool   `koanf:"force-file-write" yaml:"force-file-write,omitempty"`
+	Formatter      *string `koanf:"formatter" yaml:"formatter,omitempty"`
+	IncludeRegex   *string `koanf:"include-regex" yaml:"include-regex,omitempty"`
+	LogLevel       *string `koanf:"log-level" yaml:"log-level,omitempty"`
+	MockName       *string `koanf:"mockname" yaml:"mockname,omitempty"`
+	PkgName        *string `koanf:"pkgname" yaml:"pkgname,omitempty"`
+	Recursive      *bool   `koanf:"recursive" yaml:"recursive,omitempty"`
 	// ReplaceType is a nested map of format map["package path"]["type name"]*ReplaceType
-	ReplaceType    map[string]map[string]*ReplaceType `koanf:"replace-type"`
-	Template       *string                            `koanf:"template"`
-	TemplateData   map[string]any                     `koanf:"template-data"`
-	UnrollVariadic *bool                              `koanf:"unroll-variadic"`
-	Version        *bool                              `koanf:"version"`
+	ReplaceType  map[string]map[string]*ReplaceType `koanf:"replace-type" yaml:"replace-type,omitempty"`
+	Template     *string                            `koanf:"template" yaml:"template,omitempty"`
+	TemplateData map[string]any                     `koanf:"template-data" yaml:"template-data,omitempty"`
+	Version      *bool                              `koanf:"version" yaml:"version,omitempty"`
 }
 
 func findConfig() (*pathlib.Path, error) {

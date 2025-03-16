@@ -64,6 +64,7 @@ func NewRootCmd() (*cobra.Command, error) {
 
 	cmd.AddCommand(NewShowConfigCmd())
 	cmd.AddCommand(NewVersionCmd())
+	cmd.AddCommand(NewInitCmd())
 	return cmd, nil
 }
 
@@ -346,8 +347,8 @@ func (r *RootApp) Run() error {
 			fileLog.Err(err).Msg("can't determine if outfile exists")
 			return fmt.Errorf("determining if outfile exists: %w", err)
 		}
-		if outFileExists && !packageConfig.Config.ForceFileWrite {
-			fileLog.Error().Bool("force-file-write", packageConfig.Config.ForceFileWrite).Msg("output file exists, can't write mocks")
+		if outFileExists && !*packageConfig.Config.ForceFileWrite {
+			fileLog.Error().Bool("force-file-write", *packageConfig.Config.ForceFileWrite).Msg("output file exists, can't write mocks")
 			return fmt.Errorf("outfile exists")
 		}
 
