@@ -12,9 +12,9 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: 3.x
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         with:
-          key: ${{ github.ref }}
+          key: v3-documentation-${{ runner.os }}-${{ steps.get-date.outputs.date }}
           path: .cache
       - run: sudo apt-get install -y libcairo2-dev libfreetype6-dev libffi-dev libjpeg-dev libpng-dev libz-dev
       - run: pip install -r docs/requirements.txt
