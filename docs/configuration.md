@@ -33,7 +33,7 @@ packages:
 We can then run mockery against this config to generate the code:
 
 ``` title=""
-$ go run .
+$ mockery
 2025-03-14T23:42:17.014113000-05:00 INF Starting mockery config-file=/Users/landon/git/LandonTClipp/mockery/.mockery.yaml version=v0.0.0-dev
 2025-03-14T23:42:17.014258000-05:00 INF Parsing configured packages... version=v0.0.0-dev
 2025-03-14T23:42:17.527483000-05:00 INF Done parsing configured packages. version=v0.0.0-dev
