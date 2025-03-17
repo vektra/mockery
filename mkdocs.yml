@@ -5,6 +5,7 @@ site_description: >-
 
 repo_name: vektra/mockery
 repo_url: https://github.com/vektra/mockery
+edit_uri: edit/v3/docs
 
 theme:
   name: material
