@@ -25,7 +25,7 @@ func NewRootCmd() (*cobra.Command, error) {
 	var pFlags *pflag.FlagSet
 	cmd := &cobra.Command{
 		Use:   "mockery",
-		Short: "Generate mock objects for your Golang interfaces",
+		Short: "Generate mock objects for your Go interfaces",
 		Run: func(cmd *cobra.Command, args []string) {
 			if err := pFlags.Parse(args); err != nil {
 				fmt.Printf("failed to parse flags: %s", err.Error())
@@ -56,15 +56,12 @@ func NewRootCmd() (*cobra.Command, error) {
 	}
 	pFlags = cmd.PersistentFlags()
 	pFlags.String("config", "", "config file to use")
-	pFlags.String("tags", "", "space-separated list of additional build tags to load packages")
-	pFlags.String("mock-build-tags", "", "set the build tags of the generated mocks. Read more about the format: https://pkg.go.dev/cmd/go#hdr-Build_constraints")
 	pFlags.String("log-level", os.Getenv("MOCKERY_LOG_LEVEL"), "Level of logging")
-	pFlags.String("boilerplate-file", "", "File to read a boilerplate text from. Text should be a go block comment, i.e. /* ... */")
-	pFlags.Bool("unroll-variadic", true, "For functions with variadic arguments, do not unroll the arguments into the underlying testify call. Instead, pass variadic slice as-is.")
 
 	cmd.AddCommand(NewShowConfigCmd())
 	cmd.AddCommand(NewVersionCmd())
 	cmd.AddCommand(NewInitCmd())
+	cmd.AddCommand(NewMigrateCmd())
 	return cmd, nil
 }
 

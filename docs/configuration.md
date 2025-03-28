@@ -109,11 +109,6 @@ import (
     2. There are a number of template variables available to generalize config values.
     3. The style of mock to be generated is specified using the [`template`](template/index.md) parameter.
 
-As you can see, configuration parameters are hierarchal such that:
-
-- Interface-level config overrides package-level config.
-- Package-level config overrides top-level config.
-
 Parameter Descriptions
 -----------------------
 
@@ -139,6 +134,9 @@ Parameter Descriptions
 | `template`                                             | :fontawesome-solid-x:     | `#!yaml ""`                           | The template to use. The choices are `moq`, `mockery`, or a file path provided by `file://path/to/file.txt`.                                                                                                                                         |
 | `template-data`                                        | :fontawesome-solid-x:     | `#!yaml {}`                           | A `map[string]any` that provides arbitrary options to the template. Each template will have a different set of accepted keys. Refer to each template's documentation for more details.                                                               |
 
+!!! tip "`pkg.go.dev`"
+
+    The full schema definition can be viewed at our [pkg.go.dev](https://pkg.go.dev/github.com/vektra/mockery/v3/config#RootConfig) site.
 
 Templates
 ---------

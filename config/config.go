@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"context"
-	"errors"
 	"fmt"
 	"go/ast"
 	"os"
@@ -24,6 +23,7 @@ import (
 	"github.com/knadh/koanf/v2"
 	"github.com/rs/zerolog"
 	"github.com/spf13/pflag"
+	internalConfig "github.com/vektra/mockery/v3/internal/config"
 	"github.com/vektra/mockery/v3/internal/logging"
 	"github.com/vektra/mockery/v3/internal/stackerr"
 	"github.com/vektra/mockery/v3/shared"
@@ -48,8 +48,8 @@ func NewInterface(name string, filename string, file *ast.File, pkg *packages.Pa
 	}
 }
 
-// Data is the data sent to the template for the config file.
-type Data struct {
+// TemplateData is the data sent to the template for the config file.
+type TemplateData struct {
 	// ConfigDir is the directory of where the mockery config file is located.
 	ConfigDir string
 	// InterfaceDir is the directory of the interface being mocked.
@@ -96,7 +96,7 @@ func NewDefaultKoanf(ctx context.Context) (*koanf.Koanf, error) {
 }
 
 type RootConfig struct {
-	Config     `koanf:",squash" yaml:",inline"`
+	*Config    `koanf:",squash" yaml:",inline"`
 	Packages   map[string]*PackageConfig `koanf:"packages" yaml:"packages"`
 	koanf      *koanf.Koanf
 	configFile *pathlib.Path
@@ -131,7 +131,7 @@ func NewRootConfig(
 		return nil, nil, err
 	}
 	var rootConfig RootConfig = RootConfig{
-		Config: *conf,
+		Config: conf,
 		koanf:  k,
 	}
 
@@ -150,7 +150,7 @@ func NewRootConfig(
 	}
 	if configFile == nil {
 		log.Debug().Msg("config file not specified, searching")
-		configFile, err = findConfig()
+		configFile, err = internalConfig.FindConfig()
 		if err != nil {
 			return nil, k, fmt.Errorf("discovering mockery config: %w", err)
 		}
@@ -280,7 +280,7 @@ func (c *RootConfig) Initialize(ctx context.Context) error {
 		pkgLog := log.With().Str("package-path", pkgName).Logger()
 		pkgCtx := pkgLog.WithContext(ctx)
 
-		mergeConfigs(pkgCtx, c.Config, pkgConfig.Config)
+		mergeConfigs(pkgCtx, *c.Config, pkgConfig.Config)
 		if err := pkgConfig.Initialize(pkgCtx); err != nil {
 			return fmt.Errorf("initializing root config: %w", err)
 		}
@@ -506,28 +506,6 @@ type Config struct {
 	Version      *bool                              `koanf:"version" yaml:"version,omitempty"`
 }
 
-func findConfig() (*pathlib.Path, error) {
-	cwd, err := os.Getwd()
-	if err != nil {
-		return nil, fmt.Errorf("getting current working directory: %w", err)
-	}
-	currentPath := pathlib.NewPath(cwd)
-	for len(currentPath.Parts()) != 1 {
-		for _, confName := range []string{".mockery.yaml", ".mockery.yml"} {
-			configPath := currentPath.Join(confName)
-			isFile, err := configPath.Exists()
-			if err != nil {
-				return nil, fmt.Errorf("checking if %s is file: %w", configPath.String(), err)
-			}
-			if isFile {
-				return configPath, nil
-			}
-		}
-		currentPath = currentPath.Parent()
-	}
-	return nil, errors.New("mockery config file not found")
-}
-
 func (c *Config) FilePath() *pathlib.Path {
 	return pathlib.NewPath(*c.Dir).Join(*c.FileName).Clean()
 }
@@ -608,7 +586,7 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 		}
 	}
 	// data is the struct sent to the template parser
-	data := Data{
+	data := TemplateData{
 		ConfigDir:            filepath.Dir(*c.ConfigFile),
 		InterfaceDir:         interfaceDir,
 		InterfaceDirRelative: interfaceDirRelative,

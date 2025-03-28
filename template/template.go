@@ -1,3 +1,4 @@
+// Package template provides data and functionality for rendering templates using mockery.
 package template
 
 import (
