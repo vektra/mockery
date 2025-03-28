@@ -25,7 +25,7 @@
     
     
       
-        <title>v3 Release - mockery</title>
+        <title>v3 Migration - mockery</title>
       
     
     
@@ -71,7 +71,7 @@
     
   
 <meta property="og:type" content="website" />
-<meta property="og:title" content="v3 Release - mockery" />
+<meta property="og:title" content="v3 Migration - mockery" />
 <meta property="og:description" content="Create mock implementations of your Golang interfaces using mockery and testify." />
 <meta property="og:image" content="https://vektra.github.io/mockery/latest/assets/images/social/v3.png" />
 <meta property="og:image:type" content="image/png" />
@@ -79,7 +79,7 @@
 <meta property="og:image:height" content="630" />
 <meta property="og:url" content="https://vektra.github.io/mockery/latest/v3/" />
 <meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:title" content="v3 Release - mockery" />
+<meta property="twitter:title" content="v3 Migration - mockery" />
 <meta property="twitter:description" content="Create mock implementations of your Golang interfaces using mockery and testify." />
 <meta property="twitter:image" content="https://vektra.github.io/mockery/latest/assets/images/social/v3.png" />
  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
@@ -110,7 +110,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#v3-release" class="md-skip">
+        <a href="#v3-migration" class="md-skip">
           Skip to content
         </a>
       
@@ -167,7 +167,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              v3 Release
+              v3 Migration
             
           </span>
         </div>
@@ -802,7 +802,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
     
   
     <span class="md-typeset">
-      v3 Release
+      v3 Migration
     </span>
   
 
@@ -821,7 +821,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
     
   
     <span class="md-typeset">
-      v3 Release
+      v3 Migration
     </span>
   
 
@@ -848,46 +848,19 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#migration" class="md-nav__link">
+  <a href="#mockery-migrate" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          Migration
-        </span>
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Migration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#mockery-style-mocks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Mockery-style mocks
+          <code>mockery migrate</code>
         </span>
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#deprecation-warnings" class="md-nav__link">
-    <span class="md-ellipsis">
       
-        <span class="md-typeset">
-          Deprecation Warnings
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
+        <li class="md-nav__item">
   <a href="#layouts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -899,8 +872,8 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#function-mocks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -912,8 +885,8 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#parameters" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -967,11 +940,11 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 </li>
         
           <li class="md-nav__item">
-  <a href="#struct-name" class="md-nav__link">
+  <a href="#structname" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          <code class="highlight"><span class="nt">struct-name</span><span class="p">:</span></code>
+          <code class="highlight"><span class="nt">structname</span><span class="p">:</span></code>
         </span>
       
     </span>
@@ -980,11 +953,11 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 </li>
         
           <li class="md-nav__item">
-  <a href="#resolve-alias" class="md-nav__link">
+  <a href="#resolve-type-alias" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          <code class="highlight"><span class="nt">resolve-alias</span><span class="p">:</span></code>
+          <code class="highlight"><span class="nt">resolve-type-alias</span><span class="p">:</span></code>
         </span>
       
     </span>
@@ -1028,11 +1001,6 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -1097,46 +1065,19 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#migration" class="md-nav__link">
+  <a href="#mockery-migrate" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          Migration
-        </span>
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Migration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#mockery-style-mocks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Mockery-style mocks
+          <code>mockery migrate</code>
         </span>
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#deprecation-warnings" class="md-nav__link">
-    <span class="md-ellipsis">
       
-        <span class="md-typeset">
-          Deprecation Warnings
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
+        <li class="md-nav__item">
   <a href="#layouts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1148,8 +1089,8 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#function-mocks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1161,8 +1102,8 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#parameters" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1216,11 +1157,11 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 </li>
         
           <li class="md-nav__item">
-  <a href="#struct-name" class="md-nav__link">
+  <a href="#structname" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          <code class="highlight"><span class="nt">struct-name</span><span class="p">:</span></code>
+          <code class="highlight"><span class="nt">structname</span><span class="p">:</span></code>
         </span>
       
     </span>
@@ -1229,11 +1170,11 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 </li>
         
           <li class="md-nav__item">
-  <a href="#resolve-alias" class="md-nav__link">
+  <a href="#resolve-type-alias" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          <code class="highlight"><span class="nt">resolve-alias</span><span class="p">:</span></code>
+          <code class="highlight"><span class="nt">resolve-type-alias</span><span class="p">:</span></code>
         </span>
       
     </span>
@@ -1277,11 +1218,6 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -1336,7 +1272,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   
 
 
-<h1 id="v3-release">v3 Release<a class="headerlink" href="#v3-release" title="Permanent link">&para;</a></h1>
+<h1 id="v3-migration">v3 Migration<a class="headerlink" href="#v3-migration" title="Permanent link">&para;</a></h1>
 <p>Mockery releases version 3 of the project that provides a number of high-profile benefits over v2:</p>
 <ol>
 <li>Allows generation of <a href="../template/matryer/"><code>matryer</code></a>-style templates. The <a href="https://github.com/matryer/moq">https://github.com/matryer/moq</a> project is being subsumed into mockery to combine the speed and configuration flexibility of mockery with the simplicity of moq-style mocks.</li>
@@ -1344,41 +1280,126 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 <li>Mockery now allows users to specify their own templates to make code generation far easier. Mockery handles the problem of parsing source code and enables you to focus on creating <a href="templates.md#template-file">your own interface implementations</a>.</li>
 <li>Shedding all deprecated variables and simplifying the way in which mocks are configured.</li>
 </ol>
-<h2 id="migration">Migration<a class="headerlink" href="#migration" title="Permanent link">&para;</a></h2>
-<h3 id="mockery-style-mocks">Mockery-style mocks<a class="headerlink" href="#mockery-style-mocks" title="Permanent link">&para;</a></h3>
-<p class="annotate">In v3, mockery is capable of producing two styles of mocks. In v3, the mockery-style mocks are called <code>testify</code> and can be used by setting <code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">testify</span></code>. The shape of the mocks should be identical (minus the now-required expecter methods) and should not require any changes to existing tests using testify-style mocks.(1)</p>
-<ol>
-<li>If this is not the case and the v3 <code>testify</code>-style mocks have breaking changes, please <a href="https://github.com/vektra/mockery/issues">submit an issue</a> on Github.</li>
-</ol>
-<h3 id="deprecation-warnings">Deprecation Warnings<a class="headerlink" href="#deprecation-warnings" title="Permanent link">&para;</a></h3>
-<p>Mockery v2 has explicitly deprecated a number of variables. These deprecations can be found here: <a href="https://vektra.github.io/mockery/latest-v2/deprecations/">https://vektra.github.io/mockery/latest-v2/deprecations/</a>. Mockery logs warnings such as:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>20 Jan 25 15:53 CST WRN DEPRECATION: disable-version-string will be permanently set to True in v3 deprecation-name=disable-version-string url=https://vektra.github.io/mockery/v0.0/deprecations/#disable-version-string version=v0.0.0-dev
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>20 Jan 25 15:53 CST WRN DEPRECATION: issue-845-fix must be set to True to remove this warning. Visit the link for more details. deprecation-name=issue-845-fix url=https://vektra.github.io/mockery/v0.0/deprecations/#issue-845-fix version=v0.0.0-dev
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>20 Jan 25 15:53 CST WRN DEPRECATION: resolve-type-alias will be permanently set to False in v3. Please modify your config to set the parameter to False. deprecation-name=resolve-type-alias url=https://vektra.github.io/mockery/v0.0/deprecations/#resolve-type-alias version=v0.0.0-dev
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>20 Jan 25 15:53 CST WRN DEPRECATION: with-expecter will be permanently set to True in v3 deprecation-name=with-expecter url=https://vektra.github.io/mockery/v0.0/deprecations/#with-expecter version=v0.0.0-dev
+<h2 id="mockery-migrate"><code>mockery migrate</code><a class="headerlink" href="#mockery-migrate" title="Permanent link">&para;</a></h2>
+<p>A tool is provided that will migrate your v2 config to v3 on a best-effort basis. Take for example a v2 schema config:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">quiet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">disable-version-string</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">with-expecter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">mockname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{.InterfaceNameCamel}}&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{.MockName}}_mock.go&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nt">outpkg</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mocks</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;custom2&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nt">issue-845-fix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nt">resolve-type-alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nt">packages</span><span class="p">:</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="nt">github.com/vektra/mockery/v2/pkg/fixtures</span><span class="p">:</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">      </span><span class="nt">all</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="nt">interfaces</span><span class="p">:</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">      </span><span class="nt">RequesterVariadic</span><span class="p">:</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">        </span><span class="nt">config</span><span class="p">:</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">          </span><span class="nt">with-expecter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">        </span><span class="nt">configs</span><span class="p">:</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mockname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RequesterVariadicOneArgument</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">            </span><span class="nt">unroll-variadic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mockname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RequesterVariadic</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">            </span><span class="nt">unroll-variadic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">      </span><span class="nt">ReplaceGeneric</span><span class="p">:</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">        </span><span class="nt">config</span><span class="p">:</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">          </span><span class="nt">replace-type</span><span class="p">:</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.com/vektra/mockery/v2/pkg/fixtures.ReplaceGeneric[-TImport]=github.com/vektra/mockery/v2/pkg/fixtures/redefined_type_b.B</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.com/vektra/mockery/v2/pkg/fixtures.ReplaceGeneric[TConstraint]=github.com/vektra/mockery/v2/pkg/fixtures/constraints.String</span>
 </code></pre></div>
-<p>These warnings provide doc URLs that indicate how to fix the warning to prepare for the v3 release. While we provide these warnings on a best-effort basis, they are unlikely to be comprehensive due to the large number of changes that v3 introduces. Please <a href="https://github.com/vektra/mockery/issues">submit an issue</a> on Github if you notice a missing deprecation warning that would be useful to have.</p>
-<h3 id="layouts">Layouts<a class="headerlink" href="#layouts" title="Permanent link">&para;</a></h3>
+<p>We can run the command to migrate this to the v3 schema:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>$ mockery migrate --config ./.mockery_v2.yml
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2025-03-28T00:26:44.762164000-05:00 INF using config config=./.mockery_v2.yml version=v0.0.0-dev
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>2025-03-28T00:26:44.762804000-05:00 INF writing v3 config config=./.mockery_v2.yml v3-config=.mockery_v3.yml version=v0.0.0-dev
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2025-03-28T00:26:44.762914000-05:00 WRN breaking changes detected that possibly require manual intervention. See table below. config=./.mockery_v2.yml version=v0.0.0-dev
+</code></pre></div>
+<p>This command will return two results:</p>
+<div class="admonition info">
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1"><code>.mockery_v3.yml</code></label><label for="__tabbed_1_2">Deprecation Table</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>The translated v3 config file.</p>
+<div class="highlight"><span class="filename">YAML</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">mockname</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{.InterfaceNameCamel}}&#39;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">pkgname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mocks</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">testify</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">template-data</span><span class="p">:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">with-expecter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nt">packages</span><span class="p">:</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">github.com/vektra/mockery/v2/pkg/fixtures</span><span class="p">:</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">      </span><span class="nt">all</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nt">interfaces</span><span class="p">:</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">      </span><span class="nt">ReplaceGeneric</span><span class="p">:</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">        </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">      </span><span class="nt">RequesterVariadic</span><span class="p">:</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">        </span><span class="nt">config</span><span class="p">:</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">          </span><span class="nt">template-data</span><span class="p">:</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">            </span><span class="nt">with-expecter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">        </span><span class="nt">configs</span><span class="p">:</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mockname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RequesterVariadicOneArgument</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">            </span><span class="nt">template-data</span><span class="p">:</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">              </span><span class="nt">unroll-variadic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mockname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RequesterVariadic</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">            </span><span class="nt">template-data</span><span class="p">:</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">              </span><span class="nt">unroll-variadic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>A deprecation table that highlights situations that could not be resolved automatically. Each of these entries must be manually handled.</p>
+<p>Take for example the last entry mentioning <code>replace-type</code>. In v3, the <a data-preview="data-preview" href="../replace-type/#schema">schema for <code>replace-type</code></a> was changed from a parsed string to a more explicit key-value mapping.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>╭────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>│                                                              Deprecations                                                              │
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│ IDX  DEPRECATION TYPE      MESSAGE                                                                                                     │
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│ 0    template-variable     InterfaceNameCamel template variable has been deleted. Use &quot;{{ .InterfaceName | camelcase }}&quot; instead       │
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│ 1    deprecated-parameter  `tags` is no longer supported, parameter not migrated. Use `mock-build-tags` instead.                       │
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>│ 2    deprecated-parameter  `disable-func-mocks` permanently enabled in v3.                                                             │
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>│ 3    deprecated-parameter  `fail-on-missing` is permanently set to True in v3.                                                         │
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>│ 4    deprecated-parameter  `disable-version-string` is permanently set to True in v3.                                                  │
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>│ 5    deprecated-parameter  `issue-845-fix` is permanently set to true in v3.                                                           │
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>│ 6    deprecated-parameter  `replace-type` has moved to a new schema. Cannot automatically migrate. Please visit                        │
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>│                            https://vektra.github.io/mockery/latest-v3/replace-type/ for more information.                              │
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+</code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code>mockery migrate</code> is not comprehensive and likely has missing edge cases. We encourage you to submit issues and PRs for any problems you encounter.</p>
+</div>
+<h2 id="layouts">Layouts<a class="headerlink" href="#layouts" title="Permanent link">&para;</a></h2>
 <p>In v2, mockery defaulted to placing mocks in a separate <code>mocks/</code> directory as <a href="https://vektra.github.io/mockery/latest-v2/configuration/#layouts">shown here</a>. In v3, mockery will by default place mocks adjacent to the mocked interface.</p>
 <p>It is still possible to place mocks in a separate directory by making use of the <a href="../configuration/#templates">template variables and functions</a> available to the configuration parameters.</p>
-<h3 id="function-mocks">Function Mocks<a class="headerlink" href="#function-mocks" title="Permanent link">&para;</a></h3>
+<h2 id="function-mocks">Function Mocks<a class="headerlink" href="#function-mocks" title="Permanent link">&para;</a></h2>
 <p>Mockery v2 allowed generating mocks for function types. v3 no longer does this as it provided little benefit for users.</p>
-<h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h3>
-<h4 id="inpackage-true"><code class="highlight"><span class="nt">inpackage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span></code><a class="headerlink" href="#inpackage-true" title="Permanent link">&para;</a></h4>
+<h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
+<h3 id="inpackage-true"><code class="highlight"><span class="nt">inpackage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span></code><a class="headerlink" href="#inpackage-true" title="Permanent link">&para;</a></h3>
 <p>Mockery v2 has an <code>inpackage</code> parameter that informed mockery when a mock was being generated in the same package as the original interface. In v3, this parameter has been removed as mockery is now able to detect when the mock is placed in the same package.</p>
-<h4 id="keeptree-true"><code class="highlight"><span class="nt">keeptree</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span></code><a class="headerlink" href="#keeptree-true" title="Permanent link">&para;</a></h4>
+<h3 id="keeptree-true"><code class="highlight"><span class="nt">keeptree</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span></code><a class="headerlink" href="#keeptree-true" title="Permanent link">&para;</a></h3>
 <p>Mockery v2 provided a <code>keeptree</code> parameter that was deprecated and used only in the pre-<code>packages</code> config schema. This parameter has no use in v3 and has been removed.</p>
-<h4 id="replace-type"><code class="highlight"><span class="nt">replace-type</span><span class="p">:</span></code><a class="headerlink" href="#replace-type" title="Permanent link">&para;</a></h4>
+<h3 id="replace-type"><code class="highlight"><span class="nt">replace-type</span><span class="p">:</span></code><a class="headerlink" href="#replace-type" title="Permanent link">&para;</a></h3>
 <p>The <code class="highlight"><span class="nt">replace-type</span><span class="p">:</span></code> parameter has an updated schema. In v2, <a href="https://vektra.github.io/mockery/latest-v2/features/#replace-types">users provided a list of strings</a>, where each string needed to confirm to a specific format that was parsed at runtime. In v3, the <a href="../replace-type/">schema is more explicit</a> to make it simpler.</p>
-<h4 id="struct-name"><code class="highlight"><span class="nt">struct-name</span><span class="p">:</span></code><a class="headerlink" href="#struct-name" title="Permanent link">&para;</a></h4>
-<p>The <code>struct-name</code> parameter has been replaced with <code>mock-name</code>.</p>
-<h4 id="resolve-alias"><code class="highlight"><span class="nt">resolve-alias</span><span class="p">:</span></code><a class="headerlink" href="#resolve-alias" title="Permanent link">&para;</a></h4>
-<p>In v2, <code>resolve-alias</code> was set to <code>True</code> by default to retain backwards compatability. In v3, this is set to <code>False</code> by default.</p>
-<h4 id="with-expecter"><code class="highlight"><span class="nt">with-expecter</span><span class="p">:</span></code><a class="headerlink" href="#with-expecter" title="Permanent link">&para;</a></h4>
+<h3 id="structname"><code class="highlight"><span class="nt">structname</span><span class="p">:</span></code><a class="headerlink" href="#structname" title="Permanent link">&para;</a></h3>
+<p>The <code>structname</code> parameter has been replaced with <code>mockname</code>.</p>
+<h3 id="resolve-type-alias"><code class="highlight"><span class="nt">resolve-type-alias</span><span class="p">:</span></code><a class="headerlink" href="#resolve-type-alias" title="Permanent link">&para;</a></h3>
+<p>In v2, <code>resolve-type-alias</code> was set to <code>True</code> by default to retain backwards compatibility. In v3, this is permanently set to <code>False</code>.</p>
+<h3 id="with-expecter"><code class="highlight"><span class="nt">with-expecter</span><span class="p">:</span></code><a class="headerlink" href="#with-expecter" title="Permanent link">&para;</a></h3>
 <p>In v3, this parameter has been removed. <code>testify</code>-style mocks will always generate expecter methods.</p>
-<h4 id="unroll-variadic"><code class="highlight"><span class="nt">unroll-variadic</span><span class="p">:</span></code><a class="headerlink" href="#unroll-variadic" title="Permanent link">&para;</a></h4>
+<h3 id="unroll-variadic"><code class="highlight"><span class="nt">unroll-variadic</span><span class="p">:</span></code><a class="headerlink" href="#unroll-variadic" title="Permanent link">&para;</a></h3>
 <p>This parameter has been moved under the <code class="highlight"><span class="nt">template-data</span><span class="p">:</span></code> parameter. Parameters that apply only to specific templates are not expressed in the top-level schema and are instead passed through the schemaless <code class="highlight"><span class="nt">template-data</span><span class="p">:</span></code> map.</p>
-<h4 id="exclude"><code class="highlight"><span class="nt">exclude</span><span class="p">:</span></code><a class="headerlink" href="#exclude" title="Permanent link">&para;</a></h4>
+<h3 id="exclude"><code class="highlight"><span class="nt">exclude</span><span class="p">:</span></code><a class="headerlink" href="#exclude" title="Permanent link">&para;</a></h3>
 <p>This parameter in v2 was renamed to <code>exclude-subpkg-regex:</code>.</p>
 <h2 id="v2-support-lifecycle">v2 Support Lifecycle<a class="headerlink" href="#v2-support-lifecycle" title="Permanent link">&para;</a></h2>
 <p>In order to give the community ample time to adjust to v3, the mockery maintainers will support v2 until Dec 31, 2029 in the following ways:</p>
