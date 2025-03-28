@@ -36,3 +36,9 @@ func Test(t *testing.T) {
 		require.True(t, run)
 	})
 }
+
+func TestMatryerNoReturnStub(t *testing.T) {
+	m := &StubMatyerEmptyReturn{}
+	// If this is a stub, this should not panic.
+	m.NoArgs()
+}

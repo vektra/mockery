@@ -107,7 +107,7 @@ func (mock *{{$mock.MockName}}{{ $mock.TypeInstantiation }}) {{.Name}}({{.ArgLis
 	mock.calls.{{.Name}} = append(mock.calls.{{.Name}}, callInfo)
 	mock.lock{{.Name}}.Unlock()
 {{- if .Returns}}
-	{{- if (index $.TemplateData "stub-impl") }}
+	{{- if (index $mock.TemplateData "stub-impl") }}
 	if mock.{{.Name}}Func == nil {
 		var (
 		{{- range .Returns}}
@@ -119,7 +119,7 @@ func (mock *{{$mock.MockName}}{{ $mock.TypeInstantiation }}) {{.Name}}({{.ArgLis
 	{{- end}}
 	return mock.{{.Name}}Func({{.ArgCallList}})
 {{- else}}
-	{{- if (index $.TemplateData "stub-impl") }}
+	{{- if (index $mock.TemplateData "stub-impl") }}
 	if mock.{{.Name}}Func == nil {
 		return
 	}
