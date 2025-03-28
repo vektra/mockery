@@ -10,7 +10,7 @@ import (
 )
 
 func TestReplaceType(t *testing.T) {
-	mockFile := pathlib.NewPath("./mocks_replace_type_test.go")
+	mockFile := pathlib.NewPath("./mocks_testify_replace_type_test.go")
 	b, err := mockFile.ReadFile()
 	require.NoError(t, err)
 	// .mockery.yml replaced github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type/rti/rt1
