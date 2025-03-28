@@ -21,7 +21,7 @@ tasks:
   mocks.remove:
     desc: remove all mock files
     cmds:
-      - find . -name '*_mock.go' -o -name 'mock_*_test.go' -o -name 'mocks.go' -o -name "mocks_moq.go"  -o -name 'mocks_test.go' -o -name 'mocks_*_test.go' | xargs -r rm
+      - find . -name '*_mock.go' -o -name 'mock_*_test.go' -o -name 'mocks.go' -o -name "mocks_moq.go"  -o -name 'mocks_test.go' -o -name 'mocks_*_test.go' -o -name 'mocks_matryer_*.go' | xargs -r rm
       - rm -rf mocks/
 
   mocks.generate.custom:
@@ -32,18 +32,18 @@ tasks:
   mocks.generate.mockery:
     silent: True
     cmds:
-      - MOCKERY_CONFIG=./.mockery.yml go run .
+      - MOCKERY_CONFIG=./.mockery_testify.yml go run .
 
-  mocks.generate.moq:
+  mocks.generate.matryer:
     silent: True
     cmds:
-      - MOCKERY_CONFIG=./.mockery_moq.yml go run .
+      - MOCKERY_CONFIG=./.mockery_matryer.yml go run .
 
   mocks.generate:
     desc: generate mocks
     deps:
       - mocks.generate.mockery
-      - mocks.generate.moq
+      - mocks.generate.matryer
 
   docker:
     desc: build the mockery docker image

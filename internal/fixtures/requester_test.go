@@ -57,3 +57,12 @@ func TestRequesterMoq(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "/path/foo", result)
 }
+
+func TestRequesterMatryerStub(t *testing.T) {
+	m := &StubMatyerRequester{}
+	// The returned values should be the zero-values even though a GetFunc was
+	// not defined. If stub-impl is not true, this should panic.
+	str, err := m.Get("foo")
+	assert.Equal(t, "", str)
+	assert.Equal(t, nil, err)
+}
