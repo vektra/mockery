@@ -56,8 +56,8 @@ The templates are rendered with the data as shown in the [section below](#templa
 
 You can see examples of how the mockery project utilizes the template system to generate the different mock styles:
 
-- [`moq.templ`](https://github.com/vektra/mockery/blob/v3/internal/moq.templ)
-- [`mockery.templ`](https://github.com/vektra/mockery/blob/v3/internal/mockery.templ)
+- [`matryer.templ`](https://github.com/vektra/mockery/blob/v3/internal/mock_matryer.templ)
+- [`testify.templ`](https://github.com/vektra/mockery/blob/v3/internal/mock_testify.templ)
 
 ## Template Data
 
