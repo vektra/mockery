@@ -503,7 +503,6 @@ type Config struct {
 	ReplaceType  map[string]map[string]*ReplaceType `koanf:"replace-type" yaml:"replace-type,omitempty"`
 	Template     *string                            `koanf:"template" yaml:"template,omitempty"`
 	TemplateData map[string]any                     `koanf:"template-data" yaml:"template-data,omitempty"`
-	Version      *bool                              `koanf:"version" yaml:"version,omitempty"`
 }
 
 func (c *Config) FilePath() *pathlib.Path {
