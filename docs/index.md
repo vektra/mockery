@@ -87,15 +87,15 @@ Who uses mockery?
   </figure>
 - <figure markdown>
 	[![Grafana logo](assets/images/logos/grafana.svg){ class="center" width="100" }](https://github.com/grafana/grafana)
-	<figcaption>[Grafana](https://github.com/grafana/grafana)</figcaption>
+	<figcaption>[Grafana](https://github.com/search?q=repo%3Agrafana%2Fgrafana%20mockery&type=code)</figcaption>
   </figure>
 - <figure markdown>
 	[![Google logo](assets/images/logos/google.svg){ class="center" width="100" }](https://github.com/google/skia)
-	<figcaption>[Google Skia](https://github.com/google/skia)</figcaption>
+	<figcaption>[Google skia](https://github.com/google/skia)</figcaption>
   </figure>
 - <figure markdown>
 	[![Google logo](assets/images/logos/google.svg){ class="center" width="100" }](https://github.com/google/syzkaller)
-	<figcaption>[Google Skyzkaller](https://github.com/google/syzkaller)</figcaption>
+	<figcaption>[Google syzkaller](https://github.com/google/syzkaller)</figcaption>
   </figure>
 - <figure markdown>
 	[![Hashicorp logo](assets/images/logos/hashicorp.svg){ class="center" width="100" }](https://github.com/search?q=org%3Ahashicorp%20mockery&type=code)

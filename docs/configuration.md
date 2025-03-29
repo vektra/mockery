@@ -4,7 +4,7 @@ Configuration
 `mockery init`
 --------------
 
-`mockery init [module_name]` is a useful command that can bootstrap you with a fully-function configuration set. For example, if we run:
+`mockery init [module_name]` is a useful command that can bootstrap you with a fully-functioning configuration set. For example, if we run:
 
 ``` title=""
 $ mockery init github.com/vektra/mockery/v3/internal/fixtures
