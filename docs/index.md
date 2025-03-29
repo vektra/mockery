@@ -76,6 +76,10 @@ Who uses mockery?
 
 <div class="grid cards" markdown>
 - <figure markdown>
+	[![Kubernetes logo](assets/images/logos/kubernetes.svg){ class="center" width="100" }](https://github.com/kubernetes/kubernetes)
+	<figcaption>[Kubernetes](https://github.com/search?q=repo%3Akubernetes%2Fkubernetes%20mockery&type=code)</figcaption>
+  </figure>
+- <figure markdown>
 	[![Grafana logo](assets/images/logos/grafana.svg){ class="center" width="100" }](https://github.com/grafana/grafana)
 	<figcaption>[Grafana](https://github.com/grafana/grafana)</figcaption>
   </figure>
