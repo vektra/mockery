@@ -10,25 +10,29 @@
       
       
       
+        <link rel="canonical" href="https://vektra.github.io/mockery/latest/dev-notes/">
+      
+      
+        <link rel="prev" href="../v3/">
       
       
       
         
       
       
-      <link rel="icon" href="/mockery/latest/assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.9+insiders-4.53.16">
     
     
       
-        <title>mockery</title>
+        <title>Developer Notes - mockery</title>
       
     
     
-      <link rel="stylesheet" href="/mockery/latest/assets/stylesheets/main.ade31302.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ade31302.min.css">
       
         
-        <link rel="stylesheet" href="/mockery/latest/assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -47,9 +51,9 @@
       
     
     
-      <link rel="stylesheet" href="/mockery/latest/stylesheets/extra.css">
+      <link rel="stylesheet" href="../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("/mockery/latest",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -65,7 +69,29 @@
 
     
     
-  </head>
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Developer Notes - mockery" />
+<meta property="og:description" content="Create mock implementations of your Golang interfaces using mockery and testify." />
+<meta property="og:image" content="https://vektra.github.io/mockery/latest/assets/images/social/dev-notes.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://vektra.github.io/mockery/latest/dev-notes/" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="Developer Notes - mockery" />
+<meta property="twitter:description" content="Create mock implementations of your Golang interfaces using mockery and testify." />
+<meta property="twitter:image" content="https://vektra.github.io/mockery/latest/assets/images/social/dev-notes.png" />
+ <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
   
   
     
@@ -83,6 +109,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#developer-notes" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -97,7 +128,7 @@
   }
 </style>
 mockery v3 is currently in beta. <strong>Do not use for production.</strong>
-<br><a href="..//mockery/latest"><strong>Click here to go to v2.</strong></a>
+<br><a href="../.."><strong>Click here to go to v2.</strong></a>
 
           </div>
           
@@ -116,7 +147,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="/mockery/latest/." title="mockery" class="md-header__button md-logo" aria-label="mockery" data-md-component="logo">
+    <a href=".." title="mockery" class="md-header__button md-logo" aria-label="mockery" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M400.1 194.8c-10.9 2.8-19.9 4.3-29.1 7.6-7.3 1.9-14.7 3.9-23.2 6.1l-.6.1c-4.2 1.2-4.6 1.3-8.5-3.2-4.7-5.3-8.1-8.7-14.6-11.9-19.7-9.6-38.7-6.8-56.4 4.7-21.2 13.7-32.1 34-31.8 59.2.3 25 17.4 45.5 41.2 48.9 22 2.8 39.8-4.6 53.8-20.5 2.1-2.6 4-5.3 6.1-8.3.8-1 1.5-2.1 2.3-3.3h-60.1c-6.5 0-8.1-4-5.9-9.3 4-9.7 11.5-25.9 15.9-34 .9-1.8 3.1-5.8 6.9-5.8h101.1c4.5-13.4 11.8-26.9 21.6-39.7 22.7-29.9 49.3-45.5 87.2-52 31.8-5.6 61.7-2.5 88.9 15.9 24.6 16.8 39.8 39.6 43.9 69.5 5.3 42.1-6.9 76.3-36.7 105.6-19.7 20.9-44.9 34-73.9 39.9-5.6 1-11.1 1.5-16.5 2-2.9.2-5.7.5-8.5.8-28.3-.6-54.2-8.7-76-27.4-15.3-13.3-25.9-29.6-31.1-48.5-3.7 7.3-8 14.4-14 21.1-21.6 29.6-50.9 48-87.9 52.9-30.6 4.1-58.9-1.8-83.9-20.5-23-17.5-36.1-40.5-39.5-69.2-4.1-34 5.9-65.4 26.4-91.3 22.2-29 51.5-47.4 87.3-53.9 29.3-6.2 57.3-1.9 82.6 15.3 16.5 10.9 28.3 25.8 36.1 43.9 1.9 2.8.6 4.4-3.1 5.3m-351.8 5.6c-1.25 0-1.56-.6-.94-1.6l6.55-8.4c.62-.9 2.18-1.5 3.43-1.5H168.6c1.2 0 1.5.9.9 1.8l-5.3 8.1c-.6 1-2.2 1.9-3.1 1.9zM1.246 229.1c-1.246 0-1.558-.7-.934-1.6l6.543-8.4c.624-.9 2.182-1.6 3.425-1.6H152.4c1.2 0 1.8 1 1.5 1.9l-2.5 7.5c-.3 1.2-1.5 1.9-2.8 1.9zm74.474 26.8c-.62.9-.31 1.8.93 1.8l67.95.3c.9 0 2.2-.9 2.2-2.1l.6-7.5c0-1.3-.6-2.2-1.9-2.2H83.2c-1.25 0-2.49.9-3.12 1.9zm501.48-18c-.2-2.6-.3-4.8-.7-7-5.6-30.8-34-48.3-63.6-41.4-29 6.5-47.7 24.9-54.5 54.2-5.6 24.3 6.2 48.9 28.6 58.9 17.2 7.5 34.3 6.6 50.8-1.9 24.6-13.6 38-32.7 39.6-59.5-.1-1.2-.1-2.3-.2-3.3"/></svg>
@@ -136,7 +167,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              Developer Notes
             
           </span>
         </div>
@@ -249,7 +280,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/mockery/latest/." title="mockery" class="md-nav__button md-logo" aria-label="mockery" data-md-component="logo">
+    <a href=".." title="mockery" class="md-nav__button md-logo" aria-label="mockery" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M400.1 194.8c-10.9 2.8-19.9 4.3-29.1 7.6-7.3 1.9-14.7 3.9-23.2 6.1l-.6.1c-4.2 1.2-4.6 1.3-8.5-3.2-4.7-5.3-8.1-8.7-14.6-11.9-19.7-9.6-38.7-6.8-56.4 4.7-21.2 13.7-32.1 34-31.8 59.2.3 25 17.4 45.5 41.2 48.9 22 2.8 39.8-4.6 53.8-20.5 2.1-2.6 4-5.3 6.1-8.3.8-1 1.5-2.1 2.3-3.3h-60.1c-6.5 0-8.1-4-5.9-9.3 4-9.7 11.5-25.9 15.9-34 .9-1.8 3.1-5.8 6.9-5.8h101.1c4.5-13.4 11.8-26.9 21.6-39.7 22.7-29.9 49.3-45.5 87.2-52 31.8-5.6 61.7-2.5 88.9 15.9 24.6 16.8 39.8 39.6 43.9 69.5 5.3 42.1-6.9 76.3-36.7 105.6-19.7 20.9-44.9 34-73.9 39.9-5.6 1-11.1 1.5-16.5 2-2.9.2-5.7.5-8.5.8-28.3-.6-54.2-8.7-76-27.4-15.3-13.3-25.9-29.6-31.1-48.5-3.7 7.3-8 14.4-14 21.1-21.6 29.6-50.9 48-87.9 52.9-30.6 4.1-58.9-1.8-83.9-20.5-23-17.5-36.1-40.5-39.5-69.2-4.1-34 5.9-65.4 26.4-91.3 22.2-29 51.5-47.4 87.3-53.9 29.3-6.2 57.3-1.9 82.6 15.3 16.5 10.9 28.3 25.8 36.1 43.9 1.9 2.8.6 4.4-3.1 5.3m-351.8 5.6c-1.25 0-1.56-.6-.94-1.6l6.55-8.4c.62-.9 2.18-1.5 3.43-1.5H168.6c1.2 0 1.5.9.9 1.8l-5.3 8.1c-.6 1-2.2 1.9-3.1 1.9zM1.246 229.1c-1.246 0-1.558-.7-.934-1.6l6.543-8.4c.624-.9 2.182-1.6 3.425-1.6H152.4c1.2 0 1.8 1 1.5 1.9l-2.5 7.5c-.3 1.2-1.5 1.9-2.8 1.9zm74.474 26.8c-.62.9-.31 1.8.93 1.8l67.95.3c.9 0 2.2-.9 2.2-2.1l.6-7.5c0-1.3-.6-2.2-1.9-2.2H83.2c-1.25 0-2.49.9-3.12 1.9zm501.48-18c-.2-2.6-.3-4.8-.7-7-5.6-30.8-34-48.3-63.6-41.4-29 6.5-47.7 24.9-54.5 54.2-5.6 24.3 6.2 48.9 28.6 58.9 17.2 7.5 34.3 6.6 50.8-1.9 24.6-13.6 38-32.7 39.6-59.5-.1-1.2-.1-2.3-.2-3.3"/></svg>
@@ -279,7 +310,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="/mockery/latest/." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -363,7 +394,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="/mockery/latest/installation/" class="md-nav__link">
+      <a href="../installation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -390,7 +421,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="/mockery/latest/configuration/" class="md-nav__link">
+      <a href="../configuration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -417,7 +448,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="/mockery/latest/running/" class="md-nav__link">
+      <a href="../running/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -478,7 +509,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="/mockery/latest/template/" class="md-nav__link ">
+            <a href="../template/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -521,7 +552,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="/mockery/latest/template/testify/" class="md-nav__link">
+      <a href="../template/testify/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -548,7 +579,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="/mockery/latest/template/matryer/" class="md-nav__link">
+      <a href="../template/matryer/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -636,7 +667,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="/mockery/latest/replace-type/" class="md-nav__link">
+      <a href="../replace-type/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -667,8 +698,10 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
       
   
   
+    
   
   
+  
     
     
       
@@ -686,11 +719,11 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
@@ -710,7 +743,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -728,7 +761,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="/mockery/latest/faq/" class="md-nav__link">
+      <a href="../faq/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -755,7 +788,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   
   
     <li class="md-nav__item">
-      <a href="/mockery/latest/v3/" class="md-nav__link">
+      <a href="../v3/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -781,10 +814,38 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="/mockery/latest/dev-notes/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    
+  
+    <span class="md-typeset">
+      Developer Notes
+    </span>
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -801,6 +862,84 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#go-upgrades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Go Upgrades
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#go-syntax-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Go Syntax Updates
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Go Syntax Updates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mockery-does-not-need-to-interact-with-the-new-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Mockery does not need to interact with the new syntax
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mockery-does-need-to-interact-with-the-new-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Mockery <em>does</em> need to interact with the new syntax
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -830,6 +969,74 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#go-upgrades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Go Upgrades
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#go-syntax-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Go Syntax Updates
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Go Syntax Updates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mockery-does-not-need-to-interact-with-the-new-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Mockery does not need to interact with the new syntax
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mockery-does-need-to-interact-with-the-new-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Mockery <em>does</em> need to interact with the new syntax
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -842,8 +1049,62 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
               
               <article class="md-content__inner md-typeset">
                 
-  <h1>404 - Not found</h1>
+                  
 
+
+  
+    <a href="https://github.com/vektra/mockery/edit/v3/docs/dev-notes.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/vektra/mockery/raw/v3/docs/dev-notes.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="developer-notes">Developer Notes<a class="headerlink" href="#developer-notes" title="Permanent link">&para;</a></h1>
+<h2 id="go-upgrades">Go Upgrades<a class="headerlink" href="#go-upgrades" title="Permanent link">&para;</a></h2>
+<p class="annotate">The mockery project supports the most recent TWO stable Go versions. Testing matrices will only run on the two most recent stable Go versions. However, given the <a href="https://go.dev/blog/compat">Go backwards-compatibility guarantee</a>, it's very likely projects built off of older Go 1.x syntax will continue to work in perpetuity.(1)</p>
+<ol>
+<li>
+<p>The caveat, being noted, is the same as the above linked backwards compatibility guarantee:</p>
+<blockquote>
+<p>There are a few qualifications to that. First, compatibility means source compatibility. When you update to a new version of Go, you do have to recompile your code. Second, we can add new APIs, but not in a way that breaks existing code.</p>
+<p>The end of the document warns, “[It] is impossible to guarantee that no future change will break any program.” Then it lays out a number of reasons why programs might still break.</p>
+<p>For example, it makes sense that if your program depends on a buggy behavior and we fix the bug, your program will break. But we try very hard to break as little as possible and keep Go boring. There are two main approaches we’ve used so far: API checking and testing.</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="go-syntax-updates">Go Syntax Updates<a class="headerlink" href="#go-syntax-updates" title="Permanent link">&para;</a></h2>
+<p>When Go releases new syntax, there are two approaches that the mockery project will take:</p>
+<h3 id="mockery-does-not-need-to-interact-with-the-new-syntax">Mockery does not need to interact with the new syntax<a class="headerlink" href="#mockery-does-not-need-to-interact-with-the-new-syntax" title="Permanent link">&para;</a></h3>
+<p>In such cases, the mockery project <em>only</em> needs to upgrade its <code>golang.org/x/tools</code> dependency. This is necessary for the parsing step to simply not fail if it encounters new syntax. If mockery does not need to interact or understand this syntax, this dependency upgrade is likely all that's needed.</p>
+<p>Take for example the problems mentioned [here] when mockery upgraded to <code>go 1.24</code> in its <code>go.mod</code> file. In this situation, the project maintainers wanted to allow mockery to not crash when it parses syntax containing generic type alias syntax. However, the project did not <em>parse</em> this syntax, so the only thing we needed to do was upgrade <code>golang.org/x/tools</code>.</p>
+<h3 id="mockery-does-need-to-interact-with-the-new-syntax">Mockery <em>does</em> need to interact with the new syntax<a class="headerlink" href="#mockery-does-need-to-interact-with-the-new-syntax" title="Permanent link">&para;</a></h3>
+<p>This situation was encountered in Go 1.18 when generics were introduced. <a href="https://github.com/vektra/mockery/pull/456/files#diff-33ef32bf6c23acb95f5902d7097b7a1d5128ca061167ec0716715b0b9eeaa5f6">In this case</a>, the project needed to be upgraded to <code>go 1.18</code> because mockery now had to directly parse and interpret generic types through the <code>go/ast</code> package. This was needed in conjunction with an upgrade of <code>golang.org/x/tools</code> that handles the actual parsing into <code>go/ast</code> data.</p>
+<p>It's possible in future versions of Go that only the <code>toolchain</code> directive needs to be upgraded to allow mockery to use a more recent <code>go/ast</code> package. The purposes of the <code>go</code> directive is supposed to inform the compiler what features of the Go language the module uses in its own syntax, so in this case as long as mockery does not itself use generics, it can parse generic type information from <em>other</em> projects without needing to pin its <code>go</code> directive to the relevant version.</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
               </article>
             </div>
           
@@ -877,17 +1138,19 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "/mockery/latest", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.footnote.tooltips", "navigation.indexes", "navigation.sections", "navigation.tracking", "toc.follow"], "search": "/mockery/latest/assets/javascripts/workers/search.c7c1ca2c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.footnote.tooltips", "navigation.indexes", "navigation.sections", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.c7c1ca2c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="/mockery/latest/assets/javascripts/bundle.f807c082.min.js"></script>
+      <script src="../assets/javascripts/bundle.f807c082.min.js"></script>
       
         <script src="https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js"></script>
       
-        <script src="/mockery/latest/javascripts/tablesort.js"></script>
+        <script src="../javascripts/tablesort.js"></script>
       
-        <script src="/mockery/latest/js/open_in_new_tab.js"></script>
+        <script src="../js/open_in_new_tab.js"></script>
       
     
-  </body>
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
 </html>
