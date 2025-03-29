@@ -72,20 +72,16 @@ tasks:
 
   test:
     cmds:
-      - go run gotest.tools/gotestsum --format testname -- -v -coverprofile=coverage.txt ./...
+      - go run gotest.tools/gotestsum --format testname -- -v -coverprofile=coverage.txt ./internal/... ./shared/... ./template/...
     desc: run unit tests
-    sources:
-      - "**/*.go"
     generates:
       - coverage.txt
 
   test.e2e:
     desc: run end-to-end tests
-    sources:
-      - "**/*.go"
-      - "./.mockery.yaml"
     cmds:
       - ./e2e/run_all.sh
+      - go run gotest.tools/gotestsum --format testname -- -v -count=1 ./e2e/...
 
   test.ci:
     deps: [lint]

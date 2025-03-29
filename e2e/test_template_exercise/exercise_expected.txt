@@ -1,0 +1,96 @@
+.PkgName: test_pkgname
+.SrcPkgQualifier: templateexercise.
+
+$import.Alias: 
+$import.Path: context
+$import.Qualifier: context
+
+$import.Alias: 
+$import.Path: golang.org/x/exp/constraints
+$import.Qualifier: constraints
+
+
+
+# MOCK: 0
+$mock.InterfaceName: Exercise
+$mock.MockName: MockExercise
+
+
+# TYPE PARAM: 0
+$typeparam.Var.Name: T
+$typeparam.Var.IsSlice: false
+$typeparam.Var.Nillable: true
+$typeparam.Var.Type.String: any
+$typeparam.Var.TypeString: any
+$typeparam.CallName: T
+$typeparam.CallName: T
+$typeparam.MethodArg: T any
+$typeparam.Name: T
+$typeparam.TypeString: any
+$typeparam.TypeStringEllipsis: any
+$typeparam.TypeStringVariadicUnderlying: any
+
+# TYPE PARAM: 1
+$typeparam.Var.Name: Ordered
+$typeparam.Var.IsSlice: false
+$typeparam.Var.Nillable: true
+$typeparam.Var.Type.String: golang.org/x/exp/constraints.Ordered
+$typeparam.Var.TypeString: constraints.Ordered
+$typeparam.CallName: Ordered
+$typeparam.CallName: Ordered
+$typeparam.MethodArg: Ordered constraints.Ordered
+$typeparam.Name: Ordered
+$typeparam.TypeString: constraints.Ordered
+$typeparam.TypeStringEllipsis: constraints.Ordered
+$typeparam.TypeStringVariadicUnderlying: constraints.Ordered
+$typeparam.Constraint.String: golang.org/x/exp/constraints.Integer
+
+
+# METHOD: 0
+$method.Name: Foo
+$method.ReturnStatement: return
+$method.Call: Foo(ctx, typeParam, ordered)
+$method.AcceptsContext: true
+$method.Signature: (ctx context.Context, typeParam T, ordered Ordered) (err error)
+$method.Declaration: Foo(ctx context.Context, typeParam T, ordered Ordered) (err error)
+$method.ReturnsError: true
+$method.HasParams: true
+$method.HasReturns: true
+
+# PARAM: 0
+$param.Var.Name: ctx
+$param.Var.IsSlice: false
+$param.Var.Nillable: true
+$param.Var.Type.String: context.Context
+$param.Var.TypeString: context.Context
+
+# PARAM: 1
+$param.Var.Name: typeParam
+$param.Var.IsSlice: false
+$param.Var.Nillable: true
+$param.Var.Type.String: T
+$param.Var.TypeString: T
+
+# PARAM: 2
+$param.Var.Name: ordered
+$param.Var.IsSlice: false
+$param.Var.Nillable: true
+$param.Var.Type.String: Ordered
+$param.Var.TypeString: Ordered
+
+
+# RETURN: 0
+$return.Var.Name: err
+$return.Var.IsSlice: false
+$return.Var.Nillable: true
+$return.Var.Type.String: error
+$return.Var.TypeString: error
+
+# SCOPE
+$method.Scope.AllocateName "foo": foo
+$method.Scope.AllocateName "foo": foo1
+$method.Scope.NameExists "foo": true
+$method.Scope.NameExists "foo1": true
+$method.Scope.NameExists "notexists": false
+
+

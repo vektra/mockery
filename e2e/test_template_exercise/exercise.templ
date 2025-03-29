@@ -1,0 +1,66 @@
+.PkgName: {{ .PkgName }}
+.SrcPkgQualifier: {{ .SrcPkgQualifier }}
+{{ range $i, $import := .Imports }}
+$import.Alias: {{ $import.Alias }}
+$import.Path: {{ $import.Path }}
+$import.Qualifier: {{ $import.Qualifier }}
+{{ end }}
+
+{{ range $i, $mock := .Mocks }}
+# MOCK: {{ $i }}
+$mock.InterfaceName: {{ $mock.InterfaceName }}
+$mock.MockName: {{ $mock.MockName }}
+
+{{ range $j, $typeparam := .TypeParams }}
+# TYPE PARAM: {{ $j }}
+$typeparam.Var.Name: {{ $typeparam.Var.Name }}
+$typeparam.Var.IsSlice: {{ $typeparam.Var.IsSlice }}
+$typeparam.Var.Nillable: {{ $typeparam.Var.Nillable }}
+$typeparam.Var.Type.String: {{ $typeparam.Var.Type.String }}
+$typeparam.Var.TypeString: {{ $typeparam.Var.TypeString }}
+$typeparam.CallName: {{ $typeparam.CallName true }}
+$typeparam.CallName: {{ $typeparam.CallName false }}
+$typeparam.MethodArg: {{ $typeparam.MethodArg }}
+$typeparam.Name: {{ $typeparam.Name }}
+$typeparam.TypeString: {{ $typeparam.TypeString }}
+$typeparam.TypeStringEllipsis: {{ $typeparam.TypeStringEllipsis }}
+$typeparam.TypeStringVariadicUnderlying: {{ $typeparam.TypeStringVariadicUnderlying }}
+{{- if $typeparam.Constraint }}
+$typeparam.Constraint.String: {{ $typeparam.Constraint.String }}
+{{- end }}
+{{ end }}
+{{ range $j, $method := .Methods }}
+# METHOD: {{ $j }}
+$method.Name: {{ $method.Name }}
+$method.ReturnStatement: {{ $method.ReturnStatement }}
+$method.Call: {{ $method.Call }}
+$method.AcceptsContext: {{ $method.AcceptsContext}}
+$method.Signature: {{ $method.Signature }}
+$method.Declaration: {{ $method.Declaration }}
+$method.ReturnsError: {{ $method.ReturnsError }}
+$method.HasParams: {{ $method.HasParams }}
+$method.HasReturns: {{ $method.HasReturns }}
+{{ range $k, $param := .Params }}
+# PARAM: {{ $k }}
+$param.Var.Name: {{ $param.Var.Name }}
+$param.Var.IsSlice: {{ $param.Var.IsSlice }}
+$param.Var.Nillable: {{ $param.Var.Nillable }}
+$param.Var.Type.String: {{ $param.Var.Type.String }}
+$param.Var.TypeString: {{ $param.Var.TypeString }}
+{{ end }}
+{{ range $k, $return := .Returns }}
+# RETURN: {{ $k }}
+$return.Var.Name: {{ $return.Var.Name }}
+$return.Var.IsSlice: {{ $return.Var.IsSlice }}
+$return.Var.Nillable: {{ $return.Var.Nillable }}
+$return.Var.Type.String: {{ $return.Var.Type.String }}
+$return.Var.TypeString: {{ $return.Var.TypeString }}
+{{ end }}
+# SCOPE
+$method.Scope.AllocateName "foo": {{ $method.Scope.AllocateName "foo" }}
+$method.Scope.AllocateName "foo": {{ $method.Scope.AllocateName "foo" }}
+$method.Scope.NameExists "foo": {{ $method.Scope.NameExists "foo" }}
+$method.Scope.NameExists "foo1": {{ $method.Scope.NameExists "foo1" }}
+$method.Scope.NameExists "notexists": {{ $method.Scope.NameExists "notexists" }}
+{{ end }}
+{{ end }}

@@ -46,7 +46,7 @@ func (m *MethodScope) ResolveVariableNameCollisions(ctx context.Context) {
 	log := zerolog.Ctx(ctx)
 	for _, v := range m.vars {
 		varLog := log.With().Str("variable-name", v.Name).Logger()
-		newName := m.AllocateName(v.Name)
+		newName := m.SuggestName(v.Name)
 		if newName != v.Name {
 			varLog.Debug().Str("new-name", newName).Msg("variable was found to conflict with previously allocated name. Giving new name.")
 		}
@@ -55,11 +55,11 @@ func (m *MethodScope) ResolveVariableNameCollisions(ctx context.Context) {
 	}
 }
 
-// AllocateName creates a new variable name in the lexical scope of the method.
+// SuggestName creates a new variable name in the lexical scope of the method.
 // It ensures the returned name does not conflict with any other name visible
-// to the scope. It registers the returned name in the lexical scope such that
-// its exact value can never be allocated again.
-func (m *MethodScope) AllocateName(prefix string) string {
+// to the scope. This method does _not_ register the returned name suggestion
+// in the scope, which must separately be done by `MethodScope.AddName`.
+func (m *MethodScope) SuggestName(prefix string) string {
 	var suggestion string
 	for i := 0; ; i++ {
 		if i == 0 {
@@ -73,6 +73,16 @@ func (m *MethodScope) AllocateName(prefix string) string {
 		}
 		break
 	}
+	return suggestion
+}
+
+// AllocateName creates a new variable name in the lexical scope of the method.
+// The name is guaranteed to not collide with any other existing names at the time
+// of the call. It automatically allocates the name to the current scope. Returned
+// is the name post collision resolution.
+func (m *MethodScope) AllocateName(prefix string) string {
+	suggestion := m.SuggestName(prefix)
+	m.AddName(suggestion)
 	return suggestion
 }
 
@@ -165,8 +175,7 @@ func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, prefix string, 
 			moqPkgPath: m.moqPkgPath,
 		}
 	} else {
-		//nolint:contextcheck
-		imports = m.populateImports(context.Background(), vr.Type())
+		imports = m.populateImports(ctx, vr.Type())
 		v = Var{
 			vr:         vr,
 			typ:        vr.Type(),
@@ -175,7 +184,7 @@ func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, prefix string, 
 		}
 		m.AddName(v.TypeString())
 	}
-	v.Name = m.AllocateName(varName(vr, prefix))
+	v.Name = m.SuggestName(varName(vr, prefix))
 	m.vars = append(m.vars, &v)
 	return &v, nil
 }

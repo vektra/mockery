@@ -85,6 +85,67 @@ type MethodData struct {
 	Scope *MethodScope
 }
 
+// ReturnStatement returns the string "return" if a method has return values.
+// Otherwise, it returns an empty string.
+func (m MethodData) ReturnStatement() string {
+	if len(m.Returns) > 0 {
+		return "return"
+	}
+	return ""
+}
+
+// Call returns a string containing the method call. This will usually need to be
+// prefixed with a selector to specify which actual method to call. For example,
+// if the method has a signature of "func Foo(s string) error", this method will
+// return the string "Foo(s)". The name of each argument variable will be the same
+// as what was generated post collision-resolution. Meaning, the argument variable
+// name might be slightly altered from the original function if a naming collision
+// was found.
+func (m MethodData) Call() string {
+	return fmt.Sprintf("%s(%s)", m.Name, m.ArgCallList())
+}
+
+// AcceptsContext returns whether or not the first argument of the method is a context.Context.
+func (m MethodData) AcceptsContext() bool {
+	if len(m.Params) > 0 && m.Params[0].TypeString() == "context.Context" {
+		return true
+	}
+	return false
+}
+
+// Signature returns the string representation of the method's signature. For example,
+// if a method was declared as "func (b Bar) Foo(s string) error", this method will
+// return "(s string) error"
+func (m MethodData) Signature() string {
+	return fmt.Sprintf("(%s) (%s)", m.ArgList(), m.ReturnArgList())
+}
+
+// Declaration returns the method name followed by its signature. For
+// example, if a method was declared as "func (b Bar) Foo(s string) error", this method
+// will return "Foo(s string) error"
+func (m MethodData) Declaration() string {
+	return m.Name + m.Signature()
+}
+
+func (m MethodData) ReturnsError() bool {
+	// Yes I know that by convention the last return value is the error,
+	// but to be technically correct, we have to check all return values.
+	for _, ret := range m.Returns {
+		if ret.Var.TypeString() == "error" {
+			return true
+		}
+	}
+	return false
+}
+
+func (m MethodData) HasParams() bool {
+	return len(m.Params) > 0
+}
+
+func (m MethodData) HasReturns() bool {
+	return len(m.Returns) > 0
+}
+
 // ArgList is the string representation of method parameters, ex:
 // 's string, n int, foo bar.Baz'.
 func (m MethodData) ArgList() string {
