@@ -1,0 +1,10 @@
+dir: ./
+filename: exercise.txt
+template: file://./exercise.templ
+formatter: noop
+force-file-write: true
+pkgname: test_pkgname
+packages:
+  github.com/vektra/mockery/v3/internal/fixtures/template_exercise:
+    interfaces:
+      Exercise:
