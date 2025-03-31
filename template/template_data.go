@@ -27,6 +27,14 @@ func (d Data) MocksSomeMethod() bool {
 	return false
 }
 
+// Interfaces returns a slice of MockData, which contains the interface data
+// used to generate code (mocks, wrappers, etc.).
+// It is solely syntactic sugar for the Mocks field in order to improve the
+// readability of templates, not used to generate mocks.
+func (d Data) Interfaces() []MockData {
+	return d.Mocks
+}
+
 // MockData is the data used to generate a mock for some interface.
 type MockData struct {
 	InterfaceName string
