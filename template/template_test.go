@@ -300,7 +300,7 @@ func TestTemplateMockFuncs(t *testing.T) {
 		},
 		{
 			name:       "typeConstraint",
-			inTemplate: "{{index .Mocks 0 | typeConstraintTest}}",
+			inTemplate: "{{ (index .Mocks 0).TypeConstraintTest }}",
 			dataInit: func() Data {
 				return Data{Mocks: []MockData{{
 					TypeParams: []TypeParamData{{
