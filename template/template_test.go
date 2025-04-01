@@ -240,7 +240,7 @@ func TestTemplateMockFuncs(t *testing.T) {
 	}{
 		{
 			name:       "importStatement",
-			inTemplate: "{{- range .Imports}}{{. | importStatement}}{{- end}}",
+			inTemplate: "{{- range .Imports}}{{ .ImportStatement }}{{- end}}",
 			dataInit: func() Data {
 				imprt := NewPackage(types.NewPackage("xyz", "xyz"))
 				imprt.Alias = "x"
@@ -290,8 +290,8 @@ func TestTemplateMockFuncs(t *testing.T) {
 			want:       "SQL",
 		},
 		{
-			name:       "mocksSomeMethod",
-			inTemplate: "{{mocksSomeMethod .Mocks}}",
+			name:       "MocksSomeMethod",
+			inTemplate: "{{ .Mocks.MocksSomeMethod }}",
 			dataInit: func() Data {
 				// MethodData has to have at least 1 element to pass.
 				return Data{Mocks: []MockData{{Methods: []MethodData{{}}}}}
