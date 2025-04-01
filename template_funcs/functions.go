@@ -19,15 +19,15 @@ func Exported(s string) string {
 	return strings.ToUpper(s[0:1]) + s[1:]
 }
 
-func ReadFile(path string) string {
+func ReadFile(path string) (string, error) {
 	if path == "" {
-		return ""
+		return "", nil
 	}
 	fileBytes, err := os.ReadFile(path)
 	if err != nil {
-		panic(err.Error())
+		return "", err
 	}
-	return string(fileBytes)
+	return string(fileBytes), nil
 }
 
 // Numbers defines the generic constraints of the arithmetic arguments.
