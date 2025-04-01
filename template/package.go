@@ -21,6 +21,13 @@ func NewPackage(pkg TypesPackage) *Package {
 	return &Package{pkg: pkg}
 }
 
+func (p *Package) ImportStatement() string {
+	if p.Alias == "" {
+		return `"` + p.Path() + `"`
+	}
+	return p.Alias + ` "` + p.Path() + `"`
+}
+
 // Qualifier returns the qualifier which must be used to refer to types
 // declared in the package.
 func (p *Package) Qualifier() string {

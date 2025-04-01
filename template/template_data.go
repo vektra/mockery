@@ -6,6 +6,18 @@ import (
 	"strings"
 )
 
+type Packages []*Package
+
+func (p Packages) SyncPkgQualifier() string {
+	for _, imprt := range p {
+		if imprt.Path() == "sync" {
+			return imprt.Qualifier()
+		}
+	}
+
+	return "sync"
+}
+
 // Data is the template data used to render the mock template.
 type Data struct {
 	PkgName         string
@@ -34,6 +46,23 @@ type MockData struct {
 	TypeParams    []TypeParamData
 	Methods       []MethodData
 	TemplateData  map[string]any
+}
+
+func (m MockData) TypeConstraintTest() string {
+	if len(m.TypeParams) == 0 {
+		return ""
+	}
+	s := "["
+	for idx, param := range m.TypeParams {
+		if idx != 0 {
+			s += ", "
+		}
+		s += exported(param.Name())
+		s += " "
+		s += param.TypeString()
+	}
+	s += "]"
+	return s
 }
 
 func (m MockData) TypeConstraint() string {

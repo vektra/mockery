@@ -61,48 +61,7 @@ func exported(s string) string {
 }
 
 var TemplateMockFuncs = template.FuncMap{
-	"importStatement": func(imprt *Package) string {
-		if imprt.Alias == "" {
-			return `"` + imprt.Path() + `"`
-		}
-		return imprt.Alias + ` "` + imprt.Path() + `"`
-	},
-	"syncPkgQualifier": func(imports []*Package) string {
-		for _, imprt := range imports {
-			if imprt.Path() == "sync" {
-				return imprt.Qualifier()
-			}
-		}
-
-		return "sync"
-	},
 	"exported": exported,
-
-	"mocksSomeMethod": func(mocks []MockData) bool {
-		for _, m := range mocks {
-			if len(m.Methods) > 0 {
-				return true
-			}
-		}
-
-		return false
-	},
-	"typeConstraintTest": func(m MockData) string {
-		if len(m.TypeParams) == 0 {
-			return ""
-		}
-		s := "["
-		for idx, param := range m.TypeParams {
-			if idx != 0 {
-				s += ", "
-			}
-			s += exported(param.Name())
-			s += " "
-			s += param.TypeString()
-		}
-		s += "]"
-		return s
-	},
 	"readFile": func(path string) string {
 		if path == "" {
 			return ""
