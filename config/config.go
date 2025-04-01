@@ -26,7 +26,7 @@ import (
 	internalConfig "github.com/vektra/mockery/v3/internal/config"
 	"github.com/vektra/mockery/v3/internal/logging"
 	"github.com/vektra/mockery/v3/internal/stackerr"
-	"github.com/vektra/mockery/v3/shared"
+	"github.com/vektra/mockery/v3/template_funcs"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -624,7 +624,7 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 		for name, attributePointer := range templateMap {
 			oldVal := *attributePointer
 
-			attributeTempl, err := template.New("config-template").Funcs(shared.StringManipulationFuncs).Parse(*attributePointer)
+			attributeTempl, err := template.New("config-template").Funcs(template_funcs.FuncMap).Parse(*attributePointer)
 			if err != nil {
 				return fmt.Errorf("failed to parse %s template: %w", name, err)
 			}
