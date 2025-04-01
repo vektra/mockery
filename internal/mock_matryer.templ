@@ -15,7 +15,7 @@ import (
 {{- range .Imports}}
 	{{ .ImportStatement }}
 {{- end}}
-{{- if .Mocks.MocksSomeMethod }}
+{{- if .MocksSomeMethod }}
     "sync"
 {{- end }}
     "fmt"
@@ -83,8 +83,8 @@ type {{.MockName}}
 		}
 {{- end}}
 	}
-{{- range .Methods}}
-	lock{{.Name}} {{ .Imports.SyncPkgQualifier }}.RWMutex
+{{- range $i, $method := .Methods}}
+	lock{{ $method.Name }} {{ $.Imports.SyncPkgQualifier }}.RWMutex
 {{- end}}
 }
 {{range .Methods}}
