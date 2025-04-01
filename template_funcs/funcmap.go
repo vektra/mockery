@@ -4,6 +4,8 @@
 package template_funcs
 
 import (
+	"math"
+	"math/rand/v2"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -64,6 +66,24 @@ var FuncMap = template.FuncMap{
 	"expandEnv": os.ExpandEnv,
 	"getenv":    os.Getenv,
 
-	// Arithmetic
-	"add": Add,
+	/*******
+	* MATH *
+	********/
+	// int
+	"add":  Add[int],
+	"decr": Decr[int],
+	"div":  Div[int],
+	"incr": Incr[int],
+	"min":  Min[int],
+	"mod":  Mod[int],
+	"mul":  Mul[int],
+	"sub":  Sub[int],
+
+	// float64
+	"ceil":  math.Ceil,
+	"floor": math.Floor,
+	"round": math.Round,
+
+	// rand
+	"randInt": rand.Int,
 }
