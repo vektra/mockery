@@ -1,7 +1,9 @@
 package template_funcs
 
 import (
+	"cmp"
 	"os"
+	"slices"
 	"strings"
 
 	"golang.org/x/exp/constraints"
@@ -91,23 +93,11 @@ func Mul[T Numbers](i1 T, in ...T) T {
 }
 
 // Max returns the maximum value.
-func Max[T constraints.Ordered](i1 T, in ...T) T {
-	var max T = i1
-	for _, i := range in {
-		if i > max {
-			max = i
-		}
-	}
-	return max
+func Max[T cmp.Ordered](x ...T) T {
+	return slices.Max(x)
 }
 
 // Min returns the minimum value.
-func Min[T constraints.Ordered](i1 T, in ...T) T {
-	var min T = i1
-	for _, i := range in {
-		if i < min {
-			min = i
-		}
-	}
-	return min
+func Min[T cmp.Ordered](x ...T) T {
+	return slices.Min(x)
 }
