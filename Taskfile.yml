@@ -72,7 +72,7 @@ tasks:
 
   test:
     cmds:
-      - go run gotest.tools/gotestsum --format testname -- -v -coverprofile=coverage.txt ./internal/... ./shared/... ./template/...
+      - go run gotest.tools/gotestsum --format testname -- -v -coverprofile=coverage.txt ./internal/... ./template_funcs/... ./template/...
     desc: run unit tests
     generates:
       - coverage.txt
