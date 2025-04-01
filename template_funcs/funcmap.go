@@ -1,7 +1,7 @@
 // Package shared provides variables/objects that need to be shared
 // across multiple packages. The main purpose is to resolve cyclical imports
 // arising from multiple packages needing to share common utilies.
-package shared
+package template_funcs
 
 import (
 	"os"
@@ -13,8 +13,16 @@ import (
 	"github.com/huandu/xstrings"
 )
 
+// This list comes from the golint codebase. Golint will complain about any of
+// these being mixed-case, like "Id" instead of "ID".
+var golintInitialisms = []string{
+	"ACL", "API", "ASCII", "CPU", "CSS", "DNS", "EOF", "GUID", "HTML", "HTTP", "HTTPS", "ID", "IP", "JSON", "LHS",
+	"QPS", "RAM", "RHS", "RPC", "SLA", "SMTP", "SQL", "SSH", "TCP", "TLS", "TTL", "UDP", "UI", "UID", "UUID", "URI",
+	"URL", "UTF8", "VM", "XML", "XMPP", "XSRF", "XSS",
+}
+
 //nolint:predeclared
-var StringManipulationFuncs = template.FuncMap{
+var FuncMap = template.FuncMap{
 	// String inspection and manipulation. Note that the first argument is replaced
 	// as the last argument in some functions in order to support chained
 	// template pipelines.
@@ -40,20 +48,22 @@ var StringManipulationFuncs = template.FuncMap{
 	"kebabcase":   xstrings.ToKebabCase,
 	"firstLower":  xstrings.FirstRuneToLower,
 	"firstUpper":  xstrings.FirstRuneToUpper,
+	"exported":    Exported,
 
 	// Regular expression matching
 	"matchString": regexp.MatchString,
 	"quoteMeta":   regexp.QuoteMeta,
 
 	// Filepath manipulation
-	"base":  filepath.Base,
-	"clean": filepath.Clean,
-	"dir":   filepath.Dir,
+	"base":     filepath.Base,
+	"clean":    filepath.Clean,
+	"dir":      filepath.Dir,
+	"readFile": ReadFile,
 
 	// Basic access to reading environment variables
 	"expandEnv": os.ExpandEnv,
 	"getenv":    os.Getenv,
 
 	// Arithmetic
-	"add": func(i1, i2 int) int { return i1 + i2 },
+	"add": Add,
 }

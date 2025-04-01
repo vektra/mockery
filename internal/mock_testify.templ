@@ -13,7 +13,7 @@ package {{.PkgName}}
 
 import (
 {{- range .Imports}}
-	{{. | importStatement}}
+	{{ .ImportStatement }}
 {{- end}}
     mock "github.com/stretchr/testify/mock"
 )

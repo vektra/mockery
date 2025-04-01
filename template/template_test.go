@@ -240,7 +240,7 @@ func TestTemplateMockFuncs(t *testing.T) {
 	}{
 		{
 			name:       "importStatement",
-			inTemplate: "{{- range .Imports}}{{. | importStatement}}{{- end}}",
+			inTemplate: "{{- range .Imports}}{{ .ImportStatement }}{{- end}}",
 			dataInit: func() Data {
 				imprt := NewPackage(types.NewPackage("xyz", "xyz"))
 				imprt.Alias = "x"
@@ -250,7 +250,7 @@ func TestTemplateMockFuncs(t *testing.T) {
 		},
 		{
 			name:       "syncPkgQualifier",
-			inTemplate: "{{$.Imports | syncPkgQualifier}}",
+			inTemplate: "{{$.Imports.SyncPkgQualifier}}",
 			dataInit: func() Data {
 				return Data{Imports: []*Package{
 					NewPackage(types.NewPackage("sync", "sync")),
@@ -261,7 +261,7 @@ func TestTemplateMockFuncs(t *testing.T) {
 		},
 		{
 			name:       "syncPkgQualifier renamed",
-			inTemplate: "{{$.Imports | syncPkgQualifier}}",
+			inTemplate: "{{$.Imports.SyncPkgQualifier}}",
 			dataInit: func() Data {
 				stdSync := NewPackage(types.NewPackage("sync", "sync"))
 				stdSync.Alias = "stdSync"
@@ -290,8 +290,8 @@ func TestTemplateMockFuncs(t *testing.T) {
 			want:       "SQL",
 		},
 		{
-			name:       "mocksSomeMethod",
-			inTemplate: "{{mocksSomeMethod .Mocks}}",
+			name:       "MocksSomeMethod",
+			inTemplate: "{{ .Mocks.MocksSomeMethod }}",
 			dataInit: func() Data {
 				// MethodData has to have at least 1 element to pass.
 				return Data{Mocks: []MockData{{Methods: []MethodData{{}}}}}
@@ -300,7 +300,7 @@ func TestTemplateMockFuncs(t *testing.T) {
 		},
 		{
 			name:       "typeConstraint",
-			inTemplate: "{{index .Mocks 0 | typeConstraintTest}}",
+			inTemplate: "{{ (index .Mocks 0).TypeConstraintTest }}",
 			dataInit: func() Data {
 				return Data{Mocks: []MockData{{
 					TypeParams: []TypeParamData{{

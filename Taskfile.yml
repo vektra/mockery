@@ -21,7 +21,7 @@ tasks:
   mocks.remove:
     desc: remove all mock files
     cmds:
-      - find . -name '*_mock.go' -o -name 'mock_*_test.go' -o -name 'mocks.go' -o -name "mocks_moq.go"  -o -name 'mocks_test.go' -o -name 'mocks_*_test.go' -o -name 'mocks_matryer_*.go' | xargs -r rm
+      - find . -name '*_mock.go' -o -name 'mock_*_test.go' -o -name "mocks_moq.go"  -o -name 'mocks_test.go' -o -name 'mocks_*_test.go' -o -name 'mocks_matryer_*.go' | xargs -r rm
       - rm -rf mocks/
 
   mocks.generate.custom:
@@ -72,7 +72,7 @@ tasks:
 
   test:
     cmds:
-      - go run gotest.tools/gotestsum --format testname -- -v -coverprofile=coverage.txt ./internal/... ./shared/... ./template/...
+      - go run gotest.tools/gotestsum --format testname -- -v -coverprofile=coverage.txt ./internal/... ./template_funcs/... ./template/...
     desc: run unit tests
     generates:
       - coverage.txt
