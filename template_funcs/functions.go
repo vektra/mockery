@@ -28,8 +28,8 @@ func ReadFile(path string) string {
 	return string(fileBytes)
 }
 
-func Add(i1 int64, in ...int64) int64 {
-	var sum int64 = i1
+func Add(i1 int, in ...int) int {
+	var sum int = i1
 	for _, i := range in {
 		sum += i
 	}
