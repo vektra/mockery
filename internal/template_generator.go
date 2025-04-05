@@ -178,13 +178,13 @@ func (g *TemplateGenerator) format(src []byte) ([]byte, error) {
 	return nil, fmt.Errorf("unknown formatter type: %s", g.formatter)
 }
 
-func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func, ifaceConfig *config.Config) (template.MethodData, error) {
+func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func, ifaceConfig *config.Config) (template.Method, error) {
 	log := zerolog.Ctx(ctx)
 
 	methodScope := g.registry.MethodScope()
 
 	signature := method.Type().(*types.Signature)
-	params := make([]template.ParamData, signature.Params().Len())
+	params := make([]template.Param, signature.Params().Len())
 
 	for j := 0; j < signature.Params().Len(); j++ {
 		param := signature.Params().At(j)
@@ -217,15 +217,15 @@ func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func, 
 		}
 		v, err := methodScope.AddVar(ctx, param, "", replacement)
 		if err != nil {
-			return template.MethodData{}, err
+			return template.Method{}, err
 		}
-		params[j] = template.ParamData{
+		params[j] = template.Param{
 			Var:      v,
 			Variadic: signature.Variadic() && j == signature.Params().Len()-1,
 		}
 	}
 
-	returns := make([]template.ParamData, signature.Results().Len())
+	returns := make([]template.Param, signature.Results().Len())
 	for j := 0; j < signature.Results().Len(); j++ {
 		param := signature.Results().At(j)
 
@@ -249,14 +249,14 @@ func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func, 
 		replacement := ifaceConfig.GetReplacement(paramPkgPath, paramObjName)
 		v, err := methodScope.AddVar(ctx, param, "", replacement)
 		if err != nil {
-			return template.MethodData{}, err
+			return template.Method{}, err
 		}
-		returns[j] = template.ParamData{
+		returns[j] = template.Param{
 			Var:      v,
 			Variadic: false,
 		}
 	}
-	return template.MethodData{
+	return template.Method{
 		Name:    method.Name(),
 		Params:  params,
 		Returns: returns,
@@ -280,13 +280,13 @@ func explicitConstraintType(typeParam *types.Var) (t types.Type) {
 	return nil
 }
 
-func (g *TemplateGenerator) typeParams(ctx context.Context, tparams *types.TypeParamList) ([]template.TypeParamData, error) {
-	var tpd []template.TypeParamData
+func (g *TemplateGenerator) typeParams(ctx context.Context, tparams *types.TypeParamList) ([]template.TypeParam, error) {
+	var tpd []template.TypeParam
 	if tparams == nil {
 		return tpd, nil
 	}
 
-	tpd = make([]template.TypeParamData, tparams.Len())
+	tpd = make([]template.TypeParam, tparams.Len())
 
 	scope := g.registry.MethodScope()
 	for i := 0; i < len(tpd); i++ {
@@ -296,8 +296,8 @@ func (g *TemplateGenerator) typeParams(ctx context.Context, tparams *types.TypeP
 		if err != nil {
 			return nil, err
 		}
-		tpd[i] = template.TypeParamData{
-			ParamData:  template.ParamData{Var: v},
+		tpd[i] = template.TypeParam{
+			Param:      template.Param{Var: v},
 			Constraint: explicitConstraintType(typeParam),
 		}
 	}
@@ -310,12 +310,12 @@ func (g *TemplateGenerator) Generate(
 	interfaces []*config.Interface,
 ) ([]byte, error) {
 	log := zerolog.Ctx(ctx)
-	mockData := []template.MockData{}
+	mockData := []template.Interface{}
 	for _, ifaceMock := range interfaces {
 		ifaceLog := log.With().
 			Str("interface-name", ifaceMock.Name).
 			Str("package-path", ifaceMock.Pkg.PkgPath).
-			Str("mock-name", *ifaceMock.Config.MockName).
+			Str("mock-name", *ifaceMock.Config.StructName).
 			Logger()
 		ctx := ifaceLog.WithContext(ctx)
 
@@ -327,7 +327,7 @@ func (g *TemplateGenerator) Generate(
 		}
 		ifaceLog.Debug().Msg("found interface")
 
-		methods := make([]template.MethodData, iface.NumMethods())
+		methods := make([]template.Method, iface.NumMethods())
 		for i := 0; i < iface.NumMethods(); i++ {
 			methodData, err := g.methodData(ctx, iface.Method(i), ifaceMock.Config)
 			if err != nil {
@@ -352,19 +352,19 @@ func (g *TemplateGenerator) Generate(
 		if err != nil {
 			return nil, err
 		}
-		mockData = append(mockData, template.MockData{
-			InterfaceName: ifaceMock.Name,
-			MockName:      *ifaceMock.Config.MockName,
-			TypeParams:    tParams,
-			Methods:       methods,
-			TemplateData:  ifaceMock.Config.TemplateData,
+		mockData = append(mockData, template.Interface{
+			Name:         ifaceMock.Name,
+			StructName:   *ifaceMock.Config.StructName,
+			TypeParams:   tParams,
+			Methods:      methods,
+			TemplateData: ifaceMock.Config.TemplateData,
 		})
 	}
 
 	data := template.Data{
 		PkgName:         g.pkgName,
 		SrcPkgQualifier: "",
-		Mocks:           mockData,
+		Interfaces:      mockData,
 		TemplateData:    g.pkgConfig.TemplateData,
 	}
 	if !g.inPackage {

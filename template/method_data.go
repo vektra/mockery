@@ -5,16 +5,16 @@ import (
 	"strings"
 )
 
-// MethodData is the data which represents a method on some interface.
-type MethodData struct {
+// Method is the data which represents a method on some interface.
+type Method struct {
 	// Name is the method's name.
 	Name string
 
 	// Params represents all the arguments to the method.
-	Params []ParamData
+	Params []Param
 
 	// Returns represents all the return parameters of the method.
-	Returns []ParamData
+	Returns []Param
 
 	// Scope represents the lexical scope of the method. Its primary function
 	// is keeping track of all names visible in the current scope, which allows
@@ -24,7 +24,7 @@ type MethodData struct {
 
 // ReturnStatement returns the string "return" if a method has return values.
 // Otherwise, it returns an empty string.
-func (m MethodData) ReturnStatement() string {
+func (m Method) ReturnStatement() string {
 	if len(m.Returns) > 0 {
 		return "return"
 	}
@@ -38,12 +38,12 @@ func (m MethodData) ReturnStatement() string {
 // as what was generated post collision-resolution. Meaning, the argument variable
 // name might be slightly altered from the original function if a naming collision
 // was found.
-func (m MethodData) Call() string {
+func (m Method) Call() string {
 	return fmt.Sprintf("%s(%s)", m.Name, m.ArgCallList())
 }
 
 // AcceptsContext returns whether or not the first argument of the method is a context.Context.
-func (m MethodData) AcceptsContext() bool {
+func (m Method) AcceptsContext() bool {
 	if len(m.Params) > 0 && m.Params[0].TypeString() == "context.Context" {
 		return true
 	}
@@ -53,18 +53,18 @@ func (m MethodData) AcceptsContext() bool {
 // Signature returns the string representation of the method's signature. For example,
 // if a method was declared as "func (b Bar) Foo(s string) error", this method will
 // return "(s string) error"
-func (m MethodData) Signature() string {
+func (m Method) Signature() string {
 	return fmt.Sprintf("(%s) (%s)", m.ArgList(), m.ReturnArgList())
 }
 
 // Declaration returns the method name followed by its signature. For
 // example, if a method was declared as "func (b Bar) Foo(s string) error", this method
 // will return "Foo(s string) error"
-func (m MethodData) Declaration() string {
+func (m Method) Declaration() string {
 	return m.Name + m.Signature()
 }
 
-func (m MethodData) ReturnsError() bool {
+func (m Method) ReturnsError() bool {
 	// Yes I know that by convention the last return value is the error,
 	// but to be technically correct, we have to check all return values.
 	for _, ret := range m.Returns {
@@ -75,17 +75,17 @@ func (m MethodData) ReturnsError() bool {
 	return false
 }
 
-func (m MethodData) HasParams() bool {
+func (m Method) HasParams() bool {
 	return len(m.Params) > 0
 }
 
-func (m MethodData) HasReturns() bool {
+func (m Method) HasReturns() bool {
 	return len(m.Returns) > 0
 }
 
 // ArgList is the string representation of method parameters, ex:
 // 's string, n int, foo bar.Baz'.
-func (m MethodData) ArgList() string {
+func (m Method) ArgList() string {
 	params := make([]string, len(m.Params))
 	for i, p := range m.Params {
 		params[i] = p.MethodArg()
@@ -95,7 +95,7 @@ func (m MethodData) ArgList() string {
 
 // ArgTypeList returns the argument types in a comma-separated string, ex:
 // `string, int, bar.Baz`
-func (m MethodData) ArgTypeList() string {
+func (m Method) ArgTypeList() string {
 	params := make([]string, len(m.Params))
 	for i, p := range m.Params {
 		params[i] = p.TypeString()
@@ -106,7 +106,7 @@ func (m MethodData) ArgTypeList() string {
 // ArgTypeListEllipsis returns the argument types in a comma-separated string, ex:
 // `string, int, bar.Baz`. If the last argument is variadic, it will contain an
 // ellipsis as would be expected in a variadic function definition.
-func (m MethodData) ArgTypeListEllipsis() string {
+func (m Method) ArgTypeListEllipsis() string {
 	params := make([]string, len(m.Params))
 	for i, p := range m.Params {
 		params[i] = p.TypeStringEllipsis()
@@ -117,13 +117,13 @@ func (m MethodData) ArgTypeListEllipsis() string {
 // ArgCallList is the string representation of method call parameters,
 // ex: 's, n, foo'. In case of a last variadic parameter, it will be of
 // the format 's, n, foos...'.
-func (m MethodData) ArgCallList() string {
+func (m Method) ArgCallList() string {
 	return m.argCallListSlice(0, -1, true)
 }
 
 // ArgCallListNoEllipsis is the same as ArgCallList, except the last parameter, if
 // variadic, will not contain an ellipsis.
-func (m MethodData) ArgCallListNoEllipsis() string {
+func (m Method) ArgCallListNoEllipsis() string {
 	return m.argCallListSlice(0, -1, false)
 }
 
@@ -131,15 +131,15 @@ func (m MethodData) ArgCallListNoEllipsis() string {
 // a slice range to use for the parameter lists. Specifying an integer less than
 // 1 for end indicates to slice to the end of the parameters. As with regular
 // Go slicing semantics, the end value is a non-inclusive index.
-func (m MethodData) ArgCallListSlice(start, end int) string {
+func (m Method) ArgCallListSlice(start, end int) string {
 	return m.argCallListSlice(start, end, true)
 }
 
-func (m MethodData) ArgCallListSliceNoEllipsis(start, end int) string {
+func (m Method) ArgCallListSliceNoEllipsis(start, end int) string {
 	return m.argCallListSlice(start, end, false)
 }
 
-func (m MethodData) argCallListSlice(start, end int, ellipsis bool) string {
+func (m Method) argCallListSlice(start, end int, ellipsis bool) string {
 	if end < 0 {
 		end = len(m.Params)
 	}
@@ -156,7 +156,7 @@ func (m MethodData) argCallListSlice(start, end int, ellipsis bool) string {
 
 // ReturnArgTypeList is the string representation of method return
 // types, ex: 'bar.Baz', '(string, error)'.
-func (m MethodData) ReturnArgTypeList() string {
+func (m Method) ReturnArgTypeList() string {
 	params := make([]string, len(m.Returns))
 	for i, p := range m.Returns {
 		params[i] = p.TypeString()
@@ -169,7 +169,7 @@ func (m MethodData) ReturnArgTypeList() string {
 
 // ReturnArgNameList is the string representation of values being
 // returned from the method, ex: 'foo', 's, err'.
-func (m MethodData) ReturnArgNameList() string {
+func (m Method) ReturnArgNameList() string {
 	params := make([]string, len(m.Returns))
 	for i, p := range m.Returns {
 		params[i] = p.Name()
@@ -179,7 +179,7 @@ func (m MethodData) ReturnArgNameList() string {
 
 // ReturnArgList returns the name and types of the return values. For example:
 // "foo int, bar string, err error"
-func (m MethodData) ReturnArgList() string {
+func (m Method) ReturnArgList() string {
 	params := make([]string, len(m.Returns))
 	for i, p := range m.Returns {
 		params[i] = p.Name() + " " + p.TypeString()
@@ -187,6 +187,6 @@ func (m MethodData) ReturnArgList() string {
 	return strings.Join(params, ", ")
 }
 
-func (m MethodData) IsVariadic() bool {
+func (m Method) IsVariadic() bool {
 	return len(m.Params) > 0 && m.Params[len(m.Params)-1].Variadic
 }

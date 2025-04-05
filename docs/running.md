@@ -8,8 +8,8 @@ quiet: False
 keeptree: True
 disable-version-string: True
 with-expecter: True
-mockname: "{{.InterfaceName}}"
-filename: "{{.MockName}}.go"
+structname: "{{.InterfaceName}}"
+filename: "{{.StructName}}.go"
 outpkg: mocks
 packages:
   github.com/vektra/mockery/v3/pkg:

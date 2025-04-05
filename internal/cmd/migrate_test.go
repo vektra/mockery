@@ -15,7 +15,7 @@ quiet: False
 disable-version-string: True
 with-expecter: True
 mockname: "{{.InterfaceName}}"
-filename: "{{.MockName}}_mock.go"
+filename: "{{.StructName}}_mock.go"
 outpkg: mocks
 tags: "custom2"
 issue-845-fix: True
@@ -112,7 +112,7 @@ packages:
   github.com/vektra/mockery/v2/pkg/fixtures/issue845:
     config:
       <<: *inpackage_config
-      filename: "mock_{{.MockName}}_test.go"
+      filename: "mock_{{.StructName}}_test.go"
     interfaces:
       Interface:
         configs:
@@ -124,7 +124,7 @@ packages:
     config:
       all: True
       dir: "{{.InterfaceDir}}"
-      filename: "mock_{{.MockName}}_test.go"
+      filename: "mock_{{.StructName}}_test.go"
       outpkg: "{{.PackageName}}_test"
       inpackage: False
     interfaces:
@@ -158,7 +158,7 @@ var expectedV3Conf string = `_anchors:
   inpackage: false
   mockname: Mock{{.InterfaceName}}
   outpkg: '{{.PackageName}}_test'
-mockname: '{{.InterfaceName}}'
+structname: '{{.InterfaceName}}'
 pkgname: mocks
 template: testify
 template-data:
@@ -179,10 +179,10 @@ packages:
           template-data:
             with-expecter: true
         configs:
-          - mockname: ExpecterAndRolledVariadic
+          - structname: ExpecterAndRolledVariadic
             template-data:
               unroll-variadic: false
-          - mockname: Expecter
+          - structname: Expecter
             template-data:
               unroll-variadic: true
       ReplaceGeneric:
@@ -196,10 +196,10 @@ packages:
           template-data:
             with-expecter: false
         configs:
-          - mockname: RequesterVariadicOneArgument
+          - structname: RequesterVariadicOneArgument
             template-data:
               unroll-variadic: false
-          - mockname: RequesterVariadic
+          - structname: RequesterVariadic
             template-data:
               unroll-variadic: true
       VariadicNoReturnInterface:
@@ -222,54 +222,54 @@ packages:
     config:
       all: true
       dir: '{{.InterfaceDir}}'
-      mockname: '{{.InterfaceName}}Mock'
+      structname: '{{.InterfaceName}}Mock'
       pkgname: '{{.PackageName}}'
   github.com/vektra/mockery/v2/pkg/fixtures/example_project:
     config:
       all: true
       dir: '{{.InterfaceDir}}'
-      mockname: Mock{{.InterfaceName}}
+      structname: Mock{{.InterfaceName}}
       pkgname: '{{.PackageName}}_test'
   github.com/vektra/mockery/v2/pkg/fixtures/iface_new_type:
     config:
       all: true
       dir: '{{.InterfaceDir}}'
-      mockname: Mock{{.InterfaceName}}
+      structname: Mock{{.InterfaceName}}
       pkgname: '{{.PackageName}}_test'
   github.com/vektra/mockery/v2/pkg/fixtures/iface_typed_param:
     config:
       all: true
       dir: '{{.InterfaceDir}}'
-      mockname: Mock{{.InterfaceName}}
+      structname: Mock{{.InterfaceName}}
       pkgname: '{{.PackageName}}_test'
   github.com/vektra/mockery/v2/pkg/fixtures/index_list_expr:
     config:
       all: true
       dir: '{{.InterfaceDir}}'
-      mockname: Mock{{.InterfaceName}}
+      structname: Mock{{.InterfaceName}}
       pkgname: '{{.PackageName}}_test'
   github.com/vektra/mockery/v2/pkg/fixtures/issue845:
     config:
       all: true
       dir: '{{.InterfaceDir}}'
-      mockname: Mock{{.InterfaceName}}
+      structname: Mock{{.InterfaceName}}
       pkgname: '{{.PackageName}}_test'
     interfaces:
       Interface:
         configs:
-          - mockname: WithoutFix
-          - mockname: WithFix
+          - structname: WithoutFix
+          - structname: WithFix
   github.com/vektra/mockery/v2/pkg/fixtures/method_args/same_name_arg_and_type:
     config:
       all: true
       dir: '{{.InterfaceDir}}'
-      mockname: '{{.InterfaceName}}Mock'
+      structname: '{{.InterfaceName}}Mock'
       pkgname: '{{.PackageName}}'
   github.com/vektra/mockery/v2/pkg/fixtures/recursive_generation:
     config:
       all: true
       dir: '{{.InterfaceDir}}'
-      mockname: Mock{{.InterfaceName}}
+      structname: Mock{{.InterfaceName}}
       pkgname: '{{.PackageName}}'
       recursive: true
   github.com/vektra/mockery/v2/pkg/fixtures/type_alias:
@@ -280,12 +280,12 @@ packages:
     interfaces:
       Interface1:
         configs:
-          - mockname: InterfaceWithUnresolvedAlias
-          - mockname: InterfaceWithResolvedAlias
+          - structname: InterfaceWithUnresolvedAlias
+          - structname: InterfaceWithResolvedAlias
       Interface2:
         configs:
-          - mockname: Interface2WithUnresolvedAlias
-          - mockname: Interface2WithResolvedAlias
+          - structname: Interface2WithUnresolvedAlias
+          - structname: Interface2WithResolvedAlias
 `
 
 func TestMigrate(t *testing.T) {

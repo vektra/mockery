@@ -19,7 +19,7 @@ filename: mocks_test.go
 force-file-write: false
 formatter: goimports
 log-level: info
-mockname: Mock{{.InterfaceName}}
+structname: Mock{{.InterfaceName}}
 pkgname: '{{.SrcPackageName}}'
 recursive: false
 template: testify
@@ -83,20 +83,20 @@ import (
           dir: "{{.InterfaceDir}}"
           filename: "mocks_test.go"
           outpkg: "{{.PackageName}}_test"
-          mockname: "Mock{{.InterfaceName}}"
+          structname: "Mock{{.InterfaceName}}"
         interfaces:
           Foo:
           Bar:
             config:
               # Make it unexported instead
-              mockname: "mock{{.InterfaceName}}"
+              structname: "mock{{.InterfaceName}}"
           Baz:
             # Create two mock implementations of Baz with different names.
             configs:
               - filename: "mocks_baz_one_test.go"
-                mockname: "MockBazOne"
+                structname: "MockBazOne"
               - filename: "mocks_baz_two_test.go"
-                mockname: "MockBazTwo"
+                structname: "MockBazTwo"
       io:
         config:
           dir: path/to/io/mocks
@@ -125,7 +125,7 @@ Parameter Descriptions
 | `formatter`                                            | :fontawesome-solid-x:     | `#!yaml "goimports"`                  | The formatter to use on the rendered template. Choices are: `gofmt`, `goimports`, `noop`.                                                                                                                                                            |
 | `include-regex`                                        | :fontawesome-solid-x:     | `#!yaml ""`                           | When set, only interface names that match the expression will be generated. This setting is ignored if `all: True` is specified in the configuration. To further refine the interfaces generated, use `exclude-regex`.                               |
 | `log-level`                                            | :fontawesome-solid-x:     | `#!yaml "info"`                       | Set the level of the logger                                                                                                                                                                                                                          |
-| `mockname`                                             | :fontawesome-solid-check: | `#!yaml "Mock{{.InterfaceName}}"`     | The name of the generated mock.                                                                                                                                                                                                                      |
+| `structname`                                             | :fontawesome-solid-check: | `#!yaml "Mock{{.InterfaceName}}"`     | The name of the generated interface implementation.                                                                                                                                                                                                                      |
 | `packages`                                             | :fontawesome-solid-x:     | `#!yaml null`                         | A dictionary containing configuration describing the packages and interfaces to generate mocks for.                                                                                                                                                  |
 | `pkgname`                                              | :fontawesome-solid-check: | `#!yaml "{{.SrcPackageName}}"`        | The `#!go package name` given to the generated mock files.                                                                                                                                                                                           |
 | `recursive`                                            | :fontawesome-solid-x:     | `#!yaml false`                        | When set to `true` on a particular package, mockery will recursively search for all sub-packages and inject those packages into the config map.                                                                                                      |

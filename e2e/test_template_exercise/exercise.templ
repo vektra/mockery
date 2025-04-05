@@ -6,10 +6,10 @@ $import.Path: {{ $import.Path }}
 $import.Qualifier: {{ $import.Qualifier }}
 {{ end }}
 
-{{ range $i, $mock := .Mocks }}
+{{ range $i, $mock := .Interfaces }}
 # MOCK: {{ $i }}
-$mock.InterfaceName: {{ $mock.InterfaceName }}
-$mock.MockName: {{ $mock.MockName }}
+$mock.Name: {{ $mock.Name }}
+$mock.StructName: {{ $mock.StructName }}
 
 {{ range $j, $typeparam := .TypeParams }}
 # TYPE PARAM: {{ $j }}

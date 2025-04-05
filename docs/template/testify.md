@@ -32,7 +32,7 @@ section below shows what will be rendered for the given interface.
                 dir: "{{.InterfaceDir}}"
                 filename: "mocks.go"
                 pkgname: "test"
-                mockname: "Mock{{.InterfaceName}}"
+                structname: "Mock{{.InterfaceName}}"
             interfaces:
                 Requester:
     ```

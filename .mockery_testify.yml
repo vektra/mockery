@@ -4,7 +4,7 @@ tags: "custom2"
 formatter: "goimports"
 all: True
 dir: "{{.InterfaceDirRelative}}"
-mockname: "Mock{{.InterfaceName}}"
+structname: "Mock{{.InterfaceName}}"
 pkgname: "{{.SrcPackageName}}"
 filename: "mocks_testify_{{.SrcPackageName}}_test.go"
 template-data:
@@ -18,7 +18,7 @@ packages:
       RType:
         configs:
           - {}
-          - mockname: RTypeReplaced1
+          - structname: RTypeReplaced1
             replace-type:
               github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type/rti/rt1:
                 RType1:
@@ -28,18 +28,18 @@ packages:
     interfaces:
       RequesterVariadic:
         configs:
-          - mockname: MockRequesterVariadicOneArgument
+          - structname: MockRequesterVariadicOneArgument
             template-data:
               unroll-variadic: False
-          - mockname: MockRequesterVariadic
+          - structname: MockRequesterVariadic
             template-data:
               unroll-variadic: True
       Expecter:
         configs:
-          - mockname: MockExpecterAndRolledVariadic
+          - structname: MockExpecterAndRolledVariadic
             template-data:
               unroll-variadic: False
-          - mockname: MockExpecter
+          - structname: MockExpecter
             template-data:
               unroll-variadic: True
       VariadicNoReturnInterface:
