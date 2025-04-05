@@ -354,7 +354,7 @@ func (g *TemplateGenerator) getTemplate(ctx context.Context) (string, gojsonsche
 	return templateString, gojsonschema.NewStringLoader(jsonSchemas[g.templateName]), nil
 }
 
-func (g *TemplateGenerator) validateSchema(ctx context.Context, data template.Data, jsonLoader gojsonschema.JSONLoader) error {
+func validateSchema(ctx context.Context, data template.Data, jsonLoader gojsonschema.JSONLoader) error {
 	log := zerolog.Ctx(ctx)
 	if jsonLoader == nil {
 		log.Warn().Str("url", logging.DocsURL("/template/#schemas")).Msg("no schema found for template-data. We recommend adding one.")
@@ -446,7 +446,7 @@ func (g *TemplateGenerator) Generate(
 	if err != nil {
 		return nil, fmt.Errorf("getting template: %w", err)
 	}
-	if err := g.validateSchema(ctx, data, schema); err != nil {
+	if err := validateSchema(ctx, data, schema); err != nil {
 		return nil, fmt.Errorf("validating schema: %w", err)
 	}
 
