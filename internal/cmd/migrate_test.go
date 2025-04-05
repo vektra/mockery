@@ -303,7 +303,4 @@ func TestMigrate(t *testing.T) {
 	b, err := v3File.ReadFile()
 	require.NoError(t, err)
 	assert.Equal(t, expectedV3Conf, string(b))
-	out := pathlib.NewPath("/tmp/test.txt")
-	out.WriteFile(b)
-	t.Log(string(b))
 }
