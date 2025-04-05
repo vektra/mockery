@@ -69,6 +69,8 @@ type TemplateData struct {
 	SrcPackageName string
 	// SrcPackagePath is the fully qualified package path of the source package. e.g. "github.com/vektra/mockery/v3".
 	SrcPackagePath string
+	// Template is the value of the `template` parameter.
+	Template string
 }
 
 func addr[T any](v T) *T {
@@ -88,6 +90,7 @@ func NewDefaultKoanf(ctx context.Context) (*koanf.Koanf, error) {
 		Recursive:      addr(false),
 		Template:       addr("testify"),
 		TemplateData:   map[string]any{},
+		TemplateSchema: addr("{{.Template}}.schema.json"),
 	}
 	k := koanf.New("|")
 	if err := k.Load(structs.Provider(c, "koanf"), nil); err != nil {
@@ -510,6 +513,8 @@ type Config struct {
 	ReplaceType  map[string]map[string]*ReplaceType `koanf:"replace-type" yaml:"replace-type,omitempty"`
 	Template     *string                            `koanf:"template" yaml:"template,omitempty"`
 	TemplateData map[string]any                     `koanf:"template-data" yaml:"template-data,omitempty"`
+	// TemplateSchema is the URL of the template's JSON schema.
+	TemplateSchema *string `koanf:"template-schema" yaml:"template-schema,omitempty"`
 }
 
 func (c *Config) FilePath() *pathlib.Path {
@@ -602,15 +607,17 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 		StructName:           *c.StructName,
 		SrcPackageName:       srcPkg.Types.Name(),
 		SrcPackagePath:       srcPkg.Types.Path(),
+		Template:             *c.Template,
 	}
 	// These are the config options that we allow
 	// to be parsed by the templater. The keys are
 	// just labels we're using for logs/errors
 	templateMap := map[string]*string{
-		"filename":   c.FileName,
-		"dir":        c.Dir,
-		"structname": c.StructName,
-		"pkgname":    c.PkgName,
+		"dir":             c.Dir,
+		"filename":        c.FileName,
+		"pkgname":         c.PkgName,
+		"structname":      c.StructName,
+		"template-schema": c.TemplateSchema,
 	}
 
 	changesMade := true

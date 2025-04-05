@@ -16,8 +16,10 @@ import (
 	"github.com/chigopher/pathlib"
 	"github.com/rs/zerolog"
 	"github.com/vektra/mockery/v3/config"
+	"github.com/vektra/mockery/v3/internal/logging"
 	"github.com/vektra/mockery/v3/internal/stackerr"
 	"github.com/vektra/mockery/v3/template"
+	"github.com/xeipuuv/gojsonschema"
 	"golang.org/x/tools/go/packages"
 	"golang.org/x/tools/imports"
 )
@@ -33,13 +35,22 @@ const (
 var (
 	//go:embed mock_matryer.templ
 	templateMatryer string
+	//go:embed mock_matryer.templ.schema.json
+	templateMatryerJSONSchema string
 	//go:embed mock_testify.templ
 	templateTestify string
+	//go:embed mock_testify.templ.schema.json
+	templateTestifyJSONSchema string
 )
 
 var styleTemplates = map[string]string{
 	"matryer": templateMatryer,
 	"testify": templateTestify,
+}
+
+var jsonSchemas = map[string]string{
+	"matryer": templateMatryerJSONSchema,
+	"testify": templateTestifyJSONSchema,
 }
 
 // findPkgPath returns the fully-qualified go import path of a given dir. The
@@ -100,12 +111,13 @@ func findPkgPath(dirPath *pathlib.Path) (string, error) {
 }
 
 type TemplateGenerator struct {
-	templateName string
-	registry     *template.Registry
-	formatter    Formatter
-	inPackage    bool
-	pkgConfig    *config.Config
-	pkgName      string
+	templateName   string
+	templateSchema string
+	registry       *template.Registry
+	formatter      Formatter
+	inPackage      bool
+	pkgConfig      *config.Config
+	pkgName        string
 }
 
 func NewTemplateGenerator(
@@ -113,6 +125,7 @@ func NewTemplateGenerator(
 	srcPkg *packages.Package,
 	outPkgFSPath *pathlib.Path,
 	templateName string,
+	templateSchema string,
 	formatter Formatter,
 	pkgConfig *config.Config,
 	pkgName string,
@@ -156,12 +169,13 @@ func NewTemplateGenerator(
 	}
 
 	return &TemplateGenerator{
-		templateName: templateName,
-		registry:     reg,
-		formatter:    formatter,
-		inPackage:    inPackage,
-		pkgConfig:    pkgConfig,
-		pkgName:      pkgName,
+		templateName:   templateName,
+		templateSchema: templateSchema,
+		registry:       reg,
+		formatter:      formatter,
+		inPackage:      inPackage,
+		pkgConfig:      pkgConfig,
+		pkgName:        pkgName,
 	}, nil
 }
 
@@ -305,6 +319,62 @@ func (g *TemplateGenerator) typeParams(ctx context.Context, tparams *types.TypeP
 	return tpd, nil
 }
 
+// getTemplate returns the requested template and associated schema (if available).
+func (g *TemplateGenerator) getTemplate(ctx context.Context) (string, gojsonschema.JSONLoader, error) {
+	log := zerolog.Ctx(ctx)
+
+	if strings.HasPrefix(g.templateName, "file://") {
+		templatePath := pathlib.NewPath(strings.SplitAfterN(g.templateName, "file://", 2)[1])
+		templateBytes, err := templatePath.ReadFile()
+		if err != nil {
+			log.Err(err).Str("template-path", g.templateName).Msg("Failed to read template")
+			return "", nil, err
+		}
+		templateString := string(templateBytes)
+
+		jsonSchemaPath := pathlib.NewPath(strings.TrimPrefix(g.templateSchema, "file://"))
+		schemaExists, err := jsonSchemaPath.Exists()
+		if err != nil {
+			log.Err(err).Str("json-schema-path", jsonSchemaPath.String()).Msg("failed to determine if json schema file exists")
+			return "", nil, fmt.Errorf("determining if json schema exists: %w", err)
+		}
+		if !schemaExists {
+			log.Debug().Str("json-schema-path", jsonSchemaPath.String()).Msg("no json schema found")
+			return templateString, nil, nil
+		}
+		return templateString, gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", jsonSchemaPath.String())), nil
+	}
+
+	// Embedded templates
+	var styleExists bool
+	templateString, styleExists := styleTemplates[g.templateName]
+	if !styleExists {
+		return "", nil, stackerr.NewStackErrf(nil, "template '%s' does not exist", g.templateName)
+	}
+	return templateString, gojsonschema.NewStringLoader(jsonSchemas[g.templateName]), nil
+}
+
+func validateSchema(ctx context.Context, data template.Data, jsonLoader gojsonschema.JSONLoader) error {
+	log := zerolog.Ctx(ctx)
+	if jsonLoader == nil {
+		log.Warn().Str("url", logging.DocsURL("/template/#schemas")).Msg("no schema found for template-data. We recommend adding one.")
+		return nil
+	}
+	schema, err := gojsonschema.NewSchema(jsonLoader)
+	if err != nil {
+		return fmt.Errorf("loading json schema: %w", err)
+	}
+	if err := data.TemplateData.VerifyJSONSchema(ctx, schema); err != nil {
+		return fmt.Errorf("validating template-data")
+	}
+	for _, intf := range data.Interfaces {
+		if err := intf.TemplateData.VerifyJSONSchema(ctx, schema); err != nil {
+			return fmt.Errorf("verifying template-data for %s: %w", intf.Name, err)
+		}
+	}
+	return nil
+}
+
 func (g *TemplateGenerator) Generate(
 	ctx context.Context,
 	interfaces []*config.Interface,
@@ -372,21 +442,12 @@ func (g *TemplateGenerator) Generate(
 	}
 	data.Imports = g.registry.Imports()
 
-	var templateString string
-	if strings.HasPrefix(g.templateName, "file://") {
-		templatePath := pathlib.NewPath(strings.SplitAfterN(g.templateName, "file://", 2)[1])
-		templateBytes, err := templatePath.ReadFile()
-		if err != nil {
-			log.Err(err).Str("template-path", g.templateName).Msg("Failed to read template")
-			return nil, err
-		}
-		templateString = string(templateBytes)
-	} else {
-		var styleExists bool
-		templateString, styleExists = styleTemplates[g.templateName]
-		if !styleExists {
-			return nil, stackerr.NewStackErrf(nil, "template '%s' does not exist", g.templateName)
-		}
+	templateString, schema, err := g.getTemplate(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("getting template: %w", err)
+	}
+	if err := validateSchema(ctx, data, schema); err != nil {
+		return nil, fmt.Errorf("validating schema: %w", err)
 	}
 
 	templ, err := template.New(templateString, g.templateName)

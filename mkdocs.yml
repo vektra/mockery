@@ -34,6 +34,7 @@ theme:
     - content.code.copy
     - content.footnote.tooltips
     - navigation.indexes
+    - navigation.path
     - navigation.sections
     - navigation.tracking
     - toc.follow

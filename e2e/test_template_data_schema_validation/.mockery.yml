@@ -1,11 +1,10 @@
 dir: ./
 filename: exercise.txt
-template: file://./exercise.templ
+template: file://./template.templ
 formatter: noop
 force-file-write: true
 pkgname: test_pkgname
 template-data:
-  foo: foo
   bar: bar
 packages:
   github.com/vektra/mockery/v3/internal/fixtures/template_exercise:

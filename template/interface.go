@@ -10,7 +10,7 @@ type Interface struct {
 	StructName   string
 	TypeParams   []TypeParam
 	Methods      []Method
-	TemplateData map[string]any
+	TemplateData TemplateData
 }
 
 func (m Interface) TypeConstraintTest() string {

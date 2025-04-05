@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "vektra/mockery matryer mock",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "foo": {
+        "type": "string"
+      },
+      "bar": {
+        "type": "string"
+      }
+    },
+    "required": ["foo", "bar"]
+  }

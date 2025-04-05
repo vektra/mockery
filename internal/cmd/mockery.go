@@ -320,6 +320,7 @@ func (r *RootApp) Run() error {
 			interfacesInFile.srcPkg,
 			interfacesInFile.outFilePath.Parent(),
 			*packageConfig.Config.Template,
+			*packageConfig.Config.TemplateSchema,
 			pkg.Formatter(*r.Config.Formatter),
 			packageConfig.Config,
 			interfacesInFile.outPkgName,
