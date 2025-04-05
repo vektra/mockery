@@ -2,16 +2,18 @@ package template
 
 import "github.com/vektra/mockery/v3/template_funcs"
 
-// MockData is the data used to generate a mock for some interface.
-type MockData struct {
-	InterfaceName string
-	MockName      string
-	TypeParams    []TypeParamData
-	Methods       []MethodData
-	TemplateData  map[string]any
+// Interface is the data used to generate a mock for some interface.
+type Interface struct {
+	// Name is the name of the original interface.
+	Name string
+	// StructName is the chosen name for the struct that will implement the interface.
+	StructName   string
+	TypeParams   []TypeParamData
+	Methods      []MethodData
+	TemplateData map[string]any
 }
 
-func (m MockData) TypeConstraintTest() string {
+func (m Interface) TypeConstraintTest() string {
 	if len(m.TypeParams) == 0 {
 		return ""
 	}
@@ -28,7 +30,7 @@ func (m MockData) TypeConstraintTest() string {
 	return s
 }
 
-func (m MockData) TypeConstraint() string {
+func (m Interface) TypeConstraint() string {
 	if len(m.TypeParams) == 0 {
 		return ""
 	}
@@ -45,7 +47,7 @@ func (m MockData) TypeConstraint() string {
 	return s
 }
 
-func (m MockData) TypeInstantiation() string {
+func (m Interface) TypeInstantiation() string {
 	if len(m.TypeParams) == 0 {
 		return ""
 	}

@@ -1,5 +1,5 @@
 template: matryer
-mockname: "Moq{{.InterfaceName}}"
+structname: "Moq{{.InterfaceName}}"
 filename: "mocks_matryer_{{.SrcPackageName}}_test.go"
 all: true
 template-data:
@@ -16,17 +16,17 @@ packages:
     interfaces:
       Requester:
         configs:
-          - mockname: "Moq{{.InterfaceName}}SkipEnsure"
+          - structname: "Moq{{.InterfaceName}}SkipEnsure"
             template-data:
               skip-ensure: True
           - {}
-          - mockname: StubMatyer{{.InterfaceName}}
+          - structname: StubMatyer{{.InterfaceName}}
             template-data:
               stub-impl: True
   github.com/vektra/mockery/v3/internal/fixtures/empty_return:
     interfaces:
       EmptyReturn:
         configs:
-          - mockname: StubMatyer{{.InterfaceName}}
+          - structname: StubMatyer{{.InterfaceName}}
             template-data:
               stub-impl: True

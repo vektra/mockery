@@ -9,7 +9,7 @@ $import.Qualifier: {{ $import.Qualifier }}
 {{ range $i, $mock := .Mocks }}
 # MOCK: {{ $i }}
 $mock.InterfaceName: {{ $mock.InterfaceName }}
-$mock.MockName: {{ $mock.MockName }}
+$mock.StructName: {{ $mock.StructName }}
 
 {{ range $j, $typeparam := .TypeParams }}
 # TYPE PARAM: {{ $j }}

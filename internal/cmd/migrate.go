@@ -304,7 +304,7 @@ func migrateConfig(
 		tbl.Append("deprecated-parameter", "`tags` is no longer supported, parameter not migrated. Use `template-data.mock-build-tags` instead.")
 	}
 	if v2Config.Case != nil {
-		tbl.Append("deprecated-parameter", "`case` is no longer supported. Use `mockname` to specify the name and exported-ness of the output mocks.")
+		tbl.Append("deprecated-parameter", "`case` is no longer supported. Use `structname` to specify the name and exported-ness of the output mocks.")
 	}
 	v3.ConfigFile = v2Config.Config
 	if v2Config.Cpuprofile != nil {
@@ -328,7 +328,7 @@ func migrateConfig(
 	v3.ExcludeSubpkgRegex = v2Config.Exclude
 	v3.ExcludeRegex = v2Config.ExcludeRegex
 	if v2Config.Exported != nil {
-		tbl.Append("deprecated-parameter", "`exported` is no longer supported. Use `mockname` instead.")
+		tbl.Append("deprecated-parameter", "`exported` is no longer supported. Use `structname` instead.")
 	}
 	if v2Config.FailOnMissing == nil || (v2Config.FailOnMissing != nil && *v2Config.FailOnMissing == false) {
 		tbl.Append("deprecated-parameter", "`fail-on-missing` is permanently set to True in v3.")
@@ -354,9 +354,9 @@ func migrateConfig(
 		}
 		v3.TemplateData["mock-build-tags"] = *v2Config.MockBuildTags
 	}
-	v3.MockName = v2Config.MockName
+	v3.StructName = v2Config.MockName
 	if v2Config.Name != nil {
-		tbl.Append("deprecated-parameter", "`name` is no longer supported. Use `mockname` instead.")
+		tbl.Append("deprecated-parameter", "`name` is no longer supported. Use `structname` instead.")
 	}
 	if v2Config.Note != nil {
 		tbl.Append("deprecated-parameter", "`note` is no longer supported.")
@@ -388,7 +388,7 @@ func migrateConfig(
 		tbl.Append("deprecated-parameter", "`srcpkg` is not supported in v3. Use the `packages` configuration instead.")
 	}
 	if v2Config.StructName != nil {
-		tbl.Append("deprecated-parameter", "`structname` was replaced by `mockname` in v2. This value is ignored.")
+		tbl.Append("deprecated-parameter", "`structname` was replaced by `structname` in v2. This value is ignored.")
 	}
 	if v2Config.TestOnly != nil {
 		tbl.Append("deprecated-parameter", "`testonly` was replaced by `filename` in v2. This value is ignored and not supported in v3.")
@@ -427,7 +427,7 @@ type V2Config struct {
 	Anchors                     map[string]any `yaml:"_anchors"`
 	BoilerplateFile             *string        `yaml:"boilerplate-file"` // MOVED: moved to `template-data.boilerplate-file`
 	BuildTags                   *string        `yaml:"tags"`             // DELETED: use mock-build-tags instead
-	Case                        *string        `yaml:"case"`             // DELETED: caseness is specified using template variables/functions in `mockname`.
+	Case                        *string        `yaml:"case"`             // DELETED: caseness is specified using template variables/functions in `structname`.
 	Config                      *string        `yaml:"config"`
 	Cpuprofile                  *string        `yaml:"cpuprofile"` // DELETED: not an option in v3
 	Dir                         *string        `yaml:"dir"`
@@ -463,7 +463,7 @@ type V2Config struct {
 	ReplaceType                 []string       `yaml:"replace-type"`       // DEPRECATED: moved to new schema in v3
 	ResolveTypeAlias            *bool          `yaml:"resolve-type-alias"` // DEPRECATED: permanently set to false in v3
 	SrcPkg                      *string        `yaml:"srcpkg"`             // DELETED: Use `packages` config.
-	StructName                  *string        `yaml:"structname"`         // MOVED: moved to `mockname` in v3
+	StructName                  *string        `yaml:"structname"`         // MOVED: moved to `structname` in v3
 	TestOnly                    *bool          `yaml:"testonly"`           // DEPRECATED: use `filename` to generate `_test.go` suffix.
 	UnrollVariadic              *bool          `yaml:"unroll-variadic"`    // MOVED: moved to `template-data.unroll-variadic`
 	Version                     *bool          `yaml:"version"`

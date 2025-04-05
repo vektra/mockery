@@ -310,12 +310,12 @@ func (g *TemplateGenerator) Generate(
 	interfaces []*config.Interface,
 ) ([]byte, error) {
 	log := zerolog.Ctx(ctx)
-	mockData := []template.MockData{}
+	mockData := []template.Interface{}
 	for _, ifaceMock := range interfaces {
 		ifaceLog := log.With().
 			Str("interface-name", ifaceMock.Name).
 			Str("package-path", ifaceMock.Pkg.PkgPath).
-			Str("mock-name", *ifaceMock.Config.MockName).
+			Str("mock-name", *ifaceMock.Config.StructName).
 			Logger()
 		ctx := ifaceLog.WithContext(ctx)
 
@@ -352,19 +352,19 @@ func (g *TemplateGenerator) Generate(
 		if err != nil {
 			return nil, err
 		}
-		mockData = append(mockData, template.MockData{
-			InterfaceName: ifaceMock.Name,
-			MockName:      *ifaceMock.Config.MockName,
-			TypeParams:    tParams,
-			Methods:       methods,
-			TemplateData:  ifaceMock.Config.TemplateData,
+		mockData = append(mockData, template.Interface{
+			Name:         ifaceMock.Name,
+			StructName:   *ifaceMock.Config.StructName,
+			TypeParams:   tParams,
+			Methods:      methods,
+			TemplateData: ifaceMock.Config.TemplateData,
 		})
 	}
 
 	data := template.Data{
 		PkgName:         g.pkgName,
 		SrcPkgQualifier: "",
-		Mocks:           mockData,
+		Interfaces:      mockData,
 		TemplateData:    g.pkgConfig.TemplateData,
 	}
 	if !g.inPackage {

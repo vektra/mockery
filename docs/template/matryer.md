@@ -28,7 +28,7 @@ matryer/moq
                 dir: "{{.InterfaceDir}}"
                 filename: "mocks_moq.go"
                 pkgname: "test"
-                mockname: "Moq{{.InterfaceName}}"
+                structname: "Moq{{.InterfaceName}}"
             interfaces:
                 Requester:
     ```

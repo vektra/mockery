@@ -62,8 +62,8 @@ type TemplateData struct {
 	InterfaceName string
 	// Mock is a parameter that takes the value of "Mock" if the interface is exported, and "mock" otherwise.
 	Mock string
-	// MockName is the configured name of the mock.
-	MockName string
+	// StructName is the configured name of the mock.
+	StructName string
 	// SrcPackageName is the name of the source package as defined by the `package [name]` in the source package.
 	SrcPackageName string
 	// SrcPackagePath is the fully qualified package path of the source package. e.g. "github.com/vektra/mockery/v3".
@@ -82,7 +82,7 @@ func NewDefaultKoanf(ctx context.Context) (*koanf.Koanf, error) {
 		ForceFileWrite: addr(false),
 		Formatter:      addr("goimports"),
 		LogLevel:       addr("info"),
-		MockName:       addr("Mock{{.InterfaceName}}"),
+		StructName:     addr("Mock{{.InterfaceName}}"),
 		PkgName:        addr("{{.SrcPackageName}}"),
 		Recursive:      addr(false),
 		Template:       addr("testify"),
@@ -496,7 +496,7 @@ type Config struct {
 	Formatter      *string `koanf:"formatter" yaml:"formatter,omitempty"`
 	IncludeRegex   *string `koanf:"include-regex" yaml:"include-regex,omitempty"`
 	LogLevel       *string `koanf:"log-level" yaml:"log-level,omitempty"`
-	MockName       *string `koanf:"mockname" yaml:"mockname,omitempty"`
+	StructName     *string `koanf:"structname" yaml:"structname,omitempty"`
 	PkgName        *string `koanf:"pkgname" yaml:"pkgname,omitempty"`
 	Recursive      *bool   `koanf:"recursive" yaml:"recursive,omitempty"`
 	// ReplaceType is a nested map of format map["package path"]["type name"]*ReplaceType
@@ -592,7 +592,7 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 		InterfaceFile:        interfaceFile,
 		InterfaceName:        interfaceName,
 		Mock:                 mock,
-		MockName:             *c.MockName,
+		StructName:           *c.StructName,
 		SrcPackageName:       srcPkg.Types.Name(),
 		SrcPackagePath:       srcPkg.Types.Path(),
 	}
@@ -600,10 +600,10 @@ func (c *Config) ParseTemplates(ctx context.Context, iface *Interface, srcPkg *p
 	// to be parsed by the templater. The keys are
 	// just labels we're using for logs/errors
 	templateMap := map[string]*string{
-		"filename": c.FileName,
-		"dir":      c.Dir,
-		"mockname": c.MockName,
-		"pkgname":  c.PkgName,
+		"filename":   c.FileName,
+		"dir":        c.Dir,
+		"structname": c.StructName,
+		"pkgname":    c.PkgName,
 	}
 
 	changesMade := true

@@ -73,7 +73,7 @@ func TestTemplateMockFuncs(t *testing.T) {
 			inTemplate: "{{ .Mocks.MocksSomeMethod }}",
 			dataInit: func() Data {
 				// MethodData has to have at least 1 element to pass.
-				return Data{Mocks: []MockData{{Methods: []MethodData{{}}}}}
+				return Data{Interfaces: []Interface{{Methods: []MethodData{{}}}}}
 			},
 			want: "true",
 		},
@@ -81,7 +81,7 @@ func TestTemplateMockFuncs(t *testing.T) {
 			name:       "typeConstraint",
 			inTemplate: "{{ (index .Mocks 0).TypeConstraintTest }}",
 			dataInit: func() Data {
-				return Data{Mocks: []MockData{{
+				return Data{Interfaces: []Interface{{
 					TypeParams: []TypeParamData{{
 						ParamData: ParamData{
 							Var: &Var{Name: "t", typ: &types.Slice{}},

@@ -255,7 +255,7 @@ func (r *RootApp) Run() error {
 		if err != nil {
 			return fmt.Errorf("getting package %s: %w", iface.Pkg.PkgPath, err)
 		}
-		ifaceLog.Debug().Str("root-mock-name", *r.Config.Config.MockName).Str("pkg-mock-name", *pkgConfig.Config.MockName).Msg("mock-name during first GetPackageConfig")
+		ifaceLog.Debug().Str("root-mock-name", *r.Config.Config.StructName).Str("pkg-mock-name", *pkgConfig.Config.StructName).Msg("mock-name during first GetPackageConfig")
 
 		shouldGenerate, err := pkgConfig.ShouldGenerateInterface(ifaceCtx, iface.Name)
 		if err != nil {

@@ -24,7 +24,7 @@ import (
 {{range $i, $mock := .Mocks -}}
 
 {{- if not (index $mock.TemplateData "skip-ensure") -}}
-// Ensure, that {{.MockName}} does implement {{$.SrcPkgQualifier}}{{.InterfaceName}}.
+// Ensure, that {{.StructName}} does implement {{$.SrcPkgQualifier}}{{.InterfaceName}}.
 // If this is not the case, regenerate this file with moq.
 var _ {{$.SrcPkgQualifier}}{{.InterfaceName -}}
 	{{- if .TypeParams }}[
@@ -33,7 +33,7 @@ var _ {{$.SrcPkgQualifier}}{{.InterfaceName -}}
 			{{if $param.Constraint}}{{$param.Constraint.String}}{{else}}{{$param.TypeString}}{{end}}
 		{{- end -}}
 		]
-	{{- end }} = &{{.MockName}}
+	{{- end }} = &{{.StructName}}
 	 {{- if .TypeParams }}[
 		{{- range $index, $param := .TypeParams}}
 			{{- if $index}}, {{end -}}
@@ -44,12 +44,12 @@ var _ {{$.SrcPkgQualifier}}{{.InterfaceName -}}
 {}
 {{- end}}
 
-// {{.MockName}} is a mock implementation of {{$.SrcPkgQualifier}}{{.InterfaceName}}.
+// {{.StructName}} is a mock implementation of {{$.SrcPkgQualifier}}{{.InterfaceName}}.
 //
 //	func TestSomethingThatUses{{.InterfaceName}}(t *testing.T) {
 //
 //		// make and configure a mocked {{$.SrcPkgQualifier}}{{.InterfaceName}}
-//		mocked{{.InterfaceName}} := &{{.MockName}}{
+//		mocked{{.InterfaceName}} := &{{.StructName}}{
 			{{- range .Methods}}
 //			{{.Name}}Func: func({{.ArgList}}) {{.ReturnArgTypeList}} {
 //				panic("mock out the {{.Name}} method")
@@ -61,7 +61,7 @@ var _ {{$.SrcPkgQualifier}}{{.InterfaceName -}}
 //		// and then make assertions.
 //
 //	}
-type {{.MockName}}
+type {{.StructName}}
 {{- if .TypeParams -}}
 	[{{- range $index, $param := .TypeParams}}
 			{{- if $index}}, {{end}}{{$param.Name | exported}} {{$param.TypeString}}
@@ -89,10 +89,10 @@ type {{.MockName}}
 }
 {{range .Methods}}
 // {{.Name}} calls {{.Name}}Func.
-func (mock *{{$mock.MockName}}{{ $mock.TypeInstantiation }}) {{.Name}}({{.ArgList}}) {{.ReturnArgTypeList}} {
+func (mock *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) {{.Name}}({{.ArgList}}) {{.ReturnArgTypeList}} {
 {{- if not (index $mock.TemplateData "stub-impl") }}
 	if mock.{{.Name}}Func == nil {
-		panic("{{$mock.MockName}}.{{.Name}}Func: method is nil but {{$mock.InterfaceName}}.{{.Name}} was just called")
+		panic("{{$mock.StructName}}.{{.Name}}Func: method is nil but {{$mock.InterfaceName}}.{{.Name}} was just called")
 	}
 {{- end}}
 	callInfo := struct {
@@ -133,7 +133,7 @@ func (mock *{{$mock.MockName}}{{ $mock.TypeInstantiation }}) {{.Name}}({{.ArgLis
 // Check the length with:
 //
 //	len(mocked{{$mock.InterfaceName}}.{{.Name}}Calls())
-func (mock *{{$mock.MockName}}{{ $mock.TypeInstantiation }}) {{.Name}}Calls() []struct {
+func (mock *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) {{.Name}}Calls() []struct {
 		{{- range .Params}}
 		{{.Name | exported}} {{.TypeString}}
 		{{- end}}
@@ -150,7 +150,7 @@ func (mock *{{$mock.MockName}}{{ $mock.TypeInstantiation }}) {{.Name}}Calls() []
 }
 {{- if index $.TemplateData "with-resets" }}
 // Reset{{.Name}}Calls reset all the calls that were made to {{.Name}}.
-func (mock *{{$mock.MockName}}{{ $mock.TypeInstantiation }}) Reset{{.Name}}Calls() {
+func (mock *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) Reset{{.Name}}Calls() {
 	mock.lock{{.Name}}.Lock()
 	mock.calls.{{.Name}} = nil
 	mock.lock{{.Name}}.Unlock()
@@ -159,7 +159,7 @@ func (mock *{{$mock.MockName}}{{ $mock.TypeInstantiation }}) Reset{{.Name}}Calls
 {{end -}}
 {{- if index $.TemplateData "with-resets" }}
 // ResetCalls reset all the calls that were made to all mocked methods.
-func (mock *{{$mock.MockName}}{{ $mock.TypeInstantiation }}) ResetCalls() {
+func (mock *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) ResetCalls() {
 	{{- range .Methods}}
 	mock.lock{{.Name}}.Lock()
 	mock.calls.{{.Name}} = nil
