@@ -1,6 +1,7 @@
 template: matryer
 structname: "Moq{{.InterfaceName}}"
 filename: "mocks_matryer_{{.SrcPackageName}}_test.go"
+
 all: true
 template-data:
   skip-ensure: False

@@ -15,6 +15,7 @@ import (
 
 	"github.com/brunoga/deep"
 	"github.com/chigopher/pathlib"
+	"github.com/go-viper/mapstructure/v2"
 	koanfYAML "github.com/knadh/koanf/parsers/yaml"
 	"github.com/knadh/koanf/providers/env"
 	"github.com/knadh/koanf/providers/file"
@@ -180,7 +181,13 @@ func NewRootConfig(
 		}
 	}
 
-	if err := k.Unmarshal("", &rootConfig); err != nil {
+	// Second argument is nil because of a weird bug: https://github.com/knadh/koanf/issues/307
+	if err := k.UnmarshalWithConf("", nil, koanf.UnmarshalConf{
+		DecoderConfig: &mapstructure.DecoderConfig{
+			ErrorUnused: true,
+			Result:      &rootConfig,
+		},
+	}); err != nil {
 		return nil, k, fmt.Errorf("unmarshalling config: %w", err)
 	}
 	if err := rootConfig.Initialize(ctx); err != nil {

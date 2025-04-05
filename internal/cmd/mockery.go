@@ -92,7 +92,7 @@ func GetRootApp(ctx context.Context, flags *pflag.FlagSet) (*RootApp, error) {
 	r := &RootApp{}
 	config, _, err := config.NewRootConfig(ctx, flags)
 	if err != nil {
-		return nil, stackerr.NewStackErrf(err, "failed to get config")
+		return nil, fmt.Errorf("getting config: %w", err)
 	}
 	r.Config = *config
 	return r, nil
