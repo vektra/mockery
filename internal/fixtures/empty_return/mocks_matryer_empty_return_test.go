@@ -9,7 +9,7 @@ import (
 	"sync"
 )
 
-// Ensure, that StubMatyerEmptyReturn does implement EmptyReturn.
+// Ensure that StubMatyerEmptyReturn does implement EmptyReturn.
 // If this is not the case, regenerate this file with moq.
 var _ EmptyReturn = &StubMatyerEmptyReturn{}
 

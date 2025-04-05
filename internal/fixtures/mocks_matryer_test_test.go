@@ -18,7 +18,7 @@ import (
 	test "github.com/vektra/mockery/v3/internal/fixtures/redefined_type_b"
 )
 
-// Ensure, that MoqUsesAny does implement UsesAny.
+// Ensure that MoqUsesAny does implement UsesAny.
 // If this is not the case, regenerate this file with moq.
 var _ UsesAny = &MoqUsesAny{}
 
@@ -94,7 +94,7 @@ func (mock *MoqUsesAny) ResetCalls() {
 	mock.lockGetReader.Unlock()
 }
 
-// Ensure, that MoqFooer does implement Fooer.
+// Ensure that MoqFooer does implement Fooer.
 // If this is not the case, regenerate this file with moq.
 var _ Fooer = &MoqFooer{}
 
@@ -290,7 +290,7 @@ func (mock *MoqFooer) ResetCalls() {
 	mock.lockFoo.Unlock()
 }
 
-// Ensure, that MoqMapFunc does implement MapFunc.
+// Ensure that MoqMapFunc does implement MapFunc.
 // If this is not the case, regenerate this file with moq.
 var _ MapFunc = &MoqMapFunc{}
 
@@ -373,7 +373,7 @@ func (mock *MoqMapFunc) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqAsyncProducer does implement AsyncProducer.
+// Ensure that MoqAsyncProducer does implement AsyncProducer.
 // If this is not the case, regenerate this file with moq.
 var _ AsyncProducer = &MoqAsyncProducer{}
 
@@ -551,7 +551,7 @@ func (mock *MoqAsyncProducer) ResetCalls() {
 	mock.lockWhatever.Unlock()
 }
 
-// Ensure, that MoqConsulLock does implement ConsulLock.
+// Ensure that MoqConsulLock does implement ConsulLock.
 // If this is not the case, regenerate this file with moq.
 var _ ConsulLock = &MoqConsulLock{}
 
@@ -686,7 +686,7 @@ func (mock *MoqConsulLock) ResetCalls() {
 	mock.lockUnlock.Unlock()
 }
 
-// Ensure, that MoqKeyManager does implement KeyManager.
+// Ensure that MoqKeyManager does implement KeyManager.
 // If this is not the case, regenerate this file with moq.
 var _ KeyManager = &MoqKeyManager{}
 
@@ -776,7 +776,7 @@ func (mock *MoqKeyManager) ResetCalls() {
 	mock.lockGetKey.Unlock()
 }
 
-// Ensure, that MoqBlank does implement Blank.
+// Ensure that MoqBlank does implement Blank.
 // If this is not the case, regenerate this file with moq.
 var _ Blank = &MoqBlank{}
 
@@ -859,7 +859,7 @@ func (mock *MoqBlank) ResetCalls() {
 	mock.lockCreate.Unlock()
 }
 
-// Ensure, that MoqExpecter does implement Expecter.
+// Ensure that MoqExpecter does implement Expecter.
 // If this is not the case, regenerate this file with moq.
 var _ Expecter = &MoqExpecter{}
 
@@ -1183,7 +1183,7 @@ func (mock *MoqExpecter) ResetCalls() {
 	mock.lockVariadicMany.Unlock()
 }
 
-// Ensure, that MoqVariadicNoReturnInterface does implement VariadicNoReturnInterface.
+// Ensure that MoqVariadicNoReturnInterface does implement VariadicNoReturnInterface.
 // If this is not the case, regenerate this file with moq.
 var _ VariadicNoReturnInterface = &MoqVariadicNoReturnInterface{}
 
@@ -1269,7 +1269,7 @@ func (mock *MoqVariadicNoReturnInterface) ResetCalls() {
 	mock.lockVariadicNoReturn.Unlock()
 }
 
-// Ensure, that MoqFuncArgsCollision does implement FuncArgsCollision.
+// Ensure that MoqFuncArgsCollision does implement FuncArgsCollision.
 // If this is not the case, regenerate this file with moq.
 var _ FuncArgsCollision = &MoqFuncArgsCollision{}
 
@@ -1352,7 +1352,7 @@ func (mock *MoqFuncArgsCollision) ResetCalls() {
 	mock.lockFoo.Unlock()
 }
 
-// Ensure, that MoqGetInt does implement GetInt.
+// Ensure that MoqGetInt does implement GetInt.
 // If this is not the case, regenerate this file with moq.
 var _ GetInt = &MoqGetInt{}
 
@@ -1428,7 +1428,7 @@ func (mock *MoqGetInt) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqGetGeneric does implement GetGeneric.
+// Ensure that MoqGetGeneric does implement GetGeneric.
 // If this is not the case, regenerate this file with moq.
 var _ GetGeneric[int] = &MoqGetGeneric[int]{}
 
@@ -1504,7 +1504,7 @@ func (mock *MoqGetGeneric[T]) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqEmbeddedGet does implement EmbeddedGet.
+// Ensure that MoqEmbeddedGet does implement EmbeddedGet.
 // If this is not the case, regenerate this file with moq.
 var _ EmbeddedGet[int] = &MoqEmbeddedGet[int]{}
 
@@ -1580,7 +1580,7 @@ func (mock *MoqEmbeddedGet[T]) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqReplaceGeneric does implement ReplaceGeneric.
+// Ensure that MoqReplaceGeneric does implement ReplaceGeneric.
 // If this is not the case, regenerate this file with moq.
 var _ ReplaceGeneric[any, int, any] = &MoqReplaceGeneric[any, int, any]{}
 
@@ -1765,7 +1765,7 @@ func (mock *MoqReplaceGeneric[TImport, TConstraint, TKeep]) ResetCalls() {
 	mock.lockC.Unlock()
 }
 
-// Ensure, that MoqReplaceGenericSelf does implement ReplaceGenericSelf.
+// Ensure that MoqReplaceGenericSelf does implement ReplaceGenericSelf.
 // If this is not the case, regenerate this file with moq.
 var _ ReplaceGenericSelf[any] = &MoqReplaceGenericSelf[any]{}
 
@@ -1841,7 +1841,7 @@ func (mock *MoqReplaceGenericSelf[T]) ResetCalls() {
 	mock.lockA.Unlock()
 }
 
-// Ensure, that MoqHasConflictingNestedImports does implement HasConflictingNestedImports.
+// Ensure that MoqHasConflictingNestedImports does implement HasConflictingNestedImports.
 // If this is not the case, regenerate this file with moq.
 var _ HasConflictingNestedImports = &MoqHasConflictingNestedImports{}
 
@@ -1976,7 +1976,7 @@ func (mock *MoqHasConflictingNestedImports) ResetCalls() {
 	mock.lockZ.Unlock()
 }
 
-// Ensure, that MoqImportsSameAsPackage does implement ImportsSameAsPackage.
+// Ensure that MoqImportsSameAsPackage does implement ImportsSameAsPackage.
 // If this is not the case, regenerate this file with moq.
 var _ ImportsSameAsPackage = &MoqImportsSameAsPackage{}
 
@@ -2158,7 +2158,7 @@ func (mock *MoqImportsSameAsPackage) ResetCalls() {
 	mock.lockC.Unlock()
 }
 
-// Ensure, that MoqGenericInterface does implement GenericInterface.
+// Ensure that MoqGenericInterface does implement GenericInterface.
 // If this is not the case, regenerate this file with moq.
 var _ GenericInterface[any] = &MoqGenericInterface[any]{}
 
@@ -2241,7 +2241,7 @@ func (mock *MoqGenericInterface[M]) ResetCalls() {
 	mock.lockFunc.Unlock()
 }
 
-// Ensure, that MoqInstantiatedGenericInterface does implement InstantiatedGenericInterface.
+// Ensure that MoqInstantiatedGenericInterface does implement InstantiatedGenericInterface.
 // If this is not the case, regenerate this file with moq.
 var _ InstantiatedGenericInterface = &MoqInstantiatedGenericInterface{}
 
@@ -2324,7 +2324,7 @@ func (mock *MoqInstantiatedGenericInterface) ResetCalls() {
 	mock.lockFunc.Unlock()
 }
 
-// Ensure, that MoqMyReader does implement MyReader.
+// Ensure that MoqMyReader does implement MyReader.
 // If this is not the case, regenerate this file with moq.
 var _ MyReader = &MoqMyReader{}
 
@@ -2408,7 +2408,7 @@ func (mock *MoqMyReader) ResetCalls() {
 	mock.lockRead.Unlock()
 }
 
-// Ensure, that MoqIssue766 does implement Issue766.
+// Ensure that MoqIssue766 does implement Issue766.
 // If this is not the case, regenerate this file with moq.
 var _ Issue766 = &MoqIssue766{}
 
@@ -2492,7 +2492,7 @@ func (mock *MoqIssue766) ResetCalls() {
 	mock.lockFetchData.Unlock()
 }
 
-// Ensure, that MoqMapToInterface does implement MapToInterface.
+// Ensure that MoqMapToInterface does implement MapToInterface.
 // If this is not the case, regenerate this file with moq.
 var _ MapToInterface = &MoqMapToInterface{}
 
@@ -2572,7 +2572,7 @@ func (mock *MoqMapToInterface) ResetCalls() {
 	mock.lockFoo.Unlock()
 }
 
-// Ensure, that MoqSibling does implement Sibling.
+// Ensure that MoqSibling does implement Sibling.
 // If this is not the case, regenerate this file with moq.
 var _ Sibling = &MoqSibling{}
 
@@ -2645,7 +2645,7 @@ func (mock *MoqSibling) ResetCalls() {
 	mock.lockDoSomething.Unlock()
 }
 
-// Ensure, that MoqUsesOtherPkgIface does implement UsesOtherPkgIface.
+// Ensure that MoqUsesOtherPkgIface does implement UsesOtherPkgIface.
 // If this is not the case, regenerate this file with moq.
 var _ UsesOtherPkgIface = &MoqUsesOtherPkgIface{}
 
@@ -2725,7 +2725,7 @@ func (mock *MoqUsesOtherPkgIface) ResetCalls() {
 	mock.lockDoSomethingElse.Unlock()
 }
 
-// Ensure, that MoqPanicOnNoReturnValue does implement PanicOnNoReturnValue.
+// Ensure that MoqPanicOnNoReturnValue does implement PanicOnNoReturnValue.
 // If this is not the case, regenerate this file with moq.
 var _ PanicOnNoReturnValue = &MoqPanicOnNoReturnValue{}
 
@@ -2881,7 +2881,7 @@ func (mock *MoqRequesterSkipEnsure) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqRequester does implement Requester.
+// Ensure that MoqRequester does implement Requester.
 // If this is not the case, regenerate this file with moq.
 var _ Requester = &MoqRequester{}
 
@@ -2965,7 +2965,7 @@ func (mock *MoqRequester) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that StubMatyerRequester does implement Requester.
+// Ensure that StubMatyerRequester does implement Requester.
 // If this is not the case, regenerate this file with moq.
 var _ Requester = &StubMatyerRequester{}
 
@@ -3049,7 +3049,7 @@ func (mock *StubMatyerRequester) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqRequester2 does implement Requester2.
+// Ensure that MoqRequester2 does implement Requester2.
 // If this is not the case, regenerate this file with moq.
 var _ Requester2 = &MoqRequester2{}
 
@@ -3132,7 +3132,7 @@ func (mock *MoqRequester2) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqRequester3 does implement Requester3.
+// Ensure that MoqRequester3 does implement Requester3.
 // If this is not the case, regenerate this file with moq.
 var _ Requester3 = &MoqRequester3{}
 
@@ -3208,7 +3208,7 @@ func (mock *MoqRequester3) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqRequester4 does implement Requester4.
+// Ensure that MoqRequester4 does implement Requester4.
 // If this is not the case, regenerate this file with moq.
 var _ Requester4 = &MoqRequester4{}
 
@@ -3281,7 +3281,7 @@ func (mock *MoqRequester4) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqRequesterArgSameAsImport does implement RequesterArgSameAsImport.
+// Ensure that MoqRequesterArgSameAsImport does implement RequesterArgSameAsImport.
 // If this is not the case, regenerate this file with moq.
 var _ RequesterArgSameAsImport = &MoqRequesterArgSameAsImport{}
 
@@ -3364,7 +3364,7 @@ func (mock *MoqRequesterArgSameAsImport) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqRequesterArgSameAsNamedImport does implement RequesterArgSameAsNamedImport.
+// Ensure that MoqRequesterArgSameAsNamedImport does implement RequesterArgSameAsNamedImport.
 // If this is not the case, regenerate this file with moq.
 var _ RequesterArgSameAsNamedImport = &MoqRequesterArgSameAsNamedImport{}
 
@@ -3447,7 +3447,7 @@ func (mock *MoqRequesterArgSameAsNamedImport) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqRequesterArgSameAsPkg does implement RequesterArgSameAsPkg.
+// Ensure that MoqRequesterArgSameAsPkg does implement RequesterArgSameAsPkg.
 // If this is not the case, regenerate this file with moq.
 var _ RequesterArgSameAsPkg = &MoqRequesterArgSameAsPkg{}
 
@@ -3527,7 +3527,7 @@ func (mock *MoqRequesterArgSameAsPkg) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqRequesterArray does implement RequesterArray.
+// Ensure that MoqRequesterArray does implement RequesterArray.
 // If this is not the case, regenerate this file with moq.
 var _ RequesterArray = &MoqRequesterArray{}
 
@@ -3611,7 +3611,7 @@ func (mock *MoqRequesterArray) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqRequesterElided does implement RequesterElided.
+// Ensure that MoqRequesterElided does implement RequesterElided.
 // If this is not the case, regenerate this file with moq.
 var _ RequesterElided = &MoqRequesterElided{}
 
@@ -3700,7 +3700,7 @@ func (mock *MoqRequesterElided) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqRequesterIface does implement RequesterIface.
+// Ensure that MoqRequesterIface does implement RequesterIface.
 // If this is not the case, regenerate this file with moq.
 var _ RequesterIface = &MoqRequesterIface{}
 
@@ -3776,7 +3776,7 @@ func (mock *MoqRequesterIface) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqRequesterNS does implement RequesterNS.
+// Ensure that MoqRequesterNS does implement RequesterNS.
 // If this is not the case, regenerate this file with moq.
 var _ RequesterNS = &MoqRequesterNS{}
 
@@ -3860,7 +3860,7 @@ func (mock *MoqRequesterNS) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqRequesterPtr does implement RequesterPtr.
+// Ensure that MoqRequesterPtr does implement RequesterPtr.
 // If this is not the case, regenerate this file with moq.
 var _ RequesterPtr = &MoqRequesterPtr{}
 
@@ -3944,7 +3944,7 @@ func (mock *MoqRequesterPtr) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqRequesterReturnElided does implement RequesterReturnElided.
+// Ensure that MoqRequesterReturnElided does implement RequesterReturnElided.
 // If this is not the case, regenerate this file with moq.
 var _ RequesterReturnElided = &MoqRequesterReturnElided{}
 
@@ -4089,7 +4089,7 @@ func (mock *MoqRequesterReturnElided) ResetCalls() {
 	mock.lockPut.Unlock()
 }
 
-// Ensure, that MoqRequesterSlice does implement RequesterSlice.
+// Ensure that MoqRequesterSlice does implement RequesterSlice.
 // If this is not the case, regenerate this file with moq.
 var _ RequesterSlice = &MoqRequesterSlice{}
 
@@ -4173,7 +4173,7 @@ func (mock *MoqRequesterSlice) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqrequesterUnexported does implement requesterUnexported.
+// Ensure that MoqrequesterUnexported does implement requesterUnexported.
 // If this is not the case, regenerate this file with moq.
 var _ requesterUnexported = &MoqrequesterUnexported{}
 
@@ -4246,7 +4246,7 @@ func (mock *MoqrequesterUnexported) ResetCalls() {
 	mock.lockGet.Unlock()
 }
 
-// Ensure, that MoqRequesterVariadic does implement RequesterVariadic.
+// Ensure that MoqRequesterVariadic does implement RequesterVariadic.
 // If this is not the case, regenerate this file with moq.
 var _ RequesterVariadic = &MoqRequesterVariadic{}
 
@@ -4515,7 +4515,7 @@ func (mock *MoqRequesterVariadic) ResetCalls() {
 	mock.lockSprintf.Unlock()
 }
 
-// Ensure, that MoqExample does implement Example.
+// Ensure that MoqExample does implement Example.
 // If this is not the case, regenerate this file with moq.
 var _ Example = &MoqExample{}
 
@@ -4707,7 +4707,7 @@ func (mock *MoqExample) ResetCalls() {
 	mock.lockC.Unlock()
 }
 
-// Ensure, that MoqA does implement A.
+// Ensure that MoqA does implement A.
 // If this is not the case, regenerate this file with moq.
 var _ A = &MoqA{}
 
@@ -4784,7 +4784,7 @@ func (mock *MoqA) ResetCalls() {
 	mock.lockCall.Unlock()
 }
 
-// Ensure, that MoqStructWithTag does implement StructWithTag.
+// Ensure that MoqStructWithTag does implement StructWithTag.
 // If this is not the case, regenerate this file with moq.
 var _ StructWithTag = &MoqStructWithTag{}
 
@@ -4894,7 +4894,7 @@ func (mock *MoqStructWithTag) ResetCalls() {
 	mock.lockMethodA.Unlock()
 }
 
-// Ensure, that MoqUnsafeInterface does implement UnsafeInterface.
+// Ensure that MoqUnsafeInterface does implement UnsafeInterface.
 // If this is not the case, regenerate this file with moq.
 var _ UnsafeInterface = &MoqUnsafeInterface{}
 
@@ -4974,7 +4974,7 @@ func (mock *MoqUnsafeInterface) ResetCalls() {
 	mock.lockDo.Unlock()
 }
 
-// Ensure, that MoqVariadic does implement Variadic.
+// Ensure that MoqVariadic does implement Variadic.
 // If this is not the case, regenerate this file with moq.
 var _ Variadic = &MoqVariadic{}
 
@@ -5063,7 +5063,7 @@ func (mock *MoqVariadic) ResetCalls() {
 	mock.lockVariadicFunction.Unlock()
 }
 
-// Ensure, that MoqVariadicReturnFunc does implement VariadicReturnFunc.
+// Ensure that MoqVariadicReturnFunc does implement VariadicReturnFunc.
 // If this is not the case, regenerate this file with moq.
 var _ VariadicReturnFunc = &MoqVariadicReturnFunc{}
 

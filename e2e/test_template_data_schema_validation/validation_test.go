@@ -19,5 +19,6 @@ func TestExercise(t *testing.T) {
 		"go", "run", "github.com/vektra/mockery/v3",
 		"--config", "./.mockery.yml").CombinedOutput()
 	assert.Error(t, err)
-	assert.True(t, strings.Contains(string(out), "ERR (root): foo is required"))
+	expectedString := "ERR (root): foo is required"
+	assert.True(t, strings.Contains(string(out), expectedString), "expected string in stdout not found: \"%s\"", expectedString)
 }
