@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "vektra/mockery matryer mock",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "boilerplate-file": {
+        "type": "string"
+      },
+      "mock-build-tags": {
+        "type": "string"
+      },
+      "skip-ensure": {
+        "type": "boolean"
+      },
+      "stub-impl": {
+        "type": "boolean"
+      },
+      "with-resets": {
+        "type": "boolean"
+      }
+    },
+    "required": []
+  }

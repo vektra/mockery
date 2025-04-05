@@ -24,7 +24,7 @@ import (
 {{range $i, $mock := .Interfaces -}}
 
 {{- if not (index $mock.TemplateData "skip-ensure") -}}
-// Ensure, that {{.StructName}} does implement {{$.SrcPkgQualifier}}{{.Name}}.
+// Ensure that {{.StructName}} does implement {{$.SrcPkgQualifier}}{{.Name}}.
 // If this is not the case, regenerate this file with moq.
 var _ {{$.SrcPkgQualifier}}{{.Name -}}
 	{{- if .TypeParams }}[

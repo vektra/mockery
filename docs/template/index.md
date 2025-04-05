@@ -59,12 +59,40 @@ You can see examples of how the mockery project utilizes the template system to 
 - [`matryer.templ`](https://github.com/vektra/mockery/blob/v3/internal/mock_matryer.templ)
 - [`testify.templ`](https://github.com/vektra/mockery/blob/v3/internal/mock_testify.templ)
 
+## Schemas
+
+Templates can provide a JSON Schema file that describes the format of the `TemplateData` parameter. Mockery auto-discovers the location of these schema files by appending `.schema.json` to the path of the template. For example, if you provide to mockery `#!yaml template: file://./path/to/template.tmpl`, it will look for a file at `file://./path/to/template.tmpl.schema.json`. If found, this schema will be applied to the `TemplateData` type sent to the template.
+
+To get started with JSON Schema, you can borrow an example JSON document used for the mockery project itself:
+
+```json
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "vektra/mockery testify mock",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "boilerplate-file": {
+        "type": "string"
+      },
+      "mock-build-tags": {
+        "type": "string"
+      },
+      "unroll-variadic": {
+        "type": "boolean"
+      }
+    },
+    "required": []
+}
+```
+
+Note that the `#!json "additionalProperties": false` parameter is crucial to ensure only the specified parameters exist in the configured `#!yaml template-data: {}` map.
+
 ## Template Data
 
-### Functions
+Templates are rendered with functions and data you can utilize to generate your mocks. Links are shown below:
 
-Template files have both [`StringManipulationFuncs`](https://pkg.go.dev/github.com/vektra/mockery/v3/shared#pkg-variables) and [`TemplateMockFuncs`](https://pkg.go.dev/github.com/vektra/mockery/v3/template#pkg-variables) available as functions.
-
-### Variables
-
-The template is supplied with the [`template.Data`](https://pkg.go.dev/github.com/vektra/mockery/v3/template#Data) struct. Some attributes return types such as [`template.MockData`](https://pkg.go.dev/github.com/vektra/mockery/v3@v3.0.0-alpha.10/template#MockData) and [`template.Package`](https://pkg.go.dev/github.com/vektra/mockery/v3/template#Package) which themselves contain methods that may also be called.
+| Description | Link |
+|-|-|
+| Functions | [`template_funcs.FuncMap`](https://pkg.go.dev/github.com/vektra/mockery/v3/template_funcs#pkg-variables) | 
+| Data | [`template.Data`](https://pkg.go.dev/github.com/vektra/mockery/v3/template#Data) |

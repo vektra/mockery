@@ -15,5 +15,5 @@ type Data struct {
 	Interfaces Interfaces
 	// TemplateData is a schemaless map containing parameters from configuration
 	// you may consume in your template.
-	TemplateData map[string]any
+	TemplateData TemplateData
 }
