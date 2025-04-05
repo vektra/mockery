@@ -9,9 +9,7 @@ import (
 	"github.com/xeipuuv/gojsonschema"
 )
 
-var (
-	ErrTemplateDataSchemaValidation = errors.New("unable to verify template-data schema")
-)
+var ErrTemplateDataSchemaValidation = errors.New("unable to verify template-data schema")
 
 type TemplateData map[string]any
 

@@ -36,11 +36,11 @@ var (
 	//go:embed mock_matryer.templ
 	templateMatryer string
 	//go:embed mock_matryer.templ.schema.json
-	templateMatryerJsonSchema string
+	templateMatryerJSONSchema string
 	//go:embed mock_testify.templ
 	templateTestify string
 	//go:embed mock_testify.templ.schema.json
-	templateTestifyJsonSchema string
+	templateTestifyJSONSchema string
 )
 
 var styleTemplates = map[string]string{
@@ -49,8 +49,8 @@ var styleTemplates = map[string]string{
 }
 
 var jsonSchemas = map[string]string{
-	"matryer": templateMatryerJsonSchema,
-	"testify": templateTestifyJsonSchema,
+	"matryer": templateMatryerJSONSchema,
+	"testify": templateTestifyJSONSchema,
 }
 
 // findPkgPath returns the fully-qualified go import path of a given dir. The
@@ -111,12 +111,13 @@ func findPkgPath(dirPath *pathlib.Path) (string, error) {
 }
 
 type TemplateGenerator struct {
-	templateName string
-	registry     *template.Registry
-	formatter    Formatter
-	inPackage    bool
-	pkgConfig    *config.Config
-	pkgName      string
+	templateName   string
+	templateSchema string
+	registry       *template.Registry
+	formatter      Formatter
+	inPackage      bool
+	pkgConfig      *config.Config
+	pkgName        string
 }
 
 func NewTemplateGenerator(
@@ -124,6 +125,7 @@ func NewTemplateGenerator(
 	srcPkg *packages.Package,
 	outPkgFSPath *pathlib.Path,
 	templateName string,
+	templateSchema string,
 	formatter Formatter,
 	pkgConfig *config.Config,
 	pkgName string,
@@ -167,12 +169,13 @@ func NewTemplateGenerator(
 	}
 
 	return &TemplateGenerator{
-		templateName: templateName,
-		registry:     reg,
-		formatter:    formatter,
-		inPackage:    inPackage,
-		pkgConfig:    pkgConfig,
-		pkgName:      pkgName,
+		templateName:   templateName,
+		templateSchema: templateSchema,
+		registry:       reg,
+		formatter:      formatter,
+		inPackage:      inPackage,
+		pkgConfig:      pkgConfig,
+		pkgName:        pkgName,
 	}, nil
 }
 
@@ -329,7 +332,7 @@ func (g *TemplateGenerator) getTemplate(ctx context.Context) (string, gojsonsche
 		}
 		templateString := string(templateBytes)
 
-		jsonSchemaPath := templatePath.Parent().Join(fmt.Sprintf("%s.schema.json", templatePath.Name()))
+		jsonSchemaPath := pathlib.NewPath(strings.TrimPrefix(g.templateSchema, "file://"))
 		schemaExists, err := jsonSchemaPath.Exists()
 		if err != nil {
 			log.Err(err).Str("json-schema-path", jsonSchemaPath.String()).Msg("failed to determine if json schema file exists")
@@ -365,7 +368,9 @@ func (g *TemplateGenerator) validateSchema(ctx context.Context, data template.Da
 		return fmt.Errorf("validating template-data")
 	}
 	for _, intf := range data.Interfaces {
-		intf.TemplateData.VerifyJSONSchema(ctx, schema)
+		if err := intf.TemplateData.VerifyJSONSchema(ctx, schema); err != nil {
+			return fmt.Errorf("verifying template-data for %s: %w", intf.Name, err)
+		}
 	}
 	return nil
 }

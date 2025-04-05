@@ -22,6 +22,26 @@ section below shows what will be rendered for the given interface.
     }
     ```
 
+=== "Example Usage"
+
+    ```go
+    package test
+
+    import (
+        "testing"
+
+        "github.com/stretchr/testify/assert"
+    )
+
+    func TestRequesterMock(t *testing.T) {
+        m := NewMockRequester(t)
+        m.EXPECT().Get("foo").Return("bar", nil).Once()
+        retString, err := m.Get("foo")
+        assert.NoError(t, err)
+        assert.Equal(t, retString, "bar")
+    }
+    ```
+
 === "`.mockery.yml`"
 
     ```yaml
@@ -105,26 +125,6 @@ section below shows what will be rendered for the given interface.
 
     func (_c *Requester_Get_Call) RunAndReturn(run func(path string)(string, error)) *Requester_Get_Call {
         // ...
-    }
-    ```
-
-=== "Example Usage"
-
-    ```go
-    package test
-
-    import (
-        "testing"
-
-        "github.com/stretchr/testify/assert"
-    )
-
-    func TestRequesterMock(t *testing.T) {
-        m := NewMockRequester(t)
-        m.EXPECT().Get("foo").Return("bar", nil).Once()
-        retString, err := m.Get("foo")
-        assert.NoError(t, err)
-        assert.Equal(t, retString, "bar")
     }
     ```
 

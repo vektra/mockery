@@ -18,6 +18,23 @@ matryer/moq
     }
     ```
 
+
+=== "Example Usage"
+
+    ```go
+    func TestRequesterMoq(t *testing.T) {
+        m := &MoqRequester{
+            GetFunc: func(path string) (string, error) {
+                fmt.Printf("Go path: %s\n", path)
+                return path + "/foo", nil
+            },
+        }
+        result, err := m.Get("/path")
+        assert.NoError(t, err)
+        assert.Equal(t, "/path/foo", result)
+    }
+    ```
+
 === "`.mockery.yml`"
 
     ```yaml
@@ -96,21 +113,6 @@ matryer/moq
 
     ```
 
-=== "Example Usage"
-
-    ```go
-    func TestRequesterMoq(t *testing.T) {
-        m := &MoqRequester{
-            GetFunc: func(path string) (string, error) {
-                fmt.Printf("Go path: %s\n", path)
-                return path + "/foo", nil
-            },
-        }
-        result, err := m.Get("/path")
-        assert.NoError(t, err)
-        assert.Equal(t, "/path/foo", result)
-    }
-    ```
 
 Moq-style mocks are far simpler, and probably more intuitive, than testify-style mocks. All that's needed is to define the function that will be run when the mock's method is called.
 

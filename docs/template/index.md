@@ -8,45 +8,13 @@ templates that you can select with the `#!yaml template:` config parameter.
 
 ### `#!yaml template: "testify"`
 
-[`testify`](testify.md) templates generate powerful, testify-based mock objects. They allow you to create expectations using argument-to-return-value matching logic.
-
-```go
-package test
-
-import (
-    "testing"
-
-    "github.com/stretchr/testify/assert"
-)
-
-func TestRequesterMock(t *testing.T) {
-    m := NewMockRequester(t)
-    m.EXPECT().Get("foo").Return("bar", nil).Once()
-    retString, err := m.Get("foo")
-    assert.NoError(t, err)
-    assert.Equal(t, retString, "bar")
-}
-```
+[`testify`](testify.md#description){ data-preview } templates generate powerful, testify-based mock objects. They allow you to create expectations using argument-to-return-value matching logic.
 
 ### `#!yaml template: "matryer"`
 
-[`matryer`](matryer.md) templates draw from the mocks generated from the project at https://github.com/matryer/moq. This project was folded into mockery, and thus moq-style mocks can be natively generated from within mockery.
+[`matryer`](matryer.md#description){ data-preview } templates draw from the mocks generated from the project at https://github.com/matryer/moq. This project was folded into mockery, and thus moq-style mocks can be natively generated from within mockery.
 
 Mocks generated using this template allow you to define precise functions to be run. Example:
-
-```go
-func TestRequesterMoq(t *testing.T) {
-    m := &MoqRequester{
-        GetFunc: func(path string) (string, error) {
-            fmt.Printf("Go path: %s\n", path)
-            return path + "/foo", nil
-        },
-    }
-    result, err := m.Get("/path")
-    assert.NoError(t, err)
-    assert.Equal(t, "/path/foo", result)
-}
-```
 
 ### `#!yaml template: "file://`
 
@@ -65,7 +33,7 @@ Templates can provide a JSON Schema file that describes the format of the `Templ
 
 To get started with JSON Schema, you can borrow an example JSON document used for the mockery project itself:
 
-```json
+```json title="schema.json"
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "vektra/mockery testify mock",
@@ -87,6 +55,10 @@ To get started with JSON Schema, you can borrow an example JSON document used fo
 ```
 
 Note that the `#!json "additionalProperties": false` parameter is crucial to ensure only the specified parameters exist in the configured `#!yaml template-data: {}` map.
+
+!!! tip "`template-schema`"
+
+    You can specify a custom schema path using the [`#!yaml template-schema:`](../configuration.md#parameter-descriptions)parameter.
 
 ## Template Data
 
