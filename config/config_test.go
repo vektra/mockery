@@ -13,7 +13,6 @@ import (
 )
 
 func TestNewRootConfig(t *testing.T) {
-
 	tests := []struct {
 		name    string
 		config  string
