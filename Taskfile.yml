@@ -25,17 +25,14 @@ tasks:
       - rm -rf mocks/
 
   mocks.generate.custom:
-    silent: True
     cmds:
       - go run .
 
   mocks.generate.mockery:
-    silent: True
     cmds:
       - MOCKERY_CONFIG=./.mockery_testify.yml go run .
 
   mocks.generate.matryer:
-    silent: True
     cmds:
       - MOCKERY_CONFIG=./.mockery_matryer.yml go run .
 
