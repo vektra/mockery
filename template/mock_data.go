@@ -8,8 +8,8 @@ type Interface struct {
 	Name string
 	// StructName is the chosen name for the struct that will implement the interface.
 	StructName   string
-	TypeParams   []TypeParamData
-	Methods      []MethodData
+	TypeParams   []TypeParam
+	Methods      []Method
 	TemplateData map[string]any
 }
 

@@ -2,7 +2,7 @@ package template
 
 import "go/types"
 
-type TypeParamData struct {
-	ParamData
+type TypeParam struct {
+	Param
 	Constraint types.Type
 }

@@ -15,18 +15,18 @@ import (
 {{- range .Imports}}
 	{{ .ImportStatement }}
 {{- end}}
-{{- if .Mocks.MocksSomeMethod }}
+{{- if .Interfaces.MocksSomeMethod }}
     "sync"
 {{- end }}
     "fmt"
 )
 
-{{range $i, $mock := .Mocks -}}
+{{range $i, $mock := .Interfaces -}}
 
 {{- if not (index $mock.TemplateData "skip-ensure") -}}
-// Ensure, that {{.StructName}} does implement {{$.SrcPkgQualifier}}{{.InterfaceName}}.
+// Ensure, that {{.StructName}} does implement {{$.SrcPkgQualifier}}{{.Name}}.
 // If this is not the case, regenerate this file with moq.
-var _ {{$.SrcPkgQualifier}}{{.InterfaceName -}}
+var _ {{$.SrcPkgQualifier}}{{.Name -}}
 	{{- if .TypeParams }}[
 		{{- range $index, $param := .TypeParams}}
 			{{- if $index}}, {{end -}}
@@ -44,12 +44,12 @@ var _ {{$.SrcPkgQualifier}}{{.InterfaceName -}}
 {}
 {{- end}}
 
-// {{.StructName}} is a mock implementation of {{$.SrcPkgQualifier}}{{.InterfaceName}}.
+// {{.StructName}} is a mock implementation of {{$.SrcPkgQualifier}}{{.Name}}.
 //
-//	func TestSomethingThatUses{{.InterfaceName}}(t *testing.T) {
+//	func TestSomethingThatUses{{.Name}}(t *testing.T) {
 //
-//		// make and configure a mocked {{$.SrcPkgQualifier}}{{.InterfaceName}}
-//		mocked{{.InterfaceName}} := &{{.StructName}}{
+//		// make and configure a mocked {{$.SrcPkgQualifier}}{{.Name}}
+//		mocked{{.Name}} := &{{.StructName}}{
 			{{- range .Methods}}
 //			{{.Name}}Func: func({{.ArgList}}) {{.ReturnArgTypeList}} {
 //				panic("mock out the {{.Name}} method")
@@ -57,7 +57,7 @@ var _ {{$.SrcPkgQualifier}}{{.InterfaceName -}}
 			{{- end}}
 //		}
 //
-//		// use mocked{{.InterfaceName}} in code that requires {{$.SrcPkgQualifier}}{{.InterfaceName}}
+//		// use mocked{{.Name}} in code that requires {{$.SrcPkgQualifier}}{{.Name}}
 //		// and then make assertions.
 //
 //	}
@@ -92,7 +92,7 @@ type {{.StructName}}
 func (mock *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) {{.Name}}({{.ArgList}}) {{.ReturnArgTypeList}} {
 {{- if not (index $mock.TemplateData "stub-impl") }}
 	if mock.{{.Name}}Func == nil {
-		panic("{{$mock.StructName}}.{{.Name}}Func: method is nil but {{$mock.InterfaceName}}.{{.Name}} was just called")
+		panic("{{$mock.StructName}}.{{.Name}}Func: method is nil but {{$mock.Name}}.{{.Name}} was just called")
 	}
 {{- end}}
 	callInfo := struct {
@@ -132,7 +132,7 @@ func (mock *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) {{.Name}}({{.ArgL
 // {{.Name}}Calls gets all the calls that were made to {{.Name}}.
 // Check the length with:
 //
-//	len(mocked{{$mock.InterfaceName}}.{{.Name}}Calls())
+//	len(mocked{{$mock.Name}}.{{.Name}}Calls())
 func (mock *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) {{.Name}}Calls() []struct {
 		{{- range .Params}}
 		{{.Name | exported}} {{.TypeString}}
