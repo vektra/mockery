@@ -14,7 +14,7 @@ var v2ConfigExample string = `
 quiet: False
 disable-version-string: True
 with-expecter: True
-structname: "{{.InterfaceName}}"
+mockname: "{{.InterfaceName}}"
 filename: "{{.StructName}}_mock.go"
 outpkg: mocks
 tags: "custom2"
@@ -23,7 +23,7 @@ resolve-type-alias: False
 _anchors: &inpackage_config
   all: True
   dir: "{{.InterfaceDir}}"
-  structname: "Mock{{.InterfaceName}}"
+  mockname: "Mock{{.InterfaceName}}"
   outpkg: "{{.PackageName}}_test"
   filename: "mock_{{.InterfaceNameSnake}}_test.go"
   inpackage: False
@@ -46,17 +46,17 @@ packages:
         config:
           with-expecter: False
         configs:
-          - structname: RequesterVariadicOneArgument
+          - mockname: RequesterVariadicOneArgument
             unroll-variadic: False
-          - structname: RequesterVariadic
+          - mockname: RequesterVariadic
             unroll-variadic: True
       Expecter:
         config:
           with-expecter: True
         configs:
-          - structname: ExpecterAndRolledVariadic
+          - mockname: ExpecterAndRolledVariadic
             unroll-variadic: False
-          - structname: Expecter
+          - mockname: Expecter
             unroll-variadic: True
       RequesterReturnElided:
       VariadicNoReturnInterface:
@@ -80,14 +80,14 @@ packages:
       all: True
       dir: "{{.InterfaceDir}}"
       filename: "{{.InterfaceName}}_mock.go"
-      structname: "Mock{{.InterfaceName}}"
+      mockname: "Mock{{.InterfaceName}}"
       outpkg: "{{.PackageName}}"
       inpackage: True
   github.com/vektra/mockery/v2/pkg/fixtures/empty_return:
     config:
       all: True
       dir: "{{.InterfaceDir}}"
-      structname: "{{.InterfaceName}}Mock"
+      mockname: "{{.InterfaceName}}Mock"
       outpkg: "{{.PackageName}}"
       filename: "mock_{{.InterfaceName}}_test.go"
       inpackage: True
@@ -96,7 +96,7 @@ packages:
     config:
       all: True
       dir: "{{.InterfaceDir}}"
-      structname: "{{.InterfaceName}}Mock"
+      mockname: "{{.InterfaceName}}Mock"
       outpkg: "{{.PackageName}}"
       filename: "mock_{{.InterfaceName}}_test.go"
       inpackage: True
@@ -117,9 +117,9 @@ packages:
       Interface:
         configs:
           - issue-845-fix: False
-            structname: WithoutFix
+            mockname: WithoutFix
           - issue-845-fix: True
-            structname: WithFix
+            mockname: WithFix
   github.com/vektra/mockery/v2/pkg/fixtures/type_alias:
     config:
       all: True
@@ -131,15 +131,15 @@ packages:
       Interface1:
         configs:
           - resolve-type-alias: False
-            structname: InterfaceWithUnresolvedAlias
+            mockname: InterfaceWithUnresolvedAlias
           - resolve-type-alias: True
-            structname: InterfaceWithResolvedAlias
+            mockname: InterfaceWithResolvedAlias
       Interface2:
         configs:
           - resolve-type-alias: False
-            structname: Interface2WithUnresolvedAlias
+            mockname: Interface2WithUnresolvedAlias
           - resolve-type-alias: True
-            structname: Interface2WithResolvedAlias
+            mockname: Interface2WithResolvedAlias
   github.com/vektra/mockery/v2/pkg/:
     interfaces:
       InterfaceDoesntExist:
@@ -156,7 +156,7 @@ var expectedV3Conf string = `_anchors:
   dir: '{{.InterfaceDir}}'
   filename: mock_{{.InterfaceNameSnake}}_test.go
   inpackage: false
-  structname: Mock{{.InterfaceName}}
+  mockname: Mock{{.InterfaceName}}
   outpkg: '{{.PackageName}}_test'
 structname: '{{.InterfaceName}}'
 pkgname: mocks
@@ -303,4 +303,7 @@ func TestMigrate(t *testing.T) {
 	b, err := v3File.ReadFile()
 	require.NoError(t, err)
 	assert.Equal(t, expectedV3Conf, string(b))
+	out := pathlib.NewPath("/tmp/test.txt")
+	out.WriteFile(b)
+	t.Log(string(b))
 }
