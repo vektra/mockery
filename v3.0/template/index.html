@@ -953,6 +953,19 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 </li>
       
         <li class="md-nav__item">
+  <a href="#schemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Schemas
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#template-data" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -962,38 +975,6 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Template Data">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#functions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Functions
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#variables" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Variables
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1007,6 +988,54 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
           
           
             <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href=".." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="./" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Templates
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
               
               <article class="md-content__inner md-typeset">
                 
@@ -1035,38 +1064,10 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 templates that you can select with the <code class="highlight"><span class="nt">template</span><span class="p">:</span></code> config parameter.</p>
 <h2 id="template-options">Template Options<a class="headerlink" href="#template-options" title="Permanent link">&para;</a></h2>
 <h3 id="template-testify"><code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;testify&quot;</span></code><a class="headerlink" href="#template-testify" title="Permanent link">&para;</a></h3>
-<p><a href="testify/"><code>testify</code></a> templates generate powerful, testify-based mock objects. They allow you to create expectations using argument-to-return-value matching logic.</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">package</span><span class="w"> </span><span class="nx">test</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="s">&quot;testing&quot;</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="s">&quot;github.com/stretchr/testify/assert&quot;</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="kd">func</span><span class="w"> </span><span class="nx">TestRequesterMock</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nx">m</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewMockRequester</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="nx">m</span><span class="p">.</span><span class="nx">EXPECT</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">).</span><span class="nx">Return</span><span class="p">(</span><span class="s">&quot;bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">).</span><span class="nx">Once</span><span class="p">()</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="nx">retString</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">NoError</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="p">)</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">retString</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;bar&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p">}</span>
-</code></pre></div>
+<p><a data-preview="data-preview" href="testify/#description"><code>testify</code></a> templates generate powerful, testify-based mock objects. They allow you to create expectations using argument-to-return-value matching logic.</p>
 <h3 id="template-matryer"><code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;matryer&quot;</span></code><a class="headerlink" href="#template-matryer" title="Permanent link">&para;</a></h3>
-<p><a href="matryer/"><code>matryer</code></a> templates draw from the mocks generated from the project at <a href="https://github.com/matryer/moq">https://github.com/matryer/moq</a>. This project was folded into mockery, and thus moq-style mocks can be natively generated from within mockery.</p>
+<p><a data-preview="data-preview" href="matryer/#description"><code>matryer</code></a> templates draw from the mocks generated from the project at <a href="https://github.com/matryer/moq">https://github.com/matryer/moq</a>. This project was folded into mockery, and thus moq-style mocks can be natively generated from within mockery.</p>
 <p>Mocks generated using this template allow you to define precise functions to be run. Example:</p>
-<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">func</span><span class="w"> </span><span class="nx">TestRequesterMoq</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nx">m</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">MoqRequester</span><span class="p">{</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">        </span><span class="nx">GetFunc</span><span class="p">:</span><span class="w"> </span><span class="kd">func</span><span class="p">(</span><span class="nx">path</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">            </span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;Go path: %s\n&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">path</span><span class="p">)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nx">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;/foo&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nx">result</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">m</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/path&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">NoError</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="p">)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/path/foo&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">result</span><span class="p">)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">}</span>
-</code></pre></div>
 <h3 id="template-file"><code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;file://</span></code><a class="headerlink" href="#template-file" title="Permanent link">&para;</a></h3>
 <p>You may also provide mockery a path to your own file using the <code>file://</code> protocol specifier. The string after <code>file://</code> will be the relative or absolute path of your template.</p>
 <p>The templates are rendered with the data as shown in the <a href="#template-files">section below</a>.</p>
@@ -1075,11 +1076,53 @@ templates that you can select with the <code class="highlight"><span class="nt">
 <li><a href="https://github.com/vektra/mockery/blob/v3/internal/mock_matryer.templ"><code>matryer.templ</code></a></li>
 <li><a href="https://github.com/vektra/mockery/blob/v3/internal/mock_testify.templ"><code>testify.templ</code></a></li>
 </ul>
+<h2 id="schemas">Schemas<a class="headerlink" href="#schemas" title="Permanent link">&para;</a></h2>
+<p>Templates can provide a JSON Schema file that describes the format of the <code>TemplateData</code> parameter. Mockery auto-discovers the location of these schema files by appending <code>.schema.json</code> to the path of the template. For example, if you provide to mockery <code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file://./path/to/template.tmpl</span></code>, it will look for a file at <code>file://./path/to/template.tmpl.schema.json</code>. If found, this schema will be applied to the <code>TemplateData</code> type sent to the template.</p>
+<p>To get started with JSON Schema, you can borrow an example JSON document used for the mockery project itself:</p>
+<div class="highlight"><span class="filename">schema.json</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://json-schema.org/draft-07/schema#&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vektra/mockery testify mock&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="nt">&quot;boilerplate-file&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">      </span><span class="nt">&quot;mock-build-tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">      </span><span class="nt">&quot;unroll-variadic&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="p">}</span>
+</code></pre></div>
+<p>Note that the <code class="highlight"><span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></code> parameter is crucial to ensure only the specified parameters exist in the configured <code class="highlight"><span class="nt">template-data</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span></code> map.</p>
+<div class="admonition tip">
+<p class="admonition-title"><code>template-schema</code></p>
+<p>You can specify a custom schema path using the <a href="../configuration/#parameter-descriptions"><code class="highlight"><span class="nt">template-schema</span><span class="p">:</span></code></a>parameter.</p>
+</div>
 <h2 id="template-data">Template Data<a class="headerlink" href="#template-data" title="Permanent link">&para;</a></h2>
-<h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
-<p>Template files have both <a href="https://pkg.go.dev/github.com/vektra/mockery/v3/shared#pkg-variables"><code>StringManipulationFuncs</code></a> and <a href="https://pkg.go.dev/github.com/vektra/mockery/v3/template#pkg-variables"><code>TemplateMockFuncs</code></a> available as functions.</p>
-<h3 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">&para;</a></h3>
-<p>The template is supplied with the <a href="https://pkg.go.dev/github.com/vektra/mockery/v3/template#Data"><code>template.Data</code></a> struct. Some attributes return types such as <a href="https://pkg.go.dev/github.com/vektra/mockery/v3@v3.0.0-alpha.10/template#MockData"><code>template.MockData</code></a> and <a href="https://pkg.go.dev/github.com/vektra/mockery/v3/template#Package"><code>template.Package</code></a> which themselves contain methods that may also be called.</p>
+<p>Templates are rendered with functions and data you can utilize to generate your mocks. Links are shown below:</p>
+<table>
+<thead>
+<tr>
+<th>Description</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Functions</td>
+<td><a href="https://pkg.go.dev/github.com/vektra/mockery/v3/template_funcs#pkg-variables"><code>template_funcs.FuncMap</code></a></td>
+</tr>
+<tr>
+<td>Data</td>
+<td><a href="https://pkg.go.dev/github.com/vektra/mockery/v3/template#Data"><code>template.Data</code></a></td>
+</tr>
+</tbody>
+</table>
 
 
 
@@ -1131,7 +1174,7 @@ templates that you can select with the <code class="highlight"><span class="nt">
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.footnote.tooltips", "navigation.indexes", "navigation.sections", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.c7c1ca2c.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.footnote.tooltips", "navigation.indexes", "navigation.path", "navigation.sections", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.c7c1ca2c.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../assets/javascripts/bundle.f807c082.min.js"></script>
