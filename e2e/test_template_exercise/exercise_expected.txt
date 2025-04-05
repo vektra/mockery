@@ -12,7 +12,7 @@ $import.Qualifier: constraints
 
 
 # MOCK: 0
-$mock.InterfaceName: Exercise
+$mock.Name: Exercise
 $mock.StructName: MockExercise
 
 
