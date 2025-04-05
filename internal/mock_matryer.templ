@@ -15,7 +15,7 @@ import (
 {{- range .Imports}}
 	{{ .ImportStatement }}
 {{- end}}
-{{- if .Interfaces.MocksSomeMethod }}
+{{- if .Interfaces.ImplementsSomeMethod }}
     "sync"
 {{- end }}
     "fmt"
