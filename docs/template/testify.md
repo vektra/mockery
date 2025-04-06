@@ -2,9 +2,6 @@
 title: testify
 ---
 
-Mockery
-=======
-
 Features for `#!yaml template: testify`.
 
 Choosing this template will render a traditional "mockery-style" template. The
@@ -183,9 +180,14 @@ This style of mock also has other interesting methods:
 | key | type | description |
 |-----|------|-------------|
 | `boilerplate-file`  | `#!yaml string` | Specify a path to a file that contains comments you want displayed at the top of all generated mock files. This is commonly used to display license headers at the top of your source code. |
-| `mock-build-tags` | `#!yaml ""` | Set the build tags of the generated mocks. Read more about the [format](https://pkg.go.dev/cmd/go#hdr-Build_constraints). |
+| `mock-build-tags` | `#!yaml string` | Set the build tags of the generated mocks. Read more about the [format](https://pkg.go.dev/cmd/go#hdr-Build_constraints). |
 | `unroll-variadic` | `#!yaml bool` | If set to `#!yaml unroll-variadic: true`, will expand the variadic argument to testify using the `...` syntax. See [notes](#variadic-arguments) for more details. |
 
+### Schema
+
+```json
+{{ read_raw("../internal/mock_testify.templ.schema.json") }}
+```
 
 ## Features
 

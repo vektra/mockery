@@ -5,3 +5,4 @@ git+https://${GH_TOKEN}@github.com/squidfunk/mkdocs-material-insiders.git
 mkdocs-open-in-new-tab
 cairosvg
 pillow
+mkdocs-table-reader-plugin
