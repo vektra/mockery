@@ -63,7 +63,6 @@ nav:
   - Getting Started:
     - Installation: installation.md
     - Configuration: configuration.md
-    - Running: running.md
   - Templates:
     - template/index.md
     - template/testify.md
@@ -95,7 +94,10 @@ plugins:
     alias_type: symlink
     canonical_version: latest
 - open-in-new-tab
+- json-schema:
+    matryer: ./internal/mock_matryer.templ.schema.json
 - search
 - social
+- table-reader
 - typeset:
     enabled: true

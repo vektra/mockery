@@ -112,6 +112,8 @@ import (
 Parameter Descriptions
 -----------------------
 
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/vektra/mockery/v3/config#Config)
+
 | name                                                   | templated                 | default                               | description                                                                                                                                                                                                                                          |
 |--------------------------------------------------------|---------------------------|---------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `all`                                                  | :fontawesome-solid-x:     | `#!yaml false`                        | Generate all interfaces for the specified packages.                                                                                                                                                                                                  |
@@ -134,10 +136,6 @@ Parameter Descriptions
 | `template`                                             | :fontawesome-solid-x:     | `#!yaml ""`                           | The template to use. The choices are `moq`, `mockery`, or a file path provided by `file://path/to/file.txt`.                                                                                                                                         |
 | `template-data`                                        | :fontawesome-solid-x:     | `#!yaml {}`                           | A `map[string]any` that provides arbitrary options to the template. Each template will have a different set of accepted keys. Refer to each template's documentation for more details.                                                               |
 | `template-schema`                                      | :fontawesome-solid-check: | `#!yaml "{{.Template}}.schema.json"`  | The URL of the JSON schema to apply to the `template-data` parameter. See the [template docs](./template/index.md#schemas){ data-preview } for more details. |
-
-!!! tip "`pkg.go.dev`"
-
-    The full schema definition can be viewed at our [pkg.go.dev](https://pkg.go.dev/github.com/vektra/mockery/v3/config#RootConfig) site.
 
 Templates
 ---------

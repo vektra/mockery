@@ -1,20 +1,21 @@
 Templates
 =========
 
-Mockery, in its essence, renders templates. This project provides a number of pre-curated
-templates that you can select with the `#!yaml template:` config parameter.
+Mockery, in its essence, renders templates. This project provides a number of pre-curated templates that you can select with the `#!yaml template:` config parameter. Each template will render a specific kind of implementation of the interface in question. Historically, mocks (used in testing) are common to generate, but anything that implements the interface is fair game.
+
+Mockery provides a few embedded templates you can render, or you can use a URL to specify a remotely-hosted template.
 
 ## Template Options
 
-### `#!yaml template: "testify"`
+### [`#!yaml template: "testify"`](testify.md#description)
 
 [`testify`](testify.md#description){ data-preview } templates generate powerful, testify-based mock objects. They allow you to create expectations using argument-to-return-value matching logic.
 
-### `#!yaml template: "matryer"`
+### [`#!yaml template: "matryer"`](matryer.md#description)
 
 [`matryer`](matryer.md#description){ data-preview } templates draw from the mocks generated from the project at https://github.com/matryer/moq. This project was folded into mockery, and thus moq-style mocks can be natively generated from within mockery.
 
-Mocks generated using this template allow you to define precise functions to be run. Example:
+Mocks generated using this template allow you to define precise functions to be run.
 
 ### `#!yaml template: "file://"`
 
@@ -47,6 +48,8 @@ template-schema: https://raw.githubusercontent.com/vektra/mockery/refs/tags/v3.0
     3. Patch: `v3.1.2`
 
     This will give consumers of your template the ability to specify which level of granularity they want to track versions.
+
+The non-TLS variant is also supported: `#!yaml template: "http://"`, but not recommended for obvious reasons.
 
 ## Schemas
 
@@ -87,5 +90,5 @@ Templates are rendered with functions and data you can utilize to generate your 
 
 | Description | Link |
 |-|-|
-| Functions | [`template_funcs.FuncMap`](https://pkg.go.dev/github.com/vektra/mockery/v3/template_funcs#pkg-variables) | 
-| Data | [`template.Data`](https://pkg.go.dev/github.com/vektra/mockery/v3/template#Data) |
+| Functions | [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/vektra/mockery/v3/template_funcs#pkg-variable) | 
+| Data | [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/vektra/mockery/v3/template#Data) |
