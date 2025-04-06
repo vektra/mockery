@@ -37,8 +37,8 @@ func TestRemoteTemplates(t *testing.T) {
 	tmpDirBase := pathlib.NewPath("./test")
 	require.NoError(t, tmpDirBase.Mkdir())
 	tmpDirBase, err = tmpDirBase.ResolveAll()
-	defer require.NoError(t, tmpDirBase.RemoveAll())
 	require.NoError(t, err)
+	defer tmpDirBase.RemoveAll()
 
 	type test struct {
 		name             string
@@ -89,10 +89,8 @@ func TestRemoteTemplates(t *testing.T) {
 		},
 	} {
 		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
 			tmpdir := tmpDirBase.Join(t.Name())
 			require.NoError(t, tmpdir.MkdirAll())
-			defer require.NoError(t, tmpdir.RemoveAll())
 
 			configFile := tmpdir.Join(".mockery.yml")
 			outFile := tmpdir.Join("out.txt")
@@ -124,7 +122,6 @@ func TestRemoteTemplates(t *testing.T) {
 				"--config", configFile.String()).CombinedOutput()
 			if tt.expectMockeryErr {
 				assert.Error(t, err)
-
 			} else {
 				require.NoError(t, err, string(out))
 				outFileBytes, err := outFile.ReadFile()
