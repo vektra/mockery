@@ -98,6 +98,5 @@ plugins:
     matryer: ./internal/mock_matryer.templ.schema.json
 - search
 - social
-- table-reader
 - typeset:
     enabled: true
