@@ -94,8 +94,6 @@ plugins:
     alias_type: symlink
     canonical_version: latest
 - open-in-new-tab
-- json-schema:
-    matryer: ./internal/mock_matryer.templ.schema.json
 - search
 - social
 - typeset:
