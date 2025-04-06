@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://vektra.github.io/mockery/latest/template/">
       
       
-        <link rel="prev" href="../running/">
+        <link rel="prev" href="../configuration/">
       
       
         <link rel="next" href="testify/">
@@ -348,8 +348,6 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
       
         
       
-        
-      
     
     
     
@@ -438,34 +436,6 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
     
   
     Configuration
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../running/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Running
   
 
     
@@ -939,7 +909,20 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          <code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;file://</span></code>
+          <code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;file://&quot;</span></code>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template-https" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          <code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://&quot;</span></code>
         </span>
       
     </span>
@@ -1060,15 +1043,15 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 
 
 <h1 id="templates">Templates<a class="headerlink" href="#templates" title="Permanent link">&para;</a></h1>
-<p>Mockery, in its essence, renders templates. This project provides a number of pre-curated
-templates that you can select with the <code class="highlight"><span class="nt">template</span><span class="p">:</span></code> config parameter.</p>
+<p>Mockery, in its essence, renders templates. This project provides a number of pre-curated templates that you can select with the <code class="highlight"><span class="nt">template</span><span class="p">:</span></code> config parameter. Each template will render a specific kind of implementation of the interface in question. Historically, mocks (used in testing) are common to generate, but anything that implements the interface is fair game.</p>
+<p>Mockery provides a few embedded templates you can render, or you can use a URL to specify a remotely-hosted template.</p>
 <h2 id="template-options">Template Options<a class="headerlink" href="#template-options" title="Permanent link">&para;</a></h2>
-<h3 id="template-testify"><code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;testify&quot;</span></code><a class="headerlink" href="#template-testify" title="Permanent link">&para;</a></h3>
+<h3 id="template-testify"><a href="testify/#description"><code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;testify&quot;</span></code></a><a class="headerlink" href="#template-testify" title="Permanent link">&para;</a></h3>
 <p><a data-preview="data-preview" href="testify/#description"><code>testify</code></a> templates generate powerful, testify-based mock objects. They allow you to create expectations using argument-to-return-value matching logic.</p>
-<h3 id="template-matryer"><code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;matryer&quot;</span></code><a class="headerlink" href="#template-matryer" title="Permanent link">&para;</a></h3>
+<h3 id="template-matryer"><a href="matryer/#description"><code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;matryer&quot;</span></code></a><a class="headerlink" href="#template-matryer" title="Permanent link">&para;</a></h3>
 <p><a data-preview="data-preview" href="matryer/#description"><code>matryer</code></a> templates draw from the mocks generated from the project at <a href="https://github.com/matryer/moq">https://github.com/matryer/moq</a>. This project was folded into mockery, and thus moq-style mocks can be natively generated from within mockery.</p>
-<p>Mocks generated using this template allow you to define precise functions to be run. Example:</p>
-<h3 id="template-file"><code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;file://</span></code><a class="headerlink" href="#template-file" title="Permanent link">&para;</a></h3>
+<p>Mocks generated using this template allow you to define precise functions to be run.</p>
+<h3 id="template-file"><code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;file://&quot;</span></code><a class="headerlink" href="#template-file" title="Permanent link">&para;</a></h3>
 <p>You may also provide mockery a path to your own file using the <code>file://</code> protocol specifier. The string after <code>file://</code> will be the relative or absolute path of your template.</p>
 <p>The templates are rendered with the data as shown in the <a href="#template-files">section below</a>.</p>
 <p>You can see examples of how the mockery project utilizes the template system to generate the different mock styles:</p>
@@ -1076,27 +1059,44 @@ templates that you can select with the <code class="highlight"><span class="nt">
 <li><a href="https://github.com/vektra/mockery/blob/v3/internal/mock_matryer.templ"><code>matryer.templ</code></a></li>
 <li><a href="https://github.com/vektra/mockery/blob/v3/internal/mock_testify.templ"><code>testify.templ</code></a></li>
 </ul>
+<h3 id="template-https"><code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://&quot;</span></code><a class="headerlink" href="#template-https" title="Permanent link">&para;</a></h3>
+<p>You can also host templates remotely. This allows you to specify something like:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://raw.githubusercontent.com/vektra/mockery/refs/tags/v3.0.0-beta.8/e2e/test_template_exercise/exercise.templ</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">template-schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://raw.githubusercontent.com/vektra/mockery/refs/tags/v3.0.0-beta.8/e2e/test_template_exercise/exercise.templ.schema.json</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note on Versioning</p>
+<p>Templates hosted remotely should be versioned just like any other piece of code. We recommend hosting the template on a git repo so that you may reference explicit tags.</p>
+<p>It's best practice to maintain 3 sets of tags:</p>
+<ol>
+<li>Major: <code>v3</code></li>
+<li>Minor: <code>v3.1</code></li>
+<li>Patch: <code>v3.1.2</code></li>
+</ol>
+<p>This will give consumers of your template the ability to specify which level of granularity they want to track versions.</p>
+</div>
+<p>The non-TLS variant is also supported: <code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://&quot;</span></code>, but not recommended for obvious reasons.</p>
 <h2 id="schemas">Schemas<a class="headerlink" href="#schemas" title="Permanent link">&para;</a></h2>
 <p>Templates can provide a JSON Schema file that describes the format of the <code>TemplateData</code> parameter. Mockery auto-discovers the location of these schema files by appending <code>.schema.json</code> to the path of the template. For example, if you provide to mockery <code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file://./path/to/template.tmpl</span></code>, it will look for a file at <code>file://./path/to/template.tmpl.schema.json</code>. If found, this schema will be applied to the <code>TemplateData</code> type sent to the template.</p>
 <p>To get started with JSON Schema, you can borrow an example JSON document used for the mockery project itself:</p>
-<div class="highlight"><span class="filename">schema.json</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://json-schema.org/draft-07/schema#&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vektra/mockery testify mock&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="nt">&quot;boilerplate-file&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="p">},</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">      </span><span class="nt">&quot;mock-build-tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">      </span><span class="p">},</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">      </span><span class="nt">&quot;unroll-variadic&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">      </span><span class="p">}</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="p">}</span>
+<div class="highlight"><span class="filename">schema.json</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://json-schema.org/draft-07/schema#&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vektra/mockery testify mock&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="nt">&quot;boilerplate-file&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">      </span><span class="nt">&quot;mock-build-tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="nt">&quot;unroll-variadic&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="p">}</span>
 </code></pre></div>
 <p>Note that the <code class="highlight"><span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></code> parameter is crucial to ensure only the specified parameters exist in the configured <code class="highlight"><span class="nt">template-data</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span></code> map.</p>
 <div class="admonition tip">
@@ -1115,11 +1115,11 @@ templates that you can select with the <code class="highlight"><span class="nt">
 <tbody>
 <tr>
 <td>Functions</td>
-<td><a href="https://pkg.go.dev/github.com/vektra/mockery/v3/template_funcs#pkg-variables"><code>template_funcs.FuncMap</code></a></td>
+<td><a href="https://pkg.go.dev/github.com/vektra/mockery/v3/template_funcs#pkg-variable"><img alt="go.dev reference" src="https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&amp;logoColor=white&amp;style=flat-square" /></a></td>
 </tr>
 <tr>
 <td>Data</td>
-<td><a href="https://pkg.go.dev/github.com/vektra/mockery/v3/template#Data"><code>template.Data</code></a></td>
+<td><a href="https://pkg.go.dev/github.com/vektra/mockery/v3/template#Data"><img alt="go.dev reference" src="https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&amp;logoColor=white&amp;style=flat-square" /></a></td>
 </tr>
 </tbody>
 </table>

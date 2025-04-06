@@ -112,7 +112,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#matryermoq" class="md-skip">
+        <a href="#description" class="md-skip">
           Skip to content
         </a>
       
@@ -348,8 +348,6 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
       
         
       
-        
-      
     
     
     
@@ -438,34 +436,6 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
     
   
     Configuration
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../running/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Running
   
 
     
@@ -600,8 +570,6 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -644,8 +612,6 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -676,6 +642,38 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#matryer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Matryer
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Matryer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Schema
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -958,8 +956,6 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -990,6 +986,38 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#matryer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Matryer
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Matryer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Schema
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1074,7 +1102,9 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
   
 
 
-<h1 id="matryermoq">matryer/moq<a class="headerlink" href="#matryermoq" title="Permanent link">&para;</a></h1>
+  <h1>matryer</h1>
+
+<p><code>matryer</code> mocks are derived from the project at <a href="https://github.com/matryer/moq">https://github.com/matryer/moq</a>. These mocks create a struct that has a function field for each method, which you can declare in your test code.</p>
 <h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Interface</label><label for="__tabbed_1_2">Example Usage</label><label for="__tabbed_1_3"><code>.mockery.yml</code></label><label for="__tabbed_1_4"><code>mocks_moq.go</code></label></div>
 <div class="tabbed-content">
@@ -1194,7 +1224,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 </tr>
 <tr>
 <td><code>mock-build-tags</code></td>
-<td><code class="highlight"><span class="s">&quot;&quot;</span></code></td>
+<td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">string</span></code></td>
 <td>Set the build tags of the generated mocks. Read more about the <a href="https://pkg.go.dev/cmd/go#hdr-Build_constraints">format</a>.</td>
 </tr>
 <tr>
@@ -1214,6 +1244,10 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 </tr>
 </tbody>
 </table>
+<h2 id="matryer">Matryer<a class="headerlink" href="#matryer" title="Permanent link">&para;</a></h2>
+<h3 id="schema">Schema<a class="headerlink" href="#schema" title="Permanent link">&para;</a></h3>
+<div class="highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{{</span><span class="w"> </span><span class="err">read_raw(</span><span class="s2">&quot;../internal/mock_matryer.templ.schema.json&quot;</span><span class="err">)</span><span class="w"> </span><span class="p">}}</span>
+</code></pre></div>
 
 
 
