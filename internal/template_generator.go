@@ -16,7 +16,6 @@ import (
 	"github.com/chigopher/pathlib"
 	"github.com/rs/zerolog"
 	"github.com/vektra/mockery/v3/config"
-	"github.com/vektra/mockery/v3/internal/logging"
 	"github.com/vektra/mockery/v3/internal/stackerr"
 	"github.com/vektra/mockery/v3/template"
 	"github.com/xeipuuv/gojsonschema"
@@ -41,6 +40,11 @@ var (
 	templateTestify string
 	//go:embed mock_testify.templ.schema.json
 	templateTestifyJSONSchema string
+)
+
+var (
+	errBadHTTPStatus        = errors.New("failed to download file")
+	errSchemaDownloadFailed = errors.New("failed to download schema")
 )
 
 var styleTemplates = map[string]string{
@@ -111,13 +115,15 @@ func findPkgPath(dirPath *pathlib.Path) (string, error) {
 }
 
 type TemplateGenerator struct {
-	templateName   string
-	templateSchema string
-	registry       *template.Registry
-	formatter      Formatter
-	inPackage      bool
-	pkgConfig      *config.Config
-	pkgName        string
+	formatter           Formatter
+	inPackage           bool
+	requireSchemaExists bool
+	registry            *template.Registry
+	templateName        string
+	templateSchema      string
+	pkgConfig           *config.Config
+	pkgName             string
+	remoteTemplateCache map[string]*RemoteTemplate
 }
 
 func NewTemplateGenerator(
@@ -126,6 +132,8 @@ func NewTemplateGenerator(
 	outPkgFSPath *pathlib.Path,
 	templateName string,
 	templateSchema string,
+	requireSchemaExists bool,
+	remoteTemplateCache map[string]*RemoteTemplate,
 	formatter Formatter,
 	pkgConfig *config.Config,
 	pkgName string,
@@ -169,13 +177,15 @@ func NewTemplateGenerator(
 	}
 
 	return &TemplateGenerator{
-		templateName:   templateName,
-		templateSchema: templateSchema,
-		registry:       reg,
-		formatter:      formatter,
-		inPackage:      inPackage,
-		pkgConfig:      pkgConfig,
-		pkgName:        pkgName,
+		templateName:        templateName,
+		templateSchema:      templateSchema,
+		requireSchemaExists: requireSchemaExists,
+		registry:            reg,
+		formatter:           formatter,
+		inPackage:           inPackage,
+		pkgConfig:           pkgConfig,
+		pkgName:             pkgName,
+		remoteTemplateCache: remoteTemplateCache,
 	}, nil
 }
 
@@ -320,29 +330,33 @@ func (g *TemplateGenerator) typeParams(ctx context.Context, tparams *types.TypeP
 }
 
 // getTemplate returns the requested template and associated schema (if available).
-func (g *TemplateGenerator) getTemplate(ctx context.Context) (string, gojsonschema.JSONLoader, error) {
-	log := zerolog.Ctx(ctx)
+func (g *TemplateGenerator) getTemplate(ctx context.Context) (string, *gojsonschema.Schema, error) {
+	log := zerolog.Ctx(ctx).With().Str("template", g.templateName).Str("schema", g.templateSchema).Logger()
+	ctx = log.WithContext(ctx)
 
-	if strings.HasPrefix(g.templateName, "file://") {
-		templatePath := pathlib.NewPath(strings.SplitAfterN(g.templateName, "file://", 2)[1])
-		templateBytes, err := templatePath.ReadFile()
-		if err != nil {
-			log.Err(err).Str("template-path", g.templateName).Msg("Failed to read template")
-			return "", nil, err
+	for _, protocol := range []string{"file://", "https://"} {
+		if !strings.HasPrefix(g.templateName, protocol) {
+			continue
 		}
-		templateString := string(templateBytes)
+		var remoteTemplate *RemoteTemplate
+		if cachedRemoteTemplate, ok := g.remoteTemplateCache[g.templateName]; !ok {
+			remoteTemplate = NewRemoteTemplate(g.templateName, g.templateSchema, g.requireSchemaExists)
+			g.remoteTemplateCache[g.templateName] = remoteTemplate
+		} else {
+			remoteTemplate = cachedRemoteTemplate
+		}
 
-		jsonSchemaPath := pathlib.NewPath(strings.TrimPrefix(g.templateSchema, "file://"))
-		schemaExists, err := jsonSchemaPath.Exists()
+		templateString, err := remoteTemplate.Template(ctx)
 		if err != nil {
-			log.Err(err).Str("json-schema-path", jsonSchemaPath.String()).Msg("failed to determine if json schema file exists")
-			return "", nil, fmt.Errorf("determining if json schema exists: %w", err)
+			log.Error().Msg("could not download template")
+			return "", nil, fmt.Errorf("downloading template: %w", err)
 		}
-		if !schemaExists {
-			log.Debug().Str("json-schema-path", jsonSchemaPath.String()).Msg("no json schema found")
-			return templateString, nil, nil
+		schema, err := remoteTemplate.Schema(ctx)
+		if err != nil {
+			log.Error().Msg("could not get JSON schema")
+			return "", nil, fmt.Errorf("downloading schema: %w", err)
 		}
-		return templateString, gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", jsonSchemaPath.String())), nil
+		return templateString, schema, nil
 	}
 
 	// Embedded templates
@@ -351,18 +365,16 @@ func (g *TemplateGenerator) getTemplate(ctx context.Context) (string, gojsonsche
 	if !styleExists {
 		return "", nil, stackerr.NewStackErrf(nil, "template '%s' does not exist", g.templateName)
 	}
-	return templateString, gojsonschema.NewStringLoader(jsonSchemas[g.templateName]), nil
+	schema, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(jsonSchemas[g.templateName]))
+	if err != nil {
+		return "", nil, fmt.Errorf("generating schema: %w", err)
+	}
+	return templateString, schema, nil
 }
 
-func validateSchema(ctx context.Context, data template.Data, jsonLoader gojsonschema.JSONLoader) error {
-	log := zerolog.Ctx(ctx)
-	if jsonLoader == nil {
-		log.Warn().Str("url", logging.DocsURL("/template/#schemas")).Msg("no schema found for template-data. We recommend adding one.")
-		return nil
-	}
-	schema, err := gojsonschema.NewSchema(jsonLoader)
-	if err != nil {
-		return fmt.Errorf("loading json schema: %w", err)
+func validateSchema(ctx context.Context, data template.Data, schema *gojsonschema.Schema) error {
+	if schema == nil {
+		return errors.New("jschema argument can't be nil")
 	}
 	if err := data.TemplateData.VerifyJSONSchema(ctx, schema); err != nil {
 		return fmt.Errorf("validating template-data")
@@ -380,6 +392,10 @@ func (g *TemplateGenerator) Generate(
 	interfaces []*config.Interface,
 ) ([]byte, error) {
 	log := zerolog.Ctx(ctx)
+	log.UpdateContext(func(c zerolog.Context) zerolog.Context {
+		return c.Str("template", g.templateName).Str("schema", g.templateSchema)
+	})
+
 	mockData := []template.Interface{}
 	for _, ifaceMock := range interfaces {
 		ifaceLog := log.With().
@@ -446,8 +462,10 @@ func (g *TemplateGenerator) Generate(
 	if err != nil {
 		return nil, fmt.Errorf("getting template: %w", err)
 	}
-	if err := validateSchema(ctx, data, schema); err != nil {
-		return nil, fmt.Errorf("validating schema: %w", err)
+	if schema != nil {
+		if err := validateSchema(ctx, data, schema); err != nil {
+			return nil, fmt.Errorf("validating schema: %w", err)
+		}
 	}
 
 	templ, err := template.New(templateString, g.templateName)

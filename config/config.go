@@ -79,18 +79,19 @@ func addr[T any](v T) *T {
 
 func NewDefaultKoanf(ctx context.Context) (*koanf.Koanf, error) {
 	c := Config{
-		All:            addr(false),
-		Dir:            addr("{{.InterfaceDir}}"),
-		FileName:       addr("mocks_test.go"),
-		ForceFileWrite: addr(false),
-		Formatter:      addr("goimports"),
-		LogLevel:       addr("info"),
-		StructName:     addr("Mock{{.InterfaceName}}"),
-		PkgName:        addr("{{.SrcPackageName}}"),
-		Recursive:      addr(false),
-		Template:       addr("testify"),
-		TemplateData:   map[string]any{},
-		TemplateSchema: addr("{{.Template}}.schema.json"),
+		All:                         addr(false),
+		Dir:                         addr("{{.InterfaceDir}}"),
+		FileName:                    addr("mocks_test.go"),
+		ForceFileWrite:              addr(false),
+		Formatter:                   addr("goimports"),
+		LogLevel:                    addr("info"),
+		StructName:                  addr("Mock{{.InterfaceName}}"),
+		PkgName:                     addr("{{.SrcPackageName}}"),
+		Recursive:                   addr(false),
+		RequireTemplateSchemaExists: addr(true),
+		Template:                    addr("testify"),
+		TemplateData:                map[string]any{},
+		TemplateSchema:              addr("{{.Template}}.schema.json"),
 	}
 	k := koanf.New("|")
 	if err := k.Load(structs.Provider(c, "koanf"), nil); err != nil {
@@ -510,9 +511,12 @@ type Config struct {
 	PkgName        *string `koanf:"pkgname" yaml:"pkgname,omitempty"`
 	Recursive      *bool   `koanf:"recursive" yaml:"recursive,omitempty"`
 	// ReplaceType is a nested map of format map["package path"]["type name"]*ReplaceType
-	ReplaceType  map[string]map[string]*ReplaceType `koanf:"replace-type" yaml:"replace-type,omitempty"`
-	Template     *string                            `koanf:"template" yaml:"template,omitempty"`
-	TemplateData map[string]any                     `koanf:"template-data" yaml:"template-data,omitempty"`
+	ReplaceType map[string]map[string]*ReplaceType `koanf:"replace-type" yaml:"replace-type,omitempty"`
+	// RequireTemplateSchemaExists sets whether mockery will fail if the specified
+	// template did not have an associated JSON schema.
+	RequireTemplateSchemaExists *bool          `koand:"require-template-schema-exists" yaml:"require-template-schema-exists,omitempty"`
+	Template                    *string        `koanf:"template" yaml:"template,omitempty"`
+	TemplateData                map[string]any `koanf:"template-data" yaml:"template-data,omitempty"`
 	// TemplateSchema is the URL of the template's JSON schema.
 	TemplateSchema *string `koanf:"template-schema" yaml:"template-schema,omitempty"`
 }

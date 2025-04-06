@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/vektra/mockery/v3/config"
+	"github.com/vektra/mockery/v3/internal"
 	pkg "github.com/vektra/mockery/v3/internal"
 	"github.com/vektra/mockery/v3/internal/logging"
 	"github.com/vektra/mockery/v3/internal/stackerr"
@@ -31,12 +32,7 @@ func NewRootCmd() (*cobra.Command, error) {
 				fmt.Printf("failed to parse flags: %s", err.Error())
 				os.Exit(1)
 			}
-			level, err := pFlags.GetString("log-level")
-			if err != nil {
-				fmt.Printf("failed to get log-level from flags: %s\n", err.Error())
-				os.Exit(1)
-			}
-			log, err := logging.GetLogger(level)
+			log, err := logging.GetLogger("info")
 			if err != nil {
 				fmt.Printf("failed to get logger: %s\n", err.Error())
 				os.Exit(1)
@@ -45,12 +41,10 @@ func NewRootCmd() (*cobra.Command, error) {
 
 			r, err := GetRootApp(ctx, pFlags)
 			if err != nil {
-				printStackTrace(err)
-				os.Exit(1)
+				logFatalErr(ctx, err)
 			}
 			if err := r.Run(); err != nil {
-				printStackTrace(err)
-				os.Exit(1)
+				logFatalErr(ctx, err)
 			}
 		},
 	}
@@ -65,12 +59,9 @@ func NewRootCmd() (*cobra.Command, error) {
 	return cmd, nil
 }
 
-func printStackTrace(e error) {
-	fmt.Printf("%v\n", e)
-
-	if stack, ok := stackerr.GetStack(e); ok {
-		fmt.Printf("%+s\n", stack)
-	}
+func logFatalErr(ctx context.Context, err error) {
+	log := zerolog.Ctx(ctx)
+	log.Fatal().Err(err).Msg("app failed")
 }
 
 // Execute executes the cobra CLI workflow
@@ -170,6 +161,8 @@ func (i *InterfaceCollection) Append(ctx context.Context, iface *config.Interfac
 }
 
 func (r *RootApp) Run() error {
+	var remoteTemplateCache = make(map[string]*internal.RemoteTemplate)
+
 	log, err := logging.GetLogger(*r.Config.LogLevel)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to initialize logger: %v\n", err)
@@ -321,6 +314,8 @@ func (r *RootApp) Run() error {
 			interfacesInFile.outFilePath.Parent(),
 			*packageConfig.Config.Template,
 			*packageConfig.Config.TemplateSchema,
+			*packageConfig.Config.RequireTemplateSchemaExists,
+			remoteTemplateCache,
 			pkg.Formatter(*r.Config.Formatter),
 			packageConfig.Config,
 			interfacesInFile.outPkgName,
