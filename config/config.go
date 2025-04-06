@@ -514,7 +514,7 @@ type Config struct {
 	ReplaceType map[string]map[string]*ReplaceType `koanf:"replace-type" yaml:"replace-type,omitempty"`
 	// RequireTemplateSchemaExists sets whether mockery will fail if the specified
 	// template did not have an associated JSON schema.
-	RequireTemplateSchemaExists *bool          `koand:"require-template-schema-exists" yaml:"require-template-schema-exists,omitempty"`
+	RequireTemplateSchemaExists *bool          `koanf:"require-template-schema-exists" yaml:"require-template-schema-exists,omitempty"`
 	Template                    *string        `koanf:"template" yaml:"template,omitempty"`
 	TemplateData                map[string]any `koanf:"template-data" yaml:"template-data,omitempty"`
 	// TemplateSchema is the URL of the template's JSON schema.
