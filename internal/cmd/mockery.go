@@ -161,7 +161,7 @@ func (i *InterfaceCollection) Append(ctx context.Context, iface *config.Interfac
 }
 
 func (r *RootApp) Run() error {
-	var remoteTemplateCache = make(map[string]*internal.RemoteTemplate)
+	remoteTemplateCache := make(map[string]*internal.RemoteTemplate)
 
 	log, err := logging.GetLogger(*r.Config.LogLevel)
 	if err != nil {

@@ -42,7 +42,7 @@ func download(ctx context.Context, url string) (string, error) {
 		}
 		return string(b), nil
 	}
-	if strings.HasPrefix(url, "https://") {
+	if strings.HasPrefix(url, "https://") || strings.HasPrefix(url, "http://") {
 		templateString, err := httpsGet(ctx, url)
 		if err != nil {
 			return "", fmt.Errorf("downloading url: %w", err)

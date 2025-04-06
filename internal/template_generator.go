@@ -42,10 +42,7 @@ var (
 	templateTestifyJSONSchema string
 )
 
-var (
-	errBadHTTPStatus        = errors.New("failed to download file")
-	errSchemaDownloadFailed = errors.New("failed to download schema")
-)
+var errBadHTTPStatus = errors.New("failed to download file")
 
 var styleTemplates = map[string]string{
 	"matryer": templateMatryer,
@@ -334,7 +331,7 @@ func (g *TemplateGenerator) getTemplate(ctx context.Context) (string, *gojsonsch
 	log := zerolog.Ctx(ctx).With().Str("template", g.templateName).Str("schema", g.templateSchema).Logger()
 	ctx = log.WithContext(ctx)
 
-	for _, protocol := range []string{"file://", "https://"} {
+	for _, protocol := range []string{"file://", "https://", "http://"} {
 		if !strings.HasPrefix(g.templateName, protocol) {
 			continue
 		}
@@ -363,7 +360,7 @@ func (g *TemplateGenerator) getTemplate(ctx context.Context) (string, *gojsonsch
 	var styleExists bool
 	templateString, styleExists := styleTemplates[g.templateName]
 	if !styleExists {
-		return "", nil, stackerr.NewStackErrf(nil, "template '%s' does not exist", g.templateName)
+		return "", nil, fmt.Errorf("template '%s' does not exist", g.templateName)
 	}
 	schema, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(jsonSchemas[g.templateName]))
 	if err != nil {
