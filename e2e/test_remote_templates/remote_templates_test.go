@@ -38,7 +38,7 @@ func TestRemoteTemplates(t *testing.T) {
 	require.NoError(t, tmpDirBase.Mkdir())
 	tmpDirBase, err = tmpDirBase.ResolveAll()
 	require.NoError(t, err)
-	defer tmpDirBase.RemoveAll()
+	defer assert.NoError(t, tmpDirBase.RemoveAll())
 
 	type test struct {
 		name             string
@@ -117,6 +117,7 @@ func TestRemoteTemplates(t *testing.T) {
 			)
 			require.NoError(t, configFile.WriteFile([]byte(configFileContents)))
 
+			//nolint: gosec
 			out, err := exec.Command(
 				"go", "run", "github.com/vektra/mockery/v3",
 				"--config", configFile.String()).CombinedOutput()

@@ -14,6 +14,7 @@ import (
 
 func httpsGet(ctx context.Context, url string) (string, error) {
 	log := zerolog.Ctx(ctx)
+	//nolint: gosec
 	response, err := http.Get(url)
 	if err != nil {
 		log.Err(err).Msg("failed to download file")
