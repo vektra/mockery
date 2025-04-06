@@ -16,7 +16,7 @@ templates that you can select with the `#!yaml template:` config parameter.
 
 Mocks generated using this template allow you to define precise functions to be run. Example:
 
-### `#!yaml template: "file://`
+### `#!yaml template: "file://"`
 
 You may also provide mockery a path to your own file using the `file://` protocol specifier. The string after `file://` will be the relative or absolute path of your template.
 
@@ -26,6 +26,27 @@ You can see examples of how the mockery project utilizes the template system to 
 
 - [`matryer.templ`](https://github.com/vektra/mockery/blob/v3/internal/mock_matryer.templ)
 - [`testify.templ`](https://github.com/vektra/mockery/blob/v3/internal/mock_testify.templ)
+
+### `#!yaml template: "https://"`
+
+You can also host templates remotely. This allows you to specify something like:
+
+```yaml title=""
+template: https://raw.githubusercontent.com/vektra/mockery/refs/tags/v3.0.0-beta.8/e2e/test_template_exercise/exercise.templ
+template-schema: https://raw.githubusercontent.com/vektra/mockery/refs/tags/v3.0.0-beta.8/e2e/test_template_exercise/exercise.templ.schema.json
+```
+
+!!! note "Note on Versioning"
+
+    Templates hosted remotely should be versioned just like any other piece of code. We recommend hosting the template on a git repo so that you may reference explicit tags.
+
+    It's best practice to maintain 3 sets of tags:
+
+    1. Major: `v3`
+    2. Minor: `v3.1`
+    3. Patch: `v3.1.2`
+
+    This will give consumers of your template the ability to specify which level of granularity they want to track versions.
 
 ## Schemas
 
