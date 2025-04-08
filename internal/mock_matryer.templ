@@ -84,7 +84,7 @@ type {{.StructName}}
 {{- end}}
 	}
 {{- range $i, $method := .Methods}}
-	lock{{ $method.Name }} {{ $.Imports.SyncPkgQualifier }}.RWMutex
+	lock{{ $method.Name }} {{ $.Imports.PkgQualifier "sync" }}.RWMutex
 {{- end}}
 }
 {{range .Methods}}

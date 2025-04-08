@@ -28,8 +28,8 @@ func TestTemplateMockFuncs(t *testing.T) {
 			want: `x "xyz"`,
 		},
 		{
-			name:       "syncPkgQualifier",
-			inTemplate: "{{$.Imports.SyncPkgQualifier}}",
+			name:       "PkgQualifier",
+			inTemplate: `{{$.Imports.PkgQualifier "sync"}}`,
 			dataInit: func() Data {
 				return Data{Imports: []*Package{
 					NewPackage(types.NewPackage("sync", "sync")),
@@ -39,8 +39,8 @@ func TestTemplateMockFuncs(t *testing.T) {
 			want: "sync",
 		},
 		{
-			name:       "syncPkgQualifier renamed",
-			inTemplate: "{{$.Imports.SyncPkgQualifier}}",
+			name:       "PkgQualifier renamed",
+			inTemplate: `{{$.Imports.PkgQualifier "sync"}}`,
 			dataInit: func() Data {
 				stdSync := NewPackage(types.NewPackage("sync", "sync"))
 				stdSync.Alias = "stdSync"
