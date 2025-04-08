@@ -1,3 +1,9 @@
+// package config defines the schemas and functionality of the .mockery.yml
+// config files. This package is NOT meant to be used by external Go libraries.
+// We expose the contents of this package purely for documentation purposes.
+//
+// Do NOT import this package. We cannot guarantee backwards-compatibility of
+// the methods herein.
 package config
 
 import (
