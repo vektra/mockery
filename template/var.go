@@ -14,9 +14,9 @@ type Var struct {
 	// for a variable to be replaced with another variable via replace-type.
 	// In such a case, `vr.Type()` refers to the original type and `typ` refers
 	// to the replacer type.
-	typ        types.Type
-	imports    map[string]*Package
-	moqPkgPath string
+	typ     types.Type
+	imports map[string]*Package
+	pkgPath string
 
 	Name string
 }
@@ -40,7 +40,7 @@ func (v Var) TypeString() string {
 // packageQualifier is a types.Qualifier.
 func (v Var) packageQualifier(pkg *types.Package) string {
 	path := pkg.Path()
-	if v.moqPkgPath != "" && v.moqPkgPath == path {
+	if v.pkgPath != "" && v.pkgPath == path {
 		return ""
 	}
 	return v.imports[path].Qualifier()

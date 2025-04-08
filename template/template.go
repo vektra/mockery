@@ -1,4 +1,7 @@
 // Package template provides data and functionality for rendering templates using mockery.
+// The data and methods herein are guaranteed to be backwards compatible, as they
+// are used directly by user-defined Go templates. It is safe to import or use
+// this package for any purpose.
 package template
 
 import (
@@ -8,8 +11,7 @@ import (
 	"github.com/vektra/mockery/v3/template_funcs"
 )
 
-// Template is the Moq template. It is capable of generating the Moq
-// implementation for the given template.Data.
+// Template represents the template requested for rendering.
 type Template struct {
 	tmpl *template.Template
 }

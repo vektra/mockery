@@ -11,21 +11,22 @@
 
 package {{.PkgName}}
 
+{{- if .Interfaces.ImplementsSomeMethod }}
+    {{- $_ := .Registry.AddImport "sync" "sync" }}
+{{- end }}
+{{- $_ := .Registry.AddImport "fmt" "fmt" }}
+
 import (
 {{- range .Imports}}
 	{{ .ImportStatement }}
 {{- end}}
-{{- if .Interfaces.ImplementsSomeMethod }}
-    "sync"
-{{- end }}
-    "fmt"
 )
 
 {{range $i, $mock := .Interfaces -}}
 
 {{- if not (index $mock.TemplateData "skip-ensure") -}}
 // Ensure that {{.StructName}} does implement {{$.SrcPkgQualifier}}{{.Name}}.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ {{$.SrcPkgQualifier}}{{.Name -}}
 	{{- if .TypeParams }}[
 		{{- range $index, $param := .TypeParams}}

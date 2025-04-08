@@ -1,6 +1,7 @@
 package template
 
 import (
+	"context"
 	"go/types"
 	"os"
 	"strings"
@@ -23,7 +24,11 @@ func TestTemplateMockFuncs(t *testing.T) {
 			dataInit: func() Data {
 				imprt := NewPackage(types.NewPackage("xyz", "xyz"))
 				imprt.Alias = "x"
-				return Data{Imports: []*Package{imprt}}
+				registry, err := NewRegistry(nil, "", false)
+				require.NoError(t, err)
+				registry.addImport(context.Background(), imprt.pkg)
+
+				return Data{Registry: registry}
 			},
 			want: `x "xyz"`,
 		},
@@ -31,10 +36,12 @@ func TestTemplateMockFuncs(t *testing.T) {
 			name:       "PkgQualifier",
 			inTemplate: `{{$.Imports.PkgQualifier "sync"}}`,
 			dataInit: func() Data {
-				return Data{Imports: []*Package{
-					NewPackage(types.NewPackage("sync", "sync")),
-					NewPackage(types.NewPackage("github.com/some/module", "module")),
-				}}
+				registry, err := NewRegistry(nil, "", false)
+				require.NoError(t, err)
+				registry.addImport(context.Background(), NewPackage(types.NewPackage("sync", "sync")).pkg)
+				registry.addImport(context.Background(), NewPackage(types.NewPackage("github.com/some/module", "module")).pkg)
+
+				return Data{Registry: registry}
 			},
 			want: "sync",
 		},
@@ -45,8 +52,12 @@ func TestTemplateMockFuncs(t *testing.T) {
 				stdSync := NewPackage(types.NewPackage("sync", "sync"))
 				stdSync.Alias = "stdSync"
 				otherSyncPkg := NewPackage(types.NewPackage("github.com/someother/sync", "sync"))
+				registry, err := NewRegistry(nil, "", false)
+				require.NoError(t, err)
+				registry.addImport(context.Background(), stdSync.pkg)
+				registry.addImport(context.Background(), otherSyncPkg.pkg)
 
-				return Data{Imports: []*Package{stdSync, otherSyncPkg}}
+				return Data{Registry: registry}
 			},
 			want: "stdSync",
 		},

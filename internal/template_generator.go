@@ -444,23 +444,21 @@ func (g *TemplateGenerator) Generate(
 		})
 	}
 
-	data := template.Data{
-		PkgName:         g.pkgName,
-		SrcPkgQualifier: "",
-		Interfaces:      mockData,
-		TemplateData:    g.pkgConfig.TemplateData,
-	}
+	data := template.NewData(
+		g.pkgName, "", template.Packages{}, mockData, g.pkgConfig.TemplateData, g.registry,
+	)
 	if !g.inPackage {
 		data.SrcPkgQualifier = g.registry.SrcPkgName() + "."
 	}
-	data.Imports = g.registry.Imports()
 
 	templateString, schema, err := g.getTemplate(ctx)
 	if err != nil {
+		log.Error().Msg("could not get template")
 		return nil, fmt.Errorf("getting template: %w", err)
 	}
 	if schema != nil {
 		if err := validateSchema(ctx, data, schema); err != nil {
+			log.Error().Msg("failed to validate schema")
 			return nil, fmt.Errorf("validating schema: %w", err)
 		}
 	}
@@ -473,6 +471,7 @@ func (g *TemplateGenerator) Generate(
 	var buf bytes.Buffer
 	log.Debug().Msg("executing template")
 	if err := templ.Execute(&buf, data); err != nil {
+		log.Error().Msg("failed to execute template")
 		return []byte{}, fmt.Errorf("executing template: %w", err)
 	}
 

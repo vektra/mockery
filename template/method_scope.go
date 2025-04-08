@@ -16,8 +16,10 @@ import (
 //
 // It should be created using a registry instance.
 type MethodScope struct {
-	registry   *Registry
-	moqPkgPath string
+	// registry is a pointer to the file-global registry that contains a list
+	// of all imports.
+	registry *Registry
+	pkgPath  string
 
 	vars       []*Var
 	conflicted map[string]bool
@@ -169,18 +171,18 @@ func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, prefix string, 
 			imports,
 		)
 		v = Var{
-			vr:         vr,
-			typ:        object.Type(),
-			imports:    imports,
-			moqPkgPath: m.moqPkgPath,
+			vr:      vr,
+			typ:     object.Type(),
+			imports: imports,
+			pkgPath: m.pkgPath,
 		}
 	} else {
 		imports = m.populateImports(ctx, vr.Type())
 		v = Var{
-			vr:         vr,
-			typ:        vr.Type(),
-			imports:    imports,
-			moqPkgPath: m.moqPkgPath,
+			vr:      vr,
+			typ:     vr.Type(),
+			imports: imports,
+			pkgPath: m.pkgPath,
 		}
 		m.AddName(v.TypeString())
 	}
@@ -189,9 +191,10 @@ func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, prefix string, 
 	return &v, nil
 }
 
-// AddName records name as visible in the current scope. This may be useful
-// in cases where a template statically adds its own name that needs to be registered
-// with the scope to prevent future naming collisions.
+// AddName records name as visible in the current scope. This method does not check
+// for naming collisions, and consequently will not modify the given name in any
+// way. It's recommended that you first check MethodScope.NameExists to determine
+// if the name has any collisions, or use MethodScope.AllocateName.
 func (m *MethodScope) AddName(name string) {
 	m.visibleNames[name] = nil
 }
@@ -203,7 +206,7 @@ func (m *MethodScope) NameExists(name string) bool {
 }
 
 func (m *MethodScope) addImport(ctx context.Context, pkg TypesPackage, imports map[string]*Package) {
-	imprt := m.registry.AddImport(ctx, pkg)
+	imprt := m.registry.addImport(ctx, pkg)
 	imports[pkg.Path()] = imprt
 	m.imports[pkg.Path()] = imprt
 	m.AddName(imprt.Qualifier())
