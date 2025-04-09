@@ -176,7 +176,7 @@ func NewRootConfig(
 			".",
 			func(key, value string) (string, any) {
 				normalizedKey := strings.Replace(strings.ToLower(strings.TrimPrefix(key, "MOCKERY_")), "_", "-", -1)
-				// Loading from environment variables is kidn of weird. Koanf doesn't seem to
+				// Loading from environment variables is kind of weird. Koanf doesn't seem to
 				// have a good way to automatically convert values destined for boolean fields
 				// without resorting to reflection. We do something gross here by
 				// just checking to see if the string "looks" like it should be
