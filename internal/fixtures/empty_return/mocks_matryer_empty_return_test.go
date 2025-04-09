@@ -10,7 +10,7 @@ import (
 )
 
 // Ensure that StubMatyerEmptyReturn does implement EmptyReturn.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ EmptyReturn = &StubMatyerEmptyReturn{}
 
 // StubMatyerEmptyReturn is a mock implementation of EmptyReturn.

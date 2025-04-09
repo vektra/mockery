@@ -6,7 +6,7 @@ go run github.com/go-task/task/v3/cmd/task mocks || exit 1
 # New mocks may legimitately be created, so we run mockery once first
 num_files_before=$(find . -type f | wc -l)
 export MOCKERY_FORCE_FILE_WRITE="true"
-go run github.com/go-task/task/v3/cmd/task mocks.generate
+go run github.com/go-task/task/v3/cmd/task mocks.generate || exit 1
 num_files_after=$(find . -type f | wc -l)
 
 if [ $num_files_before -ne $num_files_after ]; then

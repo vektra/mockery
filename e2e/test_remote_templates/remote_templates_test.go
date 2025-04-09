@@ -35,10 +35,13 @@ func TestRemoteTemplates(t *testing.T) {
 	// requires a go.mod file to function correctly. Using t.TempDir() won't work
 	// because of this.
 	tmpDirBase := pathlib.NewPath("./test")
+	_ = tmpDirBase.RemoveAll()
 	require.NoError(t, tmpDirBase.Mkdir())
 	tmpDirBase, err = tmpDirBase.ResolveAll()
 	require.NoError(t, err)
-	defer assert.NoError(t, tmpDirBase.RemoveAll())
+
+	//nolint:errcheck
+	defer tmpDirBase.RemoveAll()
 
 	type test struct {
 		name             string

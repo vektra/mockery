@@ -19,7 +19,7 @@ import (
 )
 
 // Ensure that MoqUsesAny does implement UsesAny.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ UsesAny = &MoqUsesAny{}
 
 // MoqUsesAny is a mock implementation of UsesAny.
@@ -95,7 +95,7 @@ func (mock *MoqUsesAny) ResetCalls() {
 }
 
 // Ensure that MoqFooer does implement Fooer.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ Fooer = &MoqFooer{}
 
 // MoqFooer is a mock implementation of Fooer.
@@ -291,7 +291,7 @@ func (mock *MoqFooer) ResetCalls() {
 }
 
 // Ensure that MoqMapFunc does implement MapFunc.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ MapFunc = &MoqMapFunc{}
 
 // MoqMapFunc is a mock implementation of MapFunc.
@@ -374,7 +374,7 @@ func (mock *MoqMapFunc) ResetCalls() {
 }
 
 // Ensure that MoqAsyncProducer does implement AsyncProducer.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ AsyncProducer = &MoqAsyncProducer{}
 
 // MoqAsyncProducer is a mock implementation of AsyncProducer.
@@ -552,7 +552,7 @@ func (mock *MoqAsyncProducer) ResetCalls() {
 }
 
 // Ensure that MoqConsulLock does implement ConsulLock.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ ConsulLock = &MoqConsulLock{}
 
 // MoqConsulLock is a mock implementation of ConsulLock.
@@ -687,7 +687,7 @@ func (mock *MoqConsulLock) ResetCalls() {
 }
 
 // Ensure that MoqKeyManager does implement KeyManager.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ KeyManager = &MoqKeyManager{}
 
 // MoqKeyManager is a mock implementation of KeyManager.
@@ -777,7 +777,7 @@ func (mock *MoqKeyManager) ResetCalls() {
 }
 
 // Ensure that MoqBlank does implement Blank.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ Blank = &MoqBlank{}
 
 // MoqBlank is a mock implementation of Blank.
@@ -860,7 +860,7 @@ func (mock *MoqBlank) ResetCalls() {
 }
 
 // Ensure that MoqExpecter does implement Expecter.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ Expecter = &MoqExpecter{}
 
 // MoqExpecter is a mock implementation of Expecter.
@@ -1184,7 +1184,7 @@ func (mock *MoqExpecter) ResetCalls() {
 }
 
 // Ensure that MoqVariadicNoReturnInterface does implement VariadicNoReturnInterface.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ VariadicNoReturnInterface = &MoqVariadicNoReturnInterface{}
 
 // MoqVariadicNoReturnInterface is a mock implementation of VariadicNoReturnInterface.
@@ -1270,7 +1270,7 @@ func (mock *MoqVariadicNoReturnInterface) ResetCalls() {
 }
 
 // Ensure that MoqFuncArgsCollision does implement FuncArgsCollision.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ FuncArgsCollision = &MoqFuncArgsCollision{}
 
 // MoqFuncArgsCollision is a mock implementation of FuncArgsCollision.
@@ -1353,7 +1353,7 @@ func (mock *MoqFuncArgsCollision) ResetCalls() {
 }
 
 // Ensure that MoqGetInt does implement GetInt.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ GetInt = &MoqGetInt{}
 
 // MoqGetInt is a mock implementation of GetInt.
@@ -1429,7 +1429,7 @@ func (mock *MoqGetInt) ResetCalls() {
 }
 
 // Ensure that MoqGetGeneric does implement GetGeneric.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ GetGeneric[int] = &MoqGetGeneric[int]{}
 
 // MoqGetGeneric is a mock implementation of GetGeneric.
@@ -1505,7 +1505,7 @@ func (mock *MoqGetGeneric[T]) ResetCalls() {
 }
 
 // Ensure that MoqEmbeddedGet does implement EmbeddedGet.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ EmbeddedGet[int] = &MoqEmbeddedGet[int]{}
 
 // MoqEmbeddedGet is a mock implementation of EmbeddedGet.
@@ -1581,7 +1581,7 @@ func (mock *MoqEmbeddedGet[T]) ResetCalls() {
 }
 
 // Ensure that MoqReplaceGeneric does implement ReplaceGeneric.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ ReplaceGeneric[any, int, any] = &MoqReplaceGeneric[any, int, any]{}
 
 // MoqReplaceGeneric is a mock implementation of ReplaceGeneric.
@@ -1766,7 +1766,7 @@ func (mock *MoqReplaceGeneric[TImport, TConstraint, TKeep]) ResetCalls() {
 }
 
 // Ensure that MoqReplaceGenericSelf does implement ReplaceGenericSelf.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ ReplaceGenericSelf[any] = &MoqReplaceGenericSelf[any]{}
 
 // MoqReplaceGenericSelf is a mock implementation of ReplaceGenericSelf.
@@ -1842,7 +1842,7 @@ func (mock *MoqReplaceGenericSelf[T]) ResetCalls() {
 }
 
 // Ensure that MoqHasConflictingNestedImports does implement HasConflictingNestedImports.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ HasConflictingNestedImports = &MoqHasConflictingNestedImports{}
 
 // MoqHasConflictingNestedImports is a mock implementation of HasConflictingNestedImports.
@@ -1977,7 +1977,7 @@ func (mock *MoqHasConflictingNestedImports) ResetCalls() {
 }
 
 // Ensure that MoqImportsSameAsPackage does implement ImportsSameAsPackage.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ ImportsSameAsPackage = &MoqImportsSameAsPackage{}
 
 // MoqImportsSameAsPackage is a mock implementation of ImportsSameAsPackage.
@@ -2159,7 +2159,7 @@ func (mock *MoqImportsSameAsPackage) ResetCalls() {
 }
 
 // Ensure that MoqGenericInterface does implement GenericInterface.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ GenericInterface[any] = &MoqGenericInterface[any]{}
 
 // MoqGenericInterface is a mock implementation of GenericInterface.
@@ -2242,7 +2242,7 @@ func (mock *MoqGenericInterface[M]) ResetCalls() {
 }
 
 // Ensure that MoqInstantiatedGenericInterface does implement InstantiatedGenericInterface.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ InstantiatedGenericInterface = &MoqInstantiatedGenericInterface{}
 
 // MoqInstantiatedGenericInterface is a mock implementation of InstantiatedGenericInterface.
@@ -2325,7 +2325,7 @@ func (mock *MoqInstantiatedGenericInterface) ResetCalls() {
 }
 
 // Ensure that MoqMyReader does implement MyReader.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ MyReader = &MoqMyReader{}
 
 // MoqMyReader is a mock implementation of MyReader.
@@ -2409,7 +2409,7 @@ func (mock *MoqMyReader) ResetCalls() {
 }
 
 // Ensure that MoqIssue766 does implement Issue766.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ Issue766 = &MoqIssue766{}
 
 // MoqIssue766 is a mock implementation of Issue766.
@@ -2493,7 +2493,7 @@ func (mock *MoqIssue766) ResetCalls() {
 }
 
 // Ensure that MoqMapToInterface does implement MapToInterface.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ MapToInterface = &MoqMapToInterface{}
 
 // MoqMapToInterface is a mock implementation of MapToInterface.
@@ -2573,7 +2573,7 @@ func (mock *MoqMapToInterface) ResetCalls() {
 }
 
 // Ensure that MoqSibling does implement Sibling.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ Sibling = &MoqSibling{}
 
 // MoqSibling is a mock implementation of Sibling.
@@ -2646,7 +2646,7 @@ func (mock *MoqSibling) ResetCalls() {
 }
 
 // Ensure that MoqUsesOtherPkgIface does implement UsesOtherPkgIface.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ UsesOtherPkgIface = &MoqUsesOtherPkgIface{}
 
 // MoqUsesOtherPkgIface is a mock implementation of UsesOtherPkgIface.
@@ -2726,7 +2726,7 @@ func (mock *MoqUsesOtherPkgIface) ResetCalls() {
 }
 
 // Ensure that MoqPanicOnNoReturnValue does implement PanicOnNoReturnValue.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ PanicOnNoReturnValue = &MoqPanicOnNoReturnValue{}
 
 // MoqPanicOnNoReturnValue is a mock implementation of PanicOnNoReturnValue.
@@ -2882,7 +2882,7 @@ func (mock *MoqRequesterSkipEnsure) ResetCalls() {
 }
 
 // Ensure that MoqRequester does implement Requester.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ Requester = &MoqRequester{}
 
 // MoqRequester is a mock implementation of Requester.
@@ -2966,7 +2966,7 @@ func (mock *MoqRequester) ResetCalls() {
 }
 
 // Ensure that StubMatyerRequester does implement Requester.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ Requester = &StubMatyerRequester{}
 
 // StubMatyerRequester is a mock implementation of Requester.
@@ -3050,7 +3050,7 @@ func (mock *StubMatyerRequester) ResetCalls() {
 }
 
 // Ensure that MoqRequester2 does implement Requester2.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ Requester2 = &MoqRequester2{}
 
 // MoqRequester2 is a mock implementation of Requester2.
@@ -3133,7 +3133,7 @@ func (mock *MoqRequester2) ResetCalls() {
 }
 
 // Ensure that MoqRequester3 does implement Requester3.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ Requester3 = &MoqRequester3{}
 
 // MoqRequester3 is a mock implementation of Requester3.
@@ -3209,7 +3209,7 @@ func (mock *MoqRequester3) ResetCalls() {
 }
 
 // Ensure that MoqRequester4 does implement Requester4.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ Requester4 = &MoqRequester4{}
 
 // MoqRequester4 is a mock implementation of Requester4.
@@ -3282,7 +3282,7 @@ func (mock *MoqRequester4) ResetCalls() {
 }
 
 // Ensure that MoqRequesterArgSameAsImport does implement RequesterArgSameAsImport.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ RequesterArgSameAsImport = &MoqRequesterArgSameAsImport{}
 
 // MoqRequesterArgSameAsImport is a mock implementation of RequesterArgSameAsImport.
@@ -3365,7 +3365,7 @@ func (mock *MoqRequesterArgSameAsImport) ResetCalls() {
 }
 
 // Ensure that MoqRequesterArgSameAsNamedImport does implement RequesterArgSameAsNamedImport.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ RequesterArgSameAsNamedImport = &MoqRequesterArgSameAsNamedImport{}
 
 // MoqRequesterArgSameAsNamedImport is a mock implementation of RequesterArgSameAsNamedImport.
@@ -3448,7 +3448,7 @@ func (mock *MoqRequesterArgSameAsNamedImport) ResetCalls() {
 }
 
 // Ensure that MoqRequesterArgSameAsPkg does implement RequesterArgSameAsPkg.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ RequesterArgSameAsPkg = &MoqRequesterArgSameAsPkg{}
 
 // MoqRequesterArgSameAsPkg is a mock implementation of RequesterArgSameAsPkg.
@@ -3528,7 +3528,7 @@ func (mock *MoqRequesterArgSameAsPkg) ResetCalls() {
 }
 
 // Ensure that MoqRequesterArray does implement RequesterArray.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ RequesterArray = &MoqRequesterArray{}
 
 // MoqRequesterArray is a mock implementation of RequesterArray.
@@ -3612,7 +3612,7 @@ func (mock *MoqRequesterArray) ResetCalls() {
 }
 
 // Ensure that MoqRequesterElided does implement RequesterElided.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ RequesterElided = &MoqRequesterElided{}
 
 // MoqRequesterElided is a mock implementation of RequesterElided.
@@ -3701,7 +3701,7 @@ func (mock *MoqRequesterElided) ResetCalls() {
 }
 
 // Ensure that MoqRequesterIface does implement RequesterIface.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ RequesterIface = &MoqRequesterIface{}
 
 // MoqRequesterIface is a mock implementation of RequesterIface.
@@ -3777,7 +3777,7 @@ func (mock *MoqRequesterIface) ResetCalls() {
 }
 
 // Ensure that MoqRequesterNS does implement RequesterNS.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ RequesterNS = &MoqRequesterNS{}
 
 // MoqRequesterNS is a mock implementation of RequesterNS.
@@ -3861,7 +3861,7 @@ func (mock *MoqRequesterNS) ResetCalls() {
 }
 
 // Ensure that MoqRequesterPtr does implement RequesterPtr.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ RequesterPtr = &MoqRequesterPtr{}
 
 // MoqRequesterPtr is a mock implementation of RequesterPtr.
@@ -3945,7 +3945,7 @@ func (mock *MoqRequesterPtr) ResetCalls() {
 }
 
 // Ensure that MoqRequesterReturnElided does implement RequesterReturnElided.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ RequesterReturnElided = &MoqRequesterReturnElided{}
 
 // MoqRequesterReturnElided is a mock implementation of RequesterReturnElided.
@@ -4090,7 +4090,7 @@ func (mock *MoqRequesterReturnElided) ResetCalls() {
 }
 
 // Ensure that MoqRequesterSlice does implement RequesterSlice.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ RequesterSlice = &MoqRequesterSlice{}
 
 // MoqRequesterSlice is a mock implementation of RequesterSlice.
@@ -4174,7 +4174,7 @@ func (mock *MoqRequesterSlice) ResetCalls() {
 }
 
 // Ensure that MoqrequesterUnexported does implement requesterUnexported.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ requesterUnexported = &MoqrequesterUnexported{}
 
 // MoqrequesterUnexported is a mock implementation of requesterUnexported.
@@ -4247,7 +4247,7 @@ func (mock *MoqrequesterUnexported) ResetCalls() {
 }
 
 // Ensure that MoqRequesterVariadic does implement RequesterVariadic.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ RequesterVariadic = &MoqRequesterVariadic{}
 
 // MoqRequesterVariadic is a mock implementation of RequesterVariadic.
@@ -4516,7 +4516,7 @@ func (mock *MoqRequesterVariadic) ResetCalls() {
 }
 
 // Ensure that MoqExample does implement Example.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ Example = &MoqExample{}
 
 // MoqExample is a mock implementation of Example.
@@ -4708,7 +4708,7 @@ func (mock *MoqExample) ResetCalls() {
 }
 
 // Ensure that MoqA does implement A.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ A = &MoqA{}
 
 // MoqA is a mock implementation of A.
@@ -4785,7 +4785,7 @@ func (mock *MoqA) ResetCalls() {
 }
 
 // Ensure that MoqStructWithTag does implement StructWithTag.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ StructWithTag = &MoqStructWithTag{}
 
 // MoqStructWithTag is a mock implementation of StructWithTag.
@@ -4895,7 +4895,7 @@ func (mock *MoqStructWithTag) ResetCalls() {
 }
 
 // Ensure that MoqUnsafeInterface does implement UnsafeInterface.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ UnsafeInterface = &MoqUnsafeInterface{}
 
 // MoqUnsafeInterface is a mock implementation of UnsafeInterface.
@@ -4975,7 +4975,7 @@ func (mock *MoqUnsafeInterface) ResetCalls() {
 }
 
 // Ensure that MoqVariadic does implement Variadic.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ Variadic = &MoqVariadic{}
 
 // MoqVariadic is a mock implementation of Variadic.
@@ -5064,7 +5064,7 @@ func (mock *MoqVariadic) ResetCalls() {
 }
 
 // Ensure that MoqVariadicReturnFunc does implement VariadicReturnFunc.
-// If this is not the case, regenerate this file with moq.
+// If this is not the case, regenerate this file with mockery.
 var _ VariadicReturnFunc = &MoqVariadicReturnFunc{}
 
 // MoqVariadicReturnFunc is a mock implementation of VariadicReturnFunc.

@@ -1,3 +1,9 @@
+// package config defines the schemas and functionality of the .mockery.yml
+// config files. This package is NOT meant to be used by external Go libraries.
+// We expose the contents of this package purely for documentation purposes.
+//
+// Do NOT import this package. We cannot guarantee backwards-compatibility of
+// the methods herein.
 package config
 
 import (
@@ -10,6 +16,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 	"text/template"
 
@@ -162,12 +169,29 @@ func NewRootConfig(
 		log.Debug().Str("config-file", configFile.String()).Msg("config file found")
 	}
 	rootConfig.configFile = configFile
+
 	if err := k.Load(
-		env.Provider(
+		env.ProviderWithValue(
 			"MOCKERY_",
 			".",
-			func(s string) string {
-				return strings.Replace(strings.ToLower(strings.TrimPrefix(s, "MOCKERY_")), "_", "-", -1)
+			func(key, value string) (string, any) {
+				normalizedKey := strings.Replace(strings.ToLower(strings.TrimPrefix(key, "MOCKERY_")), "_", "-", -1)
+				// Loading from environment variables is kind of weird. Koanf doesn't seem to
+				// have a good way to automatically convert values destined for boolean fields
+				// without resorting to reflection. We do something gross here by
+				// just checking to see if the string "looks" like it should be
+				// a boolean. The proper solution is to use reflection on the destination
+				// struct to see what the type actually should be cast to. I'm sure
+				// the koanf project would appreciate a PR to add an environment
+				// parser:
+				if strings.ToLower(value) == "true" || strings.ToLower(value) == "false" {
+					valueAsBool, err := strconv.ParseBool(value)
+					if err != nil {
+						panic(err)
+					}
+					return normalizedKey, valueAsBool
+				}
+				return normalizedKey, value
 			}),
 		nil,
 	); err != nil {
@@ -418,11 +442,11 @@ func (c PackageConfig) GetInterfaceConfig(ctx context.Context, interfaceName str
 func (c PackageConfig) ShouldGenerateInterface(ctx context.Context, interfaceName string) (bool, error) {
 	log := zerolog.Ctx(ctx)
 	if *c.Config.All {
-		if *c.Config.IncludeRegex != "" {
-			log.Warn().Msg("interface config has both `all` and `include-regex` set: `include-regex` will be ignored")
+		if *c.Config.IncludeInterfaceRegex != "" {
+			log.Warn().Msg("interface config has both `all` and `include-interface-regex` set: `include-interface-regex` will be ignored")
 		}
-		if *c.Config.ExcludeRegex != "" {
-			log.Warn().Msg("interface config has both `all` and `exclude-regex` set: `exclude-regex` will be ignored")
+		if *c.Config.ExcludeInterfaceRegex != "" {
+			log.Warn().Msg("interface config has both `all` and `exclude-interface-regex` set: `exclude-interface-regex` will be ignored")
 		}
 		log.Debug().Msg("`all: true` is set, interface should be generated")
 		return true, nil
@@ -432,35 +456,35 @@ func (c PackageConfig) ShouldGenerateInterface(ctx context.Context, interfaceNam
 		return true, nil
 	}
 
-	includeRegex := *c.Config.IncludeRegex
-	excludeRegex := *c.Config.ExcludeRegex
+	includeRegex := *c.Config.IncludeInterfaceRegex
+	excludeRegex := *c.Config.ExcludeInterfaceRegex
 	if includeRegex == "" {
 		if excludeRegex != "" {
-			log.Warn().Msg("interface config has `exclude-regex` set but not `include-regex`: `exclude-regex` will be ignored")
+			log.Warn().Msg("interface config has `exclude-interface-regex` set but not `include-interface-regex`: `exclude-interface-regex` will be ignored")
 		}
 		return false, nil
 	}
 	includedByRegex, err := regexp.MatchString(includeRegex, interfaceName)
 	if err != nil {
-		return false, fmt.Errorf("evaluating `include-regex`: %w", err)
+		return false, fmt.Errorf("evaluating `include-interface-regex`: %w", err)
 	}
 	if !includedByRegex {
-		log.Debug().Msg("interface does not match include-regex")
+		log.Debug().Msg("interface does not match include-interface-regex")
 		return false, nil
 	}
-	log.Debug().Msg("interface matches include-regex")
+	log.Debug().Msg("interface matches include-interface-regex")
 	if excludeRegex == "" {
 		return true, nil
 	}
 	excludedByRegex, err := regexp.MatchString(excludeRegex, interfaceName)
 	if err != nil {
-		return false, fmt.Errorf("evaluating `exclude-regex`: %w", err)
+		return false, fmt.Errorf("evaluating `exclude-interface-regex`: %w", err)
 	}
 	if excludedByRegex {
-		log.Debug().Msg("interface matches exclude-regex")
+		log.Debug().Msg("interface matches exclude-interface-regex")
 		return false, nil
 	}
-	log.Debug().Msg("interface does not match exclude-regex")
+	log.Debug().Msg("interface does not match exclude-interface-regex")
 	return true, nil
 }
 
@@ -494,22 +518,22 @@ type ReplaceType struct {
 }
 
 type Config struct {
-	All                *bool          `koanf:"all" yaml:"all,omitempty"`
-	Anchors            map[string]any `koanf:"_anchors" yaml:"_anchors,omitempty"`
-	BuildTags          *string        `koanf:"build-tags" yaml:"build-tags,omitempty"`
-	ConfigFile         *string        `koanf:"config" yaml:"config,omitempty"`
-	Dir                *string        `koanf:"dir" yaml:"dir,omitempty"`
-	ExcludeSubpkgRegex []string       `koanf:"exclude-subpkg-regex" yaml:"exclude-subpkg-regex,omitempty"`
-	ExcludeRegex       *string        `koanf:"exclude-regex" yaml:"exclude-regex,omitempty"`
-	FileName           *string        `koanf:"filename" yaml:"filename,omitempty"`
+	All                   *bool          `koanf:"all" yaml:"all,omitempty"`
+	Anchors               map[string]any `koanf:"_anchors" yaml:"_anchors,omitempty"`
+	BuildTags             *string        `koanf:"build-tags" yaml:"build-tags,omitempty"`
+	ConfigFile            *string        `koanf:"config" yaml:"config,omitempty"`
+	Dir                   *string        `koanf:"dir" yaml:"dir,omitempty"`
+	ExcludeSubpkgRegex    []string       `koanf:"exclude-subpkg-regex" yaml:"exclude-subpkg-regex,omitempty"`
+	ExcludeInterfaceRegex *string        `koanf:"exclude-interface-regex" yaml:"exclude-interface-regex,omitempty"`
+	FileName              *string        `koanf:"filename" yaml:"filename,omitempty"`
 	// ForceFileWrite controls whether mockery will overwrite existing files when generating mocks. This is by default set to false.
-	ForceFileWrite *bool   `koanf:"force-file-write" yaml:"force-file-write,omitempty"`
-	Formatter      *string `koanf:"formatter" yaml:"formatter,omitempty"`
-	IncludeRegex   *string `koanf:"include-regex" yaml:"include-regex,omitempty"`
-	LogLevel       *string `koanf:"log-level" yaml:"log-level,omitempty"`
-	StructName     *string `koanf:"structname" yaml:"structname,omitempty"`
-	PkgName        *string `koanf:"pkgname" yaml:"pkgname,omitempty"`
-	Recursive      *bool   `koanf:"recursive" yaml:"recursive,omitempty"`
+	ForceFileWrite        *bool   `koanf:"force-file-write" yaml:"force-file-write,omitempty"`
+	Formatter             *string `koanf:"formatter" yaml:"formatter,omitempty"`
+	IncludeInterfaceRegex *string `koanf:"include-interface-regex" yaml:"include-interface-regex,omitempty"`
+	LogLevel              *string `koanf:"log-level" yaml:"log-level,omitempty"`
+	StructName            *string `koanf:"structname" yaml:"structname,omitempty"`
+	PkgName               *string `koanf:"pkgname" yaml:"pkgname,omitempty"`
+	Recursive             *bool   `koanf:"recursive" yaml:"recursive,omitempty"`
 	// ReplaceType is a nested map of format map["package path"]["type name"]*ReplaceType
 	ReplaceType map[string]map[string]*ReplaceType `koanf:"replace-type" yaml:"replace-type,omitempty"`
 	// RequireTemplateSchemaExists sets whether mockery will fail if the specified

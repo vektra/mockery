@@ -12,8 +12,8 @@ packages:
   github.com/vektra/mockery/v3/internal/fixtures:
     config:
       all: false
-      include-regex: '.*'
-      exclude-regex: 'RequesterGenerics'
+      include-interface-regex: '.*'
+      exclude-interface-regex: 'RequesterGenerics'
     interfaces:
       Requester:
         configs:

@@ -38,7 +38,6 @@ func NewRegistry(srcPkg *packages.Package, dstPkgPath string, inPackage bool) (*
 	return &Registry{
 		dstPkgPath:       dstPkgPath,
 		srcPkg:           srcPkg,
-		srcPkgName:       srcPkg.Name,
 		imports:          make(map[string]*Package),
 		importQualifiers: make(map[string]*Package),
 		inPackage:        inPackage,
@@ -80,10 +79,37 @@ func (r *Registry) MethodScope() *MethodScope {
 	return NewMethodScope(r)
 }
 
-// AddImport adds the given package to the set of imports. It generates a
+type fakeTypesPackage struct {
+	name string
+	path string
+}
+
+func (f fakeTypesPackage) Name() string {
+	return f.name
+}
+
+func (f fakeTypesPackage) Path() string {
+	return f.path
+}
+
+// addImport adds the given package to the set of imports. It generates a
 // suitable alias if there are any conflicts with previously imported
-// packages.
-func (r *Registry) AddImport(ctx context.Context, pkg TypesPackage) *Package {
+// packages. pkgName must be set to the unaliased package name.
+func (r *Registry) AddImport(pkgName string, pkgPath string) *Package {
+	// Note: Yes this method is a little weird. This is intended to be used
+	// by templates that want to add their own imports. Instead of requiring the
+	// templates to pass in a ctx and TypesPackage instance, we create this new
+	// AddImport method that wraps around r.addImport. r.addImport still exists
+	// because mockery will add its own imports based on the existing types, and
+	// in that case we want it to pass ctx (that contains the logger) and the
+	// real types.Package type.
+	return r.addImport(context.Background(), fakeTypesPackage{
+		name: pkgName,
+		path: pkgPath,
+	})
+}
+
+func (r *Registry) addImport(ctx context.Context, pkg TypesPackage) *Package {
 	path := pkg.Path()
 	log := zerolog.Ctx(ctx).With().
 		Str("method", "AddImport").
@@ -123,7 +149,7 @@ func (r *Registry) AddImport(ctx context.Context, pkg TypesPackage) *Package {
 
 // Imports returns the list of imported packages. The list is sorted by
 // path.
-func (r Registry) Imports() []*Package {
+func (r Registry) Imports() Packages {
 	imports := make([]*Package, 0, len(r.imports))
 	for _, imprt := range r.imports {
 		imports = append(imports, imprt)
