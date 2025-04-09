@@ -1377,7 +1377,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 <td><code>require-template-schema-exists</code></td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
 <td><code class="highlight"><span class="l l-Scalar l-Scalar-Plain">true</span></code></td>
-<td>Specifies whether mockery should assert that the <code>template-schema</code> resource exists. If set to <code class="highlight"><span class="l l-Scalar l-Scalar-Plain">false</span></code>, mockery will ignore missing schema files and not perform schema validation on <code>template-data</code>.</td>
+<td>If set to <code class="highlight"><span class="l l-Scalar l-Scalar-Plain">true</span></code> and the schema failed to download, mockery will fail. Otherwise, mockery will not attempt to download the file nor do any schema validation.</td>
 </tr>
 <tr>
 <td><code>template</code></td>
