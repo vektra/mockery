@@ -63,10 +63,18 @@ docker_manifests:
     image_templates:
       - vektra/mockery:{{ .Tag }}-amd64
       - vektra/mockery:{{ .Tag }}-arm64
+  - name_template: vektra/mockery:{{ .Major }}
+    image_templates:
+      - vektra/mockery:{{ .Tag }}-amd64
+      - vektra/mockery:{{ .Tag }}-arm64
+  - name_template: vektra/mockery:{{ .Major }}.{{ .Minor }}
+    image_templates:
+      - vektra/mockery:{{ .Tag }}-amd64
+      - vektra/mockery:{{ .Tag }}-arm64
 
 release:
-  prerelease: true
-  make_latest: false
+  prerelease: false
+  make_latest: true
 
 git:
   ignore_tags:

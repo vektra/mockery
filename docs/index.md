@@ -3,10 +3,6 @@ mockery
 
 [v3 Migration Docs](v3.md){ .md-button .md-button--stretch }
 
-!!! danger "Beta Test"
-
-	Mockery `v3` is currently in beta and should not be used for production.
-
 Mockery is a project that creates mock implementations of Golang interfaces. It inspects source code and generates implementations of the interface that aid in testing.
 
 In addition to providing a number of different styles of mocks, mockery also allows users to provide their own template files that will then be rendered using a set of template data, methods, and functions that provide comprehensive typing information about the Go interface in question.
