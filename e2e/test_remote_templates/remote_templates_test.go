@@ -39,6 +39,8 @@ func TestRemoteTemplates(t *testing.T) {
 	require.NoError(t, tmpDirBase.Mkdir())
 	tmpDirBase, err = tmpDirBase.ResolveAll()
 	require.NoError(t, err)
+
+	//nolint:errcheck
 	defer tmpDirBase.RemoveAll()
 
 	type test struct {
