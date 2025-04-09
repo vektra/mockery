@@ -332,12 +332,15 @@ func (g *TemplateGenerator) getTemplate(ctx context.Context) (string, *gojsonsch
 	ctx = log.WithContext(ctx)
 
 	for _, protocol := range []string{"file://", "https://", "http://"} {
+		var schema *gojsonschema.Schema
+		var err error
+
 		if !strings.HasPrefix(g.templateName, protocol) {
 			continue
 		}
 		var remoteTemplate *RemoteTemplate
 		if cachedRemoteTemplate, ok := g.remoteTemplateCache[g.templateName]; !ok {
-			remoteTemplate = NewRemoteTemplate(g.templateName, g.templateSchema, g.requireSchemaExists)
+			remoteTemplate = NewRemoteTemplate(g.templateName, g.templateSchema)
 			g.remoteTemplateCache[g.templateName] = remoteTemplate
 		} else {
 			remoteTemplate = cachedRemoteTemplate
@@ -348,11 +351,14 @@ func (g *TemplateGenerator) getTemplate(ctx context.Context) (string, *gojsonsch
 			log.Error().Msg("could not download template")
 			return "", nil, fmt.Errorf("downloading template: %w", err)
 		}
-		schema, err := remoteTemplate.Schema(ctx)
-		if err != nil {
-			log.Error().Msg("could not get JSON schema")
-			return "", nil, fmt.Errorf("downloading schema: %w", err)
+		if g.requireSchemaExists {
+			schema, err = remoteTemplate.Schema(ctx)
+			if err != nil {
+				log.Error().Msg("could not get JSON schema")
+				return "", nil, fmt.Errorf("downloading schema: %w", err)
+			}
 		}
+
 		return templateString, schema, nil
 	}
 
