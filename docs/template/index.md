@@ -90,5 +90,5 @@ Templates are rendered with functions and data you can utilize to generate your 
 
 | Description | Link |
 |-|-|
-| Functions | [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/vektra/mockery/v3/template_funcs#pkg-variable) | 
+| Functions | [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/vektra/mockery/v3/template_funcs#pkg-variables) | 
 | Data | [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/vektra/mockery/v3/template#Data) |
