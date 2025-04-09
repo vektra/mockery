@@ -8,7 +8,7 @@ type Packages []*Package
 // not exist in the container, an error is returned.
 func (p Packages) PkgQualifier(pkgPath string) (string, error) {
 	for _, imprt := range p {
-		if imprt.Path() == "sync" {
+		if imprt.Path() == pkgPath {
 			return imprt.Qualifier(), nil
 		}
 	}

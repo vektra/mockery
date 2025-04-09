@@ -30,7 +30,7 @@ func TestTemplateMockFuncs(t *testing.T) {
 
 				return Data{Registry: registry}
 			},
-			want: `x "xyz"`,
+			want: `"xyz"`,
 		},
 		{
 			name:       "PkgQualifier",
@@ -46,20 +46,17 @@ func TestTemplateMockFuncs(t *testing.T) {
 			want: "sync",
 		},
 		{
-			name:       "PkgQualifier renamed",
-			inTemplate: `{{$.Imports.PkgQualifier "sync"}}`,
+			name:       "PkgQualifier conflicting pkg names",
+			inTemplate: `{{$.Imports.PkgQualifier "github.com/someother/sync"}}`,
 			dataInit: func() Data {
-				stdSync := NewPackage(types.NewPackage("sync", "sync"))
-				stdSync.Alias = "stdSync"
-				otherSyncPkg := NewPackage(types.NewPackage("github.com/someother/sync", "sync"))
 				registry, err := NewRegistry(nil, "", false)
 				require.NoError(t, err)
-				registry.addImport(context.Background(), stdSync.pkg)
-				registry.addImport(context.Background(), otherSyncPkg.pkg)
+				registry.AddImport("sync", "sync")
+				registry.AddImport("sync", "github.com/someother/sync")
 
 				return Data{Registry: registry}
 			},
-			want: "stdSync",
+			want: "sync0",
 		},
 		{
 			name:       "exported empty",

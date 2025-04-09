@@ -149,7 +149,7 @@ func (r *Registry) addImport(ctx context.Context, pkg TypesPackage) *Package {
 
 // Imports returns the list of imported packages. The list is sorted by
 // path.
-func (r Registry) Imports() []*Package {
+func (r Registry) Imports() Packages {
 	imports := make([]*Package, 0, len(r.imports))
 	for _, imprt := range r.imports {
 		imports = append(imports, imprt)
