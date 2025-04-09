@@ -44,6 +44,10 @@ func NewMethodScope(r *Registry) *MethodScope {
 	return m
 }
 
+// ResolveVariableNameCollisions modifies argument names if they are found to
+// collide with any other names visible to the scope.
+//
+// This method is not meant to be used directly by templates.
 func (m *MethodScope) ResolveVariableNameCollisions(ctx context.Context) {
 	log := zerolog.Ctx(ctx)
 	for _, v := range m.vars {
@@ -112,6 +116,8 @@ var _ TypesPackage = fakePackage{}
 // Variables names are generated if required and are ensured to be
 // without conflict with other variables and imported packages. It also
 // adds the relevant imports to the registry for each added variable.
+//
+// This method is not meant to be used directly by templates.
 func (m *MethodScope) AddVar(ctx context.Context, vr *types.Var, prefix string, replacement *config.ReplaceType) (*Var, error) {
 	var (
 		imports map[string]*Package = map[string]*Package{}
