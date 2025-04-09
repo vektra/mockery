@@ -3,15 +3,15 @@
     "version": "v3.0",
     "title": "v3.0",
     "aliases": [
-      "latest-v3",
-      "v3"
+      "latest",
+      "v3",
+      "latest-v3"
     ]
   },
   {
     "version": "v2.53",
     "title": "v2.53",
     "aliases": [
-      "latest",
       "latest-v2"
     ]
   },
