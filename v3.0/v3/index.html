@@ -1347,11 +1347,12 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 <h1 id="v3-migration">v3 Migration<a class="headerlink" href="#v3-migration" title="Permanent link">&para;</a></h1>
 <p>Mockery releases version 3 of the project that provides a number of high-profile benefits over v2:</p>
 <ol>
-<li>Allows generation of <a href="../template/matryer/"><code>matryer</code></a>-style templates. The <a href="https://github.com/matryer/moq">https://github.com/matryer/moq</a> project is being subsumed into mockery to combine the speed and configuration flexibility of mockery with the simplicity of moq-style mocks.</li>
-<li>Changes the generation scheme to be entirely driven off of Go templates. This means that the data provided to templates is considered as part of the public API.</li>
-<li>Mockery now allows users to specify their own templates to make code generation far easier. Mockery handles the problem of parsing source code and enables you to focus on creating <a href="templates.md#template-file">your own interface implementations</a>.</li>
-<li>Shedding all deprecated variables and simplifying the way in which mocks are configured.</li>
+<li>Generation of <a href="../template/matryer/"><code>matryer</code></a>-style templates. The <a href="https://github.com/matryer/moq">https://github.com/matryer/moq</a> project is being subsumed into mockery to combine the speed and configuration flexibility of mockery with the simplicity of moq-style mocks.</li>
+<li>The ability to specify <a href="../template/">your own templates</a> for rendering.</li>
+<li>One output file for all generated mocks (for a particular package) instead of one output file per mock.</li>
+<li>Simplification and streamlining of the way mocks are generated using new configuration defaults.</li>
 </ol>
+<p>v3 has been architected in a way that will eventually make all other interface-based code generation frameworks obsolete.<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup></p>
 <h2 id="mockery-migrate"><code>mockery migrate</code><a class="headerlink" href="#mockery-migrate" title="Permanent link">&para;</a></h2>
 <p>A tool is provided that will migrate your v2 config to v3 on a best-effort basis. Take for example a v2 schema config:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">quiet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
@@ -1486,6 +1487,9 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 <ol>
 <li id="fn:1">
 <p>More specifically, we agree to update our dependencies used in parsing Go types such that Mockery is capable of parsing new syntax introduced in the Go language. The mockery project will <em>not</em> support changes to the generated code in a manner that makes use of any new language features. The only promise is that Mockery will be able to parse modules that use such new syntax or other language features without failing.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>A bold statement yes, but we hope to convince you of its truth with what's coming. The assumption of the <a href="https://github.com/matryer/moq">https://github.com/matryer/moq</a> project into mockery is a testament to this statement, and is only the first of many other projects we hope to integrate into mockery.&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
