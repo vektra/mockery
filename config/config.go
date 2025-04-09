@@ -16,6 +16,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 	"text/template"
 
@@ -168,12 +169,29 @@ func NewRootConfig(
 		log.Debug().Str("config-file", configFile.String()).Msg("config file found")
 	}
 	rootConfig.configFile = configFile
+
 	if err := k.Load(
-		env.Provider(
+		env.ProviderWithValue(
 			"MOCKERY_",
 			".",
-			func(s string) string {
-				return strings.Replace(strings.ToLower(strings.TrimPrefix(s, "MOCKERY_")), "_", "-", -1)
+			func(key, value string) (string, any) {
+				normalizedKey := strings.Replace(strings.ToLower(strings.TrimPrefix(key, "MOCKERY_")), "_", "-", -1)
+				// Loading from environment variables is kidn of weird. Koanf doesn't seem to
+				// have a good way to automatically convert values destined for boolean fields
+				// without resorting to reflection. We do something gross here by
+				// just checking to see if the string "looks" like it should be
+				// a boolean. The proper solution is to use reflection on the destination
+				// struct to see what the type actually should be cast to. I'm sure
+				// the koanf project would appreciate a PR to add an environment
+				// parser:
+				if strings.ToLower(value) == "true" || strings.ToLower(value) == "false" {
+					valueAsBool, err := strconv.ParseBool(value)
+					if err != nil {
+						panic(err)
+					}
+					return normalizedKey, valueAsBool
+				}
+				return normalizedKey, value
 			}),
 		nil,
 	); err != nil {
