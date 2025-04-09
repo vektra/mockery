@@ -26,6 +26,6 @@ jobs:
           git config --global user.email vektra-bot@vektra.github.io
           git fetch origin gh-pages --depth=1
       - name: Deploy docs
-        run: "mike deploy --push --update-aliases $(grep VERSION mockery-tools.env | cut -d'=' -f 2 | cut -d'.' -f1-2) latest-v3"
+        run: "mike deploy --push --update-aliases $(grep VERSION mockery-tools.env | cut -d'=' -f 2 | cut -d'.' -f1-2) latest latest-v3"
         env:
           GOOGLE_ANALYTICS_KEY: ${{ secrets.GOOGLE_ANALYTICS_KEY }}
