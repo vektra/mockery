@@ -93,7 +93,7 @@ plugins:
 - glightbox
 - mike:
     alias_type: symlink
-    canonical_version: latest
+    canonical_version: null
 - open-in-new-tab
 - search
 - social
