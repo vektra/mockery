@@ -65,11 +65,10 @@ type RemoteTemplate struct {
 	requireSchemaExists bool
 }
 
-func NewRemoteTemplate(templateURL string, schemaURL string, requireSchemaExists bool) *RemoteTemplate {
+func NewRemoteTemplate(templateURL string, schemaURL string) *RemoteTemplate {
 	return &RemoteTemplate{
-		templateURL:         templateURL,
-		schemaURL:           schemaURL,
-		requireSchemaExists: requireSchemaExists,
+		templateURL: templateURL,
+		schemaURL:   schemaURL,
 	}
 }
 
@@ -100,13 +99,7 @@ func (r *RemoteTemplate) Schema(ctx context.Context) (*gojsonschema.Schema, erro
 		schemaString, err := download(ctx, r.schemaURL)
 		if err != nil {
 			log.Debug().Err(err).Msg("schema download encountered error")
-			if r.requireSchemaExists {
-				log.Debug().Msg("schema required to exist")
-				return nil, fmt.Errorf("downloading schema: %w", err)
-			}
-
-			log.Debug().Msg("schema failed to download but require-template-schema-exists was False. Ignoring.")
-			return nil, nil
+			return nil, fmt.Errorf("downloading schema: %w", err)
 		}
 		r.schema, err = gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaString))
 		if err != nil {
