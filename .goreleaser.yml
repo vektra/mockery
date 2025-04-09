@@ -78,7 +78,7 @@ docker_manifests:
 
 release:
   prerelease: false
-  make_latest: true
+  make_latest: false
 
 git:
   ignore_tags:
