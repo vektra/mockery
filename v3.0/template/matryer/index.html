@@ -643,20 +643,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#matryer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Matryer
-        </span>
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Matryer">
+    <nav class="md-nav" aria-label="template-data">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -987,20 +974,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#matryer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Matryer
-        </span>
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Matryer">
+    <nav class="md-nav" aria-label="template-data">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1106,7 +1080,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 
 <p><code>matryer</code> mocks are derived from the project at <a href="https://github.com/matryer/moq">https://github.com/matryer/moq</a>. These mocks create a struct that has a function field for each method, which you can declare in your test code.</p>
 <h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Interface</label><label for="__tabbed_1_2">Example Usage</label><label for="__tabbed_1_3"><code>.mockery.yml</code></label><label for="__tabbed_1_4"><code>mocks_moq.go</code></label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Interface</label><label for="__tabbed_1_2">Example Usage</label><label for="__tabbed_1_3"><code>.mockery.yml</code></label><label for="__tabbed_1_4"><code>mocks_matryer.go</code></label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">package</span><span class="w"> </span><span class="nx">test</span>
@@ -1205,7 +1179,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 </div>
 </div>
 </div>
-<p>Moq-style mocks are far simpler, and probably more intuitive, than testify-style mocks. All that's needed is to define the function that will be run when the mock's method is called.</p>
+<p>matryer-style mocks are far simpler, and probably more intuitive, than testify-style mocks. All that's needed is to define the function that will be run when the mock's method is called.</p>
 <h2 id="template-data"><code>template-data</code><a class="headerlink" href="#template-data" title="Permanent link">&para;</a></h2>
 <p><code>moq</code> accepts the following <code class="highlight"><span class="nt">template-data</span><span class="p">:</span></code> keys:</p>
 <table>
@@ -1244,7 +1218,6 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 </tr>
 </tbody>
 </table>
-<h2 id="matryer">Matryer<a class="headerlink" href="#matryer" title="Permanent link">&para;</a></h2>
 <h3 id="schema">Schema<a class="headerlink" href="#schema" title="Permanent link">&para;</a></h3>
 <div class="highlight"><span class="filename">JSON</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{{</span><span class="w"> </span><span class="err">read_raw(</span><span class="s2">&quot;../internal/mock_matryer.templ.schema.json&quot;</span><span class="err">)</span><span class="w"> </span><span class="p">}}</span>
 </code></pre></div>

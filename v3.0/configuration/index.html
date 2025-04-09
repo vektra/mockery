@@ -1302,10 +1302,10 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 <td>A list of regular expressions that denote which subpackages should be excluded when <code class="highlight"><span class="nt">recursive</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span></code></td>
 </tr>
 <tr>
-<td><code>exclude-regex</code></td>
+<td><code>exclude-interface-regex</code></td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
 <td><code class="highlight"><span class="s">&quot;&quot;</span></code></td>
-<td>When set along with <code>include-regex</code>, then interfaces which match <code>include-regex</code> but also match <code>exclude-regex</code> will not be generated. If <code>all</code> is set, or if <code>include-regex</code> is not set, then <code>exclude-regex</code> has no effect.</td>
+<td>When set along with <code>include-interface-regex</code>, then interfaces which match <code>include-interface-regex</code> but also match <code>exclude-interface-regex</code> will not be generated. If <code>all</code> is set, or if <code>include-interface-regex</code> is not set, then <code>exclude-interface-regex</code> has no effect.</td>
 </tr>
 <tr>
 <td><code>filename</code></td>
@@ -1326,10 +1326,10 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 <td>The formatter to use on the rendered template. Choices are: <code>gofmt</code>, <code>goimports</code>, <code>noop</code>.</td>
 </tr>
 <tr>
-<td><code>include-regex</code></td>
+<td><code>include-interface-regex</code></td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
 <td><code class="highlight"><span class="s">&quot;&quot;</span></code></td>
-<td>When set, only interface names that match the expression will be generated. This setting is ignored if <code>all: True</code> is specified in the configuration. To further refine the interfaces generated, use <code>exclude-regex</code>.</td>
+<td>When set, only interface names that match the expression will be generated. This setting is ignored if <code>all: True</code> is specified in the configuration. To further refine the interfaces generated, use <code>exclude-interface-regex</code>.</td>
 </tr>
 <tr>
 <td><code>log-level</code></td>
@@ -1383,7 +1383,7 @@ mockery v3 is currently in beta. <strong>Do not use for production.</strong>
 <td><code>template</code></td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5c-11.3-13.6-31.5-15.4-45.1-4.1S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306l135.4 162.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256z"/></svg></span></td>
 <td><code class="highlight"><span class="s">&quot;&quot;</span></code></td>
-<td>The template to use. The choices are <code>moq</code>, <code>mockery</code>, or a file path provided by <code>file://path/to/file.txt</code>.</td>
+<td>The template to use. The choices are defined in the <a href="../template/">Templates</a> section.</td>
 </tr>
 <tr>
 <td><code>template-data</code></td>
