@@ -9,7 +9,6 @@ edit_uri: edit/v3/docs
 
 theme:
   name: material
-  custom_dir: docs/overrides
   icon:
     logo: fontawesome/brands/golang
   palette:
