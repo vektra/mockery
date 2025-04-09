@@ -186,7 +186,7 @@ This style of mock also has other interesting methods:
 ### Schema
 
 ```json
-{{ read_raw("../internal/mock_testify.templ.schema.json") }}
+--8<-- "internal/mock_testify.templ.schema.json"
 ```
 
 ## Features

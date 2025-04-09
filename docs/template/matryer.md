@@ -130,5 +130,5 @@ matryer-style mocks are far simpler, and probably more intuitive, than testify-s
 ### Schema
 
 ```json
-{{ read_raw("../internal/mock_matryer.templ.schema.json") }}
+--8<-- "internal/mock_matryer.templ.schema.json"
 ```
