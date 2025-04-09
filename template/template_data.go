@@ -15,6 +15,8 @@ type TemplateData map[string]any
 
 // VerifyJSONSchema verifies that the contents of the type adhere to the schema
 // defined by the schema argument.
+//
+// This method is not meant to be used directly by templates.
 func (t TemplateData) VerifyJSONSchema(ctx context.Context, schema *gojsonschema.Schema) error {
 	log := zerolog.Ctx(ctx)
 
