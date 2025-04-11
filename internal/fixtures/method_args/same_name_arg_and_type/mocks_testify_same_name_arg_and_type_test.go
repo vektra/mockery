@@ -9,9 +9,9 @@ import (
 	mock "github.com/stretchr/testify/mock"
 )
 
-// newmockinterfaceA creates a new instance of mockinterfaceA. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// newMockinterfaceA creates a new instance of mockinterfaceA. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
-func newmockinterfaceA(t interface {
+func newMockinterfaceA(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *mockinterfaceA {
@@ -177,9 +177,9 @@ func (_c *mockinterfaceA_DoB0v2_Call) RunAndReturn(run func(interfaceB01 interfa
 	return _c
 }
 
-// newmockinterfaceB creates a new instance of mockinterfaceB. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// newMockinterfaceB creates a new instance of mockinterfaceB. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
-func newmockinterfaceB(t interface {
+func newMockinterfaceB(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *mockinterfaceB {
@@ -248,9 +248,9 @@ func (_c *mockinterfaceB_GetData_Call) RunAndReturn(run func() int) *mockinterfa
 	return _c
 }
 
-// newmockinterfaceB0 creates a new instance of mockinterfaceB0. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// newMockinterfaceB0 creates a new instance of mockinterfaceB0. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
-func newmockinterfaceB0(t interface {
+func newMockinterfaceB0(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *mockinterfaceB0 {

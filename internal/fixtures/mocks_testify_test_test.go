@@ -4095,9 +4095,9 @@ func (_c *MockRequesterSlice_Get_Call) RunAndReturn(run func(path string) ([]str
 	return _c
 }
 
-// newmockrequesterUnexported creates a new instance of mockrequesterUnexported. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// newMockrequesterUnexported creates a new instance of mockrequesterUnexported. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
-func newmockrequesterUnexported(t interface {
+func newMockrequesterUnexported(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *mockrequesterUnexported {

@@ -9,9 +9,9 @@ import (
 	mock "github.com/stretchr/testify/mock"
 )
 
-// newmockargGetter creates a new instance of mockargGetter. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// newMockargGetter creates a new instance of mockargGetter. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
-func newmockargGetter(t interface {
+func newMockargGetter(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *mockargGetter {

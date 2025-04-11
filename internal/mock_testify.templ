@@ -25,10 +25,11 @@ import (
 {{ if firstIsLower .StructName }}
 {{ $new = "new" }}
 {{- end }}
+{{- $constructorName := printf "%s%s" $new (.StructName | firstUpper) }}
 
-// {{ $new }}{{ .StructName }} creates a new instance of {{ .StructName }}. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// {{ $constructorName }} creates a new instance of {{ .StructName }}. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
-func {{ $new }}{{ .StructName }}{{ $mock.TypeConstraint }} (t interface {
+func {{ $constructorName }}{{ $mock.TypeConstraint }} (t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *{{ .StructName }}{{ $mock.TypeInstantiation }} {

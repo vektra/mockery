@@ -9,9 +9,9 @@ import (
 	mock "github.com/stretchr/testify/mock"
 )
 
-// newmockfoo creates a new instance of mockfoo. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// newMockfoo creates a new instance of mockfoo. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
-func newmockfoo(t interface {
+func newMockfoo(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *mockfoo {

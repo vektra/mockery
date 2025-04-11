@@ -42,7 +42,7 @@ func Test_initRun(t *testing.T) {
 			args: args{
 				args: []string{"github.com/org/repo"},
 				params: func(t *testing.T, configPath string) argGetter {
-					m := newmockargGetter(t)
+					m := newMockargGetter(t)
 					m.EXPECT().GetString("config").Return(configPath, nil)
 					return m
 				},
