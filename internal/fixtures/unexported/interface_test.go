@@ -13,5 +13,5 @@ func TestUnexportedConstructorName(t *testing.T) {
 	mockFile := pathlib.NewPath("./mocks_testify_unexported_test.go")
 	b, err := mockFile.ReadFile()
 	require.NoError(t, err)
-	assert.True(t, strings.Contains(string(b), "func newmockfoo("))
+	assert.True(t, strings.Contains(string(b), "func newMockfoo("))
 }
