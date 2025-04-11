@@ -9,6 +9,7 @@ filename: "mocks_testify_{{.SrcPackageName}}_test.go"
 template-data:
   boilerplate-file: "./.boilerplate.txt"
 packages:
+  github.com/vektra/mockery/v3/internal/cmd:
   github.com/vektra/mockery/v3/internal/fixtures/buildtag/comment:
   github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type:
     config:

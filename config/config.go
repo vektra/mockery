@@ -108,7 +108,7 @@ func NewDefaultKoanf(ctx context.Context) (*koanf.Koanf, error) {
 }
 
 type RootConfig struct {
-	*Config    `koanf:",squash" yaml:",inline"`
+	Config     `koanf:",squash" yaml:",inline"`
 	Packages   map[string]*PackageConfig `koanf:"packages" yaml:"packages"`
 	koanf      *koanf.Koanf
 	configFile *pathlib.Path
@@ -143,7 +143,7 @@ func NewRootConfig(
 		return nil, nil, err
 	}
 	var rootConfig RootConfig = RootConfig{
-		Config: conf,
+		Config: *conf,
 		koanf:  k,
 	}
 
@@ -315,7 +315,7 @@ func (c *RootConfig) Initialize(ctx context.Context) error {
 		pkgLog := log.With().Str("package-path", pkgName).Logger()
 		pkgCtx := pkgLog.WithContext(ctx)
 
-		mergeConfigs(pkgCtx, *c.Config, pkgConfig.Config)
+		mergeConfigs(pkgCtx, c.Config, pkgConfig.Config)
 		if err := pkgConfig.Initialize(pkgCtx); err != nil {
 			return fmt.Errorf("initializing root config: %w", err)
 		}
