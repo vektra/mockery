@@ -1157,7 +1157,7 @@
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nt">force-file-write</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">goimports</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nt">log-level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">info</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nt">structname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mock{{.InterfaceName}}</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nt">structname</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="nv">.Mock</span><span class="p p-Indicator">}}{{</span><span class="nv">.InterfaceName</span><span class="p p-Indicator">}}</span>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nt">pkgname</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{.SrcPackageName}}&#39;</span>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nt">recursive</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">testify</span>
@@ -1216,7 +1216,7 @@
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="nt">dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{.InterfaceDir}}&quot;</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;mocks_test.go&quot;</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">      </span><span class="nt">outpkg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{.PackageName}}_test&quot;</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">      </span><span class="nt">structname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Mock{{.InterfaceName}}&quot;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">      </span><span class="nt">structname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{.Mock}}{{.InterfaceName}}&quot;</span>
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="nt">interfaces</span><span class="p">:</span>
 <a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">      </span><span class="nt">Foo</span><span class="p">:</span>
 <a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">      </span><span class="nt">Bar</span><span class="p">:</span>
@@ -1323,7 +1323,7 @@
 <tr>
 <td><code>structname</code></td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7l233.4-233.3c12.5-12.5 32.8-12.5 45.3 0z"/></svg></span></td>
-<td><code class="highlight"><span class="s">&quot;Mock{{.InterfaceName}}&quot;</span></code></td>
+<td><code class="highlight"><span class="s">&quot;{{.Mock}}{{.InterfaceName}}&quot;</span></code></td>
 <td>The name of the generated interface implementation.</td>
 </tr>
 <tr>
