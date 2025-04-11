@@ -5,6 +5,7 @@ import (
 	"os"
 	"slices"
 	"strings"
+	"unicode"
 
 	"golang.org/x/exp/constraints"
 )
@@ -100,4 +101,15 @@ func Max[T cmp.Ordered](x ...T) T {
 // Min returns the minimum value.
 func Min[T cmp.Ordered](x ...T) T {
 	return slices.Min(x)
+}
+
+// FirstIsLower returns whether or not the string's first character is lowercase.
+// If the string is empty, false is returned. If the first character is a non-alphabetic
+// character, false is returned.
+func FirstIsLower(s string) bool {
+	first := rune(s[0])
+	if len(s) == 0 || !unicode.IsLetter(first) {
+		return false
+	}
+	return !unicode.IsUpper(first)
 }

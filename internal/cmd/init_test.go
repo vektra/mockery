@@ -15,7 +15,7 @@ filename: mocks_test.go
 force-file-write: false
 formatter: goimports
 log-level: info
-structname: Mock{{.InterfaceName}}
+structname: '{{.Mock}}{{.InterfaceName}}'
 pkgname: '{{.SrcPackageName}}'
 recursive: false
 require-template-schema-exists: true
@@ -42,7 +42,7 @@ func Test_initRun(t *testing.T) {
 			args: args{
 				args: []string{"github.com/org/repo"},
 				params: func(t *testing.T, configPath string) argGetter {
-					m := NewMockargGetter(t)
+					m := newMockargGetter(t)
 					m.EXPECT().GetString("config").Return(configPath, nil)
 					return m
 				},

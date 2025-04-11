@@ -19,7 +19,7 @@ filename: mocks_test.go
 force-file-write: false
 formatter: goimports
 log-level: info
-structname: Mock{{.InterfaceName}}
+structname: {{.Mock}}{{.InterfaceName}}
 pkgname: '{{.SrcPackageName}}'
 recursive: false
 template: testify
@@ -83,7 +83,7 @@ import (
           dir: "{{.InterfaceDir}}"
           filename: "mocks_test.go"
           outpkg: "{{.PackageName}}_test"
-          structname: "Mock{{.InterfaceName}}"
+          structname: "{{.Mock}}{{.InterfaceName}}"
         interfaces:
           Foo:
           Bar:
@@ -127,7 +127,7 @@ Parameter Descriptions
 | `formatter`                                            | :fontawesome-solid-x:     | `#!yaml "goimports"`                  | The formatter to use on the rendered template. Choices are: `gofmt`, `goimports`, `noop`.                                                                                                                                                            |
 | `include-interface-regex`                              | :fontawesome-solid-x:     | `#!yaml ""`                           | When set, only interface names that match the expression will be generated. This setting is ignored if `all: True` is specified in the configuration. To further refine the interfaces generated, use `exclude-interface-regex`.                               |
 | `log-level`                                            | :fontawesome-solid-x:     | `#!yaml "info"`                       | Set the level of the logger                                                                                                                                                                                                                          |
-| `structname`                                             | :fontawesome-solid-check: | `#!yaml "Mock{{.InterfaceName}}"`   | The name of the generated interface implementation.                                                                                                                                                                                                                      |
+| `structname`                                           | :fontawesome-solid-check: | `#!yaml "{{.Mock}}{{.InterfaceName}}"` | The name of the generated interface implementation.                                                                                                                                                                                                                      |
 | `packages`                                             | :fontawesome-solid-x:     | `#!yaml null`                         | A dictionary containing configuration describing the packages and interfaces to generate mocks for.                                                                                                                                                  |
 | `pkgname`                                              | :fontawesome-solid-check: | `#!yaml "{{.SrcPackageName}}"`        | The `#!go package name` given to the generated mock files.                                                                                                                                                                                           |
 | `recursive`                                            | :fontawesome-solid-x:     | `#!yaml false`                        | When set to `true` on a particular package, mockery will recursively search for all sub-packages and inject those packages into the config map.                                                                                                      |
