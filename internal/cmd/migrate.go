@@ -159,13 +159,15 @@ func run(ctx context.Context, confPathStr string, v3ConfPath string) error {
 	}
 
 	var v3 config.RootConfig
-	v3.Config = &config.Config{}
+	var v3Config *config.Config = &config.Config{}
+	v3.Config = config.Config{}
 	v3.TemplateData = map[string]any{}
 	v3.Template = addr("testify")
 
 	tbl := newTableWriter(ctx)
 
-	migrateConfig(ctx, tbl, &v2.V2Config, &v3.Config)
+	migrateConfig(ctx, tbl, &v2.V2Config, &v3Config)
+	v3.Config = *v3Config
 	for pkgName, pkgConfig := range v2.Packages {
 		pkgLog := log.With().Str("pkg-name", pkgName).Logger()
 		pkgCtx := pkgLog.WithContext(ctx)
