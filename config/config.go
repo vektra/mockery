@@ -92,7 +92,7 @@ func NewDefaultKoanf(ctx context.Context) (*koanf.Koanf, error) {
 		ForceFileWrite:              addr(false),
 		Formatter:                   addr("goimports"),
 		LogLevel:                    addr("info"),
-		StructName:                  addr("Mock{{.InterfaceName}}"),
+		StructName:                  addr("{{.Mock}}{{.InterfaceName}}"),
 		PkgName:                     addr("{{.SrcPackageName}}"),
 		Recursive:                   addr(false),
 		RequireTemplateSchemaExists: addr(true),
