@@ -2,7 +2,7 @@ name: Test and maybe create a new release
 
 on:
   push:
-    branches: [master, v3]
+    branches: [v2, v3]
 permissions:
   contents: write
 jobs:
