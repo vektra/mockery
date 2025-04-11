@@ -2,7 +2,7 @@ name: Go Test
 
 on:
   pull_request:
-    branches: [ master, v3 ]
+    branches: [v2, v3]
 
 jobs:
   test:
