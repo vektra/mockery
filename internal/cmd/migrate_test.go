@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/chigopher/pathlib"
-	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -293,12 +292,8 @@ func TestMigrate(t *testing.T) {
 	v2File := pathlib.NewPath(tmpdir).Join("v2_config.yml")
 	v3File := pathlib.NewPath(tmpdir).Join("v3_config.yml")
 
-	writer := zerolog.NewTestWriter(t)
-	log := zerolog.New(writer)
-	ctx := log.WithContext(context.Background())
-
 	require.NoError(t, v2File.WriteFile([]byte(v2ConfigExample)))
-	require.NoError(t, run(ctx, v2File.String(), v3File.String()))
+	require.NoError(t, run(context.Background(), v2File.String(), v3File.String()))
 
 	b, err := v3File.ReadFile()
 	require.NoError(t, err)
