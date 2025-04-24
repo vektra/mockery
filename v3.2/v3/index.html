@@ -838,6 +838,19 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#config-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Config Templates
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#layouts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1077,6 +1090,19 @@
       
         <span class="md-typeset">
           <code>mockery migrate</code>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#config-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Config Templates
         </span>
       
     </span>
@@ -1437,6 +1463,11 @@
 <p class="admonition-title">Warning</p>
 <p><code>mockery migrate</code> is not comprehensive and likely has missing edge cases. We encourage you to submit issues and PRs for any problems you encounter.</p>
 </div>
+<h2 id="config-templates">Config Templates<a class="headerlink" href="#config-templates" title="Permanent link">&para;</a></h2>
+<p>Template functions used in configuration files have changed. The order of arugments for functions that take input strings is swapped. For example, in v2 the <a href="https://github.com/vektra/mockery/blob/v2.53.3/pkg/outputter.go#L49"><code>trimSuffix</code> function</a> was set to the <code>strings.TrimSuffix</code> function from the stdlib. In v3, the argument orders are swapped, for example:</p>
+<div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="s">&quot;trimSuffix&quot;</span><span class="p">:</span><span class="w">  </span><span class="kd">func</span><span class="p">(</span><span class="nx">suffix</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">s</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nx">strings</span><span class="p">.</span><span class="nx">TrimSuffix</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span><span class="w"> </span><span class="nx">suffix</span><span class="p">)</span><span class="w"> </span><span class="p">},</span>
+</code></pre></div>
+<p>This is done to support <a href="https://pkg.go.dev/text/template#hdr-Pipelines">template pipelines</a>. You can see all of the reordered functions at <a href="https://pkg.go.dev/github.com/vektra/mockery/v3@v3.2.4/template_funcs#pkg-variables">pkg.go.dev</a>.</p>
 <h2 id="layouts">Layouts<a class="headerlink" href="#layouts" title="Permanent link">&para;</a></h2>
 <p>In v2, mockery defaulted to placing mocks in a separate <code>mocks/</code> directory as <a href="https://vektra.github.io/mockery/latest-v2/configuration/#layouts">shown here</a>. In v3, mockery will by default place mocks adjacent to the mocked interface.</p>
 <p>It is still possible to place mocks in a separate directory by making use of the <a href="../configuration/#templates">template variables and functions</a> available to the configuration parameters.</p>
