@@ -40,6 +40,10 @@ var (
 	templateTestify string
 	//go:embed mock_testify.templ.schema.json
 	templateTestifyJSONSchema string
+	//go:embed mock_gomock.templ
+	templateGomock string
+	//go:embed mock_gomock.templ.schema.json
+	templateGomockJSONSchema string
 )
 
 var errBadHTTPStatus = errors.New("failed to download file")
@@ -47,11 +51,13 @@ var errBadHTTPStatus = errors.New("failed to download file")
 var styleTemplates = map[string]string{
 	"matryer": templateMatryer,
 	"testify": templateTestify,
+	"gomock":  templateGomock,
 }
 
 var jsonSchemas = map[string]string{
 	"matryer": templateMatryerJSONSchema,
 	"testify": templateTestifyJSONSchema,
+	"gomock":  templateGomockJSONSchema,
 }
 
 // findPkgPath returns the fully-qualified go import path of a given dir. The
@@ -393,6 +399,7 @@ func validateSchema(ctx context.Context, data template.Data, schema *gojsonschem
 func (g *TemplateGenerator) Generate(
 	ctx context.Context,
 	interfaces []*Interface,
+	srcPkgName, srcPkgPath string,
 ) ([]byte, error) {
 	log := zerolog.Ctx(ctx)
 	log.UpdateContext(func(c zerolog.Context) zerolog.Context {
@@ -452,7 +459,7 @@ func (g *TemplateGenerator) Generate(
 	}
 
 	data := template.NewData(
-		g.pkgName, "", mockData, g.pkgConfig.TemplateData, g.registry,
+		g.pkgName, srcPkgName, srcPkgPath, "", mockData, g.pkgConfig.TemplateData, g.registry,
 	)
 	if !g.inPackage {
 		data.SrcPkgQualifier = g.registry.SrcPkgName() + "."

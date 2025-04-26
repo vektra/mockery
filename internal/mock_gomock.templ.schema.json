@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "vektra/mockery gomock mock",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "boilerplate-file": {
+        "type": "string"
+      },
+      "mock-build-tags": {
+        "type": "string"
+      },
+      "no-source-comment": {
+        "type": "boolean"
+      },
+      "no-pkg-comment": {
+        "type": "boolean"
+      },
+      "typed": {
+        "type": "boolean"
+      }
+    },
+    "required": []
+  }

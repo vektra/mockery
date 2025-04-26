@@ -6,6 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	mock "github.com/stretchr/testify/mock"
+	"go.uber.org/mock/gomock"
 )
 
 func TestRequesterMock(t *testing.T) {
@@ -65,4 +66,13 @@ func TestRequesterMatryerStub(t *testing.T) {
 	str, err := m.Get("foo")
 	assert.Equal(t, "", str)
 	assert.Equal(t, nil, err)
+}
+
+func TestRequesterGoMock(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	m := NewGoMockRequester(ctrl)
+	m.EXPECT().Get("foo").Return("bar", nil).Times(1)
+	retString, err := m.Get("foo")
+	assert.NoError(t, err)
+	assert.Equal(t, "bar", retString)
 }

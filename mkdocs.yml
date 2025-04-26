@@ -67,6 +67,7 @@ nav:
     - template/index.md
     - template/testify.md
     - template/matryer.md
+    - template/gomock.md
   - Features:
     - replace-type.md
   - Notes:

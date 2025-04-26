@@ -20,6 +20,7 @@ Further examples of how to use the data provided to mockery templates can be fou
 
 - [matryer](https://github.com/vektra/mockery/blob/v3/internal/mock_matryer.templ)
 - [testify](https://github.com/vektra/mockery/blob/v3/internal/mock_testify.templ)
+- [gomock](https://github.com/vektra/mockery/blob/v3/internal/mock_gomock.templ)
 
 
 Full documentation is provided at: https://vektra.github.io/mockery/v3/

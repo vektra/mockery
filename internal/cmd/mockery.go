@@ -326,7 +326,12 @@ func (r *RootApp) Run() error {
 			return err
 		}
 		fileLog.Info().Msg("Executing template")
-		templateBytes, err := generator.Generate(fileCtx, interfacesInFile.interfaces)
+		templateBytes, err := generator.Generate(
+			fileCtx,
+			interfacesInFile.interfaces,
+			interfacesInFile.srcPkg.Name,
+			interfacesInFile.srcPkg.PkgPath,
+		)
 		if err != nil {
 			return err
 		}

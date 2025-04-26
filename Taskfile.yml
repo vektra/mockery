@@ -36,11 +36,16 @@ tasks:
     cmds:
       - MOCKERY_CONFIG=./.mockery_matryer.yml go run .
 
+  mocks.generate.gomock:
+    cmds:
+      - MOCKERY_CONFIG=./.mockery_gomock.yml go run .
+
   mocks.generate:
     desc: generate mocks
     deps:
       - mocks.generate.mockery
       - mocks.generate.matryer
+      - mocks.generate.gomock
 
   docker:
     desc: build the mockery docker image
