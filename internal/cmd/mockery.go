@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"sync"
 
 	"github.com/vektra/mockery/v3/config"
 	"github.com/vektra/mockery/v3/internal"
@@ -161,7 +162,7 @@ func (i *InterfaceCollection) Append(ctx context.Context, iface *internal.Interf
 }
 
 func (r *RootApp) Run() error {
-	remoteTemplateCache := make(map[string]*internal.RemoteTemplate)
+	remoteTemplateCache := pkg.NewRemoteTemplateCache()
 
 	log, err := logging.GetLogger(*r.Config.LogLevel)
 	if err != nil {
@@ -296,66 +297,20 @@ func (r *RootApp) Run() error {
 		}
 	}
 
+	var wg sync.WaitGroup
 	for outFilePath, interfacesInFile := range mockFileToInterfaces {
-		fileLog := log.With().Str("file", outFilePath).Logger()
-		fileCtx := fileLog.WithContext(ctx)
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
 
-		fileLog.Debug().Int("interfaces-in-file-len", len(interfacesInFile.interfaces)).Msgf("%v", interfacesInFile)
-
-		packageConfig, err := r.Config.GetPackageConfig(fileCtx, interfacesInFile.srcPkgPath)
-		if err != nil {
-			return err
-		}
-		if err := packageConfig.Config.ParseTemplates(ctx, "", "", interfacesInFile.srcPkg); err != nil {
-			return err
-		}
-
-		generator, err := pkg.NewTemplateGenerator(
-			fileCtx,
-			interfacesInFile.srcPkg,
-			interfacesInFile.outFilePath.Parent(),
-			*packageConfig.Config.Template,
-			*packageConfig.Config.TemplateSchema,
-			*packageConfig.Config.RequireTemplateSchemaExists,
-			remoteTemplateCache,
-			pkg.Formatter(*r.Config.Formatter),
-			packageConfig.Config,
-			interfacesInFile.outPkgName,
-		)
-		if err != nil {
-			return err
-		}
-		fileLog.Info().Msg("Executing template")
-		templateBytes, err := generator.Generate(
-			fileCtx,
-			interfacesInFile.interfaces,
-			interfacesInFile.srcPkg.Name,
-			interfacesInFile.srcPkg.PkgPath,
-		)
-		if err != nil {
-			return err
-		}
-
-		outFile := pathlib.NewPath(outFilePath)
-		if err := outFile.Parent().MkdirAll(); err != nil {
-			log.Err(err).Msg("failed to mkdir parent directories of mock file")
-			return stackerr.NewStackErr(err)
-		}
-		fileLog.Info().Msg("Writing template to file")
-		outFileExists, err := outFile.Exists()
-		if err != nil {
-			fileLog.Err(err).Msg("can't determine if outfile exists")
-			return fmt.Errorf("determining if outfile exists: %w", err)
-		}
-		if outFileExists && !*packageConfig.Config.ForceFileWrite {
-			fileLog.Error().Bool("force-file-write", *packageConfig.Config.ForceFileWrite).Msg("output file exists, can't write mocks")
-			return fmt.Errorf("outfile exists")
-		}
-
-		if err := outFile.WriteFile(templateBytes); err != nil {
-			return stackerr.NewStackErr(err)
-		}
+			fileLog := log.With().Str("file", outFilePath).Logger()
+			err := r.generate(log.WithContext(ctx), fileLog, outFilePath, interfacesInFile, remoteTemplateCache)
+			if err != nil {
+				fileLog.Err(err).Msg("error generating mocks")
+			}
+		}()
 	}
+	wg.Wait()
 
 	// The loop above could exit early, so sometimes warnings won't be shown
 	// until other errors are fixed
@@ -373,5 +328,70 @@ func (r *RootApp) Run() error {
 		os.Exit(1)
 	}
 
+	return nil
+}
+
+func (r *RootApp) generate(
+	ctx context.Context,
+	log zerolog.Logger,
+	outFilePath string,
+	interfacesInFile *InterfaceCollection,
+	remoteTemplateCache *pkg.RemoteTemplateCache,
+) error {
+	log.Debug().Int("interfaces-in-file-len", len(interfacesInFile.interfaces)).Msgf("%v", interfacesInFile)
+
+	packageConfig, err := r.Config.GetPackageConfig(ctx, interfacesInFile.srcPkgPath)
+	if err != nil {
+		return err
+	}
+	if err := packageConfig.Config.ParseTemplates(ctx, "", "", interfacesInFile.srcPkg); err != nil {
+		return err
+	}
+
+	generator, err := pkg.NewTemplateGenerator(
+		ctx,
+		interfacesInFile.srcPkg,
+		interfacesInFile.outFilePath.Parent(),
+		*packageConfig.Config.Template,
+		*packageConfig.Config.TemplateSchema,
+		*packageConfig.Config.RequireTemplateSchemaExists,
+		remoteTemplateCache,
+		pkg.Formatter(*r.Config.Formatter),
+		packageConfig.Config,
+		interfacesInFile.outPkgName,
+	)
+	if err != nil {
+		return err
+	}
+	log.Info().Msg("Executing template")
+	templateBytes, err := generator.Generate(
+		ctx,
+		interfacesInFile.interfaces,
+		interfacesInFile.srcPkg.Name,
+		interfacesInFile.srcPkg.PkgPath,
+	)
+	if err != nil {
+		return err
+	}
+
+	outFile := pathlib.NewPath(outFilePath)
+	if err := outFile.Parent().MkdirAll(); err != nil {
+		log.Err(err).Msg("failed to mkdir parent directories of mock file")
+		return stackerr.NewStackErr(err)
+	}
+	log.Info().Msg("Writing template to file")
+	outFileExists, err := outFile.Exists()
+	if err != nil {
+		log.Err(err).Msg("can't determine if outfile exists")
+		return fmt.Errorf("determining if outfile exists: %w", err)
+	}
+	if outFileExists && !*packageConfig.Config.ForceFileWrite {
+		log.Error().Bool("force-file-write", *packageConfig.Config.ForceFileWrite).Msg("output file exists, can't write mocks")
+		return fmt.Errorf("outfile exists")
+	}
+
+	if err := outFile.WriteFile(templateBytes); err != nil {
+		return stackerr.NewStackErr(err)
+	}
 	return nil
 }

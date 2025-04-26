@@ -126,7 +126,7 @@ type TemplateGenerator struct {
 	templateSchema      string
 	pkgConfig           *config.Config
 	pkgName             string
-	remoteTemplateCache map[string]*RemoteTemplate
+	remoteTemplateCache *RemoteTemplateCache
 }
 
 func NewTemplateGenerator(
@@ -136,7 +136,7 @@ func NewTemplateGenerator(
 	templateName string,
 	templateSchema string,
 	requireSchemaExists bool,
-	remoteTemplateCache map[string]*RemoteTemplate,
+	remoteTemplateCache *RemoteTemplateCache,
 	formatter Formatter,
 	pkgConfig *config.Config,
 	pkgName string,
@@ -344,14 +344,7 @@ func (g *TemplateGenerator) getTemplate(ctx context.Context) (string, *gojsonsch
 		if !strings.HasPrefix(g.templateName, protocol) {
 			continue
 		}
-		var remoteTemplate *RemoteTemplate
-		if cachedRemoteTemplate, ok := g.remoteTemplateCache[g.templateName]; !ok {
-			remoteTemplate = NewRemoteTemplate(g.templateName, g.templateSchema)
-			g.remoteTemplateCache[g.templateName] = remoteTemplate
-		} else {
-			remoteTemplate = cachedRemoteTemplate
-		}
-
+		remoteTemplate := g.remoteTemplateCache.Get(g.templateName, g.templateSchema)
 		templateString, err := remoteTemplate.Template(ctx)
 		if err != nil {
 			log.Error().Msg("could not download template")
