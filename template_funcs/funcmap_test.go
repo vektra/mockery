@@ -165,6 +165,20 @@ func TestTemplateStringFuncs(t *testing.T) {
 			want:     "Golang",
 		},
 
+		// Slice functions
+		{
+			name:     "list",
+			template: `{{list .TemplateData.s1 .TemplateData.s2 | join ","}}`,
+			data:     map[string]any{"s1": "golang", "s2": "mockery"},
+			want:     "golang,mockery",
+		},
+		{
+			name:     "append",
+			template: `{{append (list .TemplateData.s1 .TemplateData.s2) "gomock" | join ","}}`,
+			data:     map[string]any{"s1": "golang", "s2": "mockery"},
+			want:     "golang,mockery,gomock",
+		},
+
 		// Regex functions
 		{
 			name:     "matchString",
