@@ -10,6 +10,7 @@ import (
 
 	"github.com/chigopher/pathlib"
 	"github.com/rs/zerolog"
+	"github.com/vektra/mockery/v3/template"
 	"github.com/xeipuuv/gojsonschema"
 )
 
@@ -79,10 +80,10 @@ func (c *RemoteTemplateCache) Get(templateURL, schemaURL string) *RemoteTemplate
 }
 
 type RemoteTemplate struct {
-	templateURL    string
-	templateString string
-	templateOnce   sync.Once
-	templateErr    error
+	templateURL  string
+	template     template.Template
+	templateOnce sync.Once
+	templateErr  error
 
 	schemaURL  string
 	schema     *gojsonschema.Schema
@@ -99,21 +100,25 @@ func NewRemoteTemplate(templateURL, schemaURL string) *RemoteTemplate {
 	}
 }
 
-// Template will return the template string. It downloads the remote template once
+// Template returns the parsed template. It downloads the remote template once
 // and caches the result for future calls.
-func (r *RemoteTemplate) Template(ctx context.Context) (string, error) {
+func (r *RemoteTemplate) Template(ctx context.Context) (template.Template, error) {
 	r.templateOnce.Do(func() {
-		var err error
-		r.templateString, err = download(ctx, r.templateURL)
+		templateString, err := download(ctx, r.templateURL)
 		if err != nil {
 			r.templateErr = fmt.Errorf("downloading template: %w", err)
+			return
+		}
+		r.template, err = template.New(templateString, r.templateURL)
+		if err != nil {
+			r.templateErr = fmt.Errorf("creating new template: %w", err)
 		}
 	})
 
-	return r.templateString, r.templateErr
+	return r.template, r.templateErr
 }
 
-// Schema returns the JSON Schema as a string. It downloads the remote schema once
+// Schema returns the compiled JSON Schema. It downloads the remote schema once
 // and caches the result for future calls.
 func (r *RemoteTemplate) Schema(ctx context.Context) (*gojsonschema.Schema, error) {
 	log := zerolog.Ctx(ctx)
