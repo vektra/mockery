@@ -399,8 +399,8 @@ func (g *TemplateGenerator) Generate(
 		return c.Str("template", g.templateName).Str("schema", g.templateSchema)
 	})
 
-	mockData := []template.Interface{}
-	for _, ifaceMock := range interfaces {
+	mockData := make([]template.Interface, len(interfaces))
+	for i, ifaceMock := range interfaces {
 		ifaceLog := log.With().
 			Str("interface-name", ifaceMock.Name).
 			Str("package-path", ifaceMock.Pkg.PkgPath).
@@ -441,18 +441,18 @@ func (g *TemplateGenerator) Generate(
 		if err != nil {
 			return nil, err
 		}
-		mockData = append(mockData, template.NewInterface(
+		mockData[i] = template.NewInterface(
 			ifaceMock.Name,
 			*ifaceMock.Config.StructName,
 			tParams,
 			methods,
 			ifaceMock.Config.TemplateData,
 			template.NewComments(ifaceMock.TypeSpec, ifaceMock.GenDecl),
-		))
+		)
 	}
 
 	data := template.NewData(
-		g.pkgName, "", template.Packages{}, mockData, g.pkgConfig.TemplateData, g.registry,
+		g.pkgName, "", mockData, g.pkgConfig.TemplateData, g.registry,
 	)
 	if !g.inPackage {
 		data.SrcPkgQualifier = g.registry.SrcPkgName() + "."

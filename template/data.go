@@ -26,7 +26,6 @@ func (d Data) Imports() Packages {
 func NewData(
 	pkgName string,
 	srcPkgQualifier string,
-	imports Packages,
 	interfaces Interfaces,
 	templateData TemplateData,
 	registry *Registry,

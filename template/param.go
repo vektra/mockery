@@ -66,7 +66,7 @@ func (p Param) TypeStringEllipsis() string {
 	if !p.Variadic {
 		return typeString
 	}
-	return strings.Replace(typeString, "[]", "...", 1)
+	return "..." + typeString[2:]
 }
 
 // TypeStringVariadicUnderlying returns the underlying type of a variadic parameter. For
@@ -75,5 +75,5 @@ func (p Param) TypeStringEllipsis() string {
 // as `TypeString`.
 func (p Param) TypeStringVariadicUnderlying() string {
 	typeString := p.TypeStringEllipsis()
-	return strings.Replace(typeString, "...", "", 1)
+	return strings.TrimPrefix(typeString, "...")
 }
