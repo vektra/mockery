@@ -65,18 +65,18 @@ $typeparam.Constraint.String: golang.org/x/exp/constraints.Integer
 # METHOD: 0
 $method.Name: Foo
 $method.ReturnStatement: return
-$method.Call: Foo(ctx, typeParam, ordered)
+$method.Call: Foo(ctx, typeParam, ord1, ord2)
 $method.AcceptsContext: true
-$method.Signature: (ctx context.Context, typeParam T, ordered Ordered) (err error)
-$method.SignatureNoName: (context.Context, T, Ordered) (error)
-$method.Declaration: Foo(ctx context.Context, typeParam T, ordered Ordered) (err error)
+$method.Signature: (ctx context.Context, typeParam T, ord1, ord2 Ordered) (err error)
+$method.SignatureNoName: (context.Context, T, Ordered, Ordered) error
+$method.Declaration: Foo(ctx context.Context, typeParam T, ord1, ord2 Ordered) (err error)
 $method.ReturnsError: true
 $method.HasParams: true
 $method.HasReturns: true
 $method.ReturnArgList: err error
 $method.ReturnArgListNoName: error
-$method.ArgList: ctx context.Context, typeParam T, ordered Ordered
-$method.ArgListNoName: context.Context, T, Ordered
+$method.ArgList: ctx context.Context, typeParam T, ord1, ord2 Ordered
+$method.ArgListNoName: context.Context, T, Ordered, Ordered
 
 
 # PARAM: 0
@@ -100,12 +100,22 @@ $param.MethodArgNoName: T
 
 
 # PARAM: 2
-$param.Var.Name: ordered
+$param.Var.Name: ord1
 $param.Var.IsSlice: false
 $param.Var.Nillable: true
 $param.Var.Type.String: Ordered
 $param.Var.TypeString: Ordered
-$param.MethodArg: ordered Ordered
+$param.MethodArg: ord1 Ordered
+$param.MethodArgNoName: Ordered
+
+
+# PARAM: 3
+$param.Var.Name: ord2
+$param.Var.IsSlice: false
+$param.Var.Nillable: true
+$param.Var.Type.String: Ordered
+$param.Var.TypeString: Ordered
+$param.MethodArg: ord2 Ordered
 $param.MethodArgNoName: Ordered
 
 

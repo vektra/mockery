@@ -1,7 +1,6 @@
 package template
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -18,16 +17,10 @@ func (p Param) Name() string {
 }
 
 func (p Param) methodArg(includeNames bool) string {
-	var arg string
 	if includeNames {
-		arg += p.Name() + " "
+		return p.Name() + " " + p.TypeStringEllipsis()
 	}
-	if p.Variadic {
-		arg += fmt.Sprintf("...%s", p.TypeString()[2:])
-	} else {
-		arg += p.TypeString()
-	}
-	return arg
+	return p.TypeStringEllipsis()
 }
 
 // MethodArg is the representation of the parameter in the function
