@@ -1,0 +1,20 @@
+template: gomock
+structname: "GoMock{{.InterfaceName}}"
+filename: "mocks_gomock_{{.SrcPackageName}}_test.go"
+
+all: false
+template-data:
+  typed: True
+  boilerplate-file: "./.boilerplate.txt"
+packages:
+  github.com/vektra/mockery/v3/internal/fixtures:
+    interfaces:
+      Requester:
+  github.com/vektra/mockery/v3/internal/fixtures/empty_return:
+    interfaces:
+      EmptyReturn:
+  io:
+    config:
+      all: True
+      dir: internal/fixtures/
+      pkgname: test

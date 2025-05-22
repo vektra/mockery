@@ -12,6 +12,7 @@ import (
 	"go/types"
 	"os"
 	"strings"
+	"sync"
 
 	"github.com/chigopher/pathlib"
 	"github.com/rs/zerolog"
@@ -40,18 +41,66 @@ var (
 	templateTestify string
 	//go:embed mock_testify.templ.schema.json
 	templateTestifyJSONSchema string
+	//go:embed mock_gomock.templ
+	templateGomock string
+	//go:embed mock_gomock.templ.schema.json
+	templateGomockJSONSchema string
 )
 
 var errBadHTTPStatus = errors.New("failed to download file")
 
-var styleTemplates = map[string]string{
-	"matryer": templateMatryer,
-	"testify": templateTestify,
+var styleTemplates = map[string]*StyleTemplate{
+	"matryer": NewStyleTemplate("matryer", templateMatryer, templateMatryerJSONSchema),
+	"testify": NewStyleTemplate("testify", templateTestify, templateTestifyJSONSchema),
+	"gomock":  NewStyleTemplate("gomock", templateGomock, templateGomockJSONSchema),
 }
 
-var jsonSchemas = map[string]string{
-	"matryer": templateMatryerJSONSchema,
-	"testify": templateTestifyJSONSchema,
+type StyleTemplate struct {
+	name string
+
+	templateString string
+	template       template.Template
+	templateOnce   sync.Once
+	templateErr    error
+
+	schemaString string
+	schema       *gojsonschema.Schema
+	schemaOnce   sync.Once
+	schemaErr    error
+}
+
+func NewStyleTemplate(name, templateString, schemaString string) *StyleTemplate {
+	return &StyleTemplate{
+		name:           name,
+		templateString: templateString,
+		schemaString:   schemaString,
+	}
+}
+
+// Template returns the parsed template.
+func (r *StyleTemplate) Template() (template.Template, error) {
+	r.templateOnce.Do(func() {
+		var err error
+		r.template, err = template.New(r.templateString, r.name)
+		if err != nil {
+			r.templateErr = fmt.Errorf("creating new template: %w", err)
+		}
+	})
+
+	return r.template, r.templateErr
+}
+
+// Schema returns the compiled JSON Schema.
+func (r *StyleTemplate) Schema() (*gojsonschema.Schema, error) {
+	r.schemaOnce.Do(func() {
+		var err error
+		r.schema, err = gojsonschema.NewSchema(gojsonschema.NewStringLoader(r.schemaString))
+		if err != nil {
+			r.schemaErr = fmt.Errorf("creating JSON schema: %w", err)
+		}
+	})
+
+	return r.schema, r.schemaErr
 }
 
 // findPkgPath returns the fully-qualified go import path of a given dir. The
@@ -120,7 +169,7 @@ type TemplateGenerator struct {
 	templateSchema      string
 	pkgConfig           *config.Config
 	pkgName             string
-	remoteTemplateCache map[string]*RemoteTemplate
+	remoteTemplateCache *RemoteTemplateCache
 }
 
 func NewTemplateGenerator(
@@ -130,7 +179,7 @@ func NewTemplateGenerator(
 	templateName string,
 	templateSchema string,
 	requireSchemaExists bool,
-	remoteTemplateCache map[string]*RemoteTemplate,
+	remoteTemplateCache *RemoteTemplateCache,
 	formatter Formatter,
 	pkgConfig *config.Config,
 	pkgName string,
@@ -327,7 +376,7 @@ func (g *TemplateGenerator) typeParams(ctx context.Context, tparams *types.TypeP
 }
 
 // getTemplate returns the requested template and associated schema (if available).
-func (g *TemplateGenerator) getTemplate(ctx context.Context) (string, *gojsonschema.Schema, error) {
+func (g *TemplateGenerator) getTemplate(ctx context.Context) (template.Template, *gojsonschema.Schema, error) {
 	log := zerolog.Ctx(ctx).With().Str("template", g.templateName).Str("schema", g.templateSchema).Logger()
 	ctx = log.WithContext(ctx)
 
@@ -338,41 +387,38 @@ func (g *TemplateGenerator) getTemplate(ctx context.Context) (string, *gojsonsch
 		if !strings.HasPrefix(g.templateName, protocol) {
 			continue
 		}
-		var remoteTemplate *RemoteTemplate
-		if cachedRemoteTemplate, ok := g.remoteTemplateCache[g.templateName]; !ok {
-			remoteTemplate = NewRemoteTemplate(g.templateName, g.templateSchema)
-			g.remoteTemplateCache[g.templateName] = remoteTemplate
-		} else {
-			remoteTemplate = cachedRemoteTemplate
-		}
-
-		templateString, err := remoteTemplate.Template(ctx)
+		remoteTemplate := g.remoteTemplateCache.Get(g.templateName, g.templateSchema)
+		templ, err := remoteTemplate.Template(ctx)
 		if err != nil {
 			log.Error().Msg("could not download template")
-			return "", nil, fmt.Errorf("downloading template: %w", err)
+			return template.Template{}, nil, fmt.Errorf("downloading template: %w", err)
 		}
 		if g.requireSchemaExists {
 			schema, err = remoteTemplate.Schema(ctx)
 			if err != nil {
 				log.Error().Msg("could not get JSON schema")
-				return "", nil, fmt.Errorf("downloading schema: %w", err)
+				return template.Template{}, nil, fmt.Errorf("downloading schema: %w", err)
 			}
 		}
 
-		return templateString, schema, nil
+		return templ, schema, nil
 	}
 
 	// Embedded templates
 	var styleExists bool
-	templateString, styleExists := styleTemplates[g.templateName]
+	styleTemplate, styleExists := styleTemplates[g.templateName]
 	if !styleExists {
-		return "", nil, fmt.Errorf("template '%s' does not exist", g.templateName)
+		return template.Template{}, nil, fmt.Errorf("template '%s' does not exist", g.templateName)
 	}
-	schema, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(jsonSchemas[g.templateName]))
+	templ, err := styleTemplate.Template()
 	if err != nil {
-		return "", nil, fmt.Errorf("generating schema: %w", err)
+		return template.Template{}, nil, err
 	}
-	return templateString, schema, nil
+	schema, err := styleTemplate.Schema()
+	if err != nil {
+		return template.Template{}, nil, err
+	}
+	return templ, schema, nil
 }
 
 func validateSchema(ctx context.Context, data template.Data, schema *gojsonschema.Schema) error {
@@ -393,14 +439,15 @@ func validateSchema(ctx context.Context, data template.Data, schema *gojsonschem
 func (g *TemplateGenerator) Generate(
 	ctx context.Context,
 	interfaces []*Interface,
+	srcPkgName, srcPkgPath string,
 ) ([]byte, error) {
 	log := zerolog.Ctx(ctx)
 	log.UpdateContext(func(c zerolog.Context) zerolog.Context {
 		return c.Str("template", g.templateName).Str("schema", g.templateSchema)
 	})
 
-	mockData := []template.Interface{}
-	for _, ifaceMock := range interfaces {
+	mockData := make([]template.Interface, len(interfaces))
+	for i, ifaceMock := range interfaces {
 		ifaceLog := log.With().
 			Str("interface-name", ifaceMock.Name).
 			Str("package-path", ifaceMock.Pkg.PkgPath).
@@ -441,24 +488,24 @@ func (g *TemplateGenerator) Generate(
 		if err != nil {
 			return nil, err
 		}
-		mockData = append(mockData, template.NewInterface(
+		mockData[i] = template.NewInterface(
 			ifaceMock.Name,
 			*ifaceMock.Config.StructName,
 			tParams,
 			methods,
 			ifaceMock.Config.TemplateData,
 			template.NewComments(ifaceMock.TypeSpec, ifaceMock.GenDecl),
-		))
+		)
 	}
 
 	data := template.NewData(
-		g.pkgName, "", template.Packages{}, mockData, g.pkgConfig.TemplateData, g.registry,
+		g.pkgName, srcPkgName, srcPkgPath, "", mockData, g.pkgConfig.TemplateData, g.registry,
 	)
 	if !g.inPackage {
 		data.SrcPkgQualifier = g.registry.SrcPkgName() + "."
 	}
 
-	templateString, schema, err := g.getTemplate(ctx)
+	templ, schema, err := g.getTemplate(ctx)
 	if err != nil {
 		log.Error().Msg("could not get template")
 		return nil, fmt.Errorf("getting template: %w", err)
@@ -468,11 +515,6 @@ func (g *TemplateGenerator) Generate(
 			log.Error().Msg("failed to validate schema")
 			return nil, fmt.Errorf("validating schema: %w", err)
 		}
-	}
-
-	templ, err := template.New(templateString, g.templateName)
-	if err != nil {
-		return []byte{}, fmt.Errorf("creating new template: %w", err)
 	}
 
 	var buf bytes.Buffer

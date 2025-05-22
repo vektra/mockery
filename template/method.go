@@ -51,7 +51,11 @@ func (m Method) AcceptsContext() bool {
 }
 
 func (m Method) signature(includeNames bool) string {
-	return fmt.Sprintf("(%s) (%s)", m.argList(includeNames), m.returnArgList(includeNames))
+	if includeNames {
+		return fmt.Sprintf("(%s) (%s)", m.ArgList(), m.ReturnArgList())
+	} else {
+		return fmt.Sprintf("(%s) %s", m.ArgListNoName(), m.ReturnArgTypeList())
+	}
 }
 
 // Signature returns the string representation of the method's signature. For example,
@@ -93,14 +97,31 @@ func (m Method) HasReturns() bool {
 	return len(m.Returns) > 0
 }
 
-func (m Method) argList(includeName bool) string {
-	params := make([]string, len(m.Params))
-	for i, p := range m.Params {
-		if includeName {
-			params[i] = p.MethodArg()
+func (m Method) LastArg() Param {
+	if len(m.Params) == 0 {
+		return Param{}
+	}
+	return m.Params[len(m.Params)-1]
+}
+
+func argList(args []Param) string {
+	params := make([]string, len(args))
+	for i, p := range args {
+		typeString := p.TypeStringEllipsis()
+		// Specify the type only once for consecutive args of the same type.
+		if i+1 < len(args) && typeString == args[i+1].TypeStringEllipsis() {
+			params[i] = p.Name()
 		} else {
-			params[i] = p.MethodArgNoName()
+			params[i] = p.Name() + " " + typeString
 		}
+	}
+	return strings.Join(params, ", ")
+}
+
+func argListNoName(args []Param) string {
+	params := make([]string, len(args))
+	for i, p := range args {
+		params[i] = p.TypeStringEllipsis()
 	}
 	return strings.Join(params, ", ")
 }
@@ -108,12 +129,12 @@ func (m Method) argList(includeName bool) string {
 // ArgList is the string representation of method parameters, ex:
 // 's string, n int, foo bar.Baz'.
 func (m Method) ArgList() string {
-	return m.argList(true)
+	return argList(m.Params)
 }
 
 // ArgListNoName is the same as ArgList except the argument names are not included.
 func (m Method) ArgListNoName() string {
-	return m.argList(false)
+	return argListNoName(m.Params)
 }
 
 // ArgTypeList returns the argument types in a comma-separated string, ex:
@@ -200,27 +221,16 @@ func (m Method) ReturnArgNameList() string {
 	return strings.Join(params, ", ")
 }
 
-func (m Method) returnArgList(includeNames bool) string {
-	params := make([]string, len(m.Returns))
-	for i, p := range m.Returns {
-		if includeNames {
-			params[i] = p.Name() + " "
-		}
-		params[i] += p.TypeString()
-	}
-	return strings.Join(params, ", ")
-}
-
 // ReturnArgList returns the name and types of the return values. For example:
 // "foo int, bar string, err error"
 func (m Method) ReturnArgList() string {
-	return m.returnArgList(true)
+	return argList(m.Returns)
 }
 
 // ReturnArgListNoName is the same as ReturnArgList except the return argument
 // names are not included.
 func (m Method) ReturnArgListNoName() string {
-	return m.returnArgList(false)
+	return argListNoName(m.Returns)
 }
 
 func (m Method) IsVariadic() bool {

@@ -67,7 +67,7 @@ func Test_getFromDB(t *testing.T) {
 Why use mockery?
 ----------------
 
-1. You gain access to a number of pre-curated mock implementations that can be used in testing. This includes traditional "mockery-style" mocks, as well as other styles from the open source community such as from https://github.com/matryer/moq. Such mocks allow you to quickly define how the implementation should behave under test without having to manually curate your own mocks/stubs/fakes.
+1. You gain access to a number of pre-curated mock implementations that can be used in testing. This includes traditional "mockery-style" mocks, as well as other styles from the open source community such as from https://github.com/matryer/moq or https://github.com/uber-go/mock. Such mocks allow you to quickly define how the implementation should behave under test without having to manually curate your own mocks/stubs/fakes.
 2. Mockery benefits from a large number of performance improvements that almost all other Go code-generation projects currently have not employed. This means that it's orders of magnitude faster for large codebases.
 3. Mockery provides a comprehensive, centralized, flexible, and simple configuration scheme driven off of yaml instead of relying on sprawling `//go:generate` commands.
 4. Mockery is a code-generation framework. While its original goal is to provide mock implementations for testing purposes, users can supply their own templates to auto-generate any kind of code that needs to be based off of interfaces.

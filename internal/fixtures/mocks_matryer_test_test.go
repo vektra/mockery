@@ -3621,7 +3621,7 @@ var _ RequesterElided = &MoqRequesterElided{}
 //
 //		// make and configure a mocked RequesterElided
 //		mockedRequesterElided := &MoqRequesterElided{
-//			GetFunc: func(path string, url string) error {
+//			GetFunc: func(path, url string) error {
 //				panic("mock out the Get method")
 //			},
 //		}
@@ -3632,7 +3632,7 @@ var _ RequesterElided = &MoqRequesterElided{}
 //	}
 type MoqRequesterElided struct {
 	// GetFunc mocks the Get method.
-	GetFunc func(path string, url string) error
+	GetFunc func(path, url string) error
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -3648,7 +3648,7 @@ type MoqRequesterElided struct {
 }
 
 // Get calls GetFunc.
-func (mock *MoqRequesterElided) Get(path string, url string) error {
+func (mock *MoqRequesterElided) Get(path, url string) error {
 	callInfo := struct {
 		Path string
 		URL  string

@@ -7,6 +7,10 @@ type Data struct {
 	// Registry chiefly maintains the list of imports that are required in the
 	// rendered template file.
 	Registry *Registry
+	// SrcPkgName is the name of the source package containing the interfaces.
+	SrcPkgName string
+	// SrcPkgPath is the path of the source package containing the interfaces.
+	SrcPkgPath string
 	// SrcPkgQualifier is the qualifier used for the source package, if any.
 	// For example, if the source package is different from the package the template
 	// is rendered into, this string will contain something like "foo.", where
@@ -25,17 +29,20 @@ func (d Data) Imports() Packages {
 
 func NewData(
 	pkgName string,
+	srcPkgName string,
+	srcPkgPath string,
 	srcPkgQualifier string,
-	imports Packages,
 	interfaces Interfaces,
 	templateData TemplateData,
 	registry *Registry,
 ) Data {
 	return Data{
-		Interfaces:      interfaces,
 		PkgName:         pkgName,
 		Registry:        registry,
-		TemplateData:    templateData,
+		SrcPkgName:      srcPkgName,
+		SrcPkgPath:      srcPkgPath,
 		SrcPkgQualifier: srcPkgQualifier,
+		Interfaces:      interfaces,
+		TemplateData:    templateData,
 	}
 }

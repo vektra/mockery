@@ -3565,7 +3565,7 @@ func (_m *MockRequesterElided) EXPECT() *MockRequesterElided_Expecter {
 }
 
 // Get provides a mock function for the type MockRequesterElided
-func (_mock *MockRequesterElided) Get(path string, url string) error {
+func (_mock *MockRequesterElided) Get(path, url string) error {
 	ret := _mock.Called(path, url)
 
 	if len(ret) == 0 {
@@ -3593,7 +3593,7 @@ func (_e *MockRequesterElided_Expecter) Get(path interface{}, url interface{}) *
 	return &MockRequesterElided_Get_Call{Call: _e.mock.On("Get", path, url)}
 }
 
-func (_c *MockRequesterElided_Get_Call) Run(run func(path string, url string)) *MockRequesterElided_Get_Call {
+func (_c *MockRequesterElided_Get_Call) Run(run func(path, url string)) *MockRequesterElided_Get_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(string), args[1].(string))
 	})
@@ -3605,7 +3605,7 @@ func (_c *MockRequesterElided_Get_Call) Return(err error) *MockRequesterElided_G
 	return _c
 }
 
-func (_c *MockRequesterElided_Get_Call) RunAndReturn(run func(path string, url string) error) *MockRequesterElided_Get_Call {
+func (_c *MockRequesterElided_Get_Call) RunAndReturn(run func(path, url string) error) *MockRequesterElided_Get_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -3930,7 +3930,7 @@ func (_c *MockRequesterReturnElided_Get_Call) Run(run func(path string)) *MockRe
 	return _c
 }
 
-func (_c *MockRequesterReturnElided_Get_Call) Return(a int, b int, c int, err error) *MockRequesterReturnElided_Get_Call {
+func (_c *MockRequesterReturnElided_Get_Call) Return(a, b, c int, err error) *MockRequesterReturnElided_Get_Call {
 	_c.Call.Return(a, b, c, err)
 	return _c
 }

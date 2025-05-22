@@ -12,6 +12,6 @@ type (
 	// all parts of the template data passed to the template.
 	Exercise[T any, Ordered constraints.Ordered] interface {
 		// Foo is a foo
-		Foo(ctx context.Context, typeParam T, ordered Ordered) error
+		Foo(ctx context.Context, typeParam T, ord1, ord2 Ordered) error
 	} // This is a line comment
 )

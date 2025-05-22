@@ -53,6 +53,10 @@ var FuncMap = template.FuncMap{
 	"firstUpper":   xstrings.FirstRuneToUpper,
 	"exported":     Exported,
 
+	// Slice manipulation
+	"list":   func(s ...string) []string { return s },
+	"append": func(ss []string, s ...string) []string { return append(ss, s...) },
+
 	// Regular expression matching
 	"matchString": regexp.MatchString,
 	"quoteMeta":   regexp.QuoteMeta,
