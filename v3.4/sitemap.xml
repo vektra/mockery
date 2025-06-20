@@ -2,42 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://vektra.github.io/mockery/v3.4/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-20</lastmod>
     </url>
     <url>
          <loc>https://vektra.github.io/mockery/v3.4/configuration/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-20</lastmod>
     </url>
     <url>
          <loc>https://vektra.github.io/mockery/v3.4/dev-notes/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-20</lastmod>
     </url>
     <url>
          <loc>https://vektra.github.io/mockery/v3.4/faq/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-20</lastmod>
+    </url>
+    <url>
+         <loc>https://vektra.github.io/mockery/v3.4/inpackage/</loc>
+         <lastmod>2025-06-20</lastmod>
     </url>
     <url>
          <loc>https://vektra.github.io/mockery/v3.4/installation/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-20</lastmod>
     </url>
     <url>
          <loc>https://vektra.github.io/mockery/v3.4/replace-type/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-20</lastmod>
     </url>
     <url>
          <loc>https://vektra.github.io/mockery/v3.4/v3/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-20</lastmod>
     </url>
     <url>
          <loc>https://vektra.github.io/mockery/v3.4/template/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-20</lastmod>
     </url>
     <url>
          <loc>https://vektra.github.io/mockery/v3.4/template/matryer/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-20</lastmod>
     </url>
     <url>
          <loc>https://vektra.github.io/mockery/v3.4/template/testify/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-20</lastmod>
     </url>
 </urlset>
