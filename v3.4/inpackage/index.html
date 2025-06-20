@@ -13,10 +13,10 @@
         <link rel="canonical" href="https://vektra.github.io/mockery/v3.4/inpackage/">
       
       
-        <link rel="prev" href="../replace-type/">
+        <link rel="prev" href="../include-auto-generated/">
       
       
-        <link rel="next" href="../faq/">
+        <link rel="next" href="../replace-type/">
       
       
         
@@ -583,6 +583,8 @@
       
         
       
+        
+      
     
     
     
@@ -635,14 +637,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../replace-type/" class="md-nav__link">
+      <a href="../include-auto-generated/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    replace-type
+    include-auto-generated
   
 
     
@@ -687,6 +689,34 @@
 
       </a>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../replace-type/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    replace-type
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -913,7 +943,7 @@
     
     
       <li class="md-path__item">
-        <a href="../replace-type/" class="md-path__link">
+        <a href="../include-auto-generated/" class="md-path__link">
           
   <span class="md-ellipsis">
     Features
@@ -953,6 +983,7 @@
 
   <h1>inpackage</h1>
 
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.5 1.5 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1m0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> v3.5.0</p>
 <p>The <code class="highlight"><span class="l l-Scalar l-Scalar-Plain">inpackage</span></code> parameter overrides mockery's auto-detection logic that determines whether an output file resides inside or outside of the package of the original interface. Normally, import statements and type qualifiers (such as <code>srcpkg.TypeName</code>, the qualified variant of <code>TypeName</code>) are added when the mock references types in the original package <em>and</em> the mock resides outside of that package. For example:</p>
 <div class="highlight"><span class="filename">Go</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nx">mock</span><span class="w"> </span><span class="s">&quot;github.com/stretchr/testify/mock&quot;</span>
