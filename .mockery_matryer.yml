@@ -40,3 +40,7 @@ packages:
       OutputDirWithSamePkgNameAsSrc:
         config:
           dir: "{{.InterfaceDir}}/output_dir"
+  github.com/vektra/mockery/v3/internal/fixtures/private_types:
+    config:
+      all: true
+      pkgname: privatetypes_test

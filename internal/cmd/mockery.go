@@ -178,6 +178,28 @@ func (i *InterfaceCollection) Append(ctx context.Context, iface *internal.Interf
 	return nil
 }
 
+func isSamePackage(src *packages.Package, cfg *config.Config) bool {
+	if cfg.PkgName != nil && src.Name != *cfg.PkgName {
+		return false
+	}
+
+	if cfg.InPackage != nil && *cfg.InPackage {
+		return true
+	}
+
+	if cfg.Dir != nil {
+		if *cfg.Dir == "." {
+			return true
+		}
+
+		if absPath, err := filepath.Abs(*cfg.Dir); err == nil && src.Dir == absPath {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (r *RootApp) Run() error {
 	remoteTemplateCache := make(map[string]*internal.RemoteTemplate)
 
@@ -285,6 +307,11 @@ func (r *RootApp) Run() error {
 				log.Err(err).Msg("Can't parse config templates for interface")
 				return err
 			}
+
+			if !isSamePackage(iface.Pkg, ifaceConfig) && (!iface.IsExported() || iface.ContainsUnexportedTypes()) {
+				continue
+			}
+
 			filePath := ifaceConfig.FilePath()
 			ifaceLog.Info().Str("collection", filePath).Msg("adding interface to collection")
 
