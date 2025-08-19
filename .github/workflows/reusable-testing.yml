@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         os: ["macos-latest", "ubuntu-latest"]
-        go_vers: ["1.23", "1.24"]
+        go_vers: ["1.24", "1.25"]
     steps:
       - uses: actions/checkout@v2
         with:
