@@ -4,7 +4,7 @@ go 1.23.7
 
 require (
 	github.com/brunoga/deep v1.2.4
-	github.com/go-viper/mapstructure/v2 v2.3.0
+	github.com/go-viper/mapstructure/v2 v2.4.0
 	github.com/huandu/xstrings v1.5.0
 	github.com/jedib0t/go-pretty/v6 v6.6.7
 	github.com/knadh/koanf/parsers/yaml v0.1.0
