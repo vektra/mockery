@@ -139,3 +139,4 @@ packages:
         configs:
           - structname: FunServerWithDifferentFile
           - structname: AnotherFunServerWithDifferentFile
+  github.com/vektra/mockery/v3/internal/fixtures/constraint_ifaces:
