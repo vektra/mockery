@@ -25,10 +25,10 @@ A clear and concise description of what you expected to happen.
 
 ## Installation Mechanism
 
-- [] `go get`
-- [] Pre-built release
-- [] homebrew
-- [] Other: [please describe]
+- [ ] `go get`
+- [ ] Pre-built release
+- [ ] homebrew
+- [ ] Other: [please describe]
 
 ## Go version
 
