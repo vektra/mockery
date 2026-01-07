@@ -140,3 +140,7 @@ packages:
           - structname: FunServerWithDifferentFile
           - structname: AnotherFunServerWithDifferentFile
   github.com/vektra/mockery/v3/internal/fixtures/constraint_ifaces:
+  github.com/vektra/mockery/v3/internal/fixtures/interface_dir_relative:
+    config:
+      dir: '{{.InterfaceDir}}/{{  replaceAll "internal/" "" (index (splitAfterN "/" 2 .InterfaceDirRelative) 0) }}/mocks/{{index (splitAfterN "/" 2 .InterfaceDirRelative) 1}}'
+      filename: "mocks_{{.InterfaceName}}.go"
