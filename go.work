@@ -1,6 +1,5 @@
 go 1.23.7
 
-
 use (
 	.
 	./internal/fixtures/example_project/pkg_with_submodules
