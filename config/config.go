@@ -679,7 +679,7 @@ func (c *Config) ParseTemplates(
 			Str("interfaceDirPath", interfaceDirPath).
 			Str("interface-dir-relative-path", interfaceDirRelativePath).
 			Msg("found relative path")
-		interfaceDirRelative = interfaceDirRelativePath + "/"
+		interfaceDirRelative = interfaceDirRelativePath
 	}
 
 	// data is the struct sent to the template parser
