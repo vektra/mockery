@@ -70,6 +70,11 @@ tasks:
       - mocks.generate.testify
       - mocks.generate.matryer
 
+  git-state:
+    desc: Check for a dirty git git-state
+    cmds:
+      - git diff --exit-code
+
   docker:
     desc: build the mockery docker image
     cmds:
@@ -112,6 +117,7 @@ tasks:
     deps: [lint]
     cmds:
       - task: mocks
+      - task: git-state
       - task: test
       - task: mocks.remove
       - task: test.e2e

@@ -304,18 +304,20 @@ func (r *RootApp) Run() error {
 					ifaceConfig.InPackage,
 					*ifaceConfig.RequireTemplateSchemaExists,
 				)
-				log.Debug().Str("file-path", filePath).Msg("creating new interface collection")
+				ifaceLog.Debug().Str("file-path", filePath).Msg("creating new interface collection")
 			}
+			ifaceWithTypes := internal.NewInterface(
+				iface.Name,
+				iface.TypeSpec,
+				iface.GenDecl,
+				iface.FilePath,
+				iface.FileSyntax,
+				iface.Pkg,
+				ifaceConfig)
+			ifaceLog.Debug().Str("ifaceWithTypes", fmt.Sprintf("%+v", ifaceWithTypes)).Msg("created iface with types")
 			if err := mockFileToInterfaces[filePath].Append(
 				ctx,
-				internal.NewInterface(
-					iface.Name,
-					iface.TypeSpec,
-					iface.GenDecl,
-					iface.FilePath,
-					iface.FileSyntax,
-					iface.Pkg,
-					ifaceConfig),
+				ifaceWithTypes,
 			); err != nil {
 				return err
 			}
@@ -326,13 +328,8 @@ func (r *RootApp) Run() error {
 		fileLog := log.With().Str("file", outFilePath).Logger()
 		fileCtx := fileLog.WithContext(ctx)
 
-		fileLog.Debug().Int("interfaces-in-file-len", len(collection.interfaces)).Msgf("%v", collection)
-
 		packageConfig, err := r.Config.GetPackageConfig(fileCtx, collection.config.SrcPkgPath)
 		if err != nil {
-			return err
-		}
-		if err := packageConfig.Config.ParseTemplates(ctx, "", "", collection.srcPkg); err != nil {
 			return err
 		}
 

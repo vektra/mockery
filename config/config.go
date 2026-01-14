@@ -653,7 +653,13 @@ func (c *Config) ParseTemplates(
 	workingDir = filepath.ToSlash(workingDir)
 	ifaceFilePath = filepath.ToSlash(filepath.Clean(ifaceFilePath))
 	interfaceDirPath := filepath.ToSlash(filepath.Dir(ifaceFilePath))
-	interfaceDirRelativePath, err := filepath.Rel(filepath.FromSlash(workingDir), filepath.FromSlash(interfaceDirPath))
+	configPathAbs, err := filepath.Abs(*c.ConfigFile)
+	if err != nil {
+		return fmt.Errorf("getting absolute path of config file: %w", err)
+	}
+	configPathDir := filepath.ToSlash(filepath.Dir(configPathAbs))
+
+	interfaceDirRelativePath, err := filepath.Rel(filepath.FromSlash(configPathDir), filepath.FromSlash(interfaceDirPath))
 
 	var interfaceDirRelative string
 
@@ -663,6 +669,7 @@ func (c *Config) ParseTemplates(
 			Str("working-dir", workingDir).
 			Str("interfaceDirPath", interfaceDirPath).
 			Str("interface-dir-relative-path", interfaceDirRelativePath).
+			Str("iface-file-path", ifaceFilePath).
 			Msg("can't make path relative to working dir, setting to './'")
 		interfaceDirRelative = "."
 	} else {
@@ -723,6 +730,7 @@ func (c *Config) ParseTemplates(
 			}
 			var parsedBuffer bytes.Buffer
 
+			log.Debug().Str("template-data", fmt.Sprintf("%+v", data)).Msg("executing template with data")
 			if err := attributeTempl.Execute(&parsedBuffer, data); err != nil {
 				return fmt.Errorf("failed to execute %s template: %w", name, err)
 			}
