@@ -3,7 +3,7 @@ package interfacedirrelative
 import (
 	"testing"
 
-	mocks "github.com/vektra/mockery/v3/internal/fixtures/interface_dir_relative/mocks/fixtures/interface_dir_relative"
+	mocks "github.com/vektra/mockery/v3/internal/fixtures/interface_dir_relative/internal/fixtures/interface_dir_relative"
 )
 
 func TestFoo(t *testing.T) {
