@@ -653,13 +653,7 @@ func (c *Config) ParseTemplates(
 	workingDir = filepath.ToSlash(workingDir)
 	ifaceFilePath = filepath.ToSlash(filepath.Clean(ifaceFilePath))
 	interfaceDirPath := filepath.ToSlash(filepath.Dir(ifaceFilePath))
-	configPathAbs, err := filepath.Abs(*c.ConfigFile)
-	if err != nil {
-		return fmt.Errorf("getting absolute path of config file: %w", err)
-	}
-	configPathDir := filepath.ToSlash(filepath.Dir(configPathAbs))
-
-	interfaceDirRelativePath, err := filepath.Rel(filepath.FromSlash(configPathDir), filepath.FromSlash(interfaceDirPath))
+	interfaceDirRelativePath, err := filepath.Rel(filepath.FromSlash(workingDir), filepath.FromSlash(interfaceDirPath))
 
 	var interfaceDirRelative string
 

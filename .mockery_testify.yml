@@ -142,5 +142,13 @@ packages:
   github.com/vektra/mockery/v3/internal/fixtures/constraint_ifaces:
   github.com/vektra/mockery/v3/internal/fixtures/interface_dir_relative:
     config:
-      dir: '{{.InterfaceDir}}/{{  replaceAll "internal/" "" (index (splitAfterN "/" 2 .InterfaceDirRelative) 0) }}/mocks/{{index (splitAfterN "/" 2 .InterfaceDirRelative) 1}}'
-      filename: "mocks_{{.InterfaceName}}.go"
+      filename: mocks.go
+    interfaces:
+      Foo:
+        configs:
+          # This first option simply asserts that InterfaceDirRelative is an actual path. https://github.com/vektra/mockery/issues/1133
+          - dir: '{{.InterfaceDir}}/{{  replaceAll "internal/" "" (index (splitAfterN "/" 2 .InterfaceDirRelative) 0) }}/mocks/{{index (splitAfterN "/" 2 .InterfaceDirRelative) 1}}'
+          # The second option asserts that the value itself is sane. https://github.com/vektra/mockery/issues/1133#issuecomment-3758283921
+          # This mock will be explicitly tested against so that we can assert in tests that the value
+          # does not encounter breaking changes.
+          - dir: '{{.InterfaceDir}}/{{.InterfaceDirRelative}}'
