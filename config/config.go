@@ -43,7 +43,7 @@ type TemplateData struct {
 	ConfigDir string
 	// InterfaceDir is the directory of the interface being mocked.
 	InterfaceDir string
-	// InterfaceDirRelative is the same as InterfaceDir, but made relative to the ConfigDir.
+	// InterfaceDirRelative is the same as InterfaceDir, but made relative to mockery's current working directory.
 	InterfaceDirRelative string
 	// InterfaceFile is the filename of where the interface is defined.
 	InterfaceFile string

@@ -1,6 +1,4 @@
----
-title: inpackage
----
+# `#!yaml inpackage:`
 
 :octicons-tag-24: v3.5.0
 
