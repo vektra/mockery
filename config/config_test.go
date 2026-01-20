@@ -73,6 +73,26 @@ packages:
 	assert.NoError(t, err)
 }
 
+func TestNewRootConfigFormatterOptions(t *testing.T) {
+	configFile := path.Join(t.TempDir(), "config.yaml")
+	require.NoError(t, os.WriteFile(configFile, []byte(`
+formatter: goimports
+formatter-options:
+  goimports:
+    local-prefix: github.com/vektra/mockery
+`), 0o600))
+
+	flags := pflag.NewFlagSet("test", pflag.ExitOnError)
+	flags.String("config", "", "")
+
+	require.NoError(t, flags.Parse([]string{"--config", configFile}))
+	cfg, _, err := NewRootConfig(context.Background(), flags)
+	require.NoError(t, err)
+	require.NotNil(t, cfg.FormatterOptions.GoImports)
+	assert.Equal(t, "goimports", *cfg.Formatter)
+	assert.Equal(t, "github.com/vektra/mockery", cfg.FormatterOptions.GoImports.LocalPrefix)
+}
+
 func TestExtractConfigFromDirectiveComments(t *testing.T) {
 	configs := []struct {
 		name         string

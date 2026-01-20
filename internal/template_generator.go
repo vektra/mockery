@@ -179,7 +179,11 @@ func NewTemplateGenerator(
 func (g *TemplateGenerator) format(src []byte) ([]byte, error) {
 	switch g.formatter {
 	case FormatGoImports:
-		return goimports(src)
+		var localPrefix string
+		if c := g.pkgConfig.FormatterOptions.GoImports; c != nil {
+			localPrefix = c.LocalPrefix
+		}
+		return goimports(src, localPrefix)
 	case FormatGofmt:
 		return gofmt(src)
 	case FormatNoop:
@@ -485,7 +489,9 @@ func (g *TemplateGenerator) Generate(
 	return formatted, nil
 }
 
-func goimports(src []byte) ([]byte, error) {
+func goimports(src []byte, localPrefix string) ([]byte, error) {
+	imports.LocalPrefix = localPrefix
+
 	formatted, err := imports.Process("/", src, &imports.Options{
 		TabWidth:   8,
 		TabIndent:  true,
