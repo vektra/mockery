@@ -5,6 +5,21 @@ title: FAQ
 Frequently Asked Questions
 ===========================
 
+How do I generate mocks for external packages?
+----------------------------
+
+To generate mocks for external packages, you first need to `go get` the package in your project. Then, simply include the external package in your mockery config. For example:
+
+```yaml
+packages:
+  go.temporal.io/sdk:
+    config:
+      all: true
+      recursive: true
+      dir: mocks/{{.SrcPackagePath}}
+      filename: mocks.go
+```
+
 error: `interface not found in source`
 --------------------------------------
 
