@@ -881,6 +881,19 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#how-do-i-generate-mocks-for-external-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          How do I generate mocks for external packages?
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#error-interface-not-found-in-source" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1061,6 +1074,19 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#how-do-i-generate-mocks-for-external-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          How do I generate mocks for external packages?
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#error-interface-not-found-in-source" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1220,11 +1246,21 @@
 
 
 <h1 id="frequently-asked-questions">Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Permanent link">¶</a></h1>
+<h2 id="how-do-i-generate-mocks-for-external-packages">How do I generate mocks for external packages?<a class="headerlink" href="#how-do-i-generate-mocks-for-external-packages" title="Permanent link">¶</a></h2>
+<p>To generate mocks for external packages, you first need to <code>go get</code> the package in your project. Then, simply include the external package in your mockery config. For example:</p>
+<div class="highlight"><span class="filename">YAML</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">packages</span><span class="p">:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">go.temporal.io/sdk</span><span class="p">:</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="nt">all</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="nt">recursive</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="nt">dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mocks/{{.SrcPackagePath}}</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mocks.go</span>
+</code></pre></div>
 <h2 id="error-interface-not-found-in-source">error: <code>interface not found in source</code><a class="headerlink" href="#error-interface-not-found-in-source" title="Permanent link">¶</a></h2>
 <div class="admonition tip">
 <p class="admonition-title">v3.6.0</p>
 <p>Version <a href="https://github.com/vektra/mockery/releases/tag/v3.6.0"><code>v3.6.0</code></a> of mockery fixed a bug in how files were detected to be auto-generated. Many users may find that mockery is suddenly unable to find mocks after upgrading to <code>v3.6.0</code>. Try providing:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">include-auto-generated</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">include-auto-generated</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
 <p>in your mockery config to see if this resolves the issue.</p>
 </div>
