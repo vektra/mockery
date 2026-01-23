@@ -72,6 +72,8 @@ require (
 	go.uber.org/automaxprocs v1.5.3 // indirect
 	golang.org/x/crypto v0.41.0 // indirect
 	golang.org/x/net v0.43.0 // indirect
+	golang.org/x/tools/go/expect v0.1.1-deprecated // indirect
+	golang.org/x/tools/go/packages/packagestest v0.1.1-deprecated // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 )
 

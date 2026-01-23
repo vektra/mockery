@@ -1,6 +1,4 @@
----
-title: include-auto-generated
----
+# `#!yaml include-auto-generated:`
 
 :octicons-tag-24: v3.5.0
 

@@ -71,7 +71,7 @@ nav:
     - include-auto-generated.md
     - inpackage.md
     - replace-type.md
-    - Generate Directive: generate-directive.md
+    - generate-directive.md
   - Notes:
     - faq.md
     - v3.md

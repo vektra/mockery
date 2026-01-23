@@ -1,6 +1,4 @@
----
-title: replace-type
----
+# `#!yaml replace-type:`
 
 :octicons-tag-24: v3.0.0
 
