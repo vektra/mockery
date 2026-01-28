@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/rs/zerolog"
 	"github.com/vektra/mockery/v3/config"
 	"github.com/vektra/mockery/v3/internal/file"
@@ -179,11 +180,7 @@ func NewTemplateGenerator(
 func (g *TemplateGenerator) format(src []byte) ([]byte, error) {
 	switch g.formatter {
 	case FormatGoImports:
-		var localPrefix string
-		if c := g.pkgConfig.FormatterOptions.GoImports; c != nil {
-			localPrefix = c.LocalPrefix
-		}
-		return goimports(src, localPrefix)
+		return goimports(src, g.pkgConfig.FormatterOptions.GoImports)
 	case FormatGofmt:
 		return gofmt(src)
 	case FormatNoop:
@@ -489,16 +486,13 @@ func (g *TemplateGenerator) Generate(
 	return formatted, nil
 }
 
-func goimports(src []byte, localPrefix string) ([]byte, error) {
-	imports.LocalPrefix = localPrefix
+// TODO: fix nil pointer if empty formatter-options is provided in config
+func goimports(src []byte, opts *config.GoImports) ([]byte, error) {
+	spew.Dump(opts)
 
-	formatted, err := imports.Process("/", src, &imports.Options{
-		TabWidth:   8,
-		TabIndent:  true,
-		Comments:   true,
-		Fragment:   true,
-		FormatOnly: true,
-	})
+	imports.LocalPrefix = opts.GetLocalPrefix()
+
+	formatted, err := imports.Process("/", src, opts.Options())
 	if err != nil {
 		return nil, fmt.Errorf("goimports: %s", err)
 	}
