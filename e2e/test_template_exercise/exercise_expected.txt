@@ -59,7 +59,7 @@ $typeparam.Name: Ordered
 $typeparam.TypeString: constraints.Ordered
 $typeparam.TypeStringEllipsis: constraints.Ordered
 $typeparam.TypeStringVariadicUnderlying: constraints.Ordered
-$typeparam.Constraint.String: golang.org/x/exp/constraints.Integer
+$typeparam.Constraint.String: int
 
 
 # METHOD: 0
