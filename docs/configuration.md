@@ -82,7 +82,7 @@ import (
           # directory as the original interface.
           dir: "{{.InterfaceDir}}"
           filename: "mocks_test.go"
-          outpkg: "{{.PackageName}}_test"
+          pkgname: "{{.PackageName}}_test"
           structname: "{{.Mock}}{{.InterfaceName}}"
         interfaces:
           Foo:
