@@ -485,11 +485,17 @@ func (g *TemplateGenerator) Generate(
 	return formatted, nil
 }
 
-// TODO: fix nil pointer if empty formatter-options is provided in config
 func goimports(src []byte, opts *config.GoImports) ([]byte, error) {
-	imports.LocalPrefix = opts.GetLocalPrefix()
+	var localPrefix string
+	var importsOpts *imports.Options
+	if opts != nil {
+		localPrefix = opts.GetLocalPrefix()
+		importsOpts = opts.Options()
 
-	formatted, err := imports.Process("/", src, opts.Options())
+	}
+
+	imports.LocalPrefix = localPrefix
+	formatted, err := imports.Process("/", src, importsOpts)
 	if err != nil {
 		return nil, fmt.Errorf("goimports: %s", err)
 	}

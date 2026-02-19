@@ -95,25 +95,6 @@ formatter: goimports
 	assert.Equal(t, 8, *cfg.FormatterOptions.GoImports.TabWidth)
 }
 
-func TestNewRootConfigFormatterOptionsNilGoImports(t *testing.T) {
-	configFile := path.Join(t.TempDir(), "config.yaml")
-	require.NoError(t, os.WriteFile(configFile, []byte(`
-formatter: goimports
-formatter-options:
-  goimports:
-`), 0o600))
-
-	flags := pflag.NewFlagSet("test", pflag.ExitOnError)
-	flags.String("config", "", "")
-
-	require.NoError(t, flags.Parse([]string{"--config", configFile}))
-	cfg, _, err := NewRootConfig(context.Background(), flags)
-	require.NoError(t, err)
-	require.Nil(t, cfg.FormatterOptions.GoImports)
-	assert.Empty(t, cfg.FormatterOptions.GoImports.GetLocalPrefix())
-	assert.Empty(t, cfg.FormatterOptions.GoImports.Options())
-}
-
 func TestNewRootConfigFormatterOptions(t *testing.T) {
 	configFile := path.Join(t.TempDir(), "config.yaml")
 	require.NoError(t, os.WriteFile(configFile, []byte(`

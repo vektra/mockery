@@ -598,18 +598,10 @@ type GoImports struct {
 }
 
 func (g *GoImports) GetLocalPrefix() string {
-	if g == nil {
-		return ""
-	}
-
 	return deref(g.LocalPrefix)
 }
 
 func (g *GoImports) Options() *imports.Options {
-	if g == nil {
-		return nil
-	}
-
 	return &imports.Options{
 		AllErrors:  deref(g.AllErrors),
 		Comments:   deref(g.Comments),
