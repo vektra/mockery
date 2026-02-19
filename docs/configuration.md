@@ -125,7 +125,7 @@ Parameter Descriptions
 | `filename`                                             | :fontawesome-solid-check: | `#!yaml "mocks_test.go"` | The name of the file the mock will reside in. Multiple interfaces from the same source package can be placed into the same output file.                                                                                                                             |
 | `force-file-write`                                     | :fontawesome-solid-x:     | `#!yaml true`                        | When set to `#!yaml force-file-write: true`, mockery will forcibly overwrite any existing files. Otherwise, it will fail if the output file already exists. |
 | `formatter`                                            | :fontawesome-solid-x:     | `#!yaml "goimports"`                  | The formatter to use on the rendered template. Choices are: `gofmt`, `goimports`, `noop`.                                                                                                                                                            |
-| `formatter-options`                                    | :fontawesome-solid-x:     | `#!yaml nil`                          | Additional options for the formatter. Currently supports `goimports.local-prefix` which will set the corresponding option when running goimports.                                                                                                    |
+| `formatter-options`                                    | :fontawesome-solid-x:     | `#!yaml nil`                          | Additional options for the formatter. See below.                                                            |
 | `generate`                                             | :fontawesome-solid-x:     | `#!yaml true`                         | Can be used to selectively enable/disable generation of specific interfaces. See [the related docs](generate-directive.md) for more details. |
 | [`include-auto-generated`](include-auto-generated.md){ data-preview }                               | :fontawesome-solid-x:     | `#!yaml false`                        | When set to `true`, mockery will parse files that are auto-generated. This can only be specified in the top-level config or package-level config. |
 | `include-interface-regex`                              | :fontawesome-solid-x:     | `#!yaml ""`                           | When set, only interface names that match the expression will be generated. This setting is ignored if `all: True` is specified in the configuration. To further refine the interfaces generated, use `exclude-interface-regex`.                               |
@@ -141,6 +141,19 @@ Parameter Descriptions
 | `template`                                             | :fontawesome-solid-x:     | `#!yaml ""`                           | The template to use. The choices are defined in the [Templates](../template/) section.                                                                                                                                        |
 | `template-data`                                        | :fontawesome-solid-x:     | `#!yaml {}`                           | A `map[string]any` that provides arbitrary options to the template. Each template will have a different set of accepted keys. Refer to each template's documentation for more details.                                                               |
 | `template-schema`                                      | :fontawesome-solid-check: | `#!yaml "{{.Template}}.schema.json"`  | The URL of the JSON schema to apply to the `template-data` parameter. See the [template docs](./template/index.md#schemas){ data-preview } for more details. |
+
+
+The `formatter-options` field allows formatter-specific configuration. Currently goimports is supported. For
+example:
+
+```yaml title="mockery.yaml"
+---
+formatter: goimports
+formatter-options:
+  goimports:
+    local-prefix: github.com/myrepo
+    tab-indent: true
+```
 
 Templates
 ---------
