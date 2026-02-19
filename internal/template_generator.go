@@ -13,7 +13,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/rs/zerolog"
 	"github.com/vektra/mockery/v3/config"
 	"github.com/vektra/mockery/v3/internal/file"
@@ -488,8 +487,6 @@ func (g *TemplateGenerator) Generate(
 
 // TODO: fix nil pointer if empty formatter-options is provided in config
 func goimports(src []byte, opts *config.GoImports) ([]byte, error) {
-	spew.Dump(opts)
-
 	imports.LocalPrefix = opts.GetLocalPrefix()
 
 	formatted, err := imports.Process("/", src, opts.Options())
