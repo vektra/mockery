@@ -72,10 +72,9 @@ func (m *MethodScope) SuggestName(prefix string) string {
 			suggestion = fmt.Sprintf("%s%d", prefix, i)
 		}
 
-		if m.NameExists(suggestion) {
-			continue
+		if !m.NameExists(suggestion) {
+			break
 		}
-		break
 	}
 	return suggestion
 }
