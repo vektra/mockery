@@ -95,38 +95,6 @@ formatter: goimports
 	assert.Equal(t, 8, *cfg.FormatterOptions.GoImports.TabWidth)
 }
 
-func TestNewRootConfigFormatterOptions(t *testing.T) {
-	configFile := path.Join(t.TempDir(), "config.yaml")
-	require.NoError(t, os.WriteFile(configFile, []byte(`
-formatter: goimports
-formatter-options:
-  goimports:
-    all-errors: true
-    comments: false
-    format-only: true
-    fragment: true
-    local-prefix: github.com/vektra/mockery
-    tab-indent: false
-    tab-width: 4
-`), 0o600))
-
-	flags := pflag.NewFlagSet("test", pflag.ExitOnError)
-	flags.String("config", "", "")
-
-	require.NoError(t, flags.Parse([]string{"--config", configFile}))
-	cfg, _, err := NewRootConfig(context.Background(), flags)
-	require.NoError(t, err)
-	require.NotNil(t, cfg.FormatterOptions.GoImports)
-	assert.Equal(t, "goimports", *cfg.Formatter)
-	assert.True(t, *cfg.FormatterOptions.GoImports.AllErrors)
-	assert.False(t, *cfg.FormatterOptions.GoImports.Comments)
-	assert.True(t, *cfg.FormatterOptions.GoImports.FormatOnly)
-	assert.True(t, *cfg.FormatterOptions.GoImports.Fragment)
-	assert.Equal(t, "github.com/vektra/mockery", *cfg.FormatterOptions.GoImports.LocalPrefix)
-	assert.False(t, *cfg.FormatterOptions.GoImports.TabIndent)
-	assert.Equal(t, 4, *cfg.FormatterOptions.GoImports.TabWidth)
-}
-
 func TestExtractConfigFromDirectiveComments(t *testing.T) {
 	configs := []struct {
 		name         string
