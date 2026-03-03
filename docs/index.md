@@ -71,6 +71,14 @@ Why use mockery over gomock?
 4. mockery's CLI is more robust, user-friendly, and provides many more options
 5. mockery supports generics (this may no longer be an advantage if/when gomock supports generics)
 
+Warning about goroutine safety
+------------------------------
+
+As mentioned earlier, mockery relies on `testify`, which comes with a limitation:
+calling an unexpected method on a mock object can cause necessary cleanups such
+as channel closing to be skipped. This means that ideally, mock objects should
+only ever be used from the same goroutine that runs the test function.
+
 Who uses mockery?
 ------------------
 
