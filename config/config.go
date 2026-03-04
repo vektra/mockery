@@ -108,7 +108,7 @@ func defaultFormatterOptions() *FormatterOptions {
 		GoImports: &GoImports{
 			AllErrors:   addr(false),
 			Comments:    addr(true),
-			FormatOnly:  addr(false),
+			FormatOnly:  addr(true),
 			Fragment:    addr(false),
 			LocalPrefix: addr(""),
 			TabIndent:   addr(true),

@@ -18,7 +18,7 @@ formatter-options:
   goimports:
     all-errors: false
     comments: true
-    format-only: false
+    format-only: true
     fragment: false
     local-prefix: ""
     tab-indent: true
