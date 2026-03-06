@@ -1,0 +1,8 @@
+mike @ git+https://github.com/jimporter/mike.git
+mkdocs
+mkdocs-glightbox
+mkdocs-material==9.7.1
+mkdocs-open-in-new-tab
+cairosvg
+pillow
+mkdocs-table-reader-plugin
