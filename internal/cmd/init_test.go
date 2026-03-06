@@ -14,6 +14,15 @@ dir: '{{.InterfaceDir}}'
 filename: mocks_test.go
 force-file-write: true
 formatter: goimports
+formatter-options:
+  goimports:
+    all-errors: false
+    comments: true
+    format-only: true
+    fragment: false
+    local-prefix: ""
+    tab-indent: true
+    tab-width: 8
 generate: true
 include-auto-generated: false
 log-level: info
