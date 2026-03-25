@@ -5,13 +5,16 @@ import (
 	"errors"
 	"fmt"
 	"go/ast"
+	"go/types"
 	"os"
 	"path"
+	"path/filepath"
 	"testing"
 
 	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"golang.org/x/tools/go/packages"
 )
 
 func TestNewRootConfig(t *testing.T) {
@@ -195,4 +198,48 @@ func TestExtractConfigFromDirectiveComments(t *testing.T) {
 
 func ptr[T any](s T) *T {
 	return &s
+}
+
+func TestBuildTemplateData(t *testing.T) {
+	ctx := context.Background()
+
+	configFile := "/config/config.yaml"
+	structName := "MyStruct"
+	templateName := "my-template"
+
+	c := &Config{
+		ConfigFile: &configFile,
+		StructName: &structName,
+		Template:   &templateName,
+	}
+
+	pkg := &packages.Package{
+		Types: types.NewPackage("github.com/test/pkg", "mypkg"),
+	}
+
+	wd, err := os.Getwd()
+	require.NoError(t, err)
+	// normalize the working directory path to use forward slashes for consistency across platforms.
+	wd = filepath.ToSlash(wd)
+
+	ifacePath := filepath.Join(wd, "internal/foo/bar.go")
+
+	data, err := c.buildTemplateData(
+		ctx,
+		ifacePath,
+		"API",
+		pkg,
+	)
+	require.NoError(t, err)
+
+	assert.Equal(t, "/config", data.ConfigDir)
+	assert.Equal(t, fmt.Sprintf("%s/internal/foo", wd), data.InterfaceDir)
+	assert.Equal(t, "internal/foo", data.InterfaceDirRelative)
+	assert.Equal(t, fmt.Sprintf("%s/internal/foo/bar.go", wd), data.InterfaceFile)
+	assert.Equal(t, "API", data.InterfaceName)
+	assert.Equal(t, "Mock", data.Mock)
+	assert.Equal(t, "MyStruct", data.StructName)
+	assert.Equal(t, "mypkg", data.SrcPackageName)
+	assert.Equal(t, "github.com/test/pkg", data.SrcPackagePath)
+	assert.Equal(t, "my-template", data.Template)
 }
