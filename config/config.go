@@ -46,7 +46,7 @@ type TemplateData struct {
 	InterfaceDir string
 	// InterfaceDirRelative is the same as InterfaceDir, but made relative to mockery's current working directory.
 	InterfaceDirRelative string
-	// InterfaceFile is the filename of where the interface is defined.
+	// InterfaceFile is the absolute path with filename of where the interface is defined. To get only the filename, use {{.InterfaceFile | base}} in the template.
 	InterfaceFile string
 	// InterfaceName is the name of the interface (duh).
 	InterfaceName string
@@ -697,54 +697,12 @@ func (c *Config) ParseTemplates(
 ) error {
 	log := zerolog.Ctx(ctx)
 
-	mock := "mock"
-	if ast.IsExported(ifaceName) {
-		mock = "Mock"
-	}
-
-	workingDir, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("get working directory: %w", err)
-	}
-	workingDir = filepath.ToSlash(workingDir)
-	ifaceFilePath = filepath.ToSlash(filepath.Clean(ifaceFilePath))
-	interfaceDirPath := filepath.ToSlash(filepath.Dir(ifaceFilePath))
-	interfaceDirRelativePath, err := filepath.Rel(filepath.FromSlash(workingDir), filepath.FromSlash(interfaceDirPath))
-
-	var interfaceDirRelative string
-
-	if err != nil {
-		log.Debug().
-			Err(err).
-			Str("working-dir", workingDir).
-			Str("interfaceDirPath", interfaceDirPath).
-			Str("interface-dir-relative-path", interfaceDirRelativePath).
-			Str("iface-file-path", ifaceFilePath).
-			Msg("can't make path relative to working dir, setting to './'")
-		interfaceDirRelative = "."
-	} else {
-		interfaceDirRelativePath = filepath.ToSlash(interfaceDirRelativePath)
-		log.Debug().
-			Str("working-dir", workingDir).
-			Str("interfaceDirPath", interfaceDirPath).
-			Str("interface-dir-relative-path", interfaceDirRelativePath).
-			Msg("found relative path")
-		interfaceDirRelative = interfaceDirRelativePath
-	}
-
 	// data is the struct sent to the template parser
-	data := TemplateData{
-		ConfigDir:            filepath.Dir(*c.ConfigFile),
-		InterfaceDir:         interfaceDirPath,
-		InterfaceDirRelative: interfaceDirRelative,
-		InterfaceFile:        ifaceFilePath,
-		InterfaceName:        ifaceName,
-		Mock:                 mock,
-		StructName:           *c.StructName,
-		SrcPackageName:       srcPkg.Types.Name(),
-		SrcPackagePath:       srcPkg.Types.Path(),
-		Template:             *c.Template,
+	data, err := c.buildTemplateData(ctx, ifaceFilePath, ifaceName, srcPkg)
+	if err != nil {
+		return fmt.Errorf("building template data: %w", err)
 	}
+
 	// These are the config options that we allow
 	// to be parsed by the templater. The keys are
 	// just labels we're using for logs/errors
@@ -792,6 +750,63 @@ func (c *Config) ParseTemplates(
 	}
 
 	return nil
+}
+
+func (c *Config) buildTemplateData(
+	ctx context.Context,
+	// ifaceFilePath is the absolute path of the original interface.
+	ifaceFilePath string,
+	ifaceName string,
+	srcPkg *packages.Package,
+) (TemplateData, error) {
+	log := zerolog.Ctx(ctx)
+
+	mock := "mock"
+	if ast.IsExported(ifaceName) {
+		mock = "Mock"
+	}
+
+	workingDir, err := os.Getwd()
+	if err != nil {
+		return TemplateData{}, fmt.Errorf("get working directory: %w", err)
+	}
+	workingDir = filepath.ToSlash(workingDir)
+	ifaceFilePath = filepath.ToSlash(filepath.Clean(ifaceFilePath))
+	interfaceDirPath := filepath.ToSlash(filepath.Dir(ifaceFilePath))
+
+	var interfaceDirRelative string
+	interfaceDirRelativePath, err := filepath.Rel(filepath.FromSlash(workingDir), filepath.FromSlash(interfaceDirPath))
+	if err != nil {
+		log.Debug().
+			Err(err).
+			Str("working-dir", workingDir).
+			Str("interfaceDirPath", interfaceDirPath).
+			Str("interface-dir-relative-path", interfaceDirRelativePath).
+			Str("iface-file-path", ifaceFilePath).
+			Msg("can't make path relative to working dir, setting to './'")
+		interfaceDirRelative = "."
+	} else {
+		interfaceDirRelativePath = filepath.ToSlash(interfaceDirRelativePath)
+		log.Debug().
+			Str("working-dir", workingDir).
+			Str("interfaceDirPath", interfaceDirPath).
+			Str("interface-dir-relative-path", interfaceDirRelativePath).
+			Msg("found relative path")
+		interfaceDirRelative = interfaceDirRelativePath
+	}
+
+	return TemplateData{
+		ConfigDir:            filepath.Dir(*c.ConfigFile),
+		InterfaceDir:         interfaceDirPath,
+		InterfaceDirRelative: interfaceDirRelative,
+		InterfaceFile:        ifaceFilePath,
+		InterfaceName:        ifaceName,
+		Mock:                 mock,
+		StructName:           *c.StructName,
+		SrcPackageName:       srcPkg.Types.Name(),
+		SrcPackagePath:       srcPkg.Types.Path(),
+		Template:             *c.Template,
+	}, nil
 }
 
 func (c *Config) GetReplacement(pkgPath string, typeName string) *ReplaceType {
