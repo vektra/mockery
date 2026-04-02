@@ -8,6 +8,6 @@ import (
 
 func TestFoo(t *testing.T) {
 	m := newMockfoo(t)
-	m.EXPECT().Bar().Return(baz("foo"))
-	assert.Equal(t, "foo", m.Bar())
+	m.EXPECT().Bar().Return("foo")
+	assert.Equal(t, baz("foo"), m.Bar())
 }
