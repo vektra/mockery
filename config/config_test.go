@@ -243,3 +243,50 @@ func TestBuildTemplateData(t *testing.T) {
 	assert.Equal(t, "github.com/test/pkg", data.SrcPackagePath)
 	assert.Equal(t, "my-template", data.Template)
 }
+
+func TestBuildTemplateData_InterfaceDirRelativeUsesPackagePathOutsideRepo(t *testing.T) {
+	ctx := context.Background()
+
+	configFile := "/config/config.yaml"
+	structName := "MyStruct"
+	templateName := "my-template"
+
+	c := &Config{
+		ConfigFile: &configFile,
+		StructName: &structName,
+		Template:   &templateName,
+	}
+
+	pkg := &packages.Package{
+		Types: types.NewPackage("github.com/test/module/subpkg", "mypkg"),
+	}
+
+	ifacePath := filepath.ToSlash(filepath.Join(os.TempDir(), "mockery-external-module", "foo", "bar.go"))
+	expectedInterfaceDir := filepath.ToSlash(filepath.Dir(ifacePath))
+
+	data, err := c.buildTemplateData(
+		ctx,
+		ifacePath,
+		"API",
+		pkg,
+	)
+	require.NoError(t, err)
+
+	assert.Equal(t, expectedInterfaceDir, data.InterfaceDir)
+	assert.Equal(t, "github.com/test/module/subpkg", data.InterfaceDirRelative)
+}
+
+func TestIsPathOutsideCurrentGoModRepo(t *testing.T) {
+	wd, err := os.Getwd()
+	require.NoError(t, err)
+
+	outsidePath := filepath.ToSlash(filepath.Join(os.TempDir(), "mockery-outside-repo", "foo"))
+	outsideRepo, err := isPathOutsideCurrentGoModRepo(wd, outsidePath)
+	require.NoError(t, err)
+	assert.True(t, outsideRepo)
+
+	insidePath := filepath.ToSlash(filepath.Join(wd, "config"))
+	insideRepo, err := isPathOutsideCurrentGoModRepo(wd, insidePath)
+	require.NoError(t, err)
+	assert.False(t, insideRepo)
+}
