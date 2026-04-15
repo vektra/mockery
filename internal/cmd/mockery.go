@@ -178,6 +178,18 @@ func (i *InterfaceCollection) Append(ctx context.Context, iface *internal.Interf
 	return nil
 }
 
+func writeFile(path string, data []byte) error {
+	f, err := os.Create(path)
+	if err != nil {
+		return stackerr.NewStackErr(err)
+	}
+	defer f.Close()
+	if _, err = f.Write(data); err != nil {
+		return stackerr.NewStackErr(err)
+	}
+	return nil
+}
+
 func (r *RootApp) Run() error {
 	remoteTemplateCache := make(map[string]*internal.RemoteTemplate)
 
@@ -374,13 +386,8 @@ func (r *RootApp) Run() error {
 			return fmt.Errorf("outfile exists")
 		}
 
-		file, err := os.Create(outFilePath)
-		if err != nil {
-			return stackerr.NewStackErr(err)
-		}
-		defer file.Close()
-		if _, err = file.Write(templateBytes); err != nil {
-			return stackerr.NewStackErr(err)
+		if err := writeFile(outFilePath, templateBytes); err != nil {
+			return err
 		}
 	}
 
