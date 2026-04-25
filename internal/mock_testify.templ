@@ -95,15 +95,15 @@ func (_mock *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) {{$method.Name}}
 	{{- $variadicArgsName := $lastParam.Var.Name }}
 	{{- $strippedTypeString := trimPrefix "..." $lastParam.TypeStringEllipsis }}
 
-	{{- if and (ne $strippedTypeString "interface{}") (ne $strippedTypeString "any") }}
+	{{- if and (ne $strippedTypeString "any") (ne $strippedTypeString "any") }}
 	// {{ $strippedTypeString }}
-	_va := make([]interface{}, len({{- $lastParam.Var.Name }}))
+	_va := make([]any, len({{- $lastParam.Var.Name }}))
 	for _i := range {{ $lastParam.Var.Name }} {
 		_va[_i] = {{ $lastParam.Var.Name }}[_i]
 	}
 		{{- $variadicArgsName = "_va" }}
 	{{- end }}
-	var _ca []interface{}
+	var _ca []any
 	{{- if gt (len $method.Params) 1 }}
 	_ca = append(_ca, {{ $method.ArgCallListSlice 0 (len $method.Params | add -1) }})
 	{{- end }}
@@ -163,12 +163,12 @@ type {{ $ExpecterCallNameConstraint }} struct {
 {{- range $method.Params }}
 //  - {{.Var.Name}} {{.TypeStringEllipsis}}
 {{- end}}
-func (_e *{{ $expecterNameInstantiated }}) {{ $method.Name }}({{ range $method.Params }}{{ .Var.Name }} {{ if .Variadic }}...{{end}}interface{}, {{ end }}) *{{ $ExpecterCallNameInstantiated }} {
+func (_e *{{ $expecterNameInstantiated }}) {{ $method.Name }}({{ range $method.Params }}{{ .Var.Name }} {{ if .Variadic }}...{{end}}any, {{ end }}) *{{ $ExpecterCallNameInstantiated }} {
 	return &{{ $ExpecterCallNameInstantiated }}{Call: _e.mock.On("{{$method.Name}}",
 			{{- if not $method.IsVariadic }}
 				{{- range $method.Params}}{{.Var.Name}},{{end}}
 			{{- else }}
-				append([]interface{}{
+				append([]any{
 					{{- range $i, $param := $method.Params }}
 						{{- if (lt $i (len $method.Params | add -1 ))}} {{ $param.Var.Name }},
 						{{- else }} }, {{ $param.Var.Name }}...

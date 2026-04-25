@@ -106,7 +106,7 @@ type MockRoot_TakesBaz_Call struct {
 
 // TakesBaz is a helper method to define mock.On call
 //   - baz *foo.Baz
-func (_e *MockRoot_Expecter) TakesBaz(baz interface{}) *MockRoot_TakesBaz_Call {
+func (_e *MockRoot_Expecter) TakesBaz(baz any) *MockRoot_TakesBaz_Call {
 	return &MockRoot_TakesBaz_Call{Call: _e.mock.On("TakesBaz", baz)}
 }
 

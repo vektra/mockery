@@ -53,7 +53,7 @@ type FunServerWithDifferentFile_HandleRequest_Call struct {
 // HandleRequest is a helper method to define mock.On call
 //   - path string
 //   - handler http.Handler
-func (_e *FunServerWithDifferentFile_Expecter) HandleRequest(path interface{}, handler interface{}) *FunServerWithDifferentFile_HandleRequest_Call {
+func (_e *FunServerWithDifferentFile_Expecter) HandleRequest(path any, handler any) *FunServerWithDifferentFile_HandleRequest_Call {
 	return &FunServerWithDifferentFile_HandleRequest_Call{Call: _e.mock.On("HandleRequest", path, handler)}
 }
 
@@ -126,7 +126,7 @@ type AnotherFunServerWithDifferentFile_HandleRequest_Call struct {
 // HandleRequest is a helper method to define mock.On call
 //   - path string
 //   - handler http.Handler
-func (_e *AnotherFunServerWithDifferentFile_Expecter) HandleRequest(path interface{}, handler interface{}) *AnotherFunServerWithDifferentFile_HandleRequest_Call {
+func (_e *AnotherFunServerWithDifferentFile_Expecter) HandleRequest(path any, handler any) *AnotherFunServerWithDifferentFile_HandleRequest_Call {
 	return &AnotherFunServerWithDifferentFile_HandleRequest_Call{Call: _e.mock.On("HandleRequest", path, handler)}
 }
 

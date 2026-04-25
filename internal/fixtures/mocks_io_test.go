@@ -72,7 +72,7 @@ type MockReader_Read_Call struct {
 
 // Read is a helper method to define mock.On call
 //   - p []byte
-func (_e *MockReader_Expecter) Read(p interface{}) *MockReader_Read_Call {
+func (_e *MockReader_Expecter) Read(p any) *MockReader_Read_Call {
 	return &MockReader_Read_Call{Call: _e.mock.On("Read", p)}
 }
 
@@ -159,7 +159,7 @@ type MockWriter_Write_Call struct {
 
 // Write is a helper method to define mock.On call
 //   - p []byte
-func (_e *MockWriter_Expecter) Write(p interface{}) *MockWriter_Write_Call {
+func (_e *MockWriter_Expecter) Write(p any) *MockWriter_Write_Call {
 	return &MockWriter_Write_Call{Call: _e.mock.On("Write", p)}
 }
 
@@ -318,7 +318,7 @@ type MockSeeker_Seek_Call struct {
 // Seek is a helper method to define mock.On call
 //   - offset int64
 //   - whence int
-func (_e *MockSeeker_Expecter) Seek(offset interface{}, whence interface{}) *MockSeeker_Seek_Call {
+func (_e *MockSeeker_Expecter) Seek(offset any, whence any) *MockSeeker_Seek_Call {
 	return &MockSeeker_Seek_Call{Call: _e.mock.On("Seek", offset, whence)}
 }
 
@@ -410,7 +410,7 @@ type MockReadWriter_Read_Call struct {
 
 // Read is a helper method to define mock.On call
 //   - p []byte
-func (_e *MockReadWriter_Expecter) Read(p interface{}) *MockReadWriter_Read_Call {
+func (_e *MockReadWriter_Expecter) Read(p any) *MockReadWriter_Read_Call {
 	return &MockReadWriter_Read_Call{Call: _e.mock.On("Read", p)}
 }
 
@@ -470,7 +470,7 @@ type MockReadWriter_Write_Call struct {
 
 // Write is a helper method to define mock.On call
 //   - p []byte
-func (_e *MockReadWriter_Expecter) Write(p interface{}) *MockReadWriter_Write_Call {
+func (_e *MockReadWriter_Expecter) Write(p any) *MockReadWriter_Write_Call {
 	return &MockReadWriter_Write_Call{Call: _e.mock.On("Write", p)}
 }
 
@@ -601,7 +601,7 @@ type MockReadCloser_Read_Call struct {
 
 // Read is a helper method to define mock.On call
 //   - p []byte
-func (_e *MockReadCloser_Expecter) Read(p interface{}) *MockReadCloser_Read_Call {
+func (_e *MockReadCloser_Expecter) Read(p any) *MockReadCloser_Read_Call {
 	return &MockReadCloser_Read_Call{Call: _e.mock.On("Read", p)}
 }
 
@@ -732,7 +732,7 @@ type MockWriteCloser_Write_Call struct {
 
 // Write is a helper method to define mock.On call
 //   - p []byte
-func (_e *MockWriteCloser_Expecter) Write(p interface{}) *MockWriteCloser_Write_Call {
+func (_e *MockWriteCloser_Expecter) Write(p any) *MockWriteCloser_Write_Call {
 	return &MockWriteCloser_Write_Call{Call: _e.mock.On("Write", p)}
 }
 
@@ -863,7 +863,7 @@ type MockReadWriteCloser_Read_Call struct {
 
 // Read is a helper method to define mock.On call
 //   - p []byte
-func (_e *MockReadWriteCloser_Expecter) Read(p interface{}) *MockReadWriteCloser_Read_Call {
+func (_e *MockReadWriteCloser_Expecter) Read(p any) *MockReadWriteCloser_Read_Call {
 	return &MockReadWriteCloser_Read_Call{Call: _e.mock.On("Read", p)}
 }
 
@@ -923,7 +923,7 @@ type MockReadWriteCloser_Write_Call struct {
 
 // Write is a helper method to define mock.On call
 //   - p []byte
-func (_e *MockReadWriteCloser_Expecter) Write(p interface{}) *MockReadWriteCloser_Write_Call {
+func (_e *MockReadWriteCloser_Expecter) Write(p any) *MockReadWriteCloser_Write_Call {
 	return &MockReadWriteCloser_Write_Call{Call: _e.mock.On("Write", p)}
 }
 
@@ -1010,7 +1010,7 @@ type MockReadSeeker_Read_Call struct {
 
 // Read is a helper method to define mock.On call
 //   - p []byte
-func (_e *MockReadSeeker_Expecter) Read(p interface{}) *MockReadSeeker_Read_Call {
+func (_e *MockReadSeeker_Expecter) Read(p any) *MockReadSeeker_Read_Call {
 	return &MockReadSeeker_Read_Call{Call: _e.mock.On("Read", p)}
 }
 
@@ -1071,7 +1071,7 @@ type MockReadSeeker_Seek_Call struct {
 // Seek is a helper method to define mock.On call
 //   - offset int64
 //   - whence int
-func (_e *MockReadSeeker_Expecter) Seek(offset interface{}, whence interface{}) *MockReadSeeker_Seek_Call {
+func (_e *MockReadSeeker_Expecter) Seek(offset any, whence any) *MockReadSeeker_Seek_Call {
 	return &MockReadSeeker_Seek_Call{Call: _e.mock.On("Seek", offset, whence)}
 }
 
@@ -1207,7 +1207,7 @@ type MockReadSeekCloser_Read_Call struct {
 
 // Read is a helper method to define mock.On call
 //   - p []byte
-func (_e *MockReadSeekCloser_Expecter) Read(p interface{}) *MockReadSeekCloser_Read_Call {
+func (_e *MockReadSeekCloser_Expecter) Read(p any) *MockReadSeekCloser_Read_Call {
 	return &MockReadSeekCloser_Read_Call{Call: _e.mock.On("Read", p)}
 }
 
@@ -1268,7 +1268,7 @@ type MockReadSeekCloser_Seek_Call struct {
 // Seek is a helper method to define mock.On call
 //   - offset int64
 //   - whence int
-func (_e *MockReadSeekCloser_Expecter) Seek(offset interface{}, whence interface{}) *MockReadSeekCloser_Seek_Call {
+func (_e *MockReadSeekCloser_Expecter) Seek(offset any, whence any) *MockReadSeekCloser_Seek_Call {
 	return &MockReadSeekCloser_Seek_Call{Call: _e.mock.On("Seek", offset, whence)}
 }
 
@@ -1361,7 +1361,7 @@ type MockWriteSeeker_Seek_Call struct {
 // Seek is a helper method to define mock.On call
 //   - offset int64
 //   - whence int
-func (_e *MockWriteSeeker_Expecter) Seek(offset interface{}, whence interface{}) *MockWriteSeeker_Seek_Call {
+func (_e *MockWriteSeeker_Expecter) Seek(offset any, whence any) *MockWriteSeeker_Seek_Call {
 	return &MockWriteSeeker_Seek_Call{Call: _e.mock.On("Seek", offset, whence)}
 }
 
@@ -1426,7 +1426,7 @@ type MockWriteSeeker_Write_Call struct {
 
 // Write is a helper method to define mock.On call
 //   - p []byte
-func (_e *MockWriteSeeker_Expecter) Write(p interface{}) *MockWriteSeeker_Write_Call {
+func (_e *MockWriteSeeker_Expecter) Write(p any) *MockWriteSeeker_Write_Call {
 	return &MockWriteSeeker_Write_Call{Call: _e.mock.On("Write", p)}
 }
 
@@ -1513,7 +1513,7 @@ type MockReadWriteSeeker_Read_Call struct {
 
 // Read is a helper method to define mock.On call
 //   - p []byte
-func (_e *MockReadWriteSeeker_Expecter) Read(p interface{}) *MockReadWriteSeeker_Read_Call {
+func (_e *MockReadWriteSeeker_Expecter) Read(p any) *MockReadWriteSeeker_Read_Call {
 	return &MockReadWriteSeeker_Read_Call{Call: _e.mock.On("Read", p)}
 }
 
@@ -1574,7 +1574,7 @@ type MockReadWriteSeeker_Seek_Call struct {
 // Seek is a helper method to define mock.On call
 //   - offset int64
 //   - whence int
-func (_e *MockReadWriteSeeker_Expecter) Seek(offset interface{}, whence interface{}) *MockReadWriteSeeker_Seek_Call {
+func (_e *MockReadWriteSeeker_Expecter) Seek(offset any, whence any) *MockReadWriteSeeker_Seek_Call {
 	return &MockReadWriteSeeker_Seek_Call{Call: _e.mock.On("Seek", offset, whence)}
 }
 
@@ -1639,7 +1639,7 @@ type MockReadWriteSeeker_Write_Call struct {
 
 // Write is a helper method to define mock.On call
 //   - p []byte
-func (_e *MockReadWriteSeeker_Expecter) Write(p interface{}) *MockReadWriteSeeker_Write_Call {
+func (_e *MockReadWriteSeeker_Expecter) Write(p any) *MockReadWriteSeeker_Write_Call {
 	return &MockReadWriteSeeker_Write_Call{Call: _e.mock.On("Write", p)}
 }
 
@@ -1726,7 +1726,7 @@ type MockReaderFrom_ReadFrom_Call struct {
 
 // ReadFrom is a helper method to define mock.On call
 //   - r io.Reader
-func (_e *MockReaderFrom_Expecter) ReadFrom(r interface{}) *MockReaderFrom_ReadFrom_Call {
+func (_e *MockReaderFrom_Expecter) ReadFrom(r any) *MockReaderFrom_ReadFrom_Call {
 	return &MockReaderFrom_ReadFrom_Call{Call: _e.mock.On("ReadFrom", r)}
 }
 
@@ -1813,7 +1813,7 @@ type MockWriterTo_WriteTo_Call struct {
 
 // WriteTo is a helper method to define mock.On call
 //   - w io.Writer
-func (_e *MockWriterTo_Expecter) WriteTo(w interface{}) *MockWriterTo_WriteTo_Call {
+func (_e *MockWriterTo_Expecter) WriteTo(w any) *MockWriterTo_WriteTo_Call {
 	return &MockWriterTo_WriteTo_Call{Call: _e.mock.On("WriteTo", w)}
 }
 
@@ -1901,7 +1901,7 @@ type MockReaderAt_ReadAt_Call struct {
 // ReadAt is a helper method to define mock.On call
 //   - p []byte
 //   - off int64
-func (_e *MockReaderAt_Expecter) ReadAt(p interface{}, off interface{}) *MockReaderAt_ReadAt_Call {
+func (_e *MockReaderAt_Expecter) ReadAt(p any, off any) *MockReaderAt_ReadAt_Call {
 	return &MockReaderAt_ReadAt_Call{Call: _e.mock.On("ReadAt", p, off)}
 }
 
@@ -1994,7 +1994,7 @@ type MockWriterAt_WriteAt_Call struct {
 // WriteAt is a helper method to define mock.On call
 //   - p []byte
 //   - off int64
-func (_e *MockWriterAt_Expecter) WriteAt(p interface{}, off interface{}) *MockWriterAt_WriteAt_Call {
+func (_e *MockWriterAt_Expecter) WriteAt(p any, off any) *MockWriterAt_WriteAt_Call {
 	return &MockWriterAt_WriteAt_Call{Call: _e.mock.On("WriteAt", p, off)}
 }
 
@@ -2281,7 +2281,7 @@ type MockByteWriter_WriteByte_Call struct {
 
 // WriteByte is a helper method to define mock.On call
 //   - c byte
-func (_e *MockByteWriter_Expecter) WriteByte(c interface{}) *MockByteWriter_WriteByte_Call {
+func (_e *MockByteWriter_Expecter) WriteByte(c any) *MockByteWriter_WriteByte_Call {
 	return &MockByteWriter_WriteByte_Call{Call: _e.mock.On("WriteByte", c)}
 }
 
@@ -2584,7 +2584,7 @@ type MockStringWriter_WriteString_Call struct {
 
 // WriteString is a helper method to define mock.On call
 //   - s string
-func (_e *MockStringWriter_Expecter) WriteString(s interface{}) *MockStringWriter_WriteString_Call {
+func (_e *MockStringWriter_Expecter) WriteString(s any) *MockStringWriter_WriteString_Call {
 	return &MockStringWriter_WriteString_Call{Call: _e.mock.On("WriteString", s)}
 }
 
