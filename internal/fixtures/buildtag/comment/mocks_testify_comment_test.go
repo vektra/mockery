@@ -68,9 +68,9 @@ type MockIfaceWithBuildTagInComment_Sprintf_Call struct {
 // Sprintf is a helper method to define mock.On call
 //   - format string
 //   - a ...interface{}
-func (_e *MockIfaceWithBuildTagInComment_Expecter) Sprintf(format interface{}, a ...interface{}) *MockIfaceWithBuildTagInComment_Sprintf_Call {
+func (_e *MockIfaceWithBuildTagInComment_Expecter) Sprintf(format any, a ...any) *MockIfaceWithBuildTagInComment_Sprintf_Call {
 	return &MockIfaceWithBuildTagInComment_Sprintf_Call{Call: _e.mock.On("Sprintf",
-		append([]interface{}{format}, a...)...)}
+		append([]any{format}, a...)...)}
 }
 
 func (_c *MockIfaceWithBuildTagInComment_Sprintf_Call) Run(run func(format string, a ...interface{})) *MockIfaceWithBuildTagInComment_Sprintf_Call {

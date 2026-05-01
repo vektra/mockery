@@ -195,7 +195,7 @@ type MockInterface2_F_Call struct {
 //   - v Type
 //   - v1 S
 //   - s subpkg.S
-func (_e *MockInterface2_Expecter) F(v interface{}, v1 interface{}, s interface{}) *MockInterface2_F_Call {
+func (_e *MockInterface2_Expecter) F(v any, v1 any, s any) *MockInterface2_F_Call {
 	return &MockInterface2_F_Call{Call: _e.mock.On("F", v, v1, s)}
 }
 

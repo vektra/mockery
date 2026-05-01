@@ -118,7 +118,7 @@ type MockResponseWriter_Write_Call struct {
 
 // Write is a helper method to define mock.On call
 //   - bytes []byte
-func (_e *MockResponseWriter_Expecter) Write(bytes interface{}) *MockResponseWriter_Write_Call {
+func (_e *MockResponseWriter_Expecter) Write(bytes any) *MockResponseWriter_Write_Call {
 	return &MockResponseWriter_Write_Call{Call: _e.mock.On("Write", bytes)}
 }
 
@@ -158,7 +158,7 @@ type MockResponseWriter_WriteHeader_Call struct {
 
 // WriteHeader is a helper method to define mock.On call
 //   - statusCode int
-func (_e *MockResponseWriter_Expecter) WriteHeader(statusCode interface{}) *MockResponseWriter_WriteHeader_Call {
+func (_e *MockResponseWriter_Expecter) WriteHeader(statusCode any) *MockResponseWriter_WriteHeader_Call {
 	return &MockResponseWriter_WriteHeader_Call{Call: _e.mock.On("WriteHeader", statusCode)}
 }
 

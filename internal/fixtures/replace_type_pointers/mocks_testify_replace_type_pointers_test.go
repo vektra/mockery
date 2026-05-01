@@ -61,7 +61,7 @@ type MockInterfaceWithPointers_BarFunc_Call struct {
 
 // BarFunc is a helper method to define mock.On call
 //   - bar Bar
-func (_e *MockInterfaceWithPointers_Expecter) BarFunc(bar interface{}) *MockInterfaceWithPointers_BarFunc_Call {
+func (_e *MockInterfaceWithPointers_Expecter) BarFunc(bar any) *MockInterfaceWithPointers_BarFunc_Call {
 	return &MockInterfaceWithPointers_BarFunc_Call{Call: _e.mock.On("BarFunc", bar)}
 }
 
@@ -114,7 +114,7 @@ type MockInterfaceWithPointers_FooFunc_Call struct {
 
 // FooFunc is a helper method to define mock.On call
 //   - foo *Bar
-func (_e *MockInterfaceWithPointers_Expecter) FooFunc(foo interface{}) *MockInterfaceWithPointers_FooFunc_Call {
+func (_e *MockInterfaceWithPointers_Expecter) FooFunc(foo any) *MockInterfaceWithPointers_FooFunc_Call {
 	return &MockInterfaceWithPointers_FooFunc_Call{Call: _e.mock.On("FooFunc", foo)}
 }
 

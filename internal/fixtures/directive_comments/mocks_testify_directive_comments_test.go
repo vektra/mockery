@@ -72,7 +72,7 @@ type MockRequester_Get_Call struct {
 
 // Get is a helper method to define mock.On call
 //   - path string
-func (_e *MockRequester_Expecter) Get(path interface{}) *MockRequester_Get_Call {
+func (_e *MockRequester_Expecter) Get(path any) *MockRequester_Get_Call {
 	return &MockRequester_Get_Call{Call: _e.mock.On("Get", path)}
 }
 
@@ -140,7 +140,7 @@ type FunServer_HandleRequest_Call struct {
 // HandleRequest is a helper method to define mock.On call
 //   - path string
 //   - handler http.Handler
-func (_e *FunServer_Expecter) HandleRequest(path interface{}, handler interface{}) *FunServer_HandleRequest_Call {
+func (_e *FunServer_Expecter) HandleRequest(path any, handler any) *FunServer_HandleRequest_Call {
 	return &FunServer_HandleRequest_Call{Call: _e.mock.On("HandleRequest", path, handler)}
 }
 

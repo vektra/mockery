@@ -63,7 +63,7 @@ type mockinterfaceA_DoB_Call struct {
 
 // DoB is a helper method to define mock.On call
 //   - interfaceB1 interfaceB
-func (_e *mockinterfaceA_Expecter) DoB(interfaceB1 interface{}) *mockinterfaceA_DoB_Call {
+func (_e *mockinterfaceA_Expecter) DoB(interfaceB1 any) *mockinterfaceA_DoB_Call {
 	return &mockinterfaceA_DoB_Call{Call: _e.mock.On("DoB", interfaceB1)}
 }
 
@@ -116,7 +116,7 @@ type mockinterfaceA_DoB0_Call struct {
 
 // DoB0 is a helper method to define mock.On call
 //   - interfaceB interfaceB0
-func (_e *mockinterfaceA_Expecter) DoB0(interfaceB interface{}) *mockinterfaceA_DoB0_Call {
+func (_e *mockinterfaceA_Expecter) DoB0(interfaceB any) *mockinterfaceA_DoB0_Call {
 	return &mockinterfaceA_DoB0_Call{Call: _e.mock.On("DoB0", interfaceB)}
 }
 
@@ -169,7 +169,7 @@ type mockinterfaceA_DoB0v2_Call struct {
 
 // DoB0v2 is a helper method to define mock.On call
 //   - interfaceB01 interfaceB0
-func (_e *mockinterfaceA_Expecter) DoB0v2(interfaceB01 interface{}) *mockinterfaceA_DoB0v2_Call {
+func (_e *mockinterfaceA_Expecter) DoB0v2(interfaceB01 any) *mockinterfaceA_DoB0v2_Call {
 	return &mockinterfaceA_DoB0v2_Call{Call: _e.mock.On("DoB0v2", interfaceB01)}
 }
 
@@ -320,7 +320,7 @@ type mockinterfaceB0_DoB0_Call struct {
 
 // DoB0 is a helper method to define mock.On call
 //   - interfaceB01 interfaceB0
-func (_e *mockinterfaceB0_Expecter) DoB0(interfaceB01 interface{}) *mockinterfaceB0_DoB0_Call {
+func (_e *mockinterfaceB0_Expecter) DoB0(interfaceB01 any) *mockinterfaceB0_DoB0_Call {
 	return &mockinterfaceB0_DoB0_Call{Call: _e.mock.On("DoB0", interfaceB01)}
 }
 
