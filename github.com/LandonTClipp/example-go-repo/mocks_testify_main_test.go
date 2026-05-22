@@ -7,6 +7,7 @@
 package main
 
 import (
+	_ "github.com/LandonTClipp/example-go-repo"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -61,7 +62,7 @@ type MockFoo_Bar_Call struct {
 
 // Bar is a helper method to define mock.On call
 //   - s string
-func (_e *MockFoo_Expecter) Bar(s interface{}) *MockFoo_Bar_Call {
+func (_e *MockFoo_Expecter) Bar(s any) *MockFoo_Bar_Call {
 	return &MockFoo_Bar_Call{Call: _e.mock.On("Bar", s)}
 }
 

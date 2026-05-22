@@ -3,6 +3,7 @@ module github.com/vektra/mockery/v3
 go 1.25.5
 
 require (
+	github.com/LandonTClipp/example-go-repo v0.1.2
 	github.com/brunoga/deep v1.3.1
 	github.com/go-viper/mapstructure/v2 v2.5.0
 	github.com/huandu/xstrings v1.5.0
@@ -25,7 +26,6 @@ require (
 )
 
 require (
-	github.com/LandonTClipp/example-go-repo v0.1.1 // indirect
 	github.com/clipperhouse/uax29/v2 v2.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/fatih/structs v1.1.0 // indirect
