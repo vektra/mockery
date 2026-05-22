@@ -152,3 +152,7 @@ packages:
           # This mock will be explicitly tested against so that we can assert in tests that the value
           # does not encounter breaking changes.
           - dir: '{{.InterfaceDir}}/{{.InterfaceDirRelative}}'
+  github.com/LandonTClipp/example-go-repo:
+    config:
+      all: True
+      recursive: True
