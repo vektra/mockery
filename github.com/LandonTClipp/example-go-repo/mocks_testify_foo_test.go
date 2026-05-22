@@ -4,10 +4,9 @@
 // github.com/vektra/mockery
 // template: testify
 
-package main
+package foo
 
 import (
-	_ "github.com/LandonTClipp/example-go-repo"
 	mock "github.com/stretchr/testify/mock"
 )
 
