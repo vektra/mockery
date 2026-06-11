@@ -838,6 +838,7 @@ func isPathOutsideCurrentGoModRepo(workingDir string, targetPath string) (bool, 
 	// Windows can return an error here if the paths are on different drives.
 	// In that case, we can just assume the target path is outside the repo.
 	if err != nil {
+		//nolint:nilerr // Intentional: treat cross-drive Rel errors as "outside repo", not a fatal error.
 		return true, nil
 	}
 	relFromRepoRoot = filepath.ToSlash(relFromRepoRoot)
