@@ -1,3 +1,5 @@
+github.com/LandonTClipp/example-go-repo v0.1.2 h1:R4kP4EcCPuRy4l8iV8Bt1fZwLfbG7kZv7FEn+c7HxME=
+github.com/LandonTClipp/example-go-repo v0.1.2/go.mod h1:aKxggDcybo4AWkfCrBXcgBGqAxP+G+KT4OULG0bTQvQ=
 github.com/brunoga/deep v1.3.1 h1:bSrL6FhAZa6JlVv4vsi7Hg8SLwroDb1kgDERRVipBCo=
 github.com/brunoga/deep v1.3.1/go.mod h1:GDV6dnXqn80ezsLSZ5Wlv1PdKAWAO4L5PnKYtv2dgaI=
 github.com/clipperhouse/uax29/v2 v2.2.0 h1:ChwIKnQN3kcZteTXMgb1wztSgaU+ZemkgWdohwgs8tY=

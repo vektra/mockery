@@ -30,6 +30,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/spf13/pflag"
 	internalConfig "github.com/vektra/mockery/v3/internal/config"
+	internalFile "github.com/vektra/mockery/v3/internal/file"
 	"github.com/vektra/mockery/v3/internal/logging"
 	"github.com/vektra/mockery/v3/internal/stackerr"
 	"github.com/vektra/mockery/v3/template_funcs"
@@ -775,24 +776,39 @@ func (c *Config) buildTemplateData(
 	interfaceDirPath := filepath.ToSlash(filepath.Dir(ifaceFilePath))
 
 	var interfaceDirRelative string
-	interfaceDirRelativePath, err := filepath.Rel(filepath.FromSlash(workingDir), filepath.FromSlash(interfaceDirPath))
+	outsideCurrentRepo, err := isPathOutsideCurrentGoModRepo(workingDir, interfaceDirPath)
 	if err != nil {
 		log.Debug().
 			Err(err).
-			Str("working-dir", workingDir).
-			Str("interfaceDirPath", interfaceDirPath).
-			Str("interface-dir-relative-path", interfaceDirRelativePath).
-			Str("iface-file-path", ifaceFilePath).
-			Msg("can't make path relative to working dir, setting to './'")
-		interfaceDirRelative = "."
-	} else {
-		interfaceDirRelativePath = filepath.ToSlash(interfaceDirRelativePath)
+			Msg("failed to determine whether interface path is outside current go.mod repo")
+	}
+	if outsideCurrentRepo {
 		log.Debug().
 			Str("working-dir", workingDir).
 			Str("interfaceDirPath", interfaceDirPath).
-			Str("interface-dir-relative-path", interfaceDirRelativePath).
-			Msg("found relative path")
-		interfaceDirRelative = interfaceDirRelativePath
+			Str("src-package-path", srcPkg.Types.Path()).
+			Msg("interface path is outside current go.mod repo; using fully-qualified package path")
+		interfaceDirRelative = srcPkg.Types.Path()
+	} else {
+		interfaceDirRelativePath, err := filepath.Rel(filepath.FromSlash(workingDir), filepath.FromSlash(interfaceDirPath))
+		if err != nil {
+			log.Debug().
+				Err(err).
+				Str("working-dir", workingDir).
+				Str("interfaceDirPath", interfaceDirPath).
+				Str("interface-dir-relative-path", interfaceDirRelativePath).
+				Str("iface-file-path", ifaceFilePath).
+				Msg("can't make path relative to working dir, setting to './'")
+			interfaceDirRelative = "."
+		} else {
+			interfaceDirRelativePath = filepath.ToSlash(interfaceDirRelativePath)
+			log.Debug().
+				Str("working-dir", workingDir).
+				Str("interfaceDirPath", interfaceDirPath).
+				Str("interface-dir-relative-path", interfaceDirRelativePath).
+				Msg("found relative path")
+			interfaceDirRelative = interfaceDirRelativePath
+		}
 	}
 
 	return TemplateData{
@@ -807,6 +823,27 @@ func (c *Config) buildTemplateData(
 		SrcPackagePath:       srcPkg.Types.Path(),
 		Template:             *c.Template,
 	}, nil
+}
+
+func isPathOutsideCurrentGoModRepo(workingDir string, targetPath string) (bool, error) {
+	goModFile, _, err := internalFile.FindInHierarchy(workingDir, []string{"go.mod"})
+	if err != nil {
+		return false, err
+	}
+
+	repoRoot := filepath.ToSlash(filepath.Dir(goModFile))
+	targetPath = filepath.ToSlash(filepath.Clean(targetPath))
+
+	relFromRepoRoot, err := filepath.Rel(filepath.FromSlash(repoRoot), filepath.FromSlash(targetPath))
+	// Windows can return an error here if the paths are on different drives.
+	// In that case, we can just assume the target path is outside the repo.
+	if err != nil {
+		//nolint:nilerr // Intentional: treat cross-drive Rel errors as "outside repo", not a fatal error.
+		return true, nil
+	}
+	relFromRepoRoot = filepath.ToSlash(relFromRepoRoot)
+
+	return relFromRepoRoot == ".." || strings.HasPrefix(relFromRepoRoot, "../"), nil
 }
 
 func (c *Config) GetReplacement(pkgPath string, typeName string) *ReplaceType {
