@@ -35,7 +35,7 @@ error: `interface not found in source`
 
 This log message indicates that an interface was explicitly listed in the mockery config but it was not found in the source. This can happen for a number of reasons:
 
-1. The package name was misspelled
+1. The package path was misspelled (e.g., a case-sensitivity mismatch)
 2. The interface name was misspelled
 3. The `#!yaml include-auto-generated: false` parameter was set (of which `false` is the default) and the interface lived in an auto-generated file.
 
