@@ -42,7 +42,7 @@ func (p Param) MethodArgNoName() string {
 }
 
 // CallName returns the string representation of the parameter to be
-// used for a method call. For a variadic paramter, it will be of the
+// used for a method call. For a variadic parameter, it will be of the
 // format 'foos...' if ellipsis is true.
 func (p Param) CallName(ellipsis bool) string {
 	if ellipsis && p.Variadic {

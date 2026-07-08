@@ -62,7 +62,7 @@ func NewMigrateCmd() *cobra.Command {
 		},
 	}
 	flags := cmd.PersistentFlags()
-	flags.String("outfile", ".mockery_v3.yml", "Location of the ouptut v3 file.")
+	flags.String("outfile", ".mockery_v3.yml", "Location of the output v3 file.")
 
 	return cmd
 }

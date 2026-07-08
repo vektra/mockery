@@ -220,7 +220,7 @@ func (r *RootApp) Run() error {
 	//
 	// NOTE: We do that here without relying on parser, because parses iterates
 	// over existing go files and interfaces, while user could've had a typo in
-	// interface or pacakge name, making it impossible for parser to find these
+	// interface or package name, making it impossible for parser to find these
 	// files/interfaces in the first place.
 	log.Debug().Msg("Making seen map...")
 	missingMap := make(map[string]map[string]struct{}, len(configuredPackages))

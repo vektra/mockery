@@ -1,6 +1,6 @@
 // Package shared provides variables/objects that need to be shared
 // across multiple packages. The main purpose is to resolve cyclical imports
-// arising from multiple packages needing to share common utilies.
+// arising from multiple packages needing to share common utilities.
 package template_funcs
 
 import (
