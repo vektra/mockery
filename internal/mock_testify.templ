@@ -95,7 +95,7 @@ func (_mock *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) {{$method.Name}}
 	{{- $variadicArgsName := $lastParam.Var.Name }}
 	{{- $strippedTypeString := trimPrefix "..." $lastParam.TypeStringEllipsis }}
 
-	{{- if and (ne $strippedTypeString "any") (ne $strippedTypeString "any") }}
+	{{- if and (ne $strippedTypeString "interface{}") (ne $strippedTypeString "any") }}
 	// {{ $strippedTypeString }}
 	_va := make([]any, len({{- $lastParam.Var.Name }}))
 	for _i := range {{ $lastParam.Var.Name }} {

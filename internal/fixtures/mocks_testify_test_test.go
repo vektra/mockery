@@ -1369,14 +1369,9 @@ func (_c *MockExpecter_Variadic_Call) RunAndReturn(run func(ints ...int) error) 
 
 // VariadicMany provides a mock function for the type MockExpecter
 func (_mock *MockExpecter) VariadicMany(i int, a string, intfs ...interface{}) error {
-	// interface{}
-	_va := make([]any, len(intfs))
-	for _i := range intfs {
-		_va[_i] = intfs[_i]
-	}
 	var _ca []any
 	_ca = append(_ca, i, a)
-	_ca = append(_ca, _va...)
+	_ca = append(_ca, intfs...)
 	ret := _mock.Called(_ca...)
 
 	if len(ret) == 0 {
@@ -4947,13 +4942,8 @@ func (_c *MockRequesterVariadic_MultiWriteToFile_Call) RunAndReturn(run func(fil
 
 // OneInterface provides a mock function for the type MockRequesterVariadic
 func (_mock *MockRequesterVariadic) OneInterface(a ...interface{}) bool {
-	// interface{}
-	_va := make([]any, len(a))
-	for _i := range a {
-		_va[_i] = a[_i]
-	}
 	var _ca []any
-	_ca = append(_ca, _va...)
+	_ca = append(_ca, a...)
 	ret := _mock.Called(_ca...)
 
 	if len(ret) == 0 {
@@ -5010,14 +5000,9 @@ func (_c *MockRequesterVariadic_OneInterface_Call) RunAndReturn(run func(a ...in
 
 // Sprintf provides a mock function for the type MockRequesterVariadic
 func (_mock *MockRequesterVariadic) Sprintf(format string, a ...interface{}) string {
-	// interface{}
-	_va := make([]any, len(a))
-	for _i := range a {
-		_va[_i] = a[_i]
-	}
 	var _ca []any
 	_ca = append(_ca, format)
-	_ca = append(_ca, _va...)
+	_ca = append(_ca, a...)
 	ret := _mock.Called(_ca...)
 
 	if len(ret) == 0 {
