@@ -8,4 +8,6 @@ coverage.txt
 site/
 .task/
 tools/tools
+tools/gotestsum
+tools/gotestsum.exe
 *.lua
