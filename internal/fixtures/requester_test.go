@@ -34,7 +34,7 @@ func TestRequesterMockRun(t *testing.T) {
 	})
 	retString, err := m.Get("hello")
 	assert.NoError(t, err)
-	assert.Equal(t, "", retString)
+	assert.Empty(t, retString)
 }
 
 //nolint:errcheck
@@ -63,6 +63,6 @@ func TestRequesterMatryerStub(t *testing.T) {
 	// The returned values should be the zero-values even though a GetFunc was
 	// not defined. If stub-impl is not true, this should panic.
 	str, err := m.Get("foo")
-	assert.Equal(t, "", str)
+	assert.Empty(t, str)
 	assert.Equal(t, nil, err)
 }
