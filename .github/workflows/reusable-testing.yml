@@ -26,8 +26,14 @@ jobs:
         with:
           go-version: ${{ matrix.go_vers }}
 
+      # GOWORK=off keeps this scoped to the root module. In workspace mode a
+      # bare `go mod download` fetches the whole workspace build list, including
+      # graph-only deps of the tools module, and writes their hashes into
+      # go.work.sum -- which then trips the git-state check.
       - name: Download dependencies
         run: go mod download -x
+        env:
+          GOWORK: "off"
 
       - name: Test
         run: go run github.com/go-task/task/v3/cmd/task test.ci

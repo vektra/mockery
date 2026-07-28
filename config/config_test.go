@@ -93,7 +93,7 @@ formatter: goimports
 	assert.False(t, *cfg.FormatterOptions.GoImports.AllErrors)
 	assert.True(t, *cfg.FormatterOptions.GoImports.Comments)
 	assert.True(t, *cfg.FormatterOptions.GoImports.FormatOnly)
-	assert.Equal(t, "", *cfg.FormatterOptions.GoImports.LocalPrefix)
+	assert.Empty(t, *cfg.FormatterOptions.GoImports.LocalPrefix)
 	assert.True(t, *cfg.FormatterOptions.GoImports.TabIndent)
 	assert.Equal(t, 8, *cfg.FormatterOptions.GoImports.TabWidth)
 }

@@ -411,7 +411,7 @@ func (c *RootConfig) GetPackageConfig(ctx context.Context, pkgPath string) (*Pac
 // GetPackages returns a list of the packages that are defined in
 // the `packages` config section.
 func (c *RootConfig) GetPackages(ctx context.Context) ([]string, error) {
-	packages := []string{}
+	packages := make([]string, 0, len(c.Packages))
 	for key := range c.Packages {
 		packages = append(packages, key)
 	}

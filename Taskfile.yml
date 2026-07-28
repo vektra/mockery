@@ -50,19 +50,23 @@ tasks:
       - find . -name '*_mock.go' -o -name 'mock_*_test.go' -o -name "mocks_moq.go"  -o -name 'mocks_test.go' -o -name 'mocks_*_test.go' -o -name 'mocks_matryer_*.go' -o -name 'mocks.go' | xargs -r rm
       - rm -rf mocks/
 
+  # GOWORK=off on the `go run .` invocations below is deliberate. The workspace
+  # includes ./tools, so in workspace mode MVS raises mockery's own dependencies
+  # to the tools build list (e.g. golang.org/x/tools) and we would be generating
+  # mocks with a parser that consumers of mockery never get.
   mocks.generate.custom:
     cmds:
-      - go run .
+      - GOWORK=off go run .
 
   mocks.generate.testify:
     desc: Generate testify mocks
     cmds:
-      - MOCKERY_CONFIG=./.mockery_testify.yml go run .
+      - MOCKERY_CONFIG=./.mockery_testify.yml GOWORK=off go run .
 
   mocks.generate.matryer:
     desc: Generate matryer mocks
     cmds:
-      - MOCKERY_CONFIG=./.mockery_matryer.yml go run .
+      - MOCKERY_CONFIG=./.mockery_matryer.yml GOWORK=off go run .
 
   mocks.generate:
     desc: generate mocks
@@ -98,20 +102,36 @@ tasks:
     sources:
       - "**/*.go"
     cmds:
-      - go run github.com/golangci/golangci-lint/cmd/golangci-lint run
+      - go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint run
+
+  # gotestsum lives in tools/go.mod, so it normally resolves through the
+  # workspace. The tests themselves must run with GOWORK=off (see the note on
+  # mocks.generate.*), which rules that out -- build the binary from the tools
+  # module up front instead, then invoke it directly.
+  tools.gotestsum:
+    desc: build gotestsum from the tools module
+    sources:
+      - tools/go.mod
+      - tools/go.sum
+    generates:
+      - tools/gotestsum{{exeExt}}
+    cmds:
+      - cd ./tools && GOWORK=off go build -o gotestsum{{exeExt}} gotest.tools/gotestsum
 
   test:
+    deps: [tools.gotestsum]
     cmds:
-      - go run gotest.tools/gotestsum --format testname -- -v -coverprofile=coverage.txt ./internal/... ./template_funcs/... ./template/...
+      - GOWORK=off ./tools/gotestsum{{exeExt}} --format testname -- -v -coverprofile=coverage.txt ./internal/... ./template_funcs/... ./template/...
     desc: run unit tests
     generates:
       - coverage.txt
 
   test.e2e:
     desc: run end-to-end tests
+    deps: [tools.gotestsum]
     cmds:
       - bash ./e2e/run_all.sh
-      - go run gotest.tools/gotestsum --format testname -- -v -count=1 ./e2e/...
+      - GOWORK=off ./tools/gotestsum{{exeExt}} --format testname -- -v -count=1 ./e2e/...
 
   test.ci:
     deps: [lint]

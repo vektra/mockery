@@ -1,83 +1,78 @@
+version: "2"
 linters:
-  # Disable all linters.
-  # Default: false
-  disable-all: true
-  # Enable specific linter
-  # https://golangci-lint.run/usage/linters/#enabled-by-default
+  default: none
   enable:
-    - errcheck
-    - gofumpt
-    - gosimple
-    - govet
-    - ineffassign
-    - staticcheck
-    - typecheck
     - contextcheck
-    - durationcheck
     - copyloopvar
+    - durationcheck
+    - errcheck
     - gocheckcompilerdirectives
     - gosec
+    - govet
+    - ineffassign
     - loggercheck
     - nilerr
     - prealloc
     - predeclared
     - reassign
     - revive
+    - staticcheck
     - testifylint
-linters-settings:
-  revive:
-    enable-all-rules: false
+  settings:
+    revive:
+      enable-all-rules: false
+      rules:
+        - name: var-naming
+    staticcheck:
+      # In v2, staticcheck absorbed gosimple (S*), stylecheck (ST*) and
+      # quickfix (QF*). ST*/QF* were never enabled before v2, and the S*
+      # checks below were absent from the old gosimple list.
+      checks:
+        - all
+        - -SA1024
+        - -ST*
+        - -QF*
+        - -S1002
+        - -S1013
+        - -S1014
+        - -S1015
+        - -S1022
+        - -S1026
+        - -S1027
+    testifylint:
+      disable-all: true
+      enable:
+        - compares
+        - empty
+        - expected-actual
+        - len
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
     rules:
-      - name: 'var-naming'
-  staticcheck:
-    checks:
-    - all
-    - '-SA1024'
-  testifylint:
-    disable-all: true
-    enable:
-      - compares
-      - empty
-      - expected-actual
-      - len
-  gosimple:
-    checks:
-      - S1000
-      - S1001
-      - S1003
-      - S1004
-      - S1005
-      - S1006
-      - S1007
-      - S1008
-      - S1009
-      - S1010
-      - S1011
-      - S1012
-      - S1016
-      - S1017
-      - S1018
-      - S1019
-      - S1020
-      - S1021
-      - S1023
-      - S1024
-      - S1025
-      - S1028
-      - S1029
-      - S1030
-      - S1031
-      - S1032
-      - S1033
-      - S1034
-      - S1035
-      - S1036
-      - S1037
-      - S1038
-      - S1039
-      - S1040
-issues:
-  exclude-rules:
-    - linters:
-        - revive
-      text: "var-naming: don't use an underscore in package name"
+      - linters:
+          - revive
+        text: 'var-naming: don''t use an underscore in package name'
+      # These fixtures reference alias constraints on purpose, so that mockery's
+      # parser has them to exercise. Inlining them defeats the fixture.
+      - linters:
+          - govet
+        text: 'inline: Type alias'
+        path: internal/fixtures/
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofumpt
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

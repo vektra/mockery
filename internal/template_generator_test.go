@@ -10,5 +10,5 @@ import (
 func TestFindPkgPath(t *testing.T) {
 	pkgPath, err := findPkgPath("./fixtures")
 	require.NoError(t, err)
-	assert.NotEqual(t, "", pkgPath)
+	assert.NotEmpty(t, pkgPath)
 }
