@@ -82,6 +82,11 @@ packages:
   github.com/vektra/mockery/v3/internal/fixtures/iface_new_type:
   github.com/vektra/mockery/v3/internal/fixtures/auto_generated_skip:
   github.com/vektra/mockery/v3/internal/fixtures/type_alias:
+  github.com/vektra/mockery/v3/internal/fixtures/inpackage_import_collision/consumer:
+    interfaces:
+      Iface:
+        config:
+          inpackage: true
   io:
     config:
       all: True
