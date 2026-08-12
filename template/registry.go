@@ -16,11 +16,12 @@ import (
 // imports and ensures there are no conflicts in the imported package
 // qualifiers.
 type Registry struct {
-	dstPkgPath       string
-	srcPkg           *packages.Package
-	srcPkgName       string
-	imports          map[string]*Package
-	importQualifiers map[string]*Package
+	dstPkgPath         string
+	srcPkg             *packages.Package
+	srcPkgName         string
+	imports            map[string]*Package
+	importQualifiers   map[string]*Package
+	reservedQualifiers map[string]struct{}
 	// inPackage specifies whether this registry is considered to be in the same
 	// package as the srcPkg. This is needed because of the way that Go package
 	// qualifiers work. For example, test files for a package are allowed to have
@@ -35,13 +36,20 @@ type Registry struct {
 // New loads the source package info and returns a new instance of
 // Registry.
 func NewRegistry(srcPkg *packages.Package, dstPkgPath string, inPackage bool) (*Registry, error) {
-	return &Registry{
-		dstPkgPath:       dstPkgPath,
-		srcPkg:           srcPkg,
-		imports:          make(map[string]*Package),
-		importQualifiers: make(map[string]*Package),
-		inPackage:        inPackage,
-	}, nil
+	registry := &Registry{
+		dstPkgPath:         dstPkgPath,
+		srcPkg:             srcPkg,
+		imports:            make(map[string]*Package),
+		importQualifiers:   make(map[string]*Package),
+		reservedQualifiers: make(map[string]struct{}),
+		inPackage:          inPackage,
+	}
+	if inPackage && srcPkg != nil && srcPkg.Types != nil {
+		for _, name := range srcPkg.Types.Scope().Names() {
+			registry.reservedQualifiers[name] = struct{}{}
+		}
+	}
+	return registry, nil
 }
 
 func (r Registry) SrcPkg() *packages.Package {
@@ -136,7 +144,9 @@ func (r *Registry) addImport(ctx context.Context, pkg TypesPackage) *Package {
 	originalQualifier := imprt.Qualifier()
 	var aliasSuggestion string = imprt.Qualifier()
 	for i := 0; ; i++ {
-		if _, conflict := r.importQualifiers[aliasSuggestion]; conflict {
+		_, importConflict := r.importQualifiers[aliasSuggestion]
+		_, reservedConflict := r.reservedQualifiers[aliasSuggestion]
+		if importConflict || reservedConflict {
 			aliasSuggestion = fmt.Sprintf("%s%d", imprt.Qualifier(), i)
 			continue
 		}
