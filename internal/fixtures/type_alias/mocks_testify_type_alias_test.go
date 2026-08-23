@@ -143,8 +143,8 @@ func (_c *MockInterface1_Foo_Call) Run(run func()) *MockInterface1_Foo_Call {
 	return _c
 }
 
-func (_c *MockInterface1_Foo_Call) Return(v Type) *MockInterface1_Foo_Call {
-	_c.Call.Return(v)
+func (_c *MockInterface1_Foo_Call) Return(typeParam Type) *MockInterface1_Foo_Call {
+	_c.Call.Return(typeParam)
 	return _c
 }
 
@@ -181,8 +181,8 @@ func (_m *MockInterface2) EXPECT() *MockInterface2_Expecter {
 }
 
 // F provides a mock function for the type MockInterface2
-func (_mock *MockInterface2) F(v Type, v1 S, s subpkg.S) {
-	_mock.Called(v, v1, s)
+func (_mock *MockInterface2) F(typeParam Type, s S, s1 subpkg.S) {
+	_mock.Called(typeParam, s, s1)
 	return
 }
 
@@ -192,14 +192,14 @@ type MockInterface2_F_Call struct {
 }
 
 // F is a helper method to define mock.On call
-//   - v Type
-//   - v1 S
-//   - s subpkg.S
-func (_e *MockInterface2_Expecter) F(v any, v1 any, s any) *MockInterface2_F_Call {
-	return &MockInterface2_F_Call{Call: _e.mock.On("F", v, v1, s)}
+//   - typeParam Type
+//   - s S
+//   - s1 subpkg.S
+func (_e *MockInterface2_Expecter) F(typeParam any, s any, s1 any) *MockInterface2_F_Call {
+	return &MockInterface2_F_Call{Call: _e.mock.On("F", typeParam, s, s1)}
 }
 
-func (_c *MockInterface2_F_Call) Run(run func(v Type, v1 S, s subpkg.S)) *MockInterface2_F_Call {
+func (_c *MockInterface2_F_Call) Run(run func(typeParam Type, s S, s1 subpkg.S)) *MockInterface2_F_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 Type
 		if args[0] != nil {
@@ -227,7 +227,7 @@ func (_c *MockInterface2_F_Call) Return() *MockInterface2_F_Call {
 	return _c
 }
 
-func (_c *MockInterface2_F_Call) RunAndReturn(run func(v Type, v1 S, s subpkg.S)) *MockInterface2_F_Call {
+func (_c *MockInterface2_F_Call) RunAndReturn(run func(typeParam Type, s S, s1 subpkg.S)) *MockInterface2_F_Call {
 	_c.Run(run)
 	return _c
 }

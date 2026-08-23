@@ -82,8 +82,8 @@ func (_c *MockUsesAny_GetReader_Call) Run(run func()) *MockUsesAny_GetReader_Cal
 	return _c
 }
 
-func (_c *MockUsesAny_GetReader_Call) Return(v any) *MockUsesAny_GetReader_Call {
-	_c.Call.Return(v)
+func (_c *MockUsesAny_GetReader_Call) Return(anyMoqParam any) *MockUsesAny_GetReader_Call {
+	_c.Call.Return(anyMoqParam)
 	return _c
 }
 
