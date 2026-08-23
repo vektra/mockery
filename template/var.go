@@ -103,6 +103,12 @@ func varNameForType(t types.Type) string {
 	}
 
 	switch t := t.(type) {
+	case *types.Alias:
+		name := deCapitalise(t.Obj().Name())
+		if name == t.Obj().Name() {
+			name += "MoqParam"
+		}
+		return name
 	case *types.Named:
 		if t.Obj().Name() == "error" {
 			return "err"

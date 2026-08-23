@@ -60,9 +60,9 @@ func (mock *MoqUsesAny) GetReader() any {
 	mock.lockGetReader.Unlock()
 	if mock.GetReaderFunc == nil {
 		var (
-			v any
+			anyMoqParam any
 		)
-		return v
+		return anyMoqParam
 	}
 	return mock.GetReaderFunc()
 }
