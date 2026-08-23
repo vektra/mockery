@@ -1200,14 +1200,52 @@
 </blockquote>
 </li>
 </ol>
+<p>When a new Go minor version <code>1.N</code> is released, make the following changes:</p>
+<ol>
+<li>Upgrade <code>golang.org/x/tools</code> to a version that supports Go <code>1.N</code>. This is the
+   dependency that mockery uses to load and parse Go packages, and it is the only
+   dependency that must be upgraded specifically to parse source accepted by the
+   new Go release.</li>
+<li>Update the <code>go</code> directive in the root <code>go.mod</code> to Go <code>1.(N-1)</code>, the older of
+   the two supported Go releases. This records mockery's supported Go version
+   floor. <strong>Do not set the root module's <code>go</code> directive to the newest Go version
+   (<code>1.N</code>).</strong> Doing so would unnecessarily prevent users of Go <code>1.(N-1)</code> from
+   building mockery.</li>
+<li>Update the CI test matrix so that it tests Go <code>1.(N-1)</code> and <code>1.N</code>.</li>
+<li>Update the Go image version in the root <code>Dockerfile</code> to <code>1.N</code>. Unlike the
+   root module's <code>go</code> directive, the Docker image should use the latest supported
+   Go release so that the distributed image can load and parse Go <code>1.N</code> source.</li>
+<li>Regenerate the mocks and run the full test suite with both supported Go
+   versions. Review generated-file diffs: changes in <code>go/types</code> representations
+   or in the standard library can affect generated identifiers or signatures even
+   when mockery's templates did not change.</li>
+</ol>
+<p>For example, when Go 1.27 is the latest stable release, mockery supports Go 1.26
+and Go 1.27, while the root <code>go.mod</code> contains <code>go 1.26</code>. The
+<code>golang.org/x/tools</code> dependency must nevertheless be new enough to understand Go
+1.27 source code.</p>
 <h2 id="go-syntax-updates">Go Syntax Updates<a class="headerlink" href="#go-syntax-updates" title="Permanent link">¶</a></h2>
 <p>When Go releases new syntax, there are two approaches that the mockery project will take:</p>
 <h3 id="mockery-does-not-need-to-interact-with-the-new-syntax">Mockery does not need to interact with the new syntax<a class="headerlink" href="#mockery-does-not-need-to-interact-with-the-new-syntax" title="Permanent link">¶</a></h3>
-<p>In such cases, the mockery project <em>only</em> needs to upgrade its <code>golang.org/x/tools</code> dependency. This is necessary for the parsing step to simply not fail if it encounters new syntax. If mockery does not need to interact or understand this syntax, this dependency upgrade is likely all that's needed.</p>
-<p>Take for example the problems mentioned [here] when mockery upgraded to <code>go 1.24</code> in its <code>go.mod</code> file. In this situation, the project maintainers wanted to allow mockery to not crash when it parses syntax containing generic type alias syntax. However, the project did not <em>parse</em> this syntax, so the only thing we needed to do was upgrade <code>golang.org/x/tools</code>.</p>
+<p>In such cases, <code>golang.org/x/tools</code> is the only implementation dependency that
+needs to be upgraded. This is necessary so that package loading and parsing do
+not fail when they encounter the new syntax. The root module's <code>go</code> directive is
+still advanced to <code>1.(N-1)</code> as described above, but that change records the
+project's support policy; it is not what teaches mockery to parse Go <code>1.N</code>
+syntax.</p>
+<p>For example, when mockery needed to accept source containing generic type alias
+syntax, mockery did not need to interpret that syntax itself. Upgrading
+<code>golang.org/x/tools</code> supplied the required parser support; setting the <code>go</code>
+directive to that newest Go version was neither necessary nor desirable.</p>
 <h3 id="mockery-does-need-to-interact-with-the-new-syntax">Mockery <em>does</em> need to interact with the new syntax<a class="headerlink" href="#mockery-does-need-to-interact-with-the-new-syntax" title="Permanent link">¶</a></h3>
 <p>This situation was encountered in Go 1.18 when generics were introduced. <a href="https://github.com/vektra/mockery/pull/456/files#diff-33ef32bf6c23acb95f5902d7097b7a1d5128ca061167ec0716715b0b9eeaa5f6">In this case</a>, the project needed to be upgraded to <code>go 1.18</code> because mockery now had to directly parse and interpret generic types through the <code>go/ast</code> package. This was needed in conjunction with an upgrade of <code>golang.org/x/tools</code> that handles the actual parsing into <code>go/ast</code> data.</p>
-<p>It's possible in future versions of Go that only the <code>toolchain</code> directive needs to be upgraded to allow mockery to use a more recent <code>go/ast</code> package. The purposes of the <code>go</code> directive is supposed to inform the compiler what features of the Go language the module uses in its own syntax, so in this case as long as mockery does not itself use generics, it can parse generic type information from <em>other</em> projects without needing to pin its <code>go</code> directive to the relevant version.</p>
+<p>The <code>go</code> directive controls the language version used to compile mockery's own
+module and states the minimum Go version required by that module. It does not
+select the version of <code>go/ast</code> or add support for parsing newer source in other
+projects. Parser support comes from <code>golang.org/x/tools</code> and from the Go
+toolchain used to build and run mockery. A <code>toolchain</code> directive may suggest a
+newer toolchain without raising the module's declared minimum Go version, but it
+should only be added when mockery actually needs that behavior.</p>
 
 
 
