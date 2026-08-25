@@ -622,6 +622,7 @@ type Config struct {
 	Anchors               map[string]any `koanf:"_anchors" yaml:"_anchors,omitempty"`
 	BuildTags             *string        `koanf:"build-tags" yaml:"build-tags,omitempty"`
 	ConfigFile            *string        `koanf:"config" yaml:"config,omitempty"`
+	Cpuprofile            *string        `koanf:"cpuprofile" yaml:"cpuprofile,omitempty"`
 	Dir                   *string        `koanf:"dir" yaml:"dir,omitempty"`
 	ExcludeSubpkgRegex    []string       `koanf:"exclude-subpkg-regex" yaml:"exclude-subpkg-regex,omitempty"`
 	ExcludeInterfaceRegex *string        `koanf:"exclude-interface-regex" yaml:"exclude-interface-regex,omitempty"`

@@ -60,6 +60,53 @@ packages:
 	}
 }
 
+func TestNewRootConfigCpuprofile(t *testing.T) {
+	t.Run("from config file", func(t *testing.T) {
+		configFile := path.Join(t.TempDir(), "config.yaml")
+		require.NoError(t, os.WriteFile(configFile, []byte(`
+cpuprofile: /tmp/mockery.prof
+`), 0o600))
+
+		flags := pflag.NewFlagSet("test", pflag.ExitOnError)
+		flags.String("config", "", "")
+		require.NoError(t, flags.Parse([]string{"--config", configFile}))
+
+		cfg, _, err := NewRootConfig(context.Background(), flags)
+		require.NoError(t, err)
+		require.NotNil(t, cfg.Cpuprofile)
+		assert.Equal(t, "/tmp/mockery.prof", *cfg.Cpuprofile)
+	})
+
+	t.Run("from flag", func(t *testing.T) {
+		configFile := path.Join(t.TempDir(), "config.yaml")
+		require.NoError(t, os.WriteFile(configFile, []byte("\n"), 0o600))
+
+		flags := pflag.NewFlagSet("test", pflag.ExitOnError)
+		flags.String("config", "", "")
+		flags.String("cpuprofile", "", "")
+		require.NoError(t, flags.Parse([]string{"--config", configFile, "--cpuprofile", "/tmp/flag.prof"}))
+
+		cfg, _, err := NewRootConfig(context.Background(), flags)
+		require.NoError(t, err)
+		require.NotNil(t, cfg.Cpuprofile)
+		assert.Equal(t, "/tmp/flag.prof", *cfg.Cpuprofile)
+	})
+
+	t.Run("empty by default", func(t *testing.T) {
+		configFile := path.Join(t.TempDir(), "config.yaml")
+		require.NoError(t, os.WriteFile(configFile, []byte("\n"), 0o600))
+
+		flags := pflag.NewFlagSet("test", pflag.ExitOnError)
+		flags.String("config", "", "")
+		require.NoError(t, flags.Parse([]string{"--config", configFile}))
+
+		cfg, _, err := NewRootConfig(context.Background(), flags)
+		require.NoError(t, err)
+		require.NotNil(t, cfg.Cpuprofile)
+		assert.Empty(t, *cfg.Cpuprofile)
+	})
+}
+
 func TestNewRootConfigUnknownEnvVar(t *testing.T) {
 	t.Setenv("MOCKERY_UNKNOWN", "foo")
 	configFile := path.Join(t.TempDir(), "config.yaml")
