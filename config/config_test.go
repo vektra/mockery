@@ -232,7 +232,9 @@ func TestBuildTemplateData(t *testing.T) {
 	)
 	require.NoError(t, err)
 
-	assert.Equal(t, "/config", data.ConfigDir)
+	// ConfigDir comes from filepath.Dir, which cleans to the platform's
+	// separator, so "/config" is spelled the platform's way to compare.
+	assert.Equal(t, filepath.FromSlash("/config"), data.ConfigDir)
 	assert.Equal(t, fmt.Sprintf("%s/internal/foo", wd), data.InterfaceDir)
 	assert.Equal(t, "internal/foo", data.InterfaceDirRelative)
 	assert.Equal(t, fmt.Sprintf("%s/internal/foo/bar.go", wd), data.InterfaceFile)
