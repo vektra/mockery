@@ -317,9 +317,7 @@ func migrateConfig(
 		tbl.Append("deprecated-parameter", "`case` is no longer supported. Use `structname` to specify the name and exported-ness of the output mocks.")
 	}
 	v3.ConfigFile = v2Config.Config
-	if v2Config.Cpuprofile != nil {
-		tbl.Append("deprecated-parameter", "`cpuprofile` is not supported in v3, however we welcome PRs to implement the feature: https://github.com/vektra/mockery/issues/956")
-	}
+	v3.Cpuprofile = v2Config.Cpuprofile
 	v3.Dir = v2Config.Dir
 	if v2Config.DisableConfigSearch != nil {
 		tbl.Append("deprecated-parameter", "`disable-config-search` is permanently disabled in v3.")
@@ -436,7 +434,7 @@ type V2Config struct {
 	BuildTags                   *string        `yaml:"tags"`             // DELETED: use mock-build-tags instead
 	Case                        *string        `yaml:"case"`             // DELETED: caseness is specified using template variables/functions in `structname`.
 	Config                      *string        `yaml:"config"`
-	Cpuprofile                  *string        `yaml:"cpuprofile"` // DELETED: not an option in v3
+	Cpuprofile                  *string        `yaml:"cpuprofile"`
 	Dir                         *string        `yaml:"dir"`
 	DisableConfigSearch         *bool          `yaml:"disable-config-search"` // DEPRECATED: permanently set to `false` in v3
 	DisableDeprecationWarnings  *bool          `yaml:"disable-deprecation-warnings"`

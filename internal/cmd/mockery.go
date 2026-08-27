@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime/pprof"
 	"strings"
 
 	"github.com/vektra/mockery/v3/config"
@@ -52,12 +53,30 @@ func NewRootCmd() (*cobra.Command, error) {
 	pFlags = cmd.PersistentFlags()
 	pFlags.String("config", "", "config file to use")
 	pFlags.String("log-level", os.Getenv("MOCKERY_LOG_LEVEL"), "Level of logging")
+	pFlags.String("cpuprofile", "", "write a cpu profile of the mockery run to this file")
 
 	cmd.AddCommand(NewShowConfigCmd())
 	cmd.AddCommand(NewVersionCmd())
 	cmd.AddCommand(NewInitCmd())
 	cmd.AddCommand(NewMigrateCmd())
 	return cmd, nil
+}
+
+// startCPUProfile begins writing a CPU profile to path. The returned stop
+// function must be called to flush a valid profile and close the file.
+func startCPUProfile(path string) (func() error, error) {
+	f, err := os.Create(path)
+	if err != nil {
+		return nil, stackerr.NewStackErrf(err, "failed to create cpuprofile file")
+	}
+	if err := pprof.StartCPUProfile(f); err != nil {
+		f.Close()
+		return nil, fmt.Errorf("failed to start cpu profile: %w", err)
+	}
+	return func() error {
+		pprof.StopCPUProfile()
+		return f.Close()
+	}, nil
 }
 
 func logFatalErr(ctx context.Context, err error) {
@@ -200,6 +219,18 @@ func (r *RootApp) Run() error {
 	}
 	log.Info().Str("config-file", r.Config.ConfigFileUsed()).Msgf("Starting mockery")
 	ctx := log.WithContext(context.Background())
+
+	if profilePath := *r.Config.Cpuprofile; profilePath != "" {
+		stop, err := startCPUProfile(profilePath)
+		if err != nil {
+			return err
+		}
+		defer func() {
+			if err := stop(); err != nil {
+				log.Err(err).Msg("failed to stop cpu profile")
+			}
+		}()
+	}
 
 	buildTags := strings.Split(*r.Config.BuildTags, " ")
 
