@@ -121,7 +121,7 @@ tasks:
   test:
     deps: [tools.gotestsum]
     cmds:
-      - GOWORK=off ./tools/gotestsum{{exeExt}} --format testname -- -v -coverprofile=coverage.txt ./internal/... ./template_funcs/... ./template/...
+      - GOWORK=off ./tools/gotestsum{{exeExt}} --format testname -- -v -coverprofile=coverage.txt ./config/... ./internal/... ./template_funcs/... ./template/...
     desc: run unit tests
     generates:
       - coverage.txt

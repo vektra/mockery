@@ -232,7 +232,9 @@ func TestBuildTemplateData(t *testing.T) {
 	)
 	require.NoError(t, err)
 
-	assert.Equal(t, "/config", data.ConfigDir)
+	// ConfigDir comes from filepath.Dir, which cleans to the platform's
+	// separator, so "/config" is spelled the platform's way to compare.
+	assert.Equal(t, filepath.FromSlash("/config"), data.ConfigDir)
 	assert.Equal(t, fmt.Sprintf("%s/internal/foo", wd), data.InterfaceDir)
 	assert.Equal(t, "internal/foo", data.InterfaceDirRelative)
 	assert.Equal(t, fmt.Sprintf("%s/internal/foo/bar.go", wd), data.InterfaceFile)
@@ -289,4 +291,77 @@ func TestIsPathOutsideCurrentGoModRepo(t *testing.T) {
 	insideRepo, err := isPathOutsideCurrentGoModRepo(wd, insidePath)
 	require.NoError(t, err)
 	assert.False(t, insideRepo)
+}
+
+func TestShouldExcludeSubpkg(t *testing.T) {
+	tests := []struct {
+		name    string
+		regexes []string
+		pkgPath string
+		want    bool
+		wantErr string
+	}{
+		{
+			name:    "no patterns configured",
+			pkgPath: "github.com/foo/bar/subpkg",
+			want:    false,
+		},
+		{
+			name:    "matching pattern",
+			regexes: []string{"subpkg2"},
+			pkgPath: "github.com/foo/bar/subpkg2",
+			want:    true,
+		},
+		{
+			name:    "non-matching pattern",
+			regexes: []string{"subpkg2"},
+			pkgPath: "github.com/foo/bar/subpkg1",
+			want:    false,
+		},
+		{
+			name:    "unparsable pattern",
+			regexes: []string{"("},
+			pkgPath: "github.com/foo/bar/subpkg1",
+			wantErr: "evaluating `exclude-subpkg-regex`: error parsing regexp: missing closing ): `(`",
+		},
+		{
+			name:    "unparsable pattern after a match",
+			regexes: []string{"subpkg1", "("},
+			pkgPath: "github.com/foo/bar/subpkg1",
+			want:    true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Config{ExcludeSubpkgRegex: tt.regexes}
+			got, err := c.ShouldExcludeSubpkg(tt.pkgPath)
+			if tt.wantErr != "" {
+				require.EqualError(t, err, tt.wantErr)
+				assert.False(t, got)
+				return
+			}
+			require.NoError(t, err)
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestNewRootConfigUnparsableExcludeSubpkgRegex(t *testing.T) {
+	configFile := path.Join(t.TempDir(), "config.yaml")
+	require.NoError(t, os.WriteFile(configFile, []byte(`
+packages:
+  github.com/vektra/mockery/v3/internal/fixtures/recursive_generation:
+    config:
+      recursive: True
+      exclude-subpkg-regex:
+        - "("
+`), 0o600))
+
+	flags := pflag.NewFlagSet("test", pflag.ExitOnError)
+	flags.String("config", "", "")
+
+	require.NoError(t, flags.Parse([]string{"--config", configFile}))
+	_, _, err := NewRootConfig(context.Background(), flags)
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "evaluating `exclude-subpkg-regex`")
 }
