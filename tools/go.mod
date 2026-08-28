@@ -1,6 +1,6 @@
 module github.com/vektra/mockery/tools
 
-go 1.27.0
+go 1.26.0
 
 require (
 	github.com/Masterminds/semver/v3 v3.2.1
