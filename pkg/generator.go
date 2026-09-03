@@ -1134,7 +1134,7 @@ func (g *Generator) generateCalled(list *paramList, returnList *paramList) (prea
 	//
 	// It's okay for us to use the interface{} type, regardless of the actual types, because
 	// Called receives only interface{} anyway.
-	preamble += ("\tvar _ca []interface{}\n")
+	preamble += "\tvar _ca []interface{}\n"
 
 	if namesLen > 1 {
 		formattedParamNames := list.FormattedParamNames()
