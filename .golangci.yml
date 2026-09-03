@@ -1,45 +1,71 @@
+version: "2"
 linters:
-  # Disable all linters.
-  # Default: false
-  disable-all: true
-  # Enable specific linter
-  # https://golangci-lint.run/usage/linters/#enabled-by-default
+  default: none
   enable:
-    - errcheck
-    - gofumpt
-    - gosimple
-    - govet
-    - ineffassign
-    - staticcheck
-    - durationcheck
     - copyloopvar
+    - durationcheck
+    - errcheck
     - gocheckcompilerdirectives
     - gosec
+    - govet
+    - ineffassign
     - loggercheck
     - nilerr
     - prealloc
     - predeclared
     - reassign
     - revive
+    - staticcheck
     - testifylint
-linters-settings:
-  revive:
-    enable-all-rules: false
+  settings:
+    revive:
+      enable-all-rules: false
+      rules:
+        - name: var-naming
+    staticcheck:
+      # In v2, staticcheck absorbed gosimple (S*), stylecheck (ST*) and
+      # quickfix (QF*). ST*/QF* were never enabled before v2, and the S*
+      # checks below were absent from the old gosimple list.
+      checks:
+        - all
+        - -SA1024
+        - -ST*
+        - -QF*
+        - -S1002
+        - -S1013
+        - -S1014
+        - -S1015
+        - -S1022
+        - -S1026
+        - -S1027
+    testifylint:
+      disable-all: true
+      enable:
+        - compares
+        - empty
+        - expected-actual
+        - len
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
     rules:
-      - name: 'var-naming'
-  staticcheck:
-    checks:
-    - all
-    - '-SA1024'
-  testifylint:
-    disable-all: true
-    enable:
-      - compares
-      - empty
-      - expected-actual
-      - len
-issues:
-  exclude-rules:
-    - linters:
-        - revive
-      text: "var-naming: don't use an underscore in package name"
+      - linters:
+          - revive
+        text: 'var-naming: don''t use an underscore in package name'
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofumpt
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

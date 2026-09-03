@@ -503,7 +503,7 @@ func TestConfig_GetInterfaceConfig(t *testing.T) {
 			if tt.want == nil {
 				assert.Nil(t, got)
 			} else {
-				assert.Equal(t, len(tt.want), len(got))
+				assert.Len(t, got, len(tt.want))
 				for idx, entry := range got {
 					if idx >= len(tt.want) {
 						break
@@ -973,7 +973,7 @@ packages:
 				viperObj = tt.v(t)
 			}
 
-			viperObj.SetConfigName((".mockery"))
+			viperObj.SetConfigName(".mockery")
 			if tt.yaml != "" {
 				confPath := pathlib.NewPath(t.TempDir()).Join(".mockery.yaml")
 				require.NoError(t, confPath.WriteFile([]byte(tt.yaml)))
