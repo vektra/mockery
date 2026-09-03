@@ -61,7 +61,6 @@ func NewParser(buildTags []string, opts ...func(*Parser)) *Parser {
 		packages.NeedTypesSizes |
 		packages.NeedSyntax |
 		packages.NeedTypesInfo |
-		packages.NeedDeps |
 		packages.NeedImports |
 		packages.NeedName |
 		packages.NeedFiles |
