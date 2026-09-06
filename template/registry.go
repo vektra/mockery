@@ -3,6 +3,7 @@ package template
 import (
 	"context"
 	"fmt"
+	"go/token"
 	"go/types"
 	"sort"
 
@@ -115,6 +116,36 @@ func (r *Registry) AddImport(pkgName string, pkgPath string) *Package {
 		name: pkgName,
 		path: pkgPath,
 	})
+}
+
+// AddImportWithAlias добавляет импорт с точным именем, возвращая ошибку при конфликте.
+// Повторное добавление того же пути с тем же именем возвращает существующий импорт.
+func (r *Registry) AddImportWithAlias(alias string, pkgPath string) (*Package, error) {
+	if !token.IsIdentifier(alias) || alias == "_" {
+		return nil, fmt.Errorf("invalid import name %q: expected a Go identifier other than _", alias)
+	}
+	if pkgPath == "" {
+		return nil, fmt.Errorf("import %q requires a non-empty package path", alias)
+	}
+	if r.srcPkg != nil && pkgPath == r.srcPkg.PkgPath && r.inPackage {
+		return nil, fmt.Errorf("cannot import source package %q from itself; use unqualified types instead", pkgPath)
+	}
+	if imprt, ok := r.imports[pkgPath]; ok {
+		if imprt.Qualifier() != alias {
+			return nil, fmt.Errorf("cannot import %q as %q: already imported as %q", pkgPath, alias, imprt.Qualifier())
+		}
+		return imprt, nil
+	}
+	if imprt, ok := r.importQualifiers[alias]; ok {
+		return nil, fmt.Errorf("cannot import %q as %q: name already used by import %q", pkgPath, alias, imprt.Path())
+	}
+	if _, ok := r.reservedQualifiers[alias]; ok {
+		return nil, fmt.Errorf("cannot import %q as %q: name already declared in the destination package", pkgPath, alias)
+	}
+
+	imprt := r.AddImport(alias, pkgPath)
+	imprt.Alias = alias
+	return imprt, nil
 }
 
 func (r *Registry) addImport(ctx context.Context, pkg TypesPackage) *Package {
