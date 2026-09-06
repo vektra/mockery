@@ -120,11 +120,40 @@ matryer-style mocks are far simpler, and probably more intuitive, than testify-s
 
 | key | type | description |
 |-----|------|-------------|
+| `add-import` | `#!yaml list` | Add imports used by `struct-preamble`. Each entry requires `name` (the exact Go import name) and `pkgPath` (the import path). |
 | `boilerplate-file`  | `#!yaml string` | Specify a path to a file that contains comments you want displayed at the top of all generated mock files. This is commonly used to display license headers at the top of your source code. |
 | `mock-build-tags` | `#!yaml string` | Set the build tags of the generated mocks. Read more about the [format](https://pkg.go.dev/cmd/go#hdr-Build_constraints). |
 | `skip-ensure` | `#!yaml bool` | Suppress mock implementation check, avoid import cycle if mocks generated outside of the tested package. |
 | `stub-impl` | `#!yaml bool` | Return zero values when no mock implementation is provided, do not panic. |
+| `struct-preamble` | `#!yaml string` | Insert Go code at the start of the mock struct, before its generated fields. This can embed types or add fields. |
 | `with-resets` | `#!yaml bool` | Generates methods that allow resetting calls made to the mocks. |
+
+### Embedding types
+
+Some interfaces require embedding a type from their package to implement an unexported method. For example, gRPC server interfaces require an embedded `Unimplemented<ServiceName>Server`. Configure each mock's `struct-preamble` and any imports it needs:
+
+```yaml
+template: matryer
+packages:
+  example.com/project/gen:
+    config:
+      dir: ./mocks
+      pkgname: mocks
+    interfaces:
+      GreeterServer:
+        config:
+          template-data:
+            struct-preamble: gen.UnimplementedGreeterServer
+            add-import:
+              - name: gen
+                pkgPath: example.com/project/gen
+```
+
+The preamble is literal Go code, not a Go template. A YAML block scalar (`|`) can contain multiple embedded types or fields. For a generic mock, use its generated type parameter names in the preamble, for example `gen.UnimplementedStore[T]`. When generating in the source package, use the unqualified type name and omit its `add-import` entry.
+
+`name` is the exact qualifier used in the preamble; it may differ from the imported package's declared name. It must be a Go identifier; blank (`_`) and dot (`.`) imports are not supported. Imports from all mocks in the same generated file are combined, and repeated entries with the same path and name are deduplicated. If the name conflicts with another import or a known package declaration when generating in place, generation fails. A package already imported by a method signature must use its existing qualifier. These checks avoid silently renaming an import while leaving the literal preamble unchanged.
+
+Mockery does not type-check the preamble. Compile and test the generated code to verify that the embedded types exist and that the mock implements the interface. These options are specific to the `matryer` template.
 
 
 ### Schema
