@@ -50,3 +50,7 @@ type ReplaceGeneric[
 type ReplaceGenericSelf[T any] interface {
 	A() T
 }
+
+type ConstructorTypeParams[helper, ok any] interface {
+	Get() string
+}
