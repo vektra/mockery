@@ -16,10 +16,19 @@ func NewMockGenericMultipleTypes[T1 any, T2 any, T3 any](t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockGenericMultipleTypes[T1, T2, T3] {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockGenericMultipleTypes[T1, T2, T3]{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -102,10 +111,19 @@ func NewMockIndexListExpr(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockIndexListExpr {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockIndexListExpr{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }

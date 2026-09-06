@@ -16,10 +16,19 @@ func NewMockGetterIfaceTypedParam[a comparable](t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockGetterIfaceTypedParam[a] {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockGetterIfaceTypedParam[a]{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }

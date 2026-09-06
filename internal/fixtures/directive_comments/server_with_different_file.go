@@ -18,10 +18,19 @@ func NewFunServerWithDifferentFile(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *FunServerWithDifferentFile {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &FunServerWithDifferentFile{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -91,10 +100,19 @@ func NewAnotherFunServerWithDifferentFile(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *AnotherFunServerWithDifferentFile {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &AnotherFunServerWithDifferentFile{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
