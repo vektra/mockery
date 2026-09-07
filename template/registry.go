@@ -118,8 +118,8 @@ func (r *Registry) AddImport(pkgName string, pkgPath string) *Package {
 	})
 }
 
-// AddImportWithAlias добавляет импорт с точным именем, возвращая ошибку при конфликте.
-// Повторное добавление того же пути с тем же именем возвращает существующий импорт.
+// AddImportWithAlias adds an import with the exact alias or returns an error on
+// conflict. Adding the same path and alias again returns the existing import.
 func (r *Registry) AddImportWithAlias(alias string, pkgPath string) (*Package, error) {
 	if !token.IsIdentifier(alias) || alias == "_" {
 		return nil, fmt.Errorf("invalid import name %q: expected a Go identifier other than _", alias)
