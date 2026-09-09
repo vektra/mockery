@@ -25,10 +25,19 @@ func NewMockUsesAny(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockUsesAny {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockUsesAny{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -98,10 +107,19 @@ func NewMockFooer(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockFooer {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockFooer{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -269,10 +287,19 @@ func NewMockMapFunc(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockMapFunc {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockMapFunc{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -347,10 +374,19 @@ func NewMockAsyncProducer(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockAsyncProducer {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockAsyncProducer{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -512,10 +548,19 @@ func NewMockConsulLock(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockConsulLock {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockConsulLock{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -645,10 +690,19 @@ func NewMockKeyManager(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockKeyManager {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockKeyManager{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -742,10 +796,19 @@ func NewMockBlank(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockBlank {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockBlank{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -820,10 +883,19 @@ func NewMockExpecterAndRolledVariadic(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockExpecterAndRolledVariadic {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockExpecterAndRolledVariadic{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -1131,10 +1203,19 @@ func NewMockExpecter(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockExpecter {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockExpecter{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -1444,10 +1525,19 @@ func NewMockVariadicNoReturnInterface(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockVariadicNoReturnInterface {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockVariadicNoReturnInterface{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -1525,10 +1615,19 @@ func NewMockFuncArgsCollision(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockFuncArgsCollision {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockFuncArgsCollision{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -1606,10 +1705,19 @@ func NewMockRequesterGenerics[TAny any, TComparable comparable, TSigned constrai
 	mock.TestingT
 	Cleanup(func())
 }) *MockRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -1832,10 +1940,19 @@ func NewMockGetInt(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockGetInt {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockGetInt{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -1903,10 +2020,19 @@ func NewMockGetGeneric[T constraints.Integer](t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockGetGeneric[T] {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockGetGeneric[T]{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -1976,10 +2102,19 @@ func NewMockEmbeddedGet[T constraints.Signed](t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockEmbeddedGet[T] {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockEmbeddedGet[T]{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -2049,10 +2184,19 @@ func NewMockReplaceGeneric[TImport any, TConstraint constraints.Signed, TKeep an
 	mock.TestingT
 	Cleanup(func())
 }) *MockReplaceGeneric[TImport, TConstraint, TKeep] {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockReplaceGeneric[TImport, TConstraint, TKeep]{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -2221,10 +2365,19 @@ func NewMockReplaceGenericSelf[T any](t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockReplaceGenericSelf[T] {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockReplaceGenericSelf[T]{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -2288,16 +2441,105 @@ func (_c *MockReplaceGenericSelf_A_Call[T]) RunAndReturn(run func() T) *MockRepl
 	return _c
 }
 
+// NewMockConstructorTypeParams creates a new instance of MockConstructorTypeParams. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewMockConstructorTypeParams[helper any, ok any](t interface {
+	mock.TestingT
+	Cleanup(func())
+}) *MockConstructorTypeParams[helper, ok] {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
+	mock := &MockConstructorTypeParams[helper, ok]{}
+	mock.Mock.Test(t)
+
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
+
+	return mock
+}
+
+// MockConstructorTypeParams is an autogenerated mock type for the ConstructorTypeParams type
+type MockConstructorTypeParams[helper any, ok any] struct {
+	mock.Mock
+}
+
+type MockConstructorTypeParams_Expecter[helper any, ok any] struct {
+	mock *mock.Mock
+}
+
+func (_m *MockConstructorTypeParams[helper, ok]) EXPECT() *MockConstructorTypeParams_Expecter[helper, ok] {
+	return &MockConstructorTypeParams_Expecter[helper, ok]{mock: &_m.Mock}
+}
+
+// Get provides a mock function for the type MockConstructorTypeParams
+func (_mock *MockConstructorTypeParams[helper, ok]) Get() string {
+	ret := _mock.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for Get")
+	}
+
+	var r0 string
+	if returnFunc, ok := ret.Get(0).(func() string); ok {
+		r0 = returnFunc()
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+	return r0
+}
+
+// MockConstructorTypeParams_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
+type MockConstructorTypeParams_Get_Call[helper any, ok any] struct {
+	*mock.Call
+}
+
+// Get is a helper method to define mock.On call
+func (_e *MockConstructorTypeParams_Expecter[helper, ok]) Get() *MockConstructorTypeParams_Get_Call[helper, ok] {
+	return &MockConstructorTypeParams_Get_Call[helper, ok]{Call: _e.mock.On("Get")}
+}
+
+func (_c *MockConstructorTypeParams_Get_Call[helper, ok]) Run(run func()) *MockConstructorTypeParams_Get_Call[helper, ok] {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *MockConstructorTypeParams_Get_Call[helper, ok]) Return(s string) *MockConstructorTypeParams_Get_Call[helper, ok] {
+	_c.Call.Return(s)
+	return _c
+}
+
+func (_c *MockConstructorTypeParams_Get_Call[helper, ok]) RunAndReturn(run func() string) *MockConstructorTypeParams_Get_Call[helper, ok] {
+	_c.Call.Return(run)
+	return _c
+}
+
 // NewMockHasConflictingNestedImports creates a new instance of MockHasConflictingNestedImports. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockHasConflictingNestedImports(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockHasConflictingNestedImports {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockHasConflictingNestedImports{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -2425,10 +2667,19 @@ func NewMockImportsSameAsPackage(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockImportsSameAsPackage {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockImportsSameAsPackage{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -2582,10 +2833,19 @@ func NewMockGenericInterface[M any](t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockGenericInterface[M] {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockGenericInterface[M]{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -2660,10 +2920,19 @@ func NewMockInstantiatedGenericInterface(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockInstantiatedGenericInterface {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockInstantiatedGenericInterface{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -2738,10 +3007,19 @@ func NewMockMyReader(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockMyReader {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockMyReader{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -2825,10 +3103,19 @@ func NewMockIssue766(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockIssue766 {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockIssue766{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -2914,10 +3201,19 @@ func NewMockMapToInterface(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockMapToInterface {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockMapToInterface{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -2989,10 +3285,19 @@ func NewMockSibling(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockSibling {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockSibling{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -3049,10 +3354,19 @@ func NewMockUsesOtherPkgIface(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockUsesOtherPkgIface {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockUsesOtherPkgIface{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -3116,10 +3430,19 @@ func NewMockNilRun(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockNilRun {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockNilRun{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -3183,10 +3506,19 @@ func NewMockPanicOnNoReturnValue(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockPanicOnNoReturnValue {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockPanicOnNoReturnValue{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -3254,10 +3586,19 @@ func NewMockRequester(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockRequester {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockRequester{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -3341,10 +3682,19 @@ func NewMockRequester2(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockRequester2 {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockRequester2{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -3419,10 +3769,19 @@ func NewMockRequester3(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockRequester3 {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockRequester3{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -3490,10 +3849,19 @@ func NewMockRequester4(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockRequester4 {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockRequester4{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -3550,10 +3918,19 @@ func NewMockRequesterArgSameAsImport(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockRequesterArgSameAsImport {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockRequesterArgSameAsImport{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -3630,10 +4007,19 @@ func NewMockRequesterArgSameAsNamedImport(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockRequesterArgSameAsNamedImport {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockRequesterArgSameAsNamedImport{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -3710,10 +4096,19 @@ func NewMockRequesterArgSameAsPkg(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockRequesterArgSameAsPkg {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockRequesterArgSameAsPkg{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -3777,10 +4172,19 @@ func NewMockRequesterArray(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockRequesterArray {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockRequesterArray{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -3866,10 +4270,19 @@ func NewMockRequesterElided(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockRequesterElided {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockRequesterElided{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -3950,10 +4363,19 @@ func NewMockRequesterIface(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockRequesterIface {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockRequesterIface{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -4023,10 +4445,19 @@ func NewMockRequesterNS(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockRequesterNS {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockRequesterNS{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -4110,10 +4541,19 @@ func NewMockRequesterPtr(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockRequesterPtr {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockRequesterPtr{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -4199,10 +4639,19 @@ func NewMockRequesterReturnElided(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockRequesterReturnElided {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockRequesterReturnElided{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -4358,10 +4807,19 @@ func NewMockRequesterSlice(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockRequesterSlice {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockRequesterSlice{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -4447,10 +4905,19 @@ func newMockrequesterUnexported(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *mockrequesterUnexported {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &mockrequesterUnexported{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -4507,10 +4974,19 @@ func NewMockRequesterVariadicOneArgument(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockRequesterVariadicOneArgument {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockRequesterVariadicOneArgument{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -4786,10 +5262,19 @@ func NewMockRequesterVariadic(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockRequesterVariadic {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockRequesterVariadic{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -5069,10 +5554,19 @@ func NewMockExample(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockExample {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockExample{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -5244,10 +5738,19 @@ func NewMockA(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockA {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockA{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -5324,10 +5827,19 @@ func NewMockStructWithTag(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockStructWithTag {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockStructWithTag{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -5440,10 +5952,19 @@ func NewMockUnsafeInterface(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockUnsafeInterface {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockUnsafeInterface{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -5507,10 +6028,19 @@ func NewMockVariadic(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockVariadic {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockVariadic{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -5591,10 +6121,19 @@ func NewMockVariadicReturnFunc(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockVariadicReturnFunc {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockVariadicReturnFunc{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -5671,10 +6210,19 @@ func NewMockVariadicWithMultipleReturnsUnrollVariadic(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockVariadicWithMultipleReturnsUnrollVariadic {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockVariadicWithMultipleReturnsUnrollVariadic{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -5777,10 +6325,19 @@ func NewMockVariadicWithMultipleReturns(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockVariadicWithMultipleReturns {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockVariadicWithMultipleReturns{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -5879,10 +6436,19 @@ func NewMockVariadicWithNoReturns(t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockVariadicWithNoReturns {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockVariadicWithNoReturns{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }

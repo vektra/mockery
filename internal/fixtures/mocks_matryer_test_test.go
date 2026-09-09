@@ -1842,6 +1842,82 @@ func (mock *MoqReplaceGenericSelf[T]) ResetCalls() {
 	mock.lockA.Unlock()
 }
 
+// Ensure that MoqConstructorTypeParams does implement ConstructorTypeParams.
+// If this is not the case, regenerate this file with mockery.
+var _ ConstructorTypeParams[any, any] = &MoqConstructorTypeParams[any, any]{}
+
+// MoqConstructorTypeParams is a mock implementation of ConstructorTypeParams.
+//
+//	func TestSomethingThatUsesConstructorTypeParams(t *testing.T) {
+//
+//		// make and configure a mocked ConstructorTypeParams
+//		mockedConstructorTypeParams := &MoqConstructorTypeParams{
+//			GetFunc: func() string {
+//				panic("mock out the Get method")
+//			},
+//		}
+//
+//		// use mockedConstructorTypeParams in code that requires ConstructorTypeParams
+//		// and then make assertions.
+//
+//	}
+type MoqConstructorTypeParams[Helper any, Ok any] struct {
+	// GetFunc mocks the Get method.
+	GetFunc func() string
+
+	// calls tracks calls to the methods.
+	calls struct {
+		// Get holds details about calls to the Get method.
+		Get []struct {
+		}
+	}
+	lockGet sync.RWMutex
+}
+
+// Get calls GetFunc.
+func (mock *MoqConstructorTypeParams[helper, ok]) Get() string {
+	callInfo := struct {
+	}{}
+	mock.lockGet.Lock()
+	mock.calls.Get = append(mock.calls.Get, callInfo)
+	mock.lockGet.Unlock()
+	if mock.GetFunc == nil {
+		var (
+			s string
+		)
+		return s
+	}
+	return mock.GetFunc()
+}
+
+// GetCalls gets all the calls that were made to Get.
+// Check the length with:
+//
+//	len(mockedConstructorTypeParams.GetCalls())
+func (mock *MoqConstructorTypeParams[helper, ok]) GetCalls() []struct {
+} {
+	var calls []struct {
+	}
+	mock.lockGet.RLock()
+	calls = mock.calls.Get
+	mock.lockGet.RUnlock()
+	return calls
+}
+
+// ResetGetCalls reset all the calls that were made to Get.
+func (mock *MoqConstructorTypeParams[helper, ok]) ResetGetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqConstructorTypeParams[helper, ok]) ResetCalls() {
+	mock.lockGet.Lock()
+	mock.calls.Get = nil
+	mock.lockGet.Unlock()
+}
+
 // Ensure that MoqHasConflictingNestedImports does implement HasConflictingNestedImports.
 // If this is not the case, regenerate this file with mockery.
 var _ HasConflictingNestedImports = &MoqHasConflictingNestedImports{}
