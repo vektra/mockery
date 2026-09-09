@@ -16,6 +16,12 @@ package {{.PkgName}}
 	{{- $_ := .Registry.AddImport "sync" "sync" }}
 {{- end }}
 
+{{- range .Interfaces }}
+	{{- range (index .TemplateData "add-import") }}
+		{{- $_ := $.Registry.AddImportWithAlias .name .pkgPath }}
+	{{- end }}
+{{- end }}
+
 {{$srcPkgQualifier := $.SrcPkgQualifier}}
 {{- if not (index .TemplateData "skip-ensure") }}
 	{{- $_ := $.Registry.AddImport $.Registry.SrcPkgName $.Registry.SrcPkg.PkgPath }}
@@ -77,6 +83,9 @@ type {{.StructName}}
 			{{- if $index}}, {{end}}{{$param.Name | exported}} {{$param.TypeString}}
 	{{- end -}}]
 {{- end }} struct {
+{{- with (index .TemplateData "struct-preamble") }}
+	{{ . }}
+{{- end }}
 {{- range .Methods}}
 	// {{.Name}}Func mocks the {{.Name}} method.
 	{{.Name}}Func func({{.ArgList}}) {{.ReturnArgTypeList}}

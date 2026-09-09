@@ -4,6 +4,24 @@
     "type": "object",
     "additionalProperties": false,
     "properties": {
+      "add-import": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "pkgPath": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": ["name", "pkgPath"]
+        }
+      },
       "boilerplate-file": {
         "type": "string"
       },
@@ -15,6 +33,9 @@
       },
       "stub-impl": {
         "type": "boolean"
+      },
+      "struct-preamble": {
+        "type": "string"
       },
       "with-resets": {
         "type": "boolean"
