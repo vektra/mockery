@@ -23,8 +23,10 @@ package {{.PkgName}}
 {{- end }}
 
 {{$srcPkgQualifier := $.SrcPkgQualifier}}
-{{- if not (index .TemplateData "skip-ensure") }}
-	{{- $_ := $.Registry.AddImport $.Registry.SrcPkgName $.Registry.SrcPkg.PkgPath }}
+{{- range .Interfaces }}
+	{{- if not (index .TemplateData "skip-ensure") }}
+		{{- $_ := $.Registry.AddImport $.Registry.SrcPkgName $.Registry.SrcPkg.PkgPath }}
+	{{- end }}
 {{- end }}
 
 import (
