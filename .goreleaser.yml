@@ -1,4 +1,5 @@
 ---
+version: 2
 project_name: mockery
 before:
     hooks:
@@ -29,7 +30,7 @@ archives:
 checksum:
     name_template: "checksum.txt"
 snapshot:
-    name_template: "{{ .Tag }}-next"
+    version_template: "{{ .Tag }}-next"
 changelog:
     sort: asc
     use: github-native
