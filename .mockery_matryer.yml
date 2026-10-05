@@ -75,3 +75,42 @@ packages:
       OutputDirWithSamePkgNameAsSrc:
         config:
           dir: "{{.InterfaceDir}}/output_dir"
+  github.com/vektra/mockery/v3/internal/fixtures/matryer_skip_ensure/ensure:
+    config:
+      all: false
+      dir: internal/fixtures/matryer_skip_ensure/mocks
+      pkgname: skipensuremocks
+    interfaces:
+      First:
+        config:
+          filename: mocks_matryer_interface_skip_test.go
+          structname: MoqFirstSkipEnsure
+          template-data:
+            skip-ensure: True
+      Typed:
+        config:
+          filename: mocks_matryer_method_import_test.go
+          template-data:
+            skip-ensure: True
+  github.com/vektra/mockery/v3/internal/fixtures/matryer_skip_ensure/skip:
+    config:
+      all: false
+      dir: internal/fixtures/matryer_skip_ensure/mocks
+      pkgname: skipensuremocks
+      template-data:
+        skip-ensure: True
+    interfaces:
+      First:
+        configs:
+          - filename: mocks_matryer_interface_ensure_test.go
+            structname: MoqFirstEnsure
+            template-data:
+              skip-ensure: False
+          - filename: mocks_matryer_mixed_test.go
+            structname: MoqFirstMixed
+            template-data:
+              skip-ensure: False
+      Second:
+        config:
+          filename: mocks_matryer_mixed_test.go
+          structname: MoqSecondMixed
