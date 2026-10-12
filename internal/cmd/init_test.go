@@ -29,6 +29,7 @@ log-level: info
 structname: '{{.Mock}}{{.InterfaceName}}'
 pkgname: '{{.SrcPackageName}}'
 recursive: false
+resolve-internal-aliases: false
 require-template-schema-exists: true
 template: testify
 template-schema: '{{.Template}}.schema.json'
