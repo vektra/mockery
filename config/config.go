@@ -90,6 +90,7 @@ func NewDefaultKoanf(ctx context.Context) (*koanf.Koanf, error) {
 		StructName:                  addr("{{.Mock}}{{.InterfaceName}}"),
 		PkgName:                     addr("{{.SrcPackageName}}"),
 		Recursive:                   addr(false),
+		ResolveInternalAliases:      addr(false),
 		RequireTemplateSchemaExists: addr(true),
 		Template:                    addr("testify"),
 		TemplateData:                map[string]any{},
@@ -672,6 +673,10 @@ type Config struct {
 	Recursive             *bool             `koanf:"recursive" yaml:"recursive,omitempty"`
 	// ReplaceType is a nested map of format map["package path"]["type name"]*ReplaceType
 	ReplaceType map[string]map[string]*ReplaceType `koanf:"replace-type" yaml:"replace-type,omitempty"`
+	// ResolveInternalAliases renders public aliases (`type X = internal.X`) in
+	// place of the internal types they point at, so generated mocks do not
+	// import packages that can't be imported from outside their module.
+	ResolveInternalAliases *bool `koanf:"resolve-internal-aliases" yaml:"resolve-internal-aliases,omitempty"`
 	// RequireTemplateSchemaExists sets whether mockery will fail if the specified
 	// template did not have an associated JSON schema.
 	RequireTemplateSchemaExists *bool          `koanf:"require-template-schema-exists" yaml:"require-template-schema-exists,omitempty"`

@@ -71,6 +71,7 @@ nav:
     - include-auto-generated.md
     - inpackage.md
     - replace-type.md
+    - resolve-internal-aliases.md
     - generate-directive.md
   - Notes:
     - faq.md
