@@ -172,13 +172,13 @@ All of the functions defined in [`StringManipulationFuncs`](https://pkg.go.dev/g
 Config sources
 --------------
 
-Config can not only be specified from the `.yml` file, but also from CLI parameters (where available) and environment variables. For example, specifying a boolean value for a particular parameter called `enable-feature` from each config source would look like this:
+The parameter table above describes YAML configuration keys, not a list of CLI flags. Only some keys are also available on the command line; run `mockery --help` to see the flags supported by your version. For example, `log-level` can be specified through each config source:
 
 | source               | value                        |
 |----------------------|------------------------------|
-| command line         | `--enable-feature=true`       |
-| Environment variable | `MOCKERY_ENABLE_FEATURE=True` |
-| yaml                 | `#!yaml enable-feature: True` |
+| command line         | `--log-level=debug`       |
+| Environment variable | `MOCKERY_LOG_LEVEL=debug` |
+| yaml                 | `#!yaml log-level: debug` |
 
 Config is loaded from each source in the following order:
 
@@ -186,3 +186,30 @@ Config is loaded from each source in the following order:
 2. Environment variables
 3. Config file
 4. CLI Parameters
+
+
+### Migrating v2 directory-based commands
+
+In v3, `--dir`, `--all`, and `--inpackage` are not CLI flags. To replace a v2 command such as `mockery --dir internal/foo --all --inpackage`, select the source package in a configuration file:
+
+```yaml title=".mockery.yml"
+all: true
+dir: '{{.InterfaceDir}}'
+filename: mocks_test.go
+pkgname: '{{.SrcPackageName}}'
+structname: '{{.Mock}}{{.InterfaceName}}'
+template: testify
+packages:
+  example.com/project/internal/foo:
+  example.com/project/internal/bar:
+```
+
+Replace `example.com/project` with your module path from `go.mod`. The keys under `packages` are Go import paths, not filesystem directories. The YAML `dir` parameter controls the **output** directory; it does not select the source directory as v2's `--dir` did. Here, `dir` and `pkgname` put each mock in its source package, which v3 detects automatically.
+
+List the packages you need in one file, then run mockery once from the module root:
+
+```sh
+mockery --config .mockery.yml
+```
+
+The example generates mocks for all interfaces in the two listed packages. Set `recursive: true` to include their subpackages as well. If you prefer to opt individual interfaces into generation from their source files, see the [`//mockery:generate` directive](generate-directive.md).
