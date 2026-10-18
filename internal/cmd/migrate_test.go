@@ -12,6 +12,7 @@ import (
 
 var v2ConfigExample string = `
 quiet: False
+profile: out.prof
 disable-version-string: True
 with-expecter: True
 mockname: "{{.InterfaceName}}"
@@ -158,6 +159,7 @@ var expectedV3Conf string = `_anchors:
   inpackage: false
   mockname: Mock{{.InterfaceName}}
   outpkg: '{{.PackageName}}_test'
+cpuprofile: out.prof
 structname: '{{.InterfaceName}}'
 pkgname: mocks
 template: testify

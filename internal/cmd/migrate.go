@@ -317,7 +317,11 @@ func migrateConfig(
 		tbl.Append("deprecated-parameter", "`case` is no longer supported. Use `structname` to specify the name and exported-ness of the output mocks.")
 	}
 	v3.ConfigFile = v2Config.Config
-	v3.Cpuprofile = v2Config.Cpuprofile
+	if v2Config.Profile != nil && *v2Config.Profile != "" {
+		v3.Cpuprofile = v2Config.Profile
+	} else {
+		v3.Cpuprofile = v2Config.Cpuprofile
+	}
 	v3.Dir = v2Config.Dir
 	if v2Config.DisableConfigSearch != nil {
 		tbl.Append("deprecated-parameter", "`disable-config-search` is permanently disabled in v3.")
