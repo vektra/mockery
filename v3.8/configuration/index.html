@@ -552,6 +552,25 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Config sources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#migrating-v2-directory-based-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Migrating v2 directory-based commands
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -1156,6 +1175,25 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Config sources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#migrating-v2-directory-based-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Migrating v2 directory-based commands
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -1524,7 +1562,7 @@ example:</p>
 <h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">¶</a></h3>
 <p>All of the functions defined in <a href="https://pkg.go.dev/github.com/vektra/mockery/v3/shared#pkg-variables"><code>StringManipulationFuncs</code></a> are available to templated parameters.</p>
 <h2 id="config-sources">Config sources<a class="headerlink" href="#config-sources" title="Permanent link">¶</a></h2>
-<p>Config can not only be specified from the <code>.yml</code> file, but also from CLI parameters (where available) and environment variables. For example, specifying a boolean value for a particular parameter called <code>enable-feature</code> from each config source would look like this:</p>
+<p>The parameter table above describes YAML configuration keys, not a list of CLI flags. Only some keys are also available on the command line; run <code>mockery --help</code> to see the flags supported by your version. For example, <code>log-level</code> can be specified through each config source:</p>
 <table>
 <thead>
 <tr>
@@ -1535,15 +1573,15 @@ example:</p>
 <tbody>
 <tr>
 <td>command line</td>
-<td><code>--enable-feature=true</code></td>
+<td><code>--log-level=debug</code></td>
 </tr>
 <tr>
 <td>Environment variable</td>
-<td><code>MOCKERY_ENABLE_FEATURE=True</code></td>
+<td><code>MOCKERY_LOG_LEVEL=debug</code></td>
 </tr>
 <tr>
 <td>yaml</td>
-<td><code class="highlight"><span class="nt">enable-feature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span></code></td>
+<td><code class="highlight"><span class="nt">log-level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">debug</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -1554,6 +1592,23 @@ example:</p>
 <li>Config file</li>
 <li>CLI Parameters</li>
 </ol>
+<h3 id="migrating-v2-directory-based-commands">Migrating v2 directory-based commands<a class="headerlink" href="#migrating-v2-directory-based-commands" title="Permanent link">¶</a></h3>
+<p>In v3, <code>--dir</code>, <code>--all</code>, and <code>--inpackage</code> are not CLI flags. To replace a v2 command such as <code>mockery --dir internal/foo --all --inpackage</code>, select the source package in a configuration file:</p>
+<div class="highlight"><span class="filename">.mockery.yml</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">all</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nt">dir</span><span class="p">:</span><span class="w"> </span><span class="s">'{{.InterfaceDir}}'</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mocks_test.go</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nt">pkgname</span><span class="p">:</span><span class="w"> </span><span class="s">'{{.SrcPackageName}}'</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nt">structname</span><span class="p">:</span><span class="w"> </span><span class="s">'{{.Mock}}{{.InterfaceName}}'</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">testify</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nt">packages</span><span class="p">:</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="nt">example.com/project/internal/foo</span><span class="p">:</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="nt">example.com/project/internal/bar</span><span class="p">:</span>
+</code></pre></div>
+<p>Replace <code>example.com/project</code> with your module path from <code>go.mod</code>. The keys under <code>packages</code> are Go import paths, not filesystem directories. The YAML <code>dir</code> parameter controls the <strong>output</strong> directory; it does not select the source directory as v2's <code>--dir</code> did. Here, <code>dir</code> and <code>pkgname</code> put each mock in its source package, which v3 detects automatically.</p>
+<p>List the packages you need in one file, then run mockery once from the module root:</p>
+<div class="highlight"><span class="filename">Bash</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>mockery<span class="w"> </span>--config<span class="w"> </span>.mockery.yml
+</code></pre></div>
+<p>The example generates mocks for all interfaces in the two listed packages. Set <code>recursive: true</code> to include their subpackages as well. If you prefer to opt individual interfaces into generation from their source files, see the <a href="../generate-directive/"><code>//mockery:generate</code> directive</a>.</p>
 
 
 
