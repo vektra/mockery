@@ -329,6 +329,11 @@ func migrateConfig(
 	}
 	v3.ConfigFile = v2Config.Config
 	v3.Cpuprofile = v2Config.Cpuprofile
+	if v2Config.Profile != nil && *v2Config.Profile != "" {
+		// `profile` was an alias of `cpuprofile` in v2 that took precedence
+		// over it.
+		v3.Cpuprofile = v2Config.Profile
+	}
 	v3.Dir = v2Config.Dir
 	if v2Config.DisableConfigSearch != nil {
 		tbl.Append("deprecated-parameter", "`disable-config-search` is permanently disabled in v3.")
@@ -389,9 +394,6 @@ func migrateConfig(
 	}
 	if v2Config.Print != nil && *v2Config.Print == true {
 		tbl.Append("deprecated-parameter", "`print` is not supported in v3.")
-	}
-	if v2Config.Profile != nil {
-		tbl.Append("deprecated-parameter", "`profile` is not supported in v3, but PRs are welcome to implement it: https://github.com/vektra/mockery/issues/955")
 	}
 	if v2Config.Quiet != nil && *v2Config.Quiet == true {
 		tbl.Append("deprecated-parameter", "`quiet` is not supported in v3. Use `log-level` instead.")
@@ -473,7 +475,7 @@ type V2Config struct {
 	Output                      *string        `yaml:"output"`        // DELETED: Use `packages` config
 	Packageprefix               *string        `yaml:"packageprefix"` // DEPRECATED: use `pkgname`
 	Print                       *bool          `yaml:"print"`         // DEPRECATED: printing mocks not an option
-	Profile                     *string        `yaml:"profile"`       // DELETED: not an option in v3
+	Profile                     *string        `yaml:"profile"`       // MOVED: moved to `cpuprofile`
 	Quiet                       *bool          `yaml:"quiet"`         // DEPRECATED: deleted in v3 in favor of log-level
 	Recursive                   *bool          `yaml:"recursive"`
 	ReplaceType                 []string       `yaml:"replace-type"`       // DEPRECATED: moved to new schema in v3

@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/vektra/mockery/v3/config"
 )
 
 var v2ConfigExample string = `
@@ -350,6 +351,56 @@ func TestCheckDeprecatedTemplateVariables(t *testing.T) {
 				messages = append(messages, msg)
 			}
 			assert.ElementsMatch(t, tt.expected, messages)
+		})
+	}
+}
+
+func TestMigrateProfile(t *testing.T) {
+	for _, tt := range []struct {
+		name       string
+		profile    *string
+		cpuprofile *string
+		expected   *string
+	}{
+		{
+			name:     "profile",
+			profile:  addr("mockery.prof"),
+			expected: addr("mockery.prof"),
+		},
+		{
+			name:       "cpuprofile",
+			cpuprofile: addr("mockery.prof"),
+			expected:   addr("mockery.prof"),
+		},
+		{
+			// v2 used `profile` over `cpuprofile` when both were set.
+			name:       "profile takes precedence over cpuprofile",
+			profile:    addr("profile.prof"),
+			cpuprofile: addr("cpuprofile.prof"),
+			expected:   addr("profile.prof"),
+		},
+		{
+			name:       "empty profile",
+			profile:    addr(""),
+			cpuprofile: addr("cpuprofile.prof"),
+			expected:   addr("cpuprofile.prof"),
+		},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			tbl := newTableWriter(context.Background())
+			var v3Config *config.Config
+			migrateConfig(
+				context.Background(),
+				tbl,
+				&V2Config{Profile: tt.profile, Cpuprofile: tt.cpuprofile},
+				&v3Config,
+			)
+
+			require.NotNil(t, v3Config.Cpuprofile)
+			assert.Equal(t, *tt.expected, *v3Config.Cpuprofile)
+			for msg := range tbl.seenMessages {
+				assert.NotContains(t, msg, "`profile`")
+			}
 		})
 	}
 }
