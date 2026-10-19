@@ -296,3 +296,60 @@ func TestMigrate(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, expectedV3Conf, string(b))
 }
+
+func TestCheckDeprecatedTemplateVariables(t *testing.T) {
+	for _, tt := range []struct {
+		name     string
+		conf     V2Config
+		expected []string
+	}{
+		{
+			name: "PackagePath",
+			conf: V2Config{Dir: addr("mocks/{{ .PackagePath | base }}")},
+			expected: []string{
+				"PackagePath template variable has been deleted. Use \"{{ .SrcPackagePath }}\" instead",
+			},
+		},
+		{
+			name: "MockName",
+			conf: V2Config{FileName: addr("{{ .MockName | snakecase }}.go")},
+			expected: []string{
+				"MockName template variable has been deleted. Use \"{{ .StructName }}\" instead",
+			},
+		},
+		{
+			name: "PackageName and PackagePath",
+			conf: V2Config{
+				Dir:    addr("mocks/{{ .PackagePath }}"),
+				Outpkg: addr("mock{{ .PackageName }}"),
+			},
+			expected: []string{
+				"PackageName template variable has been deleted. Use \"{{ .SrcPackageName }}\" instead",
+				"PackagePath template variable has been deleted. Use \"{{ .SrcPackagePath }}\" instead",
+			},
+		},
+		{
+			name: "InterfaceNameLowerCamel is not reported as InterfaceNameLower",
+			conf: V2Config{FileName: addr("{{ .InterfaceNameLowerCamel }}.go")},
+			expected: []string{
+				"InterfaceNameLowerCamel template variable has been deleted. Use \"{{ .InterfaceName | camelcase | firstLower }}\" instead",
+			},
+		},
+		{
+			name:     "v3 variables",
+			conf:     V2Config{Dir: addr("mocks/{{ .SrcPackagePath }}/{{ .SrcPackageName }}")},
+			expected: []string{},
+		},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			tbl := newTableWriter(context.Background())
+			checkDeprecatedTemplateVariables(context.Background(), &tt.conf, tbl)
+
+			messages := make([]string, 0, len(tbl.seenMessages))
+			for msg := range tbl.seenMessages {
+				messages = append(messages, msg)
+			}
+			assert.ElementsMatch(t, tt.expected, messages)
+		})
+	}
+}

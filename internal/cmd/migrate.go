@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 	"reflect"
-	"strings"
+	"regexp"
 
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
@@ -272,11 +272,22 @@ func checkDeprecatedTemplateVariables(
 				message: "InterfaceNameLower template variable has been deleted. Use \"{{ .InterfaceName | lower }}\" instead",
 			},
 			{
+				name:    "MockName",
+				message: "MockName template variable has been deleted. Use \"{{ .StructName }}\" instead",
+			},
+			{
 				name:    "PackageName",
 				message: "PackageName template variable has been deleted. Use \"{{ .SrcPackageName }}\" instead",
 			},
+			{
+				name:    "PackagePath",
+				message: "PackagePath template variable has been deleted. Use \"{{ .SrcPackagePath }}\" instead",
+			},
 		} {
-			if strings.Contains(fieldAsString, deprecatedVariable.name) {
+			// Match the whole field reference, so that `.InterfaceNameLowerCamel`
+			// is not also reported as `.InterfaceNameLower`, nor the v3
+			// `.SrcPackageName` as `.PackageName`.
+			if regexp.MustCompile(`\.` + deprecatedVariable.name + `\b`).MatchString(fieldAsString) {
 				tbl.Append("template-variable", deprecatedVariable.message)
 			}
 		}
