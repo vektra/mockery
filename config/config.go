@@ -508,11 +508,12 @@ func (c PackageConfig) ShouldGenerateInterface(
 	hasDirectiveComment bool,
 ) (bool, error) {
 	log := zerolog.Ctx(ctx)
+	// An explicit `generate: false` always wins, including over `all: true`.
+	if ifaceConfig.Generate != nil && !*ifaceConfig.Generate {
+		log.Debug().Msg("generate: false is set, skipping generation")
+		return false, nil
+	}
 	if hasDirectiveComment {
-		if ifaceConfig.Generate != nil && !*ifaceConfig.Generate {
-			log.Debug().Msg("interface has directive comment with generate: false, skipping generation")
-			return false, nil
-		}
 		log.Debug().Msg("interface has directive comment, generating mock")
 		return true, nil
 	}

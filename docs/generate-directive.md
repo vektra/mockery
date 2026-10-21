@@ -52,4 +52,4 @@ type MockFoo struct {
 
 !!! note
 
-    The `#!yaml generate:` parameter is only effectual from within the doc comment itself. It has no effect if specified within the mockery config file.
+    The `#!yaml generate:` parameter can also be set in the mockery config file, where an explicit `#!yaml generate: false` takes precedence over `#!yaml all: true`. Because `generate` is inherited from the root and package configs, a `#!yaml generate: false` set at either of those levels disables generation for every interface beneath it, even though it previously had no effect there.
