@@ -1,6 +1,7 @@
 _anchors:
   foo: bar
 template: "testify"
+resolve-internal-aliases: True
 force-file-write: true
 formatter: "goimports"
 all: True
@@ -30,6 +31,12 @@ packages:
                 RType1:
                   pkg-path: github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type/rti/rt2
                   type-name: RType2
+  github.com/vektra/mockery/v3/internal/fixtures/example_project/resolve_internal_aliases/lib:
+    config:
+      # Output outside the lib tree, which is not allowed to import lib/internal.
+      dir: internal/fixtures/example_project/resolve_internal_aliases/mocks
+      pkgname: mocks
+      filename: "mocks_testify_resolve_internal_aliases_test.go"
   github.com/vektra/mockery/v3/internal/fixtures:
     interfaces:
       VariadicWithNoReturns:

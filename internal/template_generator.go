@@ -91,6 +91,8 @@ type TemplateGenerator struct {
 	pkgConfig           *config.Config
 	pkgName             string
 	remoteTemplateCache map[string]*RemoteTemplate
+	aliases             AliasIndex
+	outPkgPath          string
 }
 
 func NewTemplateGenerator(
@@ -105,6 +107,7 @@ func NewTemplateGenerator(
 	pkgConfig *config.Config,
 	pkgName string,
 	forceInPackage *bool,
+	aliases AliasIndex,
 ) (*TemplateGenerator, error) {
 	log := *zerolog.Ctx(ctx)
 	var err error
@@ -173,6 +176,8 @@ func NewTemplateGenerator(
 		pkgConfig:           pkgConfig,
 		pkgName:             pkgName,
 		remoteTemplateCache: remoteTemplateCache,
+		aliases:             aliases,
+		outPkgPath:          outPkgPath,
 	}, nil
 }
 
@@ -231,6 +236,11 @@ func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func, 
 			log.Debug().Str("replace-to-pkg-path", replacement.PkgPath).Str("replace-to-type-name", replacement.TypeName).Msg("found replacement")
 		} else {
 			log.Debug().Str("param-pkg-path", paramPkgPath).Msg("replacement not found")
+			// An explicit replace-type wins; otherwise swap in public aliases.
+			var err error
+			if param, err = g.aliases.resolveVar(param, g.outPkgPath); err != nil {
+				return template.Method{}, fmt.Errorf("method %s: %w", method.Name(), err)
+			}
 		}
 		v, err := methodScope.AddVar(ctx, param, "", replacement)
 		if err != nil {
@@ -245,7 +255,6 @@ func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func, 
 	returns := make([]template.Param, signature.Results().Len())
 	for j := 0; j < signature.Results().Len(); j++ {
 		param := signature.Results().At(j)
-
 		paramLog := log.With().Str("param-string", param.String()).Logger()
 		paramCtx := paramLog.WithContext(ctx)
 		paramLog.Debug().Msg("found return")
@@ -257,6 +266,10 @@ func (g *TemplateGenerator) methodData(ctx context.Context, method *types.Func, 
 			log.Debug().Str("replace-to-pkg-path", replacement.PkgPath).Str("replace-to-type-name", replacement.TypeName).Msg("found replacement")
 		} else {
 			log.Debug().Str("param-pkg-path", paramPkgPath).Msg("replacement not found")
+			var err error
+			if param, err = g.aliases.resolveVar(param, g.outPkgPath); err != nil {
+				return template.Method{}, fmt.Errorf("method %s: %w", method.Name(), err)
+			}
 		}
 		v, err := methodScope.AddVar(paramCtx, param, "", replacement)
 		if err != nil {
@@ -410,7 +423,7 @@ func (g *TemplateGenerator) Generate(
 		for i := 0; i < iface.NumMethods(); i++ {
 			methodData, err := g.methodData(ctx, iface.Method(i), ifaceMock.Config)
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("interface %s: %w", ifaceMock.Name, err)
 			}
 			methods[i] = methodData
 		}
