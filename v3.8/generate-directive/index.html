@@ -1064,7 +1064,7 @@
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The <code class="highlight"><span class="nt">generate</span><span class="p">:</span></code> parameter is only effectual from within the doc comment itself. It has no effect if specified within the mockery config file.</p>
+<p>The <code class="highlight"><span class="nt">generate</span><span class="p">:</span></code> parameter can also be set in the mockery config file, where an explicit <code class="highlight"><span class="nt">generate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span></code> takes precedence over <code class="highlight"><span class="nt">all</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span></code>. Because <code>generate</code> is inherited from the root and package configs, a <code class="highlight"><span class="nt">generate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span></code> set at either of those levels disables generation for every interface beneath it, even though it previously had no effect there.</p>
 </div>
 
 
