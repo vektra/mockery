@@ -29,6 +29,14 @@ replace-type:
       type-name: RType2
 ```
 
+### Inheritance
+
+`replace-type` is inherited like most other parameters: entries set at the root level apply to every package, and entries set at the package level apply to every interface in that package. Entries defined closer to the interface take precedence over inherited entries for the same package path and type name; entries for other types are merged.
+
+!!! warning
+
+    Before this was supported, a root-level `replace-type` was silently ignored. Existing configs that set one will now see it applied to every package.
+
 ### Result
 
 The mock will now replace all instances of `rt1.RType1` with `rt2.RType2`. You can see the before and after of `mockery`-style mocks:
