@@ -56,3 +56,5 @@ The mock will now replace all instances of `rt1.RType1` with `rt2.RType2`. You c
 ## Background
 
 This parameter is useful if you need to need to work around packages that use internal types. Take for example the situation found [here](https://github.com/vektra/mockery/issues/864#issuecomment-2567788637), noted by [RangelReale](https://github.com/RangelReale).
+
+If the internal types are re-exported through public type aliases, [`resolve-internal-aliases`](resolve-internal-aliases.md) can do this mapping automatically.
