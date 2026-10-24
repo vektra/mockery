@@ -157,6 +157,58 @@ type Hidden = internal.Orphan
 	require.Same(t, plain, got)
 }
 
+// A public alias of an internal alias of a type declared even deeper, as in
+// workflow.Context = internal.Context = workflowcontext.Context. Signatures spell the
+// middle link, which is an alias node rather than a named type.
+func TestAliasIndexResolveAliasChain(t *testing.T) {
+	imp := fakeImporter{}
+	impl := check(t, imp, "example.com/lib/internal/impl", `package impl
+type Ctx struct{}
+type Plain struct{}
+`)
+	internalPkg := check(t, imp, "example.com/lib/internal", `package internal
+import "example.com/lib/internal/impl"
+type Ctx = impl.Ctx
+type Mid = impl.Plain
+`)
+	public := check(t, imp, "example.com/lib/pub", `package pub
+import "example.com/lib/internal"
+type Ctx = internal.Ctx
+`)
+	user := check(t, imp, "example.com/lib/user", `package user
+import "example.com/lib/internal"
+type T struct{}
+func (T) Chained(c internal.Ctx, cs []internal.Ctx) {}
+func (T) NoPublicAlias() internal.Mid { return internal.Mid{} }
+`)
+
+	idx := AliasIndex{}
+	for _, p := range []*packages.Package{impl, internalPkg, public} {
+		idx.parse(p)
+	}
+	methods := map[string]*types.Signature{}
+	named := user.Types.Scope().Lookup("T").Type().(*types.Named)
+	for i := 0; i < named.NumMethods(); i++ {
+		methods[named.Method(i).Name()] = named.Method(i).Type().(*types.Signature)
+	}
+	qual := func(p *types.Package) string { return p.Name() }
+
+	const outside = "example.com/other/mocks"
+	got, err := idx.resolveType(methods["Chained"], outside)
+	require.NoError(t, err)
+	require.Equal(t, "func(c pub.Ctx, cs []pub.Ctx)", types.TypeString(got, qual))
+
+	// With no public alias anywhere down the chain it's still an error, not a leaked internal name.
+	_, err = idx.resolveType(methods["NoPublicAlias"], outside)
+	require.ErrorContains(t, err, "impl.Plain")
+
+	// Inside the module nothing is swapped.
+	const inside = "example.com/lib/mocks"
+	got, err = idx.resolveType(methods["Chained"], inside)
+	require.NoError(t, err)
+	require.Same(t, methods["Chained"], got)
+}
+
 func TestImportable(t *testing.T) {
 	for _, c := range []struct {
 		from, path string

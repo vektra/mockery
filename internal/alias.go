@@ -58,7 +58,7 @@ func typeKey(obj *types.TypeName) string {
 }
 
 // parse records every exported alias in pkg whose target is a named type in an
-// internal package. Every alias is kept, sorted by name so the results are
+// internal package. Every alias is kept, sorted by name and exported so the results are
 // deterministic. Whether an alias can actually be used is decided later, per
 // output package, in resolveType, which picks the first importable one.
 func (a AliasIndex) parse(pkg *packages.Package) {
@@ -82,10 +82,23 @@ func (a AliasIndex) parse(pkg *packages.Package) {
 		key := typeKey(target.Obj())
 		candidates := append(a[key], tn)
 		sort.Slice(candidates, func(i, j int) bool {
-			return candidates[i].Type().String() < candidates[j].Type().String()
+			return replaceAlias(candidates[i], candidates[j])
 		})
 		a[key] = candidates
 	}
+}
+
+// replaceAlias reports whether candidate should replace current as the alias for a type.
+// An exported alias wins over an internal one to favor ones you can use.
+// Then sorts alphabetically to be deterministic.
+func replaceAlias(candidate, current *types.TypeName) bool {
+	otherInternal := isInternalPath(candidate.Pkg().Path())
+	currentInternal := isInternalPath(current.Pkg().Path())
+	if otherInternal != currentInternal {
+		// If the candidate is not internal and the current isn't, it should replace the current alias.
+		return !otherInternal
+	}
+	return candidate.Type().String() < current.Type().String()
 }
 
 // resolveVar swaps the types of v that the package `from` can't import for their public
