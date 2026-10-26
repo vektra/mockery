@@ -412,3 +412,56 @@ packages:
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "evaluating `exclude-subpkg-regex`")
 }
+
+func TestMergeConfigsReplaceType(t *testing.T) {
+	newReplacement := func(pkgPath string, typeName string) *ReplaceType {
+		return &ReplaceType{PkgPath: pkgPath, TypeName: typeName}
+	}
+
+	t.Run("inherited when dest has none", func(t *testing.T) {
+		src := Config{ReplaceType: map[string]map[string]*ReplaceType{
+			"example.com/internal": {"Opts": newReplacement("example.com/public", "Opts")},
+		}}
+		dest := &Config{}
+
+		mergeConfigs(t.Context(), src, dest)
+
+		assert.Equal(t, src.ReplaceType, dest.ReplaceType)
+	})
+
+	t.Run("dest entries take precedence and others are merged", func(t *testing.T) {
+		src := Config{ReplaceType: map[string]map[string]*ReplaceType{
+			"example.com/internal": {
+				"Opts":  newReplacement("example.com/public", "Opts"),
+				"Other": newReplacement("example.com/public", "Other"),
+			},
+			"example.com/internal2": {"Thing": newReplacement("example.com/public2", "Thing")},
+		}}
+		dest := &Config{ReplaceType: map[string]map[string]*ReplaceType{
+			"example.com/internal": {"Opts": newReplacement("example.com/mine", "MyOpts")},
+		}}
+
+		mergeConfigs(t.Context(), src, dest)
+
+		assert.Equal(t, map[string]map[string]*ReplaceType{
+			"example.com/internal": {
+				"Opts":  newReplacement("example.com/mine", "MyOpts"),
+				"Other": newReplacement("example.com/public", "Other"),
+			},
+			"example.com/internal2": {"Thing": newReplacement("example.com/public2", "Thing")},
+		}, dest.ReplaceType)
+	})
+
+	t.Run("src is not mutated", func(t *testing.T) {
+		src := Config{ReplaceType: map[string]map[string]*ReplaceType{
+			"example.com/internal": {"Opts": newReplacement("example.com/public", "Opts")},
+		}}
+		dest := &Config{ReplaceType: map[string]map[string]*ReplaceType{
+			"example.com/internal": {"Other": newReplacement("example.com/public", "Other")},
+		}}
+
+		mergeConfigs(t.Context(), src, dest)
+
+		assert.Len(t, src.ReplaceType["example.com/internal"], 1)
+	})
+}
