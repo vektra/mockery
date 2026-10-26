@@ -779,6 +779,19 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#inheritance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Inheritance
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#result" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1045,6 +1058,19 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#inheritance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Inheritance
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#result" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1173,6 +1199,12 @@
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">pkg-path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type/rti/rt2</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">type-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RType2</span>
 </code></pre></div>
+<h3 id="inheritance">Inheritance<a class="headerlink" href="#inheritance" title="Permanent link">¶</a></h3>
+<p><code>replace-type</code> is inherited like most other parameters: entries set at the root level apply to every package, and entries set at the package level apply to every interface in that package. Entries defined closer to the interface take precedence over inherited entries for the same package path and type name; entries for other types are merged.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Before this was supported, a root-level <code>replace-type</code> was silently ignored. Existing configs that set one will now see it applied to every package.</p>
+</div>
 <h3 id="result">Result<a class="headerlink" href="#result" title="Permanent link">¶</a></h3>
 <p>The mock will now replace all instances of <code>rt1.RType1</code> with <code>rt2.RType2</code>. You can see the before and after of <code>mockery</code>-style mocks:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">before</label><label for="__tabbed_1_2">after</label></div>
