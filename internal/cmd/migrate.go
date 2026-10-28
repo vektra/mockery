@@ -294,6 +294,30 @@ func checkDeprecatedTemplateVariables(
 	}
 }
 
+// renamedTemplateVariables maps v2 template variables to the v3 variables
+// that replaced them with the same value, so they can be rewritten directly.
+var renamedTemplateVariables = []struct {
+	old *regexp.Regexp
+	new string
+}{
+	{old: regexp.MustCompile(`\.MockName\b`), new: ".StructName"},
+	{old: regexp.MustCompile(`\.PackageName\b`), new: ".SrcPackageName"},
+	{old: regexp.MustCompile(`\.PackagePath\b`), new: ".SrcPackagePath"},
+}
+
+// migrateTemplateVariables returns a copy of a v2 template string with the
+// renamed template variables replaced by their v3 names.
+func migrateTemplateVariables(s *string) *string {
+	if s == nil {
+		return nil
+	}
+	migrated := *s
+	for _, v := range renamedTemplateVariables {
+		migrated = v.old.ReplaceAllLiteralString(migrated, v.new)
+	}
+	return &migrated
+}
+
 func migrateConfig(
 	ctx context.Context,
 	tbl *tableWriter,
@@ -334,7 +358,7 @@ func migrateConfig(
 		// over it.
 		v3.Cpuprofile = v2Config.Profile
 	}
-	v3.Dir = v2Config.Dir
+	v3.Dir = migrateTemplateVariables(v2Config.Dir)
 	if v2Config.DisableConfigSearch != nil {
 		tbl.Append("deprecated-parameter", "`disable-config-search` is permanently disabled in v3.")
 	}
@@ -378,14 +402,14 @@ func migrateConfig(
 		}
 		v3.TemplateData["mock-build-tags"] = *v2Config.MockBuildTags
 	}
-	v3.StructName = v2Config.MockName
+	v3.StructName = migrateTemplateVariables(v2Config.MockName)
 	if v2Config.Name != nil {
 		tbl.Append("deprecated-parameter", "`name` is no longer supported. Use `structname` instead.")
 	}
 	if v2Config.Note != nil {
 		tbl.Append("deprecated-parameter", "`note` is no longer supported.")
 	}
-	v3.PkgName = v2Config.Outpkg
+	v3.PkgName = migrateTemplateVariables(v2Config.Outpkg)
 	if v2Config.Output != nil {
 		tbl.Append("deprecated-parameter", "`output` was replaced by `dir` in v2. This value is ignored.")
 	}
