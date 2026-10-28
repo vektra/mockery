@@ -107,6 +107,53 @@ cpuprofile: /tmp/mockery.prof
 	})
 }
 
+func TestNewRootConfigMemprofile(t *testing.T) {
+	t.Run("from config file", func(t *testing.T) {
+		configFile := path.Join(t.TempDir(), "config.yaml")
+		require.NoError(t, os.WriteFile(configFile, []byte(`
+memprofile: /tmp/mockery.mprof
+`), 0o600))
+
+		flags := pflag.NewFlagSet("test", pflag.ExitOnError)
+		flags.String("config", "", "")
+		require.NoError(t, flags.Parse([]string{"--config", configFile}))
+
+		cfg, _, err := NewRootConfig(context.Background(), flags)
+		require.NoError(t, err)
+		require.NotNil(t, cfg.Memprofile)
+		assert.Equal(t, "/tmp/mockery.mprof", *cfg.Memprofile)
+	})
+
+	t.Run("from flag", func(t *testing.T) {
+		configFile := path.Join(t.TempDir(), "config.yaml")
+		require.NoError(t, os.WriteFile(configFile, []byte("\n"), 0o600))
+
+		flags := pflag.NewFlagSet("test", pflag.ExitOnError)
+		flags.String("config", "", "")
+		flags.String("memprofile", "", "")
+		require.NoError(t, flags.Parse([]string{"--config", configFile, "--memprofile", "/tmp/flag.mprof"}))
+
+		cfg, _, err := NewRootConfig(context.Background(), flags)
+		require.NoError(t, err)
+		require.NotNil(t, cfg.Memprofile)
+		assert.Equal(t, "/tmp/flag.mprof", *cfg.Memprofile)
+	})
+
+	t.Run("empty by default", func(t *testing.T) {
+		configFile := path.Join(t.TempDir(), "config.yaml")
+		require.NoError(t, os.WriteFile(configFile, []byte("\n"), 0o600))
+
+		flags := pflag.NewFlagSet("test", pflag.ExitOnError)
+		flags.String("config", "", "")
+		require.NoError(t, flags.Parse([]string{"--config", configFile}))
+
+		cfg, _, err := NewRootConfig(context.Background(), flags)
+		require.NoError(t, err)
+		require.NotNil(t, cfg.Memprofile)
+		assert.Empty(t, *cfg.Memprofile)
+	})
+}
+
 func TestNewRootConfigUnknownEnvVar(t *testing.T) {
 	t.Setenv("MOCKERY_UNKNOWN", "foo")
 	configFile := path.Join(t.TempDir(), "config.yaml")

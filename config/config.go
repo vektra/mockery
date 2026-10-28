@@ -668,6 +668,7 @@ type Config struct {
 	IncludeInterfaceRegex *string           `koanf:"include-interface-regex" yaml:"include-interface-regex,omitempty"`
 	InPackage             *bool             `koanf:"inpackage" yaml:"inpackage,omitempty"`
 	LogLevel              *string           `koanf:"log-level" yaml:"log-level,omitempty"`
+	Memprofile            *string           `koanf:"memprofile" yaml:"memprofile,omitempty"`
 	StructName            *string           `koanf:"structname" yaml:"structname,omitempty"`
 	PkgName               *string           `koanf:"pkgname" yaml:"pkgname,omitempty"`
 	Recursive             *bool             `koanf:"recursive" yaml:"recursive,omitempty"`
