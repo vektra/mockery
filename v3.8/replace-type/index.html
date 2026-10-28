@@ -13,7 +13,7 @@
         <link rel="prev" href="../inpackage/">
       
       
-        <link rel="next" href="../generate-directive/">
+        <link rel="next" href="../resolve-internal-aliases/">
       
       
         
@@ -590,6 +590,8 @@
       
         
       
+        
+      
     
     
     
@@ -821,6 +823,36 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resolve-internal-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    <span class="md-typeset">
+      <code class="highlight"><span class="nt">resolve-internal-aliases</span><span class="p">:</span></code>
+    </span>
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1229,6 +1261,7 @@
 </div>
 <h2 id="background">Background<a class="headerlink" href="#background" title="Permanent link">¶</a></h2>
 <p>This parameter is useful if you need to need to work around packages that use internal types. Take for example the situation found <a href="https://github.com/vektra/mockery/issues/864#issuecomment-2567788637">here</a>, noted by <a href="https://github.com/RangelReale">RangelReale</a>.</p>
+<p>If the internal types are re-exported through public type aliases, <a href="../resolve-internal-aliases/"><code>resolve-internal-aliases</code></a> can do this mapping automatically.</p>
 
 
 
