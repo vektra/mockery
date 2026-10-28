@@ -75,9 +75,12 @@ func (r Registry) LookupInterface(name string) (*types.Interface, *types.TypePar
 	}
 
 	var tparams *types.TypeParamList
-	named, ok := obj.Type().(*types.Named)
-	if ok {
-		tparams = named.TypeParams()
+	switch t := obj.Type().(type) {
+	case *types.Named:
+		tparams = t.TypeParams()
+	case *types.Alias:
+		// A generic alias, `type L[T any] = pkg.L[T]`, declares its own type parameters.
+		tparams = t.TypeParams()
 	}
 
 	return obj.Type().Underlying().(*types.Interface).Complete(), tparams, nil

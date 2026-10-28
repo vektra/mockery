@@ -419,6 +419,7 @@ func (r *RootApp) Run() error {
 			packageConfig.Config,
 			collection.config.OutPkgName,
 			collection.config.InPackage,
+			parser.Aliases(),
 		)
 		if err != nil {
 			return err

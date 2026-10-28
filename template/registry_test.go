@@ -1,6 +1,8 @@
 package template
 
 import (
+	"go/ast"
+	"go/parser"
 	"go/token"
 	"go/types"
 	"testing"
@@ -8,6 +10,29 @@ import (
 	"github.com/stretchr/testify/require"
 	"golang.org/x/tools/go/packages"
 )
+
+// A generic alias of a generic interface declares its own type parameters, which the
+// mock must carry (`type L[T any] = impl.L[T]`).
+func TestRegistryLookupInterfaceGenericAlias(t *testing.T) {
+	fset := token.NewFileSet()
+	f, err := parser.ParseFile(fset, "lib.go", `package lib
+type Limiter[T any] interface{ Permit(item T) error }
+type Alias[T any] = Limiter[T]
+type Plain interface{ M() }
+`, 0)
+	require.NoError(t, err)
+	pkg, err := (&types.Config{}).Check("example.com/lib", fset, []*ast.File{f}, nil)
+	require.NoError(t, err)
+	registry, err := NewRegistry(&packages.Package{Name: pkg.Name(), PkgPath: pkg.Path(), Types: pkg}, "example.com/output", false)
+	require.NoError(t, err)
+
+	for name, want := range map[string]int{"Limiter": 1, "Alias": 1, "Plain": 0} {
+		iface, tparams, err := registry.LookupInterface(name)
+		require.NoError(t, err, name)
+		require.NotNil(t, iface, name)
+		require.Equal(t, want, tparams.Len(), name)
+	}
+}
 
 func TestRegistryAddImportPackageScopeConflicts(t *testing.T) {
 	for _, tt := range []struct {
