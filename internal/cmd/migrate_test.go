@@ -220,37 +220,37 @@ packages:
       all: true
       dir: '{{.InterfaceDir}}'
       structname: '{{.InterfaceName}}Mock'
-      pkgname: '{{.PackageName}}'
+      pkgname: '{{.SrcPackageName}}'
   github.com/vektra/mockery/v2/pkg/fixtures/example_project:
     config:
       all: true
       dir: '{{.InterfaceDir}}'
       structname: Mock{{.InterfaceName}}
-      pkgname: '{{.PackageName}}_test'
+      pkgname: '{{.SrcPackageName}}_test'
   github.com/vektra/mockery/v2/pkg/fixtures/iface_new_type:
     config:
       all: true
       dir: '{{.InterfaceDir}}'
       structname: Mock{{.InterfaceName}}
-      pkgname: '{{.PackageName}}_test'
+      pkgname: '{{.SrcPackageName}}_test'
   github.com/vektra/mockery/v2/pkg/fixtures/iface_typed_param:
     config:
       all: true
       dir: '{{.InterfaceDir}}'
       structname: Mock{{.InterfaceName}}
-      pkgname: '{{.PackageName}}_test'
+      pkgname: '{{.SrcPackageName}}_test'
   github.com/vektra/mockery/v2/pkg/fixtures/index_list_expr:
     config:
       all: true
       dir: '{{.InterfaceDir}}'
       structname: Mock{{.InterfaceName}}
-      pkgname: '{{.PackageName}}_test'
+      pkgname: '{{.SrcPackageName}}_test'
   github.com/vektra/mockery/v2/pkg/fixtures/issue845:
     config:
       all: true
       dir: '{{.InterfaceDir}}'
       structname: Mock{{.InterfaceName}}
-      pkgname: '{{.PackageName}}_test'
+      pkgname: '{{.SrcPackageName}}_test'
     interfaces:
       Interface:
         configs:
@@ -261,19 +261,19 @@ packages:
       all: true
       dir: '{{.InterfaceDir}}'
       structname: '{{.InterfaceName}}Mock'
-      pkgname: '{{.PackageName}}'
+      pkgname: '{{.SrcPackageName}}'
   github.com/vektra/mockery/v2/pkg/fixtures/recursive_generation:
     config:
       all: true
       dir: '{{.InterfaceDir}}'
       structname: Mock{{.InterfaceName}}
-      pkgname: '{{.PackageName}}'
+      pkgname: '{{.SrcPackageName}}'
       recursive: true
   github.com/vektra/mockery/v2/pkg/fixtures/type_alias:
     config:
       all: true
       dir: '{{.InterfaceDir}}'
-      pkgname: '{{.PackageName}}_test'
+      pkgname: '{{.SrcPackageName}}_test'
     interfaces:
       Interface1:
         configs:
@@ -351,6 +351,55 @@ func TestCheckDeprecatedTemplateVariables(t *testing.T) {
 				messages = append(messages, msg)
 			}
 			assert.ElementsMatch(t, tt.expected, messages)
+		})
+	}
+}
+
+func TestMigrateRenamedTemplateVariables(t *testing.T) {
+	for _, tt := range []struct {
+		name     string
+		conf     V2Config
+		expected config.Config
+	}{
+		{
+			name: "PackageName in outpkg",
+			conf: V2Config{Outpkg: addr("{{.PackageName}}_test")},
+			expected: config.Config{
+				PkgName: addr("{{.SrcPackageName}}_test"),
+			},
+		},
+		{
+			name: "PackagePath and MockName in dir",
+			conf: V2Config{Dir: addr("mocks/{{ .PackagePath }}/{{ .MockName | snakecase }}")},
+			expected: config.Config{
+				Dir: addr("mocks/{{ .SrcPackagePath }}/{{ .StructName | snakecase }}"),
+			},
+		},
+		{
+			name: "PackageName in mockname",
+			conf: V2Config{MockName: addr("Mock{{.PackageName | firstUpper}}{{.InterfaceName}}")},
+			expected: config.Config{
+				StructName: addr("Mock{{.SrcPackageName | firstUpper}}{{.InterfaceName}}"),
+			},
+		},
+		{
+			name: "v3 variables are left alone",
+			conf: V2Config{
+				Dir:    addr("mocks/{{.SrcPackagePath}}"),
+				Outpkg: addr("{{.SrcPackageName}}"),
+			},
+			expected: config.Config{
+				Dir:     addr("mocks/{{.SrcPackagePath}}"),
+				PkgName: addr("{{.SrcPackageName}}"),
+			},
+		},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			var v3Config *config.Config
+			migrateConfig(context.Background(), newTableWriter(context.Background()), &tt.conf, &v3Config)
+
+			require.NotNil(t, v3Config)
+			assert.Equal(t, tt.expected, *v3Config)
 		})
 	}
 }
