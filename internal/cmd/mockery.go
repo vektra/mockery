@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"runtime/pprof"
 	"strings"
 
@@ -54,6 +55,7 @@ func NewRootCmd() (*cobra.Command, error) {
 	pFlags.String("config", "", "config file to use")
 	pFlags.String("log-level", os.Getenv("MOCKERY_LOG_LEVEL"), "Level of logging")
 	pFlags.String("cpuprofile", "", "write a cpu profile of the mockery run to this file")
+	pFlags.String("memprofile", "", "write a memory profile of the mockery run to this file")
 
 	cmd.AddCommand(NewShowConfigCmd())
 	cmd.AddCommand(NewVersionCmd())
@@ -75,6 +77,23 @@ func startCPUProfile(path string) (func() error, error) {
 	}
 	return func() error {
 		pprof.StopCPUProfile()
+		return f.Close()
+	}, nil
+}
+
+// startMemProfile creates the memory profile file at path. The returned stop
+// function writes a heap profile of the run to it and closes the file.
+func startMemProfile(path string) (func() error, error) {
+	f, err := os.Create(path)
+	if err != nil {
+		return nil, stackerr.NewStackErrf(err, "failed to create memprofile file")
+	}
+	return func() error {
+		runtime.GC() // get up-to-date statistics
+		if err := pprof.WriteHeapProfile(f); err != nil {
+			f.Close()
+			return fmt.Errorf("failed to write memory profile: %w", err)
+		}
 		return f.Close()
 	}, nil
 }
@@ -228,6 +247,17 @@ func (r *RootApp) Run() error {
 		defer func() {
 			if err := stop(); err != nil {
 				log.Err(err).Msg("failed to stop cpu profile")
+			}
+		}()
+	}
+	if profilePath := *r.Config.Memprofile; profilePath != "" {
+		stop, err := startMemProfile(profilePath)
+		if err != nil {
+			return err
+		}
+		defer func() {
+			if err := stop(); err != nil {
+				log.Err(err).Msg("failed to write memory profile")
 			}
 		}()
 	}
