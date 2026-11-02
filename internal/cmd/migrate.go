@@ -433,7 +433,7 @@ func migrateConfig(
 		tbl.Append("deprecated-parameter", "`srcpkg` is not supported in v3. Use the `packages` configuration instead.")
 	}
 	if v2Config.StructName != nil {
-		tbl.Append("deprecated-parameter", "`structname` was replaced by `structname` in v2. This value is ignored.")
+		tbl.Append("deprecated-parameter", "`structname` was replaced by `mockname` in v2. This value is ignored.")
 	}
 	if v2Config.TestOnly != nil {
 		tbl.Append("deprecated-parameter", "`testonly` was replaced by `filename` in v2. This value is ignored and not supported in v3.")
@@ -505,7 +505,7 @@ type V2Config struct {
 	ReplaceType                 []string       `yaml:"replace-type"`       // DEPRECATED: moved to new schema in v3
 	ResolveTypeAlias            *bool          `yaml:"resolve-type-alias"` // DEPRECATED: permanently set to false in v3
 	SrcPkg                      *string        `yaml:"srcpkg"`             // DELETED: Use `packages` config.
-	StructName                  *string        `yaml:"structname"`         // MOVED: moved to `structname` in v3
+	StructName                  *string        `yaml:"structname"`         // DEPRECATED: replaced by `mockname` in v2
 	TestOnly                    *bool          `yaml:"testonly"`           // DEPRECATED: use `filename` to generate `_test.go` suffix.
 	UnrollVariadic              *bool          `yaml:"unroll-variadic"`    // MOVED: moved to `template-data.unroll-variadic`
 	Version                     *bool          `yaml:"version"`

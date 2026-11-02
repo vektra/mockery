@@ -404,6 +404,21 @@ func TestMigrateRenamedTemplateVariables(t *testing.T) {
 	}
 }
 
+func TestMigrateStructName(t *testing.T) {
+	tbl := newTableWriter(context.Background())
+	var v3Config *config.Config
+	migrateConfig(
+		context.Background(),
+		tbl,
+		&V2Config{StructName: addr("MockFoo")},
+		&v3Config,
+	)
+
+	require.NotNil(t, v3Config)
+	assert.Nil(t, v3Config.StructName)
+	assert.Contains(t, tbl.seenMessages, "`structname` was replaced by `mockname` in v2. This value is ignored.")
+}
+
 func TestMigrateProfile(t *testing.T) {
 	for _, tt := range []struct {
 		name       string
