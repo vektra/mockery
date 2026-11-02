@@ -283,7 +283,9 @@ func (mock *MoqOtherServer) ResetCalls() {
 
 // Ensure that MoqStore does implement embeddedtypes.Store.
 // If this is not the case, regenerate this file with mockery.
-var _ embeddedtypes.Store[any] = &MoqStore[any]{}
+func _[T any]() {
+	var _ embeddedtypes.Store[T] = &MoqStore[T]{}
+}
 
 // MoqStore is a mock implementation of embeddedtypes.Store.
 //

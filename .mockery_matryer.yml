@@ -48,7 +48,6 @@ packages:
     config:
       all: false
       include-interface-regex: '.*'
-      exclude-interface-regex: 'RequesterGenerics'
     interfaces:
       Requester:
         configs:

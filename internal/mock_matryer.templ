@@ -44,22 +44,13 @@ import (
 {{- if not (index $mock.TemplateData "skip-ensure") -}}
 // Ensure that {{.StructName}} does implement {{$srcPkgQualifier}}{{.Name}}.
 // If this is not the case, regenerate this file with mockery.
-var _ {{$srcPkgQualifier}}{{.Name -}}
-	{{- if .TypeParams }}[
-		{{- range $index, $param := .TypeParams}}
-			{{- if $index}}, {{end -}}
-			{{if $param.Constraint}}{{$param.Constraint.String}}{{else}}{{$param.TypeString}}{{end}}
-		{{- end -}}
-		]
-	{{- end }} = &{{.StructName}}
-	 {{- if .TypeParams }}[
-		{{- range $index, $param := .TypeParams}}
-			{{- if $index}}, {{end -}}
-			{{if $param.Constraint}}{{$param.Constraint.String}}{{else}}{{$param.TypeString}}{{end}}
-		{{- end -}}
-		]
-	{{- end -}}
-{}
+{{- if .TypeParams }}
+func _{{ $mock.TypeConstraint }}() {
+	var _ {{$srcPkgQualifier}}{{.Name}}{{ $mock.TypeInstantiation }} = &{{.StructName}}{{ $mock.TypeInstantiation }}{}
+}
+{{- else }}
+var _ {{$srcPkgQualifier}}{{.Name}} = &{{.StructName}}{}
+{{- end }}
 {{- end}}
 
 // {{.StructName}} is a mock implementation of {{$srcPkgQualifier}}{{.Name}}.
