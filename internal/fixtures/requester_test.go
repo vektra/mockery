@@ -2,6 +2,7 @@ package test
 
 import (
 	"fmt"
+	"io"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -65,4 +66,15 @@ func TestRequesterMatryerStub(t *testing.T) {
 	str, err := m.Get("foo")
 	assert.Empty(t, str)
 	assert.Equal(t, nil, err)
+}
+
+func TestRequesterGenericsMoq(t *testing.T) {
+	m := &MoqRequesterGenerics[any, string, int, GetInt, io.Writer, GetGeneric[int], int, int]{
+		GenericArgumentsFunc: func(_ any, s string) (int, GetInt) {
+			return len(s), nil
+		},
+	}
+	n, _ := m.GenericArguments(nil, "foo")
+	assert.Equal(t, 3, n)
+	assert.Len(t, m.GenericArgumentsCalls(), 1)
 }

@@ -1353,6 +1353,226 @@ func (mock *MoqFuncArgsCollision) ResetCalls() {
 	mock.lockFoo.Unlock()
 }
 
+// Ensure that MoqRequesterGenerics does implement RequesterGenerics.
+// If this is not the case, regenerate this file with mockery.
+func _[TAny any, TComparable comparable, TSigned constraints.Signed, TIntf GetInt, TExternalIntf io.Writer, TGenIntf GetGeneric[TSigned], TInlineType interface{ ~int | ~uint }, TInlineTypeGeneric interface {
+	~int | GenericType[int, GetInt]
+	comparable
+}]() {
+	var _ RequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] = &MoqRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]{}
+}
+
+// MoqRequesterGenerics is a mock implementation of RequesterGenerics.
+//
+//	func TestSomethingThatUsesRequesterGenerics(t *testing.T) {
+//
+//		// make and configure a mocked RequesterGenerics
+//		mockedRequesterGenerics := &MoqRequesterGenerics{
+//			GenericAnonymousStructsFunc: func(val struct{Type1 TExternalIntf}) struct{Type2 GenericType[string, EmbeddedGet[int]]} {
+//				panic("mock out the GenericAnonymousStructs method")
+//			},
+//			GenericArgumentsFunc: func(v TAny, v1 TComparable) (TSigned, TIntf) {
+//				panic("mock out the GenericArguments method")
+//			},
+//			GenericStructsFunc: func(genericType GenericType[TAny, TIntf]) GenericType[TSigned, TIntf] {
+//				panic("mock out the GenericStructs method")
+//			},
+//		}
+//
+//		// use mockedRequesterGenerics in code that requires RequesterGenerics
+//		// and then make assertions.
+//
+//	}
+type MoqRequesterGenerics[TAny any, TComparable comparable, TSigned constraints.Signed, TIntf GetInt, TExternalIntf io.Writer, TGenIntf GetGeneric[TSigned], TInlineType interface{ ~int | ~uint }, TInlineTypeGeneric interface {
+	~int | GenericType[int, GetInt]
+	comparable
+}] struct {
+	// GenericAnonymousStructsFunc mocks the GenericAnonymousStructs method.
+	GenericAnonymousStructsFunc func(val struct{ Type1 TExternalIntf }) struct {
+		Type2 GenericType[string, EmbeddedGet[int]]
+	}
+
+	// GenericArgumentsFunc mocks the GenericArguments method.
+	GenericArgumentsFunc func(v TAny, v1 TComparable) (TSigned, TIntf)
+
+	// GenericStructsFunc mocks the GenericStructs method.
+	GenericStructsFunc func(genericType GenericType[TAny, TIntf]) GenericType[TSigned, TIntf]
+
+	// calls tracks calls to the methods.
+	calls struct {
+		// GenericAnonymousStructs holds details about calls to the GenericAnonymousStructs method.
+		GenericAnonymousStructs []struct {
+			// Val is the val argument value.
+			Val struct{ Type1 TExternalIntf }
+		}
+		// GenericArguments holds details about calls to the GenericArguments method.
+		GenericArguments []struct {
+			// V is the v argument value.
+			V TAny
+			// V1 is the v1 argument value.
+			V1 TComparable
+		}
+		// GenericStructs holds details about calls to the GenericStructs method.
+		GenericStructs []struct {
+			// GenericType is the genericType argument value.
+			GenericType GenericType[TAny, TIntf]
+		}
+	}
+	lockGenericAnonymousStructs sync.RWMutex
+	lockGenericArguments        sync.RWMutex
+	lockGenericStructs          sync.RWMutex
+}
+
+// GenericAnonymousStructs calls GenericAnonymousStructsFunc.
+func (mock *MoqRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericAnonymousStructs(val struct{ Type1 TExternalIntf }) struct {
+	Type2 GenericType[string, EmbeddedGet[int]]
+} {
+	callInfo := struct {
+		Val struct{ Type1 TExternalIntf }
+	}{
+		Val: val,
+	}
+	mock.lockGenericAnonymousStructs.Lock()
+	mock.calls.GenericAnonymousStructs = append(mock.calls.GenericAnonymousStructs, callInfo)
+	mock.lockGenericAnonymousStructs.Unlock()
+	if mock.GenericAnonymousStructsFunc == nil {
+		var (
+			val1 struct {
+				Type2 GenericType[string, EmbeddedGet[int]]
+			}
+		)
+		return val1
+	}
+	return mock.GenericAnonymousStructsFunc(val)
+}
+
+// GenericAnonymousStructsCalls gets all the calls that were made to GenericAnonymousStructs.
+// Check the length with:
+//
+//	len(mockedRequesterGenerics.GenericAnonymousStructsCalls())
+func (mock *MoqRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericAnonymousStructsCalls() []struct {
+	Val struct{ Type1 TExternalIntf }
+} {
+	var calls []struct {
+		Val struct{ Type1 TExternalIntf }
+	}
+	mock.lockGenericAnonymousStructs.RLock()
+	calls = mock.calls.GenericAnonymousStructs
+	mock.lockGenericAnonymousStructs.RUnlock()
+	return calls
+}
+
+// ResetGenericAnonymousStructsCalls reset all the calls that were made to GenericAnonymousStructs.
+func (mock *MoqRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) ResetGenericAnonymousStructsCalls() {
+	mock.lockGenericAnonymousStructs.Lock()
+	mock.calls.GenericAnonymousStructs = nil
+	mock.lockGenericAnonymousStructs.Unlock()
+}
+
+// GenericArguments calls GenericArgumentsFunc.
+func (mock *MoqRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericArguments(v TAny, v1 TComparable) (TSigned, TIntf) {
+	callInfo := struct {
+		V  TAny
+		V1 TComparable
+	}{
+		V:  v,
+		V1: v1,
+	}
+	mock.lockGenericArguments.Lock()
+	mock.calls.GenericArguments = append(mock.calls.GenericArguments, callInfo)
+	mock.lockGenericArguments.Unlock()
+	if mock.GenericArgumentsFunc == nil {
+		var (
+			v2 TSigned
+			v3 TIntf
+		)
+		return v2, v3
+	}
+	return mock.GenericArgumentsFunc(v, v1)
+}
+
+// GenericArgumentsCalls gets all the calls that were made to GenericArguments.
+// Check the length with:
+//
+//	len(mockedRequesterGenerics.GenericArgumentsCalls())
+func (mock *MoqRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericArgumentsCalls() []struct {
+	V  TAny
+	V1 TComparable
+} {
+	var calls []struct {
+		V  TAny
+		V1 TComparable
+	}
+	mock.lockGenericArguments.RLock()
+	calls = mock.calls.GenericArguments
+	mock.lockGenericArguments.RUnlock()
+	return calls
+}
+
+// ResetGenericArgumentsCalls reset all the calls that were made to GenericArguments.
+func (mock *MoqRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) ResetGenericArgumentsCalls() {
+	mock.lockGenericArguments.Lock()
+	mock.calls.GenericArguments = nil
+	mock.lockGenericArguments.Unlock()
+}
+
+// GenericStructs calls GenericStructsFunc.
+func (mock *MoqRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericStructs(genericType GenericType[TAny, TIntf]) GenericType[TSigned, TIntf] {
+	callInfo := struct {
+		GenericType GenericType[TAny, TIntf]
+	}{
+		GenericType: genericType,
+	}
+	mock.lockGenericStructs.Lock()
+	mock.calls.GenericStructs = append(mock.calls.GenericStructs, callInfo)
+	mock.lockGenericStructs.Unlock()
+	if mock.GenericStructsFunc == nil {
+		var (
+			genericType1 GenericType[TSigned, TIntf]
+		)
+		return genericType1
+	}
+	return mock.GenericStructsFunc(genericType)
+}
+
+// GenericStructsCalls gets all the calls that were made to GenericStructs.
+// Check the length with:
+//
+//	len(mockedRequesterGenerics.GenericStructsCalls())
+func (mock *MoqRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericStructsCalls() []struct {
+	GenericType GenericType[TAny, TIntf]
+} {
+	var calls []struct {
+		GenericType GenericType[TAny, TIntf]
+	}
+	mock.lockGenericStructs.RLock()
+	calls = mock.calls.GenericStructs
+	mock.lockGenericStructs.RUnlock()
+	return calls
+}
+
+// ResetGenericStructsCalls reset all the calls that were made to GenericStructs.
+func (mock *MoqRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) ResetGenericStructsCalls() {
+	mock.lockGenericStructs.Lock()
+	mock.calls.GenericStructs = nil
+	mock.lockGenericStructs.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) ResetCalls() {
+	mock.lockGenericAnonymousStructs.Lock()
+	mock.calls.GenericAnonymousStructs = nil
+	mock.lockGenericAnonymousStructs.Unlock()
+
+	mock.lockGenericArguments.Lock()
+	mock.calls.GenericArguments = nil
+	mock.lockGenericArguments.Unlock()
+
+	mock.lockGenericStructs.Lock()
+	mock.calls.GenericStructs = nil
+	mock.lockGenericStructs.Unlock()
+}
+
 // Ensure that MoqGetInt does implement GetInt.
 // If this is not the case, regenerate this file with mockery.
 var _ GetInt = &MoqGetInt{}
@@ -1431,7 +1651,9 @@ func (mock *MoqGetInt) ResetCalls() {
 
 // Ensure that MoqGetGeneric does implement GetGeneric.
 // If this is not the case, regenerate this file with mockery.
-var _ GetGeneric[int] = &MoqGetGeneric[int]{}
+func _[T constraints.Integer]() {
+	var _ GetGeneric[T] = &MoqGetGeneric[T]{}
+}
 
 // MoqGetGeneric is a mock implementation of GetGeneric.
 //
@@ -1507,7 +1729,9 @@ func (mock *MoqGetGeneric[T]) ResetCalls() {
 
 // Ensure that MoqEmbeddedGet does implement EmbeddedGet.
 // If this is not the case, regenerate this file with mockery.
-var _ EmbeddedGet[int] = &MoqEmbeddedGet[int]{}
+func _[T constraints.Signed]() {
+	var _ EmbeddedGet[T] = &MoqEmbeddedGet[T]{}
+}
 
 // MoqEmbeddedGet is a mock implementation of EmbeddedGet.
 //
@@ -1583,7 +1807,9 @@ func (mock *MoqEmbeddedGet[T]) ResetCalls() {
 
 // Ensure that MoqReplaceGeneric does implement ReplaceGeneric.
 // If this is not the case, regenerate this file with mockery.
-var _ ReplaceGeneric[any, int, any] = &MoqReplaceGeneric[any, int, any]{}
+func _[TImport any, TConstraint constraints.Signed, TKeep any]() {
+	var _ ReplaceGeneric[TImport, TConstraint, TKeep] = &MoqReplaceGeneric[TImport, TConstraint, TKeep]{}
+}
 
 // MoqReplaceGeneric is a mock implementation of ReplaceGeneric.
 //
@@ -1768,7 +1994,9 @@ func (mock *MoqReplaceGeneric[TImport, TConstraint, TKeep]) ResetCalls() {
 
 // Ensure that MoqReplaceGenericSelf does implement ReplaceGenericSelf.
 // If this is not the case, regenerate this file with mockery.
-var _ ReplaceGenericSelf[any] = &MoqReplaceGenericSelf[any]{}
+func _[T any]() {
+	var _ ReplaceGenericSelf[T] = &MoqReplaceGenericSelf[T]{}
+}
 
 // MoqReplaceGenericSelf is a mock implementation of ReplaceGenericSelf.
 //
@@ -1844,7 +2072,9 @@ func (mock *MoqReplaceGenericSelf[T]) ResetCalls() {
 
 // Ensure that MoqConstructorTypeParams does implement ConstructorTypeParams.
 // If this is not the case, regenerate this file with mockery.
-var _ ConstructorTypeParams[any, any] = &MoqConstructorTypeParams[any, any]{}
+func _[helper any, ok any]() {
+	var _ ConstructorTypeParams[helper, ok] = &MoqConstructorTypeParams[helper, ok]{}
+}
 
 // MoqConstructorTypeParams is a mock implementation of ConstructorTypeParams.
 //
@@ -2237,7 +2467,9 @@ func (mock *MoqImportsSameAsPackage) ResetCalls() {
 
 // Ensure that MoqGenericInterface does implement GenericInterface.
 // If this is not the case, regenerate this file with mockery.
-var _ GenericInterface[any] = &MoqGenericInterface[any]{}
+func _[M any]() {
+	var _ GenericInterface[M] = &MoqGenericInterface[M]{}
+}
 
 // MoqGenericInterface is a mock implementation of GenericInterface.
 //
