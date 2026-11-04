@@ -51,6 +51,10 @@ template-schema: https://raw.githubusercontent.com/vektra/mockery/refs/tags/v3.0
 
 The non-TLS variant is also supported: `#!yaml template: "http://"`, but not recommended for obvious reasons.
 
+### Third-party templates
+
+Templates written and maintained by the community are listed on the [Third-Party Templates](third-party.md){ data-preview } page.
+
 ## Schemas
 
 Templates can provide a JSON Schema file that describes the format of the `TemplateData` parameter. Mockery auto-discovers the location of these schema files by appending `.schema.json` to the path of the template. For example, if you provide to mockery `#!yaml template: file://./path/to/template.tmpl`, it will look for a file at `file://./path/to/template.tmpl.schema.json`. If found, this schema will be applied to the `TemplateData` type sent to the template.
