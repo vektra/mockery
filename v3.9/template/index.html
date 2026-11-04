@@ -456,6 +456,8 @@
       
         
       
+        
+      
     
     
     
@@ -553,6 +555,34 @@
     
   
     matryer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="third-party/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Third-Party
   
 
     
@@ -1041,6 +1071,19 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#third-party-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Third-party templates
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1187,6 +1230,8 @@
 <p>This will give consumers of your template the ability to specify which level of granularity they want to track versions.</p>
 </div>
 <p>The non-TLS variant is also supported: <code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">"http://"</span></code>, but not recommended for obvious reasons.</p>
+<h3 id="third-party-templates">Third-party templates<a class="headerlink" href="#third-party-templates" title="Permanent link">¶</a></h3>
+<p>Templates written and maintained by the community are listed on the <a data-preview="data-preview" href="third-party/">Third-Party Templates</a> page.</p>
 <h2 id="schemas">Schemas<a class="headerlink" href="#schemas" title="Permanent link">¶</a></h2>
 <p>Templates can provide a JSON Schema file that describes the format of the <code>TemplateData</code> parameter. Mockery auto-discovers the location of these schema files by appending <code>.schema.json</code> to the path of the template. For example, if you provide to mockery <code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file://./path/to/template.tmpl</span></code>, it will look for a file at <code>file://./path/to/template.tmpl.schema.json</code>. If found, this schema will be applied to the <code>TemplateData</code> type sent to the template.</p>
 <p>To get started with JSON Schema, you can borrow an example JSON document used for the mockery project itself:</p>

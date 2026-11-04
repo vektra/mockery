@@ -56,4 +56,8 @@
          <loc>https://vektra.github.io/mockery/v3.9/template/testify/</loc>
          <lastmod>2026-11-04</lastmod>
     </url>
+    <url>
+         <loc>https://vektra.github.io/mockery/v3.9/template/third-party/</loc>
+         <lastmod>2026-11-04</lastmod>
+    </url>
 </urlset>
