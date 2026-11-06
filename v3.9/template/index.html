@@ -1201,9 +1201,9 @@
 <p>Mockery provides a few embedded templates you can render, or you can use a URL to specify a remotely-hosted template.</p>
 <h2 id="template-options">Template Options<a class="headerlink" href="#template-options" title="Permanent link">¶</a></h2>
 <h3 id="template-testify"><a href="testify/#description"><code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">"testify"</span></code></a><a class="headerlink" href="#template-testify" title="Permanent link">¶</a></h3>
-<p><a data-preview="data-preview" href="testify/#description"><code>testify</code></a> templates generate powerful, testify-based mock objects. They allow you to create expectations using argument-to-return-value matching logic.</p>
+<p><a data-preview="" href="testify/#description"><code>testify</code></a> templates generate powerful, testify-based mock objects. They allow you to create expectations using argument-to-return-value matching logic.</p>
 <h3 id="template-matryer"><a href="matryer/#description"><code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">"matryer"</span></code></a><a class="headerlink" href="#template-matryer" title="Permanent link">¶</a></h3>
-<p><a data-preview="data-preview" href="matryer/#description"><code>matryer</code></a> templates draw from the mocks generated from the project at <a href="https://github.com/matryer/moq">https://github.com/matryer/moq</a>. This project was folded into mockery, and thus moq-style mocks can be natively generated from within mockery.</p>
+<p><a data-preview="" href="matryer/#description"><code>matryer</code></a> templates draw from the mocks generated from the project at <a href="https://github.com/matryer/moq">https://github.com/matryer/moq</a>. This project was folded into mockery, and thus moq-style mocks can be natively generated from within mockery.</p>
 <p>Mocks generated using this template allow you to define precise functions to be run.</p>
 <h3 id="template-file"><code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">"file://"</span></code><a class="headerlink" href="#template-file" title="Permanent link">¶</a></h3>
 <p>You may also provide mockery a path to your own file using the <code>file://</code> protocol specifier. The string after <code>file://</code> will be the relative or absolute path of your template.</p>
@@ -1231,7 +1231,7 @@
 </div>
 <p>The non-TLS variant is also supported: <code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">"http://"</span></code>, but not recommended for obvious reasons.</p>
 <h3 id="third-party-templates">Third-party templates<a class="headerlink" href="#third-party-templates" title="Permanent link">¶</a></h3>
-<p>Templates written and maintained by the community are listed on the <a data-preview="data-preview" href="third-party/">Third-Party Templates</a> page.</p>
+<p>Templates written and maintained by the community are listed on the <a data-preview="" href="third-party/">Third-Party Templates</a> page.</p>
 <h2 id="schemas">Schemas<a class="headerlink" href="#schemas" title="Permanent link">¶</a></h2>
 <p>Templates can provide a JSON Schema file that describes the format of the <code>TemplateData</code> parameter. Mockery auto-discovers the location of these schema files by appending <code>.schema.json</code> to the path of the template. For example, if you provide to mockery <code class="highlight"><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file://./path/to/template.tmpl</span></code>, it will look for a file at <code>file://./path/to/template.tmpl.schema.json</code>. If found, this schema will be applied to the <code>TemplateData</code> type sent to the template.</p>
 <p>To get started with JSON Schema, you can borrow an example JSON document used for the mockery project itself:</p>
