@@ -37,6 +37,16 @@ packages:
       dir: internal/fixtures/example_project/resolve_internal_aliases/mocks
       pkgname: mocks
       filename: "mocks_testify_resolve_internal_aliases_test.go"
+  github.com/vektra/mockery/v3/internal/fixtures/args_package_name:
+    interfaces:
+      UsesArgsPackage:
+        configs:
+          - structname: MockUsesArgsPackage
+            template-data:
+              unroll-variadic: true
+          - structname: MockUsesArgsPackageRolledVariadic
+            template-data:
+              unroll-variadic: false
   github.com/vektra/mockery/v3/internal/fixtures:
     interfaces:
       VariadicWithNoReturns:
