@@ -100,14 +100,16 @@ type {{.StructName}}
 {{- end}}
 }
 {{range .Methods}}
+{{- $recv := .Scope.AllocateName "mock" }}
+{{- $callInfo := .Scope.AllocateName "callInfo" }}
 // {{.Name}} calls {{.Name}}Func.
-func (mock *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) {{.Name}}({{.ArgList}}) {{.ReturnArgTypeList}} {
+func ({{$recv}} *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) {{.Name}}({{.ArgList}}) {{.ReturnArgTypeList}} {
 {{- if not (index $mock.TemplateData "stub-impl") }}
-	if mock.{{.Name}}Func == nil {
+	if {{$recv}}.{{.Name}}Func == nil {
 		panic("{{$mock.StructName}}.{{.Name}}Func: method is nil but {{$mock.Name}}.{{.Name}} was just called")
 	}
 {{- end}}
-	callInfo := struct {
+	{{$callInfo}} := struct {
 		{{- range .Params}}
 		{{.Name | exported}} {{.TypeString}}
 		{{- end}}
@@ -116,12 +118,12 @@ func (mock *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) {{.Name}}({{.ArgL
 		{{.Name | exported}}: {{.Name}},
 		{{- end}}
 	}
-	mock.lock{{.Name}}.Lock()
-	mock.calls.{{.Name}} = append(mock.calls.{{.Name}}, callInfo)
-	mock.lock{{.Name}}.Unlock()
+	{{$recv}}.lock{{.Name}}.Lock()
+	{{$recv}}.calls.{{.Name}} = append({{$recv}}.calls.{{.Name}}, {{$callInfo}})
+	{{$recv}}.lock{{.Name}}.Unlock()
 {{- if .Returns}}
 	{{- if (index $mock.TemplateData "stub-impl") }}
-	if mock.{{.Name}}Func == nil {
+	if {{$recv}}.{{.Name}}Func == nil {
 		var (
 		{{- range .Returns}}
 			{{.Name}} {{.TypeString}}
@@ -130,14 +132,14 @@ func (mock *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) {{.Name}}({{.ArgL
 		return {{.ReturnArgNameList}}
 	}
 	{{- end}}
-	return mock.{{.Name}}Func({{.ArgCallList}})
+	return {{$recv}}.{{.Name}}Func({{.ArgCallList}})
 {{- else}}
 	{{- if (index $mock.TemplateData "stub-impl") }}
-	if mock.{{.Name}}Func == nil {
+	if {{$recv}}.{{.Name}}Func == nil {
 		return
 	}
 	{{- end}}
-	mock.{{.Name}}Func({{.ArgCallList}})
+	{{$recv}}.{{.Name}}Func({{.ArgCallList}})
 {{- end}}
 }
 
