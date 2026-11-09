@@ -4993,6 +4993,212 @@ func (mock *MoqRequesterVariadic) ResetCalls() {
 	mock.lockSprintf.Unlock()
 }
 
+// Ensure that MoqReturnFuncParamNames does implement ReturnFuncParamNames.
+// If this is not the case, regenerate this file with mockery.
+var _ ReturnFuncParamNames = &MoqReturnFuncParamNames{}
+
+// MoqReturnFuncParamNames is a mock implementation of ReturnFuncParamNames.
+//
+//	func TestSomethingThatUsesReturnFuncParamNames(t *testing.T) {
+//
+//		// make and configure a mocked ReturnFuncParamNames
+//		mockedReturnFuncParamNames := &MoqReturnFuncParamNames{
+//			ApplyFunc: func(returnFunc func() int) int {
+//				panic("mock out the Apply method")
+//			},
+//			EnabledFunc: func(ok bool) bool {
+//				panic("mock out the Enabled method")
+//			},
+//			SetFunc: func(key string, ok bool) (int, error) {
+//				panic("mock out the Set method")
+//			},
+//		}
+//
+//		// use mockedReturnFuncParamNames in code that requires ReturnFuncParamNames
+//		// and then make assertions.
+//
+//	}
+type MoqReturnFuncParamNames struct {
+	// ApplyFunc mocks the Apply method.
+	ApplyFunc func(returnFunc func() int) int
+
+	// EnabledFunc mocks the Enabled method.
+	EnabledFunc func(ok bool) bool
+
+	// SetFunc mocks the Set method.
+	SetFunc func(key string, ok bool) (int, error)
+
+	// calls tracks calls to the methods.
+	calls struct {
+		// Apply holds details about calls to the Apply method.
+		Apply []struct {
+			// ReturnFunc is the returnFunc argument value.
+			ReturnFunc func() int
+		}
+		// Enabled holds details about calls to the Enabled method.
+		Enabled []struct {
+			// Ok is the ok argument value.
+			Ok bool
+		}
+		// Set holds details about calls to the Set method.
+		Set []struct {
+			// Key is the key argument value.
+			Key string
+			// Ok is the ok argument value.
+			Ok bool
+		}
+	}
+	lockApply   sync.RWMutex
+	lockEnabled sync.RWMutex
+	lockSet     sync.RWMutex
+}
+
+// Apply calls ApplyFunc.
+func (mock *MoqReturnFuncParamNames) Apply(returnFunc func() int) int {
+	callInfo := struct {
+		ReturnFunc func() int
+	}{
+		ReturnFunc: returnFunc,
+	}
+	mock.lockApply.Lock()
+	mock.calls.Apply = append(mock.calls.Apply, callInfo)
+	mock.lockApply.Unlock()
+	if mock.ApplyFunc == nil {
+		var (
+			n int
+		)
+		return n
+	}
+	return mock.ApplyFunc(returnFunc)
+}
+
+// ApplyCalls gets all the calls that were made to Apply.
+// Check the length with:
+//
+//	len(mockedReturnFuncParamNames.ApplyCalls())
+func (mock *MoqReturnFuncParamNames) ApplyCalls() []struct {
+	ReturnFunc func() int
+} {
+	var calls []struct {
+		ReturnFunc func() int
+	}
+	mock.lockApply.RLock()
+	calls = mock.calls.Apply
+	mock.lockApply.RUnlock()
+	return calls
+}
+
+// ResetApplyCalls reset all the calls that were made to Apply.
+func (mock *MoqReturnFuncParamNames) ResetApplyCalls() {
+	mock.lockApply.Lock()
+	mock.calls.Apply = nil
+	mock.lockApply.Unlock()
+}
+
+// Enabled calls EnabledFunc.
+func (mock *MoqReturnFuncParamNames) Enabled(ok bool) bool {
+	callInfo := struct {
+		Ok bool
+	}{
+		Ok: ok,
+	}
+	mock.lockEnabled.Lock()
+	mock.calls.Enabled = append(mock.calls.Enabled, callInfo)
+	mock.lockEnabled.Unlock()
+	if mock.EnabledFunc == nil {
+		var (
+			b bool
+		)
+		return b
+	}
+	return mock.EnabledFunc(ok)
+}
+
+// EnabledCalls gets all the calls that were made to Enabled.
+// Check the length with:
+//
+//	len(mockedReturnFuncParamNames.EnabledCalls())
+func (mock *MoqReturnFuncParamNames) EnabledCalls() []struct {
+	Ok bool
+} {
+	var calls []struct {
+		Ok bool
+	}
+	mock.lockEnabled.RLock()
+	calls = mock.calls.Enabled
+	mock.lockEnabled.RUnlock()
+	return calls
+}
+
+// ResetEnabledCalls reset all the calls that were made to Enabled.
+func (mock *MoqReturnFuncParamNames) ResetEnabledCalls() {
+	mock.lockEnabled.Lock()
+	mock.calls.Enabled = nil
+	mock.lockEnabled.Unlock()
+}
+
+// Set calls SetFunc.
+func (mock *MoqReturnFuncParamNames) Set(key string, ok bool) (int, error) {
+	callInfo := struct {
+		Key string
+		Ok  bool
+	}{
+		Key: key,
+		Ok:  ok,
+	}
+	mock.lockSet.Lock()
+	mock.calls.Set = append(mock.calls.Set, callInfo)
+	mock.lockSet.Unlock()
+	if mock.SetFunc == nil {
+		var (
+			n   int
+			err error
+		)
+		return n, err
+	}
+	return mock.SetFunc(key, ok)
+}
+
+// SetCalls gets all the calls that were made to Set.
+// Check the length with:
+//
+//	len(mockedReturnFuncParamNames.SetCalls())
+func (mock *MoqReturnFuncParamNames) SetCalls() []struct {
+	Key string
+	Ok  bool
+} {
+	var calls []struct {
+		Key string
+		Ok  bool
+	}
+	mock.lockSet.RLock()
+	calls = mock.calls.Set
+	mock.lockSet.RUnlock()
+	return calls
+}
+
+// ResetSetCalls reset all the calls that were made to Set.
+func (mock *MoqReturnFuncParamNames) ResetSetCalls() {
+	mock.lockSet.Lock()
+	mock.calls.Set = nil
+	mock.lockSet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqReturnFuncParamNames) ResetCalls() {
+	mock.lockApply.Lock()
+	mock.calls.Apply = nil
+	mock.lockApply.Unlock()
+
+	mock.lockEnabled.Lock()
+	mock.calls.Enabled = nil
+	mock.lockEnabled.Unlock()
+
+	mock.lockSet.Lock()
+	mock.calls.Set = nil
+	mock.lockSet.Unlock()
+}
+
 // Ensure that MoqExample does implement Example.
 // If this is not the case, regenerate this file with mockery.
 var _ Example = &MoqExample{}
