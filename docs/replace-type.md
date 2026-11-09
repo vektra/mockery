@@ -9,7 +9,6 @@ package replace_type
 
 import (
     "github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type/rti/rt1"
-    "github.com/vektra/mockery/v3/internal/fixtures/example_project/replace_type/rti/rt2"
 )
 
 type RType interface {
@@ -44,7 +43,7 @@ The mock will now replace all instances of `rt1.RType1` with `rt2.RType2`. You c
 === "before"
 
     ```go
-    // Replace2 provides a mock function for the type RTypeReplaced1
+    // Replace1 provides a mock function for the type RTypeReplaced1
     func (_mock *RTypeReplaced1) Replace1(f rt1.RType1) {
         _mock.Called(f)
         return
@@ -54,7 +53,7 @@ The mock will now replace all instances of `rt1.RType1` with `rt2.RType2`. You c
 === "after"
 
     ```go
-    // Replace2 provides a mock function for the type RTypeReplaced1
+    // Replace1 provides a mock function for the type RTypeReplaced1
     func (_mock *RTypeReplaced1) Replace1(f rt2.RType2) {
         _mock.Called(f)
         return
