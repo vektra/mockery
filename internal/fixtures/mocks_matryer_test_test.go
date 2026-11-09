@@ -3190,6 +3190,95 @@ func (mock *MoqPanicOnNoReturnValue) ResetCalls() {
 	mock.lockDoSomething.Unlock()
 }
 
+// Ensure that MoqParamNamesInTemplate does implement ParamNamesInTemplate.
+// If this is not the case, regenerate this file with mockery.
+var _ ParamNamesInTemplate = &MoqParamNamesInTemplate{}
+
+// MoqParamNamesInTemplate is a mock implementation of ParamNamesInTemplate.
+//
+//	func TestSomethingThatUsesParamNamesInTemplate(t *testing.T) {
+//
+//		// make and configure a mocked ParamNamesInTemplate
+//		mockedParamNamesInTemplate := &MoqParamNamesInTemplate{
+//			SetFunc: func(mock string, callInfo int) error {
+//				panic("mock out the Set method")
+//			},
+//		}
+//
+//		// use mockedParamNamesInTemplate in code that requires ParamNamesInTemplate
+//		// and then make assertions.
+//
+//	}
+type MoqParamNamesInTemplate struct {
+	// SetFunc mocks the Set method.
+	SetFunc func(mock string, callInfo int) error
+
+	// calls tracks calls to the methods.
+	calls struct {
+		// Set holds details about calls to the Set method.
+		Set []struct {
+			// Mock is the mock argument value.
+			Mock string
+			// CallInfo is the callInfo argument value.
+			CallInfo int
+		}
+	}
+	lockSet sync.RWMutex
+}
+
+// Set calls SetFunc.
+func (mock1 *MoqParamNamesInTemplate) Set(mock string, callInfo int) error {
+	callInfo1 := struct {
+		Mock     string
+		CallInfo int
+	}{
+		Mock:     mock,
+		CallInfo: callInfo,
+	}
+	mock1.lockSet.Lock()
+	mock1.calls.Set = append(mock1.calls.Set, callInfo1)
+	mock1.lockSet.Unlock()
+	if mock1.SetFunc == nil {
+		var (
+			err error
+		)
+		return err
+	}
+	return mock1.SetFunc(mock, callInfo)
+}
+
+// SetCalls gets all the calls that were made to Set.
+// Check the length with:
+//
+//	len(mockedParamNamesInTemplate.SetCalls())
+func (mock *MoqParamNamesInTemplate) SetCalls() []struct {
+	Mock     string
+	CallInfo int
+} {
+	var calls []struct {
+		Mock     string
+		CallInfo int
+	}
+	mock.lockSet.RLock()
+	calls = mock.calls.Set
+	mock.lockSet.RUnlock()
+	return calls
+}
+
+// ResetSetCalls reset all the calls that were made to Set.
+func (mock *MoqParamNamesInTemplate) ResetSetCalls() {
+	mock.lockSet.Lock()
+	mock.calls.Set = nil
+	mock.lockSet.Unlock()
+}
+
+// ResetCalls reset all the calls that were made to all mocked methods.
+func (mock *MoqParamNamesInTemplate) ResetCalls() {
+	mock.lockSet.Lock()
+	mock.calls.Set = nil
+	mock.lockSet.Unlock()
+}
+
 // MoqRequesterSkipEnsure is a mock implementation of Requester.
 //
 //	func TestSomethingThatUsesRequester(t *testing.T) {
