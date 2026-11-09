@@ -77,6 +77,36 @@ func TestTemplateMockFuncs(t *testing.T) {
 			want:       "SQL",
 		},
 		{
+			name:       "exported accented",
+			inTemplate: "{{exported .TemplateData.var}}",
+			dataInit:   func() Data { return Data{TemplateData: map[string]any{"var": "état"}} },
+			want:       "État",
+		},
+		{
+			name:       "exported greek",
+			inTemplate: "{{exported .TemplateData.var}}",
+			dataInit:   func() Data { return Data{TemplateData: map[string]any{"var": "π"}} },
+			want:       "Π",
+		},
+		{
+			name:       "exported cyrillic",
+			inTemplate: "{{exported .TemplateData.var}}",
+			dataInit:   func() Data { return Data{TemplateData: map[string]any{"var": "данные"}} },
+			want:       "Данные",
+		},
+		{
+			name:       "exported uncased",
+			inTemplate: "{{exported .TemplateData.var}}",
+			dataInit:   func() Data { return Data{TemplateData: map[string]any{"var": "名称"}} },
+			want:       "名称",
+		},
+		{
+			name:       "exported four-byte",
+			inTemplate: "{{exported .TemplateData.var}}",
+			dataInit:   func() Data { return Data{TemplateData: map[string]any{"var": "𐐨value"}} },
+			want:       "𐐀value",
+		},
+		{
 			name:       "ImplementsSomeMethod",
 			inTemplate: "{{ .Interfaces.ImplementsSomeMethod }}",
 			dataInit: func() Data {
