@@ -113,3 +113,4 @@ packages:
         config:
           filename: mocks_matryer_mixed_test.go
           structname: MoqSecondMixed
+  github.com/vektra/mockery/v3/internal/fixtures/iface_typed_param_lowercase:
