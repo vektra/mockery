@@ -164,10 +164,7 @@ func NewRootConfig(
 	}
 
 	configFileFromEnv := os.Getenv("MOCKERY_CONFIG")
-	if configFileFromEnv != "" {
-		configFile = configFileFromEnv
-	}
-	if configFile == "" {
+	if configFileFromEnv == "" || (flags != nil && flags.Changed("config")) {
 		configFileFromFlags, err := flags.GetString("config")
 		if err != nil {
 			return nil, nil, fmt.Errorf("getting --config from flags: %w", err)
@@ -175,6 +172,9 @@ func NewRootConfig(
 		if configFileFromFlags != "" {
 			configFile = configFileFromFlags
 		}
+	}
+	if configFile == "" {
+		configFile = configFileFromEnv
 	}
 	if configFile == "" {
 		log.Debug().Msg("config file not specified, searching")
