@@ -192,6 +192,24 @@ formatter: goimports
 	assert.Equal(t, 8, *cfg.FormatterOptions.GoImports.TabWidth)
 }
 
+func TestNewRootConfigFlagOverridesEnvConfig(t *testing.T) {
+	dir := t.TempDir()
+	envConfig := filepath.Join(dir, "env.yaml")
+	require.NoError(t, os.WriteFile(envConfig, []byte("structname: FromEnv\n"), 0o600))
+	flagConfig := filepath.Join(dir, "flag.yaml")
+	require.NoError(t, os.WriteFile(flagConfig, []byte("structname: FromFlag\n"), 0o600))
+	t.Setenv("MOCKERY_CONFIG", envConfig)
+
+	flags := pflag.NewFlagSet("test", pflag.ExitOnError)
+	flags.String("config", "", "")
+	require.NoError(t, flags.Parse([]string{"--config", flagConfig}))
+
+	cfg, _, err := NewRootConfig(context.Background(), flags)
+	require.NoError(t, err)
+	assert.Equal(t, flagConfig, cfg.ConfigFileUsed())
+	assert.Equal(t, "FromFlag", *cfg.StructName)
+}
+
 func TestExtractConfigFromDirectiveComments(t *testing.T) {
 	configs := []struct {
 		name         string
