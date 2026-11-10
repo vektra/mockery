@@ -6,6 +6,7 @@ import (
 	"slices"
 	"strings"
 	"unicode"
+	"unicode/utf8"
 
 	"golang.org/x/exp/constraints"
 )
@@ -19,7 +20,8 @@ func Exported(s string) string {
 			return initialism
 		}
 	}
-	return strings.ToUpper(s[0:1]) + s[1:]
+	_, size := utf8.DecodeRuneInString(s)
+	return strings.ToUpper(s[:size]) + s[size:]
 }
 
 func ReadFile(path string) (string, error) {
