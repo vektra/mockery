@@ -123,6 +123,8 @@ func (_mock *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) {{$method.Name}}
 	{{ $calledString }}
 	{{- else }}
 	{{- $retArgs := $method.Scope.AllocateName "ret" }}
+	{{- $returnFunc := $method.Scope.AllocateName "returnFunc" }}
+	{{- $ok := $method.Scope.AllocateName "ok" }}
 	{{ $retArgs }} := {{ $calledString }}
 
 	if len({{ $retArgs }}) == 0 {
@@ -134,14 +136,14 @@ func (_mock *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) {{$method.Name}}
 		{{- end }}
 
 		{{- if gt (len $method.Returns) 1 }}
-	if returnFunc, ok := {{ $retArgs }}.Get(0).(func{{ $method.SignatureNoName }}); ok {
-		return returnFunc({{ $method.ArgCallList }})
+	if {{ $returnFunc }}, {{ $ok }} := {{ $retArgs }}.Get(0).(func{{ $method.SignatureNoName }}); {{ $ok }} {
+		return {{ $returnFunc }}({{ $method.ArgCallList }})
 	}
 		{{- end }}
 
 		{{- range $retIdx, $ret := $method.Returns }} {{/* START RETURN RANGE */}}
-	if returnFunc, ok := {{ $retArgs }}.Get({{ $retIdx }}).(func({{$method.ArgTypeListEllipsis }}) {{ (index $method.Returns $retIdx).TypeString }}); ok {
-		r{{ $retIdx }} = returnFunc({{ $method.ArgCallList }})
+	if {{ $returnFunc }}, {{ $ok }} := {{ $retArgs }}.Get({{ $retIdx }}).(func({{$method.ArgTypeListEllipsis }}) {{ (index $method.Returns $retIdx).TypeString }}); {{ $ok }} {
+		r{{ $retIdx }} = {{ $returnFunc }}({{ $method.ArgCallList }})
 	} else {
 		{{- if eq "error" (index $method.Returns $retIdx).TypeString }}
 		r{{ $retIdx }} = {{ $retArgs }}.Error({{ $retIdx }})
