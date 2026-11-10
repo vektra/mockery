@@ -73,7 +73,7 @@ var _ {{$srcPkgQualifier}}{{.Name}} = &{{.StructName}}{}
 type {{.StructName}}
 {{- if .TypeParams -}}
 	[{{- range $index, $param := .TypeParams}}
-			{{- if $index}}, {{end}}{{$param.Name | exported}} {{$param.TypeString}}
+			{{- if $index}}, {{end}}{{$param.Name}} {{$param.TypeString}}
 	{{- end -}}]
 {{- end }} struct {
 {{- with (index .TemplateData "struct-preamble") }}

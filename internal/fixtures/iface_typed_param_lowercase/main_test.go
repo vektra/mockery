@@ -30,3 +30,12 @@ func TestIfaceWithIfaceTypedParamLowerCaseReturnValues(t *testing.T) {
 func toPtr(i int) *int {
 	return &i
 }
+
+func TestMatryerIfaceWithIfaceTypedParamLowerCase(t *testing.T) {
+	m := &MoqGetterIfaceTypedParam[string]{
+		GetFunc: func(v string) string { return v + "!" },
+	}
+
+	assert.Equal(t, "a!", m.Get("a"))
+	assert.Len(t, m.GetCalls(), 1)
+}

@@ -2091,7 +2091,7 @@ func _[helper any, ok any]() {
 //		// and then make assertions.
 //
 //	}
-type MoqConstructorTypeParams[Helper any, Ok any] struct {
+type MoqConstructorTypeParams[helper any, ok any] struct {
 	// GetFunc mocks the Get method.
 	GetFunc func() string
 
