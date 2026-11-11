@@ -23,6 +23,22 @@ func TestFirstIsLower(t *testing.T) {
 			arg:  "MockargGetter",
 			want: false,
 		},
+		{
+			arg:  "",
+			want: false,
+		},
+		{
+			arg:  "état",
+			want: true,
+		},
+		{
+			arg:  "État",
+			want: false,
+		},
+		{
+			arg:  "πValue",
+			want: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.arg, func(t *testing.T) {

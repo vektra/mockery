@@ -109,8 +109,8 @@ func Min[T cmp.Ordered](x ...T) T {
 // If the string is empty, false is returned. If the first character is a non-alphabetic
 // character, false is returned.
 func FirstIsLower(s string) bool {
-	first := rune(s[0])
-	if len(s) == 0 || !unicode.IsLetter(first) {
+	first, _ := utf8.DecodeRuneInString(s)
+	if !unicode.IsLetter(first) {
 		return false
 	}
 	return !unicode.IsUpper(first)
