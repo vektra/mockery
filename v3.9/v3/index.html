@@ -1088,6 +1088,19 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mockname" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          <code class="highlight"><span class="nt">mockname</span><span class="p">:</span></code>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#resolve-type-alias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1335,6 +1348,19 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mockname" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          <code class="highlight"><span class="nt">mockname</span><span class="p">:</span></code>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#resolve-type-alias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1501,8 +1527,8 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">quiet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">disable-version-string</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">with-expecter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">structname</span><span class="p">:</span><span class="w"> </span><span class="s">"{{.InterfaceNameCamel}}"</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="s">"{{.StructName}}_mock.go"</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">mockname</span><span class="p">:</span><span class="w"> </span><span class="s">"{{.InterfaceNameCamel}}"</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="s">"{{.MockName}}_mock.go"</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nt">outpkg</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mocks</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="s">"custom2"</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nt">issue-845-fix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
@@ -1516,9 +1542,9 @@
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">        </span><span class="nt">config</span><span class="p">:</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">          </span><span class="nt">with-expecter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">        </span><span class="nt">configs</span><span class="p">:</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">structname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RequesterVariadicOneArgument</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mockname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RequesterVariadicOneArgument</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">            </span><span class="nt">unroll-variadic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">structname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RequesterVariadic</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mockname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RequesterVariadic</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">            </span><span class="nt">unroll-variadic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">      </span><span class="nt">ReplaceGeneric</span><span class="p">:</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">        </span><span class="nt">config</span><span class="p">:</span>
@@ -1542,7 +1568,7 @@
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">pkgname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mocks</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">testify</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">template-data</span><span class="p">:</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">with-expecter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">unroll-variadic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nt">packages</span><span class="p">:</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">github.com/vektra/mockery/v2/pkg/fixtures</span><span class="p">:</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="nt">config</span><span class="p">:</span>
@@ -1551,16 +1577,14 @@
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">      </span><span class="nt">ReplaceGeneric</span><span class="p">:</span>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">        </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">      </span><span class="nt">RequesterVariadic</span><span class="p">:</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">        </span><span class="nt">config</span><span class="p">:</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">          </span><span class="nt">template-data</span><span class="p">:</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">            </span><span class="nt">with-expecter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">        </span><span class="nt">configs</span><span class="p">:</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">structname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RequesterVariadicOneArgument</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">            </span><span class="nt">template-data</span><span class="p">:</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">              </span><span class="nt">unroll-variadic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">structname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RequesterVariadic</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">            </span><span class="nt">template-data</span><span class="p">:</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">              </span><span class="nt">unroll-variadic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">        </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">        </span><span class="nt">configs</span><span class="p">:</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">structname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RequesterVariadicOneArgument</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">            </span><span class="nt">template-data</span><span class="p">:</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">              </span><span class="nt">unroll-variadic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">structname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RequesterVariadic</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">            </span><span class="nt">template-data</span><span class="p">:</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">              </span><span class="nt">unroll-variadic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
@@ -1571,21 +1595,25 @@
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│ IDX  DEPRECATION TYPE      MESSAGE                                                                                                     │
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│ 0    template-variable     InterfaceNameCamel template variable has been deleted. Use "{{ .InterfaceName | camelcase }}" instead       │
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│ 0    template-variable     MockName template variable has been deleted. Use "{{ .StructName }}" instead                                │
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│ 1    deprecated-parameter  `tags` is no longer supported, parameter not migrated. Use `mock-build-tags` instead.                       │
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│ 1    template-variable     InterfaceNameCamel template variable has been deleted. Use "{{ .InterfaceName | camelcase }}" instead       │
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>│ 2    deprecated-parameter  `disable-func-mocks` permanently enabled in v3.                                                             │
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>│ 2    deprecated-parameter  `tags` is no longer supported, parameter not migrated. Use `template-data.mock-build-tags` instead.         │
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>│ 3    deprecated-parameter  `fail-on-missing` is permanently set to True in v3.                                                         │
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>│ 3    deprecated-parameter  `disable-func-mocks` permanently enabled in v3.                                                             │
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>│ 4    deprecated-parameter  `disable-version-string` is permanently set to True in v3.                                                  │
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>│ 4    deprecated-parameter  `fail-on-missing` is permanently set to True in v3.                                                         │
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>│ 5    deprecated-parameter  `issue-845-fix` is permanently set to true in v3.                                                           │
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>│ 5    deprecated-parameter  `disable-version-string` is permanently set to True in v3.                                                  │
 <a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>│ 6    deprecated-parameter  `replace-type` has moved to a new schema. Cannot automatically migrate. Please visit                        │
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>│                            https://vektra.github.io/mockery/latest-v3/replace-type/ for more information.                              │
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>│ 6    deprecated-parameter  `issue-845-fix` is permanently set to True in v3.                                                           │
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>│ 7    deprecated-parameter  `with-expecter` was removed in v3 because it is permanently enabled.                                        │
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>│ 8    deprecated-parameter  `replace-type` has moved to a new schema. Cannot automatically migrate. Please visit                        │
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>│                            https://vektra.github.io/mockery/latest-v3/replace-type/ for more information.                              │
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 </code></pre></div>
 </div>
 </div>
@@ -1612,6 +1640,8 @@
 <p>Mockery v2 provided a <code>keeptree</code> parameter that was deprecated and used only in the pre-<code>packages</code> config schema. This parameter has no use in v3 and has been removed.</p>
 <h3 id="replace-type"><code class="highlight"><span class="nt">replace-type</span><span class="p">:</span></code><a class="headerlink" href="#replace-type" title="Permanent link">¶</a></h3>
 <p>The <code class="highlight"><span class="nt">replace-type</span><span class="p">:</span></code> parameter has an updated schema. In v2, <a href="https://vektra.github.io/mockery/latest-v2/features/#replace-types">users provided a list of strings</a>, where each string needed to confirm to a specific format that was parsed at runtime. In v3, the <a href="../replace-type/">schema is more explicit</a> to make it simpler.</p>
+<h3 id="mockname"><code class="highlight"><span class="nt">mockname</span><span class="p">:</span></code><a class="headerlink" href="#mockname" title="Permanent link">¶</a></h3>
+<p>This parameter was renamed to <code class="highlight"><span class="nt">structname</span><span class="p">:</span></code>. The <code>{{.MockName}}</code> template variable was likewise renamed to <code>{{.StructName}}</code>.</p>
 <h3 id="resolve-type-alias"><code class="highlight"><span class="nt">resolve-type-alias</span><span class="p">:</span></code><a class="headerlink" href="#resolve-type-alias" title="Permanent link">¶</a></h3>
 <p>In v2, <code>resolve-type-alias</code> was set to <code>True</code> by default to retain backwards compatibility. In v3, this is permanently set to <code>False</code>.</p>
 <h3 id="with-expecter"><code class="highlight"><span class="nt">with-expecter</span><span class="p">:</span></code><a class="headerlink" href="#with-expecter" title="Permanent link">¶</a></h3>
