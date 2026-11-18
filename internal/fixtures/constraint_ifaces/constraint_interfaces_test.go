@@ -8,7 +8,7 @@ import (
 )
 
 func TestSkipConstraintInterfaces(t *testing.T) {
-	exists, err := file.Exists("./mocks_testify_skipconstraintifaces_test")
+	exists, err := file.Exists("./mocks_testify_skipconstraintifaces_test.go")
 
 	require.NoError(t, err)
 	require.False(t, exists)
