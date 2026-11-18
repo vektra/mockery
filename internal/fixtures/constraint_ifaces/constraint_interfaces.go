@@ -1,6 +1,10 @@
 package skipconstraintifaces
 
-import "golang.org/x/exp/constraints"
+import (
+	"fmt"
+
+	"golang.org/x/exp/constraints"
+)
 
 type Skip1 constraints.Ordered
 
@@ -20,4 +24,13 @@ type Skip5 Skip1
 
 type Skip6 interface {
 	Skip5
+}
+
+type PrintableKey interface {
+	fmt.Stringer
+	comparable
+}
+
+type ExactInt interface {
+	int
 }
