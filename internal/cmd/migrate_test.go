@@ -468,3 +468,53 @@ func TestMigrateProfile(t *testing.T) {
 		})
 	}
 }
+
+func TestMigrateInheritedDefaults(t *testing.T) {
+	messages := []string{
+		"`disable-func-mocks` permanently enabled in v3.",
+		"`disable-version-string` is permanently set to True in v3.",
+		"`fail-on-missing` is permanently set to True in v3.",
+		"`issue-845-fix` is permanently set to True in v3.",
+	}
+
+	t.Run("unset at the top level", func(t *testing.T) {
+		tbl := newTableWriter(context.Background())
+		conf := V2Config{}
+		setV2TopLevelDefaults(&conf)
+		var v3Config *config.Config
+		migrateConfig(context.Background(), tbl, &conf, &v3Config)
+
+		for _, msg := range messages {
+			assert.Contains(t, tbl.seenMessages, msg)
+		}
+	})
+
+	t.Run("unset in a package config", func(t *testing.T) {
+		tbl := newTableWriter(context.Background())
+		var v3Config *config.Config
+		migrateConfig(context.Background(), tbl, &V2Config{}, &v3Config)
+
+		assert.Empty(t, tbl.seenMessages)
+	})
+
+	t.Run("set to false in a package config", func(t *testing.T) {
+		tbl := newTableWriter(context.Background())
+		var v3Config *config.Config
+		migrateConfig(
+			context.Background(),
+			tbl,
+			&V2Config{
+				DisableFuncMocks:     addr(false),
+				DisableVersionString: addr(false),
+				FailOnMissing:        addr(false),
+				Issue845Fix:          addr(false),
+			},
+			&v3Config,
+		)
+
+		assert.Len(t, tbl.seenMessages, len(messages))
+		for _, msg := range messages {
+			assert.Contains(t, tbl.seenMessages, msg)
+		}
+	})
+}
