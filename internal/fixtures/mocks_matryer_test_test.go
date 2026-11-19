@@ -3251,7 +3251,7 @@ func (mock1 *MoqParamNamesInTemplate) Set(mock string, callInfo int) error {
 // Check the length with:
 //
 //	len(mockedParamNamesInTemplate.SetCalls())
-func (mock *MoqParamNamesInTemplate) SetCalls() []struct {
+func (mock1 *MoqParamNamesInTemplate) SetCalls() []struct {
 	Mock     string
 	CallInfo int
 } {
@@ -3259,9 +3259,9 @@ func (mock *MoqParamNamesInTemplate) SetCalls() []struct {
 		Mock     string
 		CallInfo int
 	}
-	mock.lockSet.RLock()
-	calls = mock.calls.Set
-	mock.lockSet.RUnlock()
+	mock1.lockSet.RLock()
+	calls = mock1.calls.Set
+	mock1.lockSet.RUnlock()
 	return calls
 }
 
