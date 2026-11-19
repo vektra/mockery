@@ -147,7 +147,7 @@ func ({{$recv}} *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) {{.Name}}({{
 // Check the length with:
 //
 //	len(mocked{{$mock.Name}}.{{.Name}}Calls())
-func (mock *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) {{.Name}}Calls() []struct {
+func ({{$recv}} *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) {{.Name}}Calls() []struct {
 		{{- range .Params}}
 		{{.Name | exported}} {{.TypeString}}
 		{{- end}}
@@ -157,9 +157,9 @@ func (mock *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) {{.Name}}Calls() 
 		{{.Name | exported}} {{.TypeString}}
 		{{- end}}
 	}
-	mock.lock{{.Name}}.RLock()
-	calls = mock.calls.{{.Name}}
-	mock.lock{{.Name}}.RUnlock()
+	{{$recv}}.lock{{.Name}}.RLock()
+	calls = {{$recv}}.calls.{{.Name}}
+	{{$recv}}.lock{{.Name}}.RUnlock()
 	return calls
 }
 {{- if index $.TemplateData "with-resets" }}
