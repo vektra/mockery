@@ -48,6 +48,8 @@ func (v Var) packageQualifier(pkg *types.Package) string {
 
 func nillable(typ types.Type) bool {
 	switch t := typ.(type) {
+	case *types.Basic:
+		return t.Kind() == types.UnsafePointer
 	case *types.Pointer, *types.Array, *types.Map, *types.Interface, *types.Signature, *types.Chan, *types.Slice:
 		return true
 	case *types.Named, *types.Alias, *types.TypeParam:
