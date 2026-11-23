@@ -34,6 +34,9 @@ func (nv *NodeVisitor) Visit(node ast.Node) ast.Visitor {
 	log := zerolog.Ctx(nv.ctx)
 
 	switch n := node.(type) {
+	case *ast.BlockStmt:
+		// Local type declarations cannot be mocked at package scope.
+		return nil
 	case *ast.GenDecl:
 		// If the next node in the AST is an *ast.TypeSpec, we can rely on this
 		// being its parent GenDecl because the walk is done depth-first.
