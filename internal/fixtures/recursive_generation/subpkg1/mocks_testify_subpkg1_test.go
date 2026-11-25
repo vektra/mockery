@@ -46,6 +46,24 @@ func (_m *MockFoo) EXPECT() *MockFoo_Expecter {
 	return &MockFoo_Expecter{mock: &_m.Mock}
 }
 
+type MockFoo_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockFoo) ASSERT(t mock.TestingT) *MockFoo_Asserter {
+	return &MockFoo_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockFoo_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockFoo_Asserter) NotCalled() *MockFoo_NotCalledAsserter {
+	return &MockFoo_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // Get provides a mock function for the type MockFoo
 func (_mock *MockFoo) Get() string {
 	ret := _mock.Called()
@@ -88,4 +106,12 @@ func (_c *MockFoo_Get_Call) Return(s string) *MockFoo_Get_Call {
 func (_c *MockFoo_Get_Call) RunAndReturn(run func() string) *MockFoo_Get_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Get is a helper method to assert mock.AssertNotCalled
+func (_a *MockFoo_NotCalledAsserter) Get() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get")
 }

@@ -46,6 +46,24 @@ func (_m *MockGenericMultipleTypes[T1, T2, T3]) EXPECT() *MockGenericMultipleTyp
 	return &MockGenericMultipleTypes_Expecter[T1, T2, T3]{mock: &_m.Mock}
 }
 
+type MockGenericMultipleTypes_Asserter[T1 any, T2 any, T3 any] struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockGenericMultipleTypes[T1, T2, T3]) ASSERT(t mock.TestingT) *MockGenericMultipleTypes_Asserter[T1, T2, T3] {
+	return &MockGenericMultipleTypes_Asserter[T1, T2, T3]{mock: &_m.Mock, t: t}
+}
+
+type MockGenericMultipleTypes_NotCalledAsserter[T1 any, T2 any, T3 any] struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockGenericMultipleTypes_Asserter[T1, T2, T3]) NotCalled() *MockGenericMultipleTypes_NotCalledAsserter[T1, T2, T3] {
+	return &MockGenericMultipleTypes_NotCalledAsserter[T1, T2, T3]{mock: _a.mock, t: _a.t}
+}
+
 // Func provides a mock function for the type MockGenericMultipleTypes
 func (_mock *MockGenericMultipleTypes[T1, T2, T3]) Func(arg1 *T1, arg2 T2) T3 {
 	ret := _mock.Called(arg1, arg2)
@@ -105,6 +123,16 @@ func (_c *MockGenericMultipleTypes_Func_Call[T1, T2, T3]) RunAndReturn(run func(
 	return _c
 }
 
+// Func is a helper method to assert mock.AssertNotCalled
+//   - arg1 *T1
+//   - arg2 T2
+func (_a *MockGenericMultipleTypes_NotCalledAsserter[T1, T2, T3]) Func(arg1 any, arg2 any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Func", arg1, arg2)
+}
+
 // NewMockIndexListExpr creates a new instance of MockIndexListExpr. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockIndexListExpr(t interface {
@@ -139,6 +167,24 @@ type MockIndexListExpr_Expecter struct {
 
 func (_m *MockIndexListExpr) EXPECT() *MockIndexListExpr_Expecter {
 	return &MockIndexListExpr_Expecter{mock: &_m.Mock}
+}
+
+type MockIndexListExpr_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockIndexListExpr) ASSERT(t mock.TestingT) *MockIndexListExpr_Asserter {
+	return &MockIndexListExpr_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockIndexListExpr_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockIndexListExpr_Asserter) NotCalled() *MockIndexListExpr_NotCalledAsserter {
+	return &MockIndexListExpr_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Func provides a mock function for the type MockIndexListExpr
@@ -196,4 +242,14 @@ func (_c *MockIndexListExpr_Func_Call) Return(b bool) *MockIndexListExpr_Func_Ca
 func (_c *MockIndexListExpr_Func_Call) RunAndReturn(run func(arg1 *int, arg2 string) bool) *MockIndexListExpr_Func_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Func is a helper method to assert mock.AssertNotCalled
+//   - arg1 *int
+//   - arg2 string
+func (_a *MockIndexListExpr_NotCalledAsserter) Func(arg1 any, arg2 any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Func", arg1, arg2)
 }

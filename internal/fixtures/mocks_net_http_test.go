@@ -48,6 +48,24 @@ func (_m *MockResponseWriter) EXPECT() *MockResponseWriter_Expecter {
 	return &MockResponseWriter_Expecter{mock: &_m.Mock}
 }
 
+type MockResponseWriter_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockResponseWriter) ASSERT(t mock.TestingT) *MockResponseWriter_Asserter {
+	return &MockResponseWriter_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockResponseWriter_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockResponseWriter_Asserter) NotCalled() *MockResponseWriter_NotCalledAsserter {
+	return &MockResponseWriter_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // Header provides a mock function for the type MockResponseWriter
 func (_mock *MockResponseWriter) Header() http.Header {
 	ret := _mock.Called()
@@ -92,6 +110,14 @@ func (_c *MockResponseWriter_Header_Call) Return(header http.Header) *MockRespon
 func (_c *MockResponseWriter_Header_Call) RunAndReturn(run func() http.Header) *MockResponseWriter_Header_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Header is a helper method to assert mock.AssertNotCalled
+func (_a *MockResponseWriter_NotCalledAsserter) Header() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Header")
 }
 
 // Write provides a mock function for the type MockResponseWriter
@@ -154,6 +180,15 @@ func (_c *MockResponseWriter_Write_Call) RunAndReturn(run func(bytes []byte) (in
 	return _c
 }
 
+// Write is a helper method to assert mock.AssertNotCalled
+//   - bytes []byte
+func (_a *MockResponseWriter_NotCalledAsserter) Write(bytes any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Write", bytes)
+}
+
 // WriteHeader provides a mock function for the type MockResponseWriter
 func (_mock *MockResponseWriter) WriteHeader(statusCode int) {
 	_mock.Called(statusCode)
@@ -192,4 +227,13 @@ func (_c *MockResponseWriter_WriteHeader_Call) Return() *MockResponseWriter_Writ
 func (_c *MockResponseWriter_WriteHeader_Call) RunAndReturn(run func(statusCode int)) *MockResponseWriter_WriteHeader_Call {
 	_c.Run(run)
 	return _c
+}
+
+// WriteHeader is a helper method to assert mock.AssertNotCalled
+//   - statusCode int
+func (_a *MockResponseWriter_NotCalledAsserter) WriteHeader(statusCode any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "WriteHeader", statusCode)
 }

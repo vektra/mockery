@@ -48,6 +48,24 @@ func (_m *MockRequester) EXPECT() *MockRequester_Expecter {
 	return &MockRequester_Expecter{mock: &_m.Mock}
 }
 
+type MockRequester_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRequester) ASSERT(t mock.TestingT) *MockRequester_Asserter {
+	return &MockRequester_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRequester_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRequester_Asserter) NotCalled() *MockRequester_NotCalledAsserter {
+	return &MockRequester_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // Get provides a mock function for the type MockRequester
 func (_mock *MockRequester) Get(path string) (string, error) {
 	ret := _mock.Called(path)
@@ -108,6 +126,15 @@ func (_c *MockRequester_Get_Call) RunAndReturn(run func(path string) (string, er
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+//   - path string
+func (_a *MockRequester_NotCalledAsserter) Get(path any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get", path)
+}
+
 // NewFunServer creates a new instance of FunServer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewFunServer(t interface {
@@ -142,6 +169,24 @@ type FunServer_Expecter struct {
 
 func (_m *FunServer) EXPECT() *FunServer_Expecter {
 	return &FunServer_Expecter{mock: &_m.Mock}
+}
+
+type FunServer_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *FunServer) ASSERT(t mock.TestingT) *FunServer_Asserter {
+	return &FunServer_Asserter{mock: &_m.Mock, t: t}
+}
+
+type FunServer_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *FunServer_Asserter) NotCalled() *FunServer_NotCalledAsserter {
+	return &FunServer_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // HandleRequest provides a mock function for the type FunServer
@@ -190,6 +235,16 @@ func (_c *FunServer_HandleRequest_Call) RunAndReturn(run func(path string, handl
 	return _c
 }
 
+// HandleRequest is a helper method to assert mock.AssertNotCalled
+//   - path string
+//   - handler http.Handler
+func (_a *FunServer_NotCalledAsserter) HandleRequest(path any, handler any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "HandleRequest", path, handler)
+}
+
 // NewInterfaceWithoutGenerateFoo creates a new instance of InterfaceWithoutGenerateFoo. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewInterfaceWithoutGenerateFoo(t interface {
@@ -226,6 +281,24 @@ func (_m *InterfaceWithoutGenerateFoo) EXPECT() *InterfaceWithoutGenerateFoo_Exp
 	return &InterfaceWithoutGenerateFoo_Expecter{mock: &_m.Mock}
 }
 
+type InterfaceWithoutGenerateFoo_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *InterfaceWithoutGenerateFoo) ASSERT(t mock.TestingT) *InterfaceWithoutGenerateFoo_Asserter {
+	return &InterfaceWithoutGenerateFoo_Asserter{mock: &_m.Mock, t: t}
+}
+
+type InterfaceWithoutGenerateFoo_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *InterfaceWithoutGenerateFoo_Asserter) NotCalled() *InterfaceWithoutGenerateFoo_NotCalledAsserter {
+	return &InterfaceWithoutGenerateFoo_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // Foo provides a mock function for the type InterfaceWithoutGenerateFoo
 func (_mock *InterfaceWithoutGenerateFoo) Foo() {
 	_mock.Called()
@@ -257,4 +330,12 @@ func (_c *InterfaceWithoutGenerateFoo_Foo_Call) Return() *InterfaceWithoutGenera
 func (_c *InterfaceWithoutGenerateFoo_Foo_Call) RunAndReturn(run func()) *InterfaceWithoutGenerateFoo_Foo_Call {
 	_c.Run(run)
 	return _c
+}
+
+// Foo is a helper method to assert mock.AssertNotCalled
+func (_a *InterfaceWithoutGenerateFoo_NotCalledAsserter) Foo() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Foo")
 }

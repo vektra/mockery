@@ -46,6 +46,24 @@ func (_m *mockargGetter) EXPECT() *mockargGetter_Expecter {
 	return &mockargGetter_Expecter{mock: &_m.Mock}
 }
 
+type mockargGetter_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *mockargGetter) ASSERT(t mock.TestingT) *mockargGetter_Asserter {
+	return &mockargGetter_Asserter{mock: &_m.Mock, t: t}
+}
+
+type mockargGetter_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *mockargGetter_Asserter) NotCalled() *mockargGetter_NotCalledAsserter {
+	return &mockargGetter_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // GetString provides a mock function for the type mockargGetter
 func (_mock *mockargGetter) GetString(name string) (string, error) {
 	ret := _mock.Called(name)
@@ -104,4 +122,13 @@ func (_c *mockargGetter_GetString_Call) Return(s string, err error) *mockargGett
 func (_c *mockargGetter_GetString_Call) RunAndReturn(run func(name string) (string, error)) *mockargGetter_GetString_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// GetString is a helper method to assert mock.AssertNotCalled
+//   - name string
+func (_a *mockargGetter_NotCalledAsserter) GetString(name any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "GetString", name)
 }

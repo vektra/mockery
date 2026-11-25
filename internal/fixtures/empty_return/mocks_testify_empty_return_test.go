@@ -46,6 +46,24 @@ func (_m *MockEmptyReturn) EXPECT() *MockEmptyReturn_Expecter {
 	return &MockEmptyReturn_Expecter{mock: &_m.Mock}
 }
 
+type MockEmptyReturn_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockEmptyReturn) ASSERT(t mock.TestingT) *MockEmptyReturn_Asserter {
+	return &MockEmptyReturn_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockEmptyReturn_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockEmptyReturn_Asserter) NotCalled() *MockEmptyReturn_NotCalledAsserter {
+	return &MockEmptyReturn_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // NoArgs provides a mock function for the type MockEmptyReturn
 func (_mock *MockEmptyReturn) NoArgs() {
 	_mock.Called()
@@ -77,6 +95,14 @@ func (_c *MockEmptyReturn_NoArgs_Call) Return() *MockEmptyReturn_NoArgs_Call {
 func (_c *MockEmptyReturn_NoArgs_Call) RunAndReturn(run func()) *MockEmptyReturn_NoArgs_Call {
 	_c.Run(run)
 	return _c
+}
+
+// NoArgs is a helper method to assert mock.AssertNotCalled
+func (_a *MockEmptyReturn_NotCalledAsserter) NoArgs() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "NoArgs")
 }
 
 // WithArgs provides a mock function for the type MockEmptyReturn
@@ -123,4 +149,14 @@ func (_c *MockEmptyReturn_WithArgs_Call) Return() *MockEmptyReturn_WithArgs_Call
 func (_c *MockEmptyReturn_WithArgs_Call) RunAndReturn(run func(a int, b string)) *MockEmptyReturn_WithArgs_Call {
 	_c.Run(run)
 	return _c
+}
+
+// WithArgs is a helper method to assert mock.AssertNotCalled
+//   - a int
+//   - b string
+func (_a *MockEmptyReturn_NotCalledAsserter) WithArgs(a any, b any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "WithArgs", a, b)
 }

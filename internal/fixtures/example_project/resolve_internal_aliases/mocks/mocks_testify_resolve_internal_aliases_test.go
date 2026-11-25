@@ -49,6 +49,24 @@ func (_m *MockService) EXPECT() *MockService_Expecter {
 	return &MockService_Expecter{mock: &_m.Mock}
 }
 
+type MockService_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockService) ASSERT(t mock.TestingT) *MockService_Asserter {
+	return &MockService_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockService_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockService_Asserter) NotCalled() *MockService_NotCalledAsserter {
+	return &MockService_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // Do provides a mock function for the type MockService
 func (_mock *MockService) Do(ctx context.Context, opts lib.Options) (lib.Result, error) {
 	ret := _mock.Called(ctx, opts)
@@ -115,6 +133,16 @@ func (_c *MockService_Do_Call) RunAndReturn(run func(ctx context.Context, opts l
 	return _c
 }
 
+// Do is a helper method to assert mock.AssertNotCalled
+//   - ctx context.Context
+//   - opts lib.Options
+func (_a *MockService_NotCalledAsserter) Do(ctx any, opts any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Do", ctx, opts)
+}
+
 // Many provides a mock function for the type MockService
 func (_mock *MockService) Many(results []lib.Result, each func(lib.Options)) map[string]*lib.Options {
 	ret := _mock.Called(results, each)
@@ -172,4 +200,14 @@ func (_c *MockService_Many_Call) Return(stringToOptions map[string]*lib.Options)
 func (_c *MockService_Many_Call) RunAndReturn(run func(results []lib.Result, each func(lib.Options)) map[string]*lib.Options) *MockService_Many_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Many is a helper method to assert mock.AssertNotCalled
+//   - results []lib.Result
+//   - each func(lib.Options)
+func (_a *MockService_NotCalledAsserter) Many(results any, each any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Many", results, each)
 }

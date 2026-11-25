@@ -46,6 +46,24 @@ func (_m *mockinterfaceA) EXPECT() *mockinterfaceA_Expecter {
 	return &mockinterfaceA_Expecter{mock: &_m.Mock}
 }
 
+type mockinterfaceA_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *mockinterfaceA) ASSERT(t mock.TestingT) *mockinterfaceA_Asserter {
+	return &mockinterfaceA_Asserter{mock: &_m.Mock, t: t}
+}
+
+type mockinterfaceA_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *mockinterfaceA_Asserter) NotCalled() *mockinterfaceA_NotCalledAsserter {
+	return &mockinterfaceA_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // DoB provides a mock function for the type mockinterfaceA
 func (_mock *mockinterfaceA) DoB(interfaceB1 interfaceB) interfaceB {
 	ret := _mock.Called(interfaceB1)
@@ -97,6 +115,15 @@ func (_c *mockinterfaceA_DoB_Call) Return(interfaceBMoqParam interfaceB) *mockin
 func (_c *mockinterfaceA_DoB_Call) RunAndReturn(run func(interfaceB1 interfaceB) interfaceB) *mockinterfaceA_DoB_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// DoB is a helper method to assert mock.AssertNotCalled
+//   - interfaceB1 interfaceB
+func (_a *mockinterfaceA_NotCalledAsserter) DoB(interfaceB1 any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "DoB", interfaceB1)
 }
 
 // DoB0 provides a mock function for the type mockinterfaceA
@@ -152,6 +179,15 @@ func (_c *mockinterfaceA_DoB0_Call) RunAndReturn(run func(interfaceB interfaceB0
 	return _c
 }
 
+// DoB0 is a helper method to assert mock.AssertNotCalled
+//   - interfaceB interfaceB0
+func (_a *mockinterfaceA_NotCalledAsserter) DoB0(interfaceB any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "DoB0", interfaceB)
+}
+
 // DoB0v2 provides a mock function for the type mockinterfaceA
 func (_mock *mockinterfaceA) DoB0v2(interfaceB01 interfaceB0) interfaceB0 {
 	ret := _mock.Called(interfaceB01)
@@ -205,6 +241,15 @@ func (_c *mockinterfaceA_DoB0v2_Call) RunAndReturn(run func(interfaceB01 interfa
 	return _c
 }
 
+// DoB0v2 is a helper method to assert mock.AssertNotCalled
+//   - interfaceB01 interfaceB0
+func (_a *mockinterfaceA_NotCalledAsserter) DoB0v2(interfaceB01 any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "DoB0v2", interfaceB01)
+}
+
 // newMockinterfaceB creates a new instance of mockinterfaceB. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func newMockinterfaceB(t interface {
@@ -239,6 +284,24 @@ type mockinterfaceB_Expecter struct {
 
 func (_m *mockinterfaceB) EXPECT() *mockinterfaceB_Expecter {
 	return &mockinterfaceB_Expecter{mock: &_m.Mock}
+}
+
+type mockinterfaceB_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *mockinterfaceB) ASSERT(t mock.TestingT) *mockinterfaceB_Asserter {
+	return &mockinterfaceB_Asserter{mock: &_m.Mock, t: t}
+}
+
+type mockinterfaceB_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *mockinterfaceB_Asserter) NotCalled() *mockinterfaceB_NotCalledAsserter {
+	return &mockinterfaceB_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // GetData provides a mock function for the type mockinterfaceB
@@ -285,6 +348,14 @@ func (_c *mockinterfaceB_GetData_Call) RunAndReturn(run func() int) *mockinterfa
 	return _c
 }
 
+// GetData is a helper method to assert mock.AssertNotCalled
+func (_a *mockinterfaceB_NotCalledAsserter) GetData() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "GetData")
+}
+
 // newMockinterfaceB0 creates a new instance of mockinterfaceB0. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func newMockinterfaceB0(t interface {
@@ -319,6 +390,24 @@ type mockinterfaceB0_Expecter struct {
 
 func (_m *mockinterfaceB0) EXPECT() *mockinterfaceB0_Expecter {
 	return &mockinterfaceB0_Expecter{mock: &_m.Mock}
+}
+
+type mockinterfaceB0_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *mockinterfaceB0) ASSERT(t mock.TestingT) *mockinterfaceB0_Asserter {
+	return &mockinterfaceB0_Asserter{mock: &_m.Mock, t: t}
+}
+
+type mockinterfaceB0_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *mockinterfaceB0_Asserter) NotCalled() *mockinterfaceB0_NotCalledAsserter {
+	return &mockinterfaceB0_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // DoB0 provides a mock function for the type mockinterfaceB0
@@ -372,4 +461,13 @@ func (_c *mockinterfaceB0_DoB0_Call) Return(interfaceB0MoqParam interfaceB0) *mo
 func (_c *mockinterfaceB0_DoB0_Call) RunAndReturn(run func(interfaceB01 interfaceB0) interfaceB0) *mockinterfaceB0_DoB0_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// DoB0 is a helper method to assert mock.AssertNotCalled
+//   - interfaceB01 interfaceB0
+func (_a *mockinterfaceB0_NotCalledAsserter) DoB0(interfaceB01 any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "DoB0", interfaceB01)
 }

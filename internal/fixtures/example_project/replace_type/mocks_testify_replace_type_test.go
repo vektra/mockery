@@ -48,6 +48,24 @@ func (_m *MockRType) EXPECT() *MockRType_Expecter {
 	return &MockRType_Expecter{mock: &_m.Mock}
 }
 
+type MockRType_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRType) ASSERT(t mock.TestingT) *MockRType_Asserter {
+	return &MockRType_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRType_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRType_Asserter) NotCalled() *MockRType_NotCalledAsserter {
+	return &MockRType_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // Replace1 provides a mock function for the type MockRType
 func (_mock *MockRType) Replace1(f rt1.RType1) {
 	_mock.Called(f)
@@ -86,6 +104,15 @@ func (_c *MockRType_Replace1_Call) Return() *MockRType_Replace1_Call {
 func (_c *MockRType_Replace1_Call) RunAndReturn(run func(f rt1.RType1)) *MockRType_Replace1_Call {
 	_c.Run(run)
 	return _c
+}
+
+// Replace1 is a helper method to assert mock.AssertNotCalled
+//   - f rt1.RType1
+func (_a *MockRType_NotCalledAsserter) Replace1(f any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Replace1", f)
 }
 
 // Replace2 provides a mock function for the type MockRType
@@ -128,6 +155,15 @@ func (_c *MockRType_Replace2_Call) RunAndReturn(run func(f rt2.RType2)) *MockRTy
 	return _c
 }
 
+// Replace2 is a helper method to assert mock.AssertNotCalled
+//   - f rt2.RType2
+func (_a *MockRType_NotCalledAsserter) Replace2(f any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Replace2", f)
+}
+
 // NewRTypeReplaced1 creates a new instance of RTypeReplaced1. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewRTypeReplaced1(t interface {
@@ -162,6 +198,24 @@ type RTypeReplaced1_Expecter struct {
 
 func (_m *RTypeReplaced1) EXPECT() *RTypeReplaced1_Expecter {
 	return &RTypeReplaced1_Expecter{mock: &_m.Mock}
+}
+
+type RTypeReplaced1_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *RTypeReplaced1) ASSERT(t mock.TestingT) *RTypeReplaced1_Asserter {
+	return &RTypeReplaced1_Asserter{mock: &_m.Mock, t: t}
+}
+
+type RTypeReplaced1_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *RTypeReplaced1_Asserter) NotCalled() *RTypeReplaced1_NotCalledAsserter {
+	return &RTypeReplaced1_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Replace1 provides a mock function for the type RTypeReplaced1
@@ -204,6 +258,15 @@ func (_c *RTypeReplaced1_Replace1_Call) RunAndReturn(run func(f rt2.RType2)) *RT
 	return _c
 }
 
+// Replace1 is a helper method to assert mock.AssertNotCalled
+//   - f rt2.RType2
+func (_a *RTypeReplaced1_NotCalledAsserter) Replace1(f any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Replace1", f)
+}
+
 // Replace2 provides a mock function for the type RTypeReplaced1
 func (_mock *RTypeReplaced1) Replace2(f rt2.RType2) {
 	_mock.Called(f)
@@ -242,4 +305,13 @@ func (_c *RTypeReplaced1_Replace2_Call) Return() *RTypeReplaced1_Replace2_Call {
 func (_c *RTypeReplaced1_Replace2_Call) RunAndReturn(run func(f rt2.RType2)) *RTypeReplaced1_Replace2_Call {
 	_c.Run(run)
 	return _c
+}
+
+// Replace2 is a helper method to assert mock.AssertNotCalled
+//   - f rt2.RType2
+func (_a *RTypeReplaced1_NotCalledAsserter) Replace2(f any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Replace2", f)
 }

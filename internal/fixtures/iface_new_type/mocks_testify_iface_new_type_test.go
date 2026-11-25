@@ -46,6 +46,24 @@ func (_m *MockInterface1) EXPECT() *MockInterface1_Expecter {
 	return &MockInterface1_Expecter{mock: &_m.Mock}
 }
 
+type MockInterface1_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockInterface1) ASSERT(t mock.TestingT) *MockInterface1_Asserter {
+	return &MockInterface1_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockInterface1_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockInterface1_Asserter) NotCalled() *MockInterface1_NotCalledAsserter {
+	return &MockInterface1_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // Method1 provides a mock function for the type MockInterface1
 func (_mock *MockInterface1) Method1() {
 	_mock.Called()
@@ -77,6 +95,14 @@ func (_c *MockInterface1_Method1_Call) Return() *MockInterface1_Method1_Call {
 func (_c *MockInterface1_Method1_Call) RunAndReturn(run func()) *MockInterface1_Method1_Call {
 	_c.Run(run)
 	return _c
+}
+
+// Method1 is a helper method to assert mock.AssertNotCalled
+func (_a *MockInterface1_NotCalledAsserter) Method1() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Method1")
 }
 
 // NewMockInterface2 creates a new instance of MockInterface2. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
@@ -115,6 +141,24 @@ func (_m *MockInterface2) EXPECT() *MockInterface2_Expecter {
 	return &MockInterface2_Expecter{mock: &_m.Mock}
 }
 
+type MockInterface2_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockInterface2) ASSERT(t mock.TestingT) *MockInterface2_Asserter {
+	return &MockInterface2_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockInterface2_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockInterface2_Asserter) NotCalled() *MockInterface2_NotCalledAsserter {
+	return &MockInterface2_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // Method1 provides a mock function for the type MockInterface2
 func (_mock *MockInterface2) Method1() {
 	_mock.Called()
@@ -146,6 +190,14 @@ func (_c *MockInterface2_Method1_Call) Return() *MockInterface2_Method1_Call {
 func (_c *MockInterface2_Method1_Call) RunAndReturn(run func()) *MockInterface2_Method1_Call {
 	_c.Run(run)
 	return _c
+}
+
+// Method1 is a helper method to assert mock.AssertNotCalled
+func (_a *MockInterface2_NotCalledAsserter) Method1() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Method1")
 }
 
 // NewMockInterface3 creates a new instance of MockInterface3. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
@@ -184,6 +236,24 @@ func (_m *MockInterface3) EXPECT() *MockInterface3_Expecter {
 	return &MockInterface3_Expecter{mock: &_m.Mock}
 }
 
+type MockInterface3_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockInterface3) ASSERT(t mock.TestingT) *MockInterface3_Asserter {
+	return &MockInterface3_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockInterface3_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockInterface3_Asserter) NotCalled() *MockInterface3_NotCalledAsserter {
+	return &MockInterface3_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // Method1 provides a mock function for the type MockInterface3
 func (_mock *MockInterface3) Method1() {
 	_mock.Called()
@@ -215,4 +285,12 @@ func (_c *MockInterface3_Method1_Call) Return() *MockInterface3_Method1_Call {
 func (_c *MockInterface3_Method1_Call) RunAndReturn(run func()) *MockInterface3_Method1_Call {
 	_c.Run(run)
 	return _c
+}
+
+// Method1 is a helper method to assert mock.AssertNotCalled
+func (_a *MockInterface3_NotCalledAsserter) Method1() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Method1")
 }

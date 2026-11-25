@@ -47,6 +47,24 @@ func (_m *MockUsesArgsPackage) EXPECT() *MockUsesArgsPackage_Expecter {
 	return &MockUsesArgsPackage_Expecter{mock: &_m.Mock}
 }
 
+type MockUsesArgsPackage_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockUsesArgsPackage) ASSERT(t mock.TestingT) *MockUsesArgsPackage_Asserter {
+	return &MockUsesArgsPackage_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockUsesArgsPackage_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockUsesArgsPackage_Asserter) NotCalled() *MockUsesArgsPackage_NotCalledAsserter {
+	return &MockUsesArgsPackage_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // Single provides a mock function for the type MockUsesArgsPackage
 func (_mock *MockUsesArgsPackage) Single(v args.Value) {
 	_mock.Called(v)
@@ -85,6 +103,15 @@ func (_c *MockUsesArgsPackage_Single_Call) Return() *MockUsesArgsPackage_Single_
 func (_c *MockUsesArgsPackage_Single_Call) RunAndReturn(run func(v args.Value)) *MockUsesArgsPackage_Single_Call {
 	_c.Run(run)
 	return _c
+}
+
+// Single is a helper method to assert mock.AssertNotCalled
+//   - v args.Value
+func (_a *MockUsesArgsPackage_NotCalledAsserter) Single(v any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Single", v)
 }
 
 // Variadic provides a mock function for the type MockUsesArgsPackage
@@ -146,6 +173,16 @@ func (_c *MockUsesArgsPackage_Variadic_Call) RunAndReturn(run func(v args.Value,
 	return _c
 }
 
+// Variadic is a helper method to assert mock.AssertNotCalled
+//   - v args.Value
+//   - rest ...args.Value
+func (_a *MockUsesArgsPackage_NotCalledAsserter) Variadic(v any, rest ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Variadic", append([]any{v}, rest...)...)
+}
+
 // NewMockUsesArgsPackageRolledVariadic creates a new instance of MockUsesArgsPackageRolledVariadic. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockUsesArgsPackageRolledVariadic(t interface {
@@ -180,6 +217,24 @@ type MockUsesArgsPackageRolledVariadic_Expecter struct {
 
 func (_m *MockUsesArgsPackageRolledVariadic) EXPECT() *MockUsesArgsPackageRolledVariadic_Expecter {
 	return &MockUsesArgsPackageRolledVariadic_Expecter{mock: &_m.Mock}
+}
+
+type MockUsesArgsPackageRolledVariadic_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockUsesArgsPackageRolledVariadic) ASSERT(t mock.TestingT) *MockUsesArgsPackageRolledVariadic_Asserter {
+	return &MockUsesArgsPackageRolledVariadic_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockUsesArgsPackageRolledVariadic_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockUsesArgsPackageRolledVariadic_Asserter) NotCalled() *MockUsesArgsPackageRolledVariadic_NotCalledAsserter {
+	return &MockUsesArgsPackageRolledVariadic_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Single provides a mock function for the type MockUsesArgsPackageRolledVariadic
@@ -220,6 +275,15 @@ func (_c *MockUsesArgsPackageRolledVariadic_Single_Call) Return() *MockUsesArgsP
 func (_c *MockUsesArgsPackageRolledVariadic_Single_Call) RunAndReturn(run func(v args.Value)) *MockUsesArgsPackageRolledVariadic_Single_Call {
 	_c.Run(run)
 	return _c
+}
+
+// Single is a helper method to assert mock.AssertNotCalled
+//   - v args.Value
+func (_a *MockUsesArgsPackageRolledVariadic_NotCalledAsserter) Single(v any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Single", v)
 }
 
 // Variadic provides a mock function for the type MockUsesArgsPackageRolledVariadic
@@ -274,4 +338,14 @@ func (_c *MockUsesArgsPackageRolledVariadic_Variadic_Call) Return() *MockUsesArg
 func (_c *MockUsesArgsPackageRolledVariadic_Variadic_Call) RunAndReturn(run func(v args.Value, rest ...args.Value)) *MockUsesArgsPackageRolledVariadic_Variadic_Call {
 	_c.Run(run)
 	return _c
+}
+
+// Variadic is a helper method to assert mock.AssertNotCalled
+//   - v args.Value
+//   - rest ...args.Value
+func (_a *MockUsesArgsPackageRolledVariadic_NotCalledAsserter) Variadic(v any, rest ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Variadic", append([]any{v}, rest...)...)
 }

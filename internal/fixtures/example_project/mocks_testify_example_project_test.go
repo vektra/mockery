@@ -47,6 +47,24 @@ func (_m *MockRoot) EXPECT() *MockRoot_Expecter {
 	return &MockRoot_Expecter{mock: &_m.Mock}
 }
 
+type MockRoot_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRoot) ASSERT(t mock.TestingT) *MockRoot_Asserter {
+	return &MockRoot_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRoot_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRoot_Asserter) NotCalled() *MockRoot_NotCalledAsserter {
+	return &MockRoot_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // ReturnsFoo provides a mock function for the type MockRoot
 func (_mock *MockRoot) ReturnsFoo() (foo.Foo, error) {
 	ret := _mock.Called()
@@ -102,6 +120,14 @@ func (_c *MockRoot_ReturnsFoo_Call) RunAndReturn(run func() (foo.Foo, error)) *M
 	return _c
 }
 
+// ReturnsFoo is a helper method to assert mock.AssertNotCalled
+func (_a *MockRoot_NotCalledAsserter) ReturnsFoo() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "ReturnsFoo")
+}
+
 // TakesBaz provides a mock function for the type MockRoot
 func (_mock *MockRoot) TakesBaz(baz *foo.Baz) {
 	_mock.Called(baz)
@@ -142,6 +168,15 @@ func (_c *MockRoot_TakesBaz_Call) RunAndReturn(run func(baz *foo.Baz)) *MockRoot
 	return _c
 }
 
+// TakesBaz is a helper method to assert mock.AssertNotCalled
+//   - baz *foo.Baz
+func (_a *MockRoot_NotCalledAsserter) TakesBaz(baz any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "TakesBaz", baz)
+}
+
 // NewMockStringer creates a new instance of MockStringer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockStringer(t interface {
@@ -176,6 +211,24 @@ type MockStringer_Expecter struct {
 
 func (_m *MockStringer) EXPECT() *MockStringer_Expecter {
 	return &MockStringer_Expecter{mock: &_m.Mock}
+}
+
+type MockStringer_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockStringer) ASSERT(t mock.TestingT) *MockStringer_Asserter {
+	return &MockStringer_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockStringer_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockStringer_Asserter) NotCalled() *MockStringer_NotCalledAsserter {
+	return &MockStringer_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // String provides a mock function for the type MockStringer
@@ -220,4 +273,12 @@ func (_c *MockStringer_String_Call) Return(s string) *MockStringer_String_Call {
 func (_c *MockStringer_String_Call) RunAndReturn(run func() string) *MockStringer_String_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// String is a helper method to assert mock.AssertNotCalled
+func (_a *MockStringer_NotCalledAsserter) String() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "String")
 }
