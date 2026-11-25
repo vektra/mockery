@@ -663,15 +663,18 @@ type FormatterOptions struct {
 }
 
 type Config struct {
-	All                   *bool          `koanf:"all" yaml:"all,omitempty"`
-	Anchors               map[string]any `koanf:"_anchors" yaml:"_anchors,omitempty"`
-	BuildTags             *string        `koanf:"build-tags" yaml:"build-tags,omitempty"`
-	ConfigFile            *string        `koanf:"config" yaml:"config,omitempty"`
-	Cpuprofile            *string        `koanf:"cpuprofile" yaml:"cpuprofile,omitempty"`
-	Dir                   *string        `koanf:"dir" yaml:"dir,omitempty"`
-	ExcludeSubpkgRegex    []string       `koanf:"exclude-subpkg-regex" yaml:"exclude-subpkg-regex,omitempty"`
-	ExcludeInterfaceRegex *string        `koanf:"exclude-interface-regex" yaml:"exclude-interface-regex,omitempty"`
-	FileName              *string        `koanf:"filename" yaml:"filename,omitempty"`
+	All        *bool          `koanf:"all" yaml:"all,omitempty"`
+	Anchors    map[string]any `koanf:"_anchors" yaml:"_anchors,omitempty"`
+	BuildTags  *string        `koanf:"build-tags" yaml:"build-tags,omitempty"`
+	ConfigFile *string        `koanf:"config" yaml:"config,omitempty"`
+	// ConstructorName is the templated name of the generated mock constructor function.
+	// When empty, templates fall back to their default constructor naming.
+	ConstructorName       *string  `koanf:"constructor-name" yaml:"constructor-name,omitempty"`
+	Cpuprofile            *string  `koanf:"cpuprofile" yaml:"cpuprofile,omitempty"`
+	Dir                   *string  `koanf:"dir" yaml:"dir,omitempty"`
+	ExcludeSubpkgRegex    []string `koanf:"exclude-subpkg-regex" yaml:"exclude-subpkg-regex,omitempty"`
+	ExcludeInterfaceRegex *string  `koanf:"exclude-interface-regex" yaml:"exclude-interface-regex,omitempty"`
+	FileName              *string  `koanf:"filename" yaml:"filename,omitempty"`
 	// ForceFileWrite controls whether mockery will overwrite existing files when generating mocks. This is by default set to false.
 	ForceFileWrite        *bool             `koanf:"force-file-write" yaml:"force-file-write,omitempty"`
 	Formatter             *string           `koanf:"formatter" yaml:"formatter,omitempty"`
@@ -737,6 +740,32 @@ func (c *Config) ShouldExcludeSubpkg(pkgPath string) (bool, error) {
 
 var ErrInfiniteLoop = fmt.Errorf("infinite loop in template variables detected")
 
+func parseTemplateField(
+	ctx context.Context,
+	name string,
+	attributePointer *string,
+	data TemplateData,
+) (bool, error) {
+	if attributePointer == nil {
+		return false, nil
+	}
+	log := zerolog.Ctx(ctx)
+	oldVal := *attributePointer
+
+	attributeTempl, err := template.New("config-template").Funcs(template_funcs.FuncMap).Parse(oldVal)
+	if err != nil {
+		return false, fmt.Errorf("failed to parse %s template: %w", name, err)
+	}
+	var parsedBuffer bytes.Buffer
+
+	log.Debug().Str("template-data", fmt.Sprintf("%+v", data)).Msg("executing template with data")
+	if err := attributeTempl.Execute(&parsedBuffer, data); err != nil {
+		return false, fmt.Errorf("failed to execute %s template: %w", name, err)
+	}
+	*attributePointer = parsedBuffer.String()
+	return *attributePointer != oldVal, nil
+}
+
 // ParseTemplates parses various templated strings
 // in the config struct into their fully defined values. This mutates
 // the config object passed. An *Interface object can be supplied to satisfy
@@ -759,15 +788,35 @@ func (c *Config) ParseTemplates(
 		return fmt.Errorf("building template data: %w", err)
 	}
 
+	// Resolve structname first so other templated fields (such as
+	// constructor-name or filename) see the final StructName value, including
+	// when applying template functions like firstIsLower or firstUpper to it.
+	if c.StructName != nil {
+		for i := 0; ; i++ {
+			if i >= 20 {
+				log.Error().Str("variable-name", "structname").Str("variable-value", *c.StructName).Msg("infinite loop in template variables detected")
+				return ErrInfiniteLoop
+			}
+			changed, err := parseTemplateField(ctx, "structname", c.StructName, data)
+			if err != nil {
+				return err
+			}
+			if !changed {
+				break
+			}
+		}
+		data.StructName = *c.StructName
+	}
+
 	// These are the config options that we allow
 	// to be parsed by the templater. The keys are
 	// just labels we're using for logs/errors
 	templateMap := map[string]*string{
-		"dir":             c.Dir,
-		"filename":        c.FileName,
-		"pkgname":         c.PkgName,
-		"structname":      c.StructName,
-		"template-schema": c.TemplateSchema,
+		"constructor-name": c.ConstructorName,
+		"dir":              c.Dir,
+		"filename":         c.FileName,
+		"pkgname":          c.PkgName,
+		"template-schema":  c.TemplateSchema,
 	}
 
 	changesMade := true
@@ -775,6 +824,9 @@ func (c *Config) ParseTemplates(
 		if i >= 20 {
 			log.Error().Msg("infinite loop in template variables detected")
 			for key, val := range templateMap {
+				if val == nil {
+					continue
+				}
 				l := log.With().Str("variable-name", key).Str("variable-value", *val).Logger()
 				l.Error().Msg("config variable value")
 			}
@@ -786,20 +838,11 @@ func (c *Config) ParseTemplates(
 		changesMade = false
 
 		for name, attributePointer := range templateMap {
-			oldVal := *attributePointer
-
-			attributeTempl, err := template.New("config-template").Funcs(template_funcs.FuncMap).Parse(*attributePointer)
+			changed, err := parseTemplateField(ctx, name, attributePointer, data)
 			if err != nil {
-				return fmt.Errorf("failed to parse %s template: %w", name, err)
+				return err
 			}
-			var parsedBuffer bytes.Buffer
-
-			log.Debug().Str("template-data", fmt.Sprintf("%+v", data)).Msg("executing template with data")
-			if err := attributeTempl.Execute(&parsedBuffer, data); err != nil {
-				return fmt.Errorf("failed to execute %s template: %w", name, err)
-			}
-			*attributePointer = parsedBuffer.String()
-			if *attributePointer != oldVal {
+			if changed {
 				changesMade = true
 			}
 		}
@@ -867,16 +910,16 @@ func (c *Config) buildTemplateData(
 	}
 
 	return TemplateData{
-		ConfigDir:            filepath.Dir(*c.ConfigFile),
+		ConfigDir:            filepath.Dir(deref(c.ConfigFile)),
 		InterfaceDir:         interfaceDirPath,
 		InterfaceDirRelative: interfaceDirRelative,
 		InterfaceFile:        ifaceFilePath,
 		InterfaceName:        ifaceName,
 		Mock:                 mock,
-		StructName:           *c.StructName,
+		StructName:           deref(c.StructName),
 		SrcPackageName:       srcPkg.Types.Name(),
 		SrcPackagePath:       srcPkg.Types.Path(),
-		Template:             *c.Template,
+		Template:             deref(c.Template),
 	}, nil
 }
 

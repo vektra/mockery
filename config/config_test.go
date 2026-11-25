@@ -249,12 +249,14 @@ func TestExtractConfigFromDirectiveComments(t *testing.T) {
 			commentLines: []string{
 				"// Some initial comment.",
 				"//mockery:structname: MyMock",
+				"//mockery:constructor-name: Custom{{.InterfaceName}}",
 				"//mockery:filename: my_mock.go",
 				"// Some trailing comment.",
 			},
 			expected: &Config{
-				StructName: ptr("MyMock"),
-				FileName:   ptr("my_mock.go"),
+				ConstructorName: ptr("Custom{{.InterfaceName}}"),
+				StructName:      ptr("MyMock"),
+				FileName:        ptr("my_mock.go"),
 			},
 			expectError: false,
 		},
@@ -529,4 +531,193 @@ func TestMergeConfigsReplaceType(t *testing.T) {
 
 		assert.Len(t, src.ReplaceType["example.com/internal"], 1)
 	})
+}
+
+func TestNewRootConfigConstructorName(t *testing.T) {
+	t.Run("empty by default", func(t *testing.T) {
+		configFile := filepath.Join(t.TempDir(), "config.yaml")
+		require.NoError(t, os.WriteFile(configFile, []byte("\n"), 0o600))
+
+		flags := pflag.NewFlagSet("test", pflag.ExitOnError)
+		flags.String("config", "", "")
+		require.NoError(t, flags.Parse([]string{"--config", configFile}))
+
+		cfg, _, err := NewRootConfig(t.Context(), flags)
+		require.NoError(t, err)
+		require.NotNil(t, cfg.ConstructorName)
+		assert.Empty(t, *cfg.ConstructorName)
+	})
+
+	t.Run("hierarchical inheritance and overrides", func(t *testing.T) {
+		configFile := filepath.Join(t.TempDir(), "config.yaml")
+		require.NoError(t, os.WriteFile(configFile, []byte(`
+constructor-name: "RootNew{{.InterfaceName}}"
+packages:
+  example.com/inherited:
+    interfaces:
+      Foo:
+  example.com/overridden:
+    config:
+      constructor-name: "PkgNew{{.InterfaceName}}"
+    interfaces:
+      InheritedFromPkg:
+      CustomIface:
+        config:
+          constructor-name: "IfaceCustom"
+      ResetToDefault:
+        config:
+          constructor-name: ""
+      MultiMock:
+        configs:
+          - structname: MockMultiOne
+            constructor-name: "NewMultiOne"
+          - structname: MockMultiTwo
+`), 0o600))
+
+		flags := pflag.NewFlagSet("test", pflag.ExitOnError)
+		flags.String("config", "", "")
+		require.NoError(t, flags.Parse([]string{"--config", configFile}))
+
+		cfg, _, err := NewRootConfig(t.Context(), flags)
+		require.NoError(t, err)
+		assert.Equal(t, "RootNew{{.InterfaceName}}", *cfg.ConstructorName)
+
+		inheritedPkg, err := cfg.GetPackageConfig(t.Context(), "example.com/inherited")
+		require.NoError(t, err)
+		assert.Equal(t, "RootNew{{.InterfaceName}}", *inheritedPkg.Interfaces["Foo"].Config.ConstructorName)
+
+		overriddenPkg, err := cfg.GetPackageConfig(t.Context(), "example.com/overridden")
+		require.NoError(t, err)
+		assert.Equal(t, "PkgNew{{.InterfaceName}}", *overriddenPkg.Interfaces["InheritedFromPkg"].Config.ConstructorName)
+		assert.Equal(t, "IfaceCustom", *overriddenPkg.Interfaces["CustomIface"].Config.ConstructorName)
+		assert.Empty(t, *overriddenPkg.Interfaces["ResetToDefault"].Config.ConstructorName)
+		require.Len(t, overriddenPkg.Interfaces["MultiMock"].Configs, 2)
+		assert.Equal(t, "NewMultiOne", *overriddenPkg.Interfaces["MultiMock"].Configs[0].ConstructorName)
+		assert.Equal(t, "PkgNew{{.InterfaceName}}", *overriddenPkg.Interfaces["MultiMock"].Configs[1].ConstructorName)
+	})
+
+	t.Run("from environment variable", func(t *testing.T) {
+		t.Setenv("MOCKERY_CONSTRUCTOR_NAME", "EnvNew{{.InterfaceName}}")
+		configFile := filepath.Join(t.TempDir(), "config.yaml")
+		require.NoError(t, os.WriteFile(configFile, []byte("\n"), 0o600))
+
+		flags := pflag.NewFlagSet("test", pflag.ExitOnError)
+		flags.String("config", "", "")
+		require.NoError(t, flags.Parse([]string{"--config", configFile}))
+
+		cfg, _, err := NewRootConfig(t.Context(), flags)
+		require.NoError(t, err)
+		require.NotNil(t, cfg.ConstructorName)
+		assert.Equal(t, "EnvNew{{.InterfaceName}}", *cfg.ConstructorName)
+	})
+}
+
+func TestParseTemplatesConstructorName(t *testing.T) {
+	pkg := &packages.Package{
+		Types: types.NewPackage("github.com/test/pkg", "mypkg"),
+	}
+	wd, err := os.Getwd()
+	require.NoError(t, err)
+	ifacePath := filepath.Join(wd, "foo.go")
+
+	tests := []struct {
+		name            string
+		ifaceName       string
+		structName      string
+		constructorName string
+		wantStructName  string
+		wantConstructor string
+		wantErrContains string
+		wantErrIs       error
+	}{
+		{
+			name:            "empty constructor-name stays empty",
+			ifaceName:       "Requester",
+			structName:      "{{.Mock}}{{.InterfaceName}}",
+			constructorName: "",
+			wantStructName:  "MockRequester",
+			wantConstructor: "",
+		},
+		{
+			name:            "uses InterfaceName",
+			ifaceName:       "Requester",
+			structName:      "{{.Mock}}{{.InterfaceName}}",
+			constructorName: "New{{.InterfaceName}}",
+			wantStructName:  "MockRequester",
+			wantConstructor: "NewRequester",
+		},
+		{
+			name:            "uses resolved StructName with template functions on exported interface",
+			ifaceName:       "Requester",
+			structName:      "{{.Mock}}{{.InterfaceName}}",
+			constructorName: `Make{{.StructName | trimPrefix "Mock"}}`,
+			wantStructName:  "MockRequester",
+			wantConstructor: "MakeRequester",
+		},
+		{
+			name:            "uses resolved StructName with firstIsLower and firstUpper on unexported interface",
+			ifaceName:       "requester",
+			structName:      "{{.Mock}}{{.InterfaceName}}",
+			constructorName: "{{if firstIsLower .StructName}}new{{else}}New{{end}}{{.StructName | firstUpper}}",
+			wantStructName:  "mockrequester",
+			wantConstructor: "newMockrequester",
+		},
+		{
+			name:            "uses SrcPackageName and Mock",
+			ifaceName:       "Store",
+			structName:      "{{.Mock}}{{.InterfaceName}}",
+			constructorName: "New{{.SrcPackageName | firstUpper}}{{.Mock}}{{.InterfaceName}}",
+			wantStructName:  "MockStore",
+			wantConstructor: "NewMypkgMockStore",
+		},
+		{
+			name:            "invalid template syntax in constructor-name",
+			ifaceName:       "Requester",
+			structName:      "{{.Mock}}{{.InterfaceName}}",
+			constructorName: "New{{.InterfaceName",
+			wantErrContains: "failed to parse constructor-name template",
+		},
+		{
+			name:            "unknown template field in constructor-name",
+			ifaceName:       "Requester",
+			structName:      "{{.Mock}}{{.InterfaceName}}",
+			constructorName: "New{{.NonExistentField}}",
+			wantErrContains: "failed to execute constructor-name template",
+		},
+		{
+			name:            "infinite loop in structname",
+			ifaceName:       "Requester",
+			structName:      "Loop{{.StructName}}",
+			constructorName: "New{{.StructName}}",
+			wantErrIs:       ErrInfiniteLoop,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			cfg := &Config{
+				ConfigFile:      ptr(filepath.Join(wd, ".mockery.yml")),
+				ConstructorName: ptr(tt.constructorName),
+				Dir:             ptr("{{.InterfaceDir}}"),
+				FileName:        ptr("mocks_test.go"),
+				PkgName:         ptr("{{.SrcPackageName}}"),
+				StructName:      ptr(tt.structName),
+				Template:        ptr("testify"),
+				TemplateSchema:  ptr("{{.Template}}.schema.json"),
+			}
+
+			err := cfg.ParseTemplates(t.Context(), ifacePath, tt.ifaceName, pkg)
+			if tt.wantErrIs != nil {
+				require.ErrorIs(t, err, tt.wantErrIs)
+				return
+			}
+			if tt.wantErrContains != "" {
+				require.ErrorContains(t, err, tt.wantErrContains)
+				return
+			}
+			require.NoError(t, err)
+			assert.Equal(t, tt.wantStructName, *cfg.StructName)
+			assert.Equal(t, tt.wantConstructor, *cfg.ConstructorName)
+		})
+	}
 }

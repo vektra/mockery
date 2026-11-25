@@ -3,7 +3,9 @@ package template
 // Interface is the data used to generate a mock for some interface.
 type Interface struct {
 	Comments Comments
-	Methods  []Method
+	// ConstructorName is the configured name for the mock's constructor function.
+	ConstructorName string
+	Methods         []Method
 	// Name is the name of the original interface.
 	Name string
 	// StructName is the chosen name for the struct that will implement the interface.

@@ -444,14 +444,18 @@ func (g *TemplateGenerator) Generate(
 		if err != nil {
 			return nil, err
 		}
-		mockData = append(mockData, template.NewInterface(
+		ifaceData := template.NewInterface(
 			ifaceMock.Name,
 			*ifaceMock.Config.StructName,
 			tParams,
 			methods,
 			ifaceMock.Config.TemplateData,
 			template.NewComments(ifaceMock.TypeSpec, ifaceMock.GenDecl),
-		))
+		)
+		if ifaceMock.Config.ConstructorName != nil {
+			ifaceData.ConstructorName = *ifaceMock.Config.ConstructorName
+		}
+		mockData = append(mockData, ifaceData)
 	}
 
 	data := template.NewData(
