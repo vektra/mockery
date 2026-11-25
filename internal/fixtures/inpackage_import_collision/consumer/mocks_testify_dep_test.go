@@ -47,6 +47,24 @@ func (_m *MockIface) EXPECT() *MockIface_Expecter {
 	return &MockIface_Expecter{mock: &_m.Mock}
 }
 
+type MockIface_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockIface) ASSERT(t mock.TestingT) *MockIface_Asserter {
+	return &MockIface_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockIface_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockIface_Asserter) NotCalled() *MockIface_NotCalledAsserter {
+	return &MockIface_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // M provides a mock function for the type MockIface
 func (_mock *MockIface) M() dep0.T {
 	ret := _mock.Called()
@@ -89,4 +107,12 @@ func (_c *MockIface_M_Call) Return(t dep0.T) *MockIface_M_Call {
 func (_c *MockIface_M_Call) RunAndReturn(run func() dep0.T) *MockIface_M_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// M is a helper method to assert mock.AssertNotCalled
+func (_a *MockIface_NotCalledAsserter) M() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "M")
 }

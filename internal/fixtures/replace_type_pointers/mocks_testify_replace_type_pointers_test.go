@@ -46,6 +46,24 @@ func (_m *MockInterfaceWithPointers) EXPECT() *MockInterfaceWithPointers_Expecte
 	return &MockInterfaceWithPointers_Expecter{mock: &_m.Mock}
 }
 
+type MockInterfaceWithPointers_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockInterfaceWithPointers) ASSERT(t mock.TestingT) *MockInterfaceWithPointers_Asserter {
+	return &MockInterfaceWithPointers_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockInterfaceWithPointers_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockInterfaceWithPointers_Asserter) NotCalled() *MockInterfaceWithPointers_NotCalledAsserter {
+	return &MockInterfaceWithPointers_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // BarFunc provides a mock function for the type MockInterfaceWithPointers
 func (_mock *MockInterfaceWithPointers) BarFunc(bar Bar) Bar {
 	ret := _mock.Called(bar)
@@ -95,6 +113,15 @@ func (_c *MockInterfaceWithPointers_BarFunc_Call) Return(bar1 Bar) *MockInterfac
 func (_c *MockInterfaceWithPointers_BarFunc_Call) RunAndReturn(run func(bar Bar) Bar) *MockInterfaceWithPointers_BarFunc_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// BarFunc is a helper method to assert mock.AssertNotCalled
+//   - bar Bar
+func (_a *MockInterfaceWithPointers_NotCalledAsserter) BarFunc(bar any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "BarFunc", bar)
 }
 
 // FooFunc provides a mock function for the type MockInterfaceWithPointers
@@ -148,4 +175,13 @@ func (_c *MockInterfaceWithPointers_FooFunc_Call) Return(foo1 *Bar) *MockInterfa
 func (_c *MockInterfaceWithPointers_FooFunc_Call) RunAndReturn(run func(foo *Bar) *Bar) *MockInterfaceWithPointers_FooFunc_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// FooFunc is a helper method to assert mock.AssertNotCalled
+//   - foo *Bar
+func (_a *MockInterfaceWithPointers_NotCalledAsserter) FooFunc(foo any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "FooFunc", foo)
 }

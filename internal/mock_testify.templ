@@ -67,6 +67,28 @@ func (_m *{{.StructName}}{{ $mock.TypeInstantiation }}) EXPECT() *{{ $expecterNa
 	return &{{ $expecterNameInstantiated }}{mock: &_m.Mock}
 }
 
+type {{.StructName}}_Asserter{{ $mock.TypeConstraint }} struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+{{- $asserterNameInstantiated := printf "%s_Asserter%s" .StructName ($mock.TypeInstantiation) }}
+
+func (_m *{{.StructName}}{{ $mock.TypeInstantiation }}) ASSERT(t mock.TestingT) *{{ $asserterNameInstantiated }} {
+	return &{{ $asserterNameInstantiated }}{mock: &_m.Mock, t: t}
+}
+
+type {{.StructName}}_NotCalledAsserter{{ $mock.TypeConstraint }} struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+{{- $notCalledAsserterNameInstantiated := printf "%s_NotCalledAsserter%s" .StructName ($mock.TypeInstantiation) }}
+
+func (_a *{{ $asserterNameInstantiated }}) NotCalled() *{{ $notCalledAsserterNameInstantiated }} {
+	return &{{ $notCalledAsserterNameInstantiated }}{mock: _a.mock, t: _a.t}
+}
+
 {{/* RANGE OVER ALL METHODS */}}
 {{- range $methodIdx, $method := .Methods }} {{/* START METHOD RANGE */}}
 
@@ -243,6 +265,29 @@ func (_c *{{ $ExpecterCallNameInstantiated }}) RunAndReturn(run func({{ $method.
 	_c.Call.Return(run)
 {{- end}}
 	return _c
+}
+
+{{- $asserter := $method.Scope.AllocateName "_a" }}
+// {{ $method.Name }} is a helper method to assert mock.AssertNotCalled
+{{- range $method.Params }}
+//  - {{.Var.Name}} {{.TypeStringEllipsis}}
+{{- end}}
+func ({{ $asserter }} *{{ $notCalledAsserterNameInstantiated }}) {{ $method.Name }}({{ range $method.Params }}{{ .Var.Name }} {{ if .Variadic }}...{{end}}any, {{ end }}) bool {
+	if helper, ok := {{ $asserter }}.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return {{ $asserter }}.mock.AssertNotCalled({{ $asserter }}.t, "{{$method.Name}}"
+		{{- if not $method.IsVariadic }}
+			{{- range $method.Params }}, {{ .Var.Name }}{{ end }}
+		{{- else if eq (len $method.Params) 1 }}
+			{{- $lastParam := index $method.Params 0 }}, {{ $lastParam.Var.Name }}...
+		{{- else }}, append([]any{
+			{{- range $i, $param := $method.Params }}
+				{{- if (lt $i (len $method.Params | add -1 ))}} {{ $param.Var.Name }},
+				{{- else }} }, {{ $param.Var.Name }}...
+				{{- end }}
+			{{- end }})...
+		{{- end }})
 }
 {{/* END TODO EXPECTER */}}
 {{- end }} {{/* END METHOD RANGE */}}

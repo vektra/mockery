@@ -46,6 +46,24 @@ func (_m *mockfoo) EXPECT() *mockfoo_Expecter {
 	return &mockfoo_Expecter{mock: &_m.Mock}
 }
 
+type mockfoo_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *mockfoo) ASSERT(t mock.TestingT) *mockfoo_Asserter {
+	return &mockfoo_Asserter{mock: &_m.Mock, t: t}
+}
+
+type mockfoo_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *mockfoo_Asserter) NotCalled() *mockfoo_NotCalledAsserter {
+	return &mockfoo_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // Bar provides a mock function for the type mockfoo
 func (_mock *mockfoo) Bar() baz {
 	ret := _mock.Called()
@@ -88,4 +106,12 @@ func (_c *mockfoo_Bar_Call) Return(bazMoqParam baz) *mockfoo_Bar_Call {
 func (_c *mockfoo_Bar_Call) RunAndReturn(run func() baz) *mockfoo_Bar_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Bar is a helper method to assert mock.AssertNotCalled
+func (_a *mockfoo_NotCalledAsserter) Bar() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Bar")
 }

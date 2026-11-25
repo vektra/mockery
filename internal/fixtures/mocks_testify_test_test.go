@@ -55,6 +55,24 @@ func (_m *MockUsesAny) EXPECT() *MockUsesAny_Expecter {
 	return &MockUsesAny_Expecter{mock: &_m.Mock}
 }
 
+type MockUsesAny_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockUsesAny) ASSERT(t mock.TestingT) *MockUsesAny_Asserter {
+	return &MockUsesAny_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockUsesAny_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockUsesAny_Asserter) NotCalled() *MockUsesAny_NotCalledAsserter {
+	return &MockUsesAny_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // GetReader provides a mock function for the type MockUsesAny
 func (_mock *MockUsesAny) GetReader() any {
 	ret := _mock.Called()
@@ -101,6 +119,14 @@ func (_c *MockUsesAny_GetReader_Call) RunAndReturn(run func() any) *MockUsesAny_
 	return _c
 }
 
+// GetReader is a helper method to assert mock.AssertNotCalled
+func (_a *MockUsesAny_NotCalledAsserter) GetReader() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "GetReader")
+}
+
 // NewMockFooer creates a new instance of MockFooer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockFooer(t interface {
@@ -135,6 +161,24 @@ type MockFooer_Expecter struct {
 
 func (_m *MockFooer) EXPECT() *MockFooer_Expecter {
 	return &MockFooer_Expecter{mock: &_m.Mock}
+}
+
+type MockFooer_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockFooer) ASSERT(t mock.TestingT) *MockFooer_Asserter {
+	return &MockFooer_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockFooer_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockFooer_Asserter) NotCalled() *MockFooer_NotCalledAsserter {
+	return &MockFooer_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Bar provides a mock function for the type MockFooer
@@ -175,6 +219,15 @@ func (_c *MockFooer_Bar_Call) Return() *MockFooer_Bar_Call {
 func (_c *MockFooer_Bar_Call) RunAndReturn(run func(f func([]int))) *MockFooer_Bar_Call {
 	_c.Run(run)
 	return _c
+}
+
+// Bar is a helper method to assert mock.AssertNotCalled
+//   - f func([]int)
+func (_a *MockFooer_NotCalledAsserter) Bar(f any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Bar", f)
 }
 
 // Baz provides a mock function for the type MockFooer
@@ -230,6 +283,15 @@ func (_c *MockFooer_Baz_Call) RunAndReturn(run func(path string) func(x string) 
 	return _c
 }
 
+// Baz is a helper method to assert mock.AssertNotCalled
+//   - path string
+func (_a *MockFooer_NotCalledAsserter) Baz(path any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Baz", path)
+}
+
 // Foo provides a mock function for the type MockFooer
 func (_mock *MockFooer) Foo(f func(x string) string) error {
 	ret := _mock.Called(f)
@@ -281,6 +343,15 @@ func (_c *MockFooer_Foo_Call) RunAndReturn(run func(f func(x string) string) err
 	return _c
 }
 
+// Foo is a helper method to assert mock.AssertNotCalled
+//   - f func(x string) string
+func (_a *MockFooer_NotCalledAsserter) Foo(f any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Foo", f)
+}
+
 // NewMockMapFunc creates a new instance of MockMapFunc. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockMapFunc(t interface {
@@ -315,6 +386,24 @@ type MockMapFunc_Expecter struct {
 
 func (_m *MockMapFunc) EXPECT() *MockMapFunc_Expecter {
 	return &MockMapFunc_Expecter{mock: &_m.Mock}
+}
+
+type MockMapFunc_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockMapFunc) ASSERT(t mock.TestingT) *MockMapFunc_Asserter {
+	return &MockMapFunc_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockMapFunc_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockMapFunc_Asserter) NotCalled() *MockMapFunc_NotCalledAsserter {
+	return &MockMapFunc_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockMapFunc
@@ -368,6 +457,15 @@ func (_c *MockMapFunc_Get_Call) RunAndReturn(run func(m map[string]func(string) 
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+//   - m map[string]func(string) string
+func (_a *MockMapFunc_NotCalledAsserter) Get(m any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get", m)
+}
+
 // NewMockAsyncProducer creates a new instance of MockAsyncProducer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockAsyncProducer(t interface {
@@ -402,6 +500,24 @@ type MockAsyncProducer_Expecter struct {
 
 func (_m *MockAsyncProducer) EXPECT() *MockAsyncProducer_Expecter {
 	return &MockAsyncProducer_Expecter{mock: &_m.Mock}
+}
+
+type MockAsyncProducer_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockAsyncProducer) ASSERT(t mock.TestingT) *MockAsyncProducer_Asserter {
+	return &MockAsyncProducer_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockAsyncProducer_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockAsyncProducer_Asserter) NotCalled() *MockAsyncProducer_NotCalledAsserter {
+	return &MockAsyncProducer_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Input provides a mock function for the type MockAsyncProducer
@@ -450,6 +566,14 @@ func (_c *MockAsyncProducer_Input_Call) RunAndReturn(run func() chan<- bool) *Mo
 	return _c
 }
 
+// Input is a helper method to assert mock.AssertNotCalled
+func (_a *MockAsyncProducer_NotCalledAsserter) Input() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Input")
+}
+
 // Output provides a mock function for the type MockAsyncProducer
 func (_mock *MockAsyncProducer) Output() <-chan bool {
 	ret := _mock.Called()
@@ -494,6 +618,14 @@ func (_c *MockAsyncProducer_Output_Call) Return(boolCh <-chan bool) *MockAsyncPr
 func (_c *MockAsyncProducer_Output_Call) RunAndReturn(run func() <-chan bool) *MockAsyncProducer_Output_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Output is a helper method to assert mock.AssertNotCalled
+func (_a *MockAsyncProducer_NotCalledAsserter) Output() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Output")
 }
 
 // Whatever provides a mock function for the type MockAsyncProducer
@@ -542,6 +674,14 @@ func (_c *MockAsyncProducer_Whatever_Call) RunAndReturn(run func() chan bool) *M
 	return _c
 }
 
+// Whatever is a helper method to assert mock.AssertNotCalled
+func (_a *MockAsyncProducer_NotCalledAsserter) Whatever() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Whatever")
+}
+
 // NewMockConsulLock creates a new instance of MockConsulLock. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockConsulLock(t interface {
@@ -576,6 +716,24 @@ type MockConsulLock_Expecter struct {
 
 func (_m *MockConsulLock) EXPECT() *MockConsulLock_Expecter {
 	return &MockConsulLock_Expecter{mock: &_m.Mock}
+}
+
+type MockConsulLock_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockConsulLock) ASSERT(t mock.TestingT) *MockConsulLock_Asserter {
+	return &MockConsulLock_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockConsulLock_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockConsulLock_Asserter) NotCalled() *MockConsulLock_NotCalledAsserter {
+	return &MockConsulLock_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Lock provides a mock function for the type MockConsulLock
@@ -640,6 +798,15 @@ func (_c *MockConsulLock_Lock_Call) RunAndReturn(run func(valCh <-chan struct{})
 	return _c
 }
 
+// Lock is a helper method to assert mock.AssertNotCalled
+//   - valCh <-chan struct{}
+func (_a *MockConsulLock_NotCalledAsserter) Lock(valCh any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Lock", valCh)
+}
+
 // Unlock provides a mock function for the type MockConsulLock
 func (_mock *MockConsulLock) Unlock() error {
 	ret := _mock.Called()
@@ -684,6 +851,14 @@ func (_c *MockConsulLock_Unlock_Call) RunAndReturn(run func() error) *MockConsul
 	return _c
 }
 
+// Unlock is a helper method to assert mock.AssertNotCalled
+func (_a *MockConsulLock_NotCalledAsserter) Unlock() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Unlock")
+}
+
 // NewMockKeyManager creates a new instance of MockKeyManager. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockKeyManager(t interface {
@@ -718,6 +893,24 @@ type MockKeyManager_Expecter struct {
 
 func (_m *MockKeyManager) EXPECT() *MockKeyManager_Expecter {
 	return &MockKeyManager_Expecter{mock: &_m.Mock}
+}
+
+type MockKeyManager_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockKeyManager) ASSERT(t mock.TestingT) *MockKeyManager_Asserter {
+	return &MockKeyManager_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockKeyManager_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockKeyManager_Asserter) NotCalled() *MockKeyManager_NotCalledAsserter {
+	return &MockKeyManager_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // GetKey provides a mock function for the type MockKeyManager
@@ -790,6 +983,16 @@ func (_c *MockKeyManager_GetKey_Call) RunAndReturn(run func(s string, v uint16) 
 	return _c
 }
 
+// GetKey is a helper method to assert mock.AssertNotCalled
+//   - s string
+//   - v uint16
+func (_a *MockKeyManager_NotCalledAsserter) GetKey(s any, v any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "GetKey", s, v)
+}
+
 // NewMockBlank creates a new instance of MockBlank. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockBlank(t interface {
@@ -824,6 +1027,24 @@ type MockBlank_Expecter struct {
 
 func (_m *MockBlank) EXPECT() *MockBlank_Expecter {
 	return &MockBlank_Expecter{mock: &_m.Mock}
+}
+
+type MockBlank_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockBlank) ASSERT(t mock.TestingT) *MockBlank_Asserter {
+	return &MockBlank_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockBlank_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockBlank_Asserter) NotCalled() *MockBlank_NotCalledAsserter {
+	return &MockBlank_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Create provides a mock function for the type MockBlank
@@ -877,6 +1098,15 @@ func (_c *MockBlank_Create_Call) RunAndReturn(run func(x interface{}) error) *Mo
 	return _c
 }
 
+// Create is a helper method to assert mock.AssertNotCalled
+//   - x interface{}
+func (_a *MockBlank_NotCalledAsserter) Create(x any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Create", x)
+}
+
 // NewMockExpecterAndRolledVariadic creates a new instance of MockExpecterAndRolledVariadic. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockExpecterAndRolledVariadic(t interface {
@@ -911,6 +1141,24 @@ type MockExpecterAndRolledVariadic_Expecter struct {
 
 func (_m *MockExpecterAndRolledVariadic) EXPECT() *MockExpecterAndRolledVariadic_Expecter {
 	return &MockExpecterAndRolledVariadic_Expecter{mock: &_m.Mock}
+}
+
+type MockExpecterAndRolledVariadic_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockExpecterAndRolledVariadic) ASSERT(t mock.TestingT) *MockExpecterAndRolledVariadic_Asserter {
+	return &MockExpecterAndRolledVariadic_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockExpecterAndRolledVariadic_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockExpecterAndRolledVariadic_Asserter) NotCalled() *MockExpecterAndRolledVariadic_NotCalledAsserter {
+	return &MockExpecterAndRolledVariadic_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // ManyArgsReturns provides a mock function for the type MockExpecterAndRolledVariadic
@@ -981,6 +1229,16 @@ func (_c *MockExpecterAndRolledVariadic_ManyArgsReturns_Call) RunAndReturn(run f
 	return _c
 }
 
+// ManyArgsReturns is a helper method to assert mock.AssertNotCalled
+//   - str string
+//   - i int
+func (_a *MockExpecterAndRolledVariadic_NotCalledAsserter) ManyArgsReturns(str any, i any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "ManyArgsReturns", str, i)
+}
+
 // NoArg provides a mock function for the type MockExpecterAndRolledVariadic
 func (_mock *MockExpecterAndRolledVariadic) NoArg() string {
 	ret := _mock.Called()
@@ -1025,6 +1283,14 @@ func (_c *MockExpecterAndRolledVariadic_NoArg_Call) RunAndReturn(run func() stri
 	return _c
 }
 
+// NoArg is a helper method to assert mock.AssertNotCalled
+func (_a *MockExpecterAndRolledVariadic_NotCalledAsserter) NoArg() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "NoArg")
+}
+
 // NoReturn provides a mock function for the type MockExpecterAndRolledVariadic
 func (_mock *MockExpecterAndRolledVariadic) NoReturn(str string) {
 	_mock.Called(str)
@@ -1063,6 +1329,15 @@ func (_c *MockExpecterAndRolledVariadic_NoReturn_Call) Return() *MockExpecterAnd
 func (_c *MockExpecterAndRolledVariadic_NoReturn_Call) RunAndReturn(run func(str string)) *MockExpecterAndRolledVariadic_NoReturn_Call {
 	_c.Run(run)
 	return _c
+}
+
+// NoReturn is a helper method to assert mock.AssertNotCalled
+//   - str string
+func (_a *MockExpecterAndRolledVariadic_NotCalledAsserter) NoReturn(str any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "NoReturn", str)
 }
 
 // Variadic provides a mock function for the type MockExpecterAndRolledVariadic
@@ -1123,6 +1398,15 @@ func (_c *MockExpecterAndRolledVariadic_Variadic_Call) Return(err error) *MockEx
 func (_c *MockExpecterAndRolledVariadic_Variadic_Call) RunAndReturn(run func(ints ...int) error) *MockExpecterAndRolledVariadic_Variadic_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Variadic is a helper method to assert mock.AssertNotCalled
+//   - ints ...int
+func (_a *MockExpecterAndRolledVariadic_NotCalledAsserter) Variadic(ints ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Variadic", ints...)
 }
 
 // VariadicMany provides a mock function for the type MockExpecterAndRolledVariadic
@@ -1197,6 +1481,17 @@ func (_c *MockExpecterAndRolledVariadic_VariadicMany_Call) RunAndReturn(run func
 	return _c
 }
 
+// VariadicMany is a helper method to assert mock.AssertNotCalled
+//   - i int
+//   - a string
+//   - intfs ...interface{}
+func (_a *MockExpecterAndRolledVariadic_NotCalledAsserter) VariadicMany(i any, a any, intfs ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "VariadicMany", append([]any{i, a}, intfs...)...)
+}
+
 // NewMockExpecter creates a new instance of MockExpecter. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockExpecter(t interface {
@@ -1231,6 +1526,24 @@ type MockExpecter_Expecter struct {
 
 func (_m *MockExpecter) EXPECT() *MockExpecter_Expecter {
 	return &MockExpecter_Expecter{mock: &_m.Mock}
+}
+
+type MockExpecter_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockExpecter) ASSERT(t mock.TestingT) *MockExpecter_Asserter {
+	return &MockExpecter_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockExpecter_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockExpecter_Asserter) NotCalled() *MockExpecter_NotCalledAsserter {
+	return &MockExpecter_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // ManyArgsReturns provides a mock function for the type MockExpecter
@@ -1301,6 +1614,16 @@ func (_c *MockExpecter_ManyArgsReturns_Call) RunAndReturn(run func(str string, i
 	return _c
 }
 
+// ManyArgsReturns is a helper method to assert mock.AssertNotCalled
+//   - str string
+//   - i int
+func (_a *MockExpecter_NotCalledAsserter) ManyArgsReturns(str any, i any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "ManyArgsReturns", str, i)
+}
+
 // NoArg provides a mock function for the type MockExpecter
 func (_mock *MockExpecter) NoArg() string {
 	ret := _mock.Called()
@@ -1345,6 +1668,14 @@ func (_c *MockExpecter_NoArg_Call) RunAndReturn(run func() string) *MockExpecter
 	return _c
 }
 
+// NoArg is a helper method to assert mock.AssertNotCalled
+func (_a *MockExpecter_NotCalledAsserter) NoArg() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "NoArg")
+}
+
 // NoReturn provides a mock function for the type MockExpecter
 func (_mock *MockExpecter) NoReturn(str string) {
 	_mock.Called(str)
@@ -1383,6 +1714,15 @@ func (_c *MockExpecter_NoReturn_Call) Return() *MockExpecter_NoReturn_Call {
 func (_c *MockExpecter_NoReturn_Call) RunAndReturn(run func(str string)) *MockExpecter_NoReturn_Call {
 	_c.Run(run)
 	return _c
+}
+
+// NoReturn is a helper method to assert mock.AssertNotCalled
+//   - str string
+func (_a *MockExpecter_NotCalledAsserter) NoReturn(str any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "NoReturn", str)
 }
 
 // Variadic provides a mock function for the type MockExpecter
@@ -1446,6 +1786,15 @@ func (_c *MockExpecter_Variadic_Call) Return(err error) *MockExpecter_Variadic_C
 func (_c *MockExpecter_Variadic_Call) RunAndReturn(run func(ints ...int) error) *MockExpecter_Variadic_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Variadic is a helper method to assert mock.AssertNotCalled
+//   - ints ...int
+func (_a *MockExpecter_NotCalledAsserter) Variadic(ints ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Variadic", ints...)
 }
 
 // VariadicMany provides a mock function for the type MockExpecter
@@ -1519,6 +1868,17 @@ func (_c *MockExpecter_VariadicMany_Call) RunAndReturn(run func(i int, a string,
 	return _c
 }
 
+// VariadicMany is a helper method to assert mock.AssertNotCalled
+//   - i int
+//   - a string
+//   - intfs ...interface{}
+func (_a *MockExpecter_NotCalledAsserter) VariadicMany(i any, a any, intfs ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "VariadicMany", append([]any{i, a}, intfs...)...)
+}
+
 // NewMockVariadicNoReturnInterface creates a new instance of MockVariadicNoReturnInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockVariadicNoReturnInterface(t interface {
@@ -1553,6 +1913,24 @@ type MockVariadicNoReturnInterface_Expecter struct {
 
 func (_m *MockVariadicNoReturnInterface) EXPECT() *MockVariadicNoReturnInterface_Expecter {
 	return &MockVariadicNoReturnInterface_Expecter{mock: &_m.Mock}
+}
+
+type MockVariadicNoReturnInterface_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockVariadicNoReturnInterface) ASSERT(t mock.TestingT) *MockVariadicNoReturnInterface_Asserter {
+	return &MockVariadicNoReturnInterface_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockVariadicNoReturnInterface_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockVariadicNoReturnInterface_Asserter) NotCalled() *MockVariadicNoReturnInterface_NotCalledAsserter {
+	return &MockVariadicNoReturnInterface_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // VariadicNoReturn provides a mock function for the type MockVariadicNoReturnInterface
@@ -1609,6 +1987,16 @@ func (_c *MockVariadicNoReturnInterface_VariadicNoReturn_Call) RunAndReturn(run 
 	return _c
 }
 
+// VariadicNoReturn is a helper method to assert mock.AssertNotCalled
+//   - j int
+//   - is ...interface{}
+func (_a *MockVariadicNoReturnInterface_NotCalledAsserter) VariadicNoReturn(j any, is ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "VariadicNoReturn", append([]any{j}, is...)...)
+}
+
 // NewMockFuncArgsCollision creates a new instance of MockFuncArgsCollision. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockFuncArgsCollision(t interface {
@@ -1643,6 +2031,24 @@ type MockFuncArgsCollision_Expecter struct {
 
 func (_m *MockFuncArgsCollision) EXPECT() *MockFuncArgsCollision_Expecter {
 	return &MockFuncArgsCollision_Expecter{mock: &_m.Mock}
+}
+
+type MockFuncArgsCollision_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockFuncArgsCollision) ASSERT(t mock.TestingT) *MockFuncArgsCollision_Asserter {
+	return &MockFuncArgsCollision_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockFuncArgsCollision_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockFuncArgsCollision_Asserter) NotCalled() *MockFuncArgsCollision_NotCalledAsserter {
+	return &MockFuncArgsCollision_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Foo provides a mock function for the type MockFuncArgsCollision
@@ -1696,6 +2102,15 @@ func (_c *MockFuncArgsCollision_Foo_Call) RunAndReturn(run func(ret interface{})
 	return _c
 }
 
+// Foo is a helper method to assert mock.AssertNotCalled
+//   - ret interface{}
+func (_a *MockFuncArgsCollision_NotCalledAsserter) Foo(ret any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Foo", ret)
+}
+
 // NewMockRequesterGenerics creates a new instance of MockRequesterGenerics. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockRequesterGenerics[TAny any, TComparable comparable, TSigned constraints.Signed, TIntf GetInt, TExternalIntf io.Writer, TGenIntf GetGeneric[TSigned], TInlineType interface{ ~int | ~uint }, TInlineTypeGeneric interface {
@@ -1739,6 +2154,30 @@ type MockRequesterGenerics_Expecter[TAny any, TComparable comparable, TSigned co
 
 func (_m *MockRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) EXPECT() *MockRequesterGenerics_Expecter[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
 	return &MockRequesterGenerics_Expecter[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]{mock: &_m.Mock}
+}
+
+type MockRequesterGenerics_Asserter[TAny any, TComparable comparable, TSigned constraints.Signed, TIntf GetInt, TExternalIntf io.Writer, TGenIntf GetGeneric[TSigned], TInlineType interface{ ~int | ~uint }, TInlineTypeGeneric interface {
+	~int | GenericType[int, GetInt]
+	comparable
+}] struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) ASSERT(t mock.TestingT) *MockRequesterGenerics_Asserter[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	return &MockRequesterGenerics_Asserter[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]{mock: &_m.Mock, t: t}
+}
+
+type MockRequesterGenerics_NotCalledAsserter[TAny any, TComparable comparable, TSigned constraints.Signed, TIntf GetInt, TExternalIntf io.Writer, TGenIntf GetGeneric[TSigned], TInlineType interface{ ~int | ~uint }, TInlineTypeGeneric interface {
+	~int | GenericType[int, GetInt]
+	comparable
+}] struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRequesterGenerics_Asserter[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) NotCalled() *MockRequesterGenerics_NotCalledAsserter[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	return &MockRequesterGenerics_NotCalledAsserter[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]{mock: _a.mock, t: _a.t}
 }
 
 // GenericAnonymousStructs provides a mock function for the type MockRequesterGenerics
@@ -1805,6 +2244,15 @@ func (_c *MockRequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, 
 }) *MockRequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
 	_c.Call.Return(run)
 	return _c
+}
+
+// GenericAnonymousStructs is a helper method to assert mock.AssertNotCalled
+//   - val struct{Type1 TExternalIntf}
+func (_a *MockRequesterGenerics_NotCalledAsserter[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericAnonymousStructs(val any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "GenericAnonymousStructs", val)
 }
 
 // GenericArguments provides a mock function for the type MockRequesterGenerics
@@ -1880,6 +2328,16 @@ func (_c *MockRequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned
 	return _c
 }
 
+// GenericArguments is a helper method to assert mock.AssertNotCalled
+//   - v TAny
+//   - v1 TComparable
+func (_a *MockRequesterGenerics_NotCalledAsserter[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericArguments(v any, v1 any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "GenericArguments", v, v1)
+}
+
 // GenericStructs provides a mock function for the type MockRequesterGenerics
 func (_mock *MockRequesterGenerics[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericStructs(genericType GenericType[TAny, TIntf]) GenericType[TSigned, TIntf] {
 	ret := _mock.Called(genericType)
@@ -1934,6 +2392,15 @@ func (_c *MockRequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, 
 	return _c
 }
 
+// GenericStructs is a helper method to assert mock.AssertNotCalled
+//   - genericType GenericType[TAny, TIntf]
+func (_a *MockRequesterGenerics_NotCalledAsserter[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) GenericStructs(genericType any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "GenericStructs", genericType)
+}
+
 // NewMockGetInt creates a new instance of MockGetInt. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockGetInt(t interface {
@@ -1968,6 +2435,24 @@ type MockGetInt_Expecter struct {
 
 func (_m *MockGetInt) EXPECT() *MockGetInt_Expecter {
 	return &MockGetInt_Expecter{mock: &_m.Mock}
+}
+
+type MockGetInt_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockGetInt) ASSERT(t mock.TestingT) *MockGetInt_Asserter {
+	return &MockGetInt_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockGetInt_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockGetInt_Asserter) NotCalled() *MockGetInt_NotCalledAsserter {
+	return &MockGetInt_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockGetInt
@@ -2014,6 +2499,14 @@ func (_c *MockGetInt_Get_Call) RunAndReturn(run func() int) *MockGetInt_Get_Call
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+func (_a *MockGetInt_NotCalledAsserter) Get() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get")
+}
+
 // NewMockGetGeneric creates a new instance of MockGetGeneric. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockGetGeneric[T constraints.Integer](t interface {
@@ -2048,6 +2541,24 @@ type MockGetGeneric_Expecter[T constraints.Integer] struct {
 
 func (_m *MockGetGeneric[T]) EXPECT() *MockGetGeneric_Expecter[T] {
 	return &MockGetGeneric_Expecter[T]{mock: &_m.Mock}
+}
+
+type MockGetGeneric_Asserter[T constraints.Integer] struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockGetGeneric[T]) ASSERT(t mock.TestingT) *MockGetGeneric_Asserter[T] {
+	return &MockGetGeneric_Asserter[T]{mock: &_m.Mock, t: t}
+}
+
+type MockGetGeneric_NotCalledAsserter[T constraints.Integer] struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockGetGeneric_Asserter[T]) NotCalled() *MockGetGeneric_NotCalledAsserter[T] {
+	return &MockGetGeneric_NotCalledAsserter[T]{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockGetGeneric
@@ -2096,6 +2607,14 @@ func (_c *MockGetGeneric_Get_Call[T]) RunAndReturn(run func() T) *MockGetGeneric
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+func (_a *MockGetGeneric_NotCalledAsserter[T]) Get() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get")
+}
+
 // NewMockEmbeddedGet creates a new instance of MockEmbeddedGet. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockEmbeddedGet[T constraints.Signed](t interface {
@@ -2130,6 +2649,24 @@ type MockEmbeddedGet_Expecter[T constraints.Signed] struct {
 
 func (_m *MockEmbeddedGet[T]) EXPECT() *MockEmbeddedGet_Expecter[T] {
 	return &MockEmbeddedGet_Expecter[T]{mock: &_m.Mock}
+}
+
+type MockEmbeddedGet_Asserter[T constraints.Signed] struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockEmbeddedGet[T]) ASSERT(t mock.TestingT) *MockEmbeddedGet_Asserter[T] {
+	return &MockEmbeddedGet_Asserter[T]{mock: &_m.Mock, t: t}
+}
+
+type MockEmbeddedGet_NotCalledAsserter[T constraints.Signed] struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockEmbeddedGet_Asserter[T]) NotCalled() *MockEmbeddedGet_NotCalledAsserter[T] {
+	return &MockEmbeddedGet_NotCalledAsserter[T]{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockEmbeddedGet
@@ -2178,6 +2715,14 @@ func (_c *MockEmbeddedGet_Get_Call[T]) RunAndReturn(run func() T) *MockEmbeddedG
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+func (_a *MockEmbeddedGet_NotCalledAsserter[T]) Get() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get")
+}
+
 // NewMockReplaceGeneric creates a new instance of MockReplaceGeneric. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockReplaceGeneric[TImport any, TConstraint constraints.Signed, TKeep any](t interface {
@@ -2212,6 +2757,24 @@ type MockReplaceGeneric_Expecter[TImport any, TConstraint constraints.Signed, TK
 
 func (_m *MockReplaceGeneric[TImport, TConstraint, TKeep]) EXPECT() *MockReplaceGeneric_Expecter[TImport, TConstraint, TKeep] {
 	return &MockReplaceGeneric_Expecter[TImport, TConstraint, TKeep]{mock: &_m.Mock}
+}
+
+type MockReplaceGeneric_Asserter[TImport any, TConstraint constraints.Signed, TKeep any] struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockReplaceGeneric[TImport, TConstraint, TKeep]) ASSERT(t mock.TestingT) *MockReplaceGeneric_Asserter[TImport, TConstraint, TKeep] {
+	return &MockReplaceGeneric_Asserter[TImport, TConstraint, TKeep]{mock: &_m.Mock, t: t}
+}
+
+type MockReplaceGeneric_NotCalledAsserter[TImport any, TConstraint constraints.Signed, TKeep any] struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockReplaceGeneric_Asserter[TImport, TConstraint, TKeep]) NotCalled() *MockReplaceGeneric_NotCalledAsserter[TImport, TConstraint, TKeep] {
+	return &MockReplaceGeneric_NotCalledAsserter[TImport, TConstraint, TKeep]{mock: _a.mock, t: _a.t}
 }
 
 // A provides a mock function for the type MockReplaceGeneric
@@ -2267,6 +2830,15 @@ func (_c *MockReplaceGeneric_A_Call[TImport, TConstraint, TKeep]) RunAndReturn(r
 	return _c
 }
 
+// A is a helper method to assert mock.AssertNotCalled
+//   - t1 TImport
+func (_a *MockReplaceGeneric_NotCalledAsserter[TImport, TConstraint, TKeep]) A(t1 any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "A", t1)
+}
+
 // B provides a mock function for the type MockReplaceGeneric
 func (_mock *MockReplaceGeneric[TImport, TConstraint, TKeep]) B() TImport {
 	ret := _mock.Called()
@@ -2311,6 +2883,14 @@ func (_c *MockReplaceGeneric_B_Call[TImport, TConstraint, TKeep]) Return(v TImpo
 func (_c *MockReplaceGeneric_B_Call[TImport, TConstraint, TKeep]) RunAndReturn(run func() TImport) *MockReplaceGeneric_B_Call[TImport, TConstraint, TKeep] {
 	_c.Call.Return(run)
 	return _c
+}
+
+// B is a helper method to assert mock.AssertNotCalled
+func (_a *MockReplaceGeneric_NotCalledAsserter[TImport, TConstraint, TKeep]) B() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "B")
 }
 
 // C provides a mock function for the type MockReplaceGeneric
@@ -2359,6 +2939,14 @@ func (_c *MockReplaceGeneric_C_Call[TImport, TConstraint, TKeep]) RunAndReturn(r
 	return _c
 }
 
+// C is a helper method to assert mock.AssertNotCalled
+func (_a *MockReplaceGeneric_NotCalledAsserter[TImport, TConstraint, TKeep]) C() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "C")
+}
+
 // NewMockReplaceGenericSelf creates a new instance of MockReplaceGenericSelf. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockReplaceGenericSelf[T any](t interface {
@@ -2393,6 +2981,24 @@ type MockReplaceGenericSelf_Expecter[T any] struct {
 
 func (_m *MockReplaceGenericSelf[T]) EXPECT() *MockReplaceGenericSelf_Expecter[T] {
 	return &MockReplaceGenericSelf_Expecter[T]{mock: &_m.Mock}
+}
+
+type MockReplaceGenericSelf_Asserter[T any] struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockReplaceGenericSelf[T]) ASSERT(t mock.TestingT) *MockReplaceGenericSelf_Asserter[T] {
+	return &MockReplaceGenericSelf_Asserter[T]{mock: &_m.Mock, t: t}
+}
+
+type MockReplaceGenericSelf_NotCalledAsserter[T any] struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockReplaceGenericSelf_Asserter[T]) NotCalled() *MockReplaceGenericSelf_NotCalledAsserter[T] {
+	return &MockReplaceGenericSelf_NotCalledAsserter[T]{mock: _a.mock, t: _a.t}
 }
 
 // A provides a mock function for the type MockReplaceGenericSelf
@@ -2441,6 +3047,14 @@ func (_c *MockReplaceGenericSelf_A_Call[T]) RunAndReturn(run func() T) *MockRepl
 	return _c
 }
 
+// A is a helper method to assert mock.AssertNotCalled
+func (_a *MockReplaceGenericSelf_NotCalledAsserter[T]) A() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "A")
+}
+
 // NewMockConstructorTypeParams creates a new instance of MockConstructorTypeParams. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockConstructorTypeParams[helper any, ok any](t interface {
@@ -2475,6 +3089,24 @@ type MockConstructorTypeParams_Expecter[helper any, ok any] struct {
 
 func (_m *MockConstructorTypeParams[helper, ok]) EXPECT() *MockConstructorTypeParams_Expecter[helper, ok] {
 	return &MockConstructorTypeParams_Expecter[helper, ok]{mock: &_m.Mock}
+}
+
+type MockConstructorTypeParams_Asserter[helper any, ok any] struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockConstructorTypeParams[helper, ok]) ASSERT(t mock.TestingT) *MockConstructorTypeParams_Asserter[helper, ok] {
+	return &MockConstructorTypeParams_Asserter[helper, ok]{mock: &_m.Mock, t: t}
+}
+
+type MockConstructorTypeParams_NotCalledAsserter[helper any, ok any] struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockConstructorTypeParams_Asserter[helper, ok]) NotCalled() *MockConstructorTypeParams_NotCalledAsserter[helper, ok] {
+	return &MockConstructorTypeParams_NotCalledAsserter[helper, ok]{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockConstructorTypeParams
@@ -2521,6 +3153,14 @@ func (_c *MockConstructorTypeParams_Get_Call[helper, ok]) RunAndReturn(run func(
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+func (_a *MockConstructorTypeParams_NotCalledAsserter[helper, ok]) Get() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get")
+}
+
 // NewMockHasConflictingNestedImports creates a new instance of MockHasConflictingNestedImports. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockHasConflictingNestedImports(t interface {
@@ -2555,6 +3195,24 @@ type MockHasConflictingNestedImports_Expecter struct {
 
 func (_m *MockHasConflictingNestedImports) EXPECT() *MockHasConflictingNestedImports_Expecter {
 	return &MockHasConflictingNestedImports_Expecter{mock: &_m.Mock}
+}
+
+type MockHasConflictingNestedImports_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockHasConflictingNestedImports) ASSERT(t mock.TestingT) *MockHasConflictingNestedImports_Asserter {
+	return &MockHasConflictingNestedImports_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockHasConflictingNestedImports_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockHasConflictingNestedImports_Asserter) NotCalled() *MockHasConflictingNestedImports_NotCalledAsserter {
+	return &MockHasConflictingNestedImports_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockHasConflictingNestedImports
@@ -2617,6 +3275,15 @@ func (_c *MockHasConflictingNestedImports_Get_Call) RunAndReturn(run func(path s
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+//   - path string
+func (_a *MockHasConflictingNestedImports_NotCalledAsserter) Get(path any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get", path)
+}
+
 // Z provides a mock function for the type MockHasConflictingNestedImports
 func (_mock *MockHasConflictingNestedImports) Z() http0.MyStruct {
 	ret := _mock.Called()
@@ -2661,6 +3328,14 @@ func (_c *MockHasConflictingNestedImports_Z_Call) RunAndReturn(run func() http0.
 	return _c
 }
 
+// Z is a helper method to assert mock.AssertNotCalled
+func (_a *MockHasConflictingNestedImports_NotCalledAsserter) Z() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Z")
+}
+
 // NewMockImportsSameAsPackage creates a new instance of MockImportsSameAsPackage. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockImportsSameAsPackage(t interface {
@@ -2695,6 +3370,24 @@ type MockImportsSameAsPackage_Expecter struct {
 
 func (_m *MockImportsSameAsPackage) EXPECT() *MockImportsSameAsPackage_Expecter {
 	return &MockImportsSameAsPackage_Expecter{mock: &_m.Mock}
+}
+
+type MockImportsSameAsPackage_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockImportsSameAsPackage) ASSERT(t mock.TestingT) *MockImportsSameAsPackage_Asserter {
+	return &MockImportsSameAsPackage_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockImportsSameAsPackage_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockImportsSameAsPackage_Asserter) NotCalled() *MockImportsSameAsPackage_NotCalledAsserter {
+	return &MockImportsSameAsPackage_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // A provides a mock function for the type MockImportsSameAsPackage
@@ -2739,6 +3432,14 @@ func (_c *MockImportsSameAsPackage_A_Call) Return(b test.B) *MockImportsSameAsPa
 func (_c *MockImportsSameAsPackage_A_Call) RunAndReturn(run func() test.B) *MockImportsSameAsPackage_A_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// A is a helper method to assert mock.AssertNotCalled
+func (_a *MockImportsSameAsPackage_NotCalledAsserter) A() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "A")
 }
 
 // B provides a mock function for the type MockImportsSameAsPackage
@@ -2787,6 +3488,14 @@ func (_c *MockImportsSameAsPackage_B_Call) RunAndReturn(run func() KeyManager) *
 	return _c
 }
 
+// B is a helper method to assert mock.AssertNotCalled
+func (_a *MockImportsSameAsPackage_NotCalledAsserter) B() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "B")
+}
+
 // C provides a mock function for the type MockImportsSameAsPackage
 func (_mock *MockImportsSameAsPackage) C(c C) {
 	_mock.Called(c)
@@ -2827,6 +3536,15 @@ func (_c *MockImportsSameAsPackage_C_Call) RunAndReturn(run func(c C)) *MockImpo
 	return _c
 }
 
+// C is a helper method to assert mock.AssertNotCalled
+//   - c C
+func (_a *MockImportsSameAsPackage_NotCalledAsserter) C(c any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "C", c)
+}
+
 // NewMockGenericInterface creates a new instance of MockGenericInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockGenericInterface[M any](t interface {
@@ -2861,6 +3579,24 @@ type MockGenericInterface_Expecter[M any] struct {
 
 func (_m *MockGenericInterface[M]) EXPECT() *MockGenericInterface_Expecter[M] {
 	return &MockGenericInterface_Expecter[M]{mock: &_m.Mock}
+}
+
+type MockGenericInterface_Asserter[M any] struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockGenericInterface[M]) ASSERT(t mock.TestingT) *MockGenericInterface_Asserter[M] {
+	return &MockGenericInterface_Asserter[M]{mock: &_m.Mock, t: t}
+}
+
+type MockGenericInterface_NotCalledAsserter[M any] struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockGenericInterface_Asserter[M]) NotCalled() *MockGenericInterface_NotCalledAsserter[M] {
+	return &MockGenericInterface_NotCalledAsserter[M]{mock: _a.mock, t: _a.t}
 }
 
 // Func provides a mock function for the type MockGenericInterface
@@ -2914,6 +3650,15 @@ func (_c *MockGenericInterface_Func_Call[M]) RunAndReturn(run func(arg *M) int) 
 	return _c
 }
 
+// Func is a helper method to assert mock.AssertNotCalled
+//   - arg *M
+func (_a *MockGenericInterface_NotCalledAsserter[M]) Func(arg any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Func", arg)
+}
+
 // NewMockInstantiatedGenericInterface creates a new instance of MockInstantiatedGenericInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockInstantiatedGenericInterface(t interface {
@@ -2948,6 +3693,24 @@ type MockInstantiatedGenericInterface_Expecter struct {
 
 func (_m *MockInstantiatedGenericInterface) EXPECT() *MockInstantiatedGenericInterface_Expecter {
 	return &MockInstantiatedGenericInterface_Expecter{mock: &_m.Mock}
+}
+
+type MockInstantiatedGenericInterface_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockInstantiatedGenericInterface) ASSERT(t mock.TestingT) *MockInstantiatedGenericInterface_Asserter {
+	return &MockInstantiatedGenericInterface_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockInstantiatedGenericInterface_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockInstantiatedGenericInterface_Asserter) NotCalled() *MockInstantiatedGenericInterface_NotCalledAsserter {
+	return &MockInstantiatedGenericInterface_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Func provides a mock function for the type MockInstantiatedGenericInterface
@@ -3001,6 +3764,15 @@ func (_c *MockInstantiatedGenericInterface_Func_Call) RunAndReturn(run func(arg 
 	return _c
 }
 
+// Func is a helper method to assert mock.AssertNotCalled
+//   - arg *float32
+func (_a *MockInstantiatedGenericInterface_NotCalledAsserter) Func(arg any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Func", arg)
+}
+
 // NewMockMyReader creates a new instance of MockMyReader. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockMyReader(t interface {
@@ -3035,6 +3807,24 @@ type MockMyReader_Expecter struct {
 
 func (_m *MockMyReader) EXPECT() *MockMyReader_Expecter {
 	return &MockMyReader_Expecter{mock: &_m.Mock}
+}
+
+type MockMyReader_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockMyReader) ASSERT(t mock.TestingT) *MockMyReader_Asserter {
+	return &MockMyReader_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockMyReader_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockMyReader_Asserter) NotCalled() *MockMyReader_NotCalledAsserter {
+	return &MockMyReader_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Read provides a mock function for the type MockMyReader
@@ -3097,6 +3887,15 @@ func (_c *MockMyReader_Read_Call) RunAndReturn(run func(p []byte) (int, error)) 
 	return _c
 }
 
+// Read is a helper method to assert mock.AssertNotCalled
+//   - p []byte
+func (_a *MockMyReader_NotCalledAsserter) Read(p any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Read", p)
+}
+
 // NewMockIssue766 creates a new instance of MockIssue766. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockIssue766(t interface {
@@ -3131,6 +3930,24 @@ type MockIssue766_Expecter struct {
 
 func (_m *MockIssue766) EXPECT() *MockIssue766_Expecter {
 	return &MockIssue766_Expecter{mock: &_m.Mock}
+}
+
+type MockIssue766_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockIssue766) ASSERT(t mock.TestingT) *MockIssue766_Asserter {
+	return &MockIssue766_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockIssue766_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockIssue766_Asserter) NotCalled() *MockIssue766_NotCalledAsserter {
+	return &MockIssue766_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // FetchData provides a mock function for the type MockIssue766
@@ -3195,6 +4012,15 @@ func (_c *MockIssue766_FetchData_Call) RunAndReturn(run func(fetchFunc func(x ..
 	return _c
 }
 
+// FetchData is a helper method to assert mock.AssertNotCalled
+//   - fetchFunc func(x ...int) ([]int, error)
+func (_a *MockIssue766_NotCalledAsserter) FetchData(fetchFunc any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "FetchData", fetchFunc)
+}
+
 // NewMockMapToInterface creates a new instance of MockMapToInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockMapToInterface(t interface {
@@ -3229,6 +4055,24 @@ type MockMapToInterface_Expecter struct {
 
 func (_m *MockMapToInterface) EXPECT() *MockMapToInterface_Expecter {
 	return &MockMapToInterface_Expecter{mock: &_m.Mock}
+}
+
+type MockMapToInterface_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockMapToInterface) ASSERT(t mock.TestingT) *MockMapToInterface_Asserter {
+	return &MockMapToInterface_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockMapToInterface_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockMapToInterface_Asserter) NotCalled() *MockMapToInterface_NotCalledAsserter {
+	return &MockMapToInterface_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Foo provides a mock function for the type MockMapToInterface
@@ -3279,6 +4123,15 @@ func (_c *MockMapToInterface_Foo_Call) RunAndReturn(run func(arg1 ...map[string]
 	return _c
 }
 
+// Foo is a helper method to assert mock.AssertNotCalled
+//   - arg1 ...map[string]interface{}
+func (_a *MockMapToInterface_NotCalledAsserter) Foo(arg1 ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Foo", arg1...)
+}
+
 // NewMockSibling creates a new instance of MockSibling. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockSibling(t interface {
@@ -3315,6 +4168,24 @@ func (_m *MockSibling) EXPECT() *MockSibling_Expecter {
 	return &MockSibling_Expecter{mock: &_m.Mock}
 }
 
+type MockSibling_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockSibling) ASSERT(t mock.TestingT) *MockSibling_Asserter {
+	return &MockSibling_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockSibling_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockSibling_Asserter) NotCalled() *MockSibling_NotCalledAsserter {
+	return &MockSibling_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // DoSomething provides a mock function for the type MockSibling
 func (_mock *MockSibling) DoSomething() {
 	_mock.Called()
@@ -3346,6 +4217,14 @@ func (_c *MockSibling_DoSomething_Call) Return() *MockSibling_DoSomething_Call {
 func (_c *MockSibling_DoSomething_Call) RunAndReturn(run func()) *MockSibling_DoSomething_Call {
 	_c.Run(run)
 	return _c
+}
+
+// DoSomething is a helper method to assert mock.AssertNotCalled
+func (_a *MockSibling_NotCalledAsserter) DoSomething() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "DoSomething")
 }
 
 // NewMockUsesOtherPkgIface creates a new instance of MockUsesOtherPkgIface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
@@ -3382,6 +4261,24 @@ type MockUsesOtherPkgIface_Expecter struct {
 
 func (_m *MockUsesOtherPkgIface) EXPECT() *MockUsesOtherPkgIface_Expecter {
 	return &MockUsesOtherPkgIface_Expecter{mock: &_m.Mock}
+}
+
+type MockUsesOtherPkgIface_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockUsesOtherPkgIface) ASSERT(t mock.TestingT) *MockUsesOtherPkgIface_Asserter {
+	return &MockUsesOtherPkgIface_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockUsesOtherPkgIface_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockUsesOtherPkgIface_Asserter) NotCalled() *MockUsesOtherPkgIface_NotCalledAsserter {
+	return &MockUsesOtherPkgIface_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // DoSomethingElse provides a mock function for the type MockUsesOtherPkgIface
@@ -3424,6 +4321,15 @@ func (_c *MockUsesOtherPkgIface_DoSomethingElse_Call) RunAndReturn(run func(obj 
 	return _c
 }
 
+// DoSomethingElse is a helper method to assert mock.AssertNotCalled
+//   - obj Sibling
+func (_a *MockUsesOtherPkgIface_NotCalledAsserter) DoSomethingElse(obj any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "DoSomethingElse", obj)
+}
+
 // NewMockNilRun creates a new instance of MockNilRun. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockNilRun(t interface {
@@ -3458,6 +4364,24 @@ type MockNilRun_Expecter struct {
 
 func (_m *MockNilRun) EXPECT() *MockNilRun_Expecter {
 	return &MockNilRun_Expecter{mock: &_m.Mock}
+}
+
+type MockNilRun_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockNilRun) ASSERT(t mock.TestingT) *MockNilRun_Asserter {
+	return &MockNilRun_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockNilRun_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockNilRun_Asserter) NotCalled() *MockNilRun_NotCalledAsserter {
+	return &MockNilRun_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Foo provides a mock function for the type MockNilRun
@@ -3500,6 +4424,15 @@ func (_c *MockNilRun_Foo_Call) RunAndReturn(run func(nilRun NilRun)) *MockNilRun
 	return _c
 }
 
+// Foo is a helper method to assert mock.AssertNotCalled
+//   - nilRun NilRun
+func (_a *MockNilRun_NotCalledAsserter) Foo(nilRun any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Foo", nilRun)
+}
+
 // NewMockPanicOnNoReturnValue creates a new instance of MockPanicOnNoReturnValue. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockPanicOnNoReturnValue(t interface {
@@ -3534,6 +4467,24 @@ type MockPanicOnNoReturnValue_Expecter struct {
 
 func (_m *MockPanicOnNoReturnValue) EXPECT() *MockPanicOnNoReturnValue_Expecter {
 	return &MockPanicOnNoReturnValue_Expecter{mock: &_m.Mock}
+}
+
+type MockPanicOnNoReturnValue_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockPanicOnNoReturnValue) ASSERT(t mock.TestingT) *MockPanicOnNoReturnValue_Asserter {
+	return &MockPanicOnNoReturnValue_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockPanicOnNoReturnValue_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockPanicOnNoReturnValue_Asserter) NotCalled() *MockPanicOnNoReturnValue_NotCalledAsserter {
+	return &MockPanicOnNoReturnValue_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // DoSomething provides a mock function for the type MockPanicOnNoReturnValue
@@ -3580,6 +4531,14 @@ func (_c *MockPanicOnNoReturnValue_DoSomething_Call) RunAndReturn(run func() str
 	return _c
 }
 
+// DoSomething is a helper method to assert mock.AssertNotCalled
+func (_a *MockPanicOnNoReturnValue_NotCalledAsserter) DoSomething() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "DoSomething")
+}
+
 // NewMockParamNamesInTemplate creates a new instance of MockParamNamesInTemplate. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockParamNamesInTemplate(t interface {
@@ -3614,6 +4573,24 @@ type MockParamNamesInTemplate_Expecter struct {
 
 func (_m *MockParamNamesInTemplate) EXPECT() *MockParamNamesInTemplate_Expecter {
 	return &MockParamNamesInTemplate_Expecter{mock: &_m.Mock}
+}
+
+type MockParamNamesInTemplate_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockParamNamesInTemplate) ASSERT(t mock.TestingT) *MockParamNamesInTemplate_Asserter {
+	return &MockParamNamesInTemplate_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockParamNamesInTemplate_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockParamNamesInTemplate_Asserter) NotCalled() *MockParamNamesInTemplate_NotCalledAsserter {
+	return &MockParamNamesInTemplate_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Set provides a mock function for the type MockParamNamesInTemplate
@@ -3673,6 +4650,16 @@ func (_c *MockParamNamesInTemplate_Set_Call) RunAndReturn(run func(mock string, 
 	return _c
 }
 
+// Set is a helper method to assert mock.AssertNotCalled
+//   - mock string
+//   - callInfo int
+func (_a *MockParamNamesInTemplate_NotCalledAsserter) Set(mock any, callInfo any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Set", mock, callInfo)
+}
+
 // NewMockRequester creates a new instance of MockRequester. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockRequester(t interface {
@@ -3707,6 +4694,24 @@ type MockRequester_Expecter struct {
 
 func (_m *MockRequester) EXPECT() *MockRequester_Expecter {
 	return &MockRequester_Expecter{mock: &_m.Mock}
+}
+
+type MockRequester_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRequester) ASSERT(t mock.TestingT) *MockRequester_Asserter {
+	return &MockRequester_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRequester_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRequester_Asserter) NotCalled() *MockRequester_NotCalledAsserter {
+	return &MockRequester_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockRequester
@@ -3769,6 +4774,15 @@ func (_c *MockRequester_Get_Call) RunAndReturn(run func(path string) (string, er
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+//   - path string
+func (_a *MockRequester_NotCalledAsserter) Get(path any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get", path)
+}
+
 // NewMockRequester2 creates a new instance of MockRequester2. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockRequester2(t interface {
@@ -3803,6 +4817,24 @@ type MockRequester2_Expecter struct {
 
 func (_m *MockRequester2) EXPECT() *MockRequester2_Expecter {
 	return &MockRequester2_Expecter{mock: &_m.Mock}
+}
+
+type MockRequester2_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRequester2) ASSERT(t mock.TestingT) *MockRequester2_Asserter {
+	return &MockRequester2_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRequester2_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRequester2_Asserter) NotCalled() *MockRequester2_NotCalledAsserter {
+	return &MockRequester2_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockRequester2
@@ -3856,6 +4888,15 @@ func (_c *MockRequester2_Get_Call) RunAndReturn(run func(path string) error) *Mo
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+//   - path string
+func (_a *MockRequester2_NotCalledAsserter) Get(path any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get", path)
+}
+
 // NewMockRequester3 creates a new instance of MockRequester3. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockRequester3(t interface {
@@ -3890,6 +4931,24 @@ type MockRequester3_Expecter struct {
 
 func (_m *MockRequester3) EXPECT() *MockRequester3_Expecter {
 	return &MockRequester3_Expecter{mock: &_m.Mock}
+}
+
+type MockRequester3_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRequester3) ASSERT(t mock.TestingT) *MockRequester3_Asserter {
+	return &MockRequester3_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRequester3_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRequester3_Asserter) NotCalled() *MockRequester3_NotCalledAsserter {
+	return &MockRequester3_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockRequester3
@@ -3936,6 +4995,14 @@ func (_c *MockRequester3_Get_Call) RunAndReturn(run func() error) *MockRequester
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+func (_a *MockRequester3_NotCalledAsserter) Get() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get")
+}
+
 // NewMockRequester4 creates a new instance of MockRequester4. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockRequester4(t interface {
@@ -3972,6 +5039,24 @@ func (_m *MockRequester4) EXPECT() *MockRequester4_Expecter {
 	return &MockRequester4_Expecter{mock: &_m.Mock}
 }
 
+type MockRequester4_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRequester4) ASSERT(t mock.TestingT) *MockRequester4_Asserter {
+	return &MockRequester4_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRequester4_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRequester4_Asserter) NotCalled() *MockRequester4_NotCalledAsserter {
+	return &MockRequester4_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // Get provides a mock function for the type MockRequester4
 func (_mock *MockRequester4) Get() {
 	_mock.Called()
@@ -4003,6 +5088,14 @@ func (_c *MockRequester4_Get_Call) Return() *MockRequester4_Get_Call {
 func (_c *MockRequester4_Get_Call) RunAndReturn(run func()) *MockRequester4_Get_Call {
 	_c.Run(run)
 	return _c
+}
+
+// Get is a helper method to assert mock.AssertNotCalled
+func (_a *MockRequester4_NotCalledAsserter) Get() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get")
 }
 
 // NewMockRequesterArgSameAsImport creates a new instance of MockRequesterArgSameAsImport. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
@@ -4039,6 +5132,24 @@ type MockRequesterArgSameAsImport_Expecter struct {
 
 func (_m *MockRequesterArgSameAsImport) EXPECT() *MockRequesterArgSameAsImport_Expecter {
 	return &MockRequesterArgSameAsImport_Expecter{mock: &_m.Mock}
+}
+
+type MockRequesterArgSameAsImport_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRequesterArgSameAsImport) ASSERT(t mock.TestingT) *MockRequesterArgSameAsImport_Asserter {
+	return &MockRequesterArgSameAsImport_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRequesterArgSameAsImport_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRequesterArgSameAsImport_Asserter) NotCalled() *MockRequesterArgSameAsImport_NotCalledAsserter {
+	return &MockRequesterArgSameAsImport_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockRequesterArgSameAsImport
@@ -4094,6 +5205,15 @@ func (_c *MockRequesterArgSameAsImport_Get_Call) RunAndReturn(run func(json1 str
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+//   - json1 string
+func (_a *MockRequesterArgSameAsImport_NotCalledAsserter) Get(json1 any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get", json1)
+}
+
 // NewMockRequesterArgSameAsNamedImport creates a new instance of MockRequesterArgSameAsNamedImport. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockRequesterArgSameAsNamedImport(t interface {
@@ -4128,6 +5248,24 @@ type MockRequesterArgSameAsNamedImport_Expecter struct {
 
 func (_m *MockRequesterArgSameAsNamedImport) EXPECT() *MockRequesterArgSameAsNamedImport_Expecter {
 	return &MockRequesterArgSameAsNamedImport_Expecter{mock: &_m.Mock}
+}
+
+type MockRequesterArgSameAsNamedImport_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRequesterArgSameAsNamedImport) ASSERT(t mock.TestingT) *MockRequesterArgSameAsNamedImport_Asserter {
+	return &MockRequesterArgSameAsNamedImport_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRequesterArgSameAsNamedImport_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRequesterArgSameAsNamedImport_Asserter) NotCalled() *MockRequesterArgSameAsNamedImport_NotCalledAsserter {
+	return &MockRequesterArgSameAsNamedImport_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockRequesterArgSameAsNamedImport
@@ -4183,6 +5321,15 @@ func (_c *MockRequesterArgSameAsNamedImport_Get_Call) RunAndReturn(run func(json
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+//   - json1 string
+func (_a *MockRequesterArgSameAsNamedImport_NotCalledAsserter) Get(json1 any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get", json1)
+}
+
 // NewMockRequesterArgSameAsPkg creates a new instance of MockRequesterArgSameAsPkg. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockRequesterArgSameAsPkg(t interface {
@@ -4217,6 +5364,24 @@ type MockRequesterArgSameAsPkg_Expecter struct {
 
 func (_m *MockRequesterArgSameAsPkg) EXPECT() *MockRequesterArgSameAsPkg_Expecter {
 	return &MockRequesterArgSameAsPkg_Expecter{mock: &_m.Mock}
+}
+
+type MockRequesterArgSameAsPkg_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRequesterArgSameAsPkg) ASSERT(t mock.TestingT) *MockRequesterArgSameAsPkg_Asserter {
+	return &MockRequesterArgSameAsPkg_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRequesterArgSameAsPkg_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRequesterArgSameAsPkg_Asserter) NotCalled() *MockRequesterArgSameAsPkg_NotCalledAsserter {
+	return &MockRequesterArgSameAsPkg_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockRequesterArgSameAsPkg
@@ -4259,6 +5424,15 @@ func (_c *MockRequesterArgSameAsPkg_Get_Call) RunAndReturn(run func(test1 string
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+//   - test1 string
+func (_a *MockRequesterArgSameAsPkg_NotCalledAsserter) Get(test1 any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get", test1)
+}
+
 // NewMockRequesterArray creates a new instance of MockRequesterArray. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockRequesterArray(t interface {
@@ -4293,6 +5467,24 @@ type MockRequesterArray_Expecter struct {
 
 func (_m *MockRequesterArray) EXPECT() *MockRequesterArray_Expecter {
 	return &MockRequesterArray_Expecter{mock: &_m.Mock}
+}
+
+type MockRequesterArray_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRequesterArray) ASSERT(t mock.TestingT) *MockRequesterArray_Asserter {
+	return &MockRequesterArray_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRequesterArray_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRequesterArray_Asserter) NotCalled() *MockRequesterArray_NotCalledAsserter {
+	return &MockRequesterArray_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockRequesterArray
@@ -4357,6 +5549,15 @@ func (_c *MockRequesterArray_Get_Call) RunAndReturn(run func(path string) ([2]st
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+//   - path string
+func (_a *MockRequesterArray_NotCalledAsserter) Get(path any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get", path)
+}
+
 // NewMockRequesterElided creates a new instance of MockRequesterElided. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockRequesterElided(t interface {
@@ -4391,6 +5592,24 @@ type MockRequesterElided_Expecter struct {
 
 func (_m *MockRequesterElided) EXPECT() *MockRequesterElided_Expecter {
 	return &MockRequesterElided_Expecter{mock: &_m.Mock}
+}
+
+type MockRequesterElided_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRequesterElided) ASSERT(t mock.TestingT) *MockRequesterElided_Asserter {
+	return &MockRequesterElided_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRequesterElided_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRequesterElided_Asserter) NotCalled() *MockRequesterElided_NotCalledAsserter {
+	return &MockRequesterElided_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockRequesterElided
@@ -4450,6 +5669,16 @@ func (_c *MockRequesterElided_Get_Call) RunAndReturn(run func(path string, url s
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+//   - path string
+//   - url string
+func (_a *MockRequesterElided_NotCalledAsserter) Get(path any, url any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get", path, url)
+}
+
 // NewMockRequesterIface creates a new instance of MockRequesterIface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockRequesterIface(t interface {
@@ -4484,6 +5713,24 @@ type MockRequesterIface_Expecter struct {
 
 func (_m *MockRequesterIface) EXPECT() *MockRequesterIface_Expecter {
 	return &MockRequesterIface_Expecter{mock: &_m.Mock}
+}
+
+type MockRequesterIface_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRequesterIface) ASSERT(t mock.TestingT) *MockRequesterIface_Asserter {
+	return &MockRequesterIface_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRequesterIface_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRequesterIface_Asserter) NotCalled() *MockRequesterIface_NotCalledAsserter {
+	return &MockRequesterIface_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockRequesterIface
@@ -4532,6 +5779,14 @@ func (_c *MockRequesterIface_Get_Call) RunAndReturn(run func() io.Reader) *MockR
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+func (_a *MockRequesterIface_NotCalledAsserter) Get() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get")
+}
+
 // NewMockRequesterNS creates a new instance of MockRequesterNS. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockRequesterNS(t interface {
@@ -4566,6 +5821,24 @@ type MockRequesterNS_Expecter struct {
 
 func (_m *MockRequesterNS) EXPECT() *MockRequesterNS_Expecter {
 	return &MockRequesterNS_Expecter{mock: &_m.Mock}
+}
+
+type MockRequesterNS_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRequesterNS) ASSERT(t mock.TestingT) *MockRequesterNS_Asserter {
+	return &MockRequesterNS_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRequesterNS_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRequesterNS_Asserter) NotCalled() *MockRequesterNS_NotCalledAsserter {
+	return &MockRequesterNS_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockRequesterNS
@@ -4628,6 +5901,15 @@ func (_c *MockRequesterNS_Get_Call) RunAndReturn(run func(path string) (http.Res
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+//   - path string
+func (_a *MockRequesterNS_NotCalledAsserter) Get(path any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get", path)
+}
+
 // NewMockRequesterPtr creates a new instance of MockRequesterPtr. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockRequesterPtr(t interface {
@@ -4662,6 +5944,24 @@ type MockRequesterPtr_Expecter struct {
 
 func (_m *MockRequesterPtr) EXPECT() *MockRequesterPtr_Expecter {
 	return &MockRequesterPtr_Expecter{mock: &_m.Mock}
+}
+
+type MockRequesterPtr_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRequesterPtr) ASSERT(t mock.TestingT) *MockRequesterPtr_Asserter {
+	return &MockRequesterPtr_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRequesterPtr_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRequesterPtr_Asserter) NotCalled() *MockRequesterPtr_NotCalledAsserter {
+	return &MockRequesterPtr_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockRequesterPtr
@@ -4726,6 +6026,15 @@ func (_c *MockRequesterPtr_Get_Call) RunAndReturn(run func(path string) (*string
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+//   - path string
+func (_a *MockRequesterPtr_NotCalledAsserter) Get(path any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get", path)
+}
+
 // NewMockRequesterReturnElided creates a new instance of MockRequesterReturnElided. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockRequesterReturnElided(t interface {
@@ -4760,6 +6069,24 @@ type MockRequesterReturnElided_Expecter struct {
 
 func (_m *MockRequesterReturnElided) EXPECT() *MockRequesterReturnElided_Expecter {
 	return &MockRequesterReturnElided_Expecter{mock: &_m.Mock}
+}
+
+type MockRequesterReturnElided_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRequesterReturnElided) ASSERT(t mock.TestingT) *MockRequesterReturnElided_Asserter {
+	return &MockRequesterReturnElided_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRequesterReturnElided_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRequesterReturnElided_Asserter) NotCalled() *MockRequesterReturnElided_NotCalledAsserter {
+	return &MockRequesterReturnElided_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockRequesterReturnElided
@@ -4834,6 +6161,15 @@ func (_c *MockRequesterReturnElided_Get_Call) RunAndReturn(run func(path string)
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+//   - path string
+func (_a *MockRequesterReturnElided_NotCalledAsserter) Get(path any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get", path)
+}
+
 // Put provides a mock function for the type MockRequesterReturnElided
 func (_mock *MockRequesterReturnElided) Put(path string) (int, error) {
 	ret := _mock.Called(path)
@@ -4894,6 +6230,15 @@ func (_c *MockRequesterReturnElided_Put_Call) RunAndReturn(run func(path string)
 	return _c
 }
 
+// Put is a helper method to assert mock.AssertNotCalled
+//   - path string
+func (_a *MockRequesterReturnElided_NotCalledAsserter) Put(path any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Put", path)
+}
+
 // NewMockRequesterSlice creates a new instance of MockRequesterSlice. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockRequesterSlice(t interface {
@@ -4928,6 +6273,24 @@ type MockRequesterSlice_Expecter struct {
 
 func (_m *MockRequesterSlice) EXPECT() *MockRequesterSlice_Expecter {
 	return &MockRequesterSlice_Expecter{mock: &_m.Mock}
+}
+
+type MockRequesterSlice_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRequesterSlice) ASSERT(t mock.TestingT) *MockRequesterSlice_Asserter {
+	return &MockRequesterSlice_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRequesterSlice_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRequesterSlice_Asserter) NotCalled() *MockRequesterSlice_NotCalledAsserter {
+	return &MockRequesterSlice_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockRequesterSlice
@@ -4992,6 +6355,15 @@ func (_c *MockRequesterSlice_Get_Call) RunAndReturn(run func(path string) ([]str
 	return _c
 }
 
+// Get is a helper method to assert mock.AssertNotCalled
+//   - path string
+func (_a *MockRequesterSlice_NotCalledAsserter) Get(path any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get", path)
+}
+
 // newMockrequesterUnexported creates a new instance of mockrequesterUnexported. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func newMockrequesterUnexported(t interface {
@@ -5028,6 +6400,24 @@ func (_m *mockrequesterUnexported) EXPECT() *mockrequesterUnexported_Expecter {
 	return &mockrequesterUnexported_Expecter{mock: &_m.Mock}
 }
 
+type mockrequesterUnexported_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *mockrequesterUnexported) ASSERT(t mock.TestingT) *mockrequesterUnexported_Asserter {
+	return &mockrequesterUnexported_Asserter{mock: &_m.Mock, t: t}
+}
+
+type mockrequesterUnexported_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *mockrequesterUnexported_Asserter) NotCalled() *mockrequesterUnexported_NotCalledAsserter {
+	return &mockrequesterUnexported_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // Get provides a mock function for the type mockrequesterUnexported
 func (_mock *mockrequesterUnexported) Get() {
 	_mock.Called()
@@ -5059,6 +6449,14 @@ func (_c *mockrequesterUnexported_Get_Call) Return() *mockrequesterUnexported_Ge
 func (_c *mockrequesterUnexported_Get_Call) RunAndReturn(run func()) *mockrequesterUnexported_Get_Call {
 	_c.Run(run)
 	return _c
+}
+
+// Get is a helper method to assert mock.AssertNotCalled
+func (_a *mockrequesterUnexported_NotCalledAsserter) Get() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get")
 }
 
 // NewMockRequesterVariadicOneArgument creates a new instance of MockRequesterVariadicOneArgument. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
@@ -5095,6 +6493,24 @@ type MockRequesterVariadicOneArgument_Expecter struct {
 
 func (_m *MockRequesterVariadicOneArgument) EXPECT() *MockRequesterVariadicOneArgument_Expecter {
 	return &MockRequesterVariadicOneArgument_Expecter{mock: &_m.Mock}
+}
+
+type MockRequesterVariadicOneArgument_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRequesterVariadicOneArgument) ASSERT(t mock.TestingT) *MockRequesterVariadicOneArgument_Asserter {
+	return &MockRequesterVariadicOneArgument_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRequesterVariadicOneArgument_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRequesterVariadicOneArgument_Asserter) NotCalled() *MockRequesterVariadicOneArgument_NotCalledAsserter {
+	return &MockRequesterVariadicOneArgument_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockRequesterVariadicOneArgument
@@ -5155,6 +6571,15 @@ func (_c *MockRequesterVariadicOneArgument_Get_Call) Return(b bool) *MockRequest
 func (_c *MockRequesterVariadicOneArgument_Get_Call) RunAndReturn(run func(values ...string) bool) *MockRequesterVariadicOneArgument_Get_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Get is a helper method to assert mock.AssertNotCalled
+//   - values ...string
+func (_a *MockRequesterVariadicOneArgument_NotCalledAsserter) Get(values ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get", values...)
 }
 
 // MultiWriteToFile provides a mock function for the type MockRequesterVariadicOneArgument
@@ -5223,6 +6648,16 @@ func (_c *MockRequesterVariadicOneArgument_MultiWriteToFile_Call) RunAndReturn(r
 	return _c
 }
 
+// MultiWriteToFile is a helper method to assert mock.AssertNotCalled
+//   - filename string
+//   - w ...io.Writer
+func (_a *MockRequesterVariadicOneArgument_NotCalledAsserter) MultiWriteToFile(filename any, w ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "MultiWriteToFile", append([]any{filename}, w...)...)
+}
+
 // OneInterface provides a mock function for the type MockRequesterVariadicOneArgument
 func (_mock *MockRequesterVariadicOneArgument) OneInterface(a ...interface{}) bool {
 	var tmpRet mock.Arguments
@@ -5281,6 +6716,15 @@ func (_c *MockRequesterVariadicOneArgument_OneInterface_Call) Return(b bool) *Mo
 func (_c *MockRequesterVariadicOneArgument_OneInterface_Call) RunAndReturn(run func(a ...interface{}) bool) *MockRequesterVariadicOneArgument_OneInterface_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// OneInterface is a helper method to assert mock.AssertNotCalled
+//   - a ...interface{}
+func (_a *MockRequesterVariadicOneArgument_NotCalledAsserter) OneInterface(a ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "OneInterface", a...)
 }
 
 // Sprintf provides a mock function for the type MockRequesterVariadicOneArgument
@@ -5349,6 +6793,16 @@ func (_c *MockRequesterVariadicOneArgument_Sprintf_Call) RunAndReturn(run func(f
 	return _c
 }
 
+// Sprintf is a helper method to assert mock.AssertNotCalled
+//   - format string
+//   - a ...interface{}
+func (_a *MockRequesterVariadicOneArgument_NotCalledAsserter) Sprintf(format any, a ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Sprintf", append([]any{format}, a...)...)
+}
+
 // NewMockRequesterVariadic creates a new instance of MockRequesterVariadic. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockRequesterVariadic(t interface {
@@ -5383,6 +6837,24 @@ type MockRequesterVariadic_Expecter struct {
 
 func (_m *MockRequesterVariadic) EXPECT() *MockRequesterVariadic_Expecter {
 	return &MockRequesterVariadic_Expecter{mock: &_m.Mock}
+}
+
+type MockRequesterVariadic_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRequesterVariadic) ASSERT(t mock.TestingT) *MockRequesterVariadic_Asserter {
+	return &MockRequesterVariadic_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRequesterVariadic_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRequesterVariadic_Asserter) NotCalled() *MockRequesterVariadic_NotCalledAsserter {
+	return &MockRequesterVariadic_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Get provides a mock function for the type MockRequesterVariadic
@@ -5446,6 +6918,15 @@ func (_c *MockRequesterVariadic_Get_Call) Return(b bool) *MockRequesterVariadic_
 func (_c *MockRequesterVariadic_Get_Call) RunAndReturn(run func(values ...string) bool) *MockRequesterVariadic_Get_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Get is a helper method to assert mock.AssertNotCalled
+//   - values ...string
+func (_a *MockRequesterVariadic_NotCalledAsserter) Get(values ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get", values...)
 }
 
 // MultiWriteToFile provides a mock function for the type MockRequesterVariadic
@@ -5518,6 +6999,16 @@ func (_c *MockRequesterVariadic_MultiWriteToFile_Call) RunAndReturn(run func(fil
 	return _c
 }
 
+// MultiWriteToFile is a helper method to assert mock.AssertNotCalled
+//   - filename string
+//   - w ...io.Writer
+func (_a *MockRequesterVariadic_NotCalledAsserter) MultiWriteToFile(filename any, w ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "MultiWriteToFile", append([]any{filename}, w...)...)
+}
+
 // OneInterface provides a mock function for the type MockRequesterVariadic
 func (_mock *MockRequesterVariadic) OneInterface(a ...interface{}) bool {
 	var _ca []any
@@ -5574,6 +7065,15 @@ func (_c *MockRequesterVariadic_OneInterface_Call) Return(b bool) *MockRequester
 func (_c *MockRequesterVariadic_OneInterface_Call) RunAndReturn(run func(a ...interface{}) bool) *MockRequesterVariadic_OneInterface_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// OneInterface is a helper method to assert mock.AssertNotCalled
+//   - a ...interface{}
+func (_a *MockRequesterVariadic_NotCalledAsserter) OneInterface(a ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "OneInterface", a...)
 }
 
 // Sprintf provides a mock function for the type MockRequesterVariadic
@@ -5641,6 +7141,16 @@ func (_c *MockRequesterVariadic_Sprintf_Call) RunAndReturn(run func(format strin
 	return _c
 }
 
+// Sprintf is a helper method to assert mock.AssertNotCalled
+//   - format string
+//   - a ...interface{}
+func (_a *MockRequesterVariadic_NotCalledAsserter) Sprintf(format any, a ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Sprintf", append([]any{format}, a...)...)
+}
+
 // NewMockReturnFuncParamNames creates a new instance of MockReturnFuncParamNames. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockReturnFuncParamNames(t interface {
@@ -5675,6 +7185,24 @@ type MockReturnFuncParamNames_Expecter struct {
 
 func (_m *MockReturnFuncParamNames) EXPECT() *MockReturnFuncParamNames_Expecter {
 	return &MockReturnFuncParamNames_Expecter{mock: &_m.Mock}
+}
+
+type MockReturnFuncParamNames_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockReturnFuncParamNames) ASSERT(t mock.TestingT) *MockReturnFuncParamNames_Asserter {
+	return &MockReturnFuncParamNames_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockReturnFuncParamNames_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockReturnFuncParamNames_Asserter) NotCalled() *MockReturnFuncParamNames_NotCalledAsserter {
+	return &MockReturnFuncParamNames_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Apply provides a mock function for the type MockReturnFuncParamNames
@@ -5728,6 +7256,15 @@ func (_c *MockReturnFuncParamNames_Apply_Call) RunAndReturn(run func(returnFunc 
 	return _c
 }
 
+// Apply is a helper method to assert mock.AssertNotCalled
+//   - returnFunc func() int
+func (_a *MockReturnFuncParamNames_NotCalledAsserter) Apply(returnFunc any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Apply", returnFunc)
+}
+
 // Enabled provides a mock function for the type MockReturnFuncParamNames
 func (_mock *MockReturnFuncParamNames) Enabled(ok bool) bool {
 	ret := _mock.Called(ok)
@@ -5777,6 +7314,15 @@ func (_c *MockReturnFuncParamNames_Enabled_Call) Return(b bool) *MockReturnFuncP
 func (_c *MockReturnFuncParamNames_Enabled_Call) RunAndReturn(run func(ok bool) bool) *MockReturnFuncParamNames_Enabled_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Enabled is a helper method to assert mock.AssertNotCalled
+//   - ok bool
+func (_a *MockReturnFuncParamNames_NotCalledAsserter) Enabled(ok any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Enabled", ok)
 }
 
 // Set provides a mock function for the type MockReturnFuncParamNames
@@ -5845,6 +7391,16 @@ func (_c *MockReturnFuncParamNames_Set_Call) RunAndReturn(run func(key string, o
 	return _c
 }
 
+// Set is a helper method to assert mock.AssertNotCalled
+//   - key string
+//   - ok bool
+func (_a *MockReturnFuncParamNames_NotCalledAsserter) Set(key any, ok any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Set", key, ok)
+}
+
 // NewMockExample creates a new instance of MockExample. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockExample(t interface {
@@ -5879,6 +7435,24 @@ type MockExample_Expecter struct {
 
 func (_m *MockExample) EXPECT() *MockExample_Expecter {
 	return &MockExample_Expecter{mock: &_m.Mock}
+}
+
+type MockExample_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockExample) ASSERT(t mock.TestingT) *MockExample_Asserter {
+	return &MockExample_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockExample_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockExample_Asserter) NotCalled() *MockExample_NotCalledAsserter {
+	return &MockExample_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // A provides a mock function for the type MockExample
@@ -5925,6 +7499,14 @@ func (_c *MockExample_A_Call) Return(flusher http.Flusher) *MockExample_A_Call {
 func (_c *MockExample_A_Call) RunAndReturn(run func() http.Flusher) *MockExample_A_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// A is a helper method to assert mock.AssertNotCalled
+func (_a *MockExample_NotCalledAsserter) A() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "A")
 }
 
 // B provides a mock function for the type MockExample
@@ -5978,6 +7560,15 @@ func (_c *MockExample_B_Call) RunAndReturn(run func(fixtureshttp string) http0.M
 	return _c
 }
 
+// B is a helper method to assert mock.AssertNotCalled
+//   - fixtureshttp string
+func (_a *MockExample_NotCalledAsserter) B(fixtureshttp any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "B", fixtureshttp)
+}
+
 // C provides a mock function for the type MockExample
 func (_mock *MockExample) C(fixtureshttp string) http1.MyStruct {
 	ret := _mock.Called(fixtureshttp)
@@ -6029,6 +7620,15 @@ func (_c *MockExample_C_Call) RunAndReturn(run func(fixtureshttp string) http1.M
 	return _c
 }
 
+// C is a helper method to assert mock.AssertNotCalled
+//   - fixtureshttp string
+func (_a *MockExample_NotCalledAsserter) C(fixtureshttp any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "C", fixtureshttp)
+}
+
 // NewMockA creates a new instance of MockA. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockA(t interface {
@@ -6063,6 +7663,24 @@ type MockA_Expecter struct {
 
 func (_m *MockA) EXPECT() *MockA_Expecter {
 	return &MockA_Expecter{mock: &_m.Mock}
+}
+
+type MockA_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockA) ASSERT(t mock.TestingT) *MockA_Asserter {
+	return &MockA_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockA_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockA_Asserter) NotCalled() *MockA_NotCalledAsserter {
+	return &MockA_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Call provides a mock function for the type MockA
@@ -6118,6 +7736,14 @@ func (_c *MockA_Call_Call) RunAndReturn(run func() (B, error)) *MockA_Call_Call 
 	return _c
 }
 
+// Call is a helper method to assert mock.AssertNotCalled
+func (_a *MockA_NotCalledAsserter) Call() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Call")
+}
+
 // NewMockStructWithTag creates a new instance of MockStructWithTag. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockStructWithTag(t interface {
@@ -6152,6 +7778,24 @@ type MockStructWithTag_Expecter struct {
 
 func (_m *MockStructWithTag) EXPECT() *MockStructWithTag_Expecter {
 	return &MockStructWithTag_Expecter{mock: &_m.Mock}
+}
+
+type MockStructWithTag_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockStructWithTag) ASSERT(t mock.TestingT) *MockStructWithTag_Asserter {
+	return &MockStructWithTag_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockStructWithTag_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockStructWithTag_Asserter) NotCalled() *MockStructWithTag_NotCalledAsserter {
+	return &MockStructWithTag_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // MethodA provides a mock function for the type MockStructWithTag
@@ -6243,6 +7887,15 @@ func (_c *MockStructWithTag_MethodA_Call) RunAndReturn(run func(v *struct {
 	return _c
 }
 
+// MethodA is a helper method to assert mock.AssertNotCalled
+//   - v *struct{FieldA int "json:\"field_a\""; FieldB int "json:\"field_b\" xml:\"field_b\""}
+func (_a *MockStructWithTag_NotCalledAsserter) MethodA(v any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "MethodA", v)
+}
+
 // NewMockUnsafeInterface creates a new instance of MockUnsafeInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockUnsafeInterface(t interface {
@@ -6277,6 +7930,24 @@ type MockUnsafeInterface_Expecter struct {
 
 func (_m *MockUnsafeInterface) EXPECT() *MockUnsafeInterface_Expecter {
 	return &MockUnsafeInterface_Expecter{mock: &_m.Mock}
+}
+
+type MockUnsafeInterface_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockUnsafeInterface) ASSERT(t mock.TestingT) *MockUnsafeInterface_Asserter {
+	return &MockUnsafeInterface_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockUnsafeInterface_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockUnsafeInterface_Asserter) NotCalled() *MockUnsafeInterface_NotCalledAsserter {
+	return &MockUnsafeInterface_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Do provides a mock function for the type MockUnsafeInterface
@@ -6319,6 +7990,15 @@ func (_c *MockUnsafeInterface_Do_Call) RunAndReturn(run func(ptr *unsafe.Pointer
 	return _c
 }
 
+// Do is a helper method to assert mock.AssertNotCalled
+//   - ptr *unsafe.Pointer
+func (_a *MockUnsafeInterface_NotCalledAsserter) Do(ptr any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Do", ptr)
+}
+
 // NewMockVariadic creates a new instance of MockVariadic. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockVariadic(t interface {
@@ -6353,6 +8033,24 @@ type MockVariadic_Expecter struct {
 
 func (_m *MockVariadic) EXPECT() *MockVariadic_Expecter {
 	return &MockVariadic_Expecter{mock: &_m.Mock}
+}
+
+type MockVariadic_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockVariadic) ASSERT(t mock.TestingT) *MockVariadic_Asserter {
+	return &MockVariadic_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockVariadic_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockVariadic_Asserter) NotCalled() *MockVariadic_NotCalledAsserter {
+	return &MockVariadic_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // VariadicFunction provides a mock function for the type MockVariadic
@@ -6412,6 +8110,16 @@ func (_c *MockVariadic_VariadicFunction_Call) RunAndReturn(run func(str string, 
 	return _c
 }
 
+// VariadicFunction is a helper method to assert mock.AssertNotCalled
+//   - str string
+//   - vFunc VariadicFunction
+func (_a *MockVariadic_NotCalledAsserter) VariadicFunction(str any, vFunc any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "VariadicFunction", str, vFunc)
+}
+
 // NewMockVariadicReturnFunc creates a new instance of MockVariadicReturnFunc. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockVariadicReturnFunc(t interface {
@@ -6446,6 +8154,24 @@ type MockVariadicReturnFunc_Expecter struct {
 
 func (_m *MockVariadicReturnFunc) EXPECT() *MockVariadicReturnFunc_Expecter {
 	return &MockVariadicReturnFunc_Expecter{mock: &_m.Mock}
+}
+
+type MockVariadicReturnFunc_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockVariadicReturnFunc) ASSERT(t mock.TestingT) *MockVariadicReturnFunc_Asserter {
+	return &MockVariadicReturnFunc_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockVariadicReturnFunc_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockVariadicReturnFunc_Asserter) NotCalled() *MockVariadicReturnFunc_NotCalledAsserter {
+	return &MockVariadicReturnFunc_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // SampleMethod provides a mock function for the type MockVariadicReturnFunc
@@ -6501,6 +8227,15 @@ func (_c *MockVariadicReturnFunc_SampleMethod_Call) RunAndReturn(run func(str st
 	return _c
 }
 
+// SampleMethod is a helper method to assert mock.AssertNotCalled
+//   - str string
+func (_a *MockVariadicReturnFunc_NotCalledAsserter) SampleMethod(str any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "SampleMethod", str)
+}
+
 // NewMockVariadicWithMultipleReturnsUnrollVariadic creates a new instance of MockVariadicWithMultipleReturnsUnrollVariadic. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockVariadicWithMultipleReturnsUnrollVariadic(t interface {
@@ -6535,6 +8270,24 @@ type MockVariadicWithMultipleReturnsUnrollVariadic_Expecter struct {
 
 func (_m *MockVariadicWithMultipleReturnsUnrollVariadic) EXPECT() *MockVariadicWithMultipleReturnsUnrollVariadic_Expecter {
 	return &MockVariadicWithMultipleReturnsUnrollVariadic_Expecter{mock: &_m.Mock}
+}
+
+type MockVariadicWithMultipleReturnsUnrollVariadic_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockVariadicWithMultipleReturnsUnrollVariadic) ASSERT(t mock.TestingT) *MockVariadicWithMultipleReturnsUnrollVariadic_Asserter {
+	return &MockVariadicWithMultipleReturnsUnrollVariadic_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockVariadicWithMultipleReturnsUnrollVariadic_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockVariadicWithMultipleReturnsUnrollVariadic_Asserter) NotCalled() *MockVariadicWithMultipleReturnsUnrollVariadic_NotCalledAsserter {
+	return &MockVariadicWithMultipleReturnsUnrollVariadic_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Foo provides a mock function for the type MockVariadicWithMultipleReturnsUnrollVariadic
@@ -6616,6 +8369,16 @@ func (_c *MockVariadicWithMultipleReturnsUnrollVariadic_Foo_Call) RunAndReturn(r
 	return _c
 }
 
+// Foo is a helper method to assert mock.AssertNotCalled
+//   - one string
+//   - two ...string
+func (_a *MockVariadicWithMultipleReturnsUnrollVariadic_NotCalledAsserter) Foo(one any, two ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Foo", append([]any{one}, two...)...)
+}
+
 // NewMockVariadicWithMultipleReturns creates a new instance of MockVariadicWithMultipleReturns. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockVariadicWithMultipleReturns(t interface {
@@ -6650,6 +8413,24 @@ type MockVariadicWithMultipleReturns_Expecter struct {
 
 func (_m *MockVariadicWithMultipleReturns) EXPECT() *MockVariadicWithMultipleReturns_Expecter {
 	return &MockVariadicWithMultipleReturns_Expecter{mock: &_m.Mock}
+}
+
+type MockVariadicWithMultipleReturns_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockVariadicWithMultipleReturns) ASSERT(t mock.TestingT) *MockVariadicWithMultipleReturns_Asserter {
+	return &MockVariadicWithMultipleReturns_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockVariadicWithMultipleReturns_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockVariadicWithMultipleReturns_Asserter) NotCalled() *MockVariadicWithMultipleReturns_NotCalledAsserter {
+	return &MockVariadicWithMultipleReturns_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Foo provides a mock function for the type MockVariadicWithMultipleReturns
@@ -6727,6 +8508,16 @@ func (_c *MockVariadicWithMultipleReturns_Foo_Call) RunAndReturn(run func(one st
 	return _c
 }
 
+// Foo is a helper method to assert mock.AssertNotCalled
+//   - one string
+//   - two ...string
+func (_a *MockVariadicWithMultipleReturns_NotCalledAsserter) Foo(one any, two ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Foo", append([]any{one}, two...)...)
+}
+
 // NewMockVariadicWithNoReturns creates a new instance of MockVariadicWithNoReturns. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockVariadicWithNoReturns(t interface {
@@ -6761,6 +8552,24 @@ type MockVariadicWithNoReturns_Expecter struct {
 
 func (_m *MockVariadicWithNoReturns) EXPECT() *MockVariadicWithNoReturns_Expecter {
 	return &MockVariadicWithNoReturns_Expecter{mock: &_m.Mock}
+}
+
+type MockVariadicWithNoReturns_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockVariadicWithNoReturns) ASSERT(t mock.TestingT) *MockVariadicWithNoReturns_Asserter {
+	return &MockVariadicWithNoReturns_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockVariadicWithNoReturns_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockVariadicWithNoReturns_Asserter) NotCalled() *MockVariadicWithNoReturns_NotCalledAsserter {
+	return &MockVariadicWithNoReturns_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Foo provides a mock function for the type MockVariadicWithNoReturns
@@ -6820,4 +8629,14 @@ func (_c *MockVariadicWithNoReturns_Foo_Call) Return() *MockVariadicWithNoReturn
 func (_c *MockVariadicWithNoReturns_Foo_Call) RunAndReturn(run func(one string, two ...string)) *MockVariadicWithNoReturns_Foo_Call {
 	_c.Run(run)
 	return _c
+}
+
+// Foo is a helper method to assert mock.AssertNotCalled
+//   - one string
+//   - two ...string
+func (_a *MockVariadicWithNoReturns_NotCalledAsserter) Foo(one any, two ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Foo", append([]any{one}, two...)...)
 }

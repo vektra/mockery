@@ -48,6 +48,24 @@ func (_m *MockReader) EXPECT() *MockReader_Expecter {
 	return &MockReader_Expecter{mock: &_m.Mock}
 }
 
+type MockReader_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockReader) ASSERT(t mock.TestingT) *MockReader_Asserter {
+	return &MockReader_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockReader_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockReader_Asserter) NotCalled() *MockReader_NotCalledAsserter {
+	return &MockReader_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // Read provides a mock function for the type MockReader
 func (_mock *MockReader) Read(p []byte) (int, error) {
 	ret := _mock.Called(p)
@@ -108,6 +126,15 @@ func (_c *MockReader_Read_Call) RunAndReturn(run func(p []byte) (int, error)) *M
 	return _c
 }
 
+// Read is a helper method to assert mock.AssertNotCalled
+//   - p []byte
+func (_a *MockReader_NotCalledAsserter) Read(p any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Read", p)
+}
+
 // NewMockWriter creates a new instance of MockWriter. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockWriter(t interface {
@@ -142,6 +169,24 @@ type MockWriter_Expecter struct {
 
 func (_m *MockWriter) EXPECT() *MockWriter_Expecter {
 	return &MockWriter_Expecter{mock: &_m.Mock}
+}
+
+type MockWriter_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockWriter) ASSERT(t mock.TestingT) *MockWriter_Asserter {
+	return &MockWriter_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockWriter_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockWriter_Asserter) NotCalled() *MockWriter_NotCalledAsserter {
+	return &MockWriter_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Write provides a mock function for the type MockWriter
@@ -204,6 +249,15 @@ func (_c *MockWriter_Write_Call) RunAndReturn(run func(p []byte) (int, error)) *
 	return _c
 }
 
+// Write is a helper method to assert mock.AssertNotCalled
+//   - p []byte
+func (_a *MockWriter_NotCalledAsserter) Write(p any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Write", p)
+}
+
 // NewMockCloser creates a new instance of MockCloser. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockCloser(t interface {
@@ -238,6 +292,24 @@ type MockCloser_Expecter struct {
 
 func (_m *MockCloser) EXPECT() *MockCloser_Expecter {
 	return &MockCloser_Expecter{mock: &_m.Mock}
+}
+
+type MockCloser_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockCloser) ASSERT(t mock.TestingT) *MockCloser_Asserter {
+	return &MockCloser_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockCloser_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockCloser_Asserter) NotCalled() *MockCloser_NotCalledAsserter {
+	return &MockCloser_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Close provides a mock function for the type MockCloser
@@ -284,6 +356,14 @@ func (_c *MockCloser_Close_Call) RunAndReturn(run func() error) *MockCloser_Clos
 	return _c
 }
 
+// Close is a helper method to assert mock.AssertNotCalled
+func (_a *MockCloser_NotCalledAsserter) Close() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Close")
+}
+
 // NewMockSeeker creates a new instance of MockSeeker. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockSeeker(t interface {
@@ -318,6 +398,24 @@ type MockSeeker_Expecter struct {
 
 func (_m *MockSeeker) EXPECT() *MockSeeker_Expecter {
 	return &MockSeeker_Expecter{mock: &_m.Mock}
+}
+
+type MockSeeker_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockSeeker) ASSERT(t mock.TestingT) *MockSeeker_Asserter {
+	return &MockSeeker_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockSeeker_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockSeeker_Asserter) NotCalled() *MockSeeker_NotCalledAsserter {
+	return &MockSeeker_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Seek provides a mock function for the type MockSeeker
@@ -386,6 +484,16 @@ func (_c *MockSeeker_Seek_Call) RunAndReturn(run func(offset int64, whence int) 
 	return _c
 }
 
+// Seek is a helper method to assert mock.AssertNotCalled
+//   - offset int64
+//   - whence int
+func (_a *MockSeeker_NotCalledAsserter) Seek(offset any, whence any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Seek", offset, whence)
+}
+
 // NewMockReadWriter creates a new instance of MockReadWriter. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockReadWriter(t interface {
@@ -420,6 +528,24 @@ type MockReadWriter_Expecter struct {
 
 func (_m *MockReadWriter) EXPECT() *MockReadWriter_Expecter {
 	return &MockReadWriter_Expecter{mock: &_m.Mock}
+}
+
+type MockReadWriter_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockReadWriter) ASSERT(t mock.TestingT) *MockReadWriter_Asserter {
+	return &MockReadWriter_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockReadWriter_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockReadWriter_Asserter) NotCalled() *MockReadWriter_NotCalledAsserter {
+	return &MockReadWriter_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Read provides a mock function for the type MockReadWriter
@@ -482,6 +608,15 @@ func (_c *MockReadWriter_Read_Call) RunAndReturn(run func(p []byte) (int, error)
 	return _c
 }
 
+// Read is a helper method to assert mock.AssertNotCalled
+//   - p []byte
+func (_a *MockReadWriter_NotCalledAsserter) Read(p any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Read", p)
+}
+
 // Write provides a mock function for the type MockReadWriter
 func (_mock *MockReadWriter) Write(p []byte) (int, error) {
 	ret := _mock.Called(p)
@@ -542,6 +677,15 @@ func (_c *MockReadWriter_Write_Call) RunAndReturn(run func(p []byte) (int, error
 	return _c
 }
 
+// Write is a helper method to assert mock.AssertNotCalled
+//   - p []byte
+func (_a *MockReadWriter_NotCalledAsserter) Write(p any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Write", p)
+}
+
 // NewMockReadCloser creates a new instance of MockReadCloser. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockReadCloser(t interface {
@@ -576,6 +720,24 @@ type MockReadCloser_Expecter struct {
 
 func (_m *MockReadCloser) EXPECT() *MockReadCloser_Expecter {
 	return &MockReadCloser_Expecter{mock: &_m.Mock}
+}
+
+type MockReadCloser_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockReadCloser) ASSERT(t mock.TestingT) *MockReadCloser_Asserter {
+	return &MockReadCloser_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockReadCloser_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockReadCloser_Asserter) NotCalled() *MockReadCloser_NotCalledAsserter {
+	return &MockReadCloser_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Close provides a mock function for the type MockReadCloser
@@ -620,6 +782,14 @@ func (_c *MockReadCloser_Close_Call) Return(err error) *MockReadCloser_Close_Cal
 func (_c *MockReadCloser_Close_Call) RunAndReturn(run func() error) *MockReadCloser_Close_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Close is a helper method to assert mock.AssertNotCalled
+func (_a *MockReadCloser_NotCalledAsserter) Close() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Close")
 }
 
 // Read provides a mock function for the type MockReadCloser
@@ -682,6 +852,15 @@ func (_c *MockReadCloser_Read_Call) RunAndReturn(run func(p []byte) (int, error)
 	return _c
 }
 
+// Read is a helper method to assert mock.AssertNotCalled
+//   - p []byte
+func (_a *MockReadCloser_NotCalledAsserter) Read(p any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Read", p)
+}
+
 // NewMockWriteCloser creates a new instance of MockWriteCloser. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockWriteCloser(t interface {
@@ -716,6 +895,24 @@ type MockWriteCloser_Expecter struct {
 
 func (_m *MockWriteCloser) EXPECT() *MockWriteCloser_Expecter {
 	return &MockWriteCloser_Expecter{mock: &_m.Mock}
+}
+
+type MockWriteCloser_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockWriteCloser) ASSERT(t mock.TestingT) *MockWriteCloser_Asserter {
+	return &MockWriteCloser_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockWriteCloser_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockWriteCloser_Asserter) NotCalled() *MockWriteCloser_NotCalledAsserter {
+	return &MockWriteCloser_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Close provides a mock function for the type MockWriteCloser
@@ -760,6 +957,14 @@ func (_c *MockWriteCloser_Close_Call) Return(err error) *MockWriteCloser_Close_C
 func (_c *MockWriteCloser_Close_Call) RunAndReturn(run func() error) *MockWriteCloser_Close_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Close is a helper method to assert mock.AssertNotCalled
+func (_a *MockWriteCloser_NotCalledAsserter) Close() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Close")
 }
 
 // Write provides a mock function for the type MockWriteCloser
@@ -822,6 +1027,15 @@ func (_c *MockWriteCloser_Write_Call) RunAndReturn(run func(p []byte) (int, erro
 	return _c
 }
 
+// Write is a helper method to assert mock.AssertNotCalled
+//   - p []byte
+func (_a *MockWriteCloser_NotCalledAsserter) Write(p any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Write", p)
+}
+
 // NewMockReadWriteCloser creates a new instance of MockReadWriteCloser. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockReadWriteCloser(t interface {
@@ -856,6 +1070,24 @@ type MockReadWriteCloser_Expecter struct {
 
 func (_m *MockReadWriteCloser) EXPECT() *MockReadWriteCloser_Expecter {
 	return &MockReadWriteCloser_Expecter{mock: &_m.Mock}
+}
+
+type MockReadWriteCloser_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockReadWriteCloser) ASSERT(t mock.TestingT) *MockReadWriteCloser_Asserter {
+	return &MockReadWriteCloser_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockReadWriteCloser_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockReadWriteCloser_Asserter) NotCalled() *MockReadWriteCloser_NotCalledAsserter {
+	return &MockReadWriteCloser_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Close provides a mock function for the type MockReadWriteCloser
@@ -900,6 +1132,14 @@ func (_c *MockReadWriteCloser_Close_Call) Return(err error) *MockReadWriteCloser
 func (_c *MockReadWriteCloser_Close_Call) RunAndReturn(run func() error) *MockReadWriteCloser_Close_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Close is a helper method to assert mock.AssertNotCalled
+func (_a *MockReadWriteCloser_NotCalledAsserter) Close() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Close")
 }
 
 // Read provides a mock function for the type MockReadWriteCloser
@@ -962,6 +1202,15 @@ func (_c *MockReadWriteCloser_Read_Call) RunAndReturn(run func(p []byte) (int, e
 	return _c
 }
 
+// Read is a helper method to assert mock.AssertNotCalled
+//   - p []byte
+func (_a *MockReadWriteCloser_NotCalledAsserter) Read(p any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Read", p)
+}
+
 // Write provides a mock function for the type MockReadWriteCloser
 func (_mock *MockReadWriteCloser) Write(p []byte) (int, error) {
 	ret := _mock.Called(p)
@@ -1022,6 +1271,15 @@ func (_c *MockReadWriteCloser_Write_Call) RunAndReturn(run func(p []byte) (int, 
 	return _c
 }
 
+// Write is a helper method to assert mock.AssertNotCalled
+//   - p []byte
+func (_a *MockReadWriteCloser_NotCalledAsserter) Write(p any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Write", p)
+}
+
 // NewMockReadSeeker creates a new instance of MockReadSeeker. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockReadSeeker(t interface {
@@ -1056,6 +1314,24 @@ type MockReadSeeker_Expecter struct {
 
 func (_m *MockReadSeeker) EXPECT() *MockReadSeeker_Expecter {
 	return &MockReadSeeker_Expecter{mock: &_m.Mock}
+}
+
+type MockReadSeeker_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockReadSeeker) ASSERT(t mock.TestingT) *MockReadSeeker_Asserter {
+	return &MockReadSeeker_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockReadSeeker_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockReadSeeker_Asserter) NotCalled() *MockReadSeeker_NotCalledAsserter {
+	return &MockReadSeeker_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Read provides a mock function for the type MockReadSeeker
@@ -1116,6 +1392,15 @@ func (_c *MockReadSeeker_Read_Call) Return(n int, err error) *MockReadSeeker_Rea
 func (_c *MockReadSeeker_Read_Call) RunAndReturn(run func(p []byte) (int, error)) *MockReadSeeker_Read_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Read is a helper method to assert mock.AssertNotCalled
+//   - p []byte
+func (_a *MockReadSeeker_NotCalledAsserter) Read(p any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Read", p)
 }
 
 // Seek provides a mock function for the type MockReadSeeker
@@ -1184,6 +1469,16 @@ func (_c *MockReadSeeker_Seek_Call) RunAndReturn(run func(offset int64, whence i
 	return _c
 }
 
+// Seek is a helper method to assert mock.AssertNotCalled
+//   - offset int64
+//   - whence int
+func (_a *MockReadSeeker_NotCalledAsserter) Seek(offset any, whence any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Seek", offset, whence)
+}
+
 // NewMockReadSeekCloser creates a new instance of MockReadSeekCloser. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockReadSeekCloser(t interface {
@@ -1218,6 +1513,24 @@ type MockReadSeekCloser_Expecter struct {
 
 func (_m *MockReadSeekCloser) EXPECT() *MockReadSeekCloser_Expecter {
 	return &MockReadSeekCloser_Expecter{mock: &_m.Mock}
+}
+
+type MockReadSeekCloser_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockReadSeekCloser) ASSERT(t mock.TestingT) *MockReadSeekCloser_Asserter {
+	return &MockReadSeekCloser_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockReadSeekCloser_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockReadSeekCloser_Asserter) NotCalled() *MockReadSeekCloser_NotCalledAsserter {
+	return &MockReadSeekCloser_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Close provides a mock function for the type MockReadSeekCloser
@@ -1262,6 +1575,14 @@ func (_c *MockReadSeekCloser_Close_Call) Return(err error) *MockReadSeekCloser_C
 func (_c *MockReadSeekCloser_Close_Call) RunAndReturn(run func() error) *MockReadSeekCloser_Close_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Close is a helper method to assert mock.AssertNotCalled
+func (_a *MockReadSeekCloser_NotCalledAsserter) Close() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Close")
 }
 
 // Read provides a mock function for the type MockReadSeekCloser
@@ -1322,6 +1643,15 @@ func (_c *MockReadSeekCloser_Read_Call) Return(n int, err error) *MockReadSeekCl
 func (_c *MockReadSeekCloser_Read_Call) RunAndReturn(run func(p []byte) (int, error)) *MockReadSeekCloser_Read_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Read is a helper method to assert mock.AssertNotCalled
+//   - p []byte
+func (_a *MockReadSeekCloser_NotCalledAsserter) Read(p any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Read", p)
 }
 
 // Seek provides a mock function for the type MockReadSeekCloser
@@ -1390,6 +1720,16 @@ func (_c *MockReadSeekCloser_Seek_Call) RunAndReturn(run func(offset int64, when
 	return _c
 }
 
+// Seek is a helper method to assert mock.AssertNotCalled
+//   - offset int64
+//   - whence int
+func (_a *MockReadSeekCloser_NotCalledAsserter) Seek(offset any, whence any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Seek", offset, whence)
+}
+
 // NewMockWriteSeeker creates a new instance of MockWriteSeeker. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockWriteSeeker(t interface {
@@ -1424,6 +1764,24 @@ type MockWriteSeeker_Expecter struct {
 
 func (_m *MockWriteSeeker) EXPECT() *MockWriteSeeker_Expecter {
 	return &MockWriteSeeker_Expecter{mock: &_m.Mock}
+}
+
+type MockWriteSeeker_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockWriteSeeker) ASSERT(t mock.TestingT) *MockWriteSeeker_Asserter {
+	return &MockWriteSeeker_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockWriteSeeker_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockWriteSeeker_Asserter) NotCalled() *MockWriteSeeker_NotCalledAsserter {
+	return &MockWriteSeeker_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Seek provides a mock function for the type MockWriteSeeker
@@ -1492,6 +1850,16 @@ func (_c *MockWriteSeeker_Seek_Call) RunAndReturn(run func(offset int64, whence 
 	return _c
 }
 
+// Seek is a helper method to assert mock.AssertNotCalled
+//   - offset int64
+//   - whence int
+func (_a *MockWriteSeeker_NotCalledAsserter) Seek(offset any, whence any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Seek", offset, whence)
+}
+
 // Write provides a mock function for the type MockWriteSeeker
 func (_mock *MockWriteSeeker) Write(p []byte) (int, error) {
 	ret := _mock.Called(p)
@@ -1552,6 +1920,15 @@ func (_c *MockWriteSeeker_Write_Call) RunAndReturn(run func(p []byte) (int, erro
 	return _c
 }
 
+// Write is a helper method to assert mock.AssertNotCalled
+//   - p []byte
+func (_a *MockWriteSeeker_NotCalledAsserter) Write(p any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Write", p)
+}
+
 // NewMockReadWriteSeeker creates a new instance of MockReadWriteSeeker. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockReadWriteSeeker(t interface {
@@ -1586,6 +1963,24 @@ type MockReadWriteSeeker_Expecter struct {
 
 func (_m *MockReadWriteSeeker) EXPECT() *MockReadWriteSeeker_Expecter {
 	return &MockReadWriteSeeker_Expecter{mock: &_m.Mock}
+}
+
+type MockReadWriteSeeker_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockReadWriteSeeker) ASSERT(t mock.TestingT) *MockReadWriteSeeker_Asserter {
+	return &MockReadWriteSeeker_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockReadWriteSeeker_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockReadWriteSeeker_Asserter) NotCalled() *MockReadWriteSeeker_NotCalledAsserter {
+	return &MockReadWriteSeeker_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // Read provides a mock function for the type MockReadWriteSeeker
@@ -1646,6 +2041,15 @@ func (_c *MockReadWriteSeeker_Read_Call) Return(n int, err error) *MockReadWrite
 func (_c *MockReadWriteSeeker_Read_Call) RunAndReturn(run func(p []byte) (int, error)) *MockReadWriteSeeker_Read_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Read is a helper method to assert mock.AssertNotCalled
+//   - p []byte
+func (_a *MockReadWriteSeeker_NotCalledAsserter) Read(p any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Read", p)
 }
 
 // Seek provides a mock function for the type MockReadWriteSeeker
@@ -1714,6 +2118,16 @@ func (_c *MockReadWriteSeeker_Seek_Call) RunAndReturn(run func(offset int64, whe
 	return _c
 }
 
+// Seek is a helper method to assert mock.AssertNotCalled
+//   - offset int64
+//   - whence int
+func (_a *MockReadWriteSeeker_NotCalledAsserter) Seek(offset any, whence any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Seek", offset, whence)
+}
+
 // Write provides a mock function for the type MockReadWriteSeeker
 func (_mock *MockReadWriteSeeker) Write(p []byte) (int, error) {
 	ret := _mock.Called(p)
@@ -1774,6 +2188,15 @@ func (_c *MockReadWriteSeeker_Write_Call) RunAndReturn(run func(p []byte) (int, 
 	return _c
 }
 
+// Write is a helper method to assert mock.AssertNotCalled
+//   - p []byte
+func (_a *MockReadWriteSeeker_NotCalledAsserter) Write(p any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Write", p)
+}
+
 // NewMockReaderFrom creates a new instance of MockReaderFrom. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockReaderFrom(t interface {
@@ -1808,6 +2231,24 @@ type MockReaderFrom_Expecter struct {
 
 func (_m *MockReaderFrom) EXPECT() *MockReaderFrom_Expecter {
 	return &MockReaderFrom_Expecter{mock: &_m.Mock}
+}
+
+type MockReaderFrom_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockReaderFrom) ASSERT(t mock.TestingT) *MockReaderFrom_Asserter {
+	return &MockReaderFrom_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockReaderFrom_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockReaderFrom_Asserter) NotCalled() *MockReaderFrom_NotCalledAsserter {
+	return &MockReaderFrom_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // ReadFrom provides a mock function for the type MockReaderFrom
@@ -1870,6 +2311,15 @@ func (_c *MockReaderFrom_ReadFrom_Call) RunAndReturn(run func(r io.Reader) (int6
 	return _c
 }
 
+// ReadFrom is a helper method to assert mock.AssertNotCalled
+//   - r io.Reader
+func (_a *MockReaderFrom_NotCalledAsserter) ReadFrom(r any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "ReadFrom", r)
+}
+
 // NewMockWriterTo creates a new instance of MockWriterTo. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockWriterTo(t interface {
@@ -1904,6 +2354,24 @@ type MockWriterTo_Expecter struct {
 
 func (_m *MockWriterTo) EXPECT() *MockWriterTo_Expecter {
 	return &MockWriterTo_Expecter{mock: &_m.Mock}
+}
+
+type MockWriterTo_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockWriterTo) ASSERT(t mock.TestingT) *MockWriterTo_Asserter {
+	return &MockWriterTo_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockWriterTo_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockWriterTo_Asserter) NotCalled() *MockWriterTo_NotCalledAsserter {
+	return &MockWriterTo_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // WriteTo provides a mock function for the type MockWriterTo
@@ -1966,6 +2434,15 @@ func (_c *MockWriterTo_WriteTo_Call) RunAndReturn(run func(w io.Writer) (int64, 
 	return _c
 }
 
+// WriteTo is a helper method to assert mock.AssertNotCalled
+//   - w io.Writer
+func (_a *MockWriterTo_NotCalledAsserter) WriteTo(w any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "WriteTo", w)
+}
+
 // NewMockReaderAt creates a new instance of MockReaderAt. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockReaderAt(t interface {
@@ -2000,6 +2477,24 @@ type MockReaderAt_Expecter struct {
 
 func (_m *MockReaderAt) EXPECT() *MockReaderAt_Expecter {
 	return &MockReaderAt_Expecter{mock: &_m.Mock}
+}
+
+type MockReaderAt_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockReaderAt) ASSERT(t mock.TestingT) *MockReaderAt_Asserter {
+	return &MockReaderAt_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockReaderAt_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockReaderAt_Asserter) NotCalled() *MockReaderAt_NotCalledAsserter {
+	return &MockReaderAt_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // ReadAt provides a mock function for the type MockReaderAt
@@ -2068,6 +2563,16 @@ func (_c *MockReaderAt_ReadAt_Call) RunAndReturn(run func(p []byte, off int64) (
 	return _c
 }
 
+// ReadAt is a helper method to assert mock.AssertNotCalled
+//   - p []byte
+//   - off int64
+func (_a *MockReaderAt_NotCalledAsserter) ReadAt(p any, off any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "ReadAt", p, off)
+}
+
 // NewMockWriterAt creates a new instance of MockWriterAt. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockWriterAt(t interface {
@@ -2102,6 +2607,24 @@ type MockWriterAt_Expecter struct {
 
 func (_m *MockWriterAt) EXPECT() *MockWriterAt_Expecter {
 	return &MockWriterAt_Expecter{mock: &_m.Mock}
+}
+
+type MockWriterAt_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockWriterAt) ASSERT(t mock.TestingT) *MockWriterAt_Asserter {
+	return &MockWriterAt_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockWriterAt_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockWriterAt_Asserter) NotCalled() *MockWriterAt_NotCalledAsserter {
+	return &MockWriterAt_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // WriteAt provides a mock function for the type MockWriterAt
@@ -2170,6 +2693,16 @@ func (_c *MockWriterAt_WriteAt_Call) RunAndReturn(run func(p []byte, off int64) 
 	return _c
 }
 
+// WriteAt is a helper method to assert mock.AssertNotCalled
+//   - p []byte
+//   - off int64
+func (_a *MockWriterAt_NotCalledAsserter) WriteAt(p any, off any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "WriteAt", p, off)
+}
+
 // NewMockByteReader creates a new instance of MockByteReader. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockByteReader(t interface {
@@ -2204,6 +2737,24 @@ type MockByteReader_Expecter struct {
 
 func (_m *MockByteReader) EXPECT() *MockByteReader_Expecter {
 	return &MockByteReader_Expecter{mock: &_m.Mock}
+}
+
+type MockByteReader_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockByteReader) ASSERT(t mock.TestingT) *MockByteReader_Asserter {
+	return &MockByteReader_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockByteReader_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockByteReader_Asserter) NotCalled() *MockByteReader_NotCalledAsserter {
+	return &MockByteReader_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // ReadByte provides a mock function for the type MockByteReader
@@ -2259,6 +2810,14 @@ func (_c *MockByteReader_ReadByte_Call) RunAndReturn(run func() (byte, error)) *
 	return _c
 }
 
+// ReadByte is a helper method to assert mock.AssertNotCalled
+func (_a *MockByteReader_NotCalledAsserter) ReadByte() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "ReadByte")
+}
+
 // NewMockByteScanner creates a new instance of MockByteScanner. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockByteScanner(t interface {
@@ -2293,6 +2852,24 @@ type MockByteScanner_Expecter struct {
 
 func (_m *MockByteScanner) EXPECT() *MockByteScanner_Expecter {
 	return &MockByteScanner_Expecter{mock: &_m.Mock}
+}
+
+type MockByteScanner_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockByteScanner) ASSERT(t mock.TestingT) *MockByteScanner_Asserter {
+	return &MockByteScanner_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockByteScanner_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockByteScanner_Asserter) NotCalled() *MockByteScanner_NotCalledAsserter {
+	return &MockByteScanner_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // ReadByte provides a mock function for the type MockByteScanner
@@ -2348,6 +2925,14 @@ func (_c *MockByteScanner_ReadByte_Call) RunAndReturn(run func() (byte, error)) 
 	return _c
 }
 
+// ReadByte is a helper method to assert mock.AssertNotCalled
+func (_a *MockByteScanner_NotCalledAsserter) ReadByte() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "ReadByte")
+}
+
 // UnreadByte provides a mock function for the type MockByteScanner
 func (_mock *MockByteScanner) UnreadByte() error {
 	ret := _mock.Called()
@@ -2392,6 +2977,14 @@ func (_c *MockByteScanner_UnreadByte_Call) RunAndReturn(run func() error) *MockB
 	return _c
 }
 
+// UnreadByte is a helper method to assert mock.AssertNotCalled
+func (_a *MockByteScanner_NotCalledAsserter) UnreadByte() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "UnreadByte")
+}
+
 // NewMockByteWriter creates a new instance of MockByteWriter. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockByteWriter(t interface {
@@ -2426,6 +3019,24 @@ type MockByteWriter_Expecter struct {
 
 func (_m *MockByteWriter) EXPECT() *MockByteWriter_Expecter {
 	return &MockByteWriter_Expecter{mock: &_m.Mock}
+}
+
+type MockByteWriter_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockByteWriter) ASSERT(t mock.TestingT) *MockByteWriter_Asserter {
+	return &MockByteWriter_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockByteWriter_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockByteWriter_Asserter) NotCalled() *MockByteWriter_NotCalledAsserter {
+	return &MockByteWriter_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // WriteByte provides a mock function for the type MockByteWriter
@@ -2479,6 +3090,15 @@ func (_c *MockByteWriter_WriteByte_Call) RunAndReturn(run func(c byte) error) *M
 	return _c
 }
 
+// WriteByte is a helper method to assert mock.AssertNotCalled
+//   - c byte
+func (_a *MockByteWriter_NotCalledAsserter) WriteByte(c any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "WriteByte", c)
+}
+
 // NewMockRuneReader creates a new instance of MockRuneReader. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockRuneReader(t interface {
@@ -2513,6 +3133,24 @@ type MockRuneReader_Expecter struct {
 
 func (_m *MockRuneReader) EXPECT() *MockRuneReader_Expecter {
 	return &MockRuneReader_Expecter{mock: &_m.Mock}
+}
+
+type MockRuneReader_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRuneReader) ASSERT(t mock.TestingT) *MockRuneReader_Asserter {
+	return &MockRuneReader_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRuneReader_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRuneReader_Asserter) NotCalled() *MockRuneReader_NotCalledAsserter {
+	return &MockRuneReader_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // ReadRune provides a mock function for the type MockRuneReader
@@ -2574,6 +3212,14 @@ func (_c *MockRuneReader_ReadRune_Call) RunAndReturn(run func() (rune, int, erro
 	return _c
 }
 
+// ReadRune is a helper method to assert mock.AssertNotCalled
+func (_a *MockRuneReader_NotCalledAsserter) ReadRune() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "ReadRune")
+}
+
 // NewMockRuneScanner creates a new instance of MockRuneScanner. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockRuneScanner(t interface {
@@ -2608,6 +3254,24 @@ type MockRuneScanner_Expecter struct {
 
 func (_m *MockRuneScanner) EXPECT() *MockRuneScanner_Expecter {
 	return &MockRuneScanner_Expecter{mock: &_m.Mock}
+}
+
+type MockRuneScanner_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockRuneScanner) ASSERT(t mock.TestingT) *MockRuneScanner_Asserter {
+	return &MockRuneScanner_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockRuneScanner_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockRuneScanner_Asserter) NotCalled() *MockRuneScanner_NotCalledAsserter {
+	return &MockRuneScanner_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // ReadRune provides a mock function for the type MockRuneScanner
@@ -2669,6 +3333,14 @@ func (_c *MockRuneScanner_ReadRune_Call) RunAndReturn(run func() (rune, int, err
 	return _c
 }
 
+// ReadRune is a helper method to assert mock.AssertNotCalled
+func (_a *MockRuneScanner_NotCalledAsserter) ReadRune() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "ReadRune")
+}
+
 // UnreadRune provides a mock function for the type MockRuneScanner
 func (_mock *MockRuneScanner) UnreadRune() error {
 	ret := _mock.Called()
@@ -2713,6 +3385,14 @@ func (_c *MockRuneScanner_UnreadRune_Call) RunAndReturn(run func() error) *MockR
 	return _c
 }
 
+// UnreadRune is a helper method to assert mock.AssertNotCalled
+func (_a *MockRuneScanner_NotCalledAsserter) UnreadRune() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "UnreadRune")
+}
+
 // NewMockStringWriter creates a new instance of MockStringWriter. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockStringWriter(t interface {
@@ -2747,6 +3427,24 @@ type MockStringWriter_Expecter struct {
 
 func (_m *MockStringWriter) EXPECT() *MockStringWriter_Expecter {
 	return &MockStringWriter_Expecter{mock: &_m.Mock}
+}
+
+type MockStringWriter_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockStringWriter) ASSERT(t mock.TestingT) *MockStringWriter_Asserter {
+	return &MockStringWriter_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockStringWriter_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockStringWriter_Asserter) NotCalled() *MockStringWriter_NotCalledAsserter {
+	return &MockStringWriter_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // WriteString provides a mock function for the type MockStringWriter
@@ -2807,4 +3505,13 @@ func (_c *MockStringWriter_WriteString_Call) Return(n int, err error) *MockStrin
 func (_c *MockStringWriter_WriteString_Call) RunAndReturn(run func(s string) (int, error)) *MockStringWriter_WriteString_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// WriteString is a helper method to assert mock.AssertNotCalled
+//   - s string
+func (_a *MockStringWriter_NotCalledAsserter) WriteString(s any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "WriteString", s)
 }

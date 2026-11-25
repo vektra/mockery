@@ -48,6 +48,24 @@ func (_m *FunServerWithDifferentFile) EXPECT() *FunServerWithDifferentFile_Expec
 	return &FunServerWithDifferentFile_Expecter{mock: &_m.Mock}
 }
 
+type FunServerWithDifferentFile_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *FunServerWithDifferentFile) ASSERT(t mock.TestingT) *FunServerWithDifferentFile_Asserter {
+	return &FunServerWithDifferentFile_Asserter{mock: &_m.Mock, t: t}
+}
+
+type FunServerWithDifferentFile_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *FunServerWithDifferentFile_Asserter) NotCalled() *FunServerWithDifferentFile_NotCalledAsserter {
+	return &FunServerWithDifferentFile_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // HandleRequest provides a mock function for the type FunServerWithDifferentFile
 func (_mock *FunServerWithDifferentFile) HandleRequest(path string, handler http.Handler) {
 	_mock.Called(path, handler)
@@ -94,6 +112,16 @@ func (_c *FunServerWithDifferentFile_HandleRequest_Call) RunAndReturn(run func(p
 	return _c
 }
 
+// HandleRequest is a helper method to assert mock.AssertNotCalled
+//   - path string
+//   - handler http.Handler
+func (_a *FunServerWithDifferentFile_NotCalledAsserter) HandleRequest(path any, handler any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "HandleRequest", path, handler)
+}
+
 // NewAnotherFunServerWithDifferentFile creates a new instance of AnotherFunServerWithDifferentFile. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewAnotherFunServerWithDifferentFile(t interface {
@@ -128,6 +156,24 @@ type AnotherFunServerWithDifferentFile_Expecter struct {
 
 func (_m *AnotherFunServerWithDifferentFile) EXPECT() *AnotherFunServerWithDifferentFile_Expecter {
 	return &AnotherFunServerWithDifferentFile_Expecter{mock: &_m.Mock}
+}
+
+type AnotherFunServerWithDifferentFile_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *AnotherFunServerWithDifferentFile) ASSERT(t mock.TestingT) *AnotherFunServerWithDifferentFile_Asserter {
+	return &AnotherFunServerWithDifferentFile_Asserter{mock: &_m.Mock, t: t}
+}
+
+type AnotherFunServerWithDifferentFile_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *AnotherFunServerWithDifferentFile_Asserter) NotCalled() *AnotherFunServerWithDifferentFile_NotCalledAsserter {
+	return &AnotherFunServerWithDifferentFile_NotCalledAsserter{mock: _a.mock, t: _a.t}
 }
 
 // HandleRequest provides a mock function for the type AnotherFunServerWithDifferentFile
@@ -174,4 +220,14 @@ func (_c *AnotherFunServerWithDifferentFile_HandleRequest_Call) Return() *Anothe
 func (_c *AnotherFunServerWithDifferentFile_HandleRequest_Call) RunAndReturn(run func(path string, handler http.Handler)) *AnotherFunServerWithDifferentFile_HandleRequest_Call {
 	_c.Run(run)
 	return _c
+}
+
+// HandleRequest is a helper method to assert mock.AssertNotCalled
+//   - path string
+//   - handler http.Handler
+func (_a *AnotherFunServerWithDifferentFile_NotCalledAsserter) HandleRequest(path any, handler any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "HandleRequest", path, handler)
 }

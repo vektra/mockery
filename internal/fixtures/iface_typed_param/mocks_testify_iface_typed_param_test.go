@@ -48,6 +48,24 @@ func (_m *MockGetterIfaceTypedParam[T]) EXPECT() *MockGetterIfaceTypedParam_Expe
 	return &MockGetterIfaceTypedParam_Expecter[T]{mock: &_m.Mock}
 }
 
+type MockGetterIfaceTypedParam_Asserter[T io.Reader] struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockGetterIfaceTypedParam[T]) ASSERT(t mock.TestingT) *MockGetterIfaceTypedParam_Asserter[T] {
+	return &MockGetterIfaceTypedParam_Asserter[T]{mock: &_m.Mock, t: t}
+}
+
+type MockGetterIfaceTypedParam_NotCalledAsserter[T io.Reader] struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockGetterIfaceTypedParam_Asserter[T]) NotCalled() *MockGetterIfaceTypedParam_NotCalledAsserter[T] {
+	return &MockGetterIfaceTypedParam_NotCalledAsserter[T]{mock: _a.mock, t: _a.t}
+}
+
 // Get provides a mock function for the type MockGetterIfaceTypedParam
 func (_mock *MockGetterIfaceTypedParam[T]) Get() T {
 	ret := _mock.Called()
@@ -92,4 +110,12 @@ func (_c *MockGetterIfaceTypedParam_Get_Call[T]) Return(v T) *MockGetterIfaceTyp
 func (_c *MockGetterIfaceTypedParam_Get_Call[T]) RunAndReturn(run func() T) *MockGetterIfaceTypedParam_Get_Call[T] {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Get is a helper method to assert mock.AssertNotCalled
+func (_a *MockGetterIfaceTypedParam_NotCalledAsserter[T]) Get() bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Get")
 }

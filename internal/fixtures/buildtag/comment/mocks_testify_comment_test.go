@@ -46,6 +46,24 @@ func (_m *MockIfaceWithBuildTagInComment) EXPECT() *MockIfaceWithBuildTagInComme
 	return &MockIfaceWithBuildTagInComment_Expecter{mock: &_m.Mock}
 }
 
+type MockIfaceWithBuildTagInComment_Asserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_m *MockIfaceWithBuildTagInComment) ASSERT(t mock.TestingT) *MockIfaceWithBuildTagInComment_Asserter {
+	return &MockIfaceWithBuildTagInComment_Asserter{mock: &_m.Mock, t: t}
+}
+
+type MockIfaceWithBuildTagInComment_NotCalledAsserter struct {
+	mock *mock.Mock
+	t    mock.TestingT
+}
+
+func (_a *MockIfaceWithBuildTagInComment_Asserter) NotCalled() *MockIfaceWithBuildTagInComment_NotCalledAsserter {
+	return &MockIfaceWithBuildTagInComment_NotCalledAsserter{mock: _a.mock, t: _a.t}
+}
+
 // Sprintf provides a mock function for the type MockIfaceWithBuildTagInComment
 func (_mock *MockIfaceWithBuildTagInComment) Sprintf(format string, a ...interface{}) string {
 	var tmpRet mock.Arguments
@@ -110,4 +128,14 @@ func (_c *MockIfaceWithBuildTagInComment_Sprintf_Call) Return(s string) *MockIfa
 func (_c *MockIfaceWithBuildTagInComment_Sprintf_Call) RunAndReturn(run func(format string, a ...interface{}) string) *MockIfaceWithBuildTagInComment_Sprintf_Call {
 	_c.Call.Return(run)
 	return _c
+}
+
+// Sprintf is a helper method to assert mock.AssertNotCalled
+//   - format string
+//   - a ...interface{}
+func (_a *MockIfaceWithBuildTagInComment_NotCalledAsserter) Sprintf(format any, a ...any) bool {
+	if helper, ok := _a.t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+	return _a.mock.AssertNotCalled(_a.t, "Sprintf", append([]any{format}, a...)...)
 }
