@@ -57,6 +57,8 @@ func (_mock *MockRType) Replace1(f rt1.RType1) {
 // MockRType_Replace1_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Replace1'
 type MockRType_Replace1_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Replace1 is a helper method to define mock.On call
@@ -79,11 +81,19 @@ func (_c *MockRType_Replace1_Call) Run(run func(f rt1.RType1)) *MockRType_Replac
 }
 
 func (_c *MockRType_Replace1_Call) Return() *MockRType_Replace1_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockRType_Replace1_Call) RunAndReturn(run func(f rt1.RType1)) *MockRType_Replace1_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -97,6 +107,8 @@ func (_mock *MockRType) Replace2(f rt2.RType2) {
 // MockRType_Replace2_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Replace2'
 type MockRType_Replace2_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Replace2 is a helper method to define mock.On call
@@ -119,11 +131,19 @@ func (_c *MockRType_Replace2_Call) Run(run func(f rt2.RType2)) *MockRType_Replac
 }
 
 func (_c *MockRType_Replace2_Call) Return() *MockRType_Replace2_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockRType_Replace2_Call) RunAndReturn(run func(f rt2.RType2)) *MockRType_Replace2_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -173,6 +193,8 @@ func (_mock *RTypeReplaced1) Replace1(f rt2.RType2) {
 // RTypeReplaced1_Replace1_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Replace1'
 type RTypeReplaced1_Replace1_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Replace1 is a helper method to define mock.On call
@@ -195,11 +217,19 @@ func (_c *RTypeReplaced1_Replace1_Call) Run(run func(f rt2.RType2)) *RTypeReplac
 }
 
 func (_c *RTypeReplaced1_Replace1_Call) Return() *RTypeReplaced1_Replace1_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *RTypeReplaced1_Replace1_Call) RunAndReturn(run func(f rt2.RType2)) *RTypeReplaced1_Replace1_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -213,6 +243,8 @@ func (_mock *RTypeReplaced1) Replace2(f rt2.RType2) {
 // RTypeReplaced1_Replace2_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Replace2'
 type RTypeReplaced1_Replace2_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Replace2 is a helper method to define mock.On call
@@ -235,11 +267,19 @@ func (_c *RTypeReplaced1_Replace2_Call) Run(run func(f rt2.RType2)) *RTypeReplac
 }
 
 func (_c *RTypeReplaced1_Replace2_Call) Return() *RTypeReplaced1_Replace2_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *RTypeReplaced1_Replace2_Call) RunAndReturn(run func(f rt2.RType2)) *RTypeReplaced1_Replace2_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }

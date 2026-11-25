@@ -70,6 +70,8 @@ func (_mock *MockResponseWriter) Header() http.Header {
 // MockResponseWriter_Header_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Header'
 type MockResponseWriter_Header_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Header is a helper method to define mock.On call
@@ -85,11 +87,19 @@ func (_c *MockResponseWriter_Header_Call) Run(run func()) *MockResponseWriter_He
 }
 
 func (_c *MockResponseWriter_Header_Call) Return(header http.Header) *MockResponseWriter_Header_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(header)
 	return _c
 }
 
 func (_c *MockResponseWriter_Header_Call) RunAndReturn(run func() http.Header) *MockResponseWriter_Header_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -123,6 +133,8 @@ func (_mock *MockResponseWriter) Write(bytes []byte) (int, error) {
 // MockResponseWriter_Write_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Write'
 type MockResponseWriter_Write_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Write is a helper method to define mock.On call
@@ -145,11 +157,19 @@ func (_c *MockResponseWriter_Write_Call) Run(run func(bytes []byte)) *MockRespon
 }
 
 func (_c *MockResponseWriter_Write_Call) Return(n int, err error) *MockResponseWriter_Write_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockResponseWriter_Write_Call) RunAndReturn(run func(bytes []byte) (int, error)) *MockResponseWriter_Write_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -163,6 +183,8 @@ func (_mock *MockResponseWriter) WriteHeader(statusCode int) {
 // MockResponseWriter_WriteHeader_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'WriteHeader'
 type MockResponseWriter_WriteHeader_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // WriteHeader is a helper method to define mock.On call
@@ -185,11 +207,19 @@ func (_c *MockResponseWriter_WriteHeader_Call) Run(run func(statusCode int)) *Mo
 }
 
 func (_c *MockResponseWriter_WriteHeader_Call) Return() *MockResponseWriter_WriteHeader_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockResponseWriter_WriteHeader_Call) RunAndReturn(run func(statusCode int)) *MockResponseWriter_WriteHeader_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }

@@ -55,6 +55,8 @@ func (_mock *MockInterface1) Method1() {
 // MockInterface1_Method1_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Method1'
 type MockInterface1_Method1_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Method1 is a helper method to define mock.On call
@@ -70,11 +72,19 @@ func (_c *MockInterface1_Method1_Call) Run(run func()) *MockInterface1_Method1_C
 }
 
 func (_c *MockInterface1_Method1_Call) Return() *MockInterface1_Method1_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockInterface1_Method1_Call) RunAndReturn(run func()) *MockInterface1_Method1_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -124,6 +134,8 @@ func (_mock *MockInterface2) Method1() {
 // MockInterface2_Method1_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Method1'
 type MockInterface2_Method1_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Method1 is a helper method to define mock.On call
@@ -139,11 +151,19 @@ func (_c *MockInterface2_Method1_Call) Run(run func()) *MockInterface2_Method1_C
 }
 
 func (_c *MockInterface2_Method1_Call) Return() *MockInterface2_Method1_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockInterface2_Method1_Call) RunAndReturn(run func()) *MockInterface2_Method1_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -193,6 +213,8 @@ func (_mock *MockInterface3) Method1() {
 // MockInterface3_Method1_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Method1'
 type MockInterface3_Method1_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Method1 is a helper method to define mock.On call
@@ -208,11 +230,19 @@ func (_c *MockInterface3_Method1_Call) Run(run func()) *MockInterface3_Method1_C
 }
 
 func (_c *MockInterface3_Method1_Call) Return() *MockInterface3_Method1_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockInterface3_Method1_Call) RunAndReturn(run func()) *MockInterface3_Method1_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }

@@ -77,6 +77,8 @@ func (_mock *MockUsesAny) GetReader() any {
 // MockUsesAny_GetReader_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetReader'
 type MockUsesAny_GetReader_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // GetReader is a helper method to define mock.On call
@@ -92,11 +94,19 @@ func (_c *MockUsesAny_GetReader_Call) Run(run func()) *MockUsesAny_GetReader_Cal
 }
 
 func (_c *MockUsesAny_GetReader_Call) Return(anyMoqParam any) *MockUsesAny_GetReader_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(anyMoqParam)
 	return _c
 }
 
 func (_c *MockUsesAny_GetReader_Call) RunAndReturn(run func() any) *MockUsesAny_GetReader_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -146,6 +156,8 @@ func (_mock *MockFooer) Bar(f func([]int)) {
 // MockFooer_Bar_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Bar'
 type MockFooer_Bar_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Bar is a helper method to define mock.On call
@@ -168,11 +180,19 @@ func (_c *MockFooer_Bar_Call) Run(run func(f func([]int))) *MockFooer_Bar_Call {
 }
 
 func (_c *MockFooer_Bar_Call) Return() *MockFooer_Bar_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockFooer_Bar_Call) RunAndReturn(run func(f func([]int))) *MockFooer_Bar_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -199,6 +219,8 @@ func (_mock *MockFooer) Baz(path string) func(x string) string {
 // MockFooer_Baz_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Baz'
 type MockFooer_Baz_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Baz is a helper method to define mock.On call
@@ -221,11 +243,19 @@ func (_c *MockFooer_Baz_Call) Run(run func(path string)) *MockFooer_Baz_Call {
 }
 
 func (_c *MockFooer_Baz_Call) Return(fn func(x string) string) *MockFooer_Baz_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(fn)
 	return _c
 }
 
 func (_c *MockFooer_Baz_Call) RunAndReturn(run func(path string) func(x string) string) *MockFooer_Baz_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -250,6 +280,8 @@ func (_mock *MockFooer) Foo(f func(x string) string) error {
 // MockFooer_Foo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Foo'
 type MockFooer_Foo_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Foo is a helper method to define mock.On call
@@ -272,11 +304,19 @@ func (_c *MockFooer_Foo_Call) Run(run func(f func(x string) string)) *MockFooer_
 }
 
 func (_c *MockFooer_Foo_Call) Return(err error) *MockFooer_Foo_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockFooer_Foo_Call) RunAndReturn(run func(f func(x string) string) error) *MockFooer_Foo_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -337,6 +377,8 @@ func (_mock *MockMapFunc) Get(m map[string]func(string) string) error {
 // MockMapFunc_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockMapFunc_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -359,11 +401,19 @@ func (_c *MockMapFunc_Get_Call) Run(run func(m map[string]func(string) string)) 
 }
 
 func (_c *MockMapFunc_Get_Call) Return(err error) *MockMapFunc_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockMapFunc_Get_Call) RunAndReturn(run func(m map[string]func(string) string) error) *MockMapFunc_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -426,6 +476,8 @@ func (_mock *MockAsyncProducer) Input() chan<- bool {
 // MockAsyncProducer_Input_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Input'
 type MockAsyncProducer_Input_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Input is a helper method to define mock.On call
@@ -441,11 +493,19 @@ func (_c *MockAsyncProducer_Input_Call) Run(run func()) *MockAsyncProducer_Input
 }
 
 func (_c *MockAsyncProducer_Input_Call) Return(boolCh chan<- bool) *MockAsyncProducer_Input_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(boolCh)
 	return _c
 }
 
 func (_c *MockAsyncProducer_Input_Call) RunAndReturn(run func() chan<- bool) *MockAsyncProducer_Input_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -472,6 +532,8 @@ func (_mock *MockAsyncProducer) Output() <-chan bool {
 // MockAsyncProducer_Output_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Output'
 type MockAsyncProducer_Output_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Output is a helper method to define mock.On call
@@ -487,11 +549,19 @@ func (_c *MockAsyncProducer_Output_Call) Run(run func()) *MockAsyncProducer_Outp
 }
 
 func (_c *MockAsyncProducer_Output_Call) Return(boolCh <-chan bool) *MockAsyncProducer_Output_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(boolCh)
 	return _c
 }
 
 func (_c *MockAsyncProducer_Output_Call) RunAndReturn(run func() <-chan bool) *MockAsyncProducer_Output_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -518,6 +588,8 @@ func (_mock *MockAsyncProducer) Whatever() chan bool {
 // MockAsyncProducer_Whatever_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Whatever'
 type MockAsyncProducer_Whatever_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Whatever is a helper method to define mock.On call
@@ -533,11 +605,19 @@ func (_c *MockAsyncProducer_Whatever_Call) Run(run func()) *MockAsyncProducer_Wh
 }
 
 func (_c *MockAsyncProducer_Whatever_Call) Return(boolCh chan bool) *MockAsyncProducer_Whatever_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(boolCh)
 	return _c
 }
 
 func (_c *MockAsyncProducer_Whatever_Call) RunAndReturn(run func() chan bool) *MockAsyncProducer_Whatever_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -609,6 +689,8 @@ func (_mock *MockConsulLock) Lock(valCh <-chan struct{}) (<-chan struct{}, error
 // MockConsulLock_Lock_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Lock'
 type MockConsulLock_Lock_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Lock is a helper method to define mock.On call
@@ -631,11 +713,19 @@ func (_c *MockConsulLock_Lock_Call) Run(run func(valCh <-chan struct{})) *MockCo
 }
 
 func (_c *MockConsulLock_Lock_Call) Return(valCh1 <-chan struct{}, err error) *MockConsulLock_Lock_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(valCh1, err)
 	return _c
 }
 
 func (_c *MockConsulLock_Lock_Call) RunAndReturn(run func(valCh <-chan struct{}) (<-chan struct{}, error)) *MockConsulLock_Lock_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -660,6 +750,8 @@ func (_mock *MockConsulLock) Unlock() error {
 // MockConsulLock_Unlock_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Unlock'
 type MockConsulLock_Unlock_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Unlock is a helper method to define mock.On call
@@ -675,11 +767,19 @@ func (_c *MockConsulLock_Unlock_Call) Run(run func()) *MockConsulLock_Unlock_Cal
 }
 
 func (_c *MockConsulLock_Unlock_Call) Return(err error) *MockConsulLock_Unlock_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockConsulLock_Unlock_Call) RunAndReturn(run func() error) *MockConsulLock_Unlock_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -753,6 +853,8 @@ func (_mock *MockKeyManager) GetKey(s string, v uint16) ([]byte, *Err) {
 // MockKeyManager_GetKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetKey'
 type MockKeyManager_GetKey_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // GetKey is a helper method to define mock.On call
@@ -781,11 +883,19 @@ func (_c *MockKeyManager_GetKey_Call) Run(run func(s string, v uint16)) *MockKey
 }
 
 func (_c *MockKeyManager_GetKey_Call) Return(bytes []byte, err *Err) *MockKeyManager_GetKey_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(bytes, err)
 	return _c
 }
 
 func (_c *MockKeyManager_GetKey_Call) RunAndReturn(run func(s string, v uint16) ([]byte, *Err)) *MockKeyManager_GetKey_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -846,6 +956,8 @@ func (_mock *MockBlank) Create(x interface{}) error {
 // MockBlank_Create_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Create'
 type MockBlank_Create_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Create is a helper method to define mock.On call
@@ -868,11 +980,19 @@ func (_c *MockBlank_Create_Call) Run(run func(x interface{})) *MockBlank_Create_
 }
 
 func (_c *MockBlank_Create_Call) Return(err error) *MockBlank_Create_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockBlank_Create_Call) RunAndReturn(run func(x interface{}) error) *MockBlank_Create_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -944,6 +1064,8 @@ func (_mock *MockExpecterAndRolledVariadic) ManyArgsReturns(str string, i int) (
 // MockExpecterAndRolledVariadic_ManyArgsReturns_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ManyArgsReturns'
 type MockExpecterAndRolledVariadic_ManyArgsReturns_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // ManyArgsReturns is a helper method to define mock.On call
@@ -972,11 +1094,19 @@ func (_c *MockExpecterAndRolledVariadic_ManyArgsReturns_Call) Run(run func(str s
 }
 
 func (_c *MockExpecterAndRolledVariadic_ManyArgsReturns_Call) Return(strs []string, err error) *MockExpecterAndRolledVariadic_ManyArgsReturns_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(strs, err)
 	return _c
 }
 
 func (_c *MockExpecterAndRolledVariadic_ManyArgsReturns_Call) RunAndReturn(run func(str string, i int) ([]string, error)) *MockExpecterAndRolledVariadic_ManyArgsReturns_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1001,6 +1131,8 @@ func (_mock *MockExpecterAndRolledVariadic) NoArg() string {
 // MockExpecterAndRolledVariadic_NoArg_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'NoArg'
 type MockExpecterAndRolledVariadic_NoArg_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // NoArg is a helper method to define mock.On call
@@ -1016,11 +1148,19 @@ func (_c *MockExpecterAndRolledVariadic_NoArg_Call) Run(run func()) *MockExpecte
 }
 
 func (_c *MockExpecterAndRolledVariadic_NoArg_Call) Return(s string) *MockExpecterAndRolledVariadic_NoArg_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(s)
 	return _c
 }
 
 func (_c *MockExpecterAndRolledVariadic_NoArg_Call) RunAndReturn(run func() string) *MockExpecterAndRolledVariadic_NoArg_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1034,6 +1174,8 @@ func (_mock *MockExpecterAndRolledVariadic) NoReturn(str string) {
 // MockExpecterAndRolledVariadic_NoReturn_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'NoReturn'
 type MockExpecterAndRolledVariadic_NoReturn_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // NoReturn is a helper method to define mock.On call
@@ -1056,11 +1198,19 @@ func (_c *MockExpecterAndRolledVariadic_NoReturn_Call) Run(run func(str string))
 }
 
 func (_c *MockExpecterAndRolledVariadic_NoReturn_Call) Return() *MockExpecterAndRolledVariadic_NoReturn_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockExpecterAndRolledVariadic_NoReturn_Call) RunAndReturn(run func(str string)) *MockExpecterAndRolledVariadic_NoReturn_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -1091,6 +1241,8 @@ func (_mock *MockExpecterAndRolledVariadic) Variadic(ints ...int) error {
 // MockExpecterAndRolledVariadic_Variadic_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Variadic'
 type MockExpecterAndRolledVariadic_Variadic_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Variadic is a helper method to define mock.On call
@@ -1116,11 +1268,19 @@ func (_c *MockExpecterAndRolledVariadic_Variadic_Call) Run(run func(ints ...int)
 }
 
 func (_c *MockExpecterAndRolledVariadic_Variadic_Call) Return(err error) *MockExpecterAndRolledVariadic_Variadic_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockExpecterAndRolledVariadic_Variadic_Call) RunAndReturn(run func(ints ...int) error) *MockExpecterAndRolledVariadic_Variadic_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1151,6 +1311,8 @@ func (_mock *MockExpecterAndRolledVariadic) VariadicMany(i int, a string, intfs 
 // MockExpecterAndRolledVariadic_VariadicMany_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'VariadicMany'
 type MockExpecterAndRolledVariadic_VariadicMany_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // VariadicMany is a helper method to define mock.On call
@@ -1188,11 +1350,19 @@ func (_c *MockExpecterAndRolledVariadic_VariadicMany_Call) Run(run func(i int, a
 }
 
 func (_c *MockExpecterAndRolledVariadic_VariadicMany_Call) Return(err error) *MockExpecterAndRolledVariadic_VariadicMany_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockExpecterAndRolledVariadic_VariadicMany_Call) RunAndReturn(run func(i int, a string, intfs ...interface{}) error) *MockExpecterAndRolledVariadic_VariadicMany_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1264,6 +1434,8 @@ func (_mock *MockExpecter) ManyArgsReturns(str string, i int) ([]string, error) 
 // MockExpecter_ManyArgsReturns_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ManyArgsReturns'
 type MockExpecter_ManyArgsReturns_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // ManyArgsReturns is a helper method to define mock.On call
@@ -1292,11 +1464,19 @@ func (_c *MockExpecter_ManyArgsReturns_Call) Run(run func(str string, i int)) *M
 }
 
 func (_c *MockExpecter_ManyArgsReturns_Call) Return(strs []string, err error) *MockExpecter_ManyArgsReturns_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(strs, err)
 	return _c
 }
 
 func (_c *MockExpecter_ManyArgsReturns_Call) RunAndReturn(run func(str string, i int) ([]string, error)) *MockExpecter_ManyArgsReturns_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1321,6 +1501,8 @@ func (_mock *MockExpecter) NoArg() string {
 // MockExpecter_NoArg_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'NoArg'
 type MockExpecter_NoArg_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // NoArg is a helper method to define mock.On call
@@ -1336,11 +1518,19 @@ func (_c *MockExpecter_NoArg_Call) Run(run func()) *MockExpecter_NoArg_Call {
 }
 
 func (_c *MockExpecter_NoArg_Call) Return(s string) *MockExpecter_NoArg_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(s)
 	return _c
 }
 
 func (_c *MockExpecter_NoArg_Call) RunAndReturn(run func() string) *MockExpecter_NoArg_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1354,6 +1544,8 @@ func (_mock *MockExpecter) NoReturn(str string) {
 // MockExpecter_NoReturn_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'NoReturn'
 type MockExpecter_NoReturn_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // NoReturn is a helper method to define mock.On call
@@ -1376,11 +1568,19 @@ func (_c *MockExpecter_NoReturn_Call) Run(run func(str string)) *MockExpecter_No
 }
 
 func (_c *MockExpecter_NoReturn_Call) Return() *MockExpecter_NoReturn_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockExpecter_NoReturn_Call) RunAndReturn(run func(str string)) *MockExpecter_NoReturn_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -1412,6 +1612,8 @@ func (_mock *MockExpecter) Variadic(ints ...int) error {
 // MockExpecter_Variadic_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Variadic'
 type MockExpecter_Variadic_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Variadic is a helper method to define mock.On call
@@ -1439,11 +1641,19 @@ func (_c *MockExpecter_Variadic_Call) Run(run func(ints ...int)) *MockExpecter_V
 }
 
 func (_c *MockExpecter_Variadic_Call) Return(err error) *MockExpecter_Variadic_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockExpecter_Variadic_Call) RunAndReturn(run func(ints ...int) error) *MockExpecter_Variadic_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1471,6 +1681,8 @@ func (_mock *MockExpecter) VariadicMany(i int, a string, intfs ...interface{}) e
 // MockExpecter_VariadicMany_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'VariadicMany'
 type MockExpecter_VariadicMany_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // VariadicMany is a helper method to define mock.On call
@@ -1510,11 +1722,19 @@ func (_c *MockExpecter_VariadicMany_Call) Run(run func(i int, a string, intfs ..
 }
 
 func (_c *MockExpecter_VariadicMany_Call) Return(err error) *MockExpecter_VariadicMany_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockExpecter_VariadicMany_Call) RunAndReturn(run func(i int, a string, intfs ...interface{}) error) *MockExpecter_VariadicMany_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1569,6 +1789,8 @@ func (_mock *MockVariadicNoReturnInterface) VariadicNoReturn(j int, is ...interf
 // MockVariadicNoReturnInterface_VariadicNoReturn_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'VariadicNoReturn'
 type MockVariadicNoReturnInterface_VariadicNoReturn_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // VariadicNoReturn is a helper method to define mock.On call
@@ -1600,11 +1822,19 @@ func (_c *MockVariadicNoReturnInterface_VariadicNoReturn_Call) Run(run func(j in
 }
 
 func (_c *MockVariadicNoReturnInterface_VariadicNoReturn_Call) Return() *MockVariadicNoReturnInterface_VariadicNoReturn_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockVariadicNoReturnInterface_VariadicNoReturn_Call) RunAndReturn(run func(j int, is ...interface{})) *MockVariadicNoReturnInterface_VariadicNoReturn_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -1665,6 +1895,8 @@ func (_mock *MockFuncArgsCollision) Foo(ret interface{}) error {
 // MockFuncArgsCollision_Foo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Foo'
 type MockFuncArgsCollision_Foo_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Foo is a helper method to define mock.On call
@@ -1687,11 +1919,19 @@ func (_c *MockFuncArgsCollision_Foo_Call) Run(run func(ret interface{})) *MockFu
 }
 
 func (_c *MockFuncArgsCollision_Foo_Call) Return(err error) *MockFuncArgsCollision_Foo_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockFuncArgsCollision_Foo_Call) RunAndReturn(run func(ret interface{}) error) *MockFuncArgsCollision_Foo_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1772,6 +2012,8 @@ type MockRequesterGenerics_GenericAnonymousStructs_Call[TAny any, TComparable co
 	comparable
 }] struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // GenericAnonymousStructs is a helper method to define mock.On call
@@ -1796,6 +2038,10 @@ func (_c *MockRequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, 
 func (_c *MockRequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) Return(val1 struct {
 	Type2 GenericType[string, EmbeddedGet[int]]
 }) *MockRequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(val1)
 	return _c
 }
@@ -1803,6 +2049,10 @@ func (_c *MockRequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, 
 func (_c *MockRequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) RunAndReturn(run func(val struct{ Type1 TExternalIntf }) struct {
 	Type2 GenericType[string, EmbeddedGet[int]]
 }) *MockRequesterGenerics_GenericAnonymousStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1843,6 +2093,8 @@ type MockRequesterGenerics_GenericArguments_Call[TAny any, TComparable comparabl
 	comparable
 }] struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // GenericArguments is a helper method to define mock.On call
@@ -1871,11 +2123,19 @@ func (_c *MockRequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned
 }
 
 func (_c *MockRequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) Return(v2 TSigned, v3 TIntf) *MockRequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(v2, v3)
 	return _c
 }
 
 func (_c *MockRequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) RunAndReturn(run func(v TAny, v1 TComparable) (TSigned, TIntf)) *MockRequesterGenerics_GenericArguments_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1903,6 +2163,8 @@ type MockRequesterGenerics_GenericStructs_Call[TAny any, TComparable comparable,
 	comparable
 }] struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // GenericStructs is a helper method to define mock.On call
@@ -1925,11 +2187,19 @@ func (_c *MockRequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, 
 }
 
 func (_c *MockRequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) Return(genericType1 GenericType[TSigned, TIntf]) *MockRequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(genericType1)
 	return _c
 }
 
 func (_c *MockRequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric]) RunAndReturn(run func(genericType GenericType[TAny, TIntf]) GenericType[TSigned, TIntf]) *MockRequesterGenerics_GenericStructs_Call[TAny, TComparable, TSigned, TIntf, TExternalIntf, TGenIntf, TInlineType, TInlineTypeGeneric] {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1990,6 +2260,8 @@ func (_mock *MockGetInt) Get() int {
 // MockGetInt_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockGetInt_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -2005,11 +2277,19 @@ func (_c *MockGetInt_Get_Call) Run(run func()) *MockGetInt_Get_Call {
 }
 
 func (_c *MockGetInt_Get_Call) Return(n int) *MockGetInt_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n)
 	return _c
 }
 
 func (_c *MockGetInt_Get_Call) RunAndReturn(run func() int) *MockGetInt_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2072,6 +2352,8 @@ func (_mock *MockGetGeneric[T]) Get() T {
 // MockGetGeneric_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockGetGeneric_Get_Call[T constraints.Integer] struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -2087,11 +2369,19 @@ func (_c *MockGetGeneric_Get_Call[T]) Run(run func()) *MockGetGeneric_Get_Call[T
 }
 
 func (_c *MockGetGeneric_Get_Call[T]) Return(v T) *MockGetGeneric_Get_Call[T] {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(v)
 	return _c
 }
 
 func (_c *MockGetGeneric_Get_Call[T]) RunAndReturn(run func() T) *MockGetGeneric_Get_Call[T] {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2154,6 +2444,8 @@ func (_mock *MockEmbeddedGet[T]) Get() T {
 // MockEmbeddedGet_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockEmbeddedGet_Get_Call[T constraints.Signed] struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -2169,11 +2461,19 @@ func (_c *MockEmbeddedGet_Get_Call[T]) Run(run func()) *MockEmbeddedGet_Get_Call
 }
 
 func (_c *MockEmbeddedGet_Get_Call[T]) Return(v T) *MockEmbeddedGet_Get_Call[T] {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(v)
 	return _c
 }
 
 func (_c *MockEmbeddedGet_Get_Call[T]) RunAndReturn(run func() T) *MockEmbeddedGet_Get_Call[T] {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2236,6 +2536,8 @@ func (_mock *MockReplaceGeneric[TImport, TConstraint, TKeep]) A(t1 TImport) TKee
 // MockReplaceGeneric_A_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'A'
 type MockReplaceGeneric_A_Call[TImport any, TConstraint constraints.Signed, TKeep any] struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // A is a helper method to define mock.On call
@@ -2258,11 +2560,19 @@ func (_c *MockReplaceGeneric_A_Call[TImport, TConstraint, TKeep]) Run(run func(t
 }
 
 func (_c *MockReplaceGeneric_A_Call[TImport, TConstraint, TKeep]) Return(v TKeep) *MockReplaceGeneric_A_Call[TImport, TConstraint, TKeep] {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(v)
 	return _c
 }
 
 func (_c *MockReplaceGeneric_A_Call[TImport, TConstraint, TKeep]) RunAndReturn(run func(t1 TImport) TKeep) *MockReplaceGeneric_A_Call[TImport, TConstraint, TKeep] {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2289,6 +2599,8 @@ func (_mock *MockReplaceGeneric[TImport, TConstraint, TKeep]) B() TImport {
 // MockReplaceGeneric_B_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'B'
 type MockReplaceGeneric_B_Call[TImport any, TConstraint constraints.Signed, TKeep any] struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // B is a helper method to define mock.On call
@@ -2304,11 +2616,19 @@ func (_c *MockReplaceGeneric_B_Call[TImport, TConstraint, TKeep]) Run(run func()
 }
 
 func (_c *MockReplaceGeneric_B_Call[TImport, TConstraint, TKeep]) Return(v TImport) *MockReplaceGeneric_B_Call[TImport, TConstraint, TKeep] {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(v)
 	return _c
 }
 
 func (_c *MockReplaceGeneric_B_Call[TImport, TConstraint, TKeep]) RunAndReturn(run func() TImport) *MockReplaceGeneric_B_Call[TImport, TConstraint, TKeep] {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2335,6 +2655,8 @@ func (_mock *MockReplaceGeneric[TImport, TConstraint, TKeep]) C() TConstraint {
 // MockReplaceGeneric_C_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'C'
 type MockReplaceGeneric_C_Call[TImport any, TConstraint constraints.Signed, TKeep any] struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // C is a helper method to define mock.On call
@@ -2350,11 +2672,19 @@ func (_c *MockReplaceGeneric_C_Call[TImport, TConstraint, TKeep]) Run(run func()
 }
 
 func (_c *MockReplaceGeneric_C_Call[TImport, TConstraint, TKeep]) Return(v TConstraint) *MockReplaceGeneric_C_Call[TImport, TConstraint, TKeep] {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(v)
 	return _c
 }
 
 func (_c *MockReplaceGeneric_C_Call[TImport, TConstraint, TKeep]) RunAndReturn(run func() TConstraint) *MockReplaceGeneric_C_Call[TImport, TConstraint, TKeep] {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2417,6 +2747,8 @@ func (_mock *MockReplaceGenericSelf[T]) A() T {
 // MockReplaceGenericSelf_A_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'A'
 type MockReplaceGenericSelf_A_Call[T any] struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // A is a helper method to define mock.On call
@@ -2432,11 +2764,19 @@ func (_c *MockReplaceGenericSelf_A_Call[T]) Run(run func()) *MockReplaceGenericS
 }
 
 func (_c *MockReplaceGenericSelf_A_Call[T]) Return(v T) *MockReplaceGenericSelf_A_Call[T] {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(v)
 	return _c
 }
 
 func (_c *MockReplaceGenericSelf_A_Call[T]) RunAndReturn(run func() T) *MockReplaceGenericSelf_A_Call[T] {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2497,6 +2837,8 @@ func (_mock *MockConstructorTypeParams[helper, ok]) Get() string {
 // MockConstructorTypeParams_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockConstructorTypeParams_Get_Call[helper any, ok any] struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -2512,11 +2854,19 @@ func (_c *MockConstructorTypeParams_Get_Call[helper, ok]) Run(run func()) *MockC
 }
 
 func (_c *MockConstructorTypeParams_Get_Call[helper, ok]) Return(s string) *MockConstructorTypeParams_Get_Call[helper, ok] {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(s)
 	return _c
 }
 
 func (_c *MockConstructorTypeParams_Get_Call[helper, ok]) RunAndReturn(run func() string) *MockConstructorTypeParams_Get_Call[helper, ok] {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2586,6 +2936,8 @@ func (_mock *MockHasConflictingNestedImports) Get(path string) (http.Response, e
 // MockHasConflictingNestedImports_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockHasConflictingNestedImports_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -2608,11 +2960,19 @@ func (_c *MockHasConflictingNestedImports_Get_Call) Run(run func(path string)) *
 }
 
 func (_c *MockHasConflictingNestedImports_Get_Call) Return(response http.Response, err error) *MockHasConflictingNestedImports_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(response, err)
 	return _c
 }
 
 func (_c *MockHasConflictingNestedImports_Get_Call) RunAndReturn(run func(path string) (http.Response, error)) *MockHasConflictingNestedImports_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2637,6 +2997,8 @@ func (_mock *MockHasConflictingNestedImports) Z() http0.MyStruct {
 // MockHasConflictingNestedImports_Z_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Z'
 type MockHasConflictingNestedImports_Z_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Z is a helper method to define mock.On call
@@ -2652,11 +3014,19 @@ func (_c *MockHasConflictingNestedImports_Z_Call) Run(run func()) *MockHasConfli
 }
 
 func (_c *MockHasConflictingNestedImports_Z_Call) Return(myStruct http0.MyStruct) *MockHasConflictingNestedImports_Z_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(myStruct)
 	return _c
 }
 
 func (_c *MockHasConflictingNestedImports_Z_Call) RunAndReturn(run func() http0.MyStruct) *MockHasConflictingNestedImports_Z_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2717,6 +3087,8 @@ func (_mock *MockImportsSameAsPackage) A() test.B {
 // MockImportsSameAsPackage_A_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'A'
 type MockImportsSameAsPackage_A_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // A is a helper method to define mock.On call
@@ -2732,11 +3104,19 @@ func (_c *MockImportsSameAsPackage_A_Call) Run(run func()) *MockImportsSameAsPac
 }
 
 func (_c *MockImportsSameAsPackage_A_Call) Return(b test.B) *MockImportsSameAsPackage_A_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(b)
 	return _c
 }
 
 func (_c *MockImportsSameAsPackage_A_Call) RunAndReturn(run func() test.B) *MockImportsSameAsPackage_A_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2763,6 +3143,8 @@ func (_mock *MockImportsSameAsPackage) B() KeyManager {
 // MockImportsSameAsPackage_B_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'B'
 type MockImportsSameAsPackage_B_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // B is a helper method to define mock.On call
@@ -2778,11 +3160,19 @@ func (_c *MockImportsSameAsPackage_B_Call) Run(run func()) *MockImportsSameAsPac
 }
 
 func (_c *MockImportsSameAsPackage_B_Call) Return(keyManager KeyManager) *MockImportsSameAsPackage_B_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(keyManager)
 	return _c
 }
 
 func (_c *MockImportsSameAsPackage_B_Call) RunAndReturn(run func() KeyManager) *MockImportsSameAsPackage_B_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2796,6 +3186,8 @@ func (_mock *MockImportsSameAsPackage) C(c C) {
 // MockImportsSameAsPackage_C_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'C'
 type MockImportsSameAsPackage_C_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // C is a helper method to define mock.On call
@@ -2818,11 +3210,19 @@ func (_c *MockImportsSameAsPackage_C_Call) Run(run func(c C)) *MockImportsSameAs
 }
 
 func (_c *MockImportsSameAsPackage_C_Call) Return() *MockImportsSameAsPackage_C_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockImportsSameAsPackage_C_Call) RunAndReturn(run func(c C)) *MockImportsSameAsPackage_C_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -2883,6 +3283,8 @@ func (_mock *MockGenericInterface[M]) Func(arg *M) int {
 // MockGenericInterface_Func_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Func'
 type MockGenericInterface_Func_Call[M any] struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Func is a helper method to define mock.On call
@@ -2905,11 +3307,19 @@ func (_c *MockGenericInterface_Func_Call[M]) Run(run func(arg *M)) *MockGenericI
 }
 
 func (_c *MockGenericInterface_Func_Call[M]) Return(n int) *MockGenericInterface_Func_Call[M] {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n)
 	return _c
 }
 
 func (_c *MockGenericInterface_Func_Call[M]) RunAndReturn(run func(arg *M) int) *MockGenericInterface_Func_Call[M] {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2970,6 +3380,8 @@ func (_mock *MockInstantiatedGenericInterface) Func(arg *float32) int {
 // MockInstantiatedGenericInterface_Func_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Func'
 type MockInstantiatedGenericInterface_Func_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Func is a helper method to define mock.On call
@@ -2992,11 +3404,19 @@ func (_c *MockInstantiatedGenericInterface_Func_Call) Run(run func(arg *float32)
 }
 
 func (_c *MockInstantiatedGenericInterface_Func_Call) Return(n int) *MockInstantiatedGenericInterface_Func_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n)
 	return _c
 }
 
 func (_c *MockInstantiatedGenericInterface_Func_Call) RunAndReturn(run func(arg *float32) int) *MockInstantiatedGenericInterface_Func_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -3066,6 +3486,8 @@ func (_mock *MockMyReader) Read(p []byte) (int, error) {
 // MockMyReader_Read_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Read'
 type MockMyReader_Read_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Read is a helper method to define mock.On call
@@ -3088,11 +3510,19 @@ func (_c *MockMyReader_Read_Call) Run(run func(p []byte)) *MockMyReader_Read_Cal
 }
 
 func (_c *MockMyReader_Read_Call) Return(n int, err error) *MockMyReader_Read_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockMyReader_Read_Call) RunAndReturn(run func(p []byte) (int, error)) *MockMyReader_Read_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -3164,6 +3594,8 @@ func (_mock *MockIssue766) FetchData(fetchFunc func(x ...int) ([]int, error)) ([
 // MockIssue766_FetchData_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'FetchData'
 type MockIssue766_FetchData_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // FetchData is a helper method to define mock.On call
@@ -3186,11 +3618,19 @@ func (_c *MockIssue766_FetchData_Call) Run(run func(fetchFunc func(x ...int) ([]
 }
 
 func (_c *MockIssue766_FetchData_Call) Return(ints []int, err error) *MockIssue766_FetchData_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(ints, err)
 	return _c
 }
 
 func (_c *MockIssue766_FetchData_Call) RunAndReturn(run func(fetchFunc func(x ...int) ([]int, error)) ([]int, error)) *MockIssue766_FetchData_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -3245,6 +3685,8 @@ func (_mock *MockMapToInterface) Foo(arg1 ...map[string]interface{}) {
 // MockMapToInterface_Foo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Foo'
 type MockMapToInterface_Foo_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Foo is a helper method to define mock.On call
@@ -3270,11 +3712,19 @@ func (_c *MockMapToInterface_Foo_Call) Run(run func(arg1 ...map[string]interface
 }
 
 func (_c *MockMapToInterface_Foo_Call) Return() *MockMapToInterface_Foo_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockMapToInterface_Foo_Call) RunAndReturn(run func(arg1 ...map[string]interface{})) *MockMapToInterface_Foo_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -3324,6 +3774,8 @@ func (_mock *MockSibling) DoSomething() {
 // MockSibling_DoSomething_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DoSomething'
 type MockSibling_DoSomething_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // DoSomething is a helper method to define mock.On call
@@ -3339,11 +3791,19 @@ func (_c *MockSibling_DoSomething_Call) Run(run func()) *MockSibling_DoSomething
 }
 
 func (_c *MockSibling_DoSomething_Call) Return() *MockSibling_DoSomething_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockSibling_DoSomething_Call) RunAndReturn(run func()) *MockSibling_DoSomething_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -3393,6 +3853,8 @@ func (_mock *MockUsesOtherPkgIface) DoSomethingElse(obj Sibling) {
 // MockUsesOtherPkgIface_DoSomethingElse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DoSomethingElse'
 type MockUsesOtherPkgIface_DoSomethingElse_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // DoSomethingElse is a helper method to define mock.On call
@@ -3415,11 +3877,19 @@ func (_c *MockUsesOtherPkgIface_DoSomethingElse_Call) Run(run func(obj Sibling))
 }
 
 func (_c *MockUsesOtherPkgIface_DoSomethingElse_Call) Return() *MockUsesOtherPkgIface_DoSomethingElse_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockUsesOtherPkgIface_DoSomethingElse_Call) RunAndReturn(run func(obj Sibling)) *MockUsesOtherPkgIface_DoSomethingElse_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -3469,6 +3939,8 @@ func (_mock *MockNilRun) Foo(nilRun NilRun) {
 // MockNilRun_Foo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Foo'
 type MockNilRun_Foo_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Foo is a helper method to define mock.On call
@@ -3491,11 +3963,19 @@ func (_c *MockNilRun_Foo_Call) Run(run func(nilRun NilRun)) *MockNilRun_Foo_Call
 }
 
 func (_c *MockNilRun_Foo_Call) Return() *MockNilRun_Foo_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockNilRun_Foo_Call) RunAndReturn(run func(nilRun NilRun)) *MockNilRun_Foo_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -3556,6 +4036,8 @@ func (_mock *MockPanicOnNoReturnValue) DoSomething() string {
 // MockPanicOnNoReturnValue_DoSomething_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DoSomething'
 type MockPanicOnNoReturnValue_DoSomething_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // DoSomething is a helper method to define mock.On call
@@ -3571,11 +4053,19 @@ func (_c *MockPanicOnNoReturnValue_DoSomething_Call) Run(run func()) *MockPanicO
 }
 
 func (_c *MockPanicOnNoReturnValue_DoSomething_Call) Return(s string) *MockPanicOnNoReturnValue_DoSomething_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(s)
 	return _c
 }
 
 func (_c *MockPanicOnNoReturnValue_DoSomething_Call) RunAndReturn(run func() string) *MockPanicOnNoReturnValue_DoSomething_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -3636,6 +4126,8 @@ func (_mock *MockParamNamesInTemplate) Set(mock string, callInfo int) error {
 // MockParamNamesInTemplate_Set_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Set'
 type MockParamNamesInTemplate_Set_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Set is a helper method to define mock.On call
@@ -3664,11 +4156,19 @@ func (_c *MockParamNamesInTemplate_Set_Call) Run(run func(mock string, callInfo 
 }
 
 func (_c *MockParamNamesInTemplate_Set_Call) Return(err error) *MockParamNamesInTemplate_Set_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockParamNamesInTemplate_Set_Call) RunAndReturn(run func(mock string, callInfo int) error) *MockParamNamesInTemplate_Set_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -3738,6 +4238,8 @@ func (_mock *MockRequester) Get(path string) (string, error) {
 // MockRequester_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockRequester_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -3760,11 +4262,19 @@ func (_c *MockRequester_Get_Call) Run(run func(path string)) *MockRequester_Get_
 }
 
 func (_c *MockRequester_Get_Call) Return(s string, err error) *MockRequester_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(s, err)
 	return _c
 }
 
 func (_c *MockRequester_Get_Call) RunAndReturn(run func(path string) (string, error)) *MockRequester_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -3825,6 +4335,8 @@ func (_mock *MockRequester2) Get(path string) error {
 // MockRequester2_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockRequester2_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -3847,11 +4359,19 @@ func (_c *MockRequester2_Get_Call) Run(run func(path string)) *MockRequester2_Ge
 }
 
 func (_c *MockRequester2_Get_Call) Return(err error) *MockRequester2_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockRequester2_Get_Call) RunAndReturn(run func(path string) error) *MockRequester2_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -3912,6 +4432,8 @@ func (_mock *MockRequester3) Get() error {
 // MockRequester3_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockRequester3_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -3927,11 +4449,19 @@ func (_c *MockRequester3_Get_Call) Run(run func()) *MockRequester3_Get_Call {
 }
 
 func (_c *MockRequester3_Get_Call) Return(err error) *MockRequester3_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockRequester3_Get_Call) RunAndReturn(run func() error) *MockRequester3_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -3981,6 +4511,8 @@ func (_mock *MockRequester4) Get() {
 // MockRequester4_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockRequester4_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -3996,11 +4528,19 @@ func (_c *MockRequester4_Get_Call) Run(run func()) *MockRequester4_Get_Call {
 }
 
 func (_c *MockRequester4_Get_Call) Return() *MockRequester4_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockRequester4_Get_Call) RunAndReturn(run func()) *MockRequester4_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -4063,6 +4603,8 @@ func (_mock *MockRequesterArgSameAsImport) Get(json1 string) *json.RawMessage {
 // MockRequesterArgSameAsImport_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockRequesterArgSameAsImport_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -4085,11 +4627,19 @@ func (_c *MockRequesterArgSameAsImport_Get_Call) Run(run func(json1 string)) *Mo
 }
 
 func (_c *MockRequesterArgSameAsImport_Get_Call) Return(rawMessage *json.RawMessage) *MockRequesterArgSameAsImport_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(rawMessage)
 	return _c
 }
 
 func (_c *MockRequesterArgSameAsImport_Get_Call) RunAndReturn(run func(json1 string) *json.RawMessage) *MockRequesterArgSameAsImport_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -4152,6 +4702,8 @@ func (_mock *MockRequesterArgSameAsNamedImport) Get(json1 string) *json.RawMessa
 // MockRequesterArgSameAsNamedImport_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockRequesterArgSameAsNamedImport_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -4174,11 +4726,19 @@ func (_c *MockRequesterArgSameAsNamedImport_Get_Call) Run(run func(json1 string)
 }
 
 func (_c *MockRequesterArgSameAsNamedImport_Get_Call) Return(rawMessage *json.RawMessage) *MockRequesterArgSameAsNamedImport_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(rawMessage)
 	return _c
 }
 
 func (_c *MockRequesterArgSameAsNamedImport_Get_Call) RunAndReturn(run func(json1 string) *json.RawMessage) *MockRequesterArgSameAsNamedImport_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -4228,6 +4788,8 @@ func (_mock *MockRequesterArgSameAsPkg) Get(test1 string) {
 // MockRequesterArgSameAsPkg_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockRequesterArgSameAsPkg_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -4250,11 +4812,19 @@ func (_c *MockRequesterArgSameAsPkg_Get_Call) Run(run func(test1 string)) *MockR
 }
 
 func (_c *MockRequesterArgSameAsPkg_Get_Call) Return() *MockRequesterArgSameAsPkg_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockRequesterArgSameAsPkg_Get_Call) RunAndReturn(run func(test1 string)) *MockRequesterArgSameAsPkg_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -4326,6 +4896,8 @@ func (_mock *MockRequesterArray) Get(path string) ([2]string, error) {
 // MockRequesterArray_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockRequesterArray_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -4348,11 +4920,19 @@ func (_c *MockRequesterArray_Get_Call) Run(run func(path string)) *MockRequester
 }
 
 func (_c *MockRequesterArray_Get_Call) Return(strings [2]string, err error) *MockRequesterArray_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(strings, err)
 	return _c
 }
 
 func (_c *MockRequesterArray_Get_Call) RunAndReturn(run func(path string) ([2]string, error)) *MockRequesterArray_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -4413,6 +4993,8 @@ func (_mock *MockRequesterElided) Get(path string, url string) error {
 // MockRequesterElided_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockRequesterElided_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -4441,11 +5023,19 @@ func (_c *MockRequesterElided_Get_Call) Run(run func(path string, url string)) *
 }
 
 func (_c *MockRequesterElided_Get_Call) Return(err error) *MockRequesterElided_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockRequesterElided_Get_Call) RunAndReturn(run func(path string, url string) error) *MockRequesterElided_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -4508,6 +5098,8 @@ func (_mock *MockRequesterIface) Get() io.Reader {
 // MockRequesterIface_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockRequesterIface_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -4523,11 +5115,19 @@ func (_c *MockRequesterIface_Get_Call) Run(run func()) *MockRequesterIface_Get_C
 }
 
 func (_c *MockRequesterIface_Get_Call) Return(reader io.Reader) *MockRequesterIface_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(reader)
 	return _c
 }
 
 func (_c *MockRequesterIface_Get_Call) RunAndReturn(run func() io.Reader) *MockRequesterIface_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -4597,6 +5197,8 @@ func (_mock *MockRequesterNS) Get(path string) (http.Response, error) {
 // MockRequesterNS_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockRequesterNS_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -4619,11 +5221,19 @@ func (_c *MockRequesterNS_Get_Call) Run(run func(path string)) *MockRequesterNS_
 }
 
 func (_c *MockRequesterNS_Get_Call) Return(response http.Response, err error) *MockRequesterNS_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(response, err)
 	return _c
 }
 
 func (_c *MockRequesterNS_Get_Call) RunAndReturn(run func(path string) (http.Response, error)) *MockRequesterNS_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -4695,6 +5305,8 @@ func (_mock *MockRequesterPtr) Get(path string) (*string, error) {
 // MockRequesterPtr_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockRequesterPtr_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -4717,11 +5329,19 @@ func (_c *MockRequesterPtr_Get_Call) Run(run func(path string)) *MockRequesterPt
 }
 
 func (_c *MockRequesterPtr_Get_Call) Return(s *string, err error) *MockRequesterPtr_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(s, err)
 	return _c
 }
 
 func (_c *MockRequesterPtr_Get_Call) RunAndReturn(run func(path string) (*string, error)) *MockRequesterPtr_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -4803,6 +5423,8 @@ func (_mock *MockRequesterReturnElided) Get(path string) (int, int, int, error) 
 // MockRequesterReturnElided_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockRequesterReturnElided_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -4825,11 +5447,19 @@ func (_c *MockRequesterReturnElided_Get_Call) Run(run func(path string)) *MockRe
 }
 
 func (_c *MockRequesterReturnElided_Get_Call) Return(a int, b int, c int, err error) *MockRequesterReturnElided_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(a, b, c, err)
 	return _c
 }
 
 func (_c *MockRequesterReturnElided_Get_Call) RunAndReturn(run func(path string) (int, int, int, error)) *MockRequesterReturnElided_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -4863,6 +5493,8 @@ func (_mock *MockRequesterReturnElided) Put(path string) (int, error) {
 // MockRequesterReturnElided_Put_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Put'
 type MockRequesterReturnElided_Put_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Put is a helper method to define mock.On call
@@ -4885,11 +5517,19 @@ func (_c *MockRequesterReturnElided_Put_Call) Run(run func(path string)) *MockRe
 }
 
 func (_c *MockRequesterReturnElided_Put_Call) Return(n int, err error) *MockRequesterReturnElided_Put_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockRequesterReturnElided_Put_Call) RunAndReturn(run func(path string) (int, error)) *MockRequesterReturnElided_Put_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -4961,6 +5601,8 @@ func (_mock *MockRequesterSlice) Get(path string) ([]string, error) {
 // MockRequesterSlice_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockRequesterSlice_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -4983,11 +5625,19 @@ func (_c *MockRequesterSlice_Get_Call) Run(run func(path string)) *MockRequester
 }
 
 func (_c *MockRequesterSlice_Get_Call) Return(strings []string, err error) *MockRequesterSlice_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(strings, err)
 	return _c
 }
 
 func (_c *MockRequesterSlice_Get_Call) RunAndReturn(run func(path string) ([]string, error)) *MockRequesterSlice_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -5037,6 +5687,8 @@ func (_mock *mockrequesterUnexported) Get() {
 // mockrequesterUnexported_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type mockrequesterUnexported_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -5052,11 +5704,19 @@ func (_c *mockrequesterUnexported_Get_Call) Run(run func()) *mockrequesterUnexpo
 }
 
 func (_c *mockrequesterUnexported_Get_Call) Return() *mockrequesterUnexported_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *mockrequesterUnexported_Get_Call) RunAndReturn(run func()) *mockrequesterUnexported_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -5123,6 +5783,8 @@ func (_mock *MockRequesterVariadicOneArgument) Get(values ...string) bool {
 // MockRequesterVariadicOneArgument_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockRequesterVariadicOneArgument_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -5148,11 +5810,19 @@ func (_c *MockRequesterVariadicOneArgument_Get_Call) Run(run func(values ...stri
 }
 
 func (_c *MockRequesterVariadicOneArgument_Get_Call) Return(b bool) *MockRequesterVariadicOneArgument_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(b)
 	return _c
 }
 
 func (_c *MockRequesterVariadicOneArgument_Get_Call) RunAndReturn(run func(values ...string) bool) *MockRequesterVariadicOneArgument_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -5183,6 +5853,8 @@ func (_mock *MockRequesterVariadicOneArgument) MultiWriteToFile(filename string,
 // MockRequesterVariadicOneArgument_MultiWriteToFile_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'MultiWriteToFile'
 type MockRequesterVariadicOneArgument_MultiWriteToFile_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // MultiWriteToFile is a helper method to define mock.On call
@@ -5214,11 +5886,19 @@ func (_c *MockRequesterVariadicOneArgument_MultiWriteToFile_Call) Run(run func(f
 }
 
 func (_c *MockRequesterVariadicOneArgument_MultiWriteToFile_Call) Return(s string) *MockRequesterVariadicOneArgument_MultiWriteToFile_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(s)
 	return _c
 }
 
 func (_c *MockRequesterVariadicOneArgument_MultiWriteToFile_Call) RunAndReturn(run func(filename string, w ...io.Writer) string) *MockRequesterVariadicOneArgument_MultiWriteToFile_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -5249,6 +5929,8 @@ func (_mock *MockRequesterVariadicOneArgument) OneInterface(a ...interface{}) bo
 // MockRequesterVariadicOneArgument_OneInterface_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'OneInterface'
 type MockRequesterVariadicOneArgument_OneInterface_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // OneInterface is a helper method to define mock.On call
@@ -5274,11 +5956,19 @@ func (_c *MockRequesterVariadicOneArgument_OneInterface_Call) Run(run func(a ...
 }
 
 func (_c *MockRequesterVariadicOneArgument_OneInterface_Call) Return(b bool) *MockRequesterVariadicOneArgument_OneInterface_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(b)
 	return _c
 }
 
 func (_c *MockRequesterVariadicOneArgument_OneInterface_Call) RunAndReturn(run func(a ...interface{}) bool) *MockRequesterVariadicOneArgument_OneInterface_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -5309,6 +5999,8 @@ func (_mock *MockRequesterVariadicOneArgument) Sprintf(format string, a ...inter
 // MockRequesterVariadicOneArgument_Sprintf_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Sprintf'
 type MockRequesterVariadicOneArgument_Sprintf_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Sprintf is a helper method to define mock.On call
@@ -5340,11 +6032,19 @@ func (_c *MockRequesterVariadicOneArgument_Sprintf_Call) Run(run func(format str
 }
 
 func (_c *MockRequesterVariadicOneArgument_Sprintf_Call) Return(s string) *MockRequesterVariadicOneArgument_Sprintf_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(s)
 	return _c
 }
 
 func (_c *MockRequesterVariadicOneArgument_Sprintf_Call) RunAndReturn(run func(format string, a ...interface{}) string) *MockRequesterVariadicOneArgument_Sprintf_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -5412,6 +6112,8 @@ func (_mock *MockRequesterVariadic) Get(values ...string) bool {
 // MockRequesterVariadic_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockRequesterVariadic_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -5439,11 +6141,19 @@ func (_c *MockRequesterVariadic_Get_Call) Run(run func(values ...string)) *MockR
 }
 
 func (_c *MockRequesterVariadic_Get_Call) Return(b bool) *MockRequesterVariadic_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(b)
 	return _c
 }
 
 func (_c *MockRequesterVariadic_Get_Call) RunAndReturn(run func(values ...string) bool) *MockRequesterVariadic_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -5476,6 +6186,8 @@ func (_mock *MockRequesterVariadic) MultiWriteToFile(filename string, w ...io.Wr
 // MockRequesterVariadic_MultiWriteToFile_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'MultiWriteToFile'
 type MockRequesterVariadic_MultiWriteToFile_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // MultiWriteToFile is a helper method to define mock.On call
@@ -5509,11 +6221,19 @@ func (_c *MockRequesterVariadic_MultiWriteToFile_Call) Run(run func(filename str
 }
 
 func (_c *MockRequesterVariadic_MultiWriteToFile_Call) Return(s string) *MockRequesterVariadic_MultiWriteToFile_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(s)
 	return _c
 }
 
 func (_c *MockRequesterVariadic_MultiWriteToFile_Call) RunAndReturn(run func(filename string, w ...io.Writer) string) *MockRequesterVariadic_MultiWriteToFile_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -5540,6 +6260,8 @@ func (_mock *MockRequesterVariadic) OneInterface(a ...interface{}) bool {
 // MockRequesterVariadic_OneInterface_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'OneInterface'
 type MockRequesterVariadic_OneInterface_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // OneInterface is a helper method to define mock.On call
@@ -5567,11 +6289,19 @@ func (_c *MockRequesterVariadic_OneInterface_Call) Run(run func(a ...interface{}
 }
 
 func (_c *MockRequesterVariadic_OneInterface_Call) Return(b bool) *MockRequesterVariadic_OneInterface_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(b)
 	return _c
 }
 
 func (_c *MockRequesterVariadic_OneInterface_Call) RunAndReturn(run func(a ...interface{}) bool) *MockRequesterVariadic_OneInterface_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -5599,6 +6329,8 @@ func (_mock *MockRequesterVariadic) Sprintf(format string, a ...interface{}) str
 // MockRequesterVariadic_Sprintf_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Sprintf'
 type MockRequesterVariadic_Sprintf_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Sprintf is a helper method to define mock.On call
@@ -5632,11 +6364,19 @@ func (_c *MockRequesterVariadic_Sprintf_Call) Run(run func(format string, a ...i
 }
 
 func (_c *MockRequesterVariadic_Sprintf_Call) Return(s string) *MockRequesterVariadic_Sprintf_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(s)
 	return _c
 }
 
 func (_c *MockRequesterVariadic_Sprintf_Call) RunAndReturn(run func(format string, a ...interface{}) string) *MockRequesterVariadic_Sprintf_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -5697,6 +6437,8 @@ func (_mock *MockReturnFuncParamNames) Apply(returnFunc func() int) int {
 // MockReturnFuncParamNames_Apply_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Apply'
 type MockReturnFuncParamNames_Apply_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Apply is a helper method to define mock.On call
@@ -5719,11 +6461,19 @@ func (_c *MockReturnFuncParamNames_Apply_Call) Run(run func(returnFunc func() in
 }
 
 func (_c *MockReturnFuncParamNames_Apply_Call) Return(n int) *MockReturnFuncParamNames_Apply_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n)
 	return _c
 }
 
 func (_c *MockReturnFuncParamNames_Apply_Call) RunAndReturn(run func(returnFunc func() int) int) *MockReturnFuncParamNames_Apply_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -5748,6 +6498,8 @@ func (_mock *MockReturnFuncParamNames) Enabled(ok bool) bool {
 // MockReturnFuncParamNames_Enabled_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Enabled'
 type MockReturnFuncParamNames_Enabled_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Enabled is a helper method to define mock.On call
@@ -5770,11 +6522,19 @@ func (_c *MockReturnFuncParamNames_Enabled_Call) Run(run func(ok bool)) *MockRet
 }
 
 func (_c *MockReturnFuncParamNames_Enabled_Call) Return(b bool) *MockReturnFuncParamNames_Enabled_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(b)
 	return _c
 }
 
 func (_c *MockReturnFuncParamNames_Enabled_Call) RunAndReturn(run func(ok bool) bool) *MockReturnFuncParamNames_Enabled_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -5808,6 +6568,8 @@ func (_mock *MockReturnFuncParamNames) Set(key string, ok bool) (int, error) {
 // MockReturnFuncParamNames_Set_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Set'
 type MockReturnFuncParamNames_Set_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Set is a helper method to define mock.On call
@@ -5836,11 +6598,19 @@ func (_c *MockReturnFuncParamNames_Set_Call) Run(run func(key string, ok bool)) 
 }
 
 func (_c *MockReturnFuncParamNames_Set_Call) Return(n int, err error) *MockReturnFuncParamNames_Set_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockReturnFuncParamNames_Set_Call) RunAndReturn(run func(key string, ok bool) (int, error)) *MockReturnFuncParamNames_Set_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -5903,6 +6673,8 @@ func (_mock *MockExample) A() http.Flusher {
 // MockExample_A_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'A'
 type MockExample_A_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // A is a helper method to define mock.On call
@@ -5918,11 +6690,19 @@ func (_c *MockExample_A_Call) Run(run func()) *MockExample_A_Call {
 }
 
 func (_c *MockExample_A_Call) Return(flusher http.Flusher) *MockExample_A_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(flusher)
 	return _c
 }
 
 func (_c *MockExample_A_Call) RunAndReturn(run func() http.Flusher) *MockExample_A_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -5947,6 +6727,8 @@ func (_mock *MockExample) B(fixtureshttp string) http0.MyStruct {
 // MockExample_B_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'B'
 type MockExample_B_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // B is a helper method to define mock.On call
@@ -5969,11 +6751,19 @@ func (_c *MockExample_B_Call) Run(run func(fixtureshttp string)) *MockExample_B_
 }
 
 func (_c *MockExample_B_Call) Return(myStruct http0.MyStruct) *MockExample_B_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(myStruct)
 	return _c
 }
 
 func (_c *MockExample_B_Call) RunAndReturn(run func(fixtureshttp string) http0.MyStruct) *MockExample_B_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -5998,6 +6788,8 @@ func (_mock *MockExample) C(fixtureshttp string) http1.MyStruct {
 // MockExample_C_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'C'
 type MockExample_C_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // C is a helper method to define mock.On call
@@ -6020,11 +6812,19 @@ func (_c *MockExample_C_Call) Run(run func(fixtureshttp string)) *MockExample_C_
 }
 
 func (_c *MockExample_C_Call) Return(myStruct http1.MyStruct) *MockExample_C_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(myStruct)
 	return _c
 }
 
 func (_c *MockExample_C_Call) RunAndReturn(run func(fixtureshttp string) http1.MyStruct) *MockExample_C_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -6094,6 +6894,8 @@ func (_mock *MockA) Call() (B, error) {
 // MockA_Call_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Call'
 type MockA_Call_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Call is a helper method to define mock.On call
@@ -6109,11 +6911,19 @@ func (_c *MockA_Call_Call) Run(run func()) *MockA_Call_Call {
 }
 
 func (_c *MockA_Call_Call) Return(b B, err error) *MockA_Call_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(b, err)
 	return _c
 }
 
 func (_c *MockA_Call_Call) RunAndReturn(run func() (B, error)) *MockA_Call_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -6194,6 +7004,8 @@ func (_mock *MockStructWithTag) MethodA(v *struct {
 // MockStructWithTag_MethodA_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'MethodA'
 type MockStructWithTag_MethodA_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // MethodA is a helper method to define mock.On call
@@ -6228,6 +7040,10 @@ func (_c *MockStructWithTag_MethodA_Call) Return(val *struct {
 	FieldC int "json:\"field_c\""
 	FieldD int "json:\"field_d\" xml:\"field_d\""
 }) *MockStructWithTag_MethodA_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(val)
 	return _c
 }
@@ -6239,6 +7055,10 @@ func (_c *MockStructWithTag_MethodA_Call) RunAndReturn(run func(v *struct {
 	FieldC int "json:\"field_c\""
 	FieldD int "json:\"field_d\" xml:\"field_d\""
 }) *MockStructWithTag_MethodA_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -6288,6 +7108,8 @@ func (_mock *MockUnsafeInterface) Do(ptr *unsafe.Pointer) {
 // MockUnsafeInterface_Do_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Do'
 type MockUnsafeInterface_Do_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Do is a helper method to define mock.On call
@@ -6310,11 +7132,19 @@ func (_c *MockUnsafeInterface_Do_Call) Run(run func(ptr *unsafe.Pointer)) *MockU
 }
 
 func (_c *MockUnsafeInterface_Do_Call) Return() *MockUnsafeInterface_Do_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockUnsafeInterface_Do_Call) RunAndReturn(run func(ptr *unsafe.Pointer)) *MockUnsafeInterface_Do_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -6375,6 +7205,8 @@ func (_mock *MockVariadic) VariadicFunction(str string, vFunc VariadicFunction) 
 // MockVariadic_VariadicFunction_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'VariadicFunction'
 type MockVariadic_VariadicFunction_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // VariadicFunction is a helper method to define mock.On call
@@ -6403,11 +7235,19 @@ func (_c *MockVariadic_VariadicFunction_Call) Run(run func(str string, vFunc Var
 }
 
 func (_c *MockVariadic_VariadicFunction_Call) Return(err error) *MockVariadic_VariadicFunction_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockVariadic_VariadicFunction_Call) RunAndReturn(run func(str string, vFunc VariadicFunction) error) *MockVariadic_VariadicFunction_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -6470,6 +7310,8 @@ func (_mock *MockVariadicReturnFunc) SampleMethod(str string) func(str string, a
 // MockVariadicReturnFunc_SampleMethod_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'SampleMethod'
 type MockVariadicReturnFunc_SampleMethod_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // SampleMethod is a helper method to define mock.On call
@@ -6492,11 +7334,19 @@ func (_c *MockVariadicReturnFunc_SampleMethod_Call) Run(run func(str string)) *M
 }
 
 func (_c *MockVariadicReturnFunc_SampleMethod_Call) Return(fn func(str string, arr []int, a ...interface{})) *MockVariadicReturnFunc_SampleMethod_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(fn)
 	return _c
 }
 
 func (_c *MockVariadicReturnFunc_SampleMethod_Call) RunAndReturn(run func(str string) func(str string, arr []int, a ...interface{})) *MockVariadicReturnFunc_SampleMethod_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -6574,6 +7424,8 @@ func (_mock *MockVariadicWithMultipleReturnsUnrollVariadic) Foo(one string, two 
 // MockVariadicWithMultipleReturnsUnrollVariadic_Foo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Foo'
 type MockVariadicWithMultipleReturnsUnrollVariadic_Foo_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Foo is a helper method to define mock.On call
@@ -6607,11 +7459,19 @@ func (_c *MockVariadicWithMultipleReturnsUnrollVariadic_Foo_Call) Run(run func(o
 }
 
 func (_c *MockVariadicWithMultipleReturnsUnrollVariadic_Foo_Call) Return(result string, err error) *MockVariadicWithMultipleReturnsUnrollVariadic_Foo_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(result, err)
 	return _c
 }
 
 func (_c *MockVariadicWithMultipleReturnsUnrollVariadic_Foo_Call) RunAndReturn(run func(one string, two ...string) (string, error)) *MockVariadicWithMultipleReturnsUnrollVariadic_Foo_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -6687,6 +7547,8 @@ func (_mock *MockVariadicWithMultipleReturns) Foo(one string, two ...string) (st
 // MockVariadicWithMultipleReturns_Foo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Foo'
 type MockVariadicWithMultipleReturns_Foo_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Foo is a helper method to define mock.On call
@@ -6718,11 +7580,19 @@ func (_c *MockVariadicWithMultipleReturns_Foo_Call) Run(run func(one string, two
 }
 
 func (_c *MockVariadicWithMultipleReturns_Foo_Call) Return(result string, err error) *MockVariadicWithMultipleReturns_Foo_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(result, err)
 	return _c
 }
 
 func (_c *MockVariadicWithMultipleReturns_Foo_Call) RunAndReturn(run func(one string, two ...string) (string, error)) *MockVariadicWithMultipleReturns_Foo_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -6780,6 +7650,8 @@ func (_mock *MockVariadicWithNoReturns) Foo(one string, two ...string) {
 // MockVariadicWithNoReturns_Foo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Foo'
 type MockVariadicWithNoReturns_Foo_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Foo is a helper method to define mock.On call
@@ -6813,11 +7685,19 @@ func (_c *MockVariadicWithNoReturns_Foo_Call) Run(run func(one string, two ...st
 }
 
 func (_c *MockVariadicWithNoReturns_Foo_Call) Return() *MockVariadicWithNoReturns_Foo_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockVariadicWithNoReturns_Foo_Call) RunAndReturn(run func(one string, two ...string)) *MockVariadicWithNoReturns_Foo_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }

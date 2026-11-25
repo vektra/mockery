@@ -78,6 +78,8 @@ func (_mock *MockService) Do(ctx context.Context, opts lib.Options) (lib.Result,
 // MockService_Do_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Do'
 type MockService_Do_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Do is a helper method to define mock.On call
@@ -106,11 +108,19 @@ func (_c *MockService_Do_Call) Run(run func(ctx context.Context, opts lib.Option
 }
 
 func (_c *MockService_Do_Call) Return(result lib.Result, err error) *MockService_Do_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(result, err)
 	return _c
 }
 
 func (_c *MockService_Do_Call) RunAndReturn(run func(ctx context.Context, opts lib.Options) (lib.Result, error)) *MockService_Do_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -137,6 +147,8 @@ func (_mock *MockService) Many(results []lib.Result, each func(lib.Options)) map
 // MockService_Many_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Many'
 type MockService_Many_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Many is a helper method to define mock.On call
@@ -165,11 +177,19 @@ func (_c *MockService_Many_Call) Run(run func(results []lib.Result, each func(li
 }
 
 func (_c *MockService_Many_Call) Return(stringToOptions map[string]*lib.Options) *MockService_Many_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(stringToOptions)
 	return _c
 }
 
 func (_c *MockService_Many_Call) RunAndReturn(run func(results []lib.Result, each func(lib.Options)) map[string]*lib.Options) *MockService_Many_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }

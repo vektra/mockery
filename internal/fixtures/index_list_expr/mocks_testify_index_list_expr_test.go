@@ -68,6 +68,8 @@ func (_mock *MockGenericMultipleTypes[T1, T2, T3]) Func(arg1 *T1, arg2 T2) T3 {
 // MockGenericMultipleTypes_Func_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Func'
 type MockGenericMultipleTypes_Func_Call[T1 any, T2 any, T3 any] struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Func is a helper method to define mock.On call
@@ -96,11 +98,19 @@ func (_c *MockGenericMultipleTypes_Func_Call[T1, T2, T3]) Run(run func(arg1 *T1,
 }
 
 func (_c *MockGenericMultipleTypes_Func_Call[T1, T2, T3]) Return(v T3) *MockGenericMultipleTypes_Func_Call[T1, T2, T3] {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(v)
 	return _c
 }
 
 func (_c *MockGenericMultipleTypes_Func_Call[T1, T2, T3]) RunAndReturn(run func(arg1 *T1, arg2 T2) T3) *MockGenericMultipleTypes_Func_Call[T1, T2, T3] {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -161,6 +171,8 @@ func (_mock *MockIndexListExpr) Func(arg1 *int, arg2 string) bool {
 // MockIndexListExpr_Func_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Func'
 type MockIndexListExpr_Func_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Func is a helper method to define mock.On call
@@ -189,11 +201,19 @@ func (_c *MockIndexListExpr_Func_Call) Run(run func(arg1 *int, arg2 string)) *Mo
 }
 
 func (_c *MockIndexListExpr_Func_Call) Return(b bool) *MockIndexListExpr_Func_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(b)
 	return _c
 }
 
 func (_c *MockIndexListExpr_Func_Call) RunAndReturn(run func(arg1 *int, arg2 string) bool) *MockIndexListExpr_Func_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }

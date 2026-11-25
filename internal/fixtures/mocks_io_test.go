@@ -77,6 +77,8 @@ func (_mock *MockReader) Read(p []byte) (int, error) {
 // MockReader_Read_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Read'
 type MockReader_Read_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Read is a helper method to define mock.On call
@@ -99,11 +101,19 @@ func (_c *MockReader_Read_Call) Run(run func(p []byte)) *MockReader_Read_Call {
 }
 
 func (_c *MockReader_Read_Call) Return(n int, err error) *MockReader_Read_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockReader_Read_Call) RunAndReturn(run func(p []byte) (int, error)) *MockReader_Read_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -173,6 +183,8 @@ func (_mock *MockWriter) Write(p []byte) (int, error) {
 // MockWriter_Write_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Write'
 type MockWriter_Write_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Write is a helper method to define mock.On call
@@ -195,11 +207,19 @@ func (_c *MockWriter_Write_Call) Run(run func(p []byte)) *MockWriter_Write_Call 
 }
 
 func (_c *MockWriter_Write_Call) Return(n int, err error) *MockWriter_Write_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockWriter_Write_Call) RunAndReturn(run func(p []byte) (int, error)) *MockWriter_Write_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -260,6 +280,8 @@ func (_mock *MockCloser) Close() error {
 // MockCloser_Close_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Close'
 type MockCloser_Close_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Close is a helper method to define mock.On call
@@ -275,11 +297,19 @@ func (_c *MockCloser_Close_Call) Run(run func()) *MockCloser_Close_Call {
 }
 
 func (_c *MockCloser_Close_Call) Return(err error) *MockCloser_Close_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockCloser_Close_Call) RunAndReturn(run func() error) *MockCloser_Close_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -349,6 +379,8 @@ func (_mock *MockSeeker) Seek(offset int64, whence int) (int64, error) {
 // MockSeeker_Seek_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Seek'
 type MockSeeker_Seek_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Seek is a helper method to define mock.On call
@@ -377,11 +409,19 @@ func (_c *MockSeeker_Seek_Call) Run(run func(offset int64, whence int)) *MockSee
 }
 
 func (_c *MockSeeker_Seek_Call) Return(n int64, err error) *MockSeeker_Seek_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockSeeker_Seek_Call) RunAndReturn(run func(offset int64, whence int) (int64, error)) *MockSeeker_Seek_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -451,6 +491,8 @@ func (_mock *MockReadWriter) Read(p []byte) (int, error) {
 // MockReadWriter_Read_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Read'
 type MockReadWriter_Read_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Read is a helper method to define mock.On call
@@ -473,11 +515,19 @@ func (_c *MockReadWriter_Read_Call) Run(run func(p []byte)) *MockReadWriter_Read
 }
 
 func (_c *MockReadWriter_Read_Call) Return(n int, err error) *MockReadWriter_Read_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockReadWriter_Read_Call) RunAndReturn(run func(p []byte) (int, error)) *MockReadWriter_Read_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -511,6 +561,8 @@ func (_mock *MockReadWriter) Write(p []byte) (int, error) {
 // MockReadWriter_Write_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Write'
 type MockReadWriter_Write_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Write is a helper method to define mock.On call
@@ -533,11 +585,19 @@ func (_c *MockReadWriter_Write_Call) Run(run func(p []byte)) *MockReadWriter_Wri
 }
 
 func (_c *MockReadWriter_Write_Call) Return(n int, err error) *MockReadWriter_Write_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockReadWriter_Write_Call) RunAndReturn(run func(p []byte) (int, error)) *MockReadWriter_Write_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -598,6 +658,8 @@ func (_mock *MockReadCloser) Close() error {
 // MockReadCloser_Close_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Close'
 type MockReadCloser_Close_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Close is a helper method to define mock.On call
@@ -613,11 +675,19 @@ func (_c *MockReadCloser_Close_Call) Run(run func()) *MockReadCloser_Close_Call 
 }
 
 func (_c *MockReadCloser_Close_Call) Return(err error) *MockReadCloser_Close_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockReadCloser_Close_Call) RunAndReturn(run func() error) *MockReadCloser_Close_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -651,6 +721,8 @@ func (_mock *MockReadCloser) Read(p []byte) (int, error) {
 // MockReadCloser_Read_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Read'
 type MockReadCloser_Read_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Read is a helper method to define mock.On call
@@ -673,11 +745,19 @@ func (_c *MockReadCloser_Read_Call) Run(run func(p []byte)) *MockReadCloser_Read
 }
 
 func (_c *MockReadCloser_Read_Call) Return(n int, err error) *MockReadCloser_Read_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockReadCloser_Read_Call) RunAndReturn(run func(p []byte) (int, error)) *MockReadCloser_Read_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -738,6 +818,8 @@ func (_mock *MockWriteCloser) Close() error {
 // MockWriteCloser_Close_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Close'
 type MockWriteCloser_Close_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Close is a helper method to define mock.On call
@@ -753,11 +835,19 @@ func (_c *MockWriteCloser_Close_Call) Run(run func()) *MockWriteCloser_Close_Cal
 }
 
 func (_c *MockWriteCloser_Close_Call) Return(err error) *MockWriteCloser_Close_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockWriteCloser_Close_Call) RunAndReturn(run func() error) *MockWriteCloser_Close_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -791,6 +881,8 @@ func (_mock *MockWriteCloser) Write(p []byte) (int, error) {
 // MockWriteCloser_Write_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Write'
 type MockWriteCloser_Write_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Write is a helper method to define mock.On call
@@ -813,11 +905,19 @@ func (_c *MockWriteCloser_Write_Call) Run(run func(p []byte)) *MockWriteCloser_W
 }
 
 func (_c *MockWriteCloser_Write_Call) Return(n int, err error) *MockWriteCloser_Write_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockWriteCloser_Write_Call) RunAndReturn(run func(p []byte) (int, error)) *MockWriteCloser_Write_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -878,6 +978,8 @@ func (_mock *MockReadWriteCloser) Close() error {
 // MockReadWriteCloser_Close_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Close'
 type MockReadWriteCloser_Close_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Close is a helper method to define mock.On call
@@ -893,11 +995,19 @@ func (_c *MockReadWriteCloser_Close_Call) Run(run func()) *MockReadWriteCloser_C
 }
 
 func (_c *MockReadWriteCloser_Close_Call) Return(err error) *MockReadWriteCloser_Close_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockReadWriteCloser_Close_Call) RunAndReturn(run func() error) *MockReadWriteCloser_Close_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -931,6 +1041,8 @@ func (_mock *MockReadWriteCloser) Read(p []byte) (int, error) {
 // MockReadWriteCloser_Read_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Read'
 type MockReadWriteCloser_Read_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Read is a helper method to define mock.On call
@@ -953,11 +1065,19 @@ func (_c *MockReadWriteCloser_Read_Call) Run(run func(p []byte)) *MockReadWriteC
 }
 
 func (_c *MockReadWriteCloser_Read_Call) Return(n int, err error) *MockReadWriteCloser_Read_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockReadWriteCloser_Read_Call) RunAndReturn(run func(p []byte) (int, error)) *MockReadWriteCloser_Read_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -991,6 +1111,8 @@ func (_mock *MockReadWriteCloser) Write(p []byte) (int, error) {
 // MockReadWriteCloser_Write_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Write'
 type MockReadWriteCloser_Write_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Write is a helper method to define mock.On call
@@ -1013,11 +1135,19 @@ func (_c *MockReadWriteCloser_Write_Call) Run(run func(p []byte)) *MockReadWrite
 }
 
 func (_c *MockReadWriteCloser_Write_Call) Return(n int, err error) *MockReadWriteCloser_Write_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockReadWriteCloser_Write_Call) RunAndReturn(run func(p []byte) (int, error)) *MockReadWriteCloser_Write_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1087,6 +1217,8 @@ func (_mock *MockReadSeeker) Read(p []byte) (int, error) {
 // MockReadSeeker_Read_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Read'
 type MockReadSeeker_Read_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Read is a helper method to define mock.On call
@@ -1109,11 +1241,19 @@ func (_c *MockReadSeeker_Read_Call) Run(run func(p []byte)) *MockReadSeeker_Read
 }
 
 func (_c *MockReadSeeker_Read_Call) Return(n int, err error) *MockReadSeeker_Read_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockReadSeeker_Read_Call) RunAndReturn(run func(p []byte) (int, error)) *MockReadSeeker_Read_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1147,6 +1287,8 @@ func (_mock *MockReadSeeker) Seek(offset int64, whence int) (int64, error) {
 // MockReadSeeker_Seek_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Seek'
 type MockReadSeeker_Seek_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Seek is a helper method to define mock.On call
@@ -1175,11 +1317,19 @@ func (_c *MockReadSeeker_Seek_Call) Run(run func(offset int64, whence int)) *Moc
 }
 
 func (_c *MockReadSeeker_Seek_Call) Return(n int64, err error) *MockReadSeeker_Seek_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockReadSeeker_Seek_Call) RunAndReturn(run func(offset int64, whence int) (int64, error)) *MockReadSeeker_Seek_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1240,6 +1390,8 @@ func (_mock *MockReadSeekCloser) Close() error {
 // MockReadSeekCloser_Close_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Close'
 type MockReadSeekCloser_Close_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Close is a helper method to define mock.On call
@@ -1255,11 +1407,19 @@ func (_c *MockReadSeekCloser_Close_Call) Run(run func()) *MockReadSeekCloser_Clo
 }
 
 func (_c *MockReadSeekCloser_Close_Call) Return(err error) *MockReadSeekCloser_Close_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockReadSeekCloser_Close_Call) RunAndReturn(run func() error) *MockReadSeekCloser_Close_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1293,6 +1453,8 @@ func (_mock *MockReadSeekCloser) Read(p []byte) (int, error) {
 // MockReadSeekCloser_Read_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Read'
 type MockReadSeekCloser_Read_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Read is a helper method to define mock.On call
@@ -1315,11 +1477,19 @@ func (_c *MockReadSeekCloser_Read_Call) Run(run func(p []byte)) *MockReadSeekClo
 }
 
 func (_c *MockReadSeekCloser_Read_Call) Return(n int, err error) *MockReadSeekCloser_Read_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockReadSeekCloser_Read_Call) RunAndReturn(run func(p []byte) (int, error)) *MockReadSeekCloser_Read_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1353,6 +1523,8 @@ func (_mock *MockReadSeekCloser) Seek(offset int64, whence int) (int64, error) {
 // MockReadSeekCloser_Seek_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Seek'
 type MockReadSeekCloser_Seek_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Seek is a helper method to define mock.On call
@@ -1381,11 +1553,19 @@ func (_c *MockReadSeekCloser_Seek_Call) Run(run func(offset int64, whence int)) 
 }
 
 func (_c *MockReadSeekCloser_Seek_Call) Return(n int64, err error) *MockReadSeekCloser_Seek_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockReadSeekCloser_Seek_Call) RunAndReturn(run func(offset int64, whence int) (int64, error)) *MockReadSeekCloser_Seek_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1455,6 +1635,8 @@ func (_mock *MockWriteSeeker) Seek(offset int64, whence int) (int64, error) {
 // MockWriteSeeker_Seek_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Seek'
 type MockWriteSeeker_Seek_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Seek is a helper method to define mock.On call
@@ -1483,11 +1665,19 @@ func (_c *MockWriteSeeker_Seek_Call) Run(run func(offset int64, whence int)) *Mo
 }
 
 func (_c *MockWriteSeeker_Seek_Call) Return(n int64, err error) *MockWriteSeeker_Seek_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockWriteSeeker_Seek_Call) RunAndReturn(run func(offset int64, whence int) (int64, error)) *MockWriteSeeker_Seek_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1521,6 +1711,8 @@ func (_mock *MockWriteSeeker) Write(p []byte) (int, error) {
 // MockWriteSeeker_Write_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Write'
 type MockWriteSeeker_Write_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Write is a helper method to define mock.On call
@@ -1543,11 +1735,19 @@ func (_c *MockWriteSeeker_Write_Call) Run(run func(p []byte)) *MockWriteSeeker_W
 }
 
 func (_c *MockWriteSeeker_Write_Call) Return(n int, err error) *MockWriteSeeker_Write_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockWriteSeeker_Write_Call) RunAndReturn(run func(p []byte) (int, error)) *MockWriteSeeker_Write_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1617,6 +1817,8 @@ func (_mock *MockReadWriteSeeker) Read(p []byte) (int, error) {
 // MockReadWriteSeeker_Read_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Read'
 type MockReadWriteSeeker_Read_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Read is a helper method to define mock.On call
@@ -1639,11 +1841,19 @@ func (_c *MockReadWriteSeeker_Read_Call) Run(run func(p []byte)) *MockReadWriteS
 }
 
 func (_c *MockReadWriteSeeker_Read_Call) Return(n int, err error) *MockReadWriteSeeker_Read_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockReadWriteSeeker_Read_Call) RunAndReturn(run func(p []byte) (int, error)) *MockReadWriteSeeker_Read_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1677,6 +1887,8 @@ func (_mock *MockReadWriteSeeker) Seek(offset int64, whence int) (int64, error) 
 // MockReadWriteSeeker_Seek_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Seek'
 type MockReadWriteSeeker_Seek_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Seek is a helper method to define mock.On call
@@ -1705,11 +1917,19 @@ func (_c *MockReadWriteSeeker_Seek_Call) Run(run func(offset int64, whence int))
 }
 
 func (_c *MockReadWriteSeeker_Seek_Call) Return(n int64, err error) *MockReadWriteSeeker_Seek_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockReadWriteSeeker_Seek_Call) RunAndReturn(run func(offset int64, whence int) (int64, error)) *MockReadWriteSeeker_Seek_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1743,6 +1963,8 @@ func (_mock *MockReadWriteSeeker) Write(p []byte) (int, error) {
 // MockReadWriteSeeker_Write_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Write'
 type MockReadWriteSeeker_Write_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Write is a helper method to define mock.On call
@@ -1765,11 +1987,19 @@ func (_c *MockReadWriteSeeker_Write_Call) Run(run func(p []byte)) *MockReadWrite
 }
 
 func (_c *MockReadWriteSeeker_Write_Call) Return(n int, err error) *MockReadWriteSeeker_Write_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockReadWriteSeeker_Write_Call) RunAndReturn(run func(p []byte) (int, error)) *MockReadWriteSeeker_Write_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1839,6 +2069,8 @@ func (_mock *MockReaderFrom) ReadFrom(r io.Reader) (int64, error) {
 // MockReaderFrom_ReadFrom_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ReadFrom'
 type MockReaderFrom_ReadFrom_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // ReadFrom is a helper method to define mock.On call
@@ -1861,11 +2093,19 @@ func (_c *MockReaderFrom_ReadFrom_Call) Run(run func(r io.Reader)) *MockReaderFr
 }
 
 func (_c *MockReaderFrom_ReadFrom_Call) Return(n int64, err error) *MockReaderFrom_ReadFrom_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockReaderFrom_ReadFrom_Call) RunAndReturn(run func(r io.Reader) (int64, error)) *MockReaderFrom_ReadFrom_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -1935,6 +2175,8 @@ func (_mock *MockWriterTo) WriteTo(w io.Writer) (int64, error) {
 // MockWriterTo_WriteTo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'WriteTo'
 type MockWriterTo_WriteTo_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // WriteTo is a helper method to define mock.On call
@@ -1957,11 +2199,19 @@ func (_c *MockWriterTo_WriteTo_Call) Run(run func(w io.Writer)) *MockWriterTo_Wr
 }
 
 func (_c *MockWriterTo_WriteTo_Call) Return(n int64, err error) *MockWriterTo_WriteTo_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockWriterTo_WriteTo_Call) RunAndReturn(run func(w io.Writer) (int64, error)) *MockWriterTo_WriteTo_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2031,6 +2281,8 @@ func (_mock *MockReaderAt) ReadAt(p []byte, off int64) (int, error) {
 // MockReaderAt_ReadAt_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ReadAt'
 type MockReaderAt_ReadAt_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // ReadAt is a helper method to define mock.On call
@@ -2059,11 +2311,19 @@ func (_c *MockReaderAt_ReadAt_Call) Run(run func(p []byte, off int64)) *MockRead
 }
 
 func (_c *MockReaderAt_ReadAt_Call) Return(n int, err error) *MockReaderAt_ReadAt_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockReaderAt_ReadAt_Call) RunAndReturn(run func(p []byte, off int64) (int, error)) *MockReaderAt_ReadAt_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2133,6 +2393,8 @@ func (_mock *MockWriterAt) WriteAt(p []byte, off int64) (int, error) {
 // MockWriterAt_WriteAt_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'WriteAt'
 type MockWriterAt_WriteAt_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // WriteAt is a helper method to define mock.On call
@@ -2161,11 +2423,19 @@ func (_c *MockWriterAt_WriteAt_Call) Run(run func(p []byte, off int64)) *MockWri
 }
 
 func (_c *MockWriterAt_WriteAt_Call) Return(n int, err error) *MockWriterAt_WriteAt_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockWriterAt_WriteAt_Call) RunAndReturn(run func(p []byte, off int64) (int, error)) *MockWriterAt_WriteAt_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2235,6 +2505,8 @@ func (_mock *MockByteReader) ReadByte() (byte, error) {
 // MockByteReader_ReadByte_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ReadByte'
 type MockByteReader_ReadByte_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // ReadByte is a helper method to define mock.On call
@@ -2250,11 +2522,19 @@ func (_c *MockByteReader_ReadByte_Call) Run(run func()) *MockByteReader_ReadByte
 }
 
 func (_c *MockByteReader_ReadByte_Call) Return(v byte, err error) *MockByteReader_ReadByte_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(v, err)
 	return _c
 }
 
 func (_c *MockByteReader_ReadByte_Call) RunAndReturn(run func() (byte, error)) *MockByteReader_ReadByte_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2324,6 +2604,8 @@ func (_mock *MockByteScanner) ReadByte() (byte, error) {
 // MockByteScanner_ReadByte_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ReadByte'
 type MockByteScanner_ReadByte_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // ReadByte is a helper method to define mock.On call
@@ -2339,11 +2621,19 @@ func (_c *MockByteScanner_ReadByte_Call) Run(run func()) *MockByteScanner_ReadBy
 }
 
 func (_c *MockByteScanner_ReadByte_Call) Return(v byte, err error) *MockByteScanner_ReadByte_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(v, err)
 	return _c
 }
 
 func (_c *MockByteScanner_ReadByte_Call) RunAndReturn(run func() (byte, error)) *MockByteScanner_ReadByte_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2368,6 +2658,8 @@ func (_mock *MockByteScanner) UnreadByte() error {
 // MockByteScanner_UnreadByte_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UnreadByte'
 type MockByteScanner_UnreadByte_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // UnreadByte is a helper method to define mock.On call
@@ -2383,11 +2675,19 @@ func (_c *MockByteScanner_UnreadByte_Call) Run(run func()) *MockByteScanner_Unre
 }
 
 func (_c *MockByteScanner_UnreadByte_Call) Return(err error) *MockByteScanner_UnreadByte_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockByteScanner_UnreadByte_Call) RunAndReturn(run func() error) *MockByteScanner_UnreadByte_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2448,6 +2748,8 @@ func (_mock *MockByteWriter) WriteByte(c byte) error {
 // MockByteWriter_WriteByte_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'WriteByte'
 type MockByteWriter_WriteByte_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // WriteByte is a helper method to define mock.On call
@@ -2470,11 +2772,19 @@ func (_c *MockByteWriter_WriteByte_Call) Run(run func(c byte)) *MockByteWriter_W
 }
 
 func (_c *MockByteWriter_WriteByte_Call) Return(err error) *MockByteWriter_WriteByte_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockByteWriter_WriteByte_Call) RunAndReturn(run func(c byte) error) *MockByteWriter_WriteByte_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2550,6 +2860,8 @@ func (_mock *MockRuneReader) ReadRune() (rune, int, error) {
 // MockRuneReader_ReadRune_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ReadRune'
 type MockRuneReader_ReadRune_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // ReadRune is a helper method to define mock.On call
@@ -2565,11 +2877,19 @@ func (_c *MockRuneReader_ReadRune_Call) Run(run func()) *MockRuneReader_ReadRune
 }
 
 func (_c *MockRuneReader_ReadRune_Call) Return(r rune, size int, err error) *MockRuneReader_ReadRune_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(r, size, err)
 	return _c
 }
 
 func (_c *MockRuneReader_ReadRune_Call) RunAndReturn(run func() (rune, int, error)) *MockRuneReader_ReadRune_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2645,6 +2965,8 @@ func (_mock *MockRuneScanner) ReadRune() (rune, int, error) {
 // MockRuneScanner_ReadRune_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ReadRune'
 type MockRuneScanner_ReadRune_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // ReadRune is a helper method to define mock.On call
@@ -2660,11 +2982,19 @@ func (_c *MockRuneScanner_ReadRune_Call) Run(run func()) *MockRuneScanner_ReadRu
 }
 
 func (_c *MockRuneScanner_ReadRune_Call) Return(r rune, size int, err error) *MockRuneScanner_ReadRune_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(r, size, err)
 	return _c
 }
 
 func (_c *MockRuneScanner_ReadRune_Call) RunAndReturn(run func() (rune, int, error)) *MockRuneScanner_ReadRune_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2689,6 +3019,8 @@ func (_mock *MockRuneScanner) UnreadRune() error {
 // MockRuneScanner_UnreadRune_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UnreadRune'
 type MockRuneScanner_UnreadRune_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // UnreadRune is a helper method to define mock.On call
@@ -2704,11 +3036,19 @@ func (_c *MockRuneScanner_UnreadRune_Call) Run(run func()) *MockRuneScanner_Unre
 }
 
 func (_c *MockRuneScanner_UnreadRune_Call) Return(err error) *MockRuneScanner_UnreadRune_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(err)
 	return _c
 }
 
 func (_c *MockRuneScanner_UnreadRune_Call) RunAndReturn(run func() error) *MockRuneScanner_UnreadRune_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -2778,6 +3118,8 @@ func (_mock *MockStringWriter) WriteString(s string) (int, error) {
 // MockStringWriter_WriteString_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'WriteString'
 type MockStringWriter_WriteString_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // WriteString is a helper method to define mock.On call
@@ -2800,11 +3142,19 @@ func (_c *MockStringWriter_WriteString_Call) Run(run func(s string)) *MockString
 }
 
 func (_c *MockStringWriter_WriteString_Call) Return(n int, err error) *MockStringWriter_WriteString_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n, err)
 	return _c
 }
 
 func (_c *MockStringWriter_WriteString_Call) RunAndReturn(run func(s string) (int, error)) *MockStringWriter_WriteString_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }

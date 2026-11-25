@@ -78,6 +78,8 @@ func (_mock *MockRoot) ReturnsFoo() (foo.Foo, error) {
 // MockRoot_ReturnsFoo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ReturnsFoo'
 type MockRoot_ReturnsFoo_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // ReturnsFoo is a helper method to define mock.On call
@@ -93,11 +95,19 @@ func (_c *MockRoot_ReturnsFoo_Call) Run(run func()) *MockRoot_ReturnsFoo_Call {
 }
 
 func (_c *MockRoot_ReturnsFoo_Call) Return(foo1 foo.Foo, err error) *MockRoot_ReturnsFoo_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(foo1, err)
 	return _c
 }
 
 func (_c *MockRoot_ReturnsFoo_Call) RunAndReturn(run func() (foo.Foo, error)) *MockRoot_ReturnsFoo_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -111,6 +121,8 @@ func (_mock *MockRoot) TakesBaz(baz *foo.Baz) {
 // MockRoot_TakesBaz_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'TakesBaz'
 type MockRoot_TakesBaz_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // TakesBaz is a helper method to define mock.On call
@@ -133,11 +145,19 @@ func (_c *MockRoot_TakesBaz_Call) Run(run func(baz *foo.Baz)) *MockRoot_TakesBaz
 }
 
 func (_c *MockRoot_TakesBaz_Call) Return() *MockRoot_TakesBaz_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockRoot_TakesBaz_Call) RunAndReturn(run func(baz *foo.Baz)) *MockRoot_TakesBaz_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -198,6 +218,8 @@ func (_mock *MockStringer) String() string {
 // MockStringer_String_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'String'
 type MockStringer_String_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // String is a helper method to define mock.On call
@@ -213,11 +235,19 @@ func (_c *MockStringer_String_Call) Run(run func()) *MockStringer_String_Call {
 }
 
 func (_c *MockStringer_String_Call) Return(s string) *MockStringer_String_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(s)
 	return _c
 }
 
 func (_c *MockStringer_String_Call) RunAndReturn(run func() string) *MockStringer_String_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }

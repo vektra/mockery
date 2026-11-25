@@ -67,6 +67,8 @@ func (_mock *MockAliasToInterface3) Foo() string {
 // MockAliasToInterface3_Foo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Foo'
 type MockAliasToInterface3_Foo_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Foo is a helper method to define mock.On call
@@ -82,11 +84,19 @@ func (_c *MockAliasToInterface3_Foo_Call) Run(run func()) *MockAliasToInterface3
 }
 
 func (_c *MockAliasToInterface3_Foo_Call) Return(s string) *MockAliasToInterface3_Foo_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(s)
 	return _c
 }
 
 func (_c *MockAliasToInterface3_Foo_Call) RunAndReturn(run func() string) *MockAliasToInterface3_Foo_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -147,6 +157,8 @@ func (_mock *MockInterface1) Foo() Type {
 // MockInterface1_Foo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Foo'
 type MockInterface1_Foo_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Foo is a helper method to define mock.On call
@@ -162,11 +174,19 @@ func (_c *MockInterface1_Foo_Call) Run(run func()) *MockInterface1_Foo_Call {
 }
 
 func (_c *MockInterface1_Foo_Call) Return(typeParam Type) *MockInterface1_Foo_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(typeParam)
 	return _c
 }
 
 func (_c *MockInterface1_Foo_Call) RunAndReturn(run func() Type) *MockInterface1_Foo_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -216,6 +236,8 @@ func (_mock *MockInterface2) F(typeParam Type, s S, s1 subpkg.S) {
 // MockInterface2_F_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'F'
 type MockInterface2_F_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // F is a helper method to define mock.On call
@@ -250,11 +272,19 @@ func (_c *MockInterface2_F_Call) Run(run func(typeParam Type, s S, s1 subpkg.S))
 }
 
 func (_c *MockInterface2_F_Call) Return() *MockInterface2_F_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockInterface2_F_Call) RunAndReturn(run func(typeParam Type, s S, s1 subpkg.S)) *MockInterface2_F_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }

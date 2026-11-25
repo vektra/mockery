@@ -68,6 +68,8 @@ func (_mock *mockinterfaceA) DoB(interfaceB1 interfaceB) interfaceB {
 // mockinterfaceA_DoB_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DoB'
 type mockinterfaceA_DoB_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // DoB is a helper method to define mock.On call
@@ -90,11 +92,19 @@ func (_c *mockinterfaceA_DoB_Call) Run(run func(interfaceB1 interfaceB)) *mockin
 }
 
 func (_c *mockinterfaceA_DoB_Call) Return(interfaceBMoqParam interfaceB) *mockinterfaceA_DoB_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(interfaceBMoqParam)
 	return _c
 }
 
 func (_c *mockinterfaceA_DoB_Call) RunAndReturn(run func(interfaceB1 interfaceB) interfaceB) *mockinterfaceA_DoB_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -121,6 +131,8 @@ func (_mock *mockinterfaceA) DoB0(interfaceB interfaceB0) interfaceB0 {
 // mockinterfaceA_DoB0_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DoB0'
 type mockinterfaceA_DoB0_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // DoB0 is a helper method to define mock.On call
@@ -143,11 +155,19 @@ func (_c *mockinterfaceA_DoB0_Call) Run(run func(interfaceB interfaceB0)) *mocki
 }
 
 func (_c *mockinterfaceA_DoB0_Call) Return(interfaceB0MoqParam interfaceB0) *mockinterfaceA_DoB0_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(interfaceB0MoqParam)
 	return _c
 }
 
 func (_c *mockinterfaceA_DoB0_Call) RunAndReturn(run func(interfaceB interfaceB0) interfaceB0) *mockinterfaceA_DoB0_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -174,6 +194,8 @@ func (_mock *mockinterfaceA) DoB0v2(interfaceB01 interfaceB0) interfaceB0 {
 // mockinterfaceA_DoB0v2_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DoB0v2'
 type mockinterfaceA_DoB0v2_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // DoB0v2 is a helper method to define mock.On call
@@ -196,11 +218,19 @@ func (_c *mockinterfaceA_DoB0v2_Call) Run(run func(interfaceB01 interfaceB0)) *m
 }
 
 func (_c *mockinterfaceA_DoB0v2_Call) Return(interfaceB0MoqParam interfaceB0) *mockinterfaceA_DoB0v2_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(interfaceB0MoqParam)
 	return _c
 }
 
 func (_c *mockinterfaceA_DoB0v2_Call) RunAndReturn(run func(interfaceB01 interfaceB0) interfaceB0) *mockinterfaceA_DoB0v2_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -261,6 +291,8 @@ func (_mock *mockinterfaceB) GetData() int {
 // mockinterfaceB_GetData_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetData'
 type mockinterfaceB_GetData_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // GetData is a helper method to define mock.On call
@@ -276,11 +308,19 @@ func (_c *mockinterfaceB_GetData_Call) Run(run func()) *mockinterfaceB_GetData_C
 }
 
 func (_c *mockinterfaceB_GetData_Call) Return(n int) *mockinterfaceB_GetData_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n)
 	return _c
 }
 
 func (_c *mockinterfaceB_GetData_Call) RunAndReturn(run func() int) *mockinterfaceB_GetData_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -343,6 +383,8 @@ func (_mock *mockinterfaceB0) DoB0(interfaceB01 interfaceB0) interfaceB0 {
 // mockinterfaceB0_DoB0_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DoB0'
 type mockinterfaceB0_DoB0_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // DoB0 is a helper method to define mock.On call
@@ -365,11 +407,19 @@ func (_c *mockinterfaceB0_DoB0_Call) Run(run func(interfaceB01 interfaceB0)) *mo
 }
 
 func (_c *mockinterfaceB0_DoB0_Call) Return(interfaceB0MoqParam interfaceB0) *mockinterfaceB0_DoB0_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(interfaceB0MoqParam)
 	return _c
 }
 
 func (_c *mockinterfaceB0_DoB0_Call) RunAndReturn(run func(interfaceB01 interfaceB0) interfaceB0) *mockinterfaceB0_DoB0_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }

@@ -66,6 +66,8 @@ func (_mock *MockFoo) Bar(s string) int {
 // MockFoo_Bar_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Bar'
 type MockFoo_Bar_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Bar is a helper method to define mock.On call
@@ -88,11 +90,19 @@ func (_c *MockFoo_Bar_Call) Run(run func(s string)) *MockFoo_Bar_Call {
 }
 
 func (_c *MockFoo_Bar_Call) Return(n int) *MockFoo_Bar_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(n)
 	return _c
 }
 
 func (_c *MockFoo_Bar_Call) RunAndReturn(run func(s string) int) *MockFoo_Bar_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
