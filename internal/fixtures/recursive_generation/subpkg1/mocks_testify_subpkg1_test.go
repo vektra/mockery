@@ -66,6 +66,8 @@ func (_mock *MockFoo) Get() string {
 // MockFoo_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockFoo_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -81,11 +83,19 @@ func (_c *MockFoo_Get_Call) Run(run func()) *MockFoo_Get_Call {
 }
 
 func (_c *MockFoo_Get_Call) Return(s string) *MockFoo_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(s)
 	return _c
 }
 
 func (_c *MockFoo_Get_Call) RunAndReturn(run func() string) *MockFoo_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }

@@ -55,6 +55,8 @@ func (_mock *MockEmptyReturn) NoArgs() {
 // MockEmptyReturn_NoArgs_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'NoArgs'
 type MockEmptyReturn_NoArgs_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // NoArgs is a helper method to define mock.On call
@@ -70,11 +72,19 @@ func (_c *MockEmptyReturn_NoArgs_Call) Run(run func()) *MockEmptyReturn_NoArgs_C
 }
 
 func (_c *MockEmptyReturn_NoArgs_Call) Return() *MockEmptyReturn_NoArgs_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockEmptyReturn_NoArgs_Call) RunAndReturn(run func()) *MockEmptyReturn_NoArgs_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -88,6 +98,8 @@ func (_mock *MockEmptyReturn) WithArgs(a int, b string) {
 // MockEmptyReturn_WithArgs_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'WithArgs'
 type MockEmptyReturn_WithArgs_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // WithArgs is a helper method to define mock.On call
@@ -116,11 +128,19 @@ func (_c *MockEmptyReturn_WithArgs_Call) Run(run func(a int, b string)) *MockEmp
 }
 
 func (_c *MockEmptyReturn_WithArgs_Call) Return() *MockEmptyReturn_WithArgs_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockEmptyReturn_WithArgs_Call) RunAndReturn(run func(a int, b string)) *MockEmptyReturn_WithArgs_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }

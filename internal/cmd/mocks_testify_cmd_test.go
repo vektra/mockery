@@ -75,6 +75,8 @@ func (_mock *mockargGetter) GetString(name string) (string, error) {
 // mockargGetter_GetString_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetString'
 type mockargGetter_GetString_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // GetString is a helper method to define mock.On call
@@ -97,11 +99,19 @@ func (_c *mockargGetter_GetString_Call) Run(run func(name string)) *mockargGette
 }
 
 func (_c *mockargGetter_GetString_Call) Return(s string, err error) *mockargGetter_GetString_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(s, err)
 	return _c
 }
 
 func (_c *mockargGetter_GetString_Call) RunAndReturn(run func(name string) (string, error)) *mockargGetter_GetString_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }

@@ -67,6 +67,8 @@ func (_mock *MockIface) M() dep0.T {
 // MockIface_M_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'M'
 type MockIface_M_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // M is a helper method to define mock.On call
@@ -82,11 +84,19 @@ func (_c *MockIface_M_Call) Run(run func()) *MockIface_M_Call {
 }
 
 func (_c *MockIface_M_Call) Return(t dep0.T) *MockIface_M_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(t)
 	return _c
 }
 
 func (_c *MockIface_M_Call) RunAndReturn(run func() dep0.T) *MockIface_M_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }

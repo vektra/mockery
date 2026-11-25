@@ -70,6 +70,8 @@ func (_mock *MockGetterIfaceTypedParam[T]) Get() T {
 // MockGetterIfaceTypedParam_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockGetterIfaceTypedParam_Get_Call[T io.Reader] struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -85,11 +87,19 @@ func (_c *MockGetterIfaceTypedParam_Get_Call[T]) Run(run func()) *MockGetterIfac
 }
 
 func (_c *MockGetterIfaceTypedParam_Get_Call[T]) Return(v T) *MockGetterIfaceTypedParam_Get_Call[T] {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(v)
 	return _c
 }
 
 func (_c *MockGetterIfaceTypedParam_Get_Call[T]) RunAndReturn(run func() T) *MockGetterIfaceTypedParam_Get_Call[T] {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }

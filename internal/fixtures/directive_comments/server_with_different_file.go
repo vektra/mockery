@@ -57,6 +57,8 @@ func (_mock *FunServerWithDifferentFile) HandleRequest(path string, handler http
 // FunServerWithDifferentFile_HandleRequest_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'HandleRequest'
 type FunServerWithDifferentFile_HandleRequest_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // HandleRequest is a helper method to define mock.On call
@@ -85,11 +87,19 @@ func (_c *FunServerWithDifferentFile_HandleRequest_Call) Run(run func(path strin
 }
 
 func (_c *FunServerWithDifferentFile_HandleRequest_Call) Return() *FunServerWithDifferentFile_HandleRequest_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *FunServerWithDifferentFile_HandleRequest_Call) RunAndReturn(run func(path string, handler http.Handler)) *FunServerWithDifferentFile_HandleRequest_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -139,6 +149,8 @@ func (_mock *AnotherFunServerWithDifferentFile) HandleRequest(path string, handl
 // AnotherFunServerWithDifferentFile_HandleRequest_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'HandleRequest'
 type AnotherFunServerWithDifferentFile_HandleRequest_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // HandleRequest is a helper method to define mock.On call
@@ -167,11 +179,19 @@ func (_c *AnotherFunServerWithDifferentFile_HandleRequest_Call) Run(run func(pat
 }
 
 func (_c *AnotherFunServerWithDifferentFile_HandleRequest_Call) Return() *AnotherFunServerWithDifferentFile_HandleRequest_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *AnotherFunServerWithDifferentFile_HandleRequest_Call) RunAndReturn(run func(path string, handler http.Handler)) *AnotherFunServerWithDifferentFile_HandleRequest_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }

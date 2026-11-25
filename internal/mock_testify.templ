@@ -167,6 +167,8 @@ func (_mock *{{$mock.StructName}}{{ $mock.TypeInstantiation }}) {{$method.Name}}
 // {{ $mock.StructName }}_{{ $method.Name }}_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method '{{ $method.Name }}'
 type {{ $ExpecterCallNameConstraint }} struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 
@@ -232,11 +234,19 @@ func (_c *{{ $ExpecterCallNameInstantiated }}) Run(run func({{ $method.ArgList }
 }
 
 func (_c *{{ $ExpecterCallNameInstantiated }}) Return({{ $method.ReturnArgList }}) *{{ $ExpecterCallNameInstantiated }} {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return({{ $method.ReturnArgNameList }})
 	return _c
 }
 
 func (_c *{{ $ExpecterCallNameInstantiated }}) RunAndReturn(run func({{ $method.ArgList }}){{ $method.ReturnArgTypeList }}) *{{ $ExpecterCallNameInstantiated }} {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 {{- if eq (len $method.Returns) 0 }}
 	_c.Run(run)
 {{- else}}

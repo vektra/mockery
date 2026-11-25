@@ -179,6 +179,142 @@ func TestExpecter(t *testing.T) {
 	})
 }
 
+func TestExpecterDisallowReturnAndRunAndReturn(t *testing.T) {
+	const wantPanic = "Return() and RunAndReturn() cannot be used simultaneously"
+
+	t.Run("RunAndReturn then Return panics and preserves RunAndReturn", func(t *testing.T) {
+		expMock := MockExpecter{}
+		var ran bool
+		call := expMock.EXPECT().NoArg().RunAndReturn(func() string {
+			ran = true
+			return "from-run-and-return"
+		})
+		require.PanicsWithValue(t, wantPanic, func() {
+			call.Return("from-return")
+		})
+		call.Once()
+
+		require.Equal(t, "from-run-and-return", expMock.NoArg())
+		require.True(t, ran)
+		expMock.AssertExpectations(t)
+	})
+
+	t.Run("Return then RunAndReturn panics and preserves Return", func(t *testing.T) {
+		expMock := MockExpecter{}
+		var ran bool
+		call := expMock.EXPECT().NoArg().Return("from-return")
+		require.PanicsWithValue(t, wantPanic, func() {
+			call.RunAndReturn(func() string {
+				ran = true
+				return "from-run-and-return"
+			})
+		})
+		call.Once()
+
+		require.Equal(t, "from-return", expMock.NoArg())
+		require.False(t, ran)
+		expMock.AssertExpectations(t)
+	})
+
+	t.Run("chained with Run in between panics in both orders", func(t *testing.T) {
+		expMock := MockExpecter{}
+		require.PanicsWithValue(t, wantPanic, func() {
+			expMock.EXPECT().ManyArgsReturns(mock.Anything, defaultInt).
+				RunAndReturn(func(string, int) ([]string, error) {
+					return []string{"a"}, nil
+				}).
+				Run(func(string, int) {}).
+				Return([]string{"b"}, nil)
+		})
+		require.PanicsWithValue(t, wantPanic, func() {
+			expMock.EXPECT().ManyArgsReturns(mock.Anything, defaultInt).
+				Return([]string{"b"}, nil).
+				Run(func(string, int) {}).
+				RunAndReturn(func(string, int) ([]string, error) {
+					return []string{"a"}, nil
+				})
+		})
+	})
+
+	t.Run("NoReturn method panics in both orders", func(t *testing.T) {
+		expMock := MockExpecter{}
+		require.PanicsWithValue(t, wantPanic, func() {
+			expMock.EXPECT().NoReturn(defaultString).
+				RunAndReturn(func(string) {}).
+				Return()
+		})
+		require.PanicsWithValue(t, wantPanic, func() {
+			expMock.EXPECT().NoReturn(defaultString).
+				Return().
+				RunAndReturn(func(string) {})
+		})
+	})
+
+	t.Run("generic mock panics in both orders", func(t *testing.T) {
+		m := MockConstructorTypeParams[string, bool]{}
+		require.PanicsWithValue(t, wantPanic, func() {
+			m.EXPECT().Get().RunAndReturn(func() string { return "a" }).Return("b")
+		})
+		require.PanicsWithValue(t, wantPanic, func() {
+			m.EXPECT().Get().Return("b").RunAndReturn(func() string { return "a" })
+		})
+	})
+
+	t.Run("allowed combinations continue to work", func(t *testing.T) {
+		expMock := MockExpecter{}
+
+		// Repeated Return overrides previous Return.
+		expMock.EXPECT().NoArg().Return("first").Return("second").Once()
+		require.Equal(t, "second", expMock.NoArg())
+
+		// Repeated RunAndReturn overrides previous RunAndReturn.
+		expMock.EXPECT().NoArg().
+			RunAndReturn(func() string { return "first" }).
+			RunAndReturn(func() string { return "second" }).
+			Once()
+		require.Equal(t, "second", expMock.NoArg())
+
+		// Return + Run on a zero-return method still works in both orders.
+		var ranNoReturn int
+		expMock.EXPECT().NoReturn("a").Return().Run(func(string) { ranNoReturn++ }).Once()
+		expMock.EXPECT().NoReturn("b").Run(func(string) { ranNoReturn++ }).Return().Once()
+		expMock.NoReturn("a")
+		expMock.NoReturn("b")
+		require.Equal(t, 2, ranNoReturn)
+
+		// Run + RunAndReturn on a returning method still works in both orders.
+		var sideEffects int
+		expMock.EXPECT().NoArg().
+			Run(func() { sideEffects++ }).
+			RunAndReturn(func() string { return "rr1" }).
+			Once()
+		require.Equal(t, "rr1", expMock.NoArg())
+
+		expMock.EXPECT().NoArg().
+			RunAndReturn(func() string { return "rr2" }).
+			Run(func() { sideEffects++ }).
+			Once()
+		require.Equal(t, "rr2", expMock.NoArg())
+		require.Equal(t, 2, sideEffects)
+
+		// Separate expectations on the same mock may use Return and RunAndReturn independently.
+		expMock.EXPECT().ManyArgsReturns("a", 1).Return([]string{"ret"}, nil).Once()
+		expMock.EXPECT().ManyArgsReturns("b", 2).RunAndReturn(func(s string, _ int) ([]string, error) {
+			return []string{"rr-" + s}, nil
+		}).Once()
+
+		strs1, err := expMock.ManyArgsReturns("a", 1)
+		require.NoError(t, err)
+		require.Equal(t, []string{"ret"}, strs1)
+
+		strs2, err := expMock.ManyArgsReturns("b", 2)
+		require.NoError(t, err)
+		require.Equal(t, []string{"rr-b"}, strs2)
+
+		expMock.AssertExpectations(t)
+	})
+}
+
 func intfSlice(slice interface{}) []interface{} {
 	val := reflect.ValueOf(slice)
 	switch val.Kind() {

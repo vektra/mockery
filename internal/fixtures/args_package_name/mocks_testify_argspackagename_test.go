@@ -56,6 +56,8 @@ func (_mock *MockUsesArgsPackage) Single(v args.Value) {
 // MockUsesArgsPackage_Single_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Single'
 type MockUsesArgsPackage_Single_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Single is a helper method to define mock.On call
@@ -78,11 +80,19 @@ func (_c *MockUsesArgsPackage_Single_Call) Run(run func(v args.Value)) *MockUses
 }
 
 func (_c *MockUsesArgsPackage_Single_Call) Return() *MockUsesArgsPackage_Single_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockUsesArgsPackage_Single_Call) RunAndReturn(run func(v args.Value)) *MockUsesArgsPackage_Single_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -104,6 +114,8 @@ func (_mock *MockUsesArgsPackage) Variadic(v args.Value, rest ...args.Value) {
 // MockUsesArgsPackage_Variadic_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Variadic'
 type MockUsesArgsPackage_Variadic_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Variadic is a helper method to define mock.On call
@@ -137,11 +149,19 @@ func (_c *MockUsesArgsPackage_Variadic_Call) Run(run func(v args.Value, rest ...
 }
 
 func (_c *MockUsesArgsPackage_Variadic_Call) Return() *MockUsesArgsPackage_Variadic_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockUsesArgsPackage_Variadic_Call) RunAndReturn(run func(v args.Value, rest ...args.Value)) *MockUsesArgsPackage_Variadic_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -191,6 +211,8 @@ func (_mock *MockUsesArgsPackageRolledVariadic) Single(v args.Value) {
 // MockUsesArgsPackageRolledVariadic_Single_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Single'
 type MockUsesArgsPackageRolledVariadic_Single_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Single is a helper method to define mock.On call
@@ -213,11 +235,19 @@ func (_c *MockUsesArgsPackageRolledVariadic_Single_Call) Run(run func(v args.Val
 }
 
 func (_c *MockUsesArgsPackageRolledVariadic_Single_Call) Return() *MockUsesArgsPackageRolledVariadic_Single_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockUsesArgsPackageRolledVariadic_Single_Call) RunAndReturn(run func(v args.Value)) *MockUsesArgsPackageRolledVariadic_Single_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -236,6 +266,8 @@ func (_mock *MockUsesArgsPackageRolledVariadic) Variadic(v args.Value, rest ...a
 // MockUsesArgsPackageRolledVariadic_Variadic_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Variadic'
 type MockUsesArgsPackageRolledVariadic_Variadic_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Variadic is a helper method to define mock.On call
@@ -267,11 +299,19 @@ func (_c *MockUsesArgsPackageRolledVariadic_Variadic_Call) Run(run func(v args.V
 }
 
 func (_c *MockUsesArgsPackageRolledVariadic_Variadic_Call) Return() *MockUsesArgsPackageRolledVariadic_Variadic_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *MockUsesArgsPackageRolledVariadic_Variadic_Call) RunAndReturn(run func(v args.Value, rest ...args.Value)) *MockUsesArgsPackageRolledVariadic_Variadic_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }

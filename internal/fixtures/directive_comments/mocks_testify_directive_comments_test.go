@@ -77,6 +77,8 @@ func (_mock *MockRequester) Get(path string) (string, error) {
 // MockRequester_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
 type MockRequester_Get_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Get is a helper method to define mock.On call
@@ -99,11 +101,19 @@ func (_c *MockRequester_Get_Call) Run(run func(path string)) *MockRequester_Get_
 }
 
 func (_c *MockRequester_Get_Call) Return(s string, err error) *MockRequester_Get_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return(s, err)
 	return _c
 }
 
 func (_c *MockRequester_Get_Call) RunAndReturn(run func(path string) (string, error)) *MockRequester_Get_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Call.Return(run)
 	return _c
 }
@@ -153,6 +163,8 @@ func (_mock *FunServer) HandleRequest(path string, handler http.Handler) {
 // FunServer_HandleRequest_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'HandleRequest'
 type FunServer_HandleRequest_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // HandleRequest is a helper method to define mock.On call
@@ -181,11 +193,19 @@ func (_c *FunServer_HandleRequest_Call) Run(run func(path string, handler http.H
 }
 
 func (_c *FunServer_HandleRequest_Call) Return() *FunServer_HandleRequest_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *FunServer_HandleRequest_Call) RunAndReturn(run func(path string, handler http.Handler)) *FunServer_HandleRequest_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
@@ -235,6 +255,8 @@ func (_mock *InterfaceWithoutGenerateFoo) Foo() {
 // InterfaceWithoutGenerateFoo_Foo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Foo'
 type InterfaceWithoutGenerateFoo_Foo_Call struct {
 	*mock.Call
+	returnCalled       bool
+	runAndReturnCalled bool
 }
 
 // Foo is a helper method to define mock.On call
@@ -250,11 +272,19 @@ func (_c *InterfaceWithoutGenerateFoo_Foo_Call) Run(run func()) *InterfaceWithou
 }
 
 func (_c *InterfaceWithoutGenerateFoo_Foo_Call) Return() *InterfaceWithoutGenerateFoo_Foo_Call {
+	if _c.runAndReturnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.returnCalled = true
 	_c.Call.Return()
 	return _c
 }
 
 func (_c *InterfaceWithoutGenerateFoo_Foo_Call) RunAndReturn(run func()) *InterfaceWithoutGenerateFoo_Foo_Call {
+	if _c.returnCalled {
+		panic("Return() and RunAndReturn() cannot be used simultaneously")
+	}
+	_c.runAndReturnCalled = true
 	_c.Run(run)
 	return _c
 }
