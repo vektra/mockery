@@ -88,6 +88,82 @@ func TestRegistryAddImportPackageScopeConflicts(t *testing.T) {
 	}
 }
 
+// goimports rewrites an import to add an explicit alias whenever the declared
+// package name differs from the name it infers from the import path. The
+// generated file must already contain that alias, otherwise running goimports
+// over a freshly generated mock produces a diff.
+func TestRegistryAddImportEmitsGoimportsAlias(t *testing.T) {
+	for _, tt := range []struct {
+		name      string
+		pkgName   string
+		pkgPath   string
+		wantAlias string
+		wantStmt  string
+	}{
+		{
+			name:      "package name differs from directory",
+			pkgName:   "bar",
+			pkgPath:   "mockery/foo",
+			wantAlias: "bar",
+			wantStmt:  `bar "mockery/foo"`,
+		},
+		{
+			name:      "major version suffix is not part of the name",
+			pkgName:   "semver",
+			pkgPath:   "github.com/Masterminds/semver/v3",
+			wantAlias: "",
+			wantStmt:  `"github.com/Masterminds/semver/v3"`,
+		},
+		{
+			name:      "non-identifier suffix is trimmed",
+			pkgName:   "yaml",
+			pkgPath:   "gopkg.in/yaml.v3",
+			wantAlias: "",
+			wantStmt:  `"gopkg.in/yaml.v3"`,
+		},
+		{
+			name:      "go- prefix is trimmed",
+			pkgName:   "cmd",
+			pkgPath:   "example.com/go-cmd",
+			wantAlias: "",
+			wantStmt:  `"example.com/go-cmd"`,
+		},
+		{
+			name:      "matching names need no alias",
+			pkgName:   "dep",
+			pkgPath:   "example.com/lib/dep",
+			wantAlias: "",
+			wantStmt:  `"example.com/lib/dep"`,
+		},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			r, err := NewRegistry(nil, "example.com/output", false)
+			require.NoError(t, err)
+
+			imprt := r.AddImport(tt.pkgName, tt.pkgPath)
+			require.Equal(t, tt.wantAlias, imprt.Alias)
+			require.Equal(t, tt.wantStmt, imprt.ImportStatement())
+		})
+	}
+}
+
+func TestImportPathAssumedName(t *testing.T) {
+	for _, tt := range []struct {
+		path string
+		want string
+	}{
+		{path: "mockery/foo", want: "foo"},
+		{path: "github.com/Masterminds/semver/v3", want: "semver"},
+		{path: "github.com/foo/bar/v12", want: "bar"},
+		{path: "gopkg.in/yaml.v3", want: "yaml"},
+		{path: "example.com/go-cmd", want: "cmd"},
+		{path: "example.com/lib/dep", want: "dep"},
+		{path: "stdlib", want: "stdlib"},
+	} {
+		require.Equal(t, tt.want, importPathAssumedName(tt.path), tt.path)
+	}
+}
+
 func TestRegistryAddImportWithAlias(t *testing.T) {
 	for _, tt := range []struct {
 		name      string
