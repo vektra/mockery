@@ -5,7 +5,12 @@ import (
 	"fmt"
 	"go/token"
 	"go/types"
+	"path"
 	"sort"
+	"strconv"
+	"strings"
+	"unicode"
+	"unicode/utf8"
 
 	"github.com/rs/zerolog"
 	"github.com/vektra/mockery/v3/internal/stackerr"
@@ -175,6 +180,12 @@ func (r *Registry) addImport(ctx context.Context, pkg TypesPackage) *Package {
 	}
 
 	imprt := Package{pkg: pkg}
+	// goimports qualifies an import explicitly whenever the declared package
+	// name differs from the name it infers from the import path. Emit the same
+	// alias up front so that running goimports over generated mocks is a no-op.
+	if name := pkg.Name(); name != "" && name != importPathAssumedName(path) {
+		imprt.Alias = name
+	}
 	originalQualifier := imprt.Qualifier()
 	var aliasSuggestion string = imprt.Qualifier()
 	for i := 0; ; i++ {
@@ -193,6 +204,34 @@ func (r *Registry) addImport(ctx context.Context, pkg TypesPackage) *Package {
 	r.imports[path] = &imprt
 	r.importQualifiers[imprt.Qualifier()] = &imprt
 	return &imprt
+}
+
+// importPathAssumedName returns the package name that tooling infers from an
+// import path without loading the package. It follows the heuristic used by
+// goimports: a trailing major version suffix is skipped, a leading "go-" is
+// trimmed, and the name is truncated at the first character that cannot be
+// part of an identifier.
+func importPathAssumedName(importPath string) string {
+	base := path.Base(importPath)
+	if strings.HasPrefix(base, "v") {
+		if _, err := strconv.Atoi(base[1:]); err == nil {
+			if dir := path.Dir(importPath); dir != "." {
+				base = path.Base(dir)
+			}
+		}
+	}
+	base = strings.TrimPrefix(base, "go-")
+	if i := strings.IndexFunc(base, notIdentifier); i >= 0 {
+		base = base[:i]
+	}
+	return base
+}
+
+func notIdentifier(ch rune) bool {
+	return !('a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' ||
+		'0' <= ch && ch <= '9' ||
+		ch == '_' ||
+		ch >= utf8.RuneSelf && (unicode.IsLetter(ch) || unicode.IsDigit(ch)))
 }
 
 // Imports returns the list of imported packages. The list is sorted by
