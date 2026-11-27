@@ -86,7 +86,7 @@ Note that the `#!json "additionalProperties": false` parameter is crucial to ens
 
 !!! tip "`template-schema`"
 
-    You can specify a custom schema path using the [`#!yaml template-schema:`](../configuration.md#parameter-descriptions)parameter.
+    You can specify a custom schema path using the [`#!yaml template-schema:`](../configuration.md#parameter-descriptions) parameter.
 
 ## Template Data
 
